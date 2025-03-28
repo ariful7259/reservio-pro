@@ -7,18 +7,31 @@ import {
   Wallet, 
   Calendar, 
   Search, 
-  ShieldCheck 
+  Home,
+  Building,
+  ShoppingBag,
+  Settings,
+  Menu
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const Navbar = () => {
   const location = useLocation();
   
   const navLinks = [
-    { title: 'হোম', path: '/', icon: <Calendar className="h-5 w-5" /> },
-    { title: 'অ্যাপয়েন্টমেন্ট', path: '/appointments', icon: <Calendar className="h-5 w-5" /> },
+    { title: 'হোম', path: '/', icon: <Home className="h-5 w-5" /> },
+    { title: 'বাসা', path: '/housing', icon: <Building className="h-5 w-5" /> },
     { title: 'সার্ভিস', path: '/services', icon: <Search className="h-5 w-5" /> },
-    { title: 'ওয়ালেট', path: '/wallet', icon: <Wallet className="h-5 w-5" /> },
+    { title: 'শপিং', path: '/shopping', icon: <ShoppingBag className="h-5 w-5" /> },
     { title: 'প্রোফাইল', path: '/profile', icon: <User className="h-5 w-5" /> },
   ];
 
@@ -30,22 +43,82 @@ const Navbar = () => {
         </Link>
         
         <div className="flex items-center gap-4">
-          <button className="relative p-2 text-gray-500 rounded-full hover:bg-gray-100">
-            <Bell className="h-5 w-5" />
-            <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0">
-              2
-            </Badge>
-          </button>
-          <Link to="/security" className="hidden md:block">
-            <button className="p-2 text-gray-500 rounded-full hover:bg-gray-100">
-              <ShieldCheck className="h-5 w-5" />
-            </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon" className="relative">
+                <Bell className="h-5 w-5" />
+                <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0">
+                  3
+                </Badge>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-80">
+              <DropdownMenuLabel>নোটিফিকেশন</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <div className="max-h-80 overflow-auto">
+                {[
+                  { title: 'আপনার অ্যাপয়েন্টমেন্ট ৩০ মিনিট পরে', time: '১০ মিনিট আগে' },
+                  { title: 'সাপ্তাহিক অফারঃ ২০% ছাড় সকল সার্ভিসে', time: '২ ঘন্টা আগে' },
+                  { title: 'আপনার ওয়ালেট রিচার্জ সফল হয়েছে', time: '১ দিন আগে' },
+                ].map((notification, i) => (
+                  <DropdownMenuItem key={i} className="flex flex-col items-start p-3 cursor-pointer">
+                    <div className="font-medium text-sm">{notification.title}</div>
+                    <div className="text-xs text-muted-foreground mt-1">{notification.time}</div>
+                  </DropdownMenuItem>
+                ))}
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="justify-center text-primary">
+                সব দেখুন
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          
+          <Link to="/wallet" className="hidden md:block">
+            <Button variant="outline" size="icon">
+              <Wallet className="h-5 w-5" />
+            </Button>
           </Link>
-          <Link to="/profile" className="hidden md:block">
-            <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-              <User className="h-5 w-5" />
-            </div>
-          </Link>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="hidden md:flex">
+                <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <User className="h-5 w-5" />
+                </div>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <Link to="/profile">
+                <DropdownMenuItem>
+                  <User className="mr-2 h-4 w-4" />
+                  <span>প্রোফাইল</span>
+                </DropdownMenuItem>
+              </Link>
+              <Link to="/appointments">
+                <DropdownMenuItem>
+                  <Calendar className="mr-2 h-4 w-4" />
+                  <span>অ্যাপয়েন্টমেন্ট</span>
+                </DropdownMenuItem>
+              </Link>
+              <Link to="/wallet">
+                <DropdownMenuItem>
+                  <Wallet className="mr-2 h-4 w-4" />
+                  <span>ওয়ালেট</span>
+                </DropdownMenuItem>
+              </Link>
+              <Link to="/security">
+                <DropdownMenuItem>
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>সেটিংস</span>
+                </DropdownMenuItem>
+              </Link>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="text-red-500">
+                <span>লগআউট</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
       
