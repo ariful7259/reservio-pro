@@ -102,10 +102,10 @@ const Index = () => {
         <h2 className="text-lg font-semibold mb-3">জনপ্রিয় ক্যাটাগরি</h2>
         <div className="grid grid-cols-4 gap-3">
           {[
-            { name: 'ডাক্তার', icon: <Calendar className="h-6 w-6" />, color: 'bg-blue-100 text-blue-600' },
-            { name: 'ডেন্টিস্ট', icon: <Calendar className="h-6 w-6" />, color: 'bg-green-100 text-green-600' },
-            { name: 'ল'ইয়ার', icon: <ShieldCheck className="h-6 w-6" />, color: 'bg-purple-100 text-purple-600' },
-            { name: 'অন্যান্য', icon: <Calendar className="h-6 w-6" />, color: 'bg-amber-100 text-amber-600' },
+            { name: "ডাক্তার", icon: <Calendar className="h-6 w-6" />, color: "bg-blue-100 text-blue-600" },
+            { name: "ডেন্টিস্ট", icon: <Calendar className="h-6 w-6" />, color: "bg-green-100 text-green-600" },
+            { name: "ল'ইয়ার", icon: <ShieldCheck className="h-6 w-6" />, color: "bg-purple-100 text-purple-600" },
+            { name: "অন্যান্য", icon: <Calendar className="h-6 w-6" />, color: "bg-amber-100 text-amber-600" }
           ].map((category, index) => (
             <Card key={index} className="border-0 shadow-none">
               <CardContent className="p-0">
