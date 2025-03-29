@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { SidebarDrawer } from '@/components/SidebarDrawer';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,7 +30,7 @@ const Navbar = () => {
   
   const navLinks = [
     { title: 'হোম', path: '/', icon: <Home className="h-5 w-5" /> },
-    { title: 'বাসা', path: '/housing', icon: <Building className="h-5 w-5" /> },
+    { title: 'বাসা ও রেন্ট', path: '/housing', icon: <Building className="h-5 w-5" /> },
     { title: 'সার্ভিস', path: '/services', icon: <Search className="h-5 w-5" /> },
     { title: 'শপিং', path: '/shopping', icon: <ShoppingBag className="h-5 w-5" /> },
     { title: 'প্রোফাইল', path: '/profile', icon: <User className="h-5 w-5" /> },
@@ -38,9 +39,12 @@ const Navbar = () => {
   return (
     <div className="bg-white border-b fixed top-0 left-0 right-0 z-50">
       <header className="container flex items-center justify-between h-16 px-4 md:px-6">
-        <Link to="/" className="flex items-center gap-2">
-          <span className="text-xl font-bold text-primary">Reservio</span>
-        </Link>
+        <div className="flex items-center gap-2">
+          <SidebarDrawer />
+          <Link to="/" className="flex items-center gap-2">
+            <span className="text-xl font-bold text-primary">Reservio</span>
+          </Link>
+        </div>
         
         <div className="flex items-center gap-4">
           <DropdownMenu>

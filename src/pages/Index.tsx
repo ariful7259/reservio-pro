@@ -71,13 +71,6 @@ const Index = () => {
     },
   ];
 
-  // Dashboard data
-  const dashboardStats = [
-    { title: 'মোট অ্যাপয়েন্টমেন্ট', value: '১২', icon: <Calendar className="h-5 w-5 text-blue-500" /> },
-    { title: 'পয়েন্ট ব্যালেন্স', value: '৫৫০০', icon: <TrendingUp className="h-5 w-5 text-green-500" /> },
-    { title: 'নোটিফিকেশন', value: '৩', icon: <AlertCircle className="h-5 w-5 text-red-500" /> },
-  ];
-
   // Sponsored ads
   const sponsoredAds = [
     {
@@ -98,59 +91,12 @@ const Index = () => {
     }
   ];
 
-  // Quick links
-  const quickLinks = [
-    { name: 'আমার বাসা', icon: <Home className="h-5 w-5" />, route: '/housing' },
-    { name: 'রেন্ট এনিথিং', icon: <Calendar className="h-5 w-5" />, route: '/rent-anything' },
-    { name: 'শপিং', icon: <ShieldCheck className="h-5 w-5" />, route: '/shopping' },
-  ];
-
   const handleServiceClick = (id: string) => {
     navigate(`/services/${id}`);
   };
 
   return (
     <div className="container px-4 pt-20 pb-20">
-      {/* Dashboard Section */}
-      <div className="mb-6">
-        <h1 className="text-xl font-bold mb-4">ড্যাশবোর্ড</h1>
-        <div className="grid grid-cols-3 gap-3">
-          {dashboardStats.map((stat, index) => (
-            <Card key={index} className="border">
-              <CardContent className="p-4">
-                <div className="flex flex-col items-center">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mb-2">
-                    {stat.icon}
-                  </div>
-                  <span className="text-lg font-semibold">{stat.value}</span>
-                  <span className="text-xs text-gray-500">{stat.title}</span>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      {/* Quick Links */}
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold mb-3">দ্রুত লিংক</h2>
-        <div className="flex gap-3 overflow-x-auto pb-2">
-          {quickLinks.map((link, index) => (
-            <Button
-              key={index}
-              variant="outline"
-              className="flex items-center gap-2 min-w-max"
-              onClick={() => navigate(link.route)}
-            >
-              <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
-                {link.icon}
-              </div>
-              <span>{link.name}</span>
-            </Button>
-          ))}
-        </div>
-      </div>
-
       {/* Search Bar */}
       <div className="flex items-center gap-3 mt-5 mb-6">
         <div className="relative flex-1">
@@ -205,30 +151,6 @@ const Index = () => {
           </div>
         </div>
       )}
-
-      {/* Popular Categories */}
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold mb-3">জনপ্রিয় ক্যাটাগরি</h2>
-        <div className="grid grid-cols-4 gap-3">
-          {[
-            { name: "ডাক্তার", icon: <Calendar className="h-6 w-6" />, color: "bg-blue-100 text-blue-600" },
-            { name: "ডেন্টিস্ট", icon: <Calendar className="h-6 w-6" />, color: "bg-green-100 text-green-600" },
-            { name: "ল'ইয়ার", icon: <ShieldCheck className="h-6 w-6" />, color: "bg-purple-100 text-purple-600" },
-            { name: "অন্যান্য", icon: <Calendar className="h-6 w-6" />, color: "bg-amber-100 text-amber-600" }
-          ].map((category, index) => (
-            <Card key={index} className="border-0 shadow-none">
-              <CardContent className="p-0">
-                <button className="w-full h-full flex flex-col items-center justify-center p-3">
-                  <div className={`h-12 w-12 rounded-full ${category.color} flex items-center justify-center mb-2`}>
-                    {category.icon}
-                  </div>
-                  <span className="text-sm">{category.name}</span>
-                </button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
 
       {/* Popular Services */}
       <div>
