@@ -22,12 +22,17 @@ import {
   ListCheck,
   Store,
   BookmarkCheck,
+  User,
+  LogOut,
+  Settings,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Card } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
 
 export const SidebarDrawer = () => {
   const [isServiceExpanded, setIsServiceExpanded] = useState(false);
@@ -45,21 +50,40 @@ export const SidebarDrawer = () => {
   ];
 
   const myServicesSubMenus = [
-    { icon: <Calendar className="h-5 w-5" />, name: "আমার বুকিংস", path: "/my-services/bookings" },
-    { icon: <Calendar className="h-5 w-5" />, name: "আমার অ্যাপয়েন্টমেন্টস", path: "/my-services/appointments" },
-    { icon: <Bookmark className="h-5 w-5" />, name: "আমার শর্টলিস্ট", path: "/my-services/shortlists" },
-    { icon: <MessageSquare className="h-5 w-5" />, name: "আমার যোগাযোগকৃত প্রোপার্টি", path: "/my-services/contacted-properties" },
-    { icon: <ListCheck className="h-5 w-5" />, name: "আমার লিস্টিংস", path: "/my-services/listings" },
-    { icon: <Store className="h-5 w-5" />, name: "আমার শপ", path: "/my-services/shop" },
-    { icon: <BookmarkCheck className="h-5 w-5" />, name: "স্মার্ট রেকমেন্ডেশন", path: "/my-services/recommendations" },
+    { icon: <Calendar className="h-5 w-5" />, name: "আমার বুকিংস", path: "/my-services?tab=bookings" },
+    { icon: <Calendar className="h-5 w-5" />, name: "আমার অ্যাপয়েন্টমেন্টস", path: "/my-services?tab=appointments" },
+    { icon: <Bookmark className="h-5 w-5" />, name: "আমার শর্টলিস্ট", path: "/my-services?tab=shortlists" },
+    { icon: <MessageSquare className="h-5 w-5" />, name: "আমার যোগাযোগকৃত প্রোপার্টি", path: "/my-services?tab=contacted-properties" },
+    { icon: <ListCheck className="h-5 w-5" />, name: "আমার লিস্টিংস", path: "/my-services?tab=listings" },
+    { icon: <Store className="h-5 w-5" />, name: "আমার শপ", path: "/my-services?tab=shop" },
+    { icon: <BookmarkCheck className="h-5 w-5" />, name: "স্মার্ট রেকমেন্ডেশন", path: "/my-services?tab=recommendations" },
+  ];
+
+  const rentCategories = [
+    { icon: <Building className="h-6 w-6" />, name: "অ্যাপার্টমেন্ট", path: "/rent/apartment" },
+    { icon: <Home className="h-6 w-6" />, name: "বাসা", path: "/rent/house" },
+    { icon: <Truck className="h-6 w-6" />, name: "গাড়ি", path: "/rent/car" },
+    { icon: <Briefcase className="h-6 w-6" />, name: "অফিস স্পেস", path: "/rent/office" },
+    { icon: <PaintBucket className="h-6 w-6" />, name: "ইভেন্ট স্পেস", path: "/rent/event-space" },
+    { icon: <Wrench className="h-6 w-6" />, name: "ইকুইপমেন্ট", path: "/rent/equipment" },
+    { icon: <Building className="h-6 w-6" />, name: "দোকান", path: "/rent/shop" },
+    { icon: <Home className="h-6 w-6" />, name: "অন্যান্য", path: "/rent/others" },
   ];
 
   const menuSections = [
     { icon: <ShoppingBag className="h-5 w-5" />, name: "আমার সার্ভিস", path: "/my-services", subMenu: myServicesSubMenus },
     { icon: <Wallet className="h-5 w-5" />, name: "ওয়ালেট", path: "/wallet" },
-    { icon: <Building className="h-5 w-5" />, name: "রেন্টাল", path: "/rentals" },
+    { icon: <Building className="h-5 w-5" />, name: "রেন্ট", path: "/rentals", subMenu: rentCategories },
     { icon: <Lightbulb className="h-5 w-5" />, name: "ইউটিলিটিস", path: "/utilities" },
     { icon: <HelpCircle className="h-5 w-5" />, name: "হেল্প এন্ড সাপোর্ট", path: "/help" },
+  ];
+
+  const accountSettingsMenus = [
+    { icon: <User className="h-5 w-5" />, name: "ব্যক্তিগত তথ্য", path: "/profile" },
+    { icon: <Settings className="h-5 w-5" />, name: "সিকিউরিটি", path: "/security" },
+    { icon: <Wallet className="h-5 w-5" />, name: "পেমেন্ট মেথড", path: "/payment-methods" },
+    { icon: <Store className="h-5 w-5" />, name: "রেফার ফ্রেন্ড", path: "/refer" },
+    { icon: <LogOut className="h-5 w-5" />, name: "লগআউট", path: "/logout" },
   ];
 
   const toggleServiceExpand = () => {
@@ -67,7 +91,7 @@ export const SidebarDrawer = () => {
   };
 
   return (
-    <Drawer direction="right">
+    <Drawer direction="left">
       <DrawerTrigger asChild>
         <Button variant="ghost" size="icon">
           <Menu className="h-5 w-5" />
@@ -75,11 +99,20 @@ export const SidebarDrawer = () => {
         </Button>
       </DrawerTrigger>
       <DrawerContent className="w-[85%] max-w-[350px] h-[100vh] overflow-y-auto">
-        <DrawerHeader>
-          <DrawerTitle className="text-xl">মেনু</DrawerTitle>
+        <DrawerHeader className="border-b pb-4">
+          <div className="flex items-center gap-3">
+            <Avatar>
+              <AvatarImage src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80" alt="Ariful Islam" />
+              <AvatarFallback>AI</AvatarFallback>
+            </Avatar>
+            <div>
+              <DrawerTitle className="text-lg">Ariful Islam</DrawerTitle>
+              <p className="text-sm text-muted-foreground">+৮৮০১৭১২৩৪৫৬৭৮</p>
+            </div>
+          </div>
         </DrawerHeader>
         
-        <div className="px-4 space-y-6">
+        <div className="px-4 space-y-6 py-4">
           {/* Post Your Ads Button */}
           <Button className="w-full bg-primary hover:bg-primary/90 text-white" size="lg">
             আপনার বিজ্ঞাপন পোস্ট করুন
@@ -190,6 +223,25 @@ export const SidebarDrawer = () => {
             </div>
           </div>
           
+          {/* Account Settings */}
+          <div className="space-y-3">
+            <h3 className="font-medium mb-2">অ্যাকাউন্ট সেটিংস</h3>
+            <div className="space-y-2">
+              {accountSettingsMenus.map((item, index) => (
+                <Link 
+                  key={index} 
+                  to={item.path}
+                  className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors w-full"
+                >
+                  <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                    {item.icon}
+                  </div>
+                  <span>{item.name}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+          
           {/* Menu Sections */}
           <div className="space-y-3">
             <h3 className="font-medium mb-2">সেকশন</h3>
@@ -235,7 +287,9 @@ export const SidebarDrawer = () => {
         </div>
         
         <DrawerFooter>
+          <Separator className="mb-4" />
           <Button variant="outline" className="w-full">
+            <LogOut className="h-4 w-4 mr-2" />
             লগআউট
           </Button>
         </DrawerFooter>

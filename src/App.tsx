@@ -20,6 +20,7 @@ import MyServices from "./pages/MyServices";
 import Rentals from "./pages/Rentals";
 import Utilities from "./pages/Utilities";
 import Help from "./pages/Help";
+import Notifications from "./pages/Notifications";
 
 const queryClient = new QueryClient();
 
@@ -38,11 +39,11 @@ const App = () => (
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/security" element={<Security />} />
-          <Route path="/housing" element={<Housing />} />
+          <Route path="/rentals" element={<Rentals />} />
           <Route path="/shopping" element={<Shopping />} />
+          <Route path="/notifications" element={<Notifications />} />
           <Route path="/rent-anything" element={<RentAnything />} />
           <Route path="/my-services" element={<MyServices />} />
-          <Route path="/rentals" element={<Rentals />} />
           <Route path="/utilities" element={<Utilities />} />
           <Route path="/help" element={<Help />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

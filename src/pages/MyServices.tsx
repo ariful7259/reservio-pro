@@ -1,5 +1,6 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -14,6 +15,16 @@ import {
 } from 'lucide-react';
 
 const MyServices = () => {
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState('bookings');
+  
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
+
   const emptyStates = {
     bookings: {
       icon: <Calendar className="h-10 w-10 text-muted-foreground" />,
@@ -56,7 +67,7 @@ const MyServices = () => {
     <div className="container px-4 pt-20 pb-20">
       <h1 className="text-2xl font-bold mb-6">আমার সার্ভিস</h1>
       
-      <Tabs defaultValue="bookings" className="w-full">
+      <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="overflow-x-auto pb-2">
           <TabsList className="mb-6 w-max">
             <TabsTrigger value="bookings">আমার বুকিংস</TabsTrigger>
