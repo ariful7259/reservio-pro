@@ -2,13 +2,12 @@
 import React from 'react';
 import { Wallet as WalletIcon } from 'lucide-react';
 
+// Create a proper component wrapper around the icon
 const Wallet = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
-  return (
-    <WalletIcon {...props} ref={ref} />
-  );
+  SVGSVGElement,
+  React.ComponentPropsWithoutRef<typeof WalletIcon>
+>((props, ref) => {
+  return <WalletIcon ref={ref} {...props} />;
 });
 
 Wallet.displayName = "Wallet";
