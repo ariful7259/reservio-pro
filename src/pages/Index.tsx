@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -8,14 +9,7 @@ import {
   Bell,
   Home,
   AlertCircle,
-  TrendingUp,
-  Wrench,
-  PaintBucket,
-  MapPin,
-  Building,
-  ChevronRight,
-  Plus,
-  Wallet
+  TrendingUp
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -88,28 +82,27 @@ const Index = () => {
   const sponsoredAds = [
     {
       id: '1',
-      title: 'প্যাকার্স ও মুভার্স',
-      description: 'আপনার ঘরের জিনিসপত্র নিরাপদে পরিবহন করুন',
-      image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=150&q=80',
+      title: 'স্পেশাল অফার',
+      description: 'প্রথম কনসাল্টেশনে ২০% ছাড়',
+      image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=150&q=80',
       tag: 'বিশেষ অফার',
-      link: '/services/movers',
+      link: '/special-offers',
     },
+    {
+      id: '2',
+      title: 'নতুন প্রোডাক্ট',
+      description: 'হেলথ প্যাকেজে বিশেষ ডিসকাউন্ট',
+      image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=150&q=80',
+      tag: 'প্রমো',
+      link: '/promo',
+    }
   ];
 
-  // Home services
-  const homeServices = [
-    { name: "হোম ক্লিনিং", icon: <Home className="h-6 w-6" />, color: "bg-blue-100 text-blue-600", path: "/services/cleaning" },
-    { name: "এসি রিপেয়ার", icon: <Wrench className="h-6 w-6" />, color: "bg-green-100 text-green-600", path: "/services/ac-repair" },
-    { name: "পেইন্টিং", icon: <PaintBucket className="h-6 w-6" />, color: "bg-purple-100 text-purple-600", path: "/services/painting" },
-    { name: "প্যাকার্স", icon: <Building className="h-6 w-6" />, color: "bg-amber-100 text-amber-600", path: "/services/movers" }
-  ];
-
-  // Quick services
-  const quickServices = [
-    { name: "প্রপার্টি পোস্ট", icon: <Plus className="h-5 w-5" />, route: '/property/post' },
-    { name: "NBcash ওয়ালেট", icon: <Wallet className="h-5 w-5" />, route: '/wallet' },
-    { name: "রেসিডেনশিয়াল প্ল্যান", icon: <Home className="h-5 w-5" />, route: '/plans/residential' },
-    { name: "কমার্শিয়াল প্ল্যান", icon: <Building className="h-5 w-5" />, route: '/plans/commercial' },
+  // Quick links
+  const quickLinks = [
+    { name: 'আমার বাসা', icon: <Home className="h-5 w-5" />, route: '/housing' },
+    { name: 'রেন্ট এনিথিং', icon: <Calendar className="h-5 w-5" />, route: '/rent-anything' },
+    { name: 'শপিং', icon: <ShieldCheck className="h-5 w-5" />, route: '/shopping' },
   ];
 
   const handleServiceClick = (id: string) => {
@@ -118,77 +111,6 @@ const Index = () => {
 
   return (
     <div className="container px-4 pt-20 pb-20">
-      {/* Property Post Button - Mobile Only */}
-      <div className="md:hidden mb-4">
-        <Button className="w-full" onClick={() => navigate('/property/post')}>
-          <Plus className="h-4 w-4 mr-2" />
-          প্রপার্টি পোস্ট করুন
-        </Button>
-      </div>
-      
-      {/* Packers and Movers Ad Banner */}
-      <div className="mb-6">
-        <Card className="overflow-hidden">
-          <div className="relative">
-            <img 
-              src="https://images.unsplash.com/photo-1600518464441-7a8161244231?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=400&q=80" 
-              alt="Packers and Movers" 
-              className="w-full h-40 object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-4">
-              <h2 className="text-white text-xl font-bold">প্যাকার্স অ্যান্ড মুভার্স</h2>
-              <p className="text-white/90 text-sm">এক কলে আপনার ঘরের জিনিসপত্র নিরাপদে পরিবহন করুন</p>
-              <Button className="mt-2 w-fit" size="sm">বিস্তারিত দেখুন</Button>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      {/* Home Services Categories */}
-      <div className="mb-6">
-        <div className="grid grid-cols-4 gap-3">
-          {homeServices.map((service, index) => (
-            <Card key={index} className="border-0 shadow-none cursor-pointer" onClick={() => navigate(service.path)}>
-              <CardContent className="p-2">
-                <button className="w-full h-full flex flex-col items-center justify-center p-2">
-                  <div className={`h-12 w-12 rounded-full ${service.color} flex items-center justify-center mb-2`}>
-                    {service.icon}
-                  </div>
-                  <span className="text-xs text-center">{service.name}</span>
-                </button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      {/* Quick Services Links */}
-      <div className="mb-6">
-        <Card className="border">
-          <CardContent className="p-4">
-            <h2 className="text-lg font-semibold mb-3">দ্রুত লিংক</h2>
-            <div className="space-y-2">
-              {quickServices.map((service, index) => (
-                <Button 
-                  key={index}
-                  variant="ghost" 
-                  className="w-full justify-between p-3 h-auto"
-                  onClick={() => navigate(service.route)}
-                >
-                  <div className="flex items-center">
-                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center mr-3">
-                      {service.icon}
-                    </div>
-                    <span>{service.name}</span>
-                  </div>
-                  <ChevronRight className="h-5 w-5" />
-                </Button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
       {/* Dashboard Section */}
       <div className="mb-6">
         <h1 className="text-xl font-bold mb-4">ড্যাশবোর্ড</h1>
@@ -209,36 +131,62 @@ const Index = () => {
         </div>
       </div>
 
+      {/* Quick Links */}
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold mb-3">দ্রুত লিংক</h2>
+        <div className="flex gap-3 overflow-x-auto pb-2">
+          {quickLinks.map((link, index) => (
+            <Button
+              key={index}
+              variant="outline"
+              className="flex items-center gap-2 min-w-max"
+              onClick={() => navigate(link.route)}
+            >
+              <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
+                {link.icon}
+              </div>
+              <span>{link.name}</span>
+            </Button>
+          ))}
+        </div>
+      </div>
+
       {/* Search Bar */}
-      <div className="flex items-center gap-3 mb-6">
+      <div className="flex items-center gap-3 mt-5 mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="সার্ভিস, প্রপার্টি বা প্রোডাক্ট খুঁজুন" className="pl-9" />
+          <Input placeholder="সার্ভিস খুঁজুন" className="pl-9" />
         </div>
         <Button size="icon" variant="outline">
           <Filter className="h-4 w-4" />
         </Button>
       </div>
 
-      {/* Nearby Services Map Teaser */}
+      {/* Sponsored Ads Section */}
       <div className="mb-6">
-        <Card className="border">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold">আশেপাশের সার্ভিস</h3>
-              <Badge className="bg-primary/20 text-primary hover:bg-primary/30">৫ কিমি</Badge>
-            </div>
-            <div className="h-40 bg-gray-100 rounded-lg flex items-center justify-center mb-4">
-              <div className="text-center">
-                <MapPin className="h-12 w-12 mx-auto mb-2 text-muted-foreground" />
-                <p className="text-muted-foreground">ম্যাপ দেখুন</p>
+        <h2 className="text-lg font-semibold mb-3">বিশেষ অফার</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {sponsoredAds.map((ad) => (
+            <Card 
+              key={ad.id} 
+              className="border overflow-hidden cursor-pointer hover:shadow-md transition-all"
+              onClick={() => navigate(ad.link)}
+            >
+              <div className="relative">
+                <img 
+                  src={ad.image} 
+                  alt={ad.title} 
+                  className="w-full h-32 object-cover"
+                />
+                <Badge className="absolute top-2 right-2 bg-primary">{ad.tag}</Badge>
               </div>
-            </div>
-            <Button className="w-full" onClick={() => navigate('/nearby-services')}>
-              আমার আশেপাশে খুঁজুন
-            </Button>
-          </CardContent>
-        </Card>
+              <CardContent className="p-3">
+                <h3 className="font-semibold">{ad.title}</h3>
+                <p className="text-sm text-muted-foreground">{ad.description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
 
       {/* Upcoming Appointments */}
@@ -258,6 +206,30 @@ const Index = () => {
         </div>
       )}
 
+      {/* Popular Categories */}
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold mb-3">জনপ্রিয় ক্যাটাগরি</h2>
+        <div className="grid grid-cols-4 gap-3">
+          {[
+            { name: "ডাক্তার", icon: <Calendar className="h-6 w-6" />, color: "bg-blue-100 text-blue-600" },
+            { name: "ডেন্টিস্ট", icon: <Calendar className="h-6 w-6" />, color: "bg-green-100 text-green-600" },
+            { name: "ল'ইয়ার", icon: <ShieldCheck className="h-6 w-6" />, color: "bg-purple-100 text-purple-600" },
+            { name: "অন্যান্য", icon: <Calendar className="h-6 w-6" />, color: "bg-amber-100 text-amber-600" }
+          ].map((category, index) => (
+            <Card key={index} className="border-0 shadow-none">
+              <CardContent className="p-0">
+                <button className="w-full h-full flex flex-col items-center justify-center p-3">
+                  <div className={`h-12 w-12 rounded-full ${category.color} flex items-center justify-center mb-2`}>
+                    {category.icon}
+                  </div>
+                  <span className="text-sm">{category.name}</span>
+                </button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
       {/* Popular Services */}
       <div>
         <div className="flex items-center justify-between mb-3">
@@ -271,7 +243,7 @@ const Index = () => {
           <TabsList className="mb-4 w-full bg-secondary/50">
             <TabsTrigger value="all" className="flex-1">সব</TabsTrigger>
             <TabsTrigger value="medical" className="flex-1">মেডিকেল</TabsTrigger>
-            <TabsTrigger value="housing" className="flex-1">প্রপার্টি</TabsTrigger>
+            <TabsTrigger value="legal" className="flex-1">লিগ্যাল</TabsTrigger>
             <TabsTrigger value="others" className="flex-1">অন্যান্য</TabsTrigger>
           </TabsList>
           <TabsContent value="all" className="mt-0">
@@ -280,7 +252,7 @@ const Index = () => {
                 <ServiceCard
                   key={service.id}
                   {...service}
-                  onClick={() => handleServiceClick(service.id)}
+                  onClick={handleServiceClick}
                 />
               ))}
             </div>
@@ -291,22 +263,14 @@ const Index = () => {
                 <ServiceCard
                   key={service.id}
                   {...service}
-                  onClick={() => handleServiceClick(service.id)}
+                  onClick={handleServiceClick}
                 />
               ))}
             </div>
           </TabsContent>
-          <TabsContent value="housing" className="mt-0">
+          <TabsContent value="legal" className="mt-0">
             <div className="text-center py-8 text-muted-foreground">
-              <Button 
-                variant="outline" 
-                className="mb-4"
-                onClick={() => navigate('/property/post')}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                আপনার প্রপার্টি পোস্ট করুন
-              </Button>
-              <p>কোন প্রপার্টি এখনো উপলব্ধ নেই</p>
+              কোন সার্ভিস এখনো উপলব্ধ নেই
             </div>
           </TabsContent>
           <TabsContent value="others" className="mt-0">
@@ -315,7 +279,7 @@ const Index = () => {
                 <ServiceCard
                   key={service.id}
                   {...service}
-                  onClick={() => handleServiceClick(service.id)}
+                  onClick={handleServiceClick}
                 />
               ))}
             </div>
