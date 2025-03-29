@@ -43,7 +43,7 @@ export const SidebarDrawer = () => {
           <span className="sr-only">মেনু খুলুন</span>
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="h-[85vh] overflow-y-auto" side="left">
+      <DrawerContent className="h-[85vh] overflow-y-auto">
         <DrawerHeader>
           <DrawerTitle className="text-xl">মেনু</DrawerTitle>
         </DrawerHeader>
