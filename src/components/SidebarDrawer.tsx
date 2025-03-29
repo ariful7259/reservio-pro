@@ -12,7 +12,8 @@ import {
   Wallet,
   Building,
   Lightbulb,
-  HelpCircle
+  HelpCircle,
+  Play
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
@@ -35,33 +36,62 @@ export const SidebarDrawer = () => {
   ];
 
   return (
-    <Drawer>
+    <Drawer direction="right">
       <DrawerTrigger asChild>
         <Button variant="ghost" size="icon">
           <Menu className="h-5 w-5" />
           <span className="sr-only">মেনু খুলুন</span>
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="h-[85vh] overflow-y-auto">
+      <DrawerContent className="h-[85vh] overflow-y-auto" side="left">
         <DrawerHeader>
           <DrawerTitle className="text-xl">মেনু</DrawerTitle>
         </DrawerHeader>
         
         <div className="px-4 space-y-6">
           {/* Post Your Ads Button */}
-          <Button className="w-full" size="lg">
+          <Button className="w-full bg-primary hover:bg-primary/90 text-white" size="lg">
             আপনার বিজ্ঞাপন পোস্ট করুন
           </Button>
           
           {/* Video Ad Section */}
           <div className="rounded-lg overflow-hidden border">
-            <div className="aspect-video bg-gray-200 flex items-center justify-center">
-              <p className="text-gray-500">সার্ভিস এড ভিডিও</p>
+            <div className="aspect-video bg-black flex items-center justify-center relative">
+              <video 
+                className="w-full h-full object-cover"
+                poster="https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=150&q=80"
+                controls
+              >
+                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  className="bg-black/30 text-white border-white hover:bg-black/50 hover:text-white"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const video = e.currentTarget.closest('.aspect-video')?.querySelector('video');
+                    if (video) {
+                      if (video.paused) {
+                        video.play();
+                      } else {
+                        video.pause();
+                      }
+                    }
+                  }}
+                >
+                  <Play className="h-6 w-6" />
+                </Button>
+              </div>
             </div>
             <div className="p-3">
               <h3 className="font-medium mb-2">নতুন সার্ভিস উপলব্ধ</h3>
               <p className="text-sm text-gray-600 mb-3">আমাদের নতুন সার্ভিস দেখুন এবং বুক করুন</p>
-              <Button size="sm">বুক করুন</Button>
+              <Button variant="default" size="sm" className="w-full">
+                বুক করুন
+              </Button>
             </div>
           </div>
           
