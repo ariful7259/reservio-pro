@@ -11,7 +11,8 @@ import {
   Building,
   ShoppingBag,
   Settings,
-  Menu
+  Menu,
+  Plus
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -23,13 +24,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const Navbar = () => {
   const location = useLocation();
   
   const navLinks = [
     { title: 'হোম', path: '/', icon: <Home className="h-5 w-5" /> },
-    { title: 'বাসা', path: '/housing', icon: <Building className="h-5 w-5" /> },
+    { title: 'রেন্ট', path: '/housing', icon: <Building className="h-5 w-5" /> },
     { title: 'সার্ভিস', path: '/services', icon: <Search className="h-5 w-5" /> },
     { title: 'শপিং', path: '/shopping', icon: <ShoppingBag className="h-5 w-5" /> },
     { title: 'প্রোফাইল', path: '/profile', icon: <User className="h-5 w-5" /> },
@@ -41,6 +43,14 @@ const Navbar = () => {
         <Link to="/" className="flex items-center gap-2">
           <span className="text-xl font-bold text-primary">Reservio</span>
         </Link>
+        
+        <div className="hidden md:flex items-center">
+          <span className="text-sm font-medium mr-2">Ariful Islam</span>
+          <Button variant="outline" size="sm" className="mr-4 flex items-center gap-1">
+            <Plus className="h-3 w-3" />
+            প্রপার্টি পোস্ট করুন
+          </Button>
+        </div>
         
         <div className="flex items-center gap-4">
           <DropdownMenu>
@@ -83,12 +93,15 @@ const Navbar = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="hidden md:flex">
-                <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                  <User className="h-5 w-5" />
-                </div>
+                <Avatar className="h-9 w-9">
+                  <AvatarImage src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80" />
+                  <AvatarFallback>AI</AvatarFallback>
+                </Avatar>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Ariful Islam</DropdownMenuLabel>
+              <DropdownMenuSeparator />
               <Link to="/profile">
                 <DropdownMenuItem>
                   <User className="mr-2 h-4 w-4" />
