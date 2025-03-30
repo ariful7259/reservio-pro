@@ -40,6 +40,14 @@ export const SidebarDrawer = () => {
   const [isServiceExpanded, setIsServiceExpanded] = useState(false);
   const [activePostType, setActivePostType] = useState('rent');
   
+  // User data
+  const user = {
+    name: 'আব্দুল্লাহ আল মামুন',
+    phone: '+৮৮০১৭১২৩৪৫৬৭৮',
+    email: 'abdullah@example.com',
+    image: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80',
+  };
+  
   const serviceCategories = [
     { icon: <PaintBucket className="h-6 w-6" />, name: "পেইন্টিং", path: "/services/painting" },
     { icon: <Truck className="h-6 w-6" />, name: "প্যাকার্স ও মুভার্স", path: "/services/packers-movers" },
@@ -118,13 +126,16 @@ export const SidebarDrawer = () => {
         <DrawerHeader className="border-b pb-4">
           <div className="flex items-center gap-3">
             <Avatar>
-              <AvatarImage src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80" alt="Ariful Islam" />
+              <AvatarImage src={user.image} alt={user.name} />
               <AvatarFallback>AI</AvatarFallback>
             </Avatar>
             <div>
-              <DrawerTitle className="text-lg">Ariful Islam</DrawerTitle>
-              <p className="text-sm text-muted-foreground">+৮৮০১৭১২৩৪৫৬৭৮</p>
+              <DrawerTitle className="text-lg">{user.name}</DrawerTitle>
+              <p className="text-sm text-muted-foreground">{user.phone}</p>
             </div>
+          </div>
+          <div className="mt-3">
+            <Link to="/profile" className="text-sm text-primary hover:underline">প্রোফাইল দেখুন</Link>
           </div>
         </DrawerHeader>
         
@@ -408,4 +419,3 @@ export const SidebarDrawer = () => {
 
 // Add Carousel from shadcn to use with video ads
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-
