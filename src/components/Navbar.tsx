@@ -78,16 +78,6 @@ const Navbar = () => {
             </Link>
           </div>
           
-          {/* Categories above search bar */}
-          <div className="hidden md:flex items-center gap-4 text-sm">
-            <Link to="/rentals" className="hover:text-primary">রেন্ট</Link>
-            <Link to="/services" className="hover:text-primary">সার্ভিস</Link>
-            <Link to="/shopping" className="hover:text-primary">মার্কেটপ্লেস</Link>
-            <Button size="sm" variant="ghost" className="flex items-center gap-1" onClick={() => {}}>
-              <Plus className="h-4 w-4" /> পোস্ট করুন
-            </Button>
-          </div>
-          
           <div className="w-full max-w-md mx-4 relative">
             <Popover>
               <PopoverTrigger asChild>
@@ -201,4 +191,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

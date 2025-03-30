@@ -1,7 +1,6 @@
 
 import React from 'react';
-import { Search, Filter, ShoppingCart, Star, Heart, ChevronRight } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { ShoppingCart, Star, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -56,65 +55,11 @@ const Shopping = () => {
     },
   ];
 
-  // Featured deals
-  const featuredDeals = [
-    {
-      id: '1',
-      title: 'হেলথ চেকআপ স্পেশাল অফার',
-      discount: '২০%',
-      image: 'https://images.unsplash.com/photo-1504813184591-01572f98c85f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=150&q=80',
-      bgColor: 'bg-blue-500',
-    },
-    {
-      id: '2',
-      title: 'ফিটনেস প্রোডাক্টে নিউ ইয়ার অফার',
-      discount: '৩০%',
-      image: 'https://images.unsplash.com/photo-1594381898411-846e7d193883?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=150&q=80',
-      bgColor: 'bg-green-500',
-    },
-  ];
-
   return (
     <div className="container px-4 pt-20 pb-20">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold">শপিং</h1>
+        <h1 className="text-2xl font-bold">মার্কেটপ্লেস</h1>
         <p className="text-gray-500">আপনার প্রয়োজনীয় পণ্য সহজেই কিনুন</p>
-      </div>
-
-      <div className="flex items-center gap-3 mb-6">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="পণ্য খুঁজুন" className="pl-9" />
-        </div>
-        <Button size="icon" variant="outline">
-          <Filter className="h-4 w-4" />
-        </Button>
-      </div>
-
-      {/* Featured Deals */}
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold mb-3">স্পেশাল অফার</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {featuredDeals.map((deal) => (
-            <Card 
-              key={deal.id} 
-              className="overflow-hidden cursor-pointer hover:shadow-md transition-all border-0"
-              style={{ 
-                backgroundImage: `linear-gradient(to right, ${deal.bgColor}99, ${deal.bgColor}99), url(${deal.image})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            >
-              <CardContent className="p-5 text-white">
-                <h3 className="font-bold text-xl">{deal.title}</h3>
-                <p className="text-2xl font-bold mt-2">{deal.discount} ছাড়</p>
-                <Button variant="secondary" className="mt-3 text-primary">
-                  এখনই কিনুন
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
       </div>
 
       <Tabs defaultValue="all" className="mb-6">
