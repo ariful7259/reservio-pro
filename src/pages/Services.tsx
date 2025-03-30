@@ -119,6 +119,17 @@ const Services = () => {
     navigate(`/providers/${id}`);
   };
 
+  // Function to determine button label based on service ID
+  const getButtonLabel = (id: string): string => {
+    // Convert string ID to number for modulo operation
+    // If the ID is numeric and even, use "হায়ার করুন", otherwise use "বুক করুন"
+    const numericId = parseInt(id);
+    if (!isNaN(numericId) && numericId % 2 === 0) {
+      return "হায়ার করুন";
+    }
+    return "বুক করুন";
+  };
+
   return (
     <div className="container px-4 pt-20 pb-20">
       <div className="flex items-center gap-3 mt-5 mb-6">
@@ -219,7 +230,7 @@ const Services = () => {
                   key={service.id}
                   {...service}
                   onClick={handleServiceClick}
-                  buttonLabel={service.id % 2 === 0 ? "হায়ার করুন" : "বুক করুন"}
+                  buttonLabel={getButtonLabel(service.id)}
                 />
               ))}
             </div>
@@ -244,7 +255,7 @@ const Services = () => {
                   key={service.id}
                   {...service}
                   onClick={handleServiceClick}
-                  buttonLabel={service.id % 2 === 0 ? "হায়ার করুন" : "বুক করুন"}
+                  buttonLabel={getButtonLabel(service.id)}
                 />
               ))}
             </div>
@@ -275,7 +286,7 @@ const Services = () => {
                   key={service.id}
                   {...service}
                   onClick={handleServiceClick}
-                  buttonLabel={service.id % 2 === 0 ? "হায়ার করুন" : "বুক করুন"}
+                  buttonLabel={getButtonLabel(service.id)}
                 />
               ))}
             </div>
