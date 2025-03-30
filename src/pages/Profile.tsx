@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { useNavigate } from 'react-router-dom';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const Profile = () => {
     { icon: <User className="h-5 w-5" />, label: 'ব্যক্তিগত তথ্য', action: () => {} },
     { icon: <ShieldCheck className="h-5 w-5" />, label: 'সিকিউরিটি', action: () => navigate('/security') },
     { icon: <CreditCard className="h-5 w-5" />, label: 'পেমেন্ট মেথড', action: () => {} },
-    { icon: <Bell className="h-5 w-5" />, label: 'নোটিফিকেশন', action: () => {} },
+    { icon: <Bell className="h-5 w-5" />, label: 'নোটিফিকেশন', action: () => navigate('/notifications') },
     { icon: <Users className="h-5 w-5" />, label: 'রেফার ফ্রেন্ড', action: () => {} },
     { icon: <Settings className="h-5 w-5" />, label: 'সেটিংস', action: () => {} },
   ];

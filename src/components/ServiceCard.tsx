@@ -15,6 +15,7 @@ interface ServiceCardProps {
   discount?: number;
   duration: string;
   tags?: string[];
+  buttonLabel?: string;
   onClick: (id: string) => void;
 }
 
@@ -28,12 +29,13 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   discount,
   duration,
   tags = [],
+  buttonLabel = "বুক করুন",
   onClick,
 }) => {
   const discountedPrice = discount ? price - (price * discount) / 100 : price;
 
   return (
-    <Card className="overflow-hidden border service-card transition-all duration-300">
+    <Card className="overflow-hidden border service-card transition-all duration-300 hover:shadow-md hover:scale-105 cursor-pointer">
       <div className="h-48 overflow-hidden">
         <img
           src={imageUrl}
@@ -83,7 +85,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           className="w-full"
           onClick={() => onClick(id)}
         >
-          বুক করুন
+          {buttonLabel}
         </Button>
       </CardFooter>
     </Card>

@@ -1,12 +1,14 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Filter, Calendar } from 'lucide-react';
+import { Search, Filter, Calendar, MapPin, ChevronDown } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import ServiceCard from '@/components/ServiceCard';
 import ServiceProviderCard from '@/components/ServiceProviderCard';
+import { Slider } from '@/components/ui/slider';
 
 const Services = () => {
   const navigate = useNavigate();
@@ -129,6 +131,59 @@ const Services = () => {
         </Button>
       </div>
 
+      {/* Filter Options */}
+      <div className="grid grid-cols-2 gap-2 mb-6">
+        <div className="col-span-2">
+          <label className="text-sm font-medium mb-1 block">লোকেশন</label>
+          <div className="flex items-center gap-2">
+            <MapPin className="h-4 w-4 text-muted-foreground" />
+            <Select defaultValue="dhaka">
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="এলাকা নির্বাচন করুন" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="dhaka">ঢাকা</SelectItem>
+                <SelectItem value="chittagong">চট্টগ্রাম</SelectItem>
+                <SelectItem value="khulna">খুলনা</SelectItem>
+                <SelectItem value="rajshahi">রাজশাহী</SelectItem>
+                <SelectItem value="sylhet">সিলেট</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        
+        <div>
+          <label className="text-sm font-medium mb-1 block">ক্যাটাগরি</label>
+          <Select>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="ক্যাটাগরি" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="medical">মেডিকেল</SelectItem>
+              <SelectItem value="dental">ডেন্টাল</SelectItem>
+              <SelectItem value="counseling">কাউন্সেলিং</SelectItem>
+              <SelectItem value="legal">লিগ্যাল</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        
+        <div>
+          <label className="text-sm font-medium mb-1 block">দূরত্ব</label>
+          <div className="px-2">
+            <Slider
+              defaultValue={[5]}
+              max={20}
+              step={1}
+            />
+            <div className="flex justify-between mt-1 text-xs text-muted-foreground">
+              <span>1 কিমি</span>
+              <span>10 কিমি</span>
+              <span>20 কিমি</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-bold">সার্ভিস</h1>
         <div className="flex gap-2">
@@ -164,6 +219,7 @@ const Services = () => {
                   key={service.id}
                   {...service}
                   onClick={handleServiceClick}
+                  buttonLabel={service.id % 2 === 0 ? "হায়ার করুন" : "বুক করুন"}
                 />
               ))}
             </div>
@@ -188,6 +244,7 @@ const Services = () => {
                   key={service.id}
                   {...service}
                   onClick={handleServiceClick}
+                  buttonLabel={service.id % 2 === 0 ? "হায়ার করুন" : "বুক করুন"}
                 />
               ))}
             </div>
@@ -218,6 +275,7 @@ const Services = () => {
                   key={service.id}
                   {...service}
                   onClick={handleServiceClick}
+                  buttonLabel={service.id % 2 === 0 ? "হায়ার করুন" : "বুক করুন"}
                 />
               ))}
             </div>

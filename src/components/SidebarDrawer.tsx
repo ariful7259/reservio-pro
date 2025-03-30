@@ -25,6 +25,8 @@ import {
   User,
   LogOut,
   Settings,
+  Plus,
+  Filter
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
@@ -33,9 +35,11 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export const SidebarDrawer = () => {
   const [isServiceExpanded, setIsServiceExpanded] = useState(false);
+  const [activePostType, setActivePostType] = useState('rent');
   
   const serviceCategories = [
     { icon: <PaintBucket className="h-6 w-6" />, name: "পেইন্টিং", path: "/services/painting" },
@@ -78,12 +82,33 @@ export const SidebarDrawer = () => {
     { icon: <HelpCircle className="h-5 w-5" />, name: "হেল্প এন্ড সাপোর্ট", path: "/help" },
   ];
 
-  const accountSettingsMenus = [
+  const profileMenuItems = [
     { icon: <User className="h-5 w-5" />, name: "ব্যক্তিগত তথ্য", path: "/profile" },
     { icon: <Settings className="h-5 w-5" />, name: "সিকিউরিটি", path: "/security" },
     { icon: <Wallet className="h-5 w-5" />, name: "পেমেন্ট মেথড", path: "/payment-methods" },
     { icon: <Store className="h-5 w-5" />, name: "রেফার ফ্রেন্ড", path: "/refer" },
     { icon: <LogOut className="h-5 w-5" />, name: "লগআউট", path: "/logout" },
+  ];
+
+  const videoAds = [
+    {
+      thumbnail: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1000&auto=format&fit=crop",
+      title: "নতুন সার্ভিস উপলব্ধ",
+      description: "আমাদের নতুন সার্ভিস দেখুন এবং বুক করুন",
+      videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
+    },
+    {
+      thumbnail: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=1000&auto=format&fit=crop",
+      title: "সাপ্তাহিক অফার",
+      description: "সাপ্তাহিক অফার শেষ হতে আর ২ দিন বাকি",
+      videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
+    },
+    {
+      thumbnail: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
+      title: "ইলেক্ট্রনিক্স সেল",
+      description: "সকল ইলেক্ট্রনিক্স পণ্যে ২০% ছাড়",
+      videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
+    },
   ];
 
   const toggleServiceExpand = () => {
@@ -98,7 +123,7 @@ export const SidebarDrawer = () => {
           <span className="sr-only">মেনু খুলুন</span>
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="w-[85%] max-w-[350px] h-[100vh] overflow-y-auto">
+      <DrawerContent className="w-[85%] max-w-[350px] h-[100vh] overflow-y-auto left-0 right-auto">
         <DrawerHeader className="border-b pb-4">
           <div className="flex items-center gap-3">
             <Avatar>
@@ -113,50 +138,160 @@ export const SidebarDrawer = () => {
         </DrawerHeader>
         
         <div className="px-4 space-y-6 py-4">
-          {/* Post Your Ads Button */}
-          <Button className="w-full bg-primary hover:bg-primary/90 text-white" size="lg">
-            আপনার বিজ্ঞাপন পোস্ট করুন
-          </Button>
+          {/* Post Your Ads Button with Category Selection */}
+          <div className="space-y-4">
+            <Button className="w-full bg-primary hover:bg-primary/90 text-white" size="lg">
+              আপনার বিজ্ঞাপন পোস্ট করুন
+            </Button>
+            
+            <Tabs value={activePostType} onValueChange={setActivePostType} className="w-full">
+              <TabsList className="grid grid-cols-3 mb-2">
+                <TabsTrigger value="rent">রেন্ট</TabsTrigger>
+                <TabsTrigger value="service">সার্ভিস</TabsTrigger>
+                <TabsTrigger value="marketplace">মার্কেটপ্লেস</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="rent" className="space-y-2">
+                <div className="grid grid-cols-2 gap-2">
+                  {rentCategories.slice(0, 4).map((category, index) => (
+                    <Button 
+                      key={index} 
+                      variant="outline" 
+                      className="flex flex-col items-center justify-center h-20 p-1"
+                    >
+                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center mb-1">
+                        {category.icon}
+                      </div>
+                      <span className="text-xs text-center">{category.name}</span>
+                    </Button>
+                  ))}
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <Button variant="link" size="sm" className="text-xs">
+                    আরও দেখুন <ChevronDown className="h-3 w-3 ml-1" />
+                  </Button>
+                  
+                  <Button size="sm" className="flex items-center gap-1">
+                    <Filter className="h-3 w-3" /> ফিল্টার
+                  </Button>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="service" className="space-y-2">
+                <div className="grid grid-cols-2 gap-2">
+                  {serviceCategories.slice(0, 4).map((category, index) => (
+                    <Button 
+                      key={index} 
+                      variant="outline" 
+                      className="flex flex-col items-center justify-center h-20 p-1"
+                    >
+                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center mb-1">
+                        {category.icon}
+                      </div>
+                      <span className="text-xs text-center">{category.name}</span>
+                    </Button>
+                  ))}
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <Button variant="link" size="sm" className="text-xs">
+                    আরও দেখুন <ChevronDown className="h-3 w-3 ml-1" />
+                  </Button>
+                  
+                  <Button size="sm" className="flex items-center gap-1">
+                    <Filter className="h-3 w-3" /> ফিল্টার
+                  </Button>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="marketplace" className="space-y-2">
+                <div className="grid grid-cols-2 gap-2">
+                  {/* Placeholder marketplace categories */}
+                  {[
+                    { icon: <ShoppingBag className="h-6 w-6" />, name: "ইলেক্ট্রনিক্স" },
+                    { icon: <ShoppingBag className="h-6 w-6" />, name: "ফার্নিচার" },
+                    { icon: <ShoppingBag className="h-6 w-6" />, name: "ফ্যাশন" },
+                    { icon: <ShoppingBag className="h-6 w-6" />, name: "খাদ্য" }
+                  ].map((category, index) => (
+                    <Button 
+                      key={index} 
+                      variant="outline" 
+                      className="flex flex-col items-center justify-center h-20 p-1"
+                    >
+                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center mb-1">
+                        {category.icon}
+                      </div>
+                      <span className="text-xs text-center">{category.name}</span>
+                    </Button>
+                  ))}
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <Button variant="link" size="sm" className="text-xs">
+                    আরও দেখুন <ChevronDown className="h-3 w-3 ml-1" />
+                  </Button>
+                  
+                  <Button size="sm" className="flex items-center gap-1">
+                    <Filter className="h-3 w-3" /> ফিল্টার
+                  </Button>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
           
-          {/* Video Ad Section */}
-          <div className="rounded-lg overflow-hidden border">
-            <div className="aspect-video bg-black flex items-center justify-center relative">
-              <video 
-                className="w-full h-full object-cover"
-                poster="https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=150&q=80"
-                controls
-              >
-                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Button 
-                  variant="outline" 
-                  size="icon" 
-                  className="bg-black/30 text-white border-white hover:bg-black/50 hover:text-white"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    const video = e.currentTarget.closest('.aspect-video')?.querySelector('video');
-                    if (video) {
-                      if (video.paused) {
-                        video.play();
-                      } else {
-                        video.pause();
-                      }
-                    }
-                  }}
-                >
-                  <Play className="h-6 w-6" />
-                </Button>
-              </div>
-            </div>
-            <div className="p-3">
-              <h3 className="font-medium mb-2">নতুন সার্ভিস উপলব্ধ</h3>
-              <p className="text-sm text-gray-600 mb-3">আমাদের নতুন সার্ভিস দেখুন এবং বুক করুন</p>
-              <Button variant="default" size="sm" className="w-full">
-                বুক করুন
-              </Button>
-            </div>
+          {/* Video Ad Carousel */}
+          <div className="space-y-2">
+            <h3 className="font-medium">নতুন ভিডিও</h3>
+            <Carousel className="w-full">
+              <CarouselContent>
+                {videoAds.map((ad, index) => (
+                  <CarouselItem key={index}>
+                    <div className="rounded-lg overflow-hidden border">
+                      <div className="aspect-video bg-black flex items-center justify-center relative">
+                        <video 
+                          className="w-full h-full object-cover"
+                          poster={ad.thumbnail}
+                          controls
+                        >
+                          <source src={ad.videoUrl} type="video/mp4" />
+                          Your browser does not support the video tag.
+                        </video>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <Button 
+                            variant="outline" 
+                            size="icon" 
+                            className="bg-black/30 text-white border-white hover:bg-black/50 hover:text-white"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const video = e.currentTarget.closest('.aspect-video')?.querySelector('video');
+                              if (video) {
+                                if (video.paused) {
+                                  video.play();
+                                } else {
+                                  video.pause();
+                                }
+                              }
+                            }}
+                          >
+                            <Play className="h-6 w-6" />
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="p-3">
+                        <h3 className="font-medium mb-2">{ad.title}</h3>
+                        <p className="text-sm text-gray-600 mb-3">{ad.description}</p>
+                        <Button variant="default" size="sm" className="w-full">
+                          বুক করুন
+                        </Button>
+                      </div>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="left-1 h-8 w-8" />
+              <CarouselNext className="right-1 h-8 w-8" />
+            </Carousel>
           </div>
           
           {/* Service Categories */}
@@ -223,11 +358,11 @@ export const SidebarDrawer = () => {
             </div>
           </div>
           
-          {/* Account Settings */}
+          {/* Profile Options */}
           <div className="space-y-3">
-            <h3 className="font-medium mb-2">অ্যাকাউন্ট সেটিংস</h3>
+            <h3 className="font-medium mb-2">প্রোফাইল</h3>
             <div className="space-y-2">
-              {accountSettingsMenus.map((item, index) => (
+              {profileMenuItems.map((item, index) => (
                 <Link 
                   key={index} 
                   to={item.path}
@@ -297,3 +432,6 @@ export const SidebarDrawer = () => {
     </Drawer>
   );
 };
+
+// Add Carousel from shadcn to use with video ads
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";

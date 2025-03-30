@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -12,14 +12,20 @@ import {
   PaintBucket, 
   Wrench,
   ChevronDown,
-  ChevronUp 
+  ChevronUp,
+  Filter,
+  MapPin
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
 
 const Rentals = () => {
+  const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [filterVisible, setFilterVisible] = useState(false);
 
   const rentCategories = [
     { icon: <Building className="h-8 w-8" />, name: "অ্যাপার্টমেন্ট", path: "/rent/apartment", count: 324 },
@@ -67,9 +73,101 @@ const Rentals = () => {
     },
   ];
 
+  const toggleFilter = () => {
+    setFilterVisible(!filterVisible);
+  };
+
+  const handleListingClick = (id: number) => {
+    navigate(`/rent-details/${id}`);
+  };
+
   return (
     <div className="container px-4 pt-20 pb-20">
-      <h1 className="text-2xl font-bold mb-6">রেন্ট</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold">রেন্ট</h1>
+        <Button variant="outline" size="icon" onClick={toggleFilter}>
+          <Filter className="h-4 w-4" />
+        </Button>
+      </div>
+      
+      {/* Filter options - conditionally shown */}
+      {filterVisible && (
+        <div className="mb-6 p-4 border rounded-lg bg-gray-50">
+          <h2 className="font-medium mb-3">ফিল্টার</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium mb-1 block">লোকেশন</label>
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-muted-foreground" />
+                <Select defaultValue="dhaka">
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="এলাকা নির্বাচন করুন" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="dhaka">ঢাকা</SelectItem>
+                    <SelectItem value="chittagong">চট্টগ্রাম</SelectItem>
+                    <SelectItem value="khulna">খুলনা</SelectItem>
+                    <SelectItem value="rajshahi">রাজশাহী</SelectItem>
+                    <SelectItem value="sylhet">সিলেট</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium mb-1 block">ক্যাটাগরি</label>
+              <Select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="ক্যাটাগরি" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="apartment">অ্যাপার্টমেন্ট</SelectItem>
+                  <SelectItem value="house">বাসা</SelectItem>
+                  <SelectItem value="car">গাড়ি</SelectItem>
+                  <SelectItem value="office">অফিস</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium mb-1 block">মূল্য সীমা</label>
+              <div className="px-2">
+                <Slider
+                  defaultValue={[25000]}
+                  max={100000}
+                  step={1000}
+                />
+                <div className="flex justify-between mt-1 text-xs text-muted-foreground">
+                  <span>৳১,০০০</span>
+                  <span>৳৫০,০০০</span>
+                  <span>৳১,০০,০০০</span>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium mb-1 block">দূরত্ব</label>
+              <div className="px-2">
+                <Slider
+                  defaultValue={[5]}
+                  max={20}
+                  step={1}
+                />
+                <div className="flex justify-between mt-1 text-xs text-muted-foreground">
+                  <span>1 কিমি</span>
+                  <span>10 কিমি</span>
+                  <span>20 কিমি</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex gap-2 mt-4">
+            <Button className="flex-1">ফিল্টার করুন</Button>
+            <Button variant="outline" onClick={toggleFilter}>বাতিল করুন</Button>
+          </div>
+        </div>
+      )}
       
       <div className="mb-8">
         <h2 className="text-lg font-medium mb-4">ক্যাটাগরি</h2>
@@ -78,7 +176,7 @@ const Rentals = () => {
             <Link 
               key={index} 
               to={category.path}
-              className="flex flex-col items-center justify-center"
+              className="flex flex-col items-center justify-center transition-all hover:scale-105"
             >
               <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
                 {category.icon}
@@ -100,7 +198,7 @@ const Rentals = () => {
                 <Link 
                   key={index} 
                   to={category.path}
-                  className="flex flex-col items-center justify-center"
+                  className="flex flex-col items-center justify-center transition-all hover:scale-105"
                 >
                   <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
                     {category.icon}
@@ -140,7 +238,11 @@ const Rentals = () => {
         <h2 className="text-lg font-medium mb-4">ফিচার্ড লিস্টিং</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {featuredListings.map((listing) => (
-            <Card key={listing.id} className="overflow-hidden">
+            <Card 
+              key={listing.id} 
+              className="overflow-hidden cursor-pointer hover:shadow-md transition-all hover:scale-105"
+              onClick={() => handleListingClick(listing.id)}
+            >
               <CardContent className="p-0">
                 <div className="relative aspect-square">
                   <img 
@@ -170,7 +272,7 @@ const Rentals = () => {
       <div className="bg-primary/5 p-4 rounded-lg">
         <h2 className="text-lg font-medium mb-3">আপনার সম্পত্তি রেন্ট দিন</h2>
         <p className="text-sm text-muted-foreground mb-4">আপনার অব্যবহৃত বাসা, অফিস বা যেকোনো সম্পত্তি রেন্ট দিন এবং আয় করুন</p>
-        <Button className="w-full">রেন্ট লিস্টিং পোস্ট করুন</Button>
+        <Button className="w-full" onClick={() => navigate('/rent-listing/create')}>রেন্ট লিস্টিং পোস্ট করুন</Button>
       </div>
     </div>
   );
