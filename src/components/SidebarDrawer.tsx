@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -25,7 +24,8 @@ import {
   LogOut,
   Settings,
   Plus,
-  Filter
+  Filter,
+  User
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
@@ -88,6 +88,15 @@ export const SidebarDrawer = () => {
     { icon: <Lightbulb className="h-5 w-5" />, name: "ইউটিলিটিস", path: "/utilities" },
     { icon: <HelpCircle className="h-5 w-5" />, name: "হেল্প এন্ড সাপোর্ট", path: "/help" },
   ];
+  
+  // Additional profile menu items
+  const profileMenuItems = [
+    { icon: <User className="h-5 w-5" />, name: "ব্যক্তিগত তথ্য", path: "/profile/personal" },
+    { icon: <Settings className="h-5 w-5" />, name: "সিকিউরিটি", path: "/profile/security" },
+    { icon: <Wallet className="h-5 w-5" />, name: "পেমেন্ট মেথড", path: "/profile/payment" },
+    { icon: <MessageSquare className="h-5 w-5" />, name: "রেফার ফ্রেন্ড", path: "/profile/refer" },
+    { icon: <LogOut className="h-5 w-5" />, name: "লগআউট", path: "/logout" },
+  ];
 
   const videoAds = [
     {
@@ -134,8 +143,17 @@ export const SidebarDrawer = () => {
               <p className="text-sm text-muted-foreground">{user.phone}</p>
             </div>
           </div>
-          <div className="mt-3">
-            <Link to="/profile" className="text-sm text-primary hover:underline">প্রোফাইল দেখুন</Link>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {profileMenuItems.map((item, index) => (
+              <Link 
+                key={index} 
+                to={item.path} 
+                className="bg-secondary/50 hover:bg-secondary px-3 py-2 rounded-lg text-sm flex items-center gap-2"
+              >
+                {item.icon}
+                <span>{item.name}</span>
+              </Link>
+            ))}
           </div>
         </DrawerHeader>
         
@@ -407,10 +425,12 @@ export const SidebarDrawer = () => {
         
         <DrawerFooter>
           <Separator className="mb-4" />
-          <Button variant="outline" className="w-full">
-            <LogOut className="h-4 w-4 mr-2" />
-            লগআউট
-          </Button>
+          <Link to="/create-post">
+            <Button className="w-full bg-primary">
+              <Plus className="h-4 w-4 mr-2" />
+              পোস্ট করুন
+            </Button>
+          </Link>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

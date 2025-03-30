@@ -2,21 +2,12 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
-  Bell, 
-  Wallet, 
-  Calendar, 
+  MessageSquare,
   Search, 
   Home,
   Building,
   ShoppingBag,
-  Settings,
   ChevronDown,
-  PaintBucket,
-  Truck,
-  Briefcase,
-  Wrench,
-  User,
-  MessageSquare,
   Plus
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -30,8 +21,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const Navbar = () => {
   const location = useLocation();
@@ -41,30 +30,9 @@ const Navbar = () => {
   const navLinks = [
     { title: 'হোম', path: '/', icon: <Home className="h-5 w-5" /> },
     { title: 'রেন্ট', path: '/rentals', icon: <Building className="h-5 w-5" /> },
+    { title: 'পোস্ট করুন', path: '/create-post', icon: <Plus className="h-5 w-5" /> },
     { title: 'সার্ভিস', path: '/services', icon: <Search className="h-5 w-5" /> },
     { title: 'মার্কেটপ্লেস', path: '/shopping', icon: <ShoppingBag className="h-5 w-5" /> },
-    { title: 'প্রোফাইল', path: '/profile', icon: <User className="h-5 w-5" /> },
-  ];
-
-  const searchCategories = [
-    { icon: <Home className="h-5 w-5" />, name: "বাসা", value: "house" },
-    { icon: <Building className="h-5 w-5" />, name: "অ্যাপার্টমেন্ট", value: "apartment" },
-    { icon: <PaintBucket className="h-5 w-5" />, name: "পেইন্টিং", value: "painting" },
-    { icon: <Truck className="h-5 w-5" />, name: "প্যাকিং", value: "packing" },
-    { icon: <Briefcase className="h-5 w-5" />, name: "ক্লিনিং", value: "cleaning" },
-    { icon: <Wrench className="h-5 w-5" />, name: "রিপেয়ার", value: "repair" },
-    { icon: <ShoppingBag className="h-5 w-5" />, name: "পণ্য", value: "products" },
-    { icon: <Building className="h-5 w-5" />, name: "অফিস", value: "office" },
-  ];
-
-  const bannerImages = [
-    "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1511385348-a52b4a160dc2?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1618359057154-e21ae64350b6?q=80&w=1000&auto=format&fit=crop",
   ];
 
   return (
@@ -79,40 +47,19 @@ const Navbar = () => {
           </div>
           
           <div className="w-full max-w-md mx-4 relative">
-            <Popover>
-              <PopoverTrigger asChild>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <input 
-                    type="text" 
-                    placeholder="খুঁজুন" 
-                    className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                  <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 transform -translate-y-1/2">
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </div>
-              </PopoverTrigger>
-              <PopoverContent className="w-full p-2" align="center">
-                <div className="grid grid-cols-4 gap-2">
-                  {searchCategories.map((category, index) => (
-                    <Button 
-                      key={index} 
-                      variant="ghost" 
-                      className="flex flex-col items-center justify-center h-20 p-1"
-                      onClick={() => setSearchTerm(`${category.name}: `)}
-                    >
-                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mb-1">
-                        {category.icon}
-                      </div>
-                      <span className="text-xs text-center">{category.name}</span>
-                    </Button>
-                  ))}
-                </div>
-              </PopoverContent>
-            </Popover>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input 
+                type="text" 
+                placeholder="খুঁজুন" 
+                className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 transform -translate-y-1/2">
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
           
           <div className="flex items-center gap-2">
@@ -167,6 +114,22 @@ const Navbar = () => {
         <div className="grid grid-cols-5 h-full">
           {navLinks.map((link) => {
             const isActive = location.pathname === link.path;
+            
+            // Special handling for create post button
+            if (link.title === 'পোস্ট করুন') {
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className="flex flex-col items-center justify-center relative"
+                >
+                  <div className="bg-primary rounded-full h-10 w-10 flex items-center justify-center mb-1">
+                    <Plus className="h-6 w-6 text-white" />
+                  </div>
+                  <span className="text-xs mt-1 text-primary font-medium">{link.title}</span>
+                </Link>
+              );
+            }
             
             return (
               <Link

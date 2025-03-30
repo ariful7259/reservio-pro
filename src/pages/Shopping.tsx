@@ -1,12 +1,21 @@
 
-import React from 'react';
-import { ShoppingCart, Star, Heart } from 'lucide-react';
+import React, { useState } from 'react';
+import { ShoppingCart, Star, Heart, Filter, ChevronDown, ChevronUp, Plus, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Separator } from '@/components/ui/separator';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { useNavigate } from 'react-router-dom';
 
 const Shopping = () => {
+  const navigate = useNavigate();
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [filterVisible, setFilterVisible] = useState(false);
+  
   // Sample product data
   const products = [
     {
@@ -54,13 +63,184 @@ const Shopping = () => {
       isFavorite: false,
     },
   ];
+  
+  // Product categories
+  const productCategories = [
+    { icon: <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="হেলথ" />, name: "হেলথ", path: "/shopping/health", count: 245 },
+    { icon: <img src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="ফিটনেস" />, name: "ফিটনেস", path: "/shopping/fitness", count: 123 },
+    { icon: <img src="https://images.unsplash.com/photo-1561736778-92e52a7769ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="মেডিসিন" />, name: "মেডিসিন", path: "/shopping/medicine", count: 78 },
+    { icon: <img src="https://images.unsplash.com/photo-1607083206968-13611e3d76db?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="ভিটামিন" />, name: "ভিটামিন", path: "/shopping/vitamins", count: 56 },
+    { icon: <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="ইলেক্ট্রনিক্স" />, name: "ইলেক্ট্রনিক্স", path: "/shopping/electronics", count: 42 },
+    { icon: <img src="https://images.unsplash.com/photo-1560769629-975ec94e6a86?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="বিউটি" />, name: "বিউটি", path: "/shopping/beauty", count: 35 },
+    { icon: <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="এক্সেসরিজ" />, name: "এক্সেসরিজ", path: "/shopping/accessories", count: 89 },
+    { icon: <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="অন্যান্য" />, name: "অন্যান্য", path: "/shopping/others", count: 67 },
+  ];
+
+  const toggleFilter = () => {
+    setFilterVisible(!filterVisible);
+  };
 
   return (
     <div className="container px-4 pt-20 pb-20">
-      <div className="mb-6">
+      <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">মার্কেটপ্লেস</h1>
-        <p className="text-gray-500">আপনার প্রয়োজনীয় পণ্য সহজেই কিনুন</p>
+        <div className="flex gap-2">
+          <Button 
+            onClick={() => navigate('/shopping/create')}
+            className="bg-primary text-white flex items-center gap-2"
+          >
+            <Plus size={16} /> পণ্য পোস্ট করুন
+          </Button>
+          <Button variant="outline" size="icon" onClick={toggleFilter}>
+            <Filter className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
+      
+      {/* Filter options - conditionally shown */}
+      {filterVisible && (
+        <div className="mb-6 p-4 border rounded-lg bg-gray-50">
+          <h2 className="font-medium mb-3">ফিল্টার</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium mb-1 block">লোকেশন</label>
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-muted-foreground" />
+                <Select defaultValue="dhaka">
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="এলাকা নির্বাচন করুন" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="dhaka">ঢাকা</SelectItem>
+                    <SelectItem value="chittagong">চট্টগ্রাম</SelectItem>
+                    <SelectItem value="khulna">খুলনা</SelectItem>
+                    <SelectItem value="rajshahi">রাজশাহী</SelectItem>
+                    <SelectItem value="sylhet">সিলেট</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium mb-1 block">ক্যাটাগরি</label>
+              <Select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="ক্যাটাগরি" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="health">হেলথ</SelectItem>
+                  <SelectItem value="fitness">ফিটনেস</SelectItem>
+                  <SelectItem value="medicine">মেডিসিন</SelectItem>
+                  <SelectItem value="electronics">ইলেক্ট্রনিক্স</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium mb-1 block">মূল্য সীমা</label>
+              <div className="px-2">
+                <Slider
+                  defaultValue={[2500]}
+                  max={10000}
+                  step={500}
+                />
+                <div className="flex justify-between mt-1 text-xs text-muted-foreground">
+                  <span>৳৫০০</span>
+                  <span>৳৫,০০০</span>
+                  <span>৳১০,০০০</span>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium mb-1 block">রেটিং</label>
+              <div className="px-2">
+                <Slider
+                  defaultValue={[4.5]}
+                  max={5}
+                  step={0.5}
+                />
+                <div className="flex justify-between mt-1 text-xs text-muted-foreground">
+                  <span>১</span>
+                  <span>৩</span>
+                  <span>৫</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex gap-2 mt-4">
+            <Button className="flex-1">ফিল্টার করুন</Button>
+            <Button variant="outline" onClick={toggleFilter}>বাতিল করুন</Button>
+          </div>
+        </div>
+      )}
+      
+      {/* Product Categories */}
+      <div className="mb-8">
+        <h2 className="text-lg font-medium mb-4">ক্যাটাগরি</h2>
+        <div className="grid grid-cols-4 gap-3">
+          {productCategories.slice(0, 4).map((category, index) => (
+            <a 
+              key={index} 
+              href={category.path}
+              className="flex flex-col items-center justify-center transition-all hover:scale-105"
+            >
+              <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                {category.icon}
+              </div>
+              <span className="text-xs text-center mb-1">{category.name}</span>
+              <Badge variant="outline" className="text-xs">{category.count}</Badge>
+            </a>
+          ))}
+        </div>
+        
+        <Collapsible
+          open={isExpanded}
+          onOpenChange={setIsExpanded}
+          className="w-full mt-3"
+        >
+          <CollapsibleContent className="mt-3">
+            <div className="grid grid-cols-4 gap-3">
+              {productCategories.slice(4).map((category, index) => (
+                <a 
+                  key={index} 
+                  href={category.path}
+                  className="flex flex-col items-center justify-center transition-all hover:scale-105"
+                >
+                  <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                    {category.icon}
+                  </div>
+                  <span className="text-xs text-center mb-1">{category.name}</span>
+                  <Badge variant="outline" className="text-xs">{category.count}</Badge>
+                </a>
+              ))}
+            </div>
+          </CollapsibleContent>
+          
+          <div className="w-full flex justify-center mt-4">
+            <CollapsibleTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex items-center gap-1"
+              >
+                {isExpanded ? (
+                  <>
+                    <ChevronUp className="h-4 w-4" /> কম দেখুন
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="h-4 w-4" /> আরও দেখুন
+                  </>
+                )}
+              </Button>
+            </CollapsibleTrigger>
+          </div>
+        </Collapsible>
+      </div>
+      
+      <Separator className="my-6" />
 
       <Tabs defaultValue="all" className="mb-6">
         <TabsList className="w-full bg-secondary/50 mb-4">

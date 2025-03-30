@@ -21,6 +21,7 @@ import Rentals from "./pages/Rentals";
 import Utilities from "./pages/Utilities";
 import Help from "./pages/Help";
 import Notifications from "./pages/Notifications";
+import CreatePost from "./pages/CreatePost";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,7 @@ const App = () => (
           <Route path="/my-services" element={<MyServices />} />
           <Route path="/utilities" element={<Utilities />} />
           <Route path="/help" element={<Help />} />
+          <Route path="/create-post" element={<CreatePost />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
@@ -56,4 +58,3 @@ const App = () => (
 );
 
 export default App;
-

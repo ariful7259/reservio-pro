@@ -1,15 +1,28 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus } from 'lucide-react';
+import { 
+  Plus, 
+  Filter, 
+  ChevronDown, 
+  ChevronUp,
+  MapPin
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
 import ServiceCard from '@/components/ServiceCard';
 import ServiceProviderCard from '@/components/ServiceProviderCard';
 
 const Services = () => {
   const navigate = useNavigate();
   const [view, setView] = useState<'services' | 'providers'>('services');
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [filterVisible, setFilterVisible] = useState(false);
 
   // Sample services data
   const services = [
@@ -107,6 +120,18 @@ const Services = () => {
       availability: 'দুপুর ০৩:০০ - রাত ০৮:০০',
     },
   ];
+  
+  // Service categories
+  const serviceCategories = [
+    { icon: <img src="https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="মেডিকেল" />, name: "মেডিকেল", path: "/services/medical", count: 245 },
+    { icon: <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="ডেন্টাল" />, name: "ডেন্টাল", path: "/services/dental", count: 123 },
+    { icon: <img src="https://images.unsplash.com/photo-1573497620053-ea5300f94f21?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="মেন্টাল" />, name: "মেন্টাল হেলথ", path: "/services/mental", count: 78 },
+    { icon: <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="ফিজিও" />, name: "ফিজিওথেরাপি", path: "/services/physio", count: 56 },
+    { icon: <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="নিউট্রিশন" />, name: "নিউট্রিশন", path: "/services/nutrition", count: 42 },
+    { icon: <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="লিগ্যাল" />, name: "লিগ্যাল", path: "/services/legal", count: 35 },
+    { icon: <img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="ইডুকেশন" />, name: "ইডুকেশন", path: "/services/education", count: 89 },
+    { icon: <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="অন্যান্য" />, name: "অন্যান্য", path: "/services/others", count: 67 },
+  ];
 
   const handleServiceClick = (id: string) => {
     navigate(`/services/${id}`);
@@ -126,16 +151,173 @@ const Services = () => {
     }
     return "বুক করুন";
   };
+  
+  const toggleFilter = () => {
+    setFilterVisible(!filterVisible);
+  };
 
   return (
     <div className="container px-4 pt-20 pb-20">
-      {/* Create post button */}
-      <div className="flex justify-between items-center mb-6">
+      {/* Header with title and filter button */}
+      <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">সার্ভিস</h1>
-        <Button className="bg-primary text-white flex items-center gap-2">
-          <Plus size={16} /> সার্ভিস পোস্ট করুন
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            onClick={() => navigate('/services/create')}
+            className="bg-primary text-white flex items-center gap-2"
+          >
+            <Plus size={16} /> সার্ভিস পোস্ট করুন
+          </Button>
+          <Button variant="outline" size="icon" onClick={toggleFilter}>
+            <Filter className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
+      
+      {/* Filter options - conditionally shown */}
+      {filterVisible && (
+        <div className="mb-6 p-4 border rounded-lg bg-gray-50">
+          <h2 className="font-medium mb-3">ফিল্টার</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium mb-1 block">লোকেশন</label>
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-muted-foreground" />
+                <Select defaultValue="dhaka">
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="এলাকা নির্বাচন করুন" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="dhaka">ঢাকা</SelectItem>
+                    <SelectItem value="chittagong">চট্টগ্রাম</SelectItem>
+                    <SelectItem value="khulna">খুলনা</SelectItem>
+                    <SelectItem value="rajshahi">রাজশাহী</SelectItem>
+                    <SelectItem value="sylhet">সিলেট</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium mb-1 block">ক্যাটাগরি</label>
+              <Select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="ক্যাটাগরি" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="medical">মেডিকেল</SelectItem>
+                  <SelectItem value="dental">ডেন্টাল</SelectItem>
+                  <SelectItem value="mental">মেন্টাল হেলথ</SelectItem>
+                  <SelectItem value="physio">ফিজিওথেরাপি</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium mb-1 block">মূল্য সীমা</label>
+              <div className="px-2">
+                <Slider
+                  defaultValue={[1500]}
+                  max={5000}
+                  step={100}
+                />
+                <div className="flex justify-between mt-1 text-xs text-muted-foreground">
+                  <span>৳৫০০</span>
+                  <span>৳২,৫০০</span>
+                  <span>৳৫,০০০</span>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium mb-1 block">রেটিং</label>
+              <div className="px-2">
+                <Slider
+                  defaultValue={[4.5]}
+                  max={5}
+                  step={0.5}
+                />
+                <div className="flex justify-between mt-1 text-xs text-muted-foreground">
+                  <span>১</span>
+                  <span>৩</span>
+                  <span>৫</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex gap-2 mt-4">
+            <Button className="flex-1">ফিল্টার করুন</Button>
+            <Button variant="outline" onClick={toggleFilter}>বাতিল করুন</Button>
+          </div>
+        </div>
+      )}
+      
+      {/* Service Categories */}
+      <div className="mb-8">
+        <h2 className="text-lg font-medium mb-4">ক্যাটাগরি</h2>
+        <div className="grid grid-cols-4 gap-3">
+          {serviceCategories.slice(0, 4).map((category, index) => (
+            <a 
+              key={index} 
+              href={category.path}
+              className="flex flex-col items-center justify-center transition-all hover:scale-105"
+            >
+              <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                {category.icon}
+              </div>
+              <span className="text-xs text-center mb-1">{category.name}</span>
+              <Badge variant="outline" className="text-xs">{category.count}</Badge>
+            </a>
+          ))}
+        </div>
+        
+        <Collapsible
+          open={isExpanded}
+          onOpenChange={setIsExpanded}
+          className="w-full mt-3"
+        >
+          <CollapsibleContent className="mt-3">
+            <div className="grid grid-cols-4 gap-3">
+              {serviceCategories.slice(4).map((category, index) => (
+                <a 
+                  key={index} 
+                  href={category.path}
+                  className="flex flex-col items-center justify-center transition-all hover:scale-105"
+                >
+                  <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                    {category.icon}
+                  </div>
+                  <span className="text-xs text-center mb-1">{category.name}</span>
+                  <Badge variant="outline" className="text-xs">{category.count}</Badge>
+                </a>
+              ))}
+            </div>
+          </CollapsibleContent>
+          
+          <div className="w-full flex justify-center mt-4">
+            <CollapsibleTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex items-center gap-1"
+              >
+                {isExpanded ? (
+                  <>
+                    <ChevronUp className="h-4 w-4" /> কম দেখুন
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="h-4 w-4" /> আরও দেখুন
+                  </>
+                )}
+              </Button>
+            </CollapsibleTrigger>
+          </div>
+        </Collapsible>
+      </div>
+      
+      <Separator className="my-6" />
       
       <div className="flex items-center justify-end mb-4">
         <div className="flex gap-2">
