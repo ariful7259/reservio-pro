@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Filter, Calendar, MapPin, ChevronDown } from 'lucide-react';
+import { Search, Filter, Calendar, MapPin, ChevronDown, Plus } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -142,6 +142,13 @@ const Services = () => {
         </Button>
       </div>
 
+      {/* Create post button between sections */}
+      <div className="flex justify-center mb-6">
+        <Button className="bg-primary text-white flex items-center gap-2">
+          <Plus size={16} /> সার্ভিস পোস্ট করুন
+        </Button>
+      </div>
+
       {/* Filter Options */}
       <div className="grid grid-cols-2 gap-2 mb-6">
         <div className="col-span-2">
@@ -224,7 +231,7 @@ const Services = () => {
         </TabsList>
         <TabsContent value="all" className="mt-0">
           {view === 'services' ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {services.map(service => (
                 <ServiceCard
                   key={service.id}
@@ -249,7 +256,7 @@ const Services = () => {
         
         <TabsContent value="medical" className="mt-0">
           {view === 'services' ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {services.slice(0, 3).map(service => (
                 <ServiceCard
                   key={service.id}
@@ -280,7 +287,7 @@ const Services = () => {
         
         <TabsContent value="others" className="mt-0">
           {view === 'services' ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {services.slice(3, 5).map(service => (
                 <ServiceCard
                   key={service.id}
@@ -308,3 +315,4 @@ const Services = () => {
 };
 
 export default Services;
+

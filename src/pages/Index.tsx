@@ -9,7 +9,8 @@ import {
   Bell,
   Home,
   AlertCircle,
-  TrendingUp
+  TrendingUp,
+  Plus
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import ServiceCard from '@/components/ServiceCard';
 import AppointmentCard from '@/components/AppointmentCard';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -91,14 +93,55 @@ const Index = () => {
     }
   ];
 
+  // Banner images
+  const bannerImages = [
+    "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1511385348-a52b4a160dc2?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1618359057154-e21ae64350b6?q=80&w=1000&auto=format&fit=crop",
+  ];
+
   const handleServiceClick = (id: string) => {
     navigate(`/services/${id}`);
   };
 
   return (
     <div className="container px-4 pt-20 pb-20">
+      {/* Banner Slider with increased size */}
+      <div className="overflow-hidden px-4 py-3 mb-6">
+        <Carousel className="w-full">
+          <CarouselContent>
+            {bannerImages.map((image, index) => (
+              <CarouselItem key={index}>
+                <div className="p-1">
+                  <div className="overflow-hidden rounded-lg aspect-[16/6] w-full">
+                    <img 
+                      src={image} 
+                      alt={`Banner ${index + 1}`} 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="left-2" />
+          <CarouselNext className="right-2" />
+        </Carousel>
+      </div>
+
+      {/* Create post button between sections */}
+      <div className="flex justify-center mb-6 md:hidden">
+        <Button className="bg-primary text-white w-full max-w-xs flex items-center gap-2">
+          <Plus size={16} /> পোস্ট করুন
+        </Button>
+      </div>
+
       {/* Search Bar */}
-      <div className="flex items-center gap-3 mt-5 mb-6">
+      <div className="flex items-center gap-3 mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input placeholder="সার্ভিস খুঁজুন" className="pl-9" />
@@ -175,6 +218,7 @@ const Index = () => {
                   key={service.id}
                   {...service}
                   onClick={handleServiceClick}
+                  buttonLabel="বুক করুন"
                 />
               ))}
             </div>
@@ -186,6 +230,7 @@ const Index = () => {
                   key={service.id}
                   {...service}
                   onClick={handleServiceClick}
+                  buttonLabel="বুক করুন"
                 />
               ))}
             </div>
@@ -202,6 +247,7 @@ const Index = () => {
                   key={service.id}
                   {...service}
                   onClick={handleServiceClick}
+                  buttonLabel="বুক করুন"
                 />
               ))}
             </div>
@@ -213,3 +259,4 @@ const Index = () => {
 };
 
 export default Index;
+

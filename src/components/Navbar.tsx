@@ -16,7 +16,8 @@ import {
   Briefcase,
   Wrench,
   User,
-  MessageSquare
+  MessageSquare,
+  Plus
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -35,6 +36,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 const Navbar = () => {
   const location = useLocation();
   const [searchTerm, setSearchTerm] = useState('');
+  const isHomePage = location.pathname === "/";
   
   const navLinks = [
     { title: 'হোম', path: '/', icon: <Home className="h-5 w-5" /> },
@@ -76,6 +78,16 @@ const Navbar = () => {
             </Link>
           </div>
           
+          {/* Categories above search bar */}
+          <div className="hidden md:flex items-center gap-4 text-sm">
+            <Link to="/rentals" className="hover:text-primary">রেন্ট</Link>
+            <Link to="/services" className="hover:text-primary">সার্ভিস</Link>
+            <Link to="/shopping" className="hover:text-primary">মার্কেটপ্লেস</Link>
+            <Button size="sm" variant="ghost" className="flex items-center gap-1" onClick={() => {}}>
+              <Plus className="h-4 w-4" /> পোস্ট করুন
+            </Button>
+          </div>
+          
           <div className="w-full max-w-md mx-4 relative">
             <Popover>
               <PopoverTrigger asChild>
@@ -114,7 +126,7 @@ const Navbar = () => {
           </div>
           
           <div className="flex items-center gap-2">
-            {/* Message Icon with Dropdown */}
+            {/* Message Icon with Dropdown - moved notification inside */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon" className="relative">
@@ -124,33 +136,20 @@ const Navbar = () => {
                   </Badge>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuContent align="end" className="w-80">
                 <DropdownMenuLabel>মেসেজ</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Link to="/notifications" className="w-full">নোটিফিকেশন</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to="/chat" className="w-full">চ্যাট</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to="/feedback" className="w-full">ফিডব্যাক</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Notification Icon with Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon" className="relative">
-                  <Bell className="h-5 w-5" />
-                  <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0">
-                    3
-                  </Badge>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-80">
-                <DropdownMenuLabel>নোটিফিকেশন</DropdownMenuLabel>
+                <div className="flex gap-2 p-2">
+                  <DropdownMenuItem className="flex-1 justify-center">
+                    <Link to="/notifications" className="w-full text-center">নোটিফিকেশন</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="flex-1 justify-center">
+                    <Link to="/chat" className="w-full text-center">চ্যাট</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="flex-1 justify-center">
+                    <Link to="/feedback" className="w-full text-center">ফিডব্যাক</Link>
+                  </DropdownMenuItem>
+                </div>
                 <DropdownMenuSeparator />
                 <div className="max-h-80 overflow-auto">
                   {[
@@ -172,29 +171,6 @@ const Navbar = () => {
             </DropdownMenu>
           </div>
         </header>
-        
-        {/* Slideable Banners - Increased Size */}
-        <div className="overflow-hidden px-4 py-3 bg-gray-50">
-          <Carousel className="w-full">
-            <CarouselContent>
-              {bannerImages.map((image, index) => (
-                <CarouselItem key={index}>
-                  <div className="p-1">
-                    <div className="overflow-hidden rounded-lg aspect-[16/5]">
-                      <img 
-                        src={image} 
-                        alt={`Banner ${index + 1}`} 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="left-2" />
-            <CarouselNext className="right-2" />
-          </Carousel>
-        </div>
       </div>
       
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t h-16 z-40">
@@ -225,3 +201,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

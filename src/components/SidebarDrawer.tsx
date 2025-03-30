@@ -22,7 +22,6 @@ import {
   ListCheck,
   Store,
   BookmarkCheck,
-  User,
   LogOut,
   Settings,
   Plus,
@@ -80,14 +79,6 @@ export const SidebarDrawer = () => {
     { icon: <Building className="h-5 w-5" />, name: "রেন্ট", path: "/rentals", subMenu: rentCategories },
     { icon: <Lightbulb className="h-5 w-5" />, name: "ইউটিলিটিস", path: "/utilities" },
     { icon: <HelpCircle className="h-5 w-5" />, name: "হেল্প এন্ড সাপোর্ট", path: "/help" },
-  ];
-
-  const profileMenuItems = [
-    { icon: <User className="h-5 w-5" />, name: "ব্যক্তিগত তথ্য", path: "/profile" },
-    { icon: <Settings className="h-5 w-5" />, name: "সিকিউরিটি", path: "/security" },
-    { icon: <Wallet className="h-5 w-5" />, name: "পেমেন্ট মেথড", path: "/payment-methods" },
-    { icon: <Store className="h-5 w-5" />, name: "রেফার ফ্রেন্ড", path: "/refer" },
-    { icon: <LogOut className="h-5 w-5" />, name: "লগআউট", path: "/logout" },
   ];
 
   const videoAds = [
@@ -281,7 +272,8 @@ export const SidebarDrawer = () => {
                       <div className="p-3">
                         <h3 className="font-medium mb-2">{ad.title}</h3>
                         <p className="text-sm text-gray-600 mb-3">{ad.description}</p>
-                        <Button variant="default" size="sm" className="w-full">
+                        <Button variant="default" size="sm" className="w-full" 
+                          onClick={() => window.location.href = '/services'}>
                           বুক করুন
                         </Button>
                       </div>
@@ -358,25 +350,6 @@ export const SidebarDrawer = () => {
             </div>
           </div>
           
-          {/* Profile Options */}
-          <div className="space-y-3">
-            <h3 className="font-medium mb-2">প্রোফাইল</h3>
-            <div className="space-y-2">
-              {profileMenuItems.map((item, index) => (
-                <Link 
-                  key={index} 
-                  to={item.path}
-                  className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors w-full"
-                >
-                  <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                    {item.icon}
-                  </div>
-                  <span>{item.name}</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-          
           {/* Menu Sections */}
           <div className="space-y-3">
             <h3 className="font-medium mb-2">সেকশন</h3>
@@ -435,3 +408,4 @@ export const SidebarDrawer = () => {
 
 // Add Carousel from shadcn to use with video ads
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+
