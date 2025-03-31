@@ -1,10 +1,11 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Star, 
   MapPin,
   ArrowRight,
+  Search,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -14,6 +15,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 
 const Index = () => {
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Banner images
   const bannerImages = [
@@ -87,6 +89,13 @@ const Index = () => {
     },
   ];
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
+    }
+  };
+
   return (
     <div className="container px-4 pt-20 pb-20">
       {/* Banner Slider with increased size */}
@@ -110,6 +119,27 @@ const Index = () => {
           <CarouselPrevious className="left-2" />
           <CarouselNext className="right-2" />
         </Carousel>
+      </div>
+      
+      {/* Search Bar */}
+      <div className="mb-6">
+        <form onSubmit={handleSearch} className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <input 
+            type="text" 
+            placeholder="খুঁজুন" 
+            className="w-full pl-10 pr-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <Button 
+            type="submit" 
+            variant="primary" 
+            className="absolute right-1 top-1/2 transform -translate-y-1/2"
+          >
+            খুঁজুন
+          </Button>
+        </form>
       </div>
 
       {/* Featured Listings */}

@@ -20,10 +20,85 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
+import { useToast } from "@/components/ui/use-toast";
 
 const CreatePost = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [postType, setPostType] = useState<'rent' | 'service' | 'marketplace'>('rent');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Form data states for different post types
+  const [rentForm, setRentForm] = useState({
+    title: '',
+    category: '',
+    location: '',
+    price: '',
+    period: 'month',
+    description: '',
+    images: [] as File[]
+  });
+
+  const [serviceForm, setServiceForm] = useState({
+    title: '',
+    category: '',
+    location: '',
+    price: '',
+    duration: '',
+    timeUnit: 'minutes',
+    description: '',
+    images: [] as File[]
+  });
+
+  const [marketplaceForm, setMarketplaceForm] = useState({
+    title: '',
+    category: '',
+    price: '',
+    discountPrice: '',
+    tags: '',
+    description: '',
+    images: [] as File[]
+  });
+
+  // Handle file upload
+  const handleFileUpload = (files: FileList | null, type: 'rent' | 'service' | 'marketplace') => {
+    if (!files) return;
+    
+    const fileArray = Array.from(files);
+    
+    if (type === 'rent') {
+      setRentForm({...rentForm, images: [...rentForm.images, ...fileArray]});
+    } else if (type === 'service') {
+      setServiceForm({...serviceForm, images: [...serviceForm.images, ...fileArray]});
+    } else {
+      setMarketplaceForm({...marketplaceForm, images: [...marketplaceForm.images, ...fileArray]});
+    }
+  };
+
+  // Handle form submission
+  const handleSubmit = (type: 'rent' | 'service' | 'marketplace') => {
+    setIsSubmitting(true);
+    
+    // Simulate API call to create post
+    setTimeout(() => {
+      setIsSubmitting(false);
+      
+      // Show success toast
+      toast({
+        title: "পোস্ট সফলভাবে তৈরি হয়েছে",
+        description: "আপনার পোস্ট এখন প্রদর্শিত হবে",
+      });
+      
+      // Navigate to the appropriate listing page based on post type
+      if (type === 'rent') {
+        navigate('/rentals');
+      } else if (type === 'service') {
+        navigate('/services');
+      } else {
+        navigate('/shopping');
+      }
+    }, 1500);
+  };
 
   return (
     <div className="container px-4 pt-20 pb-20">
@@ -53,12 +128,19 @@ const CreatePost = () => {
               <CardContent className="p-4 space-y-4">
                 <div className="flex flex-col gap-2">
                   <Label>শিরোনাম</Label>
-                  <Input placeholder="শিরোনাম লিখুন" />
+                  <Input 
+                    placeholder="শিরোনাম লিখুন" 
+                    value={rentForm.title}
+                    onChange={(e) => setRentForm({...rentForm, title: e.target.value})}
+                  />
                 </div>
                 
                 <div className="flex flex-col gap-2">
                   <Label>ক্যাটাগরি</Label>
-                  <Select>
+                  <Select 
+                    value={rentForm.category}
+                    onValueChange={(value) => setRentForm({...rentForm, category: value})}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="ক্যাটাগরি নির্বাচন করুন" />
                     </SelectTrigger>
@@ -77,7 +159,11 @@ const CreatePost = () => {
                   <Label>লোকেশন</Label>
                   <div className="flex items-center gap-2">
                     <MapPin className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                    <Input placeholder="লোকেশন লিখুন" />
+                    <Input 
+                      placeholder="লোকেশন লিখুন" 
+                      value={rentForm.location}
+                      onChange={(e) => setRentForm({...rentForm, location: e.target.value})}
+                    />
                   </div>
                 </div>
                 
@@ -85,8 +171,17 @@ const CreatePost = () => {
                   <Label>ভাড়া (প্রতি মাস/দিন)</Label>
                   <div className="flex items-center gap-2">
                     <DollarSign className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                    <Input type="number" placeholder="0" />
-                    <Select defaultValue="month">
+                    <Input 
+                      type="number" 
+                      placeholder="0" 
+                      value={rentForm.price}
+                      onChange={(e) => setRentForm({...rentForm, price: e.target.value})}
+                    />
+                    <Select 
+                      defaultValue="month"
+                      value={rentForm.period}
+                      onValueChange={(value) => setRentForm({...rentForm, period: value})}
+                    >
                       <SelectTrigger className="w-28">
                         <SelectValue placeholder="পিরিয়ড" />
                       </SelectTrigger>
@@ -101,7 +196,12 @@ const CreatePost = () => {
                 
                 <div className="flex flex-col gap-2">
                   <Label>বিবরণ</Label>
-                  <Textarea placeholder="এখানে বিস্তারিত লিখুন..." className="min-h-[120px]" />
+                  <Textarea 
+                    placeholder="এখানে বিস্তারিত লিখুন..." 
+                    className="min-h-[120px]"
+                    value={rentForm.description}
+                    onChange={(e) => setRentForm({...rentForm, description: e.target.value})}
+                  />
                 </div>
                 
                 <div className="flex flex-col gap-2">
@@ -109,16 +209,34 @@ const CreatePost = () => {
                   <div className="border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center">
                     <Camera className="h-10 w-10 text-muted-foreground mb-2" />
                     <p className="text-muted-foreground text-center">ছবি আপলোড করতে ক্লিক করুন বা টেনে আনুন</p>
-                    <input type="file" className="hidden" id="file-upload" multiple accept="image/*" />
+                    <input 
+                      type="file" 
+                      className="hidden" 
+                      id="file-upload" 
+                      multiple 
+                      accept="image/*"
+                      onChange={(e) => handleFileUpload(e.target.files, 'rent')}
+                    />
                     <Button variant="outline" className="mt-4" onClick={() => document.getElementById('file-upload')?.click()}>
                       আপলোড করুন
                     </Button>
                   </div>
+                  {rentForm.images.length > 0 && (
+                    <div className="mt-2">
+                      <p className="text-sm text-muted-foreground">{rentForm.images.length} টি ছবি আপলোড করা হয়েছে</p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
             
-            <Button className="w-full">পোস্ট করুন</Button>
+            <Button 
+              className="w-full" 
+              onClick={() => handleSubmit('rent')} 
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'প্রক্রিয়াকরণ হচ্ছে...' : 'পোস্ট করুন'}
+            </Button>
           </div>
         </TabsContent>
 
@@ -128,12 +246,19 @@ const CreatePost = () => {
               <CardContent className="p-4 space-y-4">
                 <div className="flex flex-col gap-2">
                   <Label>সার্ভিসের নাম</Label>
-                  <Input placeholder="সার্ভিসের নাম লিখুন" />
+                  <Input 
+                    placeholder="সার্ভিসের নাম লিখুন" 
+                    value={serviceForm.title}
+                    onChange={(e) => setServiceForm({...serviceForm, title: e.target.value})}
+                  />
                 </div>
                 
                 <div className="flex flex-col gap-2">
                   <Label>ক্যাটাগরি</Label>
-                  <Select>
+                  <Select 
+                    value={serviceForm.category}
+                    onValueChange={(value) => setServiceForm({...serviceForm, category: value})}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="ক্যাটাগরি নির্বাচন করুন" />
                     </SelectTrigger>
@@ -152,7 +277,11 @@ const CreatePost = () => {
                   <Label>লোকেশন</Label>
                   <div className="flex items-center gap-2">
                     <MapPin className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                    <Input placeholder="লোকেশন লিখুন" />
+                    <Input 
+                      placeholder="লোকেশন লিখুন"
+                      value={serviceForm.location}
+                      onChange={(e) => setServiceForm({...serviceForm, location: e.target.value})}
+                    />
                   </div>
                 </div>
                 
@@ -160,7 +289,12 @@ const CreatePost = () => {
                   <Label>মূল্য</Label>
                   <div className="flex items-center gap-2">
                     <DollarSign className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                    <Input type="number" placeholder="0" />
+                    <Input 
+                      type="number" 
+                      placeholder="0"
+                      value={serviceForm.price}
+                      onChange={(e) => setServiceForm({...serviceForm, price: e.target.value})}
+                    />
                   </div>
                 </div>
                 
@@ -168,8 +302,17 @@ const CreatePost = () => {
                   <Label>সময়কাল</Label>
                   <div className="flex items-center gap-2">
                     <Clock className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                    <Input type="number" placeholder="0" />
-                    <Select defaultValue="minutes">
+                    <Input 
+                      type="number" 
+                      placeholder="0"
+                      value={serviceForm.duration}
+                      onChange={(e) => setServiceForm({...serviceForm, duration: e.target.value})}
+                    />
+                    <Select 
+                      defaultValue="minutes"
+                      value={serviceForm.timeUnit}
+                      onValueChange={(value) => setServiceForm({...serviceForm, timeUnit: value})}
+                    >
                       <SelectTrigger className="w-28">
                         <SelectValue placeholder="সময়" />
                       </SelectTrigger>
@@ -184,7 +327,12 @@ const CreatePost = () => {
                 
                 <div className="flex flex-col gap-2">
                   <Label>বিবরণ</Label>
-                  <Textarea placeholder="এখানে বিস্তারিত লিখুন..." className="min-h-[120px]" />
+                  <Textarea 
+                    placeholder="এখানে বিস্তারিত লিখুন..." 
+                    className="min-h-[120px]"
+                    value={serviceForm.description}
+                    onChange={(e) => setServiceForm({...serviceForm, description: e.target.value})}
+                  />
                 </div>
                 
                 <div className="flex flex-col gap-2">
@@ -192,16 +340,34 @@ const CreatePost = () => {
                   <div className="border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center">
                     <Camera className="h-10 w-10 text-muted-foreground mb-2" />
                     <p className="text-muted-foreground text-center">ছবি আপলোড করতে ক্লিক করুন বা টেনে আনুন</p>
-                    <input type="file" className="hidden" id="service-upload" multiple accept="image/*" />
+                    <input 
+                      type="file" 
+                      className="hidden" 
+                      id="service-upload" 
+                      multiple 
+                      accept="image/*"
+                      onChange={(e) => handleFileUpload(e.target.files, 'service')}
+                    />
                     <Button variant="outline" className="mt-4" onClick={() => document.getElementById('service-upload')?.click()}>
                       আপলোড করুন
                     </Button>
                   </div>
+                  {serviceForm.images.length > 0 && (
+                    <div className="mt-2">
+                      <p className="text-sm text-muted-foreground">{serviceForm.images.length} টি ছবি আপলোড করা হয়েছে</p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
             
-            <Button className="w-full">পোস্ট করুন</Button>
+            <Button 
+              className="w-full" 
+              onClick={() => handleSubmit('service')}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'প্রক্রিয়াকরণ হচ্ছে...' : 'পোস্ট করুন'}
+            </Button>
           </div>
         </TabsContent>
 
@@ -211,12 +377,19 @@ const CreatePost = () => {
               <CardContent className="p-4 space-y-4">
                 <div className="flex flex-col gap-2">
                   <Label>পণ্যের নাম</Label>
-                  <Input placeholder="পণ্যের নাম লিখুন" />
+                  <Input 
+                    placeholder="পণ্যের নাম লিখুন"
+                    value={marketplaceForm.title}
+                    onChange={(e) => setMarketplaceForm({...marketplaceForm, title: e.target.value})}
+                  />
                 </div>
                 
                 <div className="flex flex-col gap-2">
                   <Label>ক্যাটাগরি</Label>
-                  <Select>
+                  <Select
+                    value={marketplaceForm.category}
+                    onValueChange={(value) => setMarketplaceForm({...marketplaceForm, category: value})}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="ক্যাটাগরি নির্বাচন করুন" />
                     </SelectTrigger>
@@ -235,7 +408,12 @@ const CreatePost = () => {
                   <Label>মূল্য</Label>
                   <div className="flex items-center gap-2">
                     <DollarSign className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                    <Input type="number" placeholder="মূল্য" />
+                    <Input 
+                      type="number" 
+                      placeholder="মূল্য"
+                      value={marketplaceForm.price}
+                      onChange={(e) => setMarketplaceForm({...marketplaceForm, price: e.target.value})}
+                    />
                   </div>
                 </div>
                 
@@ -243,7 +421,12 @@ const CreatePost = () => {
                   <Label>ডিসকাউন্ট মূল্য (যদি থাকে)</Label>
                   <div className="flex items-center gap-2">
                     <DollarSign className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                    <Input type="number" placeholder="ডিসকাউন্ট মূল্য" />
+                    <Input 
+                      type="number" 
+                      placeholder="ডিসকাউন্ট মূল্য"
+                      value={marketplaceForm.discountPrice}
+                      onChange={(e) => setMarketplaceForm({...marketplaceForm, discountPrice: e.target.value})}
+                    />
                   </div>
                 </div>
                 
@@ -251,13 +434,22 @@ const CreatePost = () => {
                   <Label>ট্যাগ</Label>
                   <div className="flex items-center gap-2">
                     <Tag className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                    <Input placeholder="কমা দিয়ে ট্যাগ আলাদা করুন" />
+                    <Input 
+                      placeholder="কমা দিয়ে ট্যাগ আলাদা করুন"
+                      value={marketplaceForm.tags}
+                      onChange={(e) => setMarketplaceForm({...marketplaceForm, tags: e.target.value})}
+                    />
                   </div>
                 </div>
                 
                 <div className="flex flex-col gap-2">
                   <Label>বিবরণ</Label>
-                  <Textarea placeholder="এখানে বিস্তারিত লিখুন..." className="min-h-[120px]" />
+                  <Textarea 
+                    placeholder="এখানে বিস্তারিত লিখুন..." 
+                    className="min-h-[120px]"
+                    value={marketplaceForm.description}
+                    onChange={(e) => setMarketplaceForm({...marketplaceForm, description: e.target.value})}
+                  />
                 </div>
                 
                 <div className="flex flex-col gap-2">
@@ -265,16 +457,34 @@ const CreatePost = () => {
                   <div className="border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center">
                     <Camera className="h-10 w-10 text-muted-foreground mb-2" />
                     <p className="text-muted-foreground text-center">ছবি আপলোড করতে ক্লিক করুন বা টেনে আনুন</p>
-                    <input type="file" className="hidden" id="product-upload" multiple accept="image/*" />
+                    <input 
+                      type="file" 
+                      className="hidden" 
+                      id="product-upload" 
+                      multiple 
+                      accept="image/*"
+                      onChange={(e) => handleFileUpload(e.target.files, 'marketplace')}
+                    />
                     <Button variant="outline" className="mt-4" onClick={() => document.getElementById('product-upload')?.click()}>
                       আপলোড করুন
                     </Button>
                   </div>
+                  {marketplaceForm.images.length > 0 && (
+                    <div className="mt-2">
+                      <p className="text-sm text-muted-foreground">{marketplaceForm.images.length} টি ছবি আপলোড করা হয়েছে</p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
             
-            <Button className="w-full">পোস্ট করুন</Button>
+            <Button 
+              className="w-full" 
+              onClick={() => handleSubmit('marketplace')}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'প্রক্রিয়াকরণ হচ্ছে...' : 'পোস্ট করুন'}
+            </Button>
           </div>
         </TabsContent>
       </Tabs>

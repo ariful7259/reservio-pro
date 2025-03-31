@@ -46,7 +46,12 @@ const Navbar = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
+      // Improved search functionality - navigate to search results page with query parameter
       navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
+      
+      // Display mock search results for demonstration purposes
+      console.log(`Searching for: ${searchTerm}`);
+      // This would normally connect to a backend API to fetch actual search results
     }
   };
 
@@ -83,7 +88,6 @@ const Navbar = () => {
           </div>
           
           <div className="flex items-center gap-2">
-            {/* Profile Dropdown - Picture icon removed as it will be moved to the sidebar */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon" className="rounded-full overflow-hidden">

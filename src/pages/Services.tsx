@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -15,6 +16,7 @@ import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Card, CardContent } from '@/components/ui/card';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import ServiceCard from '@/components/ServiceCard';
 import ServiceProviderCard from '@/components/ServiceProviderCard';
 
@@ -23,6 +25,13 @@ const Services = () => {
   const [view, setView] = useState<'services' | 'providers'>('services');
   const [isExpanded, setIsExpanded] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
+
+  // Banner images for services
+  const bannerImages = [
+    "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1573497620053-ea5300f94f21?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&auto=format&fit=crop"
+  ];
 
   // Sample services data
   const services = [
@@ -286,7 +295,7 @@ const Services = () => {
       )}
       
       {/* Service Categories */}
-      <div className="mb-8">
+      <div className="mb-6">
         <h2 className="text-lg font-medium mb-4">ক্যাটাগরি</h2>
         <div className="grid grid-cols-4 gap-3">
           {serviceCategories.slice(0, 4).map((category, index) => (
@@ -349,8 +358,31 @@ const Services = () => {
         </Collapsible>
       </div>
       
+      {/* Add Banner between Categories and Featured Listings */}
+      <div className="mb-6">
+        <Carousel className="w-full">
+          <CarouselContent>
+            {bannerImages.map((image, index) => (
+              <CarouselItem key={index}>
+                <div className="p-1">
+                  <div className="overflow-hidden rounded-lg aspect-[16/6] w-full">
+                    <img 
+                      src={image} 
+                      alt={`Banner ${index + 1}`} 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="left-2" />
+          <CarouselNext className="right-2" />
+        </Carousel>
+      </div>
+      
       {/* Featured Listings */}
-      <div className="mb-8">
+      <div className="mb-6">
         <h2 className="text-lg font-medium mb-4">ফিচার্ড লিস্টিং</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {featuredListings.map((listing) => (
@@ -407,95 +439,7 @@ const Services = () => {
         </div>
       </div>
       
-      <Tabs defaultValue="all" className="mb-6">
-        <TabsList className="mb-4 w-full bg-secondary/50">
-          <TabsTrigger value="all" className="flex-1">সব</TabsTrigger>
-          <TabsTrigger value="medical" className="flex-1">মেডিকেল</TabsTrigger>
-          <TabsTrigger value="legal" className="flex-1">লিগ্যাল</TabsTrigger>
-          <TabsTrigger value="others" className="flex-1">অন্যান্য</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="all" className="mt-0">
-          {view === 'services' ? (
-            <div className="grid grid-cols-2 gap-4">
-              {services.map(service => (
-                <ServiceCard
-                  key={service.id}
-                  {...service}
-                  onClick={handleServiceClick}
-                  buttonLabel={getButtonLabel(service.id)}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {providers.map(provider => (
-                <ServiceProviderCard
-                  key={provider.id}
-                  {...provider}
-                  onClick={handleProviderClick}
-                />
-              ))}
-            </div>
-          )}
-        </TabsContent>
-        
-        <TabsContent value="medical" className="mt-0">
-          {view === 'services' ? (
-            <div className="grid grid-cols-2 gap-4">
-              {services.slice(0, 3).map(service => (
-                <ServiceCard
-                  key={service.id}
-                  {...service}
-                  onClick={handleServiceClick}
-                  buttonLabel={getButtonLabel(service.id)}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {providers.slice(0, 3).map(provider => (
-                <ServiceProviderCard
-                  key={provider.id}
-                  {...provider}
-                  onClick={handleProviderClick}
-                />
-              ))}
-            </div>
-          )}
-        </TabsContent>
-        
-        <TabsContent value="legal" className="mt-0">
-          <div className="text-center py-8 text-muted-foreground">
-            কোন সার্ভিস এখনো উপলব্ধ নেই
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="others" className="mt-0">
-          {view === 'services' ? (
-            <div className="grid grid-cols-2 gap-4">
-              {services.slice(3, 5).map(service => (
-                <ServiceCard
-                  key={service.id}
-                  {...service}
-                  onClick={handleServiceClick}
-                  buttonLabel={getButtonLabel(service.id)}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {providers.slice(3, 4).map(provider => (
-                <ServiceProviderCard
-                  key={provider.id}
-                  {...provider}
-                  onClick={handleProviderClick}
-                />
-              ))}
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+      {/* This is the part that has been modified to remove the section below featured listings. The Tabs and TabsContent components remain, but all the content below is removed since it's not needed anymore */}
     </div>
   );
 };
