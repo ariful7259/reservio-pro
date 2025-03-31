@@ -2,96 +2,18 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Search, 
-  Filter, 
-  Calendar, 
-  ShieldCheck,
-  Bell,
-  Home,
-  AlertCircle,
-  TrendingUp,
-  Plus
+  Star, 
+  MapPin,
+  ArrowRight,
 } from 'lucide-react';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import ServiceCard from '@/components/ServiceCard';
-import AppointmentCard from '@/components/AppointmentCard';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const Index = () => {
   const navigate = useNavigate();
-
-  // Sample data
-  const upcomingAppointments = [
-    {
-      id: '1',
-      serviceName: 'ডাক্তার কনসাল্টেশন',
-      providerName: 'ডাঃ রাহিম আহমেদ',
-      providerImage: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80',
-      date: '২৪ জুন, ২০২৩',
-      time: 'সকাল ১০:৩০',
-      status: 'upcoming',
-      location: 'মেডিকেল সেন্টার, ঢাকা',
-    },
-  ] as const;
-
-  const popularServices = [
-    {
-      id: '1',
-      title: 'ডাক্তার কনসাল্টেশন',
-      provider: 'মেডিকেল সেন্টার',
-      imageUrl: 'https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-      rating: 4.8,
-      price: 1500,
-      discount: 10,
-      duration: '৩০ মিনিট',
-      tags: ['মেডিকেল', 'অনলাইন'],
-    },
-    {
-      id: '2',
-      title: 'ডেন্টাল চেকআপ',
-      provider: 'শাইন ডেন্টাল',
-      imageUrl: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-      rating: 4.6,
-      price: 2000,
-      duration: '৪৫ মিনিট',
-      tags: ['ডেন্টাল', 'চেকআপ'],
-    },
-    {
-      id: '3',
-      title: 'মেন্টাল হেলথ কাউন্সেলিং',
-      provider: 'মাইন্ড কেয়ার',
-      imageUrl: 'https://images.unsplash.com/photo-1573497620053-ea5300f94f21?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-      rating: 4.9,
-      price: 1800,
-      discount: 15,
-      duration: '৬০ মিনিট',
-      tags: ['কাউন্সেলিং', 'অনলাইন'],
-    },
-  ];
-
-  // Sponsored ads
-  const sponsoredAds = [
-    {
-      id: '1',
-      title: 'স্পেশাল অফার',
-      description: 'প্রথম কনসাল্টেশনে ২০% ছাড়',
-      image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=150&q=80',
-      tag: 'বিশেষ অফার',
-      link: '/special-offers',
-    },
-    {
-      id: '2',
-      title: 'নতুন প্রোডাক্ট',
-      description: 'হেলথ প্যাকেজে বিশেষ ডিসকাউন্ট',
-      image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=150&q=80',
-      tag: 'প্রমো',
-      link: '/promo',
-    }
-  ];
 
   // Banner images
   const bannerImages = [
@@ -104,9 +26,66 @@ const Index = () => {
     "https://images.unsplash.com/photo-1618359057154-e21ae64350b6?q=80&w=1000&auto=format&fit=crop",
   ];
 
-  const handleServiceClick = (id: string) => {
-    navigate(`/services/${id}`);
-  };
+  // Combined Featured Listings from all categories
+  const featuredListings = [
+    // Rental listings
+    {
+      id: "rent-1",
+      title: "৩ বেডরুম অ্যাপার্টমেন্ট",
+      location: "গুলশান, ঢাকা",
+      price: "৳২৫,০০০/মাস",
+      image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1000&auto=format&fit=crop",
+      category: "রেন্ট",
+      path: "/rent-details/1"
+    },
+    {
+      id: "rent-2",
+      title: "অফিস স্পেস",
+      location: "বনানী, ঢাকা",
+      price: "৳৫০,০০০/মাস",
+      image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1000&auto=format&fit=crop",
+      category: "রেন্ট",
+      path: "/rent-details/2"
+    },
+    // Service listings
+    {
+      id: "serv-1",
+      title: "ডাক্তার কনসাল্টেশন",
+      location: "মেডিকেল সেন্টার, ঢাকা",
+      price: "৳১,৫০০",
+      image: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
+      category: "সার্ভিস",
+      path: "/services/1"
+    },
+    {
+      id: "serv-2",
+      title: "ডেন্টাল চেকআপ",
+      location: "শাইন ডেন্টাল, ঢাকা",
+      price: "৳২,০০০",
+      image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
+      category: "সার্ভিস",
+      path: "/services/2"
+    },
+    // Marketplace listings
+    {
+      id: "market-1",
+      title: "স্মার্ট ব্লাড প্রেশার মনিটর",
+      location: "ধানমন্ডি, ঢাকা",
+      price: "৳২,৫০০",
+      image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
+      category: "মার্কেটপ্লেস",
+      path: "/shopping/product/1"
+    },
+    {
+      id: "market-2",
+      title: "ডিজিটাল গ্লুকোমিটার কিট",
+      location: "উত্তরা, ঢাকা",
+      price: "৳৩,৫০০",
+      image: "https://images.unsplash.com/photo-1587854680352-936b22b91030?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
+      category: "মার্কেটপ্লেস",
+      path: "/shopping/product/2"
+    },
+  ];
 
   return (
     <div className="container px-4 pt-20 pb-20">
@@ -133,123 +112,177 @@ const Index = () => {
         </Carousel>
       </div>
 
-      {/* Create post button between sections */}
-      <div className="flex justify-center mb-6 md:hidden">
-        <Button className="bg-primary text-white w-full max-w-xs flex items-center gap-2">
-          <Plus size={16} /> পোস্ট করুন
-        </Button>
-      </div>
-
-      {/* Search Bar */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="সার্ভিস খুঁজুন" className="pl-9" />
-        </div>
-        <Button size="icon" variant="outline">
-          <Filter className="h-4 w-4" />
-        </Button>
-      </div>
-
-      {/* Sponsored Ads Section */}
+      {/* Featured Listings */}
       <div className="mb-6">
-        <h2 className="text-lg font-semibold mb-3">বিশেষ অফার</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {sponsoredAds.map((ad) => (
-            <Card 
-              key={ad.id} 
-              className="border overflow-hidden cursor-pointer hover:shadow-md transition-all"
-              onClick={() => navigate(ad.link)}
-            >
-              <div className="relative">
-                <img 
-                  src={ad.image} 
-                  alt={ad.title} 
-                  className="w-full h-32 object-cover"
-                />
-                <Badge className="absolute top-2 right-2 bg-primary">{ad.tag}</Badge>
-              </div>
-              <CardContent className="p-3">
-                <h3 className="font-semibold">{ad.title}</h3>
-                <p className="text-sm text-muted-foreground">{ad.description}</p>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold">ফিচার্ড লিস্টিং</h2>
         </div>
-      </div>
 
-      {/* Upcoming Appointments */}
-      {upcomingAppointments.length > 0 && (
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-semibold">আপনার আসন্ন অ্যাপয়েন্টমেন্ট</h2>
-            <Button variant="link" className="p-0" onClick={() => navigate('/appointments')}>
-              সব দেখুন
-            </Button>
-          </div>
-          <div className="space-y-3">
-            {upcomingAppointments.map(appointment => (
-              <AppointmentCard key={appointment.id} {...appointment} />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Popular Services */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-lg font-semibold">জনপ্রিয় সার্ভিসসমূহ</h2>
-          <Button variant="link" className="p-0" onClick={() => navigate('/services')}>
-            সব দেখুন
-          </Button>
-        </div>
-        
-        <Tabs defaultValue="all" className="mb-6">
+        <Tabs defaultValue="all">
           <TabsList className="mb-4 w-full bg-secondary/50">
             <TabsTrigger value="all" className="flex-1">সব</TabsTrigger>
-            <TabsTrigger value="medical" className="flex-1">মেডিকেল</TabsTrigger>
-            <TabsTrigger value="legal" className="flex-1">লিগ্যাল</TabsTrigger>
-            <TabsTrigger value="others" className="flex-1">অন্যান্য</TabsTrigger>
+            <TabsTrigger value="rent" className="flex-1">রেন্ট</TabsTrigger>
+            <TabsTrigger value="services" className="flex-1">সার্ভিস</TabsTrigger>
+            <TabsTrigger value="marketplace" className="flex-1">মার্কেটপ্লেস</TabsTrigger>
           </TabsList>
-          <TabsContent value="all" className="mt-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {popularServices.map(service => (
-                <ServiceCard
-                  key={service.id}
-                  {...service}
-                  onClick={handleServiceClick}
-                  buttonLabel="বুক করুন"
-                />
+
+          <TabsContent value="all">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {featuredListings.map((listing) => (
+                <Card 
+                  key={listing.id} 
+                  className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
+                  onClick={() => navigate(listing.path)}
+                >
+                  <div className="relative aspect-square">
+                    <img 
+                      src={listing.image} 
+                      alt={listing.title} 
+                      className="w-full h-full object-cover"
+                    />
+                    <Badge className="absolute top-2 right-2">{listing.category}</Badge>
+                  </div>
+                  <CardContent className="p-3">
+                    <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
+                    <div className="flex items-center text-xs text-muted-foreground mt-1">
+                      <MapPin className="h-3 w-3 mr-1" />
+                      <span>{listing.location}</span>
+                    </div>
+                    <div className="flex items-center justify-between mt-2">
+                      <p className="text-sm font-bold text-primary">{listing.price}</p>
+                      <div className="flex items-center text-xs">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
+                        <span>4.8</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
-          </TabsContent>
-          <TabsContent value="medical" className="mt-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {popularServices.slice(0, 2).map(service => (
-                <ServiceCard
-                  key={service.id}
-                  {...service}
-                  onClick={handleServiceClick}
-                  buttonLabel="বুক করুন"
-                />
-              ))}
+            <div className="flex justify-center mt-4">
+              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/all-listings')}>
+                সব দেখুন <ArrowRight className="h-4 w-4" />
+              </Button>
             </div>
           </TabsContent>
-          <TabsContent value="legal" className="mt-0">
-            <div className="text-center py-8 text-muted-foreground">
-              কোন সার্ভিস এখনো উপলব্ধ নেই
+
+          <TabsContent value="rent">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {featuredListings.filter(item => item.category === "রেন্ট").map((listing) => (
+                <Card 
+                  key={listing.id} 
+                  className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
+                  onClick={() => navigate(listing.path)}
+                >
+                  <div className="relative aspect-square">
+                    <img 
+                      src={listing.image} 
+                      alt={listing.title} 
+                      className="w-full h-full object-cover"
+                    />
+                    <Badge className="absolute top-2 right-2">{listing.category}</Badge>
+                  </div>
+                  <CardContent className="p-3">
+                    <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
+                    <div className="flex items-center text-xs text-muted-foreground mt-1">
+                      <MapPin className="h-3 w-3 mr-1" />
+                      <span>{listing.location}</span>
+                    </div>
+                    <div className="flex items-center justify-between mt-2">
+                      <p className="text-sm font-bold text-primary">{listing.price}</p>
+                      <div className="flex items-center text-xs">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
+                        <span>4.8</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            <div className="flex justify-center mt-4">
+              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/rentals')}>
+                আরও দেখুন <ArrowRight className="h-4 w-4" />
+              </Button>
             </div>
           </TabsContent>
-          <TabsContent value="others" className="mt-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {popularServices.slice(2, 3).map(service => (
-                <ServiceCard
-                  key={service.id}
-                  {...service}
-                  onClick={handleServiceClick}
-                  buttonLabel="বুক করুন"
-                />
+
+          <TabsContent value="services">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {featuredListings.filter(item => item.category === "সার্ভিস").map((listing) => (
+                <Card 
+                  key={listing.id} 
+                  className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
+                  onClick={() => navigate(listing.path)}
+                >
+                  <div className="relative aspect-square">
+                    <img 
+                      src={listing.image} 
+                      alt={listing.title} 
+                      className="w-full h-full object-cover"
+                    />
+                    <Badge className="absolute top-2 right-2">{listing.category}</Badge>
+                  </div>
+                  <CardContent className="p-3">
+                    <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
+                    <div className="flex items-center text-xs text-muted-foreground mt-1">
+                      <MapPin className="h-3 w-3 mr-1" />
+                      <span>{listing.location}</span>
+                    </div>
+                    <div className="flex items-center justify-between mt-2">
+                      <p className="text-sm font-bold text-primary">{listing.price}</p>
+                      <div className="flex items-center text-xs">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
+                        <span>4.8</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
+            </div>
+            <div className="flex justify-center mt-4">
+              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/services')}>
+                আরও দেখুন <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="marketplace">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {featuredListings.filter(item => item.category === "মার্কেটপ্লেস").map((listing) => (
+                <Card 
+                  key={listing.id} 
+                  className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
+                  onClick={() => navigate(listing.path)}
+                >
+                  <div className="relative aspect-square">
+                    <img 
+                      src={listing.image} 
+                      alt={listing.title} 
+                      className="w-full h-full object-cover"
+                    />
+                    <Badge className="absolute top-2 right-2">{listing.category}</Badge>
+                  </div>
+                  <CardContent className="p-3">
+                    <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
+                    <div className="flex items-center text-xs text-muted-foreground mt-1">
+                      <MapPin className="h-3 w-3 mr-1" />
+                      <span>{listing.location}</span>
+                    </div>
+                    <div className="flex items-center justify-between mt-2">
+                      <p className="text-sm font-bold text-primary">{listing.price}</p>
+                      <div className="flex items-center text-xs">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
+                        <span>4.8</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            <div className="flex justify-center mt-4">
+              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/shopping')}>
+                আরও দেখুন <ArrowRight className="h-4 w-4" />
+              </Button>
             </div>
           </TabsContent>
         </Tabs>
@@ -259,4 +292,3 @@ const Index = () => {
 };
 
 export default Index;
-

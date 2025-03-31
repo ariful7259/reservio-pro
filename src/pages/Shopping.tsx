@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ShoppingCart, Star, Heart, Filter, ChevronDown, ChevronUp, Plus, MapPin } from 'lucide-react';
+import { ShoppingCart, Star, Heart, Filter, ChevronDown, ChevronUp, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -76,6 +76,50 @@ const Shopping = () => {
     { icon: <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="অন্যান্য" />, name: "অন্যান্য", path: "/shopping/others", count: 67 },
   ];
 
+  // Featured product listings
+  const featuredListings = [
+    {
+      id: '1',
+      title: 'স্মার্ট ব্লাড প্রেশার মনিটর',
+      location: 'ধানমন্ডি, ঢাকা',
+      price: '৳২,৫০০',
+      oldPrice: '৳৩,০০০',
+      image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+      rating: 4.5,
+      discount: 17,
+    },
+    {
+      id: '2',
+      title: 'ডিজিটাল গ্লুকোমিটার কিট',
+      location: 'উত্তরা, ঢাকা',
+      price: '৳৩,৫০০',
+      oldPrice: '৳৪,২০০',
+      image: 'https://images.unsplash.com/photo-1587854680352-936b22b91030?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+      rating: 4.7,
+      discount: 17,
+    },
+    {
+      id: '3',
+      title: 'ফিটনেস ওয়াচ প্রো',
+      location: 'বনানী, ঢাকা',
+      price: '৳৪,৯৯৯',
+      oldPrice: '৳৫,৫০০',
+      image: 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+      rating: 4.8,
+      discount: 9,
+    },
+    {
+      id: '4',
+      title: 'ইয়োগা ম্যাট প্রিমিয়াম',
+      location: 'মিরপুর, ঢাকা',
+      price: '৳১,২০০',
+      oldPrice: '৳১,৫০০',
+      image: 'https://images.unsplash.com/photo-1592432678016-e910b452f9a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+      rating: 4.6,
+      discount: 20,
+    },
+  ];
+
   const toggleFilter = () => {
     setFilterVisible(!filterVisible);
   };
@@ -84,17 +128,9 @@ const Shopping = () => {
     <div className="container px-4 pt-20 pb-20">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">মার্কেটপ্লেস</h1>
-        <div className="flex gap-2">
-          <Button 
-            onClick={() => navigate('/shopping/create')}
-            className="bg-primary text-white flex items-center gap-2"
-          >
-            <Plus size={16} /> পণ্য পোস্ট করুন
-          </Button>
-          <Button variant="outline" size="icon" onClick={toggleFilter}>
-            <Filter className="h-4 w-4" />
-          </Button>
-        </div>
+        <Button variant="outline" size="icon" onClick={toggleFilter}>
+          <Filter className="h-4 w-4" />
+        </Button>
       </div>
       
       {/* Filter options - conditionally shown */}
@@ -238,6 +274,55 @@ const Shopping = () => {
             </CollapsibleTrigger>
           </div>
         </Collapsible>
+      </div>
+      
+      {/* Featured Listings */}
+      <div className="mb-8">
+        <h2 className="text-lg font-medium mb-4">ফিচার্ড লিস্টিং</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {featuredListings.map((listing) => (
+            <Card 
+              key={listing.id} 
+              className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
+              onClick={() => navigate(`/shopping/product/${listing.id}`)}
+            >
+              <div className="relative aspect-square">
+                <img 
+                  src={listing.image} 
+                  alt={listing.title} 
+                  className="w-full h-full object-cover"
+                />
+                {listing.discount && (
+                  <Badge className="absolute top-2 left-2 bg-red-500">
+                    {listing.discount}% ছাড়
+                  </Badge>
+                )}
+                <Button variant="outline" size="icon" className="absolute top-2 right-2 h-8 w-8 bg-white rounded-full">
+                  <Heart className="h-4 w-4 text-gray-400" />
+                </Button>
+              </div>
+              <CardContent className="p-3">
+                <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
+                <div className="flex items-center text-xs text-muted-foreground mt-1">
+                  <MapPin className="h-3 w-3 mr-1" />
+                  <span>{listing.location}</span>
+                </div>
+                <div className="flex items-center justify-between mt-2">
+                  <div>
+                    <div className="font-bold">{listing.price}</div>
+                    {listing.oldPrice && (
+                      <div className="text-xs text-gray-400 line-through">{listing.oldPrice}</div>
+                    )}
+                  </div>
+                  <div className="flex items-center text-xs">
+                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
+                    <span>{listing.rating}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
       
       <Separator className="my-6" />

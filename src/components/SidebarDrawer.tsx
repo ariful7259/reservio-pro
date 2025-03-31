@@ -12,12 +12,10 @@ import {
   Lightbulb,
   HelpCircle,
   Play,
-  ChevronDown,
-  ChevronUp,
+  User,
   LogOut,
   Plus,
-  Filter,
-  User
+  MessageSquare
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
@@ -27,9 +25,17 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Badge } from '@/components/ui/badge';
 
 export const SidebarDrawer = () => {
-  const [isServiceExpanded, setIsServiceExpanded] = useState(false);
   const [activePostType, setActivePostType] = useState('rent');
   const navigate = useNavigate();
   
@@ -41,19 +47,10 @@ export const SidebarDrawer = () => {
     image: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80',
   };
   
-  const serviceCategories = [
-    { icon: <PaintBucket className="h-6 w-6" />, name: "পেইন্টিং", path: "/services/painting" },
-    { icon: <Truck className="h-6 w-6" />, name: "প্যাকার্স ও মুভার্স", path: "/services/packers-movers" },
-    { icon: <Briefcase className="h-6 w-6" />, name: "হোম ক্লিনিং", path: "/services/home-cleaning" },
-    { icon: <Wrench className="h-6 w-6" />, name: "এসি রিপেয়ার", path: "/services/ac-repair" },
-    // Additional categories that will be shown when expanded
-    { icon: <Home className="h-6 w-6" />, name: "গৃহ নির্মাণ", path: "/services/construction" },
-    { icon: <Wrench className="h-6 w-6" />, name: "প্লাম্বিং", path: "/services/plumbing" },
-    { icon: <Wrench className="h-6 w-6" />, name: "ইলেক্ট্রিশিয়ান", path: "/services/electrician" },
-    { icon: <Wrench className="h-6 w-6" />, name: "কার্পেন্টার", path: "/services/carpenter" },
-  ];
-
-  const myServicesSubMenus = [
+  // Profile menu items
+  const profileMenuItems = [
+    { icon: <User className="h-5 w-5" />, name: "ব্যক্তিগত তথ্য", path: "/profile/personal" },
+    { icon: <MessageSquare className="h-5 w-5" />, name: "নোটিফিকেশন", path: "/notifications", badge: 2 },
     { icon: <Wallet className="h-5 w-5" />, name: "ওয়ালেট", path: "/wallet" },
     { icon: <Lightbulb className="h-5 w-5" />, name: "ইউটিলিটিস", path: "/utilities" },
     { icon: <HelpCircle className="h-5 w-5" />, name: "হেল্প এন্ড সাপোর্ট", path: "/help" },
@@ -80,10 +77,6 @@ export const SidebarDrawer = () => {
     },
   ];
 
-  const toggleServiceExpand = () => {
-    setIsServiceExpanded(!isServiceExpanded);
-  };
-
   return (
     <Drawer direction="left">
       <DrawerTrigger asChild>
@@ -103,6 +96,26 @@ export const SidebarDrawer = () => {
               <DrawerTitle className="text-lg">{user.name}</DrawerTitle>
               <p className="text-sm text-muted-foreground">{user.phone}</p>
             </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild className="ml-auto">
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {profileMenuItems.map((item, index) => (
+                  <DropdownMenuItem key={index} asChild>
+                    <Link to={item.path} className="flex items-center gap-2 w-full">
+                      {item.icon}
+                      <span>{item.name}</span>
+                      {item.badge && (
+                        <Badge variant="destructive" className="ml-auto">{item.badge}</Badge>
+                      )}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </DrawerHeader>
         
@@ -173,25 +186,6 @@ export const SidebarDrawer = () => {
               <CarouselNext className="right-1 h-8 w-8" />
             </Carousel>
           </div>
-          
-          {/* Menu Sections */}
-          <div className="space-y-3">
-            <h3 className="font-medium mb-2">সেকশন</h3>
-            <Accordion type="single" collapsible className="w-full">
-              {myServicesSubMenus.map((section, index) => (
-                <AccordionItem key={index} value={`item-${index}`}>
-                  <Link to={section.path}>
-                    <div className="flex items-center gap-3 py-3 px-3">
-                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                        {section.icon}
-                      </div>
-                      <span>{section.name}</span>
-                    </div>
-                  </Link>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
         </div>
         
         <DrawerFooter>
@@ -212,3 +206,5 @@ export const SidebarDrawer = () => {
 
 // Add Carousel from shadcn to use with video ads
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { ChevronDown } from 'lucide-react';
+

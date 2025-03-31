@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
-  MessageSquare,
   Search, 
   Home,
   Building,
@@ -38,23 +37,18 @@ const Navbar = () => {
     { title: 'মার্কেটপ্লেস', path: '/shopping', icon: <ShoppingBag className="h-5 w-5" /> },
   ];
 
-  // User profile data
-  const user = {
-    name: 'আব্দুল্লাহ আল মামুন',
-    phone: '+৮৮০১৭১২৩৪৫৬৭৮',
-    email: 'abdullah@example.com',
-    image: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80',
-  };
-
   // Profile menu items
   const profileMenuItems = [
     { icon: <User className="h-5 w-5" />, name: "ব্যক্তিগত তথ্য", path: "/profile/personal" },
-    { icon: <MessageSquare className="h-5 w-5" />, name: "নোটিফিকেশন", path: "/notifications" },
-    { icon: <Building className="h-5 w-5" />, name: "সিকিউরিটি", path: "/security" },
-    { icon: <ShoppingBag className="h-5 w-5" />, name: "পেমেন্ট মেথড", path: "/profile/payment" },
-    { icon: <Plus className="h-5 w-5" />, name: "রেফার ফ্রেন্ড", path: "/profile/refer" },
     { icon: <LogOut className="h-5 w-5" />, name: "লগআউট", path: "/logout" },
   ];
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
+    }
+  };
 
   return (
     <>
@@ -68,7 +62,7 @@ const Navbar = () => {
           </div>
           
           <div className="w-full max-w-md mx-4 relative">
-            <div className="relative">
+            <form onSubmit={handleSearch} className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input 
                 type="text" 
@@ -77,36 +71,27 @@ const Navbar = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 transform -translate-y-1/2">
+              <Button 
+                type="submit" 
+                variant="ghost" 
+                size="icon" 
+                className="absolute right-1 top-1/2 transform -translate-y-1/2"
+              >
                 <ChevronDown className="h-4 w-4" />
               </Button>
-            </div>
+            </form>
           </div>
           
           <div className="flex items-center gap-2">
-            {/* Profile Dropdown */}
+            {/* Profile Dropdown - Picture icon removed as it will be moved to the sidebar */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon" className="rounded-full overflow-hidden">
-                  <img 
-                    src={user.image} 
-                    alt={user.name} 
-                    className="h-8 w-8 object-cover"
-                  />
+                  <User className="h-5 w-5" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <div className="flex items-center gap-3 p-3 border-b">
-                  <img 
-                    src={user.image} 
-                    alt={user.name} 
-                    className="h-10 w-10 rounded-full object-cover"
-                  />
-                  <div>
-                    <p className="font-medium text-sm">{user.name}</p>
-                    <p className="text-xs text-muted-foreground">{user.phone}</p>
-                  </div>
-                </div>
+                <DropdownMenuLabel>প্রোফাইল</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {profileMenuItems.map((item, index) => (
                   <DropdownMenuItem key={index} asChild>
@@ -116,50 +101,6 @@ const Navbar = () => {
                     </Link>
                   </DropdownMenuItem>
                 ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Message Icon with Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon" className="relative">
-                  <MessageSquare className="h-5 w-5" />
-                  <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0">
-                    2
-                  </Badge>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-80">
-                <DropdownMenuLabel>মেসেজ</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <div className="flex gap-2 p-2">
-                  <DropdownMenuItem className="flex-1 justify-center">
-                    <Link to="/notifications" className="w-full text-center">নোটিফিকেশন</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="flex-1 justify-center">
-                    <Link to="/chat" className="w-full text-center">চ্যাট</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="flex-1 justify-center">
-                    <Link to="/feedback" className="w-full text-center">ফিডব্যাক</Link>
-                  </DropdownMenuItem>
-                </div>
-                <DropdownMenuSeparator />
-                <div className="max-h-80 overflow-auto">
-                  {[
-                    { title: 'আপনার অ্যাপয়েন্টমেন্ট ৩০ মিনিট পরে', time: '১০ মিনিট আগে' },
-                    { title: 'সাপ্তাহিক অফারঃ ২০% ছাড় সকল সার্ভিসে', time: '২ ঘন্টা আগে' },
-                    { title: 'আপনার ওয়ালেট রিচার্জ সফল হয়েছে', time: '১ দিন আগে' },
-                  ].map((notification, i) => (
-                    <DropdownMenuItem key={i} className="flex flex-col items-start p-3 cursor-pointer">
-                      <div className="font-medium text-sm">{notification.title}</div>
-                      <div className="text-xs text-muted-foreground mt-1">{notification.time}</div>
-                    </DropdownMenuItem>
-                  ))}
-                </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="justify-center text-primary">
-                  <Link to="/notifications" className="w-full text-center">সব দেখুন</Link>
-                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

@@ -1,12 +1,11 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Plus, 
   Filter, 
   ChevronDown, 
   ChevronUp,
-  MapPin
+  MapPin,
+  Star
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -15,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
+import { Card, CardContent } from '@/components/ui/card';
 import ServiceCard from '@/components/ServiceCard';
 import ServiceProviderCard from '@/components/ServiceProviderCard';
 
@@ -50,7 +50,7 @@ const Services = () => {
     {
       id: '3',
       title: 'মেন্টাল হেলথ কাউন্সেলিং',
-      provider: 'মাইন্ড কেয়ার',
+      provider: 'মাইন্দ কেয়ার',
       imageUrl: 'https://images.unsplash.com/photo-1573497620053-ea5300f94f21?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
       rating: 4.9,
       price: 1800,
@@ -133,6 +133,46 @@ const Services = () => {
     { icon: <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="অন্যান্য" />, name: "অন্যান্য", path: "/services/others", count: 67 },
   ];
 
+  // Featured service listings
+  const featuredListings = [
+    {
+      id: '1',
+      title: 'ডাক্তার কনসাল্টেশন',
+      provider: 'মেডিকেল সেন্টার',
+      location: 'গুলশান, ঢাকা',
+      image: 'https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+      price: '৳১,৫০০',
+      rating: 4.8,
+    },
+    {
+      id: '2',
+      title: 'ডেন্টাল চেকআপ',
+      provider: 'শাইন ডেন্টাল',
+      location: 'ধানমন্ডি, ঢাকা',
+      image: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+      price: '৳২,০০০',
+      rating: 4.6,
+    },
+    {
+      id: '3',
+      title: 'মেন্টাল হেলথ কাউন্সেলিং',
+      provider: 'মাইন্দ কেয়ার',
+      location: 'বনানী, ঢাকা',
+      image: 'https://images.unsplash.com/photo-1573497620053-ea5300f94f21?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+      price: '৳১,৮০০',
+      rating: 4.9,
+    },
+    {
+      id: '4',
+      title: 'ফিজিওথেরাপি সেশন',
+      provider: 'হেলদি লাইফ ক্লিনিক',
+      location: 'উত্তরা, ঢাকা',
+      image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+      price: '৳২,৫০০',
+      rating: 4.7,
+    },
+  ];
+
   const handleServiceClick = (id: string) => {
     navigate(`/services/${id}`);
   };
@@ -161,17 +201,9 @@ const Services = () => {
       {/* Header with title and filter button */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">সার্ভিস</h1>
-        <div className="flex gap-2">
-          <Button 
-            onClick={() => navigate('/services/create')}
-            className="bg-primary text-white flex items-center gap-2"
-          >
-            <Plus size={16} /> সার্ভিস পোস্ট করুন
-          </Button>
-          <Button variant="outline" size="icon" onClick={toggleFilter}>
-            <Filter className="h-4 w-4" />
-          </Button>
-        </div>
+        <Button variant="outline" size="icon" onClick={toggleFilter}>
+          <Filter className="h-4 w-4" />
+        </Button>
       </div>
       
       {/* Filter options - conditionally shown */}
@@ -315,6 +347,43 @@ const Services = () => {
             </CollapsibleTrigger>
           </div>
         </Collapsible>
+      </div>
+      
+      {/* Featured Listings */}
+      <div className="mb-8">
+        <h2 className="text-lg font-medium mb-4">ফিচার্ড লিস্টিং</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {featuredListings.map((listing) => (
+            <Card 
+              key={listing.id} 
+              className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
+              onClick={() => navigate(`/services/${listing.id}`)}
+            >
+              <div className="relative aspect-square">
+                <img 
+                  src={listing.image} 
+                  alt={listing.title} 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <CardContent className="p-3">
+                <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
+                <p className="text-xs text-muted-foreground mb-1">{listing.provider}</p>
+                <div className="flex items-center text-xs text-muted-foreground">
+                  <MapPin className="h-3 w-3 mr-1" />
+                  <span>{listing.location}</span>
+                </div>
+                <div className="flex items-center justify-between mt-2">
+                  <p className="text-sm font-bold text-primary">{listing.price}</p>
+                  <div className="flex items-center text-xs">
+                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
+                    <span>{listing.rating}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
       
       <Separator className="my-6" />
