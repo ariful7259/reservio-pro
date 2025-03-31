@@ -134,7 +134,7 @@ const Index = () => {
           />
           <Button 
             type="submit" 
-            variant="primary" 
+            variant="default" 
             className="absolute right-1 top-1/2 transform -translate-y-1/2"
           >
             খুঁজুন
@@ -322,3 +322,4 @@ const Index = () => {
 };
 
 export default Index;
+
