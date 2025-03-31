@@ -266,14 +266,6 @@ const Rentals = () => {
           <Button variant="outline">আরও দেখুন</Button>
         </div>
       </div>
-      
-      <Separator className="my-6" />
-      
-      <div className="bg-primary/5 p-4 rounded-lg">
-        <h2 className="text-lg font-medium mb-3">আপনার সম্পত্তি রেন্ট দিন</h2>
-        <p className="text-sm text-muted-foreground mb-4">আপনার অব্যবহৃত বাসা, অফিস বা যেকোনো সম্পত্তি রেন্ট দিন এবং আয় করুন</p>
-        <Button className="w-full" onClick={() => navigate('/rent-listing/create')}>রেন্ট লিস্টিং পোস্ট করুন</Button>
-      </div>
     </div>
   );
 };

@@ -49,6 +49,17 @@ const App = () => (
           <Route path="/utilities" element={<Utilities />} />
           <Route path="/help" element={<Help />} />
           <Route path="/create-post" element={<CreatePost />} />
+          
+          {/* Digital Creator Solution Routes */}
+          <Route path="/create-store" element={<NotFound />} /> {/* Placeholder, will need implementation */}
+          <Route path="/email-automation" element={<NotFound />} /> {/* Placeholder, will need implementation */}
+          <Route path="/course-builder" element={<NotFound />} /> {/* Placeholder, will need implementation */}
+          <Route path="/event-hosting" element={<NotFound />} /> {/* Placeholder, will need implementation */}
+          <Route path="/one-on-one" element={<NotFound />} /> {/* Placeholder, will need implementation */}
+          <Route path="/digital-products" element={<NotFound />} /> {/* Placeholder, will need implementation */}
+          <Route path="/paid-community" element={<NotFound />} /> {/* Placeholder, will need implementation */}
+          <Route path="/audience-analytics" element={<NotFound />} /> {/* Placeholder, will need implementation */}
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
