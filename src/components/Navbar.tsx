@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   MessageSquare,
   Search, 
@@ -8,7 +8,9 @@ import {
   Building,
   ShoppingBag,
   ChevronDown,
-  Plus
+  Plus,
+  User,
+  LogOut
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -24,6 +26,7 @@ import {
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const isHomePage = location.pathname === "/";
   
@@ -33,6 +36,24 @@ const Navbar = () => {
     { title: 'পোস্ট করুন', path: '/create-post', icon: <Plus className="h-5 w-5" /> },
     { title: 'সার্ভিস', path: '/services', icon: <Search className="h-5 w-5" /> },
     { title: 'মার্কেটপ্লেস', path: '/shopping', icon: <ShoppingBag className="h-5 w-5" /> },
+  ];
+
+  // User profile data
+  const user = {
+    name: 'আব্দুল্লাহ আল মামুন',
+    phone: '+৮৮০১৭১২৩৪৫৬৭৮',
+    email: 'abdullah@example.com',
+    image: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80',
+  };
+
+  // Profile menu items
+  const profileMenuItems = [
+    { icon: <User className="h-5 w-5" />, name: "ব্যক্তিগত তথ্য", path: "/profile/personal" },
+    { icon: <MessageSquare className="h-5 w-5" />, name: "নোটিফিকেশন", path: "/notifications" },
+    { icon: <Building className="h-5 w-5" />, name: "সিকিউরিটি", path: "/security" },
+    { icon: <ShoppingBag className="h-5 w-5" />, name: "পেমেন্ট মেথড", path: "/profile/payment" },
+    { icon: <Plus className="h-5 w-5" />, name: "রেফার ফ্রেন্ড", path: "/profile/refer" },
+    { icon: <LogOut className="h-5 w-5" />, name: "লগআউট", path: "/logout" },
   ];
 
   return (
@@ -63,7 +84,42 @@ const Navbar = () => {
           </div>
           
           <div className="flex items-center gap-2">
-            {/* Message Icon with Dropdown - moved notification inside */}
+            {/* Profile Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon" className="rounded-full overflow-hidden">
+                  <img 
+                    src={user.image} 
+                    alt={user.name} 
+                    className="h-8 w-8 object-cover"
+                  />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="flex items-center gap-3 p-3 border-b">
+                  <img 
+                    src={user.image} 
+                    alt={user.name} 
+                    className="h-10 w-10 rounded-full object-cover"
+                  />
+                  <div>
+                    <p className="font-medium text-sm">{user.name}</p>
+                    <p className="text-xs text-muted-foreground">{user.phone}</p>
+                  </div>
+                </div>
+                <DropdownMenuSeparator />
+                {profileMenuItems.map((item, index) => (
+                  <DropdownMenuItem key={index} asChild>
+                    <Link to={item.path} className="flex items-center gap-2">
+                      {item.icon}
+                      <span>{item.name}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Message Icon with Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon" className="relative">

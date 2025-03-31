@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   Menu, 
   Home, 
@@ -7,22 +8,13 @@ import {
   Truck, 
   Briefcase, 
   Wrench,
-  ShoppingBag,
   Wallet,
-  Building,
   Lightbulb,
   HelpCircle,
   Play,
   ChevronDown,
   ChevronUp,
-  Calendar,
-  Bookmark,
-  MessageSquare,
-  ListCheck,
-  Store,
-  BookmarkCheck,
   LogOut,
-  Settings,
   Plus,
   Filter,
   User
@@ -39,6 +31,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 export const SidebarDrawer = () => {
   const [isServiceExpanded, setIsServiceExpanded] = useState(false);
   const [activePostType, setActivePostType] = useState('rent');
+  const navigate = useNavigate();
   
   // User data
   const user = {
@@ -61,41 +54,9 @@ export const SidebarDrawer = () => {
   ];
 
   const myServicesSubMenus = [
-    { icon: <Calendar className="h-5 w-5" />, name: "আমার বুকিংস", path: "/my-services?tab=bookings" },
-    { icon: <Calendar className="h-5 w-5" />, name: "আমার অ্যাপয়েন্টমেন্টস", path: "/my-services?tab=appointments" },
-    { icon: <Bookmark className="h-5 w-5" />, name: "আমার শর্টলিস্ট", path: "/my-services?tab=shortlists" },
-    { icon: <MessageSquare className="h-5 w-5" />, name: "আমার যোগাযোগকৃত প্রোপার্টি", path: "/my-services?tab=contacted-properties" },
-    { icon: <ListCheck className="h-5 w-5" />, name: "আমার লিস্টিংস", path: "/my-services?tab=listings" },
-    { icon: <Store className="h-5 w-5" />, name: "আমার শপ", path: "/my-services?tab=shop" },
-    { icon: <BookmarkCheck className="h-5 w-5" />, name: "স্মার্ট রেকমেন্ডেশন", path: "/my-services?tab=recommendations" },
-  ];
-
-  const rentCategories = [
-    { icon: <Building className="h-6 w-6" />, name: "অ্যাপার্টমেন্ট", path: "/rent/apartment" },
-    { icon: <Home className="h-6 w-6" />, name: "বাসা", path: "/rent/house" },
-    { icon: <Truck className="h-6 w-6" />, name: "গাড়ি", path: "/rent/car" },
-    { icon: <Briefcase className="h-6 w-6" />, name: "অফিস স্পেস", path: "/rent/office" },
-    { icon: <PaintBucket className="h-6 w-6" />, name: "ইভেন্ট স্পেস", path: "/rent/event-space" },
-    { icon: <Wrench className="h-6 w-6" />, name: "ইকুইপমেন্ট", path: "/rent/equipment" },
-    { icon: <Building className="h-6 w-6" />, name: "দোকান", path: "/rent/shop" },
-    { icon: <Home className="h-6 w-6" />, name: "অন্যান্য", path: "/rent/others" },
-  ];
-
-  const menuSections = [
-    { icon: <ShoppingBag className="h-5 w-5" />, name: "আমার সার্ভিস", path: "/my-services", subMenu: myServicesSubMenus },
     { icon: <Wallet className="h-5 w-5" />, name: "ওয়ালেট", path: "/wallet" },
-    { icon: <Building className="h-5 w-5" />, name: "রেন্ট", path: "/rentals", subMenu: rentCategories },
     { icon: <Lightbulb className="h-5 w-5" />, name: "ইউটিলিটিস", path: "/utilities" },
     { icon: <HelpCircle className="h-5 w-5" />, name: "হেল্প এন্ড সাপোর্ট", path: "/help" },
-  ];
-  
-  // Additional profile menu items
-  const profileMenuItems = [
-    { icon: <User className="h-5 w-5" />, name: "ব্যক্তিগত তথ্য", path: "/profile/personal" },
-    { icon: <Settings className="h-5 w-5" />, name: "সিকিউরিটি", path: "/profile/security" },
-    { icon: <Wallet className="h-5 w-5" />, name: "পেমেন্ট মেথড", path: "/profile/payment" },
-    { icon: <MessageSquare className="h-5 w-5" />, name: "রেফার ফ্রেন্ড", path: "/profile/refer" },
-    { icon: <LogOut className="h-5 w-5" />, name: "লগআউট", path: "/logout" },
   ];
 
   const videoAds = [
@@ -143,121 +104,19 @@ export const SidebarDrawer = () => {
               <p className="text-sm text-muted-foreground">{user.phone}</p>
             </div>
           </div>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {profileMenuItems.map((item, index) => (
-              <Link 
-                key={index} 
-                to={item.path} 
-                className="bg-secondary/50 hover:bg-secondary px-3 py-2 rounded-lg text-sm flex items-center gap-2"
-              >
-                {item.icon}
-                <span>{item.name}</span>
-              </Link>
-            ))}
-          </div>
         </DrawerHeader>
         
         <div className="px-4 space-y-6 py-4">
-          {/* Post Your Ads Button with Category Selection */}
-          <div className="space-y-4">
-            <Button className="w-full bg-primary hover:bg-primary/90 text-white" size="lg">
-              আপনার বিজ্ঞাপন পোস্ট করুন
-            </Button>
-            
-            <Tabs value={activePostType} onValueChange={setActivePostType} className="w-full">
-              <TabsList className="grid grid-cols-3 mb-2">
-                <TabsTrigger value="rent">রেন্ট</TabsTrigger>
-                <TabsTrigger value="service">সার্ভিস</TabsTrigger>
-                <TabsTrigger value="marketplace">মার্কেটপ্লেস</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="rent" className="space-y-2">
-                <div className="grid grid-cols-2 gap-2">
-                  {rentCategories.slice(0, 4).map((category, index) => (
-                    <Button 
-                      key={index} 
-                      variant="outline" 
-                      className="flex flex-col items-center justify-center h-20 p-1"
-                    >
-                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center mb-1">
-                        {category.icon}
-                      </div>
-                      <span className="text-xs text-center">{category.name}</span>
-                    </Button>
-                  ))}
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <Button variant="link" size="sm" className="text-xs">
-                    আরও দেখুন <ChevronDown className="h-3 w-3 ml-1" />
-                  </Button>
-                  
-                  <Button size="sm" className="flex items-center gap-1">
-                    <Filter className="h-3 w-3" /> ফিল্টার
-                  </Button>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="service" className="space-y-2">
-                <div className="grid grid-cols-2 gap-2">
-                  {serviceCategories.slice(0, 4).map((category, index) => (
-                    <Button 
-                      key={index} 
-                      variant="outline" 
-                      className="flex flex-col items-center justify-center h-20 p-1"
-                    >
-                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center mb-1">
-                        {category.icon}
-                      </div>
-                      <span className="text-xs text-center">{category.name}</span>
-                    </Button>
-                  ))}
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <Button variant="link" size="sm" className="text-xs">
-                    আরও দেখুন <ChevronDown className="h-3 w-3 ml-1" />
-                  </Button>
-                  
-                  <Button size="sm" className="flex items-center gap-1">
-                    <Filter className="h-3 w-3" /> ফিল্টার
-                  </Button>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="marketplace" className="space-y-2">
-                <div className="grid grid-cols-2 gap-2">
-                  {/* Placeholder marketplace categories */}
-                  {[
-                    { icon: <ShoppingBag className="h-6 w-6" />, name: "ইলেক্ট্রনিক্স" },
-                    { icon: <ShoppingBag className="h-6 w-6" />, name: "ফার্নিচার" },
-                    { icon: <ShoppingBag className="h-6 w-6" />, name: "ফ্যাশন" },
-                    { icon: <ShoppingBag className="h-6 w-6" />, name: "খাদ্য" }
-                  ].map((category, index) => (
-                    <Button 
-                      key={index} 
-                      variant="outline" 
-                      className="flex flex-col items-center justify-center h-20 p-1"
-                    >
-                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center mb-1">
-                        {category.icon}
-                      </div>
-                      <span className="text-xs text-center">{category.name}</span>
-                    </Button>
-                  ))}
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <Button variant="link" size="sm" className="text-xs">
-                    আরও দেখুন <ChevronDown className="h-3 w-3 ml-1" />
-                  </Button>
-                  
-                  <Button size="sm" className="flex items-center gap-1">
-                    <Filter className="h-3 w-3" /> ফিল্টার
-                  </Button>
-                </div>
-              </TabsContent>
-            </Tabs>
+          {/* Post Your Ads Section */}
+          <div className="space-y-4 p-4 border rounded-lg bg-gray-50">
+            <h3 className="font-medium text-lg">বিজ্ঞাপন পোস্ট করুন</h3>
+            <p className="text-sm text-gray-600">আপনার পণ্য, সেবা, বা প্রপার্টি বিজ্ঞাপন দিতে এখনই পোস্ট করুন</p>
+            <Link to="/create-post">
+              <Button className="w-full bg-primary hover:bg-primary/90 text-white" size="lg">
+                <Plus className="h-4 w-4 mr-2" />
+                বিজ্ঞাপন পোস্ট করুন
+              </Button>
+            </Link>
           </div>
           
           {/* Video Ad Carousel */}
@@ -315,108 +174,20 @@ export const SidebarDrawer = () => {
             </Carousel>
           </div>
           
-          {/* Service Categories */}
-          <div>
-            <h3 className="font-medium mb-3">সার্ভিস ক্যাটাগরি</h3>
-            <div className="space-y-4">
-              <div className="grid grid-cols-4 gap-3">
-                {serviceCategories.slice(0, 4).map((category, index) => (
-                  <Link 
-                    key={index} 
-                    to={category.path}
-                    className="flex flex-col items-center justify-center"
-                  >
-                    <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center mb-2">
-                      {category.icon}
-                    </div>
-                    <span className="text-xs text-center">{category.name}</span>
-                  </Link>
-                ))}
-              </div>
-              
-              <Collapsible
-                open={isServiceExpanded}
-                onOpenChange={setIsServiceExpanded}
-                className="w-full"
-              >
-                <div className="w-full flex justify-center">
-                  <CollapsibleTrigger asChild>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="flex items-center gap-1"
-                      onClick={toggleServiceExpand}
-                    >
-                      {isServiceExpanded ? (
-                        <>
-                          <ChevronUp className="h-4 w-4" /> কম দেখুন
-                        </>
-                      ) : (
-                        <>
-                          <ChevronDown className="h-4 w-4" /> আরও দেখুন
-                        </>
-                      )}
-                    </Button>
-                  </CollapsibleTrigger>
-                </div>
-                <CollapsibleContent className="mt-3">
-                  <div className="grid grid-cols-4 gap-3">
-                    {serviceCategories.slice(4).map((category, index) => (
-                      <Link 
-                        key={index} 
-                        to={category.path}
-                        className="flex flex-col items-center justify-center"
-                      >
-                        <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center mb-2">
-                          {category.icon}
-                        </div>
-                        <span className="text-xs text-center">{category.name}</span>
-                      </Link>
-                    ))}
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
-            </div>
-          </div>
-          
           {/* Menu Sections */}
           <div className="space-y-3">
             <h3 className="font-medium mb-2">সেকশন</h3>
             <Accordion type="single" collapsible className="w-full">
-              {menuSections.map((section, index) => (
+              {myServicesSubMenus.map((section, index) => (
                 <AccordionItem key={index} value={`item-${index}`}>
-                  {section.subMenu ? (
-                    <AccordionTrigger className="py-3 px-3 hover:no-underline">
-                      <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                          {section.icon}
-                        </div>
-                        <span>{section.name}</span>
+                  <Link to={section.path}>
+                    <div className="flex items-center gap-3 py-3 px-3">
+                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                        {section.icon}
                       </div>
-                    </AccordionTrigger>
-                  ) : (
-                    <Link to={section.path}>
-                      <div className="flex items-center gap-3 py-3 px-3">
-                        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                          {section.icon}
-                        </div>
-                        <span>{section.name}</span>
-                      </div>
-                    </Link>
-                  )}
-                  
-                  {section.subMenu && (
-                    <AccordionContent>
-                      <div className="pl-12 space-y-3 py-2">
-                        {section.subMenu.map((subItem, subIndex) => (
-                          <Link key={subIndex} to={subItem.path} className="flex items-center gap-2 hover:text-primary">
-                            {subItem.icon}
-                            <span>{subItem.name}</span>
-                          </Link>
-                        ))}
-                      </div>
-                    </AccordionContent>
-                  )}
+                      <span>{section.name}</span>
+                    </div>
+                  </Link>
                 </AccordionItem>
               ))}
             </Accordion>
@@ -425,12 +196,14 @@ export const SidebarDrawer = () => {
         
         <DrawerFooter>
           <Separator className="mb-4" />
-          <Link to="/create-post">
-            <Button className="w-full bg-primary">
-              <Plus className="h-4 w-4 mr-2" />
-              পোস্ট করুন
-            </Button>
-          </Link>
+          <Button 
+            variant="outline" 
+            className="w-full border-red-200 text-red-500 hover:bg-red-50 hover:text-red-600"
+            onClick={() => navigate("/logout")}
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            লগ আউট
+          </Button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
