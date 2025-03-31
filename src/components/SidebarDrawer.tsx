@@ -15,12 +15,13 @@ import {
   User,
   LogOut,
   Plus,
-  MessageSquare
+  MessageSquare,
+  ChevronDown,
+  Rocket
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Card } from '@/components/ui/card';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
@@ -34,9 +35,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import DigitalCreatorSolutionsMenu from './DigitalCreatorSolutionsMenu';
 
 export const SidebarDrawer = () => {
   const [activePostType, setActivePostType] = useState('rent');
+  const [digitalCreatorExpanded, setDigitalCreatorExpanded] = useState(false);
   const navigate = useNavigate();
   
   // User data
@@ -120,6 +124,12 @@ export const SidebarDrawer = () => {
         </DrawerHeader>
         
         <div className="px-4 space-y-6 py-4">
+          {/* Digital Creator Solutions Menu */}
+          <DigitalCreatorSolutionsMenu 
+            isExpanded={digitalCreatorExpanded}
+            onToggle={() => setDigitalCreatorExpanded(!digitalCreatorExpanded)}
+          />
+          
           {/* Post Your Ads Section */}
           <div className="space-y-4 p-4 border rounded-lg bg-gray-50">
             <h3 className="font-medium text-lg">বিজ্ঞাপন পোস্ট করুন</h3>
@@ -203,8 +213,3 @@ export const SidebarDrawer = () => {
     </Drawer>
   );
 };
-
-// Add Carousel from shadcn to use with video ads
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { ChevronDown } from 'lucide-react';
-

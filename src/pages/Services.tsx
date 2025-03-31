@@ -2,364 +2,202 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Filter, 
-  ChevronDown, 
-  ChevronUp,
+  Search, 
+  Calendar, 
+  Clock, 
   MapPin,
-  Star
+  Star,
+  Filter,
+  ChevronDown,
+  ChevronUp,
+  BadgeCheck
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { ServiceCard } from '@/components/ServiceCard';
+import { ServiceProviderCard } from '@/components/ServiceProviderCard';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import ServiceCard from '@/components/ServiceCard';
-import ServiceProviderCard from '@/components/ServiceProviderCard';
 
 const Services = () => {
+  const [filterExpanded, setFilterExpanded] = useState(false);
   const navigate = useNavigate();
-  const [view, setView] = useState<'services' | 'providers'>('services');
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [filterVisible, setFilterVisible] = useState(false);
 
-  // Banner images for services
+  // Banner images for Services
   const bannerImages = [
-    "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1573497620053-ea5300f94f21?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&auto=format&fit=crop"
+    "https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1000&auto=format&fit=crop", 
+    "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=1000&auto=format&fit=crop",
   ];
 
-  // Sample services data
-  const services = [
-    {
-      id: '1',
-      title: 'ডাক্তার কনসাল্টেশন',
-      provider: 'মেডিকেল সেন্টার',
-      imageUrl: 'https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-      rating: 4.8,
-      price: 1500,
-      discount: 10,
-      duration: '৩০ মিনিট',
-      tags: ['মেডিকেল', 'অনলাইন'],
-    },
-    {
-      id: '2',
-      title: 'ডেন্টাল চেকআপ',
-      provider: 'শাইন ডেন্টাল',
-      imageUrl: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-      rating: 4.6,
-      price: 2000,
-      duration: '৪৫ মিনিট',
-      tags: ['ডেন্টাল', 'চেকআপ'],
-    },
-    {
-      id: '3',
-      title: 'মেন্টাল হেলথ কাউন্সেলিং',
-      provider: 'মাইন্দ কেয়ার',
-      imageUrl: 'https://images.unsplash.com/photo-1573497620053-ea5300f94f21?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-      rating: 4.9,
-      price: 1800,
-      discount: 15,
-      duration: '৬০ মিনিট',
-      tags: ['কাউন্সেলিং', 'অনলাইন'],
-    },
-    {
-      id: '4',
-      title: 'ফিজিওথেরাপি সেশন',
-      provider: 'হেলদি লাইফ ক্লিনিক',
-      imageUrl: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-      rating: 4.7,
-      price: 2500,
-      duration: '৬০ মিনিট',
-      tags: ['ফিজিওথেরাপি'],
-    },
-    {
-      id: '5',
-      title: 'নিউট্রিশন কনসাল্টেশন',
-      provider: 'হেলদি ডাইট',
-      imageUrl: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-      rating: 4.5,
-      price: 1200,
-      discount: 8,
-      duration: '৪৫ মিনিট',
-      tags: ['নিউট্রিশন', 'ডায়েট'],
-    },
-  ];
-
-  // Sample providers data
-  const providers = [
-    {
-      id: '1',
-      name: 'ডাঃ রাহিম আহমেদ',
-      specialty: 'কার্ডিওলজিস্ট',
-      imageUrl: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80',
-      rating: 4.8,
-      reviewCount: 127,
-      availability: 'সকাল ১০:০০ - দুপুর ০২:০০',
-    },
-    {
-      id: '2',
-      name: 'ডাঃ ফারহানা খাতুন',
-      specialty: 'গাইনোকোলজিস্ট',
-      imageUrl: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80',
-      rating: 4.9,
-      reviewCount: 215,
-      availability: 'দুপুর ০২:০০ - সন্ধ্যা ০৬:০০',
-    },
-    {
-      id: '3',
-      name: 'ডাঃ মাসুদ রানা',
-      specialty: 'নিউরোলজিস্ট',
-      imageUrl: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80',
-      rating: 4.7,
-      reviewCount: 98,
-      availability: 'সকাল ০৯:০০ - দুপুর ০১:০০',
-    },
-    {
-      id: '4',
-      name: 'ডাঃ জাহিদুল ইসলাম',
-      specialty: 'ডেন্টিস্ট',
-      imageUrl: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80',
-      rating: 4.6,
-      reviewCount: 156,
-      availability: 'দুপুর ০৩:০০ - রাত ০৮:০০',
-    },
-  ];
-  
-  // Service categories
+  // Service Categories
   const serviceCategories = [
-    { icon: <img src="https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="মেডিকেল" />, name: "মেডিকেল", path: "/services/medical", count: 245 },
-    { icon: <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="ডেন্টাল" />, name: "ডেন্টাল", path: "/services/dental", count: 123 },
-    { icon: <img src="https://images.unsplash.com/photo-1573497620053-ea5300f94f21?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="মেন্টাল" />, name: "মেন্টাল হেলথ", path: "/services/mental", count: 78 },
-    { icon: <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="ফিজিও" />, name: "ফিজিওথেরাপি", path: "/services/physio", count: 56 },
-    { icon: <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="নিউট্রিশন" />, name: "নিউট্রিশন", path: "/services/nutrition", count: 42 },
-    { icon: <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="লিগ্যাল" />, name: "লিগ্যাল", path: "/services/legal", count: 35 },
-    { icon: <img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="ইডুকেশন" />, name: "ইডুকেশন", path: "/services/education", count: 89 },
-    { icon: <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3&auto=format&fit=crop&w=40&h=40&q=80" className="h-8 w-8 rounded-full object-cover" alt="অন্যান্য" />, name: "অন্যান্য", path: "/services/others", count: 67 },
+    { name: "ডাক্তার", icon: "🩺", count: 152 },
+    { name: "ডেন্টাল", icon: "🦷", count: 89 },
+    { name: "মেন্টাল হেলথ", icon: "🧠", count: 63 },
+    { name: "ল", icon: "⚖️", count: 54 },
+    { name: "রিপেয়ার", icon: "🔧", count: 87 },
+    { name: "হোম সার্ভিস", icon: "🏠", count: 105 },
+    { name: "বিউটি", icon: "💇‍♀️", count: 93 },
+    { name: "কনসালটেন্সি", icon: "💼", count: 76 },
   ];
 
-  // Featured service listings
-  const featuredListings = [
+  // Featured Services
+  const featuredServices = [
     {
-      id: '1',
-      title: 'ডাক্তার কনসাল্টেশন',
-      provider: 'মেডিকেল সেন্টার',
-      location: 'গুলশান, ঢাকা',
-      image: 'https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-      price: '৳১,৫০০',
+      id: 1,
+      title: "হার্ট স্পেশালিষ্ট অ্যাপয়েন্টমেন্ট",
+      provider: "ডা. রহমান হার্ট কেয়ার",
+      price: "৳১,৫০০",
       rating: 4.8,
+      reviewCount: 245,
+      location: "গুলশান, ঢাকা",
+      image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=300&auto=format&fit=crop",
+      tags: ["কার্ডিওলজি", "হার্ট"]
     },
     {
-      id: '2',
-      title: 'ডেন্টাল চেকআপ',
-      provider: 'শাইন ডেন্টাল',
-      location: 'ধানমন্ডি, ঢাকা',
-      image: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-      price: '৳২,০০০',
-      rating: 4.6,
-    },
-    {
-      id: '3',
-      title: 'মেন্টাল হেলথ কাউন্সেলিং',
-      provider: 'মাইন্দ কেয়ার',
-      location: 'বনানী, ঢাকা',
-      image: 'https://images.unsplash.com/photo-1573497620053-ea5300f94f21?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-      price: '৳১,৮০০',
-      rating: 4.9,
-    },
-    {
-      id: '4',
-      title: 'ফিজিওথেরাপি সেশন',
-      provider: 'হেলদি লাইফ ক্লিনিক',
-      location: 'উত্তরা, ঢাকা',
-      image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-      price: '৳২,৫০০',
+      id: 2,
+      title: "ডেন্টাল চেকআপ ও ক্লিনিং",
+      provider: "শাইন ডেন্টাল কেয়ার",
+      price: "৳২,০০০",
       rating: 4.7,
+      reviewCount: 189,
+      location: "বনানী, ঢাকা",
+      image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?q=80&w=300&auto=format&fit=crop",
+      tags: ["ডেন্টাল", "অরাল হেলথ"]
+    },
+    {
+      id: 3,
+      title: "মেন্টাল হেলথ কাউন্সেলিং",
+      provider: "মাইন্ড মেটার্স",
+      price: "৳১,২০০",
+      rating: 4.9,
+      reviewCount: 156,
+      location: "ধানমন্ডি, ঢাকা",
+      image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=300&auto=format&fit=crop",
+      tags: ["কাউন্সেলিং", "থেরাপি"]
+    },
+    {
+      id: 4,
+      title: "ফিজিওথেরাপি সেশন",
+      provider: "হেলথি বডি ফিজিও",
+      price: "৳১,৮০০",
+      rating: 4.6,
+      reviewCount: 127,
+      location: "মিরপুর, ঢাকা",
+      image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?q=80&w=300&auto=format&fit=crop",
+      tags: ["ফিজিওথেরাপি", "পেইন রিলিফ"]
     },
   ];
 
-  const handleServiceClick = (id: string) => {
-    navigate(`/services/${id}`);
-  };
-
-  const handleProviderClick = (id: string) => {
-    navigate(`/providers/${id}`);
-  };
-
-  // Function to determine button label based on service ID
-  const getButtonLabel = (id: string): string => {
-    // Convert string ID to number for modulo operation
-    const numericId = parseInt(id);
-    // If the ID is numeric and even, use "হায়ার করুন", otherwise use "বুক করুন"
-    if (!isNaN(numericId) && numericId % 2 === 0) {
-      return "হায়ার করুন";
-    }
-    return "বুক করুন";
-  };
-  
-  const toggleFilter = () => {
-    setFilterVisible(!filterVisible);
+  // Function to handle clicking on a service
+  const handleServiceClick = (serviceId: number) => {
+    navigate(`/services/${serviceId}`);
   };
 
   return (
     <div className="container px-4 pt-20 pb-20">
-      {/* Header with title and filter button */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">সার্ভিস</h1>
-        <Button variant="outline" size="icon" onClick={toggleFilter}>
-          <Filter className="h-4 w-4" />
-        </Button>
+      {/* Header with search */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold mb-4">সার্ভিসেস</h1>
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input 
+              placeholder="সার্ভিস খুঁজুন" 
+              className="pl-9" 
+            />
+          </div>
+          <Button 
+            variant="outline" 
+            size="icon"
+            onClick={() => setFilterExpanded(!filterExpanded)}
+          >
+            <Filter className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
-      
-      {/* Filter options - conditionally shown */}
-      {filterVisible && (
+
+      {/* Filter Panel - conditional rendering */}
+      {filterExpanded && (
         <div className="mb-6 p-4 border rounded-lg bg-gray-50">
-          <h2 className="font-medium mb-3">ফিল্টার</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-medium mb-1 block">লোকেশন</label>
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-                <Select defaultValue="dhaka">
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="এলাকা নির্বাচন করুন" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="dhaka">ঢাকা</SelectItem>
-                    <SelectItem value="chittagong">চট্টগ্রাম</SelectItem>
-                    <SelectItem value="khulna">খুলনা</SelectItem>
-                    <SelectItem value="rajshahi">রাজশাহী</SelectItem>
-                    <SelectItem value="sylhet">সিলেট</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            
+          <h3 className="font-medium mb-3">ফিল্টার করুন</h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="text-sm font-medium mb-1 block">ক্যাটাগরি</label>
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="ক্যাটাগরি" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="medical">মেডিকেল</SelectItem>
-                  <SelectItem value="dental">ডেন্টাল</SelectItem>
-                  <SelectItem value="mental">মেন্টাল হেলথ</SelectItem>
-                  <SelectItem value="physio">ফিজিওথেরাপি</SelectItem>
-                </SelectContent>
-              </Select>
+              <select className="w-full p-2 border rounded-md">
+                <option value="">সব ক্যাটাগরি</option>
+                <option value="doctor">ডাক্তার</option>
+                <option value="dental">ডেন্টাল</option>
+                <option value="mental-health">মেন্টাল হেলথ</option>
+                <option value="law">ল</option>
+                <option value="repair">রিপেয়ার</option>
+                <option value="home-service">হোম সার্ভিস</option>
+                <option value="beauty">বিউটি</option>
+                <option value="consultancy">কনসালটেন্সি</option>
+              </select>
             </div>
             
             <div>
-              <label className="text-sm font-medium mb-1 block">মূল্য সীমা</label>
-              <div className="px-2">
-                <Slider
-                  defaultValue={[1500]}
-                  max={5000}
-                  step={100}
-                />
-                <div className="flex justify-between mt-1 text-xs text-muted-foreground">
-                  <span>৳৫০০</span>
-                  <span>৳২,৫০০</span>
-                  <span>৳৫,০০০</span>
-                </div>
-              </div>
+              <label className="text-sm font-medium mb-1 block">লোকেশন</label>
+              <select className="w-full p-2 border rounded-md">
+                <option value="">সব লোকেশন</option>
+                <option value="gulshan">গুলশান</option>
+                <option value="banani">বনানী</option>
+                <option value="dhanmondi">ধানমন্ডি</option>
+                <option value="mirpur">মিরপুর</option>
+                <option value="mohammadpur">মোহাম্মদপুর</option>
+                <option value="uttara">উত্তরা</option>
+              </select>
             </div>
             
             <div>
-              <label className="text-sm font-medium mb-1 block">রেটিং</label>
-              <div className="px-2">
-                <Slider
-                  defaultValue={[4.5]}
-                  max={5}
-                  step={0.5}
-                />
-                <div className="flex justify-between mt-1 text-xs text-muted-foreground">
-                  <span>১</span>
-                  <span>৩</span>
-                  <span>৫</span>
-                </div>
+              <label className="text-sm font-medium mb-1 block">মূল্য</label>
+              <div className="flex gap-2">
+                <Input type="number" placeholder="সর্বনিম্ন" />
+                <Input type="number" placeholder="সর্বোচ্চ" />
               </div>
             </div>
           </div>
           
-          <div className="flex gap-2 mt-4">
-            <Button className="flex-1">ফিল্টার করুন</Button>
-            <Button variant="outline" onClick={toggleFilter}>বাতিল করুন</Button>
+          <div className="flex justify-end gap-2 mt-4">
+            <Button variant="outline" onClick={() => setFilterExpanded(false)}>
+              বাতিল
+            </Button>
+            <Button>
+              ফিল্টার করুন
+            </Button>
           </div>
         </div>
       )}
-      
-      {/* Service Categories */}
-      <div className="mb-6">
+
+      {/* Categories section */}
+      <div className="mb-8">
         <h2 className="text-lg font-medium mb-4">ক্যাটাগরি</h2>
         <div className="grid grid-cols-4 gap-3">
-          {serviceCategories.slice(0, 4).map((category, index) => (
-            <a 
-              key={index} 
-              href={category.path}
-              className="flex flex-col items-center justify-center transition-all hover:scale-105"
+          {serviceCategories.map((category, index) => (
+            <div 
+              key={index}
+              className="flex flex-col items-center justify-center p-3 rounded-lg border hover:bg-gray-50 cursor-pointer transition-colors"
+              onClick={() => navigate(`/services/category/${category.name}`)}
             >
-              <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
-                {category.icon}
-              </div>
-              <span className="text-xs text-center mb-1">{category.name}</span>
-              <Badge variant="outline" className="text-xs">{category.count}</Badge>
-            </a>
+              <div className="text-2xl mb-1">{category.icon}</div>
+              <span className="text-xs text-center">{category.name}</span>
+              <Badge variant="outline" className="mt-1">{category.count}</Badge>
+            </div>
           ))}
         </div>
-        
-        <Collapsible
-          open={isExpanded}
-          onOpenChange={setIsExpanded}
-          className="w-full mt-3"
-        >
-          <CollapsibleContent className="mt-3">
-            <div className="grid grid-cols-4 gap-3">
-              {serviceCategories.slice(4).map((category, index) => (
-                <a 
-                  key={index} 
-                  href={category.path}
-                  className="flex flex-col items-center justify-center transition-all hover:scale-105"
-                >
-                  <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
-                    {category.icon}
-                  </div>
-                  <span className="text-xs text-center mb-1">{category.name}</span>
-                  <Badge variant="outline" className="text-xs">{category.count}</Badge>
-                </a>
-              ))}
-            </div>
-          </CollapsibleContent>
-          
-          <div className="w-full flex justify-center mt-4">
-            <CollapsibleTrigger asChild>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="flex items-center gap-1"
-              >
-                {isExpanded ? (
-                  <>
-                    <ChevronUp className="h-4 w-4" /> কম দেখুন
-                  </>
-                ) : (
-                  <>
-                    <ChevronDown className="h-4 w-4" /> আরও দেখুন
-                  </>
-                )}
-              </Button>
-            </CollapsibleTrigger>
-          </div>
-        </Collapsible>
       </div>
       
-      {/* Add Banner between Categories and Featured Listings */}
-      <div className="mb-6">
+      {/* Banner section */}
+      <div className="mb-6 overflow-hidden rounded-lg">
         <Carousel className="w-full">
           <CarouselContent>
             {bannerImages.map((image, index) => (
@@ -380,66 +218,58 @@ const Services = () => {
           <CarouselNext className="right-2" />
         </Carousel>
       </div>
-      
-      {/* Featured Listings */}
-      <div className="mb-6">
-        <h2 className="text-lg font-medium mb-4">ফিচার্ড লিস্টিং</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {featuredListings.map((listing) => (
+
+      {/* Services listing */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-medium">ফিচার্ড সার্ভিস</h2>
+          <Button variant="ghost" size="sm" onClick={() => navigate('/services')}>
+            সব দেখুন <ChevronRight className="h-4 w-4 ml-1" />
+          </Button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {featuredServices.map((service) => (
             <Card 
-              key={listing.id} 
-              className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
-              onClick={() => navigate(`/services/${listing.id}`)}
+              key={service.id}
+              className="overflow-hidden hover:shadow-md transition-all cursor-pointer"
+              onClick={() => handleServiceClick(service.id)}
             >
-              <div className="relative aspect-square">
+              <div className="relative">
                 <img 
-                  src={listing.image} 
-                  alt={listing.title} 
-                  className="w-full h-full object-cover"
+                  src={service.image} 
+                  alt={service.title}
+                  className="w-full h-48 object-cover"
                 />
+                {service.rating >= 4.8 && (
+                  <Badge className="absolute top-2 right-2 bg-green-500">
+                    <BadgeCheck className="h-3 w-3 mr-1" /> বেস্ট সেলার
+                  </Badge>
+                )}
               </div>
-              <CardContent className="p-3">
-                <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
-                <p className="text-xs text-muted-foreground mb-1">{listing.provider}</p>
-                <div className="flex items-center text-xs text-muted-foreground">
+              <CardContent className="p-4">
+                <h3 className="font-medium text-base mb-1 line-clamp-1">{service.title}</h3>
+                <div className="flex items-center text-sm text-muted-foreground mb-2">
                   <MapPin className="h-3 w-3 mr-1" />
-                  <span>{listing.location}</span>
+                  <span className="line-clamp-1">{service.location}</span>
                 </div>
-                <div className="flex items-center justify-between mt-2">
-                  <p className="text-sm font-bold text-primary">{listing.price}</p>
-                  <div className="flex items-center text-xs">
-                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
-                    <span>{listing.rating}</span>
+                <div className="flex items-center text-xs text-muted-foreground mb-3">
+                  <div className="flex items-center">
+                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                    <span className="ml-1">{service.rating}</span>
                   </div>
+                  <span className="mx-1">•</span>
+                  <span>{service.reviewCount} রিভিউ</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-primary">{service.price}</span>
+                  <Button size="sm">বুক করুন</Button>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
       </div>
-      
-      <Separator className="my-6" />
-      
-      <div className="flex items-center justify-end mb-4">
-        <div className="flex gap-2">
-          <Button 
-            variant={view === 'services' ? 'default' : 'outline'} 
-            size="sm"
-            onClick={() => setView('services')}
-          >
-            সার্ভিস
-          </Button>
-          <Button 
-            variant={view === 'providers' ? 'default' : 'outline'} 
-            size="sm"
-            onClick={() => setView('providers')}
-          >
-            প্রফেশনাল
-          </Button>
-        </div>
-      </div>
-      
-      {/* This is the part that has been modified to remove the section below featured listings. The Tabs and TabsContent components remain, but all the content below is removed since it's not needed anymore */}
     </div>
   );
 };
