@@ -22,6 +22,7 @@ import Utilities from "./pages/Utilities";
 import Help from "./pages/Help";
 import Notifications from "./pages/Notifications";
 import CreatePost from "./pages/CreatePost";
+import PaidCommunity from "./pages/PaidCommunity";
 
 const queryClient = new QueryClient();
 
@@ -57,7 +58,7 @@ const App = () => (
           <Route path="/event-hosting" element={<NotFound />} />
           <Route path="/one-on-one" element={<NotFound />} />
           <Route path="/digital-products" element={<NotFound />} />
-          <Route path="/paid-community" element={<NotFound />} />
+          <Route path="/paid-community" element={<PaidCommunity />} />
           <Route path="/audience-analytics" element={<NotFound />} />
           <Route path="/multi-channel" element={<NotFound />} />
           <Route path="/reseller-program" element={<NotFound />} />
