@@ -25,6 +25,7 @@ import CreatePost from "./pages/CreatePost";
 import PaidCommunity from "./pages/PaidCommunity";
 import CreateStore from "./pages/CreateStore";
 import CourseBuilder from "./pages/CourseBuilder";
+import DigitalProduct from "./pages/DigitalProduct";
 
 const queryClient = new QueryClient();
 
@@ -70,7 +71,7 @@ const App = () => (
           <Route path="/video-hosting" element={<NotFound />} />
           <Route path="/affiliate" element={<NotFound />} />
           <Route path="/social-media" element={<NotFound />} />
-          <Route path="/product/:id" element={<NotFound />} />
+          <Route path="/product/:id" element={<DigitalProduct />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

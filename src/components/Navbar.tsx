@@ -17,7 +17,17 @@ import {
   Users,
   BarChart,
   DollarSign,
-  MessageSquare
+  MessageSquare,
+  Store,
+  Scissors,
+  Briefcase,
+  FileText,
+  Video,
+  Globe,
+  Zap,
+  Database,
+  Cpu,
+  Shield
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -56,16 +66,112 @@ const Navbar = () => {
     { icon: <LogOut className="h-5 w-5" />, name: "লগআউট", path: "/logout" },
   ];
 
-  // Digital creator solutions
+  // Digital creator solutions - Enhanced with descriptions
   const creatorSolutions = [
-    { icon: <Rocket className="h-4 w-4 text-primary" />, name: "অনলাইন স্টোর", path: "/create-store" },
-    { icon: <Mail className="h-4 w-4 text-blue-500" />, name: "ইমেইল অটোমেশন", path: "/email-automation" },
-    { icon: <BookOpen className="h-4 w-4 text-amber-500" />, name: "কোর্স বিল্ডার", path: "/course-builder" },
-    { icon: <Calendar className="h-4 w-4 text-red-500" />, name: "ইভেন্ট হোস্টিং", path: "/event-hosting" },
-    { icon: <MessageSquare className="h-4 w-4 text-orange-500" />, name: "১:১ সেশন", path: "/one-on-one" },
-    { icon: <DollarSign className="h-4 w-4 text-green-500" />, name: "ডিজিটাল প্রোডাক্ট", path: "/digital-products" },
-    { icon: <Users className="h-4 w-4 text-yellow-500" />, name: "পেইড কমিউনিটি", path: "/paid-community" },
-    { icon: <BarChart className="h-4 w-4 text-purple-500" />, name: "অডিয়েন্স অ্যানালিটিক্স", path: "/audience-analytics" },
+    { 
+      icon: <Store className="h-4 w-4 text-primary" />, 
+      name: "অনলাইন স্টোর", 
+      path: "/create-store",
+      description: "নিজের ব্র্যান্ডের ওয়েবসাইট তৈরি করুন"
+    },
+    { 
+      icon: <Mail className="h-4 w-4 text-blue-500" />, 
+      name: "ইমেইল অটোমেশন", 
+      path: "/email-automation",
+      description: "গ্রাহকদের সাথে অটোমেটিক যোগাযোগ"
+    },
+    { 
+      icon: <BookOpen className="h-4 w-4 text-amber-500" />, 
+      name: "কোর্স বিল্ডার", 
+      path: "/course-builder",
+      description: "আয় করুন অনলাইন শিক্ষা দিয়ে"
+    },
+    { 
+      icon: <Calendar className="h-4 w-4 text-red-500" />, 
+      name: "ইভেন্ট হোস্টিং", 
+      path: "/event-hosting",
+      description: "অনলাইন ও অফলাইন ইভেন্ট ম্যানেজমেন্ট"
+    },
+    { 
+      icon: <MessageSquare className="h-4 w-4 text-orange-500" />, 
+      name: "১:১ সেশন", 
+      path: "/one-on-one",
+      description: "পারসোনাল কনসালটেশন সেবা"
+    },
+    { 
+      icon: <DollarSign className="h-4 w-4 text-green-500" />, 
+      name: "ডিজিটাল প্রোডাক্ট", 
+      path: "/digital-products",
+      description: "ইবুক, টেমপ্লেট, সফটওয়্যার বিক্রয়"
+    },
+    { 
+      icon: <Users className="h-4 w-4 text-yellow-500" />, 
+      name: "পেইড কমিউনিটি", 
+      path: "/paid-community",
+      description: "মেম্বারশিপ কমিউনিটি তৈরি করুন"
+    },
+    { 
+      icon: <BarChart className="h-4 w-4 text-purple-500" />, 
+      name: "অডিয়েন্স অ্যানালিটিক্স", 
+      path: "/audience-analytics",
+      description: "গ্রাহক আচরণ ও বিক্রয় বিশ্লেষণ"
+    },
+    { 
+      icon: <Globe className="h-4 w-4 text-cyan-500" />, 
+      name: "মাল্টি-চ্যানেল", 
+      path: "/multi-channel",
+      description: "সব প্ল্যাটফর্ম থেকে বিক্রয় করুন"
+    },
+    { 
+      icon: <Briefcase className="h-4 w-4 text-indigo-500" />, 
+      name: "রিসেলার প্রোগ্রাম", 
+      path: "/reseller-program",
+      description: "এফিলিয়েট নেটওয়ার্ক তৈরি করুন"
+    },
+    { 
+      icon: <FileText className="h-4 w-4 text-teal-500" />, 
+      name: "কন্টেন্ট প্ল্যানার", 
+      path: "/content-planner",
+      description: "সোশ্যাল মিডিয়া ও কন্টেন্ট ম্যানেজমেন্ট"
+    },
+    { 
+      icon: <Cpu className="h-4 w-4 text-gray-500" />, 
+      name: "পেমেন্ট গেটওয়ে", 
+      path: "/payment-gateway",
+      description: "সহজে পেমেন্ট কালেকশন করুন"
+    },
+    { 
+      icon: <Shield className="h-4 w-4 text-emerald-500" />, 
+      name: "কপি প্রোটেকশন", 
+      path: "/drm",
+      description: "কন্টেন্ট চুরি ও কপি হওয়া ঠেকান"
+    },
+    { 
+      icon: <Video className="h-4 w-4 text-rose-500" />, 
+      name: "ভিডিও হোস্টিং", 
+      path: "/video-hosting",
+      description: "প্রোফেশনাল ভিডিও সার্ভিস"
+    },
+    { 
+      icon: <Zap className="h-4 w-4 text-amber-500" />, 
+      name: "এফিলিয়েট টুল", 
+      path: "/affiliate",
+      description: "এফিলিয়েট মার্কেটিং ম্যানেজমেন্ট"
+    }
+  ];
+
+  // Service categories expanded with salon and parlour
+  const serviceCategories = [
+    { name: "ডাক্তার", path: "/services/category/medical" },
+    { name: "ডেন্টাল", path: "/services/category/dental" },
+    { name: "মেন্টাল হেলথ", path: "/services/category/mental-health" },
+    { name: "সেলুন", path: "/services/category/salon" },
+    { name: "পার্লার", path: "/services/category/parlour" },
+    { name: "ল", path: "/services/category/legal" },
+    { name: "রিপেয়ার", path: "/services/category/repair" },
+    { name: "হোম সার্ভিস", path: "/services/category/home-service" },
+    { name: "বিউটি", path: "/services/category/beauty" },
+    { name: "কনসালটেন্সি", path: "/services/category/consultancy" },
   ];
 
   const handleSearch = (e: React.FormEvent) => {
@@ -192,15 +298,20 @@ const Navbar = () => {
                             <span className="text-sm">ডিজিটাল ক্রিয়েটর</span>
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-48">
-                          {creatorSolutions.map((solution, index) => (
-                            <DropdownMenuItem key={index} asChild>
-                              <Link to={solution.path} className="flex items-center gap-2">
-                                {solution.icon}
-                                <span>{solution.name}</span>
-                              </Link>
-                            </DropdownMenuItem>
-                          ))}
+                        <DropdownMenuContent className="w-56 max-h-[70vh] overflow-auto">
+                          <div className="grid grid-cols-1 gap-1 p-1">
+                            {creatorSolutions.map((solution, index) => (
+                              <DropdownMenuItem key={index} asChild className="p-2">
+                                <Link to={solution.path} className="flex flex-col gap-1">
+                                  <div className="flex items-center gap-2">
+                                    {solution.icon}
+                                    <span className="font-medium">{solution.name}</span>
+                                  </div>
+                                  <p className="text-xs text-muted-foreground pl-6">{solution.description}</p>
+                                </Link>
+                              </DropdownMenuItem>
+                            ))}
+                          </div>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
