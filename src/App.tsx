@@ -23,6 +23,7 @@ import Help from "./pages/Help";
 import Notifications from "./pages/Notifications";
 import CreatePost from "./pages/CreatePost";
 import PaidCommunity from "./pages/PaidCommunity";
+import CreateStore from "./pages/CreateStore";
 
 const queryClient = new QueryClient();
 
@@ -52,7 +53,7 @@ const App = () => (
           <Route path="/create-post" element={<CreatePost />} />
           
           {/* Digital Creator Solution Routes - Enhanced with Monetization */}
-          <Route path="/create-store" element={<NotFound />} />
+          <Route path="/create-store" element={<CreateStore />} />
           <Route path="/email-automation" element={<NotFound />} />
           <Route path="/course-builder" element={<NotFound />} />
           <Route path="/event-hosting" element={<NotFound />} />
