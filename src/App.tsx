@@ -24,6 +24,7 @@ import Notifications from "./pages/Notifications";
 import CreatePost from "./pages/CreatePost";
 import PaidCommunity from "./pages/PaidCommunity";
 import CreateStore from "./pages/CreateStore";
+import CourseBuilder from "./pages/CourseBuilder";
 
 const queryClient = new QueryClient();
 
@@ -54,8 +55,8 @@ const App = () => (
           
           {/* Digital Creator Solution Routes - Enhanced with Monetization */}
           <Route path="/create-store" element={<CreateStore />} />
+          <Route path="/course-builder" element={<CourseBuilder />} />
           <Route path="/email-automation" element={<NotFound />} />
-          <Route path="/course-builder" element={<NotFound />} />
           <Route path="/event-hosting" element={<NotFound />} />
           <Route path="/one-on-one" element={<NotFound />} />
           <Route path="/digital-products" element={<NotFound />} />
