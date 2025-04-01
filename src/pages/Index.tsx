@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -6,13 +5,6 @@ import {
   MapPin,
   ArrowRight,
   Search,
-  Rocket,
-  BookOpen,
-  Mail,
-  Calendar,
-  Users,
-  BarChart,
-  DollarSign,
   Home,
   Camera,
   Building,
@@ -35,6 +27,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import DigitalProductsShowcase from '@/components/DigitalProductsShowcase';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -112,58 +105,6 @@ const Index = () => {
     },
   ];
 
-  // Digital creator solutions data
-  const creatorSolutions = [
-    { 
-      icon: <Rocket className="h-8 w-8 text-primary" />, 
-      title: "আপনার নিজস্ব অনলাইন স্টোর / ওয়েবসাইট",
-      description: "নিজের ব্র্যান্ড তৈরি করুন এবং নিজস্ব ডোমেইনে আপনার পণ্য বিক্রি করুন।",
-      path: "/create-store"
-    },
-    { 
-      icon: <Mail className="h-8 w-8 text-blue-500" />, 
-      title: "ইমেইল অটোমেশন",
-      description: "স্বযংক্রিয় ইমেইল মার্কেটিং ক্যাম্পেইন তৈরি করুন আপনার দর্শকদের সাথে যোগাযোগ রাখতে।",
-      path: "/email-automation"
-    },
-    { 
-      icon: <BookOpen className="h-8 w-8 text-amber-500" />, 
-      title: "কোর্স বিল্ডার",
-      description: "অনলাইন কোর্স তৈরি করুন এবং আপনার জ্ঞান বিক্রি করুন।",
-      path: "/course-builder"
-    },
-    { 
-      icon: <Calendar className="h-8 w-8 text-red-500" />, 
-      title: "ইভেন্ট ও ওয়েবিনার হোস্টিং",
-      description: "ইভেন্ট, ওয়েবিনার এবং লাইভ সেশন পরিচালনা করুন সহজেই।",
-      path: "/event-hosting"
-    },
-    { 
-      icon: <MessageSquare className="h-8 w-8 text-orange-500" />, 
-      title: "১:১ সেশন অফার",
-      description: "আপনার সময়ের জন্য পেমেন্ট গ্রহণ করুন এবং ১:১ কনসালটেশন প্রদান করুন।",
-      path: "/one-on-one"
-    },
-    { 
-      icon: <DollarSign className="h-8 w-8 text-green-500" />, 
-      title: "ডিজিটাল প্রোডাক্ট বিক্রয়",
-      description: "ই-বুক, টেমপ্লেট, সফটওয়্যার এবং অন্যান্য ডিজিটাল সামগ্রী বিক্রি করুন।",
-      path: "/digital-products"
-    },
-    { 
-      icon: <Users className="h-8 w-8 text-yellow-500" />, 
-      title: "পেইড কমিউনিটি চালু করুন",
-      description: "আপনার অনুসারীদের জন্য একটি এক্সক্লুসিভ মেম্বারশিপ কমিউনিটি তৈরি করুন।",
-      path: "/paid-community"
-    },
-    { 
-      icon: <BarChart className="h-8 w-8 text-purple-500" />, 
-      title: "অডিয়েন্স অ্যানালিটিক্স",
-      description: "আপনার দর্শকদের আচরণ বিশ্লেষণ করুন এবং মার্কেটিং কৌশল উন্নত করুন।",
-      path: "/audience-analytics"
-    },
-  ];
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
@@ -217,28 +158,9 @@ const Index = () => {
         </form>
       </div>
 
-      {/* Digital Creator Solutions - Responsive Layout */}
+      {/* Digital Products Explore Section */}
       <div className="mb-10">
-        <h2 className="text-xl font-semibold mb-6">ডিজিটাল ক্রিয়েটর সলিউশন</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {creatorSolutions.map((solution, index) => (
-            <Card 
-              key={index} 
-              className="border cursor-pointer hover:shadow-md transition-all hover:bg-gray-50"
-              onClick={() => navigate(solution.path)}
-            >
-              <CardContent className="p-4 flex items-start gap-3">
-                <div className="flex-shrink-0 mt-1">
-                  {solution.icon}
-                </div>
-                <div>
-                  <h3 className="font-medium text-sm sm:text-base">{solution.title}</h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{solution.description}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <DigitalProductsShowcase />
       </div>
 
       {/* Featured Listings */}

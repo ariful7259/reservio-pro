@@ -50,15 +50,24 @@ const App = () => (
           <Route path="/help" element={<Help />} />
           <Route path="/create-post" element={<CreatePost />} />
           
-          {/* Digital Creator Solution Routes */}
-          <Route path="/create-store" element={<NotFound />} /> {/* Placeholder, will need implementation */}
-          <Route path="/email-automation" element={<NotFound />} /> {/* Placeholder, will need implementation */}
-          <Route path="/course-builder" element={<NotFound />} /> {/* Placeholder, will need implementation */}
-          <Route path="/event-hosting" element={<NotFound />} /> {/* Placeholder, will need implementation */}
-          <Route path="/one-on-one" element={<NotFound />} /> {/* Placeholder, will need implementation */}
-          <Route path="/digital-products" element={<NotFound />} /> {/* Placeholder, will need implementation */}
-          <Route path="/paid-community" element={<NotFound />} /> {/* Placeholder, will need implementation */}
-          <Route path="/audience-analytics" element={<NotFound />} /> {/* Placeholder, will need implementation */}
+          {/* Digital Creator Solution Routes - Enhanced with Monetization */}
+          <Route path="/create-store" element={<NotFound />} />
+          <Route path="/email-automation" element={<NotFound />} />
+          <Route path="/course-builder" element={<NotFound />} />
+          <Route path="/event-hosting" element={<NotFound />} />
+          <Route path="/one-on-one" element={<NotFound />} />
+          <Route path="/digital-products" element={<NotFound />} />
+          <Route path="/paid-community" element={<NotFound />} />
+          <Route path="/audience-analytics" element={<NotFound />} />
+          <Route path="/multi-channel" element={<NotFound />} />
+          <Route path="/reseller-program" element={<NotFound />} />
+          <Route path="/content-planner" element={<NotFound />} />
+          <Route path="/payment-gateway" element={<NotFound />} />
+          <Route path="/drm" element={<NotFound />} />
+          <Route path="/video-hosting" element={<NotFound />} />
+          <Route path="/affiliate" element={<NotFound />} />
+          <Route path="/social-media" element={<NotFound />} />
+          <Route path="/product/:id" element={<NotFound />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
