@@ -22,7 +22,8 @@ import {
   Map,
   Bike,
   ShoppingBag,
-  Check
+  Check,
+  User
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';

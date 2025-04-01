@@ -10,6 +10,7 @@ import {
   Filter,
   ChevronDown,
   ChevronUp,
+  ChevronRight,
   BadgeCheck
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -19,8 +20,8 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { ServiceCard } from '@/components/ServiceCard';
-import { ServiceProviderCard } from '@/components/ServiceProviderCard';
+import ServiceCard from '@/components/ServiceCard';
+import ServiceProviderCard from '@/components/ServiceProviderCard';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const Services = () => {
