@@ -12,6 +12,8 @@ import Appointments from "./pages/Appointments";
 import Wallet from "./pages/Wallet";
 import Profile from "./pages/Profile";
 import Security from "./pages/Security";
+import KycVerification from "./pages/KycVerification";
+import TwoFactorAuthentication from "./pages/TwoFactorAuthentication";
 import Housing from "./pages/Housing";
 import Shopping from "./pages/Shopping";
 import RentAnything from "./pages/RentAnything";
@@ -44,6 +46,9 @@ const App = () => (
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/security" element={<Security />} />
+          <Route path="/security/2fa" element={<TwoFactorAuthentication />} />
+          <Route path="/kyc-verification" element={<KycVerification />} />
+          <Route path="/kyc-verification/:step" element={<KycVerification />} />
           <Route path="/rentals" element={<Rentals />} />
           <Route path="/shopping" element={<Shopping />} />
           <Route path="/marketplace" element={<Shopping />} />

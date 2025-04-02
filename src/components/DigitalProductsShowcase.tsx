@@ -18,7 +18,9 @@ import {
   CreditCard,
   Shield,
   Video,
-  Zap
+  Zap,
+  ShieldCheck,
+  Fingerprint
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -101,6 +103,22 @@ const DigitalProductsShowcase = () => {
       icon: ChartBar, 
       color: "bg-pink-100 text-pink-600",
       path: "/audience-analytics"
+    },
+    { 
+      id: 9,
+      title: "KYC ভেরিফিকেশন", 
+      description: "নিরাপদ লেনদেনের জন্য পরিচয় যাচাই", 
+      icon: Fingerprint, 
+      color: "bg-cyan-100 text-cyan-600",
+      path: "/kyc-verification"
+    },
+    { 
+      id: 10,
+      title: "সিকিউরিটি সিস্টেম", 
+      description: "উন্নত নিরাপত্তার জন্য ২FA সক্রিয় করুন", 
+      icon: ShieldCheck, 
+      color: "bg-lime-100 text-lime-600",
+      path: "/security"
     }
   ];
 

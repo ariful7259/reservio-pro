@@ -1,11 +1,13 @@
 
 import React from 'react';
-import { User, ShieldCheck, CreditCard, Bell, LogOut, Users, Settings } from 'lucide-react';
+import { User, ShieldCheck, CreditCard, Bell, LogOut, Users, Settings, Fingerprint } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { useNavigate } from 'react-router-dom';
+import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const Profile = () => {
@@ -22,6 +24,7 @@ const Profile = () => {
   const menuItems = [
     { icon: <User className="h-5 w-5" />, label: 'ব্যক্তিগত তথ্য', action: () => {} },
     { icon: <ShieldCheck className="h-5 w-5" />, label: 'সিকিউরিটি', action: () => navigate('/security') },
+    { icon: <Fingerprint className="h-5 w-5" />, label: 'KYC ভেরিফিকেশন', action: () => navigate('/kyc-verification') },
     { icon: <CreditCard className="h-5 w-5" />, label: 'পেমেন্ট মেথড', action: () => {} },
     { icon: <Bell className="h-5 w-5" />, label: 'নোটিফিকেশন', action: () => navigate('/notifications') },
     { icon: <Users className="h-5 w-5" />, label: 'রেফার ফ্রেন্ড', action: () => {} },
@@ -50,6 +53,42 @@ const Profile = () => {
               <p className="text-sm text-muted-foreground">{user.email}</p>
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card className="border mb-6">
+        <CardContent className="p-5">
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="font-semibold">KYC স্ট্যাটাস</h3>
+            <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200">পেন্ডিং</Badge>
+          </div>
+          <Progress value={50} className="h-2 mb-2" />
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">৫০% সম্পূর্ণ</span>
+            <span className="text-amber-600">পেন্ডিং</span>
+          </div>
+          <p className="text-sm text-muted-foreground mt-3 mb-4">আপনার KYC প্রক্রিয়া সম্পূর্ণ করতে বাকি স্টেপগুলো শেষ করুন</p>
+          <Button variant="outline" className="w-full" onClick={() => navigate('/kyc-verification')}>
+            KYC সম্পূর্ণ করুন
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Card className="border mb-6">
+        <CardContent className="p-5">
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="font-semibold">সিকিউরিটি স্কোর</h3>
+            <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200">যাচাই করুন</Badge>
+          </div>
+          <Progress value={70} className="h-2 mb-2" />
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">৭০% সুরক্ষিত</span>
+            <span className="text-amber-600">সুপারিশ</span>
+          </div>
+          <p className="text-sm text-muted-foreground mt-3 mb-4">উন্নত নিরাপত্তার জন্য ২FA সক্রিয় করুন</p>
+          <Button variant="outline" className="w-full" onClick={() => navigate('/security')}>
+            নিরাপত্তা বাড়ান
+          </Button>
         </CardContent>
       </Card>
 

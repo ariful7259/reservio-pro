@@ -17,7 +17,9 @@ import {
   Plus,
   MessageSquare,
   ChevronDown,
-  Rocket
+  Rocket,
+  ShieldCheck,
+  Fingerprint
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
@@ -56,6 +58,8 @@ export const SidebarDrawer = () => {
     { icon: <User className="h-5 w-5" />, name: "ব্যক্তিগত তথ্য", path: "/profile/personal" },
     { icon: <MessageSquare className="h-5 w-5" />, name: "নোটিফিকেশন", path: "/notifications", badge: 2 },
     { icon: <Wallet className="h-5 w-5" />, name: "ওয়ালেট", path: "/wallet" },
+    { icon: <ShieldCheck className="h-5 w-5" />, name: "সিকিউরিটি", path: "/security" },
+    { icon: <Fingerprint className="h-5 w-5" />, name: "KYC ভেরিফিকেশন", path: "/kyc-verification" },
     { icon: <Lightbulb className="h-5 w-5" />, name: "ইউটিলিটিস", path: "/utilities" },
     { icon: <HelpCircle className="h-5 w-5" />, name: "হেল্প এন্ড সাপোর্ট", path: "/help" },
   ];
