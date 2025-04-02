@@ -104,17 +104,17 @@ const FeaturedDigitalProducts = () => {
     navigate(path);
   };
 
-  // Category icons mapping
+  // Category icons mapping with vibrant colors
   const getCategoryIcon = (category: string) => {
     switch(category) {
-      case 'কোর্স': return <BookOpen className="h-4 w-4" />;
-      case 'ইবুক': return <FileText className="h-4 w-4" />;
-      case 'টেমপ্লেট': return <Palette className="h-4 w-4" />;
-      case 'সফটওয়্যার': return <Code className="h-4 w-4" />;
-      case 'অডিও': return <Music className="h-4 w-4" />;
-      case 'ভিডিও': return <Video className="h-4 w-4" />;
-      case 'গ্রাফিক্স': return <ImageIcon className="h-4 w-4" />;
-      default: return <ShoppingBag className="h-4 w-4" />;
+      case 'কোর্স': return <BookOpen className="h-4 w-4 text-purple-500" />;
+      case 'ইবুক': return <FileText className="h-4 w-4 text-blue-500" />;
+      case 'টেমপ্লেট': return <Palette className="h-4 w-4 text-pink-500" />;
+      case 'সফটওয়্যার': return <Code className="h-4 w-4 text-green-500" />;
+      case 'অডিও': return <Music className="h-4 w-4 text-amber-500" />;
+      case 'ভিডিও': return <Video className="h-4 w-4 text-red-500" />;
+      case 'গ্রাফিক্স': return <ImageIcon className="h-4 w-4 text-cyan-500" />;
+      default: return <ShoppingBag className="h-4 w-4 text-orange-500" />;
     }
   };
 
@@ -147,7 +147,7 @@ const FeaturedDigitalProducts = () => {
                       alt={product.title} 
                       className="w-full h-full object-cover"
                     />
-                    <Badge className="absolute top-2 right-2 flex items-center gap-1">
+                    <Badge className="absolute top-2 right-2 flex items-center gap-1 bg-white text-black">
                       {getCategoryIcon(product.category)}
                       {product.category}
                     </Badge>

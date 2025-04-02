@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Search, Filter, Calendar, Tag, ChevronRight, MapPin } from 'lucide-react';
+import { Search, Filter, Calendar, Tag, ChevronRight, MapPin, Home, Building, Car, Briefcase, Bike, Camera, Monitor, Tools, Smartphone, Headphones, PlusCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -19,6 +19,7 @@ const RentAnything = () => {
       location: 'ধানমন্ডি, ঢাকা',
       image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
       category: 'electronics',
+      subcategory: 'camera',
       owner: 'রহিম আহমেদ',
       rating: 4.8,
     },
@@ -31,6 +32,7 @@ const RentAnything = () => {
       location: 'মিরপুর, ঢাকা',
       image: 'https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
       category: 'sports',
+      subcategory: 'bike',
       owner: 'করিম খান',
       rating: 4.6,
     },
@@ -43,17 +45,61 @@ const RentAnything = () => {
       location: 'উত্তরা, ঢাকা',
       image: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
       category: 'tools',
+      subcategory: 'generator',
       owner: 'সেলিম মিয়া',
       rating: 4.9,
     },
   ];
 
-  // Categories
+  // Categories with subcategories
   const categories = [
-    { name: 'ইলেকট্রনিক্স', value: 'electronics' },
-    { name: 'স্পোর্টস', value: 'sports' },
-    { name: 'টুলস', value: 'tools' },
-    { name: 'ভেহিকেল', value: 'vehicles' },
+    { 
+      name: 'ইলেকট্রনিক্স', 
+      value: 'electronics',
+      icon: <Smartphone className="h-5 w-5 text-pink-500" />,
+      subcategories: [
+        { name: 'ক্যামেরা', value: 'camera', icon: <Camera className="h-4 w-4 text-pink-500" /> },
+        { name: 'কম্পিউটার', value: 'computer', icon: <Monitor className="h-4 w-4 text-pink-500" /> },
+        { name: 'স্মার্টফোন', value: 'smartphone', icon: <Smartphone className="h-4 w-4 text-pink-500" /> },
+        { name: 'হেডফোন', value: 'headphone', icon: <Headphones className="h-4 w-4 text-pink-500" /> },
+      ]
+    },
+    { 
+      name: 'স্পোর্টস', 
+      value: 'sports',
+      icon: <Bike className="h-5 w-5 text-blue-500" />,
+      subcategories: [
+        { name: 'বাইক', value: 'bike', icon: <Bike className="h-4 w-4 text-blue-500" /> },
+        { name: 'খেলাধুলা সরঞ্জাম', value: 'sports-equipment', icon: <PlusCircle className="h-4 w-4 text-blue-500" /> },
+      ]
+    },
+    { 
+      name: 'টুলস', 
+      value: 'tools',
+      icon: <Tools className="h-5 w-5 text-purple-500" />,
+      subcategories: [
+        { name: 'পাওয়ার টুলস', value: 'power-tools', icon: <Tools className="h-4 w-4 text-purple-500" /> },
+        { name: 'জেনারেটর', value: 'generator', icon: <PlusCircle className="h-4 w-4 text-purple-500" /> },
+      ]
+    },
+    { 
+      name: 'ভেহিকেল', 
+      value: 'vehicles',
+      icon: <Car className="h-5 w-5 text-green-500" />,
+      subcategories: [
+        { name: 'কার', value: 'car', icon: <Car className="h-4 w-4 text-green-500" /> },
+        { name: 'বাইক', value: 'motorcycle', icon: <Bike className="h-4 w-4 text-green-500" /> },
+      ]
+    },
+    { 
+      name: 'রিয়েল এস্টেট', 
+      value: 'real-estate',
+      icon: <Building className="h-5 w-5 text-amber-500" />,
+      subcategories: [
+        { name: 'অফিস স্পেস', value: 'office', icon: <Briefcase className="h-4 w-4 text-amber-500" /> },
+        { name: 'বাসস্থান', value: 'residence', icon: <Home className="h-4 w-4 text-amber-500" /> },
+      ]
+    },
   ];
 
   return (
@@ -90,10 +136,11 @@ const RentAnything = () => {
       </div>
 
       <Tabs defaultValue="all" className="mb-6">
-        <TabsList className="w-full bg-secondary/50 mb-4">
+        <TabsList className="w-full bg-secondary/50 mb-4 flex-wrap">
           <TabsTrigger value="all" className="flex-1">সব</TabsTrigger>
           {categories.map(category => (
-            <TabsTrigger key={category.value} value={category.value} className="flex-1">
+            <TabsTrigger key={category.value} value={category.value} className="flex-1 flex items-center gap-1">
+              {category.icon}
               {category.name}
             </TabsTrigger>
           ))}
@@ -113,14 +160,26 @@ const RentAnything = () => {
                   </div>
                   <CardContent className="p-4 sm:w-2/3 flex flex-col justify-between">
                     <div>
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
                         <h3 className="font-semibold text-lg">{item.title}</h3>
-                        <Badge>
-                          {item.category === 'electronics' && 'ইলেকট্রনিক্স'}
-                          {item.category === 'sports' && 'স্পোর্টস'}
-                          {item.category === 'tools' && 'টুলস'}
-                          {item.category === 'vehicles' && 'ভেহিকেল'}
-                        </Badge>
+                        <div className="flex gap-2">
+                          {categories.find(c => c.value === item.category)?.subcategories.find(
+                            s => s.value === item.subcategory
+                          ) && (
+                            <Badge variant="outline" className="flex items-center gap-1">
+                              {categories.find(c => c.value === item.category)?.subcategories.find(
+                                s => s.value === item.subcategory
+                              )?.icon}
+                              {categories.find(c => c.value === item.category)?.subcategories.find(
+                                s => s.value === item.subcategory
+                              )?.name}
+                            </Badge>
+                          )}
+                          <Badge>
+                            {categories.find(c => c.value === item.category)?.icon}
+                            {categories.find(c => c.value === item.category)?.name}
+                          </Badge>
+                        </div>
                       </div>
                       <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
                       <div className="flex items-center text-muted-foreground text-sm mt-2">
@@ -148,56 +207,116 @@ const RentAnything = () => {
         
         {categories.map(category => (
           <TabsContent key={category.value} value={category.value}>
-            <div className="space-y-4">
-              {rentalItems
-                .filter(item => item.category === category.value)
-                .map((item) => (
-                  <Card key={item.id} className="overflow-hidden">
-                    <div className="flex flex-col sm:flex-row">
-                      <div className="sm:w-1/3">
-                        <img 
-                          src={item.image}
-                          alt={item.title}
-                          className="w-full h-48 sm:h-full object-cover"
-                        />
+            <div className="mb-4">
+              <Tabs defaultValue="all" className="w-full">
+                <TabsList className="w-full mb-4">
+                  <TabsTrigger value="all">সব {category.name}</TabsTrigger>
+                  {category.subcategories.map(sub => (
+                    <TabsTrigger key={sub.value} value={sub.value} className="flex items-center gap-1">
+                      {sub.icon}
+                      {sub.name}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+                
+                <TabsContent value="all">
+                  <div className="space-y-4">
+                    {rentalItems.filter(item => item.category === category.value).map((item) => (
+                      <Card key={item.id} className="overflow-hidden">
+                        <div className="flex flex-col sm:flex-row">
+                          <div className="sm:w-1/3">
+                            <img 
+                              src={item.image}
+                              alt={item.title}
+                              className="w-full h-48 sm:h-full object-cover"
+                            />
+                          </div>
+                          <CardContent className="p-4 sm:w-2/3 flex flex-col justify-between">
+                            <div>
+                              <div className="flex items-center justify-between">
+                                <h3 className="font-semibold text-lg">{item.title}</h3>
+                                <Badge variant="outline" className="flex items-center gap-1">
+                                  {category.subcategories.find(s => s.value === item.subcategory)?.icon}
+                                  {category.subcategories.find(s => s.value === item.subcategory)?.name}
+                                </Badge>
+                              </div>
+                              <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
+                              <div className="flex items-center text-muted-foreground text-sm mt-2">
+                                <MapPin className="h-4 w-4 mr-1" /> {item.location}
+                              </div>
+                              <div className="flex items-center text-sm mt-2">
+                                <Tag className="h-4 w-4 mr-1 text-primary" /> 
+                                <span className="font-medium">{item.owner}</span>
+                                <span className="mx-1">•</span>
+                                <span>{item.rating} রেটিং</span>
+                              </div>
+                            </div>
+                            <div className="flex items-center justify-between mt-4">
+                              <div className="text-lg font-bold">৳ {item.price}/{item.priceUnit}</div>
+                              <Button size="sm" className="gap-1">
+                                বুক করুন <Calendar className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </div>
+                      </Card>
+                    ))}
+                    {rentalItems.filter(item => item.category === category.value).length === 0 && (
+                      <div className="text-center py-10 text-muted-foreground">
+                        এই ক্যাটাগরিতে কোনো আইটেম এখনো উপলব্ধ নেই
                       </div>
-                      <CardContent className="p-4 sm:w-2/3 flex flex-col justify-between">
-                        <div>
-                          <div className="flex items-center justify-between">
-                            <h3 className="font-semibold text-lg">{item.title}</h3>
-                            <Badge>
-                              {item.category === 'electronics' && 'ইলেকট্রনিক্স'}
-                              {item.category === 'sports' && 'স্পোর্টস'}
-                              {item.category === 'tools' && 'টুলস'}
-                              {item.category === 'vehicles' && 'ভেহিকেল'}
-                            </Badge>
+                    )}
+                  </div>
+                </TabsContent>
+                
+                {category.subcategories.map(sub => (
+                  <TabsContent key={sub.value} value={sub.value}>
+                    <div className="space-y-4">
+                      {rentalItems.filter(item => item.category === category.value && item.subcategory === sub.value).map((item) => (
+                        <Card key={item.id} className="overflow-hidden">
+                          <div className="flex flex-col sm:flex-row">
+                            <div className="sm:w-1/3">
+                              <img 
+                                src={item.image}
+                                alt={item.title}
+                                className="w-full h-48 sm:h-full object-cover"
+                              />
+                            </div>
+                            <CardContent className="p-4 sm:w-2/3 flex flex-col justify-between">
+                              <div>
+                                <div className="flex items-center justify-between">
+                                  <h3 className="font-semibold text-lg">{item.title}</h3>
+                                </div>
+                                <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
+                                <div className="flex items-center text-muted-foreground text-sm mt-2">
+                                  <MapPin className="h-4 w-4 mr-1" /> {item.location}
+                                </div>
+                                <div className="flex items-center text-sm mt-2">
+                                  <Tag className="h-4 w-4 mr-1 text-primary" /> 
+                                  <span className="font-medium">{item.owner}</span>
+                                  <span className="mx-1">•</span>
+                                  <span>{item.rating} রেটিং</span>
+                                </div>
+                              </div>
+                              <div className="flex items-center justify-between mt-4">
+                                <div className="text-lg font-bold">৳ {item.price}/{item.priceUnit}</div>
+                                <Button size="sm" className="gap-1">
+                                  বুক করুন <Calendar className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </CardContent>
                           </div>
-                          <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
-                          <div className="flex items-center text-muted-foreground text-sm mt-2">
-                            <MapPin className="h-4 w-4 mr-1" /> {item.location}
-                          </div>
-                          <div className="flex items-center text-sm mt-2">
-                            <Tag className="h-4 w-4 mr-1 text-primary" /> 
-                            <span className="font-medium">{item.owner}</span>
-                            <span className="mx-1">•</span>
-                            <span>{item.rating} রেটিং</span>
-                          </div>
+                        </Card>
+                      ))}
+                      {rentalItems.filter(item => item.category === category.value && item.subcategory === sub.value).length === 0 && (
+                        <div className="text-center py-10 text-muted-foreground">
+                          এই সাবক্যাটাগরিতে কোনো আইটেম এখনো উপলব্ধ নেই
                         </div>
-                        <div className="flex items-center justify-between mt-4">
-                          <div className="text-lg font-bold">৳ {item.price}/{item.priceUnit}</div>
-                          <Button size="sm" className="gap-1">
-                            বুক করুন <Calendar className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </CardContent>
+                      )}
                     </div>
-                  </Card>
+                  </TabsContent>
                 ))}
-              {rentalItems.filter(item => item.category === category.value).length === 0 && (
-                <div className="text-center py-10 text-muted-foreground">
-                  এই ক্যাটাগরিতে কোনো আইটেম এখনো উপলব্ধ নেই
-                </div>
-              )}
+              </Tabs>
             </div>
           </TabsContent>
         ))}
