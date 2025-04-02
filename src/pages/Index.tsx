@@ -1,11 +1,9 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Star, 
   MapPin,
   ArrowRight,
-  Search,
   Home,
   Camera,
   Building,
@@ -28,7 +26,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import ExploreSection from '@/components/ExploreSection';
+import FeaturedDigitalProducts from '@/components/FeaturedDigitalProducts';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -138,30 +136,9 @@ const Index = () => {
         </Carousel>
       </div>
       
-      {/* Search Bar */}
-      <div className="mb-6">
-        <form onSubmit={handleSearch} className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-          <input 
-            type="text" 
-            placeholder="খুঁজুন" 
-            className="w-full pl-10 pr-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Button 
-            type="submit" 
-            variant="default" 
-            className="absolute right-1 top-1/2 transform -translate-y-1/2"
-          >
-            খুঁজুন
-          </Button>
-        </form>
-      </div>
-
-      {/* Explore Section */}
+      {/* Featured Digital Products Carousel */}
       <div className="mb-10">
-        <ExploreSection />
+        <FeaturedDigitalProducts />
       </div>
 
       {/* Featured Listings */}
