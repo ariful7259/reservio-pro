@@ -1,606 +1,476 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Search, 
-  Calendar, 
-  Clock, 
-  MapPin,
-  Star,
-  Filter,
-  ChevronDown,
-  ChevronUp,
-  ChevronRight,
-  BadgeCheck,
-  Scissors,
-  UserPlus,
-  MessageSquare,
-  Heart
-} from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Search, MapPin, Calendar, Filter, ArrowRight, Scissors, MessageCircle, Clock, Star, Heart } from 'lucide-react';
 import ServiceCard from '@/components/ServiceCard';
-import ServiceProviderCard from '@/components/ServiceProviderCard';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { useToast } from "@/components/ui/use-toast";
 
 const Services = () => {
-  const [filterExpanded, setFilterExpanded] = useState(false);
-  const [activeTab, setActiveTab] = useState('services');
   const navigate = useNavigate();
-  const { toast } = useToast();
-
-  // Banner images for Services
-  const bannerImages = [
-    "https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1000&auto=format&fit=crop", 
-    "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=1000&auto=format&fit=crop",
-  ];
-
-  // Service Categories with Salon and Parlour added
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  // Service categories
   const serviceCategories = [
-    { name: "ডাক্তার", icon: "🩺", count: 152, path: "/services/category/medical" },
-    { name: "ডেন্টাল", icon: "🦷", count: 89, path: "/services/category/dental" },
-    { name: "মেন্টাল হেলথ", icon: "🧠", count: 63, path: "/services/category/mental" },
-    { name: "সেলুন", icon: "✂️", count: 92, path: "/services/category/salon" },
-    { name: "পার্লার", icon: "💇‍♀️", count: 78, path: "/services/category/parlour" },
-    { name: "ল", icon: "⚖️", count: 54, path: "/services/category/legal" },
-    { name: "রিপেয়ার", icon: "🔧", count: 87, path: "/services/category/repair" },
-    { name: "হোম সার্ভিস", icon: "🏠", count: 105, path: "/services/category/home" },
+    { name: "ডাক্তার", path: "/services/category/medical", count: 123 },
+    { name: "ডেন্টাল", path: "/services/category/dental", count: 45 },
+    { name: "মেন্টাল হেলথ", path: "/services/category/mental-health", count: 32 },
+    { name: "সেলুন", path: "/services/category/salon", count: 67 },
+    { name: "পার্লার", path: "/services/category/parlour", count: 53 },
+    { name: "ল", path: "/services/category/legal", count: 28 },
+    { name: "রিপেয়ার", path: "/services/category/repair", count: 74 },
+    { name: "হোম সার্ভিস", path: "/services/category/home-service", count: 62 },
+    { name: "বিউটি", path: "/services/category/beauty", count: 89 },
+    { name: "কনসালটেন্সি", path: "/services/category/consultancy", count: 41 },
   ];
-
-  // Featured Services
-  const featuredServices = [
+  
+  // Sample professional services data
+  const professionalServices = [
     {
-      id: 1,
-      title: "হার্ট স্পেশালিষ্ট অ্যাপয়েন্টমেন্ট",
-      provider: "ডা. রহমান হার্ট কেয়ার",
-      price: "৳১,৫০০",
+      id: "1",
+      title: "জেনারেল হেলথ কনসালটেশন",
+      provider: "ডাঃ আহমেদ হাসান",
+      imageUrl: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       rating: 4.8,
-      reviewCount: 245,
-      location: "গুলশান, ঢাকা",
-      image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=300&auto=format&fit=crop",
-      tags: ["কার্ডিওলজি", "হার্ট"]
+      price: 1500,
+      duration: "৩০ মিনিট",
+      tags: ["জেনেরাল", "ফিজিক্যাল"],
+      buttonLabel: "অ্যাপয়েন্টমেন্ট বুক করুন"
     },
     {
-      id: 2,
-      title: "ডেন্টাল চেকআপ ও ক্লিনিং",
-      provider: "শাইন ডেন্টাল কেয়ার",
-      price: "৳২,০০০",
+      id: "2",
+      title: "ডেন্টাল চেকআপ",
+      provider: "ডাঃ শাহিন আক্তার",
+      imageUrl: "https://images.unsplash.com/photo-1606811842243-af7be28a43dd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       rating: 4.7,
-      reviewCount: 189,
-      location: "বনানী, ঢাকা",
-      image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?q=80&w=300&auto=format&fit=crop",
-      tags: ["ডেন্টাল", "অরাল হেলথ"]
+      price: 2000,
+      discount: 10,
+      duration: "৪৫ মিনিট",
+      tags: ["দাঁত", "চেকআপ"],
+      buttonLabel: "অ্যাপয়েন্টমেন্ট বুক করুন"
     },
     {
-      id: 3,
-      title: "মেন্টাল হেলথ কাউন্সেলিং",
-      provider: "মাইন্ড মেটার্স",
-      price: "৳১,২০০",
+      id: "3",
+      title: "সাইকোলজিক্যাল কাউন্সেলিং",
+      provider: "ফারহানা জামান",
+      imageUrl: "https://images.unsplash.com/photo-1573497620053-ea5300f94f21?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       rating: 4.9,
-      reviewCount: 156,
-      location: "ধানমন্ডি, ঢাকা",
-      image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=300&auto=format&fit=crop",
-      tags: ["কাউন্সেলিং", "থেরাপি"]
+      price: 3000,
+      duration: "৬০ মিনিট",
+      tags: ["মানসিক স্বাস্থ্য", "কাউন্সেলিং"],
+      buttonLabel: "অ্যাপয়েন্টমেন্ট বুক করুন"
     },
     {
-      id: 4,
-      title: "ফিজিওথেরাপি সেশন",
-      provider: "হেলথি বডি ফিজিও",
-      price: "৳১,৮০০",
+      id: "4",
+      title: "জটিল রোগের কনসালটেশন",
+      provider: "ডাঃ কামাল রেজা",
+      imageUrl: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       rating: 4.6,
-      reviewCount: 127,
-      location: "মিরপুর, ঢাকা",
-      image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?q=80&w=300&auto=format&fit=crop",
-      tags: ["ফিজিওথেরাপি", "পেইন রিলিফ"]
+      price: 2500,
+      duration: "৪৫ মিনিট",
+      tags: ["বিশেষজ্ঞ", "জটিল রোগ"],
+      buttonLabel: "অ্যাপয়েন্টমেন্ট বুক করুন"
     },
   ];
-
-  // Salon Services
-  const salonServices = [
+  
+  // Sample non-professional services data
+  const nonProfessionalServices = [
     {
-      id: 5,
-      title: "হেয়ার কাট & স্টাইলিং",
-      provider: "লুক শার্প সেলুন",
-      price: "৳৫০০",
-      rating: 4.8,
-      reviewCount: 315,
-      location: "ধানমন্ডি, ঢাকা",
-      image: "https://images.unsplash.com/photo-1493256338651-d82f7acb2b38?q=80&w=300&auto=format&fit=crop",
-      tags: ["হেয়ার কাট", "স্টাইলিং"]
+      id: "5",
+      title: "কাট এন্ড স্টাইল",
+      provider: "স্টাইলিশ বিউটি সেলুন",
+      imageUrl: "https://images.unsplash.com/photo-1562322140-8baeececf3df?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      rating: 4.5,
+      price: 500,
+      duration: "৪৫ মিনিট",
+      tags: ["হেয়ার", "স্টাইল"],
+      buttonLabel: "বুক করুন"
     },
     {
-      id: 6,
-      title: "শেভ & ফেসিয়াল",
-      provider: "জেন্টস পয়েন্ট",
-      price: "৳৮০০",
+      id: "6",
+      title: "স্কিন কেয়ার ফেসিয়াল",
+      provider: "গ্লো বিউটি পার্লার",
+      imageUrl: "https://images.unsplash.com/photo-1596755471730-bc5166332a52?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       rating: 4.7,
-      reviewCount: 208,
-      location: "বনানী, ঢাকা",
-      image: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=300&auto=format&fit=crop",
-      tags: ["শেভ", "ফেসিয়াল"]
-    }
+      price: 1200,
+      discount: 15,
+      duration: "৬০ মিনিট",
+      tags: ["স্কিন কেয়ার", "ফেসিয়াল"],
+      buttonLabel: "বুক করুন"
+    },
+    {
+      id: "7",
+      title: "ইলেকট্রনিক্স রিপেয়ার",
+      provider: "টেক সার্ভিস সেন্টার",
+      imageUrl: "https://images.unsplash.com/photo-1588420343618-6141b3784bce?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      rating: 4.3,
+      price: 800,
+      duration: "১-২ ঘণ্টা",
+      tags: ["রিপেয়ার", "ইলেকট্রনিক্স"],
+      buttonLabel: "বুক করুন"
+    },
+    {
+      id: "8",
+      title: "হোম ক্লিনিং",
+      provider: "স্মার্ট ক্লিনার্স",
+      imageUrl: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      rating: 4.6,
+      price: 1500,
+      duration: "৩ ঘণ্টা",
+      tags: ["ক্লিনিং", "হোম সার্ভিস"],
+      buttonLabel: "বুক করুন"
+    },
   ];
-
-  // Parlour Services
-  const parlourServices = [
-    {
-      id: 7,
-      title: "ফুল ফেস মেকআপ",
-      provider: "গ্ল্যামার পার্লার",
-      price: "৳২,৫০০",
-      rating: 4.9,
-      reviewCount: 276,
-      location: "গুলশান, ঢাকা",
-      image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=300&auto=format&fit=crop",
-      tags: ["মেকআপ", "ব্রাইডাল"]
-    },
-    {
-      id: 8,
-      title: "হেয়ার স্পা & ট্রিটমেন্ট",
-      provider: "বিউটি হেভেন",
-      price: "৳১,৮০০",
-      rating: 4.8,
-      reviewCount: 194,
-      location: "উত্তরা, ঢাকা",
-      image: "https://images.unsplash.com/photo-1560869713-7d0a29430803?q=80&w=300&auto=format&fit=crop",
-      tags: ["হেয়ার স্পা", "হেয়ার কেয়ার"]
-    }
+  
+  // Recommended services
+  const recommendedServices = [
+    professionalServices[0],
+    nonProfessionalServices[0],
+    professionalServices[1],
+    nonProfessionalServices[1]
   ];
-
-  // Service providers for the Hire section
-  const serviceProviders = [
-    {
-      id: 1,
-      name: "ডা. আহমেদ হাসান",
-      profession: "কার্ডিওলজিস্ট",
-      image: "https://i.pravatar.cc/300?img=11",
-      rating: 4.9,
-      reviewCount: 127,
-      experience: 15,
-      featured: true,
-      location: "গুলশান, ঢাকা",
-      availability: "সকাল ৯টা - দুপুর ২টা",
-      fee: "৳২,০০০"
-    },
-    {
-      id: 2,
-      name: "ডা. জাফরিন আলম",
-      profession: "ডেন্টিস্ট",
-      image: "https://i.pravatar.cc/300?img=32",
-      rating: 4.8,
-      reviewCount: 94,
-      experience: 8,
-      featured: false,
-      location: "বনানী, ঢাকা",
-      availability: "বিকাল ৪টা - রাত ৮টা",
-      fee: "৳১,৫০০"
-    },
-    {
-      id: 3,
-      name: "নিলিমা রহমান",
-      profession: "সাইকোলজিস্ট",
-      image: "https://i.pravatar.cc/300?img=21",
-      rating: 4.9,
-      reviewCount: 106,
-      experience: 12,
-      featured: true,
-      location: "ধানমন্ডি, ঢাকা",
-      availability: "সকাল ১০টা - বিকাল ৫টা",
-      fee: "৳২,৫০০"
-    },
-    {
-      id: 4,
-      name: "রাজিব হোসেন",
-      profession: "হেয়ার স্টাইলিস্ট",
-      image: "https://i.pravatar.cc/300?img=59",
-      rating: 4.7,
-      reviewCount: 183,
-      experience: 10,
-      featured: false,
-      location: "মোহাম্মদপুর, ঢাকা",
-      availability: "সকাল ১১টা - রাত ৯টা",
-      fee: "৳৮০০"
-    }
-  ];
-
-  // Function to handle clicking on a service
-  const handleServiceClick = (serviceId: number) => {
-    navigate(`/services/${serviceId}`);
+  
+  const handleServiceClick = (id: string) => {
+    navigate(`/services/${id}`);
   };
-
-  // Function to handle booking a service
-  const handleBookService = (serviceId: number, event: React.MouseEvent) => {
-    event.stopPropagation();
-    toast({
-      title: "বুকিং প্রক্রিয়া শুরু হয়েছে",
-      description: "আপনাকে অ্যাপয়েন্টমেন্ট পেজে নিয়ে যাওয়া হচ্ছে...",
-    });
-    navigate(`/appointments?service=${serviceId}`);
-  };
-
-  // Function to handle hiring a service provider
-  const handleHireProvider = (providerId: number) => {
-    toast({
-      title: "হায়ারিং প্রক্রিয়া শুরু হয়েছে",
-      description: "আপনাকে প্রোফাইল পেজে নিয়ে যাওয়া হচ্ছে...",
-    });
-    navigate(`/appointments?provider=${providerId}`);
-  };
-
-  // Function to handle clicking on a category
-  const handleCategoryClick = (path: string) => {
-    navigate(path);
+  
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Searching for:", searchTerm);
+    // Implementation for search functionality
   };
 
   return (
     <div className="container px-4 pt-20 pb-20">
-      {/* Header with search */}
+      <h1 className="text-2xl font-bold mb-6">সার্ভিস</h1>
+      
+      {/* Search and Filter */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-4">সার্ভিসেস</h1>
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input 
-              placeholder="সার্ভিস খুঁজুন" 
-              className="pl-9" 
-            />
-          </div>
+        <form onSubmit={handleSearch} className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <input 
+            type="text" 
+            placeholder="সার্ভিস খুঁজুন" 
+            className="w-full pl-10 pr-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
           <Button 
-            variant="outline" 
-            size="icon"
-            onClick={() => setFilterExpanded(!filterExpanded)}
+            type="submit" 
+            variant="default" 
+            className="absolute right-1 top-1/2 transform -translate-y-1/2"
           >
-            <Filter className="h-4 w-4" />
+            খুঁজুন
+          </Button>
+        </form>
+      </div>
+      
+      {/* Service Categories */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-medium">ক্যাটাগরি</h2>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="flex items-center gap-1" 
+            onClick={() => navigate('/services/categories')}
+          >
+            সব দেখুন <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
-      </div>
-
-      {/* Filter Panel - conditional rendering */}
-      {filterExpanded && (
-        <div className="mb-6 p-4 border rounded-lg bg-gray-50">
-          <h3 className="font-medium mb-3">ফিল্টার করুন</h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="text-sm font-medium mb-1 block">ক্যাটাগরি</label>
-              <select className="w-full p-2 border rounded-md">
-                <option value="">সব ক্যাটাগরি</option>
-                <option value="doctor">ডাক্তার</option>
-                <option value="dental">ডেন্টাল</option>
-                <option value="mental-health">মেন্টাল হেলথ</option>
-                <option value="salon">সেলুন</option>
-                <option value="parlour">পার্লার</option>
-                <option value="law">ল</option>
-                <option value="repair">রিপেয়ার</option>
-                <option value="home-service">হোম সার্ভিস</option>
-              </select>
-            </div>
-            
-            <div>
-              <label className="text-sm font-medium mb-1 block">লোকেশন</label>
-              <select className="w-full p-2 border rounded-md">
-                <option value="">সব লোকেশন</option>
-                <option value="gulshan">গুলশান</option>
-                <option value="banani">বনানী</option>
-                <option value="dhanmondi">ধানমন্ডি</option>
-                <option value="mirpur">মিরপুর</option>
-                <option value="mohammadpur">মোহাম্মদপুর</option>
-                <option value="uttara">উত্তরা</option>
-              </select>
-            </div>
-            
-            <div>
-              <label className="text-sm font-medium mb-1 block">মূল্য</label>
-              <div className="flex gap-2">
-                <Input type="number" placeholder="সর্বনিম্ন" />
-                <Input type="number" placeholder="সর্বোচ্চ" />
-              </div>
-            </div>
-          </div>
-          
-          <div className="flex justify-end gap-2 mt-4">
-            <Button variant="outline" onClick={() => setFilterExpanded(false)}>
-              বাতিল
-            </Button>
-            <Button>
-              ফিল্টার করুন
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {/* Book or Hire Tabs */}
-      <div className="mb-6">
-        <Tabs defaultValue="services" onValueChange={setActiveTab}>
-          <TabsList className="w-full grid grid-cols-2 mb-4">
-            <TabsTrigger value="services" className="gap-2">
-              <Calendar className="h-4 w-4" /> সার্ভিস বুক করুন
-            </TabsTrigger>
-            <TabsTrigger value="providers" className="gap-2">
-              <UserPlus className="h-4 w-4" /> প্রোফেশনাল হায়ার করুন
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </div>
-
-      {/* Categories section */}
-      <div className="mb-8">
-        <h2 className="text-lg font-medium mb-4">ক্যাটাগরি</h2>
-        <div className="grid grid-cols-4 gap-3">
-          {serviceCategories.map((category, index) => (
+        
+        <div className="grid grid-cols-5 gap-3">
+          {serviceCategories.slice(0, 5).map((category, index) => (
             <div 
               key={index}
-              className="flex flex-col items-center justify-center p-3 rounded-lg border hover:bg-gray-50 cursor-pointer transition-colors"
-              onClick={() => handleCategoryClick(category.path)}
+              className="flex flex-col items-center justify-center text-center cursor-pointer"
+              onClick={() => navigate(category.path)}
             >
-              <div className="text-2xl mb-1">{category.icon}</div>
-              <span className="text-xs text-center">{category.name}</span>
-              <Badge variant="outline" className="mt-1">{category.count}</Badge>
+              <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                {index === 3 ? (
+                  <Scissors className="h-6 w-6" />
+                ) : (
+                  <Search className="h-6 w-6" />
+                )}
+              </div>
+              <span className="text-xs font-medium">{category.name}</span>
+              <Badge variant="outline" className="mt-1 text-xs">{category.count}</Badge>
             </div>
           ))}
         </div>
       </div>
       
-      {/* Banner section */}
-      <div className="mb-6 overflow-hidden rounded-lg">
-        <Carousel className="w-full">
-          <CarouselContent>
-            {bannerImages.map((image, index) => (
-              <CarouselItem key={index}>
-                <div className="p-1">
-                  <div className="overflow-hidden rounded-lg aspect-[16/6] w-full">
-                    <img 
-                      src={image} 
-                      alt={`Banner ${index + 1}`} 
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="left-2" />
-          <CarouselNext className="right-2" />
-        </Carousel>
+      {/* Book and Hire Sections */}
+      <div className="mb-8 grid grid-cols-2 gap-4">
+        <Card className="overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-100 border-blue-200">
+          <CardContent className="p-6">
+            <div className="flex flex-col items-center text-center">
+              <Calendar className="h-12 w-12 text-blue-500 mb-4" />
+              <h3 className="text-lg font-bold mb-2">সার্ভিস বুক করুন</h3>
+              <p className="text-sm text-gray-600 mb-4">প্রফেশনাল সার্ভিস বুক করে সময় বাঁচান</p>
+              <Button 
+                variant="default" 
+                className="bg-blue-500 hover:bg-blue-600"
+                onClick={() => navigate('/services/book')}
+              >
+                বুক করুন
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="overflow-hidden bg-gradient-to-r from-amber-50 to-orange-100 border-amber-200">
+          <CardContent className="p-6">
+            <div className="flex flex-col items-center text-center">
+              <MessageCircle className="h-12 w-12 text-amber-500 mb-4" />
+              <h3 className="text-lg font-bold mb-2">প্রফেশনাল হায়ার করুন</h3>
+              <p className="text-sm text-gray-600 mb-4">প্রফেশনাল ব্যক্তিদের সাথে যোগাযোগ করুন</p>
+              <Button 
+                variant="default" 
+                className="bg-amber-500 hover:bg-amber-600"
+                onClick={() => navigate('/services/hire')}
+              >
+                হায়ার করুন
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-
-      {activeTab === 'services' ? (
-        <>
-          {/* Featured Services listing */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-medium">ফিচার্ড সার্ভিস</h2>
-              <Button variant="ghost" size="sm" onClick={() => navigate('/services')}>
-                সব দেখুন <ChevronRight className="h-4 w-4 ml-1" />
-              </Button>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {featuredServices.map((service) => (
-                <Card 
-                  key={service.id}
-                  className="overflow-hidden hover:shadow-md transition-all cursor-pointer"
-                  onClick={() => handleServiceClick(service.id)}
-                >
-                  <div className="relative">
-                    <img 
-                      src={service.image} 
-                      alt={service.title}
-                      className="w-full h-48 object-cover"
-                    />
-                    {service.rating >= 4.8 && (
-                      <Badge className="absolute top-2 right-2 bg-green-500">
-                        <BadgeCheck className="h-3 w-3 mr-1" /> বেস্ট সেলার
-                      </Badge>
-                    )}
-                  </div>
-                  <CardContent className="p-4">
-                    <h3 className="font-medium text-base mb-1 line-clamp-1">{service.title}</h3>
-                    <div className="flex items-center text-sm text-muted-foreground mb-2">
-                      <MapPin className="h-3 w-3 mr-1" />
-                      <span className="line-clamp-1">{service.location}</span>
-                    </div>
-                    <div className="flex items-center text-xs text-muted-foreground mb-3">
-                      <div className="flex items-center">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                        <span className="ml-1">{service.rating}</span>
-                      </div>
-                      <span className="mx-1">•</span>
-                      <span>{service.reviewCount} রিভিউ</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-primary">{service.price}</span>
-                      <Button size="sm" onClick={(e) => handleBookService(service.id, e)}>বুক করুন</Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-
-          {/* Salon Services */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-medium">সেলুন সার্ভিস</h2>
-              <Button variant="ghost" size="sm" onClick={() => navigate('/services/category/salon')}>
-                সব দেখুন <ChevronRight className="h-4 w-4 ml-1" />
-              </Button>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {salonServices.map((service) => (
-                <Card 
-                  key={service.id}
-                  className="overflow-hidden hover:shadow-md transition-all cursor-pointer"
-                  onClick={() => handleServiceClick(service.id)}
-                >
-                  <div className="relative">
-                    <img 
-                      src={service.image} 
-                      alt={service.title}
-                      className="w-full h-48 object-cover"
-                    />
-                    <Badge className="absolute top-2 right-2 bg-blue-500">
-                      <Scissors className="h-3 w-3 mr-1" /> সেলুন
-                    </Badge>
-                  </div>
-                  <CardContent className="p-4">
-                    <h3 className="font-medium text-base mb-1 line-clamp-1">{service.title}</h3>
-                    <div className="flex items-center text-sm text-muted-foreground mb-2">
-                      <MapPin className="h-3 w-3 mr-1" />
-                      <span className="line-clamp-1">{service.location}</span>
-                    </div>
-                    <div className="flex items-center text-xs text-muted-foreground mb-3">
-                      <div className="flex items-center">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                        <span className="ml-1">{service.rating}</span>
-                      </div>
-                      <span className="mx-1">•</span>
-                      <span>{service.reviewCount} রিভিউ</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-primary">{service.price}</span>
-                      <Button size="sm" onClick={(e) => handleBookService(service.id, e)}>বুক করুন</Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-
-          {/* Beauty Parlour Services */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-medium">পার্লার সার্ভিস</h2>
-              <Button variant="ghost" size="sm" onClick={() => navigate('/services/category/parlour')}>
-                সব দেখুন <ChevronRight className="h-4 w-4 ml-1" />
-              </Button>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {parlourServices.map((service) => (
-                <Card 
-                  key={service.id}
-                  className="overflow-hidden hover:shadow-md transition-all cursor-pointer"
-                  onClick={() => handleServiceClick(service.id)}
-                >
-                  <div className="relative">
-                    <img 
-                      src={service.image} 
-                      alt={service.title}
-                      className="w-full h-48 object-cover"
-                    />
-                    <Badge className="absolute top-2 right-2 bg-pink-500">
-                      <BadgeCheck className="h-3 w-3 mr-1" /> পার্লার
-                    </Badge>
-                  </div>
-                  <CardContent className="p-4">
-                    <h3 className="font-medium text-base mb-1 line-clamp-1">{service.title}</h3>
-                    <div className="flex items-center text-sm text-muted-foreground mb-2">
-                      <MapPin className="h-3 w-3 mr-1" />
-                      <span className="line-clamp-1">{service.location}</span>
-                    </div>
-                    <div className="flex items-center text-xs text-muted-foreground mb-3">
-                      <div className="flex items-center">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                        <span className="ml-1">{service.rating}</span>
-                      </div>
-                      <span className="mx-1">•</span>
-                      <span>{service.reviewCount} রিভিউ</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-primary">{service.price}</span>
-                      <Button size="sm" onClick={(e) => handleBookService(service.id, e)}>বুক করুন</Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </>
-      ) : (
-        // Service Providers section (Hire professionals)
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-medium">শীর্ষ প্রফেশনালস</h2>
-            <Button variant="ghost" size="sm" onClick={() => navigate('/professionals')}>
-              সব দেখুন <ChevronRight className="h-4 w-4 ml-1" />
-            </Button>
-          </div>
+      
+      {/* Services Tabs */}
+      <div className="mb-8">
+        <Tabs defaultValue="recommended">
+          <TabsList className="grid w-full grid-cols-3 mb-6">
+            <TabsTrigger value="recommended">রেকমেন্ডেড</TabsTrigger>
+            <TabsTrigger value="professional">প্রফেশনাল</TabsTrigger>
+            <TabsTrigger value="non-professional">নন-প্রফেশনাল</TabsTrigger>
+          </TabsList>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {serviceProviders.map((provider) => (
-              <Card key={provider.id} className="overflow-hidden hover:shadow-md transition-all">
-                <CardContent className="p-4">
-                  <div className="flex gap-4">
-                    <div className="relative">
-                      <Avatar className="h-20 w-20">
-                        <AvatarImage src={provider.image} alt={provider.name} />
-                        <AvatarFallback>{provider.name.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      {provider.featured && (
-                        <Badge className="absolute -top-2 -left-2 bg-amber-500">
-                          <BadgeCheck className="h-3 w-3 mr-1" /> ভেরিফাইড
-                        </Badge>
-                      )}
-                    </div>
-                    
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-1">
-                        <h3 className="font-medium text-base">{provider.name}</h3>
-                        <div className="flex gap-1">
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <MessageSquare className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <Heart className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                      <div className="text-sm text-muted-foreground mb-1">{provider.profession}</div>
-                      
-                      <div className="flex items-center text-xs text-muted-foreground mb-2">
-                        <div className="flex items-center">
-                          <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                          <span className="ml-1">{provider.rating}</span>
-                        </div>
-                        <span className="mx-1">•</span>
-                        <span>{provider.reviewCount} রিভিউ</span>
-                        <span className="mx-1">•</span>
-                        <span>{provider.experience} বছর অভিজ্ঞতা</span>
-                      </div>
-                      
-                      <div className="flex items-center text-xs text-muted-foreground mb-2">
-                        <MapPin className="h-3 w-3 mr-1" />
-                        <span>{provider.location}</span>
-                      </div>
-                      
-                      <div className="flex items-center text-xs text-muted-foreground mb-3">
-                        <Clock className="h-3 w-3 mr-1" />
-                        <span>{provider.availability}</span>
-                      </div>
-                      
-                      <div className="flex items-center justify-between mt-2">
-                        <span className="font-bold text-primary">{provider.fee}</span>
-                        <Button size="sm" onClick={() => handleHireProvider(provider.id)}>হায়ার করুন</Button>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <TabsContent value="recommended">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+              {recommendedServices.map((service) => (
+                <ServiceCard
+                  key={service.id}
+                  id={service.id}
+                  title={service.title}
+                  provider={service.provider}
+                  imageUrl={service.imageUrl}
+                  rating={service.rating}
+                  price={service.price}
+                  discount={service.discount}
+                  duration={service.duration}
+                  tags={service.tags}
+                  buttonLabel={service.buttonLabel}
+                  onClick={handleServiceClick}
+                />
+              ))}
+            </div>
+            <div className="text-center">
+              <Button 
+                variant="outline" 
+                className="flex items-center gap-1 mx-auto"
+                onClick={() => navigate('/services/all')}
+              >
+                আরও দেখুন <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="professional">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+              {professionalServices.map((service) => (
+                <ServiceCard
+                  key={service.id}
+                  id={service.id}
+                  title={service.title}
+                  provider={service.provider}
+                  imageUrl={service.imageUrl}
+                  rating={service.rating}
+                  price={service.price}
+                  discount={service.discount}
+                  duration={service.duration}
+                  tags={service.tags}
+                  buttonLabel={service.buttonLabel}
+                  onClick={handleServiceClick}
+                />
+              ))}
+            </div>
+            <div className="text-center">
+              <Button 
+                variant="outline" 
+                className="flex items-center gap-1 mx-auto"
+                onClick={() => navigate('/services/professional')}
+              >
+                আরও দেখুন <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="non-professional">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+              {nonProfessionalServices.map((service) => (
+                <ServiceCard
+                  key={service.id}
+                  id={service.id}
+                  title={service.title}
+                  provider={service.provider}
+                  imageUrl={service.imageUrl}
+                  rating={service.rating}
+                  price={service.price}
+                  discount={service.discount}
+                  duration={service.duration}
+                  tags={service.tags}
+                  buttonLabel={service.buttonLabel}
+                  onClick={handleServiceClick}
+                />
+              ))}
+            </div>
+            <div className="text-center">
+              <Button 
+                variant="outline" 
+                className="flex items-center gap-1 mx-auto"
+                onClick={() => navigate('/services/non-professional')}
+              >
+                আরও দেখুন <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+      
+      {/* Highlighted Services */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-medium">আজকের সেরা অফার</h2>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="flex items-center gap-1" 
+            onClick={() => navigate('/services/offers')}
+          >
+            সব দেখুন <ArrowRight className="h-4 w-4" />
+          </Button>
         </div>
-      )}
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+          <Card className="overflow-hidden border-orange-200">
+            <div className="h-40 overflow-hidden relative">
+              <img
+                src="https://images.unsplash.com/photo-1595745822695-859878c7bf1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                alt="Premium Service"
+                className="w-full h-full object-cover"
+              />
+              <Badge className="absolute top-2 right-2 bg-orange-500">২৫% ছাড়</Badge>
+            </div>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="font-semibold">প্রিমিয়াম মেডিকেল চেকআপ</h3>
+                <div className="flex items-center gap-1 bg-amber-100 px-2 py-1 rounded text-amber-700">
+                  <Star className="h-3 w-3 fill-amber-500 text-amber-500" />
+                  <span className="text-xs font-medium">4.9</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-1 text-muted-foreground text-sm mb-2">
+                <MapPin className="h-4 w-4" />
+                <span>প্রিমিয়াম হসপিটাল, গুলশান</span>
+              </div>
+              <div className="flex items-center gap-1 text-muted-foreground text-sm mb-3">
+                <Clock className="h-4 w-4" />
+                <span>১২০ মিনিট</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-primary font-bold">৳৫,০০০</span>
+                  <span className="text-muted-foreground text-sm line-through ml-2">৳৭,৫০০</span>
+                </div>
+                <Button 
+                  variant="default"
+                  onClick={() => navigate('/services/premium-checkup')}
+                >
+                  বুক করুন
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="overflow-hidden border-blue-200">
+            <div className="h-40 overflow-hidden relative">
+              <img
+                src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                alt="Dental Service"
+                className="w-full h-full object-cover"
+              />
+              <Badge className="absolute top-2 right-2 bg-blue-500">২০% ছাড়</Badge>
+            </div>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="font-semibold">কমপ্লিট ডেন্টাল কেয়ার</h3>
+                <div className="flex items-center gap-1 bg-amber-100 px-2 py-1 rounded text-amber-700">
+                  <Star className="h-3 w-3 fill-amber-500 text-amber-500" />
+                  <span className="text-xs font-medium">4.8</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-1 text-muted-foreground text-sm mb-2">
+                <MapPin className="h-4 w-4" />
+                <span>ডেন্টাল প্রো ক্লিনিক, বনানী</span>
+              </div>
+              <div className="flex items-center gap-1 text-muted-foreground text-sm mb-3">
+                <Clock className="h-4 w-4" />
+                <span>৯০ মিনিট</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-primary font-bold">৳৩,২০০</span>
+                  <span className="text-muted-foreground text-sm line-through ml-2">৳৪,০০০</span>
+                </div>
+                <Button 
+                  variant="default"
+                  onClick={() => navigate('/services/dental-care')}
+                >
+                  বুক করুন
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+      
+      {/* Recently Viewed */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-medium">সাম্প্রতিক দেখা সার্ভিস</h2>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="flex items-center gap-1" 
+            onClick={() => navigate('/services/recently-viewed')}
+          >
+            সব দেখুন <ArrowRight className="h-4 w-4" />
+          </Button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {professionalServices.slice(0, 2).map((service) => (
+            <ServiceCard
+              key={service.id}
+              id={service.id}
+              title={service.title}
+              provider={service.provider}
+              imageUrl={service.imageUrl}
+              rating={service.rating}
+              price={service.price}
+              discount={service.discount}
+              duration={service.duration}
+              tags={service.tags}
+              buttonLabel={service.buttonLabel}
+              onClick={handleServiceClick}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,9 +1,7 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Building, 
   Home, 
@@ -15,15 +13,6 @@ import {
   ChevronUp,
   Filter,
   MapPin,
-  UserPlus,
-  FileText,
-  CreditCard,
-  Clock,
-  Map,
-  Bike,
-  ShoppingBag,
-  Check,
-  User
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
@@ -31,12 +20,12 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import RentalFeatures from '@/components/RentalFeatures';
 
 const Rentals = () => {
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
-  const [activeTab, setActiveTab] = useState('home');
 
   // Banner images for Rentals
   const bannerImages = [
@@ -93,114 +82,6 @@ const Rentals = () => {
     },
   ];
 
-  // New rent features
-  const rentFeatures = [
-    { 
-      id: 'home', 
-      title: 'Find a Home', 
-      banglaTitle: 'বাসা খোঁজুন', 
-      description: 'বাসা খোঁজার সার্চ ফিচার',
-      icon: <Home className="h-16 w-16 text-primary" />,
-      path: '/rent/find-home'
-    },
-    { 
-      id: 'roommates', 
-      title: 'Roommates', 
-      banglaTitle: 'রুমমেট', 
-      description: 'রুমমেট খোঁজার অপশন',
-      icon: <UserPlus className="h-16 w-16 text-blue-500" />,
-      path: '/rent/roommates'
-    },
-    { 
-      id: 'mess', 
-      title: 'Mess Seats', 
-      banglaTitle: 'মেস সিট', 
-      description: 'মেসের খালি সিটের তালিকা',
-      icon: <Briefcase className="h-16 w-16 text-green-500" />,
-      path: '/rent/mess-seats'
-    },
-    { 
-      id: 'lease', 
-      title: 'Lease Negotiation', 
-      banglaTitle: 'লিজ নেগোশিয়েশন', 
-      description: 'লিজ দর-কষাকষির সহায়তা',
-      icon: <FileText className="h-16 w-16 text-amber-500" />,
-      path: '/rent/lease'
-    },
-    { 
-      id: 'property', 
-      title: 'Property Listing', 
-      banglaTitle: 'প্রপার্টি লিস্টিং', 
-      description: 'সম্পত্তি মালিকদের জন্য লিস্টিং সুবিধা',
-      icon: <Building className="h-16 w-16 text-red-500" />,
-      path: '/rent/listing'
-    },
-    { 
-      id: 'tenant', 
-      title: 'Tenant Management', 
-      banglaTitle: 'টেনেন্ট ম্যানেজমেন্ট', 
-      description: 'টেনেন্টদের তথ্য সংরক্ষণ ও পরিচালনা',
-      icon: <User className="h-16 w-16 text-purple-500" />,
-      path: '/rent/tenant'
-    },
-    { 
-      id: 'payment', 
-      title: 'Rent Collection', 
-      banglaTitle: 'রেন্ট কালেকশন', 
-      description: 'অনলাইন ভাড়া সংগ্রহ এবং পেমেন্ট ট্র্যাকিং',
-      icon: <CreditCard className="h-16 w-16 text-pink-500" />,
-      path: '/rent/payment'
-    },
-    { 
-      id: 'map', 
-      title: 'Map View', 
-      banglaTitle: 'ম্যাপ ভিউ', 
-      description: 'কাছাকাছি থাকা ভাড়ার সম্পত্তি ম্যাপে দেখা',
-      icon: <Map className="h-16 w-16 text-cyan-500" />,
-      path: '/rent/map'
-    },
-    { 
-      id: 'browse', 
-      title: 'Browse Rental Items', 
-      banglaTitle: 'রেন্টাল আইটেম ব্রাউজ', 
-      description: 'বাইসাইকেল, বই, ইলেকট্রনিক্স, আসবাবপত্র ইত্যাদি ভাড়া নেওয়ার সুবিধা',
-      icon: <Bike className="h-16 w-16 text-indigo-500" />,
-      path: '/rent/browse'
-    },
-    { 
-      id: 'post', 
-      title: 'Post Items for Rent', 
-      banglaTitle: 'রেন্টের জন্য আইটেম পোস্ট', 
-      description: 'ব্যবহারকারীরা নিজেদের জিনিস ভাড়ার জন্য পোস্ট করতে পারবে',
-      icon: <ShoppingBag className="h-16 w-16 text-gray-500" />,
-      path: '/rent/post'
-    },
-    { 
-      id: 'category', 
-      title: 'Category Search', 
-      banglaTitle: 'ক্যাটাগরি সার্চ', 
-      description: 'ক্যাটাগরি অনুযায়ী ভাড়া আইটেম ব্রাউজ করা',
-      icon: <Filter className="h-16 w-16 text-orange-500" />,
-      path: '/rent/category'
-    },
-    { 
-      id: 'agreement', 
-      title: 'Rental Agreements', 
-      banglaTitle: 'রেন্টাল এগ্রিমেন্ট', 
-      description: 'ভাড়ার চুক্তি তৈরির সুবিধা',
-      icon: <Check className="h-16 w-16 text-teal-500" />,
-      path: '/rent/agreement'
-    },
-    { 
-      id: 'active', 
-      title: 'Active Rentals', 
-      banglaTitle: 'অ্যাকটিভ রেন্টাল', 
-      description: 'বর্তমানে ভাড়া নেওয়া বা দেওয়া আইটেমগুলোর তালিকা',
-      icon: <Clock className="h-16 w-16 text-rose-500" />,
-      path: '/rent/active'
-    },
-  ];
-
   const toggleFilter = () => {
     setFilterVisible(!filterVisible);
   };
@@ -250,7 +131,7 @@ const Rentals = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="apartment">অ্যাপার্টমেন্ট</SelectItem>
-                  <SelectItem value="house">বাসা</SelectItem>
+                  <SelectItem value="house">বাস��</SelectItem>
                   <SelectItem value="car">গাড়ি</SelectItem>
                   <SelectItem value="office">অফিস</SelectItem>
                 </SelectContent>
@@ -415,60 +296,9 @@ const Rentals = () => {
         </div>
       </div>
       
-      {/* Rent Features Section */}
+      {/* Enhanced Rent Features Section */}
       <div className="mb-10">
-        <h2 className="text-lg font-medium mb-4">রেন্ট ফিচারস</h2>
-        
-        <Tabs onValueChange={setActiveTab} value={activeTab}>
-          <TabsList className="grid grid-cols-2 md:grid-cols-4 mb-8 bg-transparent gap-2">
-            {rentFeatures.slice(0, 8).map(feature => (
-              <TabsTrigger 
-                key={feature.id} 
-                value={feature.id}
-                className="border bg-white hover:bg-gray-50 data-[state=active]:bg-primary data-[state=active]:text-white"
-              >
-                {feature.banglaTitle}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-          
-          {rentFeatures.map(feature => (
-            <TabsContent key={feature.id} value={feature.id} className="focus-visible:outline-none focus-visible:ring-0">
-              <div className="bg-gray-50 p-6 rounded-lg">
-                <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-                  <div className="p-6 bg-white rounded-full shadow-sm">
-                    {feature.icon}
-                  </div>
-                  <div className="flex-1 text-center md:text-left">
-                    <h3 className="text-xl font-bold mb-2">{feature.banglaTitle}</h3>
-                    <p className="text-gray-600 mb-4">{feature.description}</p>
-                    <Button onClick={() => navigate(feature.path)}>
-                      এখনই ব্যবহার করুন
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </TabsContent>
-          ))}
-        </Tabs>
-        
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mt-6">
-          {rentFeatures.slice(8).map(feature => (
-            <Card 
-              key={feature.id} 
-              className="cursor-pointer hover:shadow-md transition-all"
-              onClick={() => navigate(feature.path)}
-            >
-              <CardContent className="p-4 flex flex-col items-center text-center">
-                <div className="p-3 rounded-full bg-gray-100 mb-2">
-                  {React.cloneElement(feature.icon, { className: 'h-8 w-8' })}
-                </div>
-                <h3 className="font-medium text-sm">{feature.banglaTitle}</h3>
-                <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{feature.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <RentalFeatures />
       </div>
       
       <div className="mt-4 text-center">

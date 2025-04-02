@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -27,7 +28,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import DigitalProductsShowcase from '@/components/DigitalProductsShowcase';
+import ExploreSection from '@/components/ExploreSection';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -158,9 +159,9 @@ const Index = () => {
         </form>
       </div>
 
-      {/* Digital Products Explore Section */}
+      {/* Explore Section */}
       <div className="mb-10">
-        <DigitalProductsShowcase />
+        <ExploreSection />
       </div>
 
       {/* Featured Listings */}
