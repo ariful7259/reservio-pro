@@ -37,6 +37,7 @@ const DigitalProductsShowcase = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Digital product data with categories
   const digitalProducts: ProductCardProps[] = [
     { 
       id: 1,

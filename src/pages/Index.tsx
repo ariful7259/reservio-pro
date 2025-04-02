@@ -28,6 +28,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import FeaturedDigitalProducts from '@/components/FeaturedDigitalProducts';
+import DigitalProductsShowcase from '@/components/DigitalProductsShowcase';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -135,6 +136,11 @@ const Index = () => {
           <CarouselPrevious className="left-2" />
           <CarouselNext className="right-2" />
         </Carousel>
+      </div>
+      
+      {/* Digital Creator Solutions Section */}
+      <div className="mb-10">
+        <DigitalProductsShowcase />
       </div>
       
       {/* Featured Digital Products Carousel */}
