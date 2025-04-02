@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Search, Filter, Calendar, Tag, ChevronRight, MapPin, Home, Building, Car, Briefcase, Bike, Camera, Monitor, Tools, Smartphone, Headphones, PlusCircle } from 'lucide-react';
+import { Search, Filter, Calendar, Tag, ChevronRight, MapPin, Home, Building, Car, Briefcase, Bike, Camera, Monitor, Wrench, Smartphone, Headphones, PlusCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -76,9 +75,9 @@ const RentAnything = () => {
     { 
       name: 'টুলস', 
       value: 'tools',
-      icon: <Tools className="h-5 w-5 text-purple-500" />,
+      icon: <Wrench className="h-5 w-5 text-purple-500" />,
       subcategories: [
-        { name: 'পাওয়ার টুলস', value: 'power-tools', icon: <Tools className="h-4 w-4 text-purple-500" /> },
+        { name: 'পাওয়ার টুলস', value: 'power-tools', icon: <Wrench className="h-4 w-4 text-purple-500" /> },
         { name: 'জেনারেটর', value: 'generator', icon: <PlusCircle className="h-4 w-4 text-purple-500" /> },
       ]
     },

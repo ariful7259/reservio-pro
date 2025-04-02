@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -19,7 +18,6 @@ import {
   Home,
   Briefcase,
   Bike,
-  Tools,
   Book,
   FileText,
   Code,
@@ -31,7 +29,8 @@ import {
   User,
   Stethoscope,
   Wrench,
-  Sparkles
+  Sparkles,
+  BookOpen
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -126,10 +125,10 @@ const CreatePost = () => {
     { 
       name: 'ইকুইপমেন্ট', 
       value: 'equipment',
-      icon: <Tools className="h-4 w-4 text-purple-500" />,
+      icon: <Wrench className="h-4 w-4 text-purple-500" />,
       subcategories: [
         { name: 'ইলেকট্রনিক্স', value: 'electronic-equipment', icon: <Smartphone className="h-4 w-4 text-purple-500" /> },
-        { name: 'টুলস', value: 'tools-equipment', icon: <Tools className="h-4 w-4 text-purple-500" /> }
+        { name: 'টুলস', value: 'tools-equipment', icon: <Wrench className="h-4 w-4 text-purple-500" /> }
       ]
     }
   ];
