@@ -49,7 +49,6 @@ const CreatePost = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [subcategories, setSubcategories] = useState<{name: string, value: string, icon?: JSX.Element}[]>([]);
 
-  // Form data states for different post types
   const [rentForm, setRentForm] = useState({
     title: '',
     category: '',
@@ -84,7 +83,6 @@ const CreatePost = () => {
     images: [] as File[]
   });
 
-  // Categories with subcategories for rent
   const rentCategories = [
     { 
       name: 'অ্যাপার্টমেন্ট', 
@@ -133,7 +131,6 @@ const CreatePost = () => {
     }
   ];
 
-  // Categories with subcategories for service
   const serviceCategories = [
     { 
       name: 'মেডিকেল', 
@@ -191,7 +188,6 @@ const CreatePost = () => {
     }
   ];
 
-  // Categories with subcategories for marketplace
   const marketplaceCategories = [
     { 
       name: 'হেলথ', 
@@ -236,7 +232,6 @@ const CreatePost = () => {
     }
   ];
 
-  // Update subcategories when category changes
   useEffect(() => {
     if (postType === 'rent' && rentForm.category) {
       const category = rentCategories.find(c => c.value === rentForm.category);
@@ -252,7 +247,6 @@ const CreatePost = () => {
     }
   }, [rentForm.category, serviceForm.category, marketplaceForm.category, postType]);
 
-  // Handle file upload
   const handleFileUpload = (files: FileList | null, type: 'rent' | 'service' | 'marketplace') => {
     if (!files) return;
     
@@ -267,21 +261,17 @@ const CreatePost = () => {
     }
   };
 
-  // Handle form submission
   const handleSubmit = (type: 'rent' | 'service' | 'marketplace') => {
     setIsSubmitting(true);
     
-    // Simulate API call to create post
     setTimeout(() => {
       setIsSubmitting(false);
       
-      // Show success toast
       toast({
         title: "পোস্ট সফলভাবে তৈরি হয়েছে",
         description: "আপনার পোস্ট এখন প্রদর্শিত হবে",
       });
       
-      // Navigate to the appropriate listing page based on post type
       if (type === 'rent') {
         navigate('/rentals');
       } else if (type === 'service') {
@@ -292,7 +282,6 @@ const CreatePost = () => {
     }, 1500);
   };
 
-  // Get category icon
   const getCategoryIcon = (type: 'rent' | 'service' | 'marketplace', categoryValue: string) => {
     if (type === 'rent') {
       return rentCategories.find(c => c.value === categoryValue)?.icon;
@@ -458,6 +447,35 @@ const CreatePost = () => {
                 </div>
               </CardContent>
             </Card>
+            
+            <div className="mt-8">
+              <h2 className="text-lg font-medium mb-4">রেন্ট ফিচারস</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Card className="p-4 hover:shadow-md transition-all">
+                  <div className="flex flex-col items-center text-center">
+                    <Clock className="h-10 w-10 text-amber-500 mb-2" />
+                    <h3 className="font-medium">লং এবং শর্ট টার্ম</h3>
+                    <p className="text-sm text-muted-foreground mt-1">দৈনিক, মাসিক, বা বার্ষিক ভিত্তিতে ভাড়া দিন</p>
+                  </div>
+                </Card>
+                
+                <Card className="p-4 hover:shadow-md transition-all">
+                  <div className="flex flex-col items-center text-center">
+                    <Shield className="h-10 w-10 text-green-500 mb-2" />
+                    <h3 className="font-medium">ভেরিফাইড পেমেন্ট</h3>
+                    <p className="text-sm text-muted-foreground mt-1">সুরক্ষিত লেনদেন নিশ্চিত করুন</p>
+                  </div>
+                </Card>
+                
+                <Card className="p-4 hover:shadow-md transition-all">
+                  <div className="flex flex-col items-center text-center">
+                    <Book className="h-10 w-10 text-blue-500 mb-2" />
+                    <h3 className="font-medium">চুক্তি তৈরি</h3>
+                    <p className="text-sm text-muted-foreground mt-1">অটোমেটিক রেন্টাল এগ্রিমেন্ট তৈরি করুন</p>
+                  </div>
+                </Card>
+              </div>
+            </div>
             
             <Button 
               className="w-full" 

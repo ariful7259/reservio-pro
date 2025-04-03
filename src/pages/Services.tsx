@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Search, 
@@ -39,7 +39,8 @@ import {
   Globe,
   CreditCard,
   ImageIcon,
-  Palette
+  Palette,
+  Building
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -50,11 +51,14 @@ import { Separator } from '@/components/ui/separator';
 import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/components/ui/use-toast';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const Services = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [filterVisible, setFilterVisible] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [subcategories, setSubcategories] = useState<{id: number, name: string, count: number}[]>([]);
 
   // Services categories with their subcategories
   const categories = [
@@ -391,12 +395,26 @@ const Services = () => {
     }
   ];
 
+  // Effect to update subcategories when category changes
+  useEffect(() => {
+    if (selectedCategory) {
+      const category = categories.find(c => c.id.toString() === selectedCategory);
+      setSubcategories(category?.subcategories || []);
+    } else {
+      setSubcategories([]);
+    }
+  }, [selectedCategory]);
+
   const handleFilterToggle = () => {
     setFilterVisible(!filterVisible);
   };
 
   const handleServiceClick = (id: number) => {
     navigate(`/services/${id}`);
+  };
+
+  const handleCategoryClick = (id: number) => {
+    navigate(`/services/category/${id}`);
   };
 
   const handleBookmark = (e: React.MouseEvent, id: number) => {
@@ -444,20 +462,37 @@ const Services = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <h3 className="text-sm font-medium mb-2">ক্যাটেগরি</h3>
-              <div className="grid grid-cols-2 gap-2">
-                <Button variant="outline" size="sm" className="justify-start">
-                  <User className="h-4 w-4 mr-2" /> মেডিকেল
-                </Button>
-                <Button variant="outline" size="sm" className="justify-start">
-                  <Scissors className="h-4 w-4 mr-2" /> সেলুন
-                </Button>
-                <Button variant="outline" size="sm" className="justify-start">
-                  <Sparkles className="h-4 w-4 mr-2" /> বিউটি
-                </Button>
-                <Button variant="outline" size="sm" className="justify-start">
-                  <Briefcase className="h-4 w-4 mr-2" /> হোম সার্ভিস
-                </Button>
-              </div>
+              <Select 
+                value={selectedCategory} 
+                onValueChange={setSelectedCategory}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="ক্যাটেগরি নির্বাচন করুন" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map(category => (
+                    <SelectItem key={category.id} value={category.id.toString()}>
+                      <div className="flex items-center gap-2">
+                        {category.icon}
+                        <span>{category.name}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {subcategories.length > 0 && (
+                <div className="mt-2">
+                  <h3 className="text-sm font-medium mb-2">সাব-ক্যাটেগরি</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    {subcategories.map(sub => (
+                      <Button key={sub.id} variant="outline" size="sm" className="justify-start">
+                        {sub.name}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
             
             <div>
@@ -525,7 +560,7 @@ const Services = () => {
             <div 
               key={category.id}
               className="flex flex-col items-center justify-center p-3 border rounded-lg hover:bg-gray-50 transition-all cursor-pointer"
-              onClick={() => navigate(`/services/category/${category.id}`)}
+              onClick={() => handleCategoryClick(category.id)}
             >
               {category.icon}
               <span className="text-xs text-center font-medium">{category.name}</span>
@@ -539,7 +574,7 @@ const Services = () => {
             <div 
               key={category.id}
               className="flex flex-col items-center justify-center p-3 border rounded-lg hover:bg-gray-50 transition-all cursor-pointer"
-              onClick={() => navigate(`/services/category/${category.id}`)}
+              onClick={() => handleCategoryClick(category.id)}
             >
               {category.icon}
               <span className="text-xs text-center font-medium">{category.name}</span>
@@ -559,7 +594,7 @@ const Services = () => {
                   <img 
                     src={banner.url} 
                     alt={banner.title}
-                    className="w-full h-40 object-cover"
+                    className="w-full h-40 md:h-52 object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex flex-col justify-end p-4">
                     <h3 className="text-white text-xl font-bold">{banner.title}</h3>
@@ -713,11 +748,6 @@ const Services = () => {
                 </Card>
               ))}
             </div>
-            <div className="flex justify-center mt-6">
-              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/services/category/1')}>
-                আরও দেখুন <ArrowRight className="h-4 w-4" />
-              </Button>
-            </div>
           </TabsContent>
           
           <TabsContent value="hire">
@@ -784,11 +814,6 @@ const Services = () => {
                   </div>
                 </Card>
               ))}
-            </div>
-            <div className="flex justify-center mt-6">
-              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/services/hire')}>
-                আরও দেখুন <ArrowRight className="h-4 w-4" />
-              </Button>
             </div>
           </TabsContent>
         </Tabs>

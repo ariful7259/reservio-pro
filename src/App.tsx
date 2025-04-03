@@ -28,6 +28,7 @@ import PaidCommunity from "./pages/PaidCommunity";
 import CreateStore from "./pages/CreateStore";
 import CourseBuilder from "./pages/CourseBuilder";
 import DigitalProduct from "./pages/DigitalProduct";
+import ServiceCategory from "./pages/ServiceCategory";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/services" element={<Services />} />
           <Route path="/services/:id" element={<ServiceDetail />} />
+          <Route path="/services/category/:id" element={<ServiceCategory />} />
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/profile" element={<Profile />} />

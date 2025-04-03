@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -89,7 +88,7 @@ const CreateStore = () => {
       id: 6,
       name: "ই-লার্নিং প্ল্যাটফর্ম",
       image: "https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=1374&auto=format&fit=crop",
-      category: "ই-লার্নিং",
+      category: "ই-লা��্নিং",
       price: "৳১০,০০০",
       features: ["কোর্স স্ট্রাকচার", "ভিডিও প্লেয়ার", "কুইজ সিস্টেম"],
       isPopular: false
@@ -209,7 +208,7 @@ const CreateStore = () => {
   const handleDomainSearch = () => {
     if (!domainName) {
       toast({
-        title: "অনুগ্রহ করে একটি ডোমেইন নাম লিখুন",
+        title: "অনুগ্রহ করে একটি ডোমেইন নাম ল���খুন",
         variant: "destructive"
       });
       return;
@@ -412,19 +411,121 @@ const CreateStore = () => {
         </Tabs>
       </div>
       
-      {/* Features Section */}
+      {/* Enhanced Features Section with Proper Implementation */}
       <div className="mb-16">
         <h2 className="text-2xl font-bold mb-8 text-center">অনলাইন স্টোরের ফিচারসমূহ</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {storeFeatures.map((feature, idx) => (
-            <div key={idx} className="flex flex-col items-center text-center p-6 border rounded-lg hover:shadow-md transition-all">
-              <div className="mb-4 p-3 bg-primary/10 rounded-full">
-                {feature.icon}
-              </div>
-              <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-              <p className="text-muted-foreground">{feature.description}</p>
+          <div className="flex flex-col p-6 border rounded-lg hover:shadow-md transition-all hover:border-primary/50">
+            <div className="mb-4 p-3 bg-primary/10 rounded-full w-fit">
+              <Layout className="h-8 w-8 text-primary" />
             </div>
-          ))}
+            <h3 className="text-lg font-semibold mb-3">স্মার্ট থিম বিল্ডার</h3>
+            <p className="text-muted-foreground flex-grow">ড্র্যাগ এন্ড ড্রপ ইন্টারফেস ব্যবহার করে আপনার সাইট ডিজাইন করুন, কোডিং জ্ঞান ছাড়াই।</p>
+            <div className="mt-4">
+              <Button variant="outline" size="sm" className="rounded-full">
+                বিস্তারিত দেখুন <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
+          </div>
+          
+          <div className="flex flex-col p-6 border rounded-lg hover:shadow-md transition-all hover:border-primary/50">
+            <div className="mb-4 p-3 bg-primary/10 rounded-full w-fit">
+              <ShoppingBag className="h-8 w-8 text-primary" />
+            </div>
+            <h3 className="text-lg font-semibold mb-3">অ্যাডভান্সড ই-কমার্স টুলস</h3>
+            <p className="text-muted-foreground flex-grow">প্রোডাক্ট ক্যাটালগ, শপিং কার্ট, এবং পেমেন্ট প্রসেসিং সিস্টেম অন্তর্ভুক্ত।</p>
+            <div className="mt-4">
+              <Button variant="outline" size="sm" className="rounded-full">
+                বিস্তারিত দেখুন <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
+          </div>
+          
+          <div className="flex flex-col p-6 border rounded-lg hover:shadow-md transition-all hover:border-primary/50">
+            <div className="mb-4 p-3 bg-primary/10 rounded-full w-fit">
+              <Globe className="h-8 w-8 text-primary" />
+            </div>
+            <h3 className="text-lg font-semibold mb-3">কাস্টম ডোমেইন</h3>
+            <p className="text-muted-foreground flex-grow">আপনার ব্র্যান্ডের জন্য একটি অনন্য ডোমেইন নাম নিবন্ধন করুন বা আপনার বিদ্যমান ডোমেইন ব্যবহার করুন।</p>
+            <div className="mt-4">
+              <Button variant="outline" size="sm" className="rounded-full">
+                বিস্তারিত দেখুন <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
+          </div>
+          
+          <div className="flex flex-col p-6 border rounded-lg hover:shadow-md transition-all hover:border-primary/50">
+            <div className="mb-4 p-3 bg-primary/10 rounded-full w-fit">
+              <CreditCard className="h-8 w-8 text-primary" />
+            </div>
+            <h3 className="text-lg font-semibold mb-3">পেমেন্ট গেটওয়ে ইন্টিগ্রেশন</h3>
+            <p className="text-muted-foreground flex-grow">বিকাশ, নগদ, রকেট, ভিসা, মাস্টারকার্ড এবং আরও অনেক পেমেন্ট পদ্ধতি গ্রহণ করুন।</p>
+            <div className="mt-4">
+              <Button variant="outline" size="sm" className="rounded-full">
+                বিস্তারিত দেখুন <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
+          </div>
+          
+          <div className="flex flex-col p-6 border rounded-lg hover:shadow-md transition-all hover:border-primary/50">
+            <div className="mb-4 p-3 bg-primary/10 rounded-full w-fit">
+              <Search className="h-8 w-8 text-primary" />
+            </div>
+            <h3 className="text-lg font-semibold mb-3">SEO অপটিমাইজেশন</h3>
+            <p className="text-muted-foreground flex-grow">সার্চ ইঞ্জিন র্যাঙ্কিং বাড়াতে বিল্ট-ইন SEO টুলস ব্যবহার করুন।</p>
+            <div className="mt-4">
+              <Button variant="outline" size="sm" className="rounded-full">
+                বিস্তারিত দেখুন <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
+          </div>
+          
+          <div className="flex flex-col p-6 border rounded-lg hover:shadow-md transition-all hover:border-primary/50">
+            <div className="mb-4 p-3 bg-primary/10 rounded-full w-fit">
+              <Settings className="h-8 w-8 text-primary" />
+            </div>
+            <h3 className="text-lg font-semibold mb-3">মোবাইল অপটিমাইজেশন</h3>
+            <p className="text-muted-foreground flex-grow">সকল ডিভাইসে পারফেক্ট দেখাবে আপনার ওয়েবসাইট, মোবাইল থেকে ডেস্কটপ পর্যন্ত।</p>
+            <div className="mt-4">
+              <Button variant="outline" size="sm" className="rounded-full">
+                বিস্তারিত দেখুন <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-8 p-6 bg-primary/5 rounded-lg">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <div className="md:w-1/2">
+              <h3 className="text-xl font-bold mb-3">ড্র্যাগ এন্ড ড্রপ ইন্টারফেস</h3>
+              <p className="text-muted-foreground mb-4">একটি সহজ ইন্টারফেস ব্যবহার করে আপনার নিজের স্টাইলে ওয়েবসাইট ডিজাইন করুন। আপনার পছন্দের যেকোন উপাদান টেনে স্থাপন করুন, কোনো প্রোগ্রামিং জ্ঞান ছাড়াই।</p>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center gap-2">
+                  <Check className="h-5 w-5 text-primary" />
+                  <span>রিয়েল-টাইム প্রিভিউ</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="h-5 w-5 text-primary" />
+                  <span>১০০+ রেডিমেড বিল্ডিং ব্লক</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="h-5 w-5 text-primary" />
+                  <span>অটো-রেসপন্সিভ</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="h-5 w-5 text-primary" />
+                  <span>কাস্টম CSS সাপোর্ট</span>
+                </div>
+              </div>
+            </div>
+            <div className="md:w-1/2">
+              <img 
+                src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=1470&auto=format&fit=crop" 
+                alt="ড্র্যাগ এন্ড ড্রপ ইন্টারফেস"
+                className="rounded-lg w-full h-auto object-cover"
+              />
+            </div>
+          </div>
         </div>
       </div>
       
