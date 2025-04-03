@@ -166,7 +166,10 @@ const Services = () => {
       reviews: 56,
       image: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1000&auto=format&fit=crop",
       icon: <Rocket className="h-4 w-4 text-blue-600" />,
-      description: "নিজের ব্র্যান্ডের ওয়েবসাইট তৈরি করুন"
+      description: "নিজের ব্র্যান্ডের ওয়েবসাইট তৈরি করুন",
+      isSponsored: false,
+      isVerified: true,
+      isBookable: true
     },
     { 
       id: 11,
@@ -180,7 +183,10 @@ const Services = () => {
       reviews: 42,
       image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000&auto=format&fit=crop",
       icon: <Mail className="h-4 w-4 text-indigo-600" />,
-      description: "গ্রাহকদের সাথে অটোমেটিক যোগাযোগ"
+      description: "গ্রাহকদের সাথে অটোমেটিক যোগাযোগ",
+      isSponsored: true,
+      isVerified: true,
+      isBookable: true
     },
     { 
       id: 12,
@@ -194,7 +200,10 @@ const Services = () => {
       reviews: 38,
       image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
       icon: <BookOpen className="h-4 w-4 text-amber-600" />,
-      description: "আয় করুন অনলাইন শিক্ষা দিয়ে"
+      description: "আয় করুন অনলাইন শিক্ষা দিয়ে",
+      isSponsored: false,
+      isVerified: true,
+      isBookable: true
     },
     { 
       id: 13,
@@ -208,7 +217,10 @@ const Services = () => {
       reviews: 45,
       image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop",
       icon: <Calendar className="h-4 w-4 text-red-600" />,
-      description: "অনলাইন ও অফলাইন ইভেন্ট ম্যানেজমেন্ট"
+      description: "অনলাইন ও অফলাইন ইভেন্ট ম্যানেজমেন্ট",
+      isSponsored: true,
+      isVerified: false,
+      isBookable: true
     },
     { 
       id: 14,
@@ -222,7 +234,10 @@ const Services = () => {
       reviews: 32,
       image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=1000&auto=format&fit=crop",
       icon: <MessageSquare className="h-4 w-4 text-orange-600" />,
-      description: "পারসোনাল কনসালটেশন সেবা"
+      description: "পারসোনাল কনসালটেশন সেবা",
+      isSponsored: false,
+      isVerified: true,
+      isBookable: true
     },
     { 
       id: 15,
@@ -236,7 +251,10 @@ const Services = () => {
       reviews: 28,
       image: "https://images.unsplash.com/photo-1618359057154-e21ae64350b6?q=80&w=1000&auto=format&fit=crop",
       icon: <ShoppingBag className="h-4 w-4 text-green-600" />,
-      description: "ইবুক, টেমপ্লেট, সফটওয়্যার বিক্রয়"
+      description: "ইবুক, টেমপ্লেট, সফটওয়্যার বিক্রয়",
+      isSponsored: true,
+      isVerified: false,
+      isBookable: true
     },
   ];
 
@@ -300,7 +318,7 @@ const Services = () => {
     },
     {
       id: 5,
-      title: "ফিজিওথেরাপি",
+      title: "ফিজিওথেরা���ি",
       provider: "ডা. কামরুল হাসান",
       category: "মেডিকেল",
       subcategory: "ফিজিওথেরাপি",
@@ -601,7 +619,7 @@ const Services = () => {
                 <div className="flex items-center justify-between mb-1">
                   <Badge variant="outline" className="text-xs">{service.category}</Badge>
                   <div className="flex items-center text-xs">
-                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
+                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
                     <span>{service.rating}</span>
                   </div>
                 </div>
