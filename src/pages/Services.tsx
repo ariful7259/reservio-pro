@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -25,7 +24,22 @@ import {
   Shield,
   Phone,
   Bookmark,
-  Share2
+  Share2,
+  Stethoscope,
+  Wrench,
+  FileText,
+  BookOpen,
+  Code,
+  Music,
+  Video,
+  Rocket,
+  Mail,
+  Users,
+  ChartBar,
+  Globe,
+  CreditCard,
+  ImageIcon,
+  Palette
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -35,22 +49,195 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/components/ui/use-toast';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const Services = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [filterVisible, setFilterVisible] = useState(false);
 
-  // Services categories
+  // Services categories with their subcategories
   const categories = [
-    { id: 1, name: "মেডিকেল", icon: <User className="h-8 w-8 mb-2" />, count: 124 },
-    { id: 2, name: "সেলুন এবং পার্লার", icon: <Scissors className="h-8 w-8 mb-2" />, count: 56 },
-    { id: 3, name: "বিউটি", icon: <Sparkles className="h-8 w-8 mb-2" />, count: 87 },
-    { id: 4, name: "হোম সার্ভিস", icon: <Briefcase className="h-8 w-8 mb-2" />, count: 103 },
-    { id: 5, name: "পেশাদার সেবা", icon: <Briefcase className="h-8 w-8 mb-2" />, count: 92 },
-    { id: 6, name: "শিক্ষা", icon: <Briefcase className="h-8 w-8 mb-2" />, count: 78 },
-    { id: 7, name: "ইভেন্ট", icon: <Calendar className="h-8 w-8 mb-2" />, count: 65 },
-    { id: 8, name: "অন্যান্য", icon: <ShoppingBag className="h-8 w-8 mb-2" />, count: 156 },
+    { 
+      id: 1, 
+      name: "মেডিকেল", 
+      icon: <Stethoscope className="h-8 w-8 mb-2 text-red-500" />, 
+      count: 124,
+      subcategories: [
+        { id: 101, name: "জেনারেল", count: 48 },
+        { id: 102, name: "ডেন্টাল", count: 32 },
+        { id: 103, name: "ফিজিওথেরাপি", count: 16 },
+        { id: 104, name: "মেন্টাল হেলথ", count: 28 }
+      ]
+    },
+    { 
+      id: 2, 
+      name: "সেলুন এবং পার্লার", 
+      icon: <Scissors className="h-8 w-8 mb-2 text-pink-500" />, 
+      count: 56,
+      subcategories: [
+        { id: 201, name: "হেয়ার কাট", count: 24 },
+        { id: 202, name: "ফেসিয়াল", count: 18 },
+        { id: 203, name: "মেকাপ", count: 14 }
+      ]
+    },
+    { 
+      id: 3, 
+      name: "বিউটি", 
+      icon: <Sparkles className="h-8 w-8 mb-2 text-purple-500" />, 
+      count: 87,
+      subcategories: [
+        { id: 301, name: "ম্যাসাজ", count: 22 },
+        { id: 302, name: "স্কিন কেয়ার", count: 35 },
+        { id: 303, name: "মেকওভার", count: 30 }
+      ]
+    },
+    { 
+      id: 4, 
+      name: "হোম সার্ভিস", 
+      icon: <Wrench className="h-8 w-8 mb-2 text-amber-500" />, 
+      count: 103,
+      subcategories: [
+        { id: 401, name: "ইলেকট্রিশিয়ান", count: 32 },
+        { id: 402, name: "প্লাম্বার", count: 28 },
+        { id: 403, name: "পেইন্টিং", count: 18 },
+        { id: 404, name: "ক্লিনিং", count: 25 }
+      ]
+    },
+    { 
+      id: 5, 
+      name: "পেশাদার সেবা", 
+      icon: <Briefcase className="h-8 w-8 mb-2 text-blue-500" />, 
+      count: 92,
+      subcategories: [
+        { id: 501, name: "লিগ্যাল", count: 24 },
+        { id: 502, name: "আইটি কনসাল্টেন্ট", count: 35 },
+        { id: 503, name: "অ্যাকাউন্টিং", count: 18 },
+        { id: 504, name: "কন্সাল্টেন্সি", count: 15 }
+      ]
+    },
+    { 
+      id: 6, 
+      name: "শিক্ষা", 
+      icon: <BookOpen className="h-8 w-8 mb-2 text-green-500" />, 
+      count: 78,
+      subcategories: [
+        { id: 601, name: "প্রাইভেট টিউটর", count: 30 },
+        { id: 602, name: "কোচিং", count: 25 },
+        { id: 603, name: "অনলাইন কোর্স", count: 23 }
+      ]
+    },
+    { 
+      id: 7, 
+      name: "ডিজিটাল ক্রিয়েটর", 
+      icon: <Code className="h-8 w-8 mb-2 text-indigo-500" />, 
+      count: 65,
+      subcategories: [
+        { id: 701, name: "ওয়েব ডেভেলপমেন্ট", count: 22 },
+        { id: 702, name: "গ্রাফিক ডিজাইন", count: 18 },
+        { id: 703, name: "কন্টেন্ট রাইটিং", count: 15 },
+        { id: 704, name: "ভিডিও এডিটিং", count: 10 }
+      ]
+    },
+    { 
+      id: 8, 
+      name: "ইভেন্ট", 
+      icon: <Calendar className="h-8 w-8 mb-2 text-orange-500" />, 
+      count: 45,
+      subcategories: [
+        { id: 801, name: "ফটোগ্রাফি", count: 15 },
+        { id: 802, name: "ডেকোরেশন", count: 12 },
+        { id: 803, name: "ক্যাটারিং", count: 18 }
+      ]
+    },
+  ];
+
+  // Digital creator services
+  const digitalCreatorServices = [
+    { 
+      id: 10,
+      title: "অনলাইন স্টোর", 
+      provider: "টেক ওয়েব সলিউশন",
+      category: "ডিজিটাল ক্রিয়েটর",
+      subcategory: "ওয়েব ডেভেলপমেন্ট",
+      location: "গুলশান, ঢাকা",
+      price: "৳১৫,০০০+",
+      rating: 4.8,
+      reviews: 56,
+      image: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1000&auto=format&fit=crop",
+      icon: <Rocket className="h-4 w-4 text-blue-600" />,
+      description: "নিজের ব্র্যান্ডের ওয়েবসাইট তৈরি করুন"
+    },
+    { 
+      id: 11,
+      title: "ইমেইল অটোমেশন", 
+      provider: "ডিজিটাল মার্কেটিং সার্ভিসেস",
+      category: "ডিজিটাল ক্রিয়েটর",
+      subcategory: "মার্কেটিং",
+      location: "বনানী, ঢাকা",
+      price: "৳৮,০০০+",
+      rating: 4.6,
+      reviews: 42,
+      image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000&auto=format&fit=crop",
+      icon: <Mail className="h-4 w-4 text-indigo-600" />,
+      description: "গ্রাহকদের সাথে অটোমেটিক যোগাযোগ"
+    },
+    { 
+      id: 12,
+      title: "কোর্স বিল্ডার", 
+      provider: "এডুটেক সলিউশনস",
+      category: "ডিজিটাল ক্রিয়েটর",
+      subcategory: "শিক্ষা",
+      location: "মিরপুর, ঢাকা",
+      price: "৳১২,০০০+",
+      rating: 4.7,
+      reviews: 38,
+      image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
+      icon: <BookOpen className="h-4 w-4 text-amber-600" />,
+      description: "আয় করুন অনলাইন শিক্ষা দিয়ে"
+    },
+    { 
+      id: 13,
+      title: "ইভেন্ট হোস্টিং", 
+      provider: "ইভেন্ট প্রোস",
+      category: "ইভেন্ট",
+      subcategory: "ইভেন্ট ম্যানেজমেন্ট",
+      location: "ধানমন্ডি, ঢাকা",
+      price: "৳১৮,০০০+",
+      rating: 4.5,
+      reviews: 45,
+      image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop",
+      icon: <Calendar className="h-4 w-4 text-red-600" />,
+      description: "অনলাইন ও অফলাইন ইভেন্ট ম্যানেজমেন্ট"
+    },
+    { 
+      id: 14,
+      title: "১:১ সেশন", 
+      provider: "এক্সপার্ট কনেক্ট",
+      category: "পেশাদার সেবা",
+      subcategory: "কন্সাল্টেন্সি",
+      location: "বারিধারা, ঢাকা",
+      price: "৳২,০০০/ঘন্টা",
+      rating: 4.9,
+      reviews: 32,
+      image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=1000&auto=format&fit=crop",
+      icon: <MessageSquare className="h-4 w-4 text-orange-600" />,
+      description: "পারসোনাল কনসালটেশন সেবা"
+    },
+    { 
+      id: 15,
+      title: "ডিজিটাল প্রোডাক্ট", 
+      provider: "ক্রিয়েটিভ মার্কেট",
+      category: "ডিজিটাল ক্রিয়েটর",
+      subcategory: "গ্রাফিক ডিজাইন",
+      location: "উত্তরা, ঢাকা",
+      price: "৳৫,০০০+",
+      rating: 4.7,
+      reviews: 28,
+      image: "https://images.unsplash.com/photo-1618359057154-e21ae64350b6?q=80&w=1000&auto=format&fit=crop",
+      icon: <ShoppingBag className="h-4 w-4 text-green-600" />,
+      description: "ইবুক, টেমপ্লেট, সফটওয়্যার বিক্রয়"
+    },
   ];
 
   // Featured services
@@ -60,6 +247,7 @@ const Services = () => {
       title: "ডাক্তার কনসাল্টেশন",
       provider: "ডা. আহমেদ হাসান",
       category: "মেডিকেল",
+      subcategory: "জেনারেল",
       location: "গুলশান, ঢাকা",
       price: "৳১,৫০০",
       rating: 4.8,
@@ -74,6 +262,7 @@ const Services = () => {
       title: "ডেন্টাল চেকআপ",
       provider: "ডা. ফারহানা আক্তার",
       category: "মেডিকেল",
+      subcategory: "ডেন্টাল",
       location: "বনানী, ঢাকা",
       price: "৳১,২০০",
       rating: 4.7,
@@ -85,8 +274,9 @@ const Services = () => {
     {
       id: 3,
       title: "সেলুন সার্ভিস",
-      provider: "প্রিমিয়াম স্টাইল সেলুন",
+      provider: "প্রি���িয়াম স্টাইল সেলুন",
       category: "সেলুন এবং পার্লার",
+      subcategory: "হেয়ার কাট",
       location: "ধানমন্ডি, ঢাকা",
       price: "৳৮০০+",
       rating: 4.5,
@@ -99,6 +289,7 @@ const Services = () => {
       title: "বিউটি ট্রিটমেন্ট",
       provider: "গ্ল্যামার পার্লার",
       category: "বিউটি",
+      subcategory: "ম্যাসাজ",
       location: "মোহাম্মদপুর, ঢাকা",
       price: "৳১,৫০০+",
       rating: 4.6,
@@ -112,6 +303,7 @@ const Services = () => {
       title: "ফিজিওথেরাপি",
       provider: "ডা. কামরুল হাসান",
       category: "মেডিকেল",
+      subcategory: "ফিজিওথেরাপি",
       location: "মিরপুর, ঢাকা",
       price: "৳১,৮০০",
       rating: 4.9,
@@ -125,6 +317,7 @@ const Services = () => {
       title: "ইলেকট্রিশিয়ান",
       provider: "রাসেল ইলেকট্রিক",
       category: "হোম সার্ভিস",
+      subcategory: "ইলেকট্রিশিয়ান",
       location: "উত্তরা, ঢাকা",
       price: "৳৫০০+",
       rating: 4.5,
@@ -137,6 +330,7 @@ const Services = () => {
       title: "ম্যাসাজ থেরাপি",
       provider: "রিলাক্স স্পা সেন্টার",
       category: "বিউটি",
+      subcategory: "ম্যাসাজ",
       location: "বারিধারা, ঢাকা",
       price: "৳২,২০০",
       rating: 4.7,
@@ -150,6 +344,7 @@ const Services = () => {
       title: "হেয়ার কালার",
       provider: "ট্রেন্ডি সেলুন",
       category: "সেলুন এবং পার্লার",
+      subcategory: "হেয়ার কালার",
       location: "নিউ মার্কেট, ঢাকা",
       price: "৳১,২০০+",
       rating: 4.4,
@@ -157,6 +352,25 @@ const Services = () => {
       image: "https://images.unsplash.com/photo-1562322140-8baeececf3df?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
       isBookable: true
     },
+  ];
+
+  // Banner images for services
+  const bannerImages = [
+    {
+      url: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=400&q=80",
+      title: "পেশাদার সার্ভিস প্রভাইডারদের সাথে",
+      description: "১০০০+ বেরিফাইড সার্ভিস প্রোভাইডার"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=400&q=80",
+      title: "ডেন্টাল সার্ভিস স্পেশাল অফার",
+      description: "২০% ছাড় সকল ডেন্টাল সার্ভিসে"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=400&q=80",
+      title: "প্রিমিয়াম স্পা এবং ওয়েলনেস",
+      description: "সর্বোচ্চ মানের রিলাক্সেশন সার্ভিস"
+    }
   ];
 
   const handleFilterToggle = () => {
@@ -313,6 +527,97 @@ const Services = () => {
               <span className="text-xs text-center font-medium">{category.name}</span>
               <Badge variant="outline" className="mt-2 text-xs">{category.count}</Badge>
             </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Banner Carousel */}
+      <div className="mb-6">
+        <Carousel className="w-full">
+          <CarouselContent>
+            {bannerImages.map((banner, index) => (
+              <CarouselItem key={index}>
+                <div className="relative rounded-lg overflow-hidden">
+                  <img 
+                    src={banner.url} 
+                    alt={banner.title}
+                    className="w-full h-40 object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex flex-col justify-end p-4">
+                    <h3 className="text-white text-xl font-bold">{banner.title}</h3>
+                    <p className="text-white text-sm mt-1">{banner.description}</p>
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="left-2" />
+          <CarouselNext className="right-2" />
+        </Carousel>
+      </div>
+
+      {/* Featured Services */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-medium">ফিচার্ড সার্ভিস</h2>
+          <Button variant="ghost" size="sm" className="flex items-center gap-1" onClick={() => navigate('/services')}>
+            সব দেখুন <ArrowRight className="h-4 w-4" />
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {[...featuredServices, ...digitalCreatorServices].slice(0, 8).map((service) => (
+            <Card 
+              key={service.id}
+              className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
+              onClick={() => handleServiceClick(service.id)}
+            >
+              <div className="relative aspect-square">
+                <img 
+                  src={service.image} 
+                  alt={service.title}
+                  className="w-full h-full object-cover"
+                />
+                {service.isSponsored && (
+                  <Badge className="absolute top-2 left-2 bg-amber-500 hover:bg-amber-600">স্পন্সর্ড</Badge>
+                )}
+                {service.isVerified && (
+                  <Badge variant="secondary" className="absolute top-2 right-2 flex items-center gap-1">
+                    <CheckCircle className="h-3 w-3" /> ভেরিফায়েড
+                  </Badge>
+                )}
+                <div className="absolute bottom-2 right-2 flex gap-2">
+                  <Button variant="outline" size="icon" className="h-7 w-7 bg-white rounded-full"
+                    onClick={(e) => handleBookmark(e, service.id)}>
+                    <Bookmark className="h-3 w-3" />
+                  </Button>
+                  <Button variant="outline" size="icon" className="h-7 w-7 bg-white rounded-full"
+                    onClick={(e) => handleShare(e, service.id)}>
+                    <Share2 className="h-3 w-3" />
+                  </Button>
+                </div>
+              </div>
+              <CardContent className="p-3">
+                <div className="flex items-center justify-between mb-1">
+                  <Badge variant="outline" className="text-xs">{service.category}</Badge>
+                  <div className="flex items-center text-xs">
+                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
+                    <span>{service.rating}</span>
+                  </div>
+                </div>
+                <h3 className="font-medium text-sm line-clamp-1">{service.title}</h3>
+                <div className="flex items-center text-xs text-muted-foreground mt-1">
+                  <MapPin className="h-3 w-3 mr-1" />
+                  <span className="line-clamp-1">{service.location}</span>
+                </div>
+                <div className="flex items-center justify-between mt-2">
+                  <p className="text-sm font-bold text-primary">{service.price}</p>
+                  <Button size="sm" variant="ghost" className="h-7 px-2 text-xs">
+                    বুক করুন
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>
