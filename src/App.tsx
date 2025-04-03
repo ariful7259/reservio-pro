@@ -58,6 +58,14 @@ const App = () => (
           <Route path="/marketplace" element={<Shopping />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/rent-anything" element={<RentAnything />} />
+          <Route path="/rent/apartment" element={<Housing />} />
+          <Route path="/rent/house" element={<Housing />} />
+          <Route path="/rent/car" element={<Housing />} />
+          <Route path="/rent/office" element={<Housing />} />
+          <Route path="/rent/event-space" element={<Housing />} />
+          <Route path="/rent/equipment" element={<Housing />} />
+          <Route path="/rent/shop" element={<Housing />} />
+          <Route path="/rent/others" element={<Housing />} />
           <Route path="/my-services" element={<MyServices />} />
           <Route path="/utilities" element={<Utilities />} />
           <Route path="/help" element={<Help />} />

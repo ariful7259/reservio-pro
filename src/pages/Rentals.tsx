@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,6 +14,8 @@ import {
   ChevronUp,
   Filter,
   MapPin,
+  LayoutGrid,
+  Map as MapIcon,
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
@@ -20,12 +23,14 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import RentalFeatures from '@/components/RentalFeatures';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import MapView from '@/components/MapView';
 
 const Rentals = () => {
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
 
   // Banner images for Rentals
   const bannerImages = [
@@ -54,7 +59,9 @@ const Rentals = () => {
       location: "গুলশান, ঢাকা",
       price: "৳২৫,০০০/মাস",
       image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1000&auto=format&fit=crop",
-      category: "apartment"
+      category: "apartment",
+      latitude: 23.7937,
+      longitude: 90.4137
     },
     {
       id: 2,
@@ -62,7 +69,9 @@ const Rentals = () => {
       location: "বনানী, ঢাকা",
       price: "৳৫০,০০০/মাস",
       image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1000&auto=format&fit=crop",
-      category: "office"
+      category: "office",
+      latitude: 23.7937,
+      longitude: 90.3938
     },
     {
       id: 3,
@@ -70,7 +79,9 @@ const Rentals = () => {
       location: "মিরপুর, ঢাকা",
       price: "৳৫,০০০/দিন",
       image: "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=1000&auto=format&fit=crop",
-      category: "car"
+      category: "car",
+      latitude: 23.8103,
+      longitude: 90.3420
     },
     {
       id: 4,
@@ -78,7 +89,9 @@ const Rentals = () => {
       location: "ধানমন্ডি, ঢাকা",
       price: "৳১,০০০/দিন",
       image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1000&auto=format&fit=crop",
-      category: "equipment"
+      category: "equipment",
+      latitude: 23.7465,
+      longitude: 90.3751
     },
   ];
 
@@ -94,9 +107,21 @@ const Rentals = () => {
     <div className="container px-4 pt-20 pb-20">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">রেন্ট</h1>
-        <Button variant="outline" size="icon" onClick={toggleFilter}>
-          <Filter className="h-4 w-4" />
-        </Button>
+        <div className="flex gap-2">
+          <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as 'grid' | 'map')} className="w-[180px]">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="grid" className="flex items-center gap-1">
+                <LayoutGrid className="h-4 w-4" /> গ্রিড
+              </TabsTrigger>
+              <TabsTrigger value="map" className="flex items-center gap-1">
+                <MapIcon className="h-4 w-4" /> মানচিত্র
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+          <Button variant="outline" size="icon" onClick={toggleFilter}>
+            <Filter className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
       
       {/* Filter options - conditionally shown */}
@@ -131,7 +156,7 @@ const Rentals = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="apartment">অ্যাপার্টমেন্ট</SelectItem>
-                  <SelectItem value="house">বাস��</SelectItem>
+                  <SelectItem value="house">বাসা</SelectItem>
                   <SelectItem value="car">গাড়ি</SelectItem>
                   <SelectItem value="office">অফিস</SelectItem>
                 </SelectContent>
@@ -269,40 +294,72 @@ const Rentals = () => {
       {/* Featured Listings */}
       <div className="mb-6">
         <h2 className="text-lg font-medium mb-4">ফিচার্ড লিস্টিং</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {featuredListings.map((listing) => (
-            <Card 
-              key={listing.id} 
-              className="overflow-hidden cursor-pointer hover:shadow-md transition-all hover:scale-105"
-              onClick={() => handleListingClick(listing.id)}
-            >
-              <CardContent className="p-0">
-                <div className="relative aspect-square">
-                  <img 
-                    src={listing.image} 
-                    alt={listing.title} 
-                    className="w-full h-full object-cover"
-                  />
-                  <Badge className="absolute top-2 right-2">{listing.category}</Badge>
-                </div>
-                <div className="p-3">
-                  <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
-                  <p className="text-xs text-muted-foreground mb-1">{listing.location}</p>
-                  <p className="text-sm font-bold text-primary">{listing.price}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-      
-      {/* Enhanced Rent Features Section */}
-      <div className="mb-10">
-        <RentalFeatures />
-      </div>
-      
-      <div className="mt-4 text-center">
-        <Button variant="outline" onClick={() => navigate('/rent-anything')}>আরও দেখুন</Button>
+        
+        {viewMode === 'grid' && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {featuredListings.map((listing) => (
+              <Card 
+                key={listing.id} 
+                className="overflow-hidden cursor-pointer hover:shadow-md transition-all hover:scale-105"
+                onClick={() => handleListingClick(listing.id)}
+              >
+                <CardContent className="p-0">
+                  <div className="relative aspect-square">
+                    <img 
+                      src={listing.image} 
+                      alt={listing.title} 
+                      className="w-full h-full object-cover"
+                    />
+                    <Badge className="absolute top-2 right-2">{listing.category}</Badge>
+                  </div>
+                  <div className="p-3">
+                    <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
+                    <p className="text-xs text-muted-foreground mb-1">{listing.location}</p>
+                    <p className="text-sm font-bold text-primary">{listing.price}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+        
+        {viewMode === 'map' && (
+          <div className="mb-4">
+            <MapView 
+              listings={featuredListings.map(listing => ({
+                id: listing.id,
+                title: listing.title,
+                location: listing.location,
+                latitude: listing.latitude,
+                longitude: listing.longitude
+              }))}
+            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+              {featuredListings.slice(0, 3).map((listing) => (
+                <Card 
+                  key={listing.id} 
+                  className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
+                  onClick={() => handleListingClick(listing.id)}
+                >
+                  <div className="flex h-24">
+                    <div className="w-1/3">
+                      <img 
+                        src={listing.image} 
+                        alt={listing.title} 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="w-2/3 p-2">
+                      <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
+                      <p className="text-xs text-muted-foreground">{listing.location}</p>
+                      <p className="text-sm font-bold text-primary mt-auto">{listing.price}</p>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
