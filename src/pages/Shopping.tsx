@@ -155,6 +155,10 @@ const Shopping = () => {
     navigate(`/shopping/product/${id}`);
   };
 
+  const handleCategoryClick = (categoryValue: string) => {
+    navigate(`/shopping/category/${categoryValue}`);
+  };
+
   return (
     <div className="container px-4 pt-20 pb-20">
       {/* Header with search bar */}
@@ -265,6 +269,7 @@ const Shopping = () => {
             <div 
               key={index}
               className="flex flex-col items-center justify-center p-3 border rounded-lg hover:bg-gray-50 transition-all cursor-pointer"
+              onClick={() => handleCategoryClick(category.name.toLowerCase())}
             >
               {category.icon}
               <span className="text-xs text-center font-medium">{category.name}</span>
@@ -278,6 +283,7 @@ const Shopping = () => {
             <div 
               key={index}
               className="flex flex-col items-center justify-center p-3 border rounded-lg hover:bg-gray-50 transition-all cursor-pointer"
+              onClick={() => handleCategoryClick(category.name.toLowerCase())}
             >
               {category.icon}
               <span className="text-xs text-center font-medium">{category.name}</span>

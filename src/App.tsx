@@ -29,6 +29,7 @@ import CreateStore from "./pages/CreateStore";
 import CourseBuilder from "./pages/CourseBuilder";
 import DigitalProduct from "./pages/DigitalProduct";
 import ServiceCategory from "./pages/ServiceCategory";
+import ShoppingCategory from "./pages/ShoppingCategory";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,7 @@ const App = () => (
           <Route path="/kyc-verification/:step" element={<KycVerification />} />
           <Route path="/rentals" element={<Rentals />} />
           <Route path="/shopping" element={<Shopping />} />
+          <Route path="/shopping/category/:id" element={<ShoppingCategory />} />
           <Route path="/marketplace" element={<Shopping />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/rent-anything" element={<RentAnything />} />
