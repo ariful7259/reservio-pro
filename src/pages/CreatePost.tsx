@@ -30,7 +30,8 @@ import {
   Stethoscope,
   Wrench,
   Sparkles,
-  BookOpen
+  BookOpen,
+  Shield
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -121,7 +122,7 @@ const CreatePost = () => {
       ]
     },
     { 
-      name: 'ইকুইপমেন্ট', 
+      name: 'ই��ুইপমেন্ট', 
       value: 'equipment',
       icon: <Wrench className="h-4 w-4 text-purple-500" />,
       subcategories: [
