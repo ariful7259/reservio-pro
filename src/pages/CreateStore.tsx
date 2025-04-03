@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -15,7 +16,14 @@ import {
   DollarSign,
   Store,
   ArrowRight,
-  ChevronDown
+  ChevronDown,
+  SmartphoneIcon,
+  Code,
+  Smartphone,
+  MousePointer,
+  BarChart,
+  Layers,
+  ShoppingCart
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -36,6 +44,8 @@ const CreateStore = () => {
   const [activeTab, setActiveTab] = useState('templates');
   const [domainName, setDomainName] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
+  const [selectedFeature, setSelectedFeature] = useState<string | null>(null);
+  const [showFeatureDetails, setShowFeatureDetails] = useState(false);
 
   // Website templates
   const templates = [
@@ -88,7 +98,7 @@ const CreateStore = () => {
       id: 6,
       name: "ই-লার্নিং প্ল্যাটফর্ম",
       image: "https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=1374&auto=format&fit=crop",
-      category: "ই-লা��্নিং",
+      category: "ই-লার্নিং",
       price: "৳১০,০০০",
       features: ["কোর্স স্ট্রাকচার", "ভিডিও প্লেয়ার", "কুইজ সিস্টেম"],
       isPopular: false
@@ -152,32 +162,80 @@ const CreateStore = () => {
     {
       icon: <Layout className="h-8 w-8 text-primary" />,
       title: "স্মার্ট থিম বিল্ডার",
-      description: "ড্র্যাগ এন্ড ড্রপ ইন্টারফেস ব্যবহার করে আপনার সাইট ডিজাইন করুন, কোডিং জ্ঞান ছাড়াই।"
+      description: "ড্র্যাগ এন্ড ড্রপ ইন্টারফেস ব্যবহার করে আপনার সাইট ডিজাইন করুন, কোডিং জ্ঞান ছাড়াই।",
+      details: [
+        "ইন্টুইটিভ ড্র্যাগ-এন্ড-ড্রপ ইন্টারফেস",
+        "৫০+ প্রি-ডিজাইনড সেকশন",
+        "রিয়েল-টাইম ভিজুয়াল এডিটিং",
+        "রেসপন্সিভ প্রিভিউ (মোবাইল, ট্যাবলেট, ডেস্কটপ)",
+        "হান্ড্রেডস অফ কাস্টমাইজেশন অপশন"
+      ],
+      image: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=1470&auto=format&fit=crop"
     },
     {
       icon: <ShoppingBag className="h-8 w-8 text-primary" />,
       title: "অ্যাডভান্সড ই-কমার্স টুলস",
-      description: "প্রোডাক্ট ক্যাটালগ, শপিং কার্ট, এবং পেমেন্ট প্রসেসিং সিস্টেম অন্তর্ভুক্ত।"
+      description: "প্রোডাক্ট ক্যাটালগ, শপিং কার্ট, এবং পেমেন্ট প্রসেসিং সিস্টেম অন্তর্ভুক্ত।",
+      details: [
+        "আনলিমিটেড প্রোডাক্ট ক্যাটালগ",
+        "মাল্টি-কারেন্সি সাপোর্ট",
+        "ডিসকাউন্ট এবং প্রোমো কোড সিস্টেম",
+        "ইনভেন্টরি ম্যানেজমেন্ট",
+        "অটোমেটিক ট্যাক্স ক্যালকুলেশন"
+      ],
+      image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1470&auto=format&fit=crop"
     },
     {
       icon: <Globe className="h-8 w-8 text-primary" />,
       title: "কাস্টম ডোমেইন",
-      description: "আপনার ব্র্যান্ডের জন্য একটি অনন্য ডোমেইন নাম নিবন্ধন করুন বা আপনার বিদ্যমান ডোমেইন ব্যবহার করুন।"
+      description: "আপনার ব্র্যান্ডের জন্য একটি অনন্য ডোমেইন নাম নিবন্ধন করুন বা আপনার বিদ্যমান ডোমেইন ব্যবহার করুন।",
+      details: [
+        "ডোমেইন রেজিস্ট্রেশন সার্ভিস",
+        "কাস্টম ডোমেইন কনফিগারেশন",
+        "ফ্রি SSL সার্টিফিকেট",
+        "ডোমেইন ম্যানেজমেন্ট টুল",
+        "আনলিমিটেড সাবডোমেইন"
+      ],
+      image: "https://images.unsplash.com/photo-1591696205602-2f950c417cb9?q=80&w=1470&auto=format&fit=crop"
     },
     {
       icon: <CreditCard className="h-8 w-8 text-primary" />,
       title: "পেমেন্ট গেটওয়ে ইন্টিগ্রেশন",
-      description: "বিকাশ, নগদ, রকেট, ভিসা, মাস্টারকার্ড এবং আরও অনেক পেমেন্ট পদ্ধতি গ্রহণ করুন।"
+      description: "বিকাশ, নগদ, রকেট, ভিসা, মাস্টারকার্ড এবং আরও অনেক পেমেন্ট পদ্ধতি গ্রহণ করুন।",
+      details: [
+        "৩০+ দেশীয় ও আন্তর্জাতিক পেমেন্ট গেটওয়ে",
+        "সিকিউর পেমেন্ট প্রসেসিং",
+        "বিকাশ, নগদ, রকেট ইন্টিগ্রেশন",
+        "ভিসা, মাস্টারকার্ড, আমেরিকান এক্সপ্রেস",
+        "অটোমেটিক রিফান্ড প্রসেসিং"
+      ],
+      image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?q=80&w=1470&auto=format&fit=crop"
     },
     {
       icon: <Search className="h-8 w-8 text-primary" />,
       title: "SEO অপটিমাইজেশন",
-      description: "সার্চ ইঞ্জিন র্যাঙ্কিং বাড়াতে বিল্ট-ইন SEO টুলস ব্যবহার করুন।"
+      description: "সার্চ ইঞ্জিন র্যাঙ্কিং বাড়াতে বিল্ট-ইন SEO টুলস ব্যবহার করুন।",
+      details: [
+        "অটোমেটিক সাইটম্যাপ জেনারেশন",
+        "কি-ওয়ার্ড অপটিমাইজেশন টুল",
+        "মেটা ট্যাগ কাস্টমাইজেশন",
+        "কাস্টম URL স্ট্রাকচার",
+        "পেইজ স্পিড অপটিমাইজেশন"
+      ],
+      image: "https://images.unsplash.com/photo-1571750008453-307bb0f440ec?q=80&w=1470&auto=format&fit=crop"
     },
     {
-      icon: <Settings className="h-8 w-8 text-primary" />,
+      icon: <Smartphone className="h-8 w-8 text-primary" />,
       title: "মোবাইল অপটিমাইজেশন",
-      description: "সকল ডিভাইসে পারফেক্ট দেখাবে আপনার ওয়েবসাইট, মোবাইল থেকে ডেস্কটপ পর্যন্ত।"
+      description: "সকল ডিভাইসে পারফেক্ট দেখাবে আপনার ওয়েবসাইট, মোবাইল থেকে ডেস্কটপ পর্যন্ত।",
+      details: [
+        "অটোমেটিক রেসপন্সিভ ডিজাইন",
+        "টাচ-ফ্রেন্ডলি ইন্টারফেস",
+        "এক্সিলারেটেড মোবাইল পেজেস (AMP)",
+        "মোবাইল-ফাস্ট লোডিং অপটিমাইজেশন",
+        "প্রগ্রেসিভ ওয়েব অ্যাপ ফিচার"
+      ],
+      image: "https://images.unsplash.com/photo-1526406915894-7bcd65f60845?q=80&w=1524&auto=format&fit=crop"
     }
   ];
 
@@ -208,7 +266,7 @@ const CreateStore = () => {
   const handleDomainSearch = () => {
     if (!domainName) {
       toast({
-        title: "অনুগ্রহ করে একটি ডোমেইন নাম ল���খুন",
+        title: "অনুগ্রহ করে একটি ডোমেইন নাম লিখুন",
         variant: "destructive"
       });
       return;
@@ -248,6 +306,11 @@ const CreateStore = () => {
       title: "ফ্রি ট্রায়াল শুরু হয়েছে!",
       description: "আপনার ১৫ দিনের ফ্রি ট্রায়াল শুরু হয়েছে। শুভেচ্ছা!",
     });
+  };
+
+  const handleViewFeatureDetails = (title: string) => {
+    setSelectedFeature(title);
+    setShowFeatureDetails(true);
   };
 
   return (
@@ -317,12 +380,12 @@ const CreateStore = () => {
 
       {/* Template Selection & Pricing */}
       <div className="mb-16">
+        <h2 className="text-2xl font-bold mb-6 text-center">ওয়েবসাইট সেটআপ করুন</h2>
         <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold">ওয়েবসাইট সেটআপ করুন</h2>
-            <TabsList>
-              <TabsTrigger value="templates">থিম বেছে নিন</TabsTrigger>
-              <TabsTrigger value="pricing">প্ল্যান বেছে নিন</TabsTrigger>
+          <div className="flex justify-center items-center mb-8">
+            <TabsList className="mx-auto">
+              <TabsTrigger value="templates" className="px-6">থিম বেছে নিন</TabsTrigger>
+              <TabsTrigger value="pricing" className="px-6">প্ল্যান বেছে নিন</TabsTrigger>
             </TabsList>
           </div>
           
@@ -411,120 +474,206 @@ const CreateStore = () => {
         </Tabs>
       </div>
       
-      {/* Enhanced Features Section with Proper Implementation */}
+      {/* Enhanced Features Section */}
       <div className="mb-16">
         <h2 className="text-2xl font-bold mb-8 text-center">অনলাইন স্টোরের ফিচারসমূহ</h2>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div className="flex flex-col p-6 border rounded-lg hover:shadow-md transition-all hover:border-primary/50">
-            <div className="mb-4 p-3 bg-primary/10 rounded-full w-fit">
-              <Layout className="h-8 w-8 text-primary" />
-            </div>
-            <h3 className="text-lg font-semibold mb-3">স্মার্ট থিম বিল্ডার</h3>
-            <p className="text-muted-foreground flex-grow">ড্র্যাগ এন্ড ড্রপ ইন্টারফেস ব্যবহার করে আপনার সাইট ডিজাইন করুন, কোডিং জ্ঞান ছাড়াই।</p>
-            <div className="mt-4">
-              <Button variant="outline" size="sm" className="rounded-full">
-                বিস্তারিত দেখুন <ChevronRight className="h-4 w-4 ml-1" />
-              </Button>
-            </div>
-          </div>
-          
-          <div className="flex flex-col p-6 border rounded-lg hover:shadow-md transition-all hover:border-primary/50">
-            <div className="mb-4 p-3 bg-primary/10 rounded-full w-fit">
-              <ShoppingBag className="h-8 w-8 text-primary" />
-            </div>
-            <h3 className="text-lg font-semibold mb-3">অ্যাডভান্সড ই-কমার্স টুলস</h3>
-            <p className="text-muted-foreground flex-grow">প্রোডাক্ট ক্যাটালগ, শপিং কার্ট, এবং পেমেন্ট প্রসেসিং সিস্টেম অন্তর্ভুক্ত।</p>
-            <div className="mt-4">
-              <Button variant="outline" size="sm" className="rounded-full">
-                বিস্তারিত দেখুন <ChevronRight className="h-4 w-4 ml-1" />
-              </Button>
-            </div>
-          </div>
-          
-          <div className="flex flex-col p-6 border rounded-lg hover:shadow-md transition-all hover:border-primary/50">
-            <div className="mb-4 p-3 bg-primary/10 rounded-full w-fit">
-              <Globe className="h-8 w-8 text-primary" />
-            </div>
-            <h3 className="text-lg font-semibold mb-3">কাস্টম ডোমেইন</h3>
-            <p className="text-muted-foreground flex-grow">আপনার ব্র্যান্ডের জন্য একটি অনন্য ডোমেইন নাম নিবন্ধন করুন বা আপনার বিদ্যমান ডোমেইন ব্যবহার করুন।</p>
-            <div className="mt-4">
-              <Button variant="outline" size="sm" className="rounded-full">
-                বিস্তারিত দেখুন <ChevronRight className="h-4 w-4 ml-1" />
-              </Button>
-            </div>
-          </div>
-          
-          <div className="flex flex-col p-6 border rounded-lg hover:shadow-md transition-all hover:border-primary/50">
-            <div className="mb-4 p-3 bg-primary/10 rounded-full w-fit">
-              <CreditCard className="h-8 w-8 text-primary" />
-            </div>
-            <h3 className="text-lg font-semibold mb-3">পেমেন্ট গেটওয়ে ইন্টিগ্রেশন</h3>
-            <p className="text-muted-foreground flex-grow">বিকাশ, নগদ, রকেট, ভিসা, মাস্টারকার্ড এবং আরও অনেক পেমেন্ট পদ্ধতি গ্রহণ করুন।</p>
-            <div className="mt-4">
-              <Button variant="outline" size="sm" className="rounded-full">
-                বিস্তারিত দেখুন <ChevronRight className="h-4 w-4 ml-1" />
-              </Button>
-            </div>
-          </div>
-          
-          <div className="flex flex-col p-6 border rounded-lg hover:shadow-md transition-all hover:border-primary/50">
-            <div className="mb-4 p-3 bg-primary/10 rounded-full w-fit">
-              <Search className="h-8 w-8 text-primary" />
-            </div>
-            <h3 className="text-lg font-semibold mb-3">SEO অপটিমাইজেশন</h3>
-            <p className="text-muted-foreground flex-grow">সার্চ ইঞ্জিন র্যাঙ্কিং বাড়াতে বিল্ট-ইন SEO টুলস ব্যবহার করুন।</p>
-            <div className="mt-4">
-              <Button variant="outline" size="sm" className="rounded-full">
-                বিস্তারিত দেখুন <ChevronRight className="h-4 w-4 ml-1" />
-              </Button>
-            </div>
-          </div>
-          
-          <div className="flex flex-col p-6 border rounded-lg hover:shadow-md transition-all hover:border-primary/50">
-            <div className="mb-4 p-3 bg-primary/10 rounded-full w-fit">
-              <Settings className="h-8 w-8 text-primary" />
-            </div>
-            <h3 className="text-lg font-semibold mb-3">মোবাইল অপটিমাইজেশন</h3>
-            <p className="text-muted-foreground flex-grow">সকল ডিভাইসে পারফেক্ট দেখাবে আপনার ওয়েবসাইট, মোবাইল থেকে ডেস্কটপ পর্যন্ত।</p>
-            <div className="mt-4">
-              <Button variant="outline" size="sm" className="rounded-full">
-                বিস্তারিত দেখুন <ChevronRight className="h-4 w-4 ml-1" />
-              </Button>
-            </div>
-          </div>
+          {storeFeatures.map((feature, index) => (
+            <Card 
+              key={index} 
+              className="flex flex-col border hover:shadow-md transition-all overflow-hidden hover:border-primary/50"
+            >
+              <div className="p-6 flex-grow">
+                <div className="mb-4 p-3 bg-primary/10 rounded-full w-fit">
+                  {feature.icon}
+                </div>
+                <h3 className="text-lg font-semibold mb-3">{feature.title}</h3>
+                <p className="text-muted-foreground">{feature.description}</p>
+              </div>
+              <div className="p-4 border-t">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full flex justify-between items-center"
+                  onClick={() => handleViewFeatureDetails(feature.title)}
+                >
+                  <span>বিস্তারিত দেখুন</span>
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </Card>
+          ))}
         </div>
         
-        <div className="mt-8 p-6 bg-primary/5 rounded-lg">
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            <div className="md:w-1/2">
-              <h3 className="text-xl font-bold mb-3">ড্র্যাগ এন্ড ড্রপ ইন্টারফেস</h3>
-              <p className="text-muted-foreground mb-4">একটি সহজ ইন্টারফেস ব্যবহার করে আপনার নিজের স্টাইলে ওয়েবসাইট ডিজাইন করুন। আপনার পছন্দের যেকোন উপাদান টেনে স্থাপন করুন, কোনো প্রোগ্রামিং জ্ঞান ছাড়াই।</p>
-              <div className="grid grid-cols-2 gap-4">
+        {/* Feature Detail Modal - Triggered by button click */}
+        {showFeatureDetails && selectedFeature && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowFeatureDetails(false)}>
+            <div className="bg-white rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+              {storeFeatures.filter(f => f.title === selectedFeature).map((feature, index) => (
+                <div key={index} className="p-6">
+                  <div className="flex justify-between items-center mb-6">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-primary/10 rounded-full">
+                        {feature.icon}
+                      </div>
+                      <h3 className="text-xl font-bold">{feature.title}</h3>
+                    </div>
+                    <Button variant="ghost" size="icon" onClick={() => setShowFeatureDetails(false)}>
+                      <span className="sr-only">Close</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                    </Button>
+                  </div>
+                  
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <p className="text-muted-foreground mb-6">{feature.description}</p>
+                      <div className="space-y-4">
+                        <h4 className="font-semibold">বৈশিষ্ট্যসমূহ:</h4>
+                        <ul className="space-y-3">
+                          {feature.details.map((detail, idx) => (
+                            <li key={idx} className="flex items-start">
+                              <Check className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                              <span>{detail}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="mt-6">
+                        <Button className="w-full mt-4">
+                          এখনই শুরু করুন <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="relative aspect-video overflow-hidden rounded-lg">
+                      <img 
+                        src={feature.image} 
+                        alt={feature.title}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        
+        {/* Interactive Feature Showcase */}
+        <div className="mt-12 bg-gradient-to-b from-primary/5 to-primary/0 rounded-lg">
+          <div className="grid md:grid-cols-2 gap-8 p-8">
+            <div className="flex flex-col justify-center">
+              <Badge className="w-fit mb-4 bg-primary">ড্র্যাগ এন্ড ড্রপ ইন্টারফেস</Badge>
+              <h3 className="text-2xl font-bold mb-4">কোডিং জ্ঞান ছাড়াই আপনার নিজস্ব ওয়েবসাইট তৈরি করুন</h3>
+              <p className="text-muted-foreground mb-6">
+                ইন্টুইটিভ ড্র্যাগ-এন্ড-ড্রপ ইন্টারফেস ব্যবহার করে মিনিটের মধ্যে আপনার ওয়েবসাইট ডিজাইন করুন।
+                প্রি-ডিজাইনড টেমপ্লেট এবং কম্পোনেন্ট থেকে বেছে নিন, আপনার পছন্দমত কাস্টমাইজ করুন, এবং লাইভ দেখুন।
+              </p>
+              <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="flex items-center gap-2">
-                  <Check className="h-5 w-5 text-primary" />
-                  <span>রিয়েল-টাইム প্রিভিউ</span>
+                  <MousePointer className="h-5 w-5 text-primary" />
+                  <span>সহজ ইন্টারফেস</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Check className="h-5 w-5 text-primary" />
-                  <span>১০০+ রেডিমেড বিল্ডিং ব্লক</span>
+                  <Layers className="h-5 w-5 text-primary" />
+                  <span>১০০+ কম্পোনেন্ট</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Check className="h-5 w-5 text-primary" />
-                  <span>অটো-রেসপন্সিভ</span>
+                  <Smartphone className="h-5 w-5 text-primary" />
+                  <span>মোবাইল অপটিমাইজড</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Check className="h-5 w-5 text-primary" />
-                  <span>কাস্টম CSS সাপোর্ট</span>
+                  <Code className="h-5 w-5 text-primary" />
+                  <span>কোড না লিখেই</span>
+                </div>
+              </div>
+              <Button className="w-fit">
+                ইন্টারফেস দেখুন <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+            <div className="relative">
+              <div className="relative z-10 border bg-white shadow-lg rounded-lg overflow-hidden transform rotate-2 hover:rotate-0 transition-transform">
+                <div className="h-8 bg-gray-100 border-b flex items-center px-4 gap-2">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                </div>
+                <img 
+                  src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=1470&auto=format&fit=crop" 
+                  alt="ড্র্যাগ এন্ড ড্রপ ইন্টারফেস"
+                  className="w-full rounded-b-lg"
+                />
+              </div>
+              <div className="absolute -bottom-4 -right-4 border bg-white shadow-lg rounded-lg overflow-hidden w-24 h-24 z-0">
+                <div className="p-2">
+                  <ShoppingCart className="h-8 w-8 text-primary mx-auto" />
+                  <p className="text-xs text-center mt-1">শপিং কার্ট</p>
+                </div>
+              </div>
+              <div className="absolute -top-4 -left-4 border bg-white shadow-lg rounded-lg overflow-hidden w-24 h-24 z-0">
+                <div className="p-2">
+                  <BarChart className="h-8 w-8 text-primary mx-auto" />
+                  <p className="text-xs text-center mt-1">এনালিটিক্স</p>
                 </div>
               </div>
             </div>
-            <div className="md:w-1/2">
-              <img 
-                src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=1470&auto=format&fit=crop" 
-                alt="ড্র্যাগ এন্ড ড্রপ ইন্টারফেস"
-                className="rounded-lg w-full h-auto object-cover"
-              />
+          </div>
+        </div>
+      </div>
+      
+      {/* E-Commerce Features Showcase */}
+      <div className="mb-16">
+        <div className="grid md:grid-cols-2 gap-8 items-center">
+          <div className="order-2 md:order-1">
+            <img 
+              src="https://images.unsplash.com/photo-1556740758-90de374c12ad?q=80&w=1470&auto=format&fit=crop" 
+              alt="ই-কমার্স ফিচার"
+              className="rounded-lg w-full h-auto shadow-xl"
+            />
+          </div>
+          <div className="order-1 md:order-2">
+            <Badge className="mb-4 bg-amber-500 hover:bg-amber-600">ই-কমার্স ফিচার</Badge>
+            <h3 className="text-2xl font-bold mb-4">একটি পূর্ণাঙ্গ ই-কমার্স অভিজ্ঞতা তৈরি করুন</h3>
+            <p className="text-muted-foreground mb-6">
+              আপনার অনলাইন স্টোরে অত্যাধুনিক ই-কমার্স ফিচারগুলি ব্যবহার করুন। প্রোডাক্ট ম্যানেজমেন্ট, 
+              ইনভেন্টরি ট্র্যাকিং, এবং সিকিউর পেমেন্ট সিস্টেম দিয়ে আপনার ব্যবসা পরিচালনা করুন।
+            </p>
+            
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-primary/10 rounded-full">
+                  <ShoppingBag className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-semibold">প্রোডাক্ট ম্যানেজমেন্ট</h4>
+                  <p className="text-sm text-muted-foreground">সহজেই আপনার প্রোডাক্ট যোগ করুন, ক্যাটেগরি অনুযায়ী সাজান, এবং প্রাইস আপডেট করুন।</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-primary/10 rounded-full">
+                  <CreditCard className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-semibold">পেমেন্ট অপশন</h4>
+                  <p className="text-sm text-muted-foreground">বিকাশ, নগদ, রকেট, ভিসা, মাস্টারকার্ড সহ ৩০+ পেমেন্ট মেথড সাপোর্ট।</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-primary/10 rounded-full">
+                  <Layers className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-semibold">ইনভেন্টরি ম্যানেজমেন্ট</h4>
+                  <p className="text-sm text-muted-foreground">রিয়েল-টাইম ইনভেন্টরি ট্র্যাকিং, স্টক অ্যালার্ট, এবং সাপ্লাই চেইন মনিটরিং।</p>
+                </div>
+              </div>
             </div>
+            
+            <Button className="mt-8">
+              ই-কমার্স ডেমো দেখুন <ChevronRight className="ml-2 h-4 w-4" />
+            </Button>
           </div>
         </div>
       </div>
@@ -588,7 +737,7 @@ const CreateStore = () => {
       </div>
       
       {/* CTA Section */}
-      <div className="text-center">
+      <div className="text-center py-12 px-4 bg-gradient-to-b from-primary/10 to-transparent rounded-lg">
         <h2 className="text-2xl font-bold mb-4">আজই শুরু করুন আপনার অনলাইন ব্যবসা</h2>
         <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-8">
           কোন সেটআপ ফি নেই, ১৫ দিনের ফ্রি ট্রায়াল, এবং ৩০ দিনের মানি-ব্যাক গ্যারান্টি।
@@ -603,3 +752,4 @@ const CreateStore = () => {
 };
 
 export default CreateStore;
+
