@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "./components/ThemeProvider";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Services from "./pages/Services";
@@ -35,66 +36,68 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/services/:id" element={<ServiceDetail />} />
-          <Route path="/services/category/:id" element={<ServiceCategory />} />
-          <Route path="/appointments" element={<Appointments />} />
-          <Route path="/wallet" element={<Wallet />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/security" element={<Security />} />
-          <Route path="/security/2fa" element={<TwoFactorAuthentication />} />
-          <Route path="/kyc-verification" element={<KycVerification />} />
-          <Route path="/kyc-verification/:step" element={<KycVerification />} />
-          <Route path="/rentals" element={<Rentals />} />
-          <Route path="/shopping" element={<Shopping />} />
-          <Route path="/shopping/category/:id" element={<ShoppingCategory />} />
-          <Route path="/marketplace" element={<Shopping />} />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route path="/rent-anything" element={<RentAnything />} />
-          <Route path="/rent/apartment" element={<Housing />} />
-          <Route path="/rent/house" element={<Housing />} />
-          <Route path="/rent/car" element={<Housing />} />
-          <Route path="/rent/office" element={<Housing />} />
-          <Route path="/rent/event-space" element={<Housing />} />
-          <Route path="/rent/equipment" element={<Housing />} />
-          <Route path="/rent/shop" element={<Housing />} />
-          <Route path="/rent/others" element={<Housing />} />
-          <Route path="/my-services" element={<MyServices />} />
-          <Route path="/utilities" element={<Utilities />} />
-          <Route path="/help" element={<Help />} />
-          <Route path="/create-post" element={<CreatePost />} />
-          
-          {/* Digital Creator Solution Routes - Enhanced with Monetization */}
-          <Route path="/create-store" element={<CreateStore />} />
-          <Route path="/course-builder" element={<CourseBuilder />} />
-          <Route path="/email-automation" element={<NotFound />} />
-          <Route path="/event-hosting" element={<NotFound />} />
-          <Route path="/one-on-one" element={<NotFound />} />
-          <Route path="/digital-products" element={<NotFound />} />
-          <Route path="/paid-community" element={<PaidCommunity />} />
-          <Route path="/audience-analytics" element={<NotFound />} />
-          <Route path="/multi-channel" element={<NotFound />} />
-          <Route path="/reseller-program" element={<NotFound />} />
-          <Route path="/content-planner" element={<NotFound />} />
-          <Route path="/payment-gateway" element={<NotFound />} />
-          <Route path="/drm" element={<NotFound />} />
-          <Route path="/video-hosting" element={<NotFound />} />
-          <Route path="/affiliate" element={<NotFound />} />
-          <Route path="/social-media" element={<NotFound />} />
-          <Route path="/product/:id" element={<DigitalProduct />} />
-          
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <ThemeProvider defaultTheme="light">
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/services/:id" element={<ServiceDetail />} />
+            <Route path="/services/category/:id" element={<ServiceCategory />} />
+            <Route path="/appointments" element={<Appointments />} />
+            <Route path="/wallet" element={<Wallet />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/security" element={<Security />} />
+            <Route path="/security/2fa" element={<TwoFactorAuthentication />} />
+            <Route path="/kyc-verification" element={<KycVerification />} />
+            <Route path="/kyc-verification/:step" element={<KycVerification />} />
+            <Route path="/rentals" element={<Rentals />} />
+            <Route path="/shopping" element={<Shopping />} />
+            <Route path="/shopping/category/:id" element={<ShoppingCategory />} />
+            <Route path="/marketplace" element={<Shopping />} />
+            <Route path="/notifications" element={<Notifications />} />
+            <Route path="/rent-anything" element={<RentAnything />} />
+            <Route path="/rent/apartment" element={<Housing />} />
+            <Route path="/rent/house" element={<Housing />} />
+            <Route path="/rent/car" element={<Housing />} />
+            <Route path="/rent/office" element={<Housing />} />
+            <Route path="/rent/event-space" element={<Housing />} />
+            <Route path="/rent/equipment" element={<Housing />} />
+            <Route path="/rent/shop" element={<Housing />} />
+            <Route path="/rent/others" element={<Housing />} />
+            <Route path="/my-services" element={<MyServices />} />
+            <Route path="/utilities" element={<Utilities />} />
+            <Route path="/help" element={<Help />} />
+            <Route path="/create-post" element={<CreatePost />} />
+            
+            {/* Digital Creator Solution Routes - Enhanced with Monetization */}
+            <Route path="/create-store" element={<CreateStore />} />
+            <Route path="/course-builder" element={<CourseBuilder />} />
+            <Route path="/email-automation" element={<NotFound />} />
+            <Route path="/event-hosting" element={<NotFound />} />
+            <Route path="/one-on-one" element={<NotFound />} />
+            <Route path="/digital-products" element={<NotFound />} />
+            <Route path="/paid-community" element={<PaidCommunity />} />
+            <Route path="/audience-analytics" element={<NotFound />} />
+            <Route path="/multi-channel" element={<NotFound />} />
+            <Route path="/reseller-program" element={<NotFound />} />
+            <Route path="/content-planner" element={<NotFound />} />
+            <Route path="/payment-gateway" element={<NotFound />} />
+            <Route path="/drm" element={<NotFound />} />
+            <Route path="/video-hosting" element={<NotFound />} />
+            <Route path="/affiliate" element={<NotFound />} />
+            <Route path="/social-media" element={<NotFound />} />
+            <Route path="/product/:id" element={<DigitalProduct />} />
+            
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 
