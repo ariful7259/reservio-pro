@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { AppProvider } from "./context/AppContext";
+import { AuthProvider } from "./hooks/useAuth";
 import OfflineIndicator from "./components/OfflineIndicator";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -42,86 +43,108 @@ import OfflineMode from "./pages/OfflineMode";
 import Feedback from "./pages/Feedback";
 import AppointmentBooking from "./pages/AppointmentBooking";
 import QrScanner from "./pages/QrScanner";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import ProfileManagement from "./pages/ProfileManagement";
+import ChatPage from "./pages/ChatPage";
+import SearchPage from "./pages/SearchPage";
+import PaymentDemo from "./pages/PaymentDemo";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider defaultTheme="light">
-      <AppProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Navbar />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/onboarding" element={<Onboarding />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/services/:id" element={<ServiceDetail />} />
-              <Route path="/services/category/:id" element={<ServiceCategory />} />
-              <Route path="/appointments" element={<Appointments />} />
-              <Route path="/appointment-booking" element={<AppointmentBooking />} />
-              <Route path="/wallet" element={<Wallet />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/security" element={<Security />} />
-              <Route path="/security/2fa" element={<TwoFactorAuthentication />} />
-              <Route path="/kyc-verification" element={<KycVerification />} />
-              <Route path="/kyc-verification/:step" element={<KycVerification />} />
-              <Route path="/rentals" element={<Rentals />} />
-              <Route path="/shopping" element={<Shopping />} />
-              <Route path="/shopping/category/:id" element={<ShoppingCategory />} />
-              <Route path="/marketplace" element={<Shopping />} />
-              <Route path="/notifications" element={<Notifications />} />
-              <Route path="/rent-anything" element={<RentAnything />} />
-              <Route path="/rent/apartment" element={<Housing />} />
-              <Route path="/rent/house" element={<Housing />} />
-              <Route path="/rent/car" element={<Housing />} />
-              <Route path="/rent/office" element={<Housing />} />
-              <Route path="/rent/event-space" element={<Housing />} />
-              <Route path="/rent/equipment" element={<Housing />} />
-              <Route path="/rent/shop" element={<Housing />} />
-              <Route path="/rent/others" element={<Housing />} />
-              <Route path="/my-services" element={<MyServices />} />
-              <Route path="/utilities" element={<Utilities />} />
-              <Route path="/help" element={<Help />} />
-              <Route path="/create-post" element={<CreatePost />} />
-              <Route path="/feedback" element={<Feedback />} />
-              <Route path="/qr-scanner" element={<QrScanner />} />
-              
-              {/* New Pages */}
-              <Route path="/favorites" element={<Favorites />} />
-              <Route path="/reviews" element={<Reviews />} />
-              <Route path="/rewards" element={<Rewards />} />
-              <Route path="/language-settings" element={<LanguageSettings />} />
-              <Route path="/offline-mode" element={<OfflineMode />} />
-              
-              {/* Digital Creator Solution Routes - Enhanced with Monetization */}
-              <Route path="/create-store" element={<CreateStore />} />
-              <Route path="/course-builder" element={<CourseBuilder />} />
-              <Route path="/email-automation" element={<NotFound />} />
-              <Route path="/event-hosting" element={<NotFound />} />
-              <Route path="/one-on-one" element={<NotFound />} />
-              <Route path="/digital-products" element={<NotFound />} />
-              <Route path="/paid-community" element={<PaidCommunity />} />
-              <Route path="/audience-analytics" element={<NotFound />} />
-              <Route path="/multi-channel" element={<NotFound />} />
-              <Route path="/reseller-program" element={<NotFound />} />
-              <Route path="/content-planner" element={<NotFound />} />
-              <Route path="/payment-gateway" element={<NotFound />} />
-              <Route path="/drm" element={<NotFound />} />
-              <Route path="/video-hosting" element={<NotFound />} />
-              <Route path="/affiliate" element={<NotFound />} />
-              <Route path="/social-media" element={<NotFound />} />
-              <Route path="/product/:id" element={<DigitalProduct />} />
-              
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-            <OfflineIndicator />
-          </BrowserRouter>
-        </TooltipProvider>
-      </AppProvider>
+      <AuthProvider>
+        <AppProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Navbar />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/onboarding" element={<Onboarding />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/services/:id" element={<ServiceDetail />} />
+                <Route path="/services/category/:id" element={<ServiceCategory />} />
+                <Route path="/appointments" element={<Appointments />} />
+                <Route path="/appointment-booking" element={<AppointmentBooking />} />
+                <Route path="/wallet" element={<Wallet />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/security" element={<Security />} />
+                <Route path="/security/2fa" element={<TwoFactorAuthentication />} />
+                <Route path="/kyc-verification" element={<KycVerification />} />
+                <Route path="/kyc-verification/:step" element={<KycVerification />} />
+                <Route path="/rentals" element={<Rentals />} />
+                <Route path="/shopping" element={<Shopping />} />
+                <Route path="/shopping/category/:id" element={<ShoppingCategory />} />
+                <Route path="/marketplace" element={<Shopping />} />
+                <Route path="/notifications" element={<Notifications />} />
+                <Route path="/rent-anything" element={<RentAnything />} />
+                <Route path="/rent/apartment" element={<Housing />} />
+                <Route path="/rent/house" element={<Housing />} />
+                <Route path="/rent/car" element={<Housing />} />
+                <Route path="/rent/office" element={<Housing />} />
+                <Route path="/rent/event-space" element={<Housing />} />
+                <Route path="/rent/equipment" element={<Housing />} />
+                <Route path="/rent/shop" element={<Housing />} />
+                <Route path="/rent/others" element={<Housing />} />
+                <Route path="/my-services" element={<MyServices />} />
+                <Route path="/utilities" element={<Utilities />} />
+                <Route path="/help" element={<Help />} />
+                <Route path="/create-post" element={<CreatePost />} />
+                <Route path="/feedback" element={<Feedback />} />
+                <Route path="/qr-scanner" element={<QrScanner />} />
+                
+                {/* Authentication Routes */}
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/profile-management" element={<ProfileManagement />} />
+                
+                {/* Chat System */}
+                <Route path="/messages" element={<ChatPage />} />
+                
+                {/* Advanced Search */}
+                <Route path="/search" element={<SearchPage />} />
+                
+                {/* Payment System */}
+                <Route path="/payment" element={<PaymentDemo />} />
+                
+                {/* New Pages */}
+                <Route path="/favorites" element={<Favorites />} />
+                <Route path="/reviews" element={<Reviews />} />
+                <Route path="/rewards" element={<Rewards />} />
+                <Route path="/language-settings" element={<LanguageSettings />} />
+                <Route path="/offline-mode" element={<OfflineMode />} />
+                
+                {/* Digital Creator Solution Routes - Enhanced with Monetization */}
+                <Route path="/create-store" element={<CreateStore />} />
+                <Route path="/course-builder" element={<CourseBuilder />} />
+                <Route path="/email-automation" element={<NotFound />} />
+                <Route path="/event-hosting" element={<NotFound />} />
+                <Route path="/one-on-one" element={<NotFound />} />
+                <Route path="/digital-products" element={<NotFound />} />
+                <Route path="/paid-community" element={<PaidCommunity />} />
+                <Route path="/audience-analytics" element={<NotFound />} />
+                <Route path="/multi-channel" element={<NotFound />} />
+                <Route path="/reseller-program" element={<NotFound />} />
+                <Route path="/content-planner" element={<NotFound />} />
+                <Route path="/payment-gateway" element={<NotFound />} />
+                <Route path="/drm" element={<NotFound />} />
+                <Route path="/video-hosting" element={<NotFound />} />
+                <Route path="/affiliate" element={<NotFound />} />
+                <Route path="/social-media" element={<NotFound />} />
+                <Route path="/product/:id" element={<DigitalProduct />} />
+                
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+              <OfflineIndicator />
+            </BrowserRouter>
+          </TooltipProvider>
+        </AppProvider>
+      </AuthProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );
