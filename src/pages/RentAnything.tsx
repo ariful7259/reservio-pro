@@ -1,10 +1,13 @@
-import React from 'react';
-import { Search, Filter, Calendar, Tag, ChevronRight, MapPin, Home, Building, Car, Briefcase, Bike, Camera, Monitor, Wrench, Smartphone, Headphones, PlusCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, Filter, Calendar, Tag, ChevronRight, MapPin, Home, Building, Car, Briefcase, Bike, Camera, Monitor, Wrench, Smartphone, Headphones, PlusCircle, Map, Globe, ListFilter, View } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import MapView from '@/components/MapView';
+import { useToast } from '@/components/ui/use-toast';
+import P2PPaymentModal from '@/components/P2PPaymentModal';
 
 const RentAnything = () => {
   // Sample rental items
@@ -101,6 +104,26 @@ const RentAnything = () => {
     },
   ];
 
+  // View toggle state
+  const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
+  const { toast } = useToast();
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+
+  // Handle location select
+  const handleLocationSelect = (lat: number, lng: number) => {
+    toast({
+      title: "লোকেশন নির্বাচিত হয়েছে",
+      description: `${lat.toFixed(4)}, ${lng.toFixed(4)}`,
+    });
+  };
+
+  // Handle book button click
+  const handleBookClick = (item: any) => {
+    setSelectedItem(item);
+    setPaymentModalOpen(true);
+  };
+
   return (
     <div className="container px-4 pt-20 pb-20">
       <div className="mb-6">
@@ -132,146 +155,105 @@ const RentAnything = () => {
         <Button size="icon" variant="outline">
           <Filter className="h-4 w-4" />
         </Button>
+        <Button 
+          size="icon" 
+          variant={viewMode === 'map' ? 'default' : 'outline'}
+          onClick={() => setViewMode(viewMode === 'list' ? 'map' : 'list')}
+        >
+          {viewMode === 'list' ? <Map className="h-4 w-4" /> : <ListFilter className="h-4 w-4" />}
+        </Button>
       </div>
 
-      <Tabs defaultValue="all" className="mb-6">
-        <TabsList className="w-full bg-secondary/50 mb-4 flex-wrap">
-          <TabsTrigger value="all" className="flex-1">সব</TabsTrigger>
-          {categories.map(category => (
-            <TabsTrigger key={category.value} value={category.value} className="flex-1 flex items-center gap-1">
-              {category.icon}
-              {category.name}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-
-        <TabsContent value="all">
-          <div className="space-y-4">
-            {rentalItems.map((item) => (
-              <Card key={item.id} className="overflow-hidden">
-                <div className="flex flex-col sm:flex-row">
-                  <div className="sm:w-1/3">
-                    <img 
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-48 sm:h-full object-cover"
-                    />
-                  </div>
-                  <CardContent className="p-4 sm:w-2/3 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between flex-wrap gap-2">
-                        <h3 className="font-semibold text-lg">{item.title}</h3>
-                        <div className="flex gap-2">
-                          {categories.find(c => c.value === item.category)?.subcategories.find(
-                            s => s.value === item.subcategory
-                          ) && (
-                            <Badge variant="outline" className="flex items-center gap-1">
-                              {categories.find(c => c.value === item.category)?.subcategories.find(
-                                s => s.value === item.subcategory
-                              )?.icon}
-                              {categories.find(c => c.value === item.category)?.subcategories.find(
-                                s => s.value === item.subcategory
-                              )?.name}
-                            </Badge>
-                          )}
-                          <Badge>
-                            {categories.find(c => c.value === item.category)?.icon}
-                            {categories.find(c => c.value === item.category)?.name}
-                          </Badge>
-                        </div>
-                      </div>
-                      <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
-                      <div className="flex items-center text-muted-foreground text-sm mt-2">
-                        <MapPin className="h-4 w-4 mr-1" /> {item.location}
-                      </div>
-                      <div className="flex items-center text-sm mt-2">
-                        <Tag className="h-4 w-4 mr-1 text-primary" /> 
-                        <span className="font-medium">{item.owner}</span>
-                        <span className="mx-1">•</span>
-                        <span>{item.rating} রেটিং</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between mt-4">
-                      <div className="text-lg font-bold">৳ {item.price}/{item.priceUnit}</div>
-                      <Button size="sm" className="gap-1">
-                        বুক করুন <Calendar className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </div>
-              </Card>
+      {viewMode === 'map' ? (
+        <MapView onLocationSelect={handleLocationSelect} />
+      ) : (
+        <Tabs defaultValue="all" className="mb-6">
+          <TabsList className="w-full bg-secondary/50 mb-4 flex-wrap">
+            <TabsTrigger value="all" className="flex-1">সব</TabsTrigger>
+            {categories.map(category => (
+              <TabsTrigger key={category.value} value={category.value} className="flex-1 flex items-center gap-1">
+                {category.icon}
+                {category.name}
+              </TabsTrigger>
             ))}
-          </div>
-        </TabsContent>
-        
-        {categories.map(category => (
-          <TabsContent key={category.value} value={category.value}>
-            <div className="mb-4">
-              <Tabs defaultValue="all" className="w-full">
-                <TabsList className="w-full mb-4">
-                  <TabsTrigger value="all">সব {category.name}</TabsTrigger>
-                  {category.subcategories.map(sub => (
-                    <TabsTrigger key={sub.value} value={sub.value} className="flex items-center gap-1">
-                      {sub.icon}
-                      {sub.name}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-                
-                <TabsContent value="all">
-                  <div className="space-y-4">
-                    {rentalItems.filter(item => item.category === category.value).map((item) => (
-                      <Card key={item.id} className="overflow-hidden">
-                        <div className="flex flex-col sm:flex-row">
-                          <div className="sm:w-1/3">
-                            <img 
-                              src={item.image}
-                              alt={item.title}
-                              className="w-full h-48 sm:h-full object-cover"
-                            />
+          </TabsList>
+
+          <TabsContent value="all">
+            <div className="space-y-4">
+              {rentalItems.map((item) => (
+                <Card key={item.id} className="overflow-hidden">
+                  <div className="flex flex-col sm:flex-row">
+                    <div className="sm:w-1/3">
+                      <img 
+                        src={item.image}
+                        alt={item.title}
+                        className="w-full h-48 sm:h-full object-cover"
+                      />
+                    </div>
+                    <CardContent className="p-4 sm:w-2/3 flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center justify-between flex-wrap gap-2">
+                          <h3 className="font-semibold text-lg">{item.title}</h3>
+                          <div className="flex gap-2">
+                            {categories.find(c => c.value === item.category)?.subcategories.find(
+                              s => s.value === item.subcategory
+                            ) && (
+                              <Badge variant="outline" className="flex items-center gap-1">
+                                {categories.find(c => c.value === item.category)?.subcategories.find(
+                                  s => s.value === item.subcategory
+                                )?.icon}
+                                {categories.find(c => c.value === item.category)?.subcategories.find(
+                                  s => s.value === item.subcategory
+                                )?.name}
+                              </Badge>
+                            )}
+                            <Badge>
+                              {categories.find(c => c.value === item.category)?.icon}
+                              {categories.find(c => c.value === item.category)?.name}
+                            </Badge>
                           </div>
-                          <CardContent className="p-4 sm:w-2/3 flex flex-col justify-between">
-                            <div>
-                              <div className="flex items-center justify-between">
-                                <h3 className="font-semibold text-lg">{item.title}</h3>
-                                <Badge variant="outline" className="flex items-center gap-1">
-                                  {category.subcategories.find(s => s.value === item.subcategory)?.icon}
-                                  {category.subcategories.find(s => s.value === item.subcategory)?.name}
-                                </Badge>
-                              </div>
-                              <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
-                              <div className="flex items-center text-muted-foreground text-sm mt-2">
-                                <MapPin className="h-4 w-4 mr-1" /> {item.location}
-                              </div>
-                              <div className="flex items-center text-sm mt-2">
-                                <Tag className="h-4 w-4 mr-1 text-primary" /> 
-                                <span className="font-medium">{item.owner}</span>
-                                <span className="mx-1">•</span>
-                                <span>{item.rating} রেটিং</span>
-                              </div>
-                            </div>
-                            <div className="flex items-center justify-between mt-4">
-                              <div className="text-lg font-bold">৳ {item.price}/{item.priceUnit}</div>
-                              <Button size="sm" className="gap-1">
-                                বুক করুন <Calendar className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </CardContent>
                         </div>
-                      </Card>
-                    ))}
-                    {rentalItems.filter(item => item.category === category.value).length === 0 && (
-                      <div className="text-center py-10 text-muted-foreground">
-                        এই ক্যাটাগরিতে কোনো আইটেম এখনো উপলব্ধ নেই
+                        <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
+                        <div className="flex items-center text-muted-foreground text-sm mt-2">
+                          <MapPin className="h-4 w-4 mr-1" /> {item.location}
+                        </div>
+                        <div className="flex items-center text-sm mt-2">
+                          <Tag className="h-4 w-4 mr-1 text-primary" /> 
+                          <span className="font-medium">{item.owner}</span>
+                          <span className="mx-1">•</span>
+                          <span>{item.rating} রেটিং</span>
+                        </div>
                       </div>
-                    )}
+                      <div className="flex items-center justify-between mt-4">
+                        <div className="text-lg font-bold">৳ {item.price}/{item.priceUnit}</div>
+                        <Button size="sm" className="gap-1">
+                          বুক করুন <Calendar className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </CardContent>
                   </div>
-                </TabsContent>
-                
-                {category.subcategories.map(sub => (
-                  <TabsContent key={sub.value} value={sub.value}>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+          
+          {categories.map(category => (
+            <TabsContent key={category.value} value={category.value}>
+              <div className="mb-4">
+                <Tabs defaultValue="all" className="w-full">
+                  <TabsList className="w-full mb-4">
+                    <TabsTrigger value="all">সব {category.name}</TabsTrigger>
+                    {category.subcategories.map(sub => (
+                      <TabsTrigger key={sub.value} value={sub.value} className="flex items-center gap-1">
+                        {sub.icon}
+                        {sub.name}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                  
+                  <TabsContent value="all">
                     <div className="space-y-4">
-                      {rentalItems.filter(item => item.category === category.value && item.subcategory === sub.value).map((item) => (
+                      {rentalItems.filter(item => item.category === category.value).map((item) => (
                         <Card key={item.id} className="overflow-hidden">
                           <div className="flex flex-col sm:flex-row">
                             <div className="sm:w-1/3">
@@ -307,19 +289,87 @@ const RentAnything = () => {
                           </div>
                         </Card>
                       ))}
-                      {rentalItems.filter(item => item.category === category.value && item.subcategory === sub.value).length === 0 && (
+                      {rentalItems.filter(item => item.category === category.value).length === 0 && (
                         <div className="text-center py-10 text-muted-foreground">
-                          এই সাবক্যাটাগরিতে কোনো আইটেম এখনো উপলব্ধ নেই
+                          এই ক্যাটাগরিতে কোনো আইটেম এখনো উপলব্ধ নেই
                         </div>
                       )}
                     </div>
                   </TabsContent>
-                ))}
-              </Tabs>
-            </div>
-          </TabsContent>
-        ))}
-      </Tabs>
+                  
+                  {category.subcategories.map(sub => (
+                    <TabsContent key={sub.value} value={sub.value}>
+                      <div className="space-y-4">
+                        {rentalItems.filter(item => item.category === category.value && item.subcategory === sub.value).map((item) => (
+                          <Card key={item.id} className="overflow-hidden">
+                            <div className="flex flex-col sm:flex-row">
+                              <div className="sm:w-1/3">
+                                <img 
+                                  src={item.image}
+                                  alt={item.title}
+                                  className="w-full h-48 sm:h-full object-cover"
+                                />
+                              </div>
+                              <CardContent className="p-4 sm:w-2/3 flex flex-col justify-between">
+                                <div>
+                                  <div className="flex items-center justify-between">
+                                    <h3 className="font-semibold text-lg">{item.title}</h3>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
+                                  <div className="flex items-center text-muted-foreground text-sm mt-2">
+                                    <MapPin className="h-4 w-4 mr-1" /> {item.location}
+                                  </div>
+                                  <div className="flex items-center text-sm mt-2">
+                                    <Tag className="h-4 w-4 mr-1 text-primary" /> 
+                                    <span className="font-medium">{item.owner}</span>
+                                    <span className="mx-1">•</span>
+                                    <span>{item.rating} রেটিং</span>
+                                  </div>
+                                </div>
+                                <div className="flex items-center justify-between mt-4">
+                                  <div className="text-lg font-bold">৳ {item.price}/{item.priceUnit}</div>
+                                  <Button size="sm" className="gap-1">
+                                    বুক করুন <Calendar className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </CardContent>
+                            </div>
+                          </Card>
+                        ))}
+                        {rentalItems.filter(item => item.category === category.value && item.subcategory === sub.value).length === 0 && (
+                          <div className="text-center py-10 text-muted-foreground">
+                            এই সাবক্যাটাগরিতে কোনো আইটেম এখনো উপলব্ধ নেই
+                          </div>
+                        )}
+                      </div>
+                    </TabsContent>
+                  ))}
+                </Tabs>
+              </div>
+            </TabsContent>
+          ))}
+        </Tabs>
+      )}
+
+      {/* P2P Payment Instructions Modal */}
+      <Card className="mb-6 bg-green-50 border border-green-200">
+        <CardContent className="p-4">
+          <h3 className="font-semibold text-green-800 mb-2">নিরাপদ P2P পেমেন্ট</h3>
+          <p className="text-sm text-green-700 mb-3">আমাদের এসক্রো সিস্টেমের মাধ্যমে আপনার পেমেন্ট সুরক্ষিত থাকবে। সার্ভিস সম্পন্ন হওয়ার আগে পর্যন্ত আমরা আপনার অর্থ হোল্ড করে রাখবো।</p>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="bg-white">সুরক্ষিত</Badge>
+            <Badge variant="outline" className="bg-white">দ্রুত</Badge>
+            <Badge variant="outline" className="bg-white">বিশ্বাসযোগ্য</Badge>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* P2P Payment Modal */}
+      <P2PPaymentModal
+        open={paymentModalOpen}
+        onOpenChange={setPaymentModalOpen}
+        item={selectedItem}
+      />
     </div>
   );
 };
