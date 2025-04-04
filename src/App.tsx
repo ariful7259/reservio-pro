@@ -39,6 +39,9 @@ import Rewards from "./pages/Rewards";
 import Onboarding from "./pages/Onboarding";
 import LanguageSettings from "./pages/LanguageSettings";
 import OfflineMode from "./pages/OfflineMode";
+import Feedback from "./pages/Feedback";
+import AppointmentBooking from "./pages/AppointmentBooking";
+import QrScanner from "./pages/QrScanner";
 
 const queryClient = new QueryClient();
 
@@ -58,6 +61,7 @@ const App = () => (
               <Route path="/services/:id" element={<ServiceDetail />} />
               <Route path="/services/category/:id" element={<ServiceCategory />} />
               <Route path="/appointments" element={<Appointments />} />
+              <Route path="/appointment-booking" element={<AppointmentBooking />} />
               <Route path="/wallet" element={<Wallet />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/security" element={<Security />} />
@@ -82,6 +86,8 @@ const App = () => (
               <Route path="/utilities" element={<Utilities />} />
               <Route path="/help" element={<Help />} />
               <Route path="/create-post" element={<CreatePost />} />
+              <Route path="/feedback" element={<Feedback />} />
+              <Route path="/qr-scanner" element={<QrScanner />} />
               
               {/* New Pages */}
               <Route path="/favorites" element={<Favorites />} />

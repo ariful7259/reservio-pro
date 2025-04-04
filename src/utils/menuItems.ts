@@ -30,6 +30,18 @@ export const getMenuItems = (language: 'en' | 'bn') => {
       href: '/rewards',
     },
     {
+      title: language === 'bn' ? 'ফিডব্যাক' : 'Feedback',
+      href: '/feedback',
+    },
+    {
+      title: language === 'bn' ? 'QR স্ক্যান' : 'QR Scan',
+      href: '/qr-scanner',
+    },
+    {
+      title: language === 'bn' ? 'অ্যাপয়েন্টমেন্ট' : 'Appointments',
+      href: '/appointment-booking',
+    },
+    {
       title: language === 'bn' ? 'ভাষা' : 'Language',
       href: '/language-settings',
     },
@@ -61,6 +73,18 @@ export const getSettingsItems = (language: 'en' | 'bn') => {
     {
       title: language === 'bn' ? 'লয়ালটি রিওয়ার্ড' : 'Loyalty Rewards',
       href: '/rewards',
+    },
+    {
+      title: language === 'bn' ? 'ফিডব্যাক' : 'Feedback',
+      href: '/feedback',
+    },
+    {
+      title: language === 'bn' ? 'QR স্ক্যান' : 'QR Scan',
+      href: '/qr-scanner',
+    },
+    {
+      title: language === 'bn' ? 'অ্যাপয়েন্টমেন্ট' : 'Appointments',
+      href: '/appointment-booking',
     },
     {
       title: language === 'bn' ? 'ভাষা সেটিংস' : 'Language Settings',

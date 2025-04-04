@@ -2,9 +2,23 @@
 import React from 'react';
 import { WifiOff } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { toast } from '@/components/ui/use-toast';
 
 const OfflineIndicator: React.FC = () => {
   const { isOnline, language } = useApp();
+  
+  // Show toast when going offline
+  React.useEffect(() => {
+    if (!isOnline) {
+      toast({
+        title: language === 'bn' ? "আপনি অফলাইন মোডে আছেন" : "You are offline",
+        description: language === 'bn' 
+          ? "কিছু ফিচার সীমিত হতে পারে। ইন্টারনেট সংযোগ পুনরায় স্থাপন করুন।" 
+          : "Some features may be limited. Please restore your internet connection.",
+        variant: "destructive",
+      });
+    }
+  }, [isOnline, language, toast]);
   
   if (isOnline) return null;
   
