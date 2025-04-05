@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -44,7 +45,7 @@ import {
   AirVent,
   ShoppingCart,
   Flame,
-  Generator,
+  Power, // Replaced Generator with Power icon
   Tractor,
   Droplets,
   Wind,
