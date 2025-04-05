@@ -53,11 +53,13 @@ const ProductCatalogTemplate = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center flex-wrap gap-4">
         <div className="flex items-center flex-wrap gap-2">
-          <Input 
-            placeholder="প্রোডাক্ট সার্চ করুন..."
-            className="w-[250px]"
-            startIcon={<Search className="h-4 w-4" />}
-          />
+          <div className="relative w-[250px]">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input 
+              placeholder="প্রোডাক্ট সার্চ করুন..."
+              className="pl-9 w-full"
+            />
+          </div>
           <Button variant="outline" size="icon">
             <Filter className="h-4 w-4" />
           </Button>
