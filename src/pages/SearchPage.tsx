@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useApp } from '@/context/AppContext';
 import AdvancedSearchFilters, { SearchFilters } from '@/components/search/AdvancedSearchFilters';
-import { ServiceCard } from '@/components/ServiceCard';
+import ServiceCard from '@/components/ServiceCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const SearchPage = () => {

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
@@ -6,9 +7,9 @@ import TutorialGuide from '@/components/onboarding/TutorialGuide';
 import BreadcrumbTrail from '@/components/navigation/BreadcrumbTrail';
 import { TutorialStep } from '@/components/onboarding/TutorialGuide';
 
-// Re-exporting the existing components
-import { ExploreSection } from '@/components/ExploreSection';
-import { ServiceCard } from '@/components/ServiceCard';
+// Correct import statements for the components
+import ExploreSection from '@/components/ExploreSection';
+import ServiceCard from '@/components/ServiceCard';
 
 // Continue with the rest of the Index component
 const Index = () => {
