@@ -16,6 +16,32 @@ import {
   MapPin,
   LayoutGrid,
   Map as MapIcon,
+  Camera,
+  Laptop,
+  Smartphone,
+  Speaker,
+  Car,
+  Bike,
+  Bus,
+  Tractor,
+  Tent,
+  Armchair,
+  ShowerHead,
+  Tv,
+  BookOpen,
+  HeartPulse,
+  Store,
+  Hammer,
+  Hotel,
+  Building2,
+  Home as HomeIcon,
+  User,
+  DoorOpen,
+  Building as BuildingIcon,
+  HotelIcon,
+  Warehouse,
+  Camera as CameraIcon,
+  Table,
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
@@ -42,14 +68,102 @@ const Rentals = () => {
   ];
 
   const rentCategories = [
-    { icon: <Building className="h-8 w-8" />, name: "অ্যাপার্টমেন্ট", path: "/rent/apartment", count: 324 },
-    { icon: <Home className="h-8 w-8" />, name: "বাসা", path: "/rent/house", count: 156 },
-    { icon: <Truck className="h-8 w-8" />, name: "গাড়ি", path: "/rent/car", count: 89 },
-    { icon: <Briefcase className="h-8 w-8" />, name: "অফিস স্পেস", path: "/rent/office", count: 42 },
-    { icon: <PaintBucket className="h-8 w-8" />, name: "ইভেন্ট স্পেস", path: "/rent/event-space", count: 27 },
-    { icon: <Wrench className="h-8 w-8" />, name: "ইকুইপমেন্ট", path: "/rent/equipment", count: 53 },
-    { icon: <Building className="h-8 w-8" />, name: "দোকান", path: "/rent/shop", count: 31 },
-    { icon: <Home className="h-8 w-8" />, name: "অন্যান্য", path: "/rent/others", count: 18 },
+    { 
+      icon: <Laptop className="h-8 w-8" />, 
+      name: "ইলেকট্রনিক্স", 
+      path: "/rent/electronics", 
+      count: 324 
+    },
+    { 
+      icon: <Car className="h-8 w-8" />, 
+      name: "পরিবহন", 
+      path: "/rent/transport", 
+      count: 178 
+    },
+    { 
+      icon: <Tent className="h-8 w-8" />, 
+      name: "ইভেন্ট সামগ্রী", 
+      path: "/rent/event", 
+      count: 89 
+    },
+    { 
+      icon: <Armchair className="h-8 w-8" />, 
+      name: "ঘরোয়া সামগ্রী", 
+      path: "/rent/home", 
+      count: 145 
+    },
+    { 
+      icon: <BookOpen className="h-8 w-8" />, 
+      name: "শিক্ষা সামগ্রী", 
+      path: "/rent/education", 
+      count: 65 
+    },
+    { 
+      icon: <Tractor className="h-8 w-8" />, 
+      name: "কৃষি যন্ত্রপাতি", 
+      path: "/rent/agriculture", 
+      count: 42 
+    },
+    { 
+      icon: <Store className="h-8 w-8" />, 
+      name: "ব্যবসায়িক সামগ্রী", 
+      path: "/rent/business", 
+      count: 86 
+    },
+    { 
+      icon: <Hammer className="h-8 w-8" />, 
+      name: "কারিগরি টুলস", 
+      path: "/rent/tools", 
+      count: 96 
+    },
+    { 
+      icon: <Building className="h-8 w-8" />, 
+      name: "অ্যাপার্টমেন্ট/ফ্ল্যাট", 
+      path: "/rent/apartment", 
+      count: 187 
+    },
+    { 
+      icon: <Home className="h-8 w-8" />, 
+      name: "বাসা/বাড়ি", 
+      path: "/rent/house", 
+      count: 156 
+    },
+    { 
+      icon: <User className="h-8 w-8" />, 
+      name: "মেস/হোস্টেল", 
+      path: "/rent/hostel", 
+      count: 83 
+    },
+    { 
+      icon: <DoorOpen className="h-8 w-8" />, 
+      name: "সিঙ্গেল রুম/শেয়ারড", 
+      path: "/rent/room", 
+      count: 119 
+    },
+    { 
+      icon: <Briefcase className="h-8 w-8" />, 
+      name: "কমার্শিয়াল স্পেস", 
+      path: "/rent/commercial", 
+      count: 76 
+    },
+    { 
+      icon: <HotelIcon className="h-8 w-8" />, 
+      name: "গেস্ট হাউস/স্বল্পমেয়াদী", 
+      path: "/rent/guesthouse", 
+      count: 59 
+    },
+    { 
+      icon: <HomeIcon className="h-8 w-8" />, 
+      name: "গ্রামীণ বাসস্থান", 
+      path: "/rent/rural", 
+      count: 47 
+    },
+    { 
+      icon: <Camera className="h-8 w-8" />, 
+      name: "স্টুডিও/স্পেশাল স্পেস", 
+      path: "/rent/studio", 
+      count: 35 
+    }
   ];
 
   const featuredListings = [
@@ -206,7 +320,7 @@ const Rentals = () => {
       <div className="mb-8">
         <h2 className="text-lg font-medium mb-4">ক্যাটাগরি</h2>
         <div className="grid grid-cols-4 gap-3">
-          {rentCategories.slice(0, 4).map((category, index) => (
+          {rentCategories.slice(0, 8).map((category, index) => (
             <Link 
               key={index} 
               to={category.path}
@@ -228,7 +342,7 @@ const Rentals = () => {
         >
           <CollapsibleContent className="mt-3">
             <div className="grid grid-cols-4 gap-3">
-              {rentCategories.slice(4).map((category, index) => (
+              {rentCategories.slice(8).map((category, index) => (
                 <Link 
                   key={index} 
                   to={category.path}
