@@ -49,6 +49,7 @@ import ProfileManagement from "./pages/ProfileManagement";
 import ChatPage from "./pages/ChatPage";
 import SearchPage from "./pages/SearchPage";
 import PaymentDemo from "./pages/PaymentDemo";
+import ReferralSystem from "./pages/ReferralSystem";
 
 const queryClient = new QueryClient();
 
@@ -110,6 +111,9 @@ const App = () => (
                 
                 {/* Payment System */}
                 <Route path="/payment" element={<PaymentDemo />} />
+                
+                {/* Referral System */}
+                <Route path="/referral" element={<ReferralSystem />} />
                 
                 {/* New Pages */}
                 <Route path="/favorites" element={<Favorites />} />
