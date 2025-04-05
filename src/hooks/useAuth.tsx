@@ -82,12 +82,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw new Error("User already exists");
     }
     
-    // Create new user
+    // Create new user with all required properties
     const newUser = {
       id: Date.now().toString(),
       name,
       email,
-      password
+      password,
+      avatar: `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70)}`,
+      phone: "",
+      address: ""
     };
     
     // In a real app, you would send this to your backend
