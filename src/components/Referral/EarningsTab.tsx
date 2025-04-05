@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useReferralData } from '@/hooks/useReferralData';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -6,7 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { PiggyBank, Loader2Circle, CheckCircle, Clock, AlertTriangle, Download } from 'lucide-react';
+import { PiggyBank, LoaderCircle, CheckCircle, Clock, AlertTriangle, Download } from 'lucide-react';
 
 const EarningsTab = () => {
   const { referralData, loading } = useReferralData();
@@ -26,7 +25,6 @@ const EarningsTab = () => {
 
   if (!referralData) return null;
 
-  // Get status icon component
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':
@@ -38,7 +36,6 @@ const EarningsTab = () => {
     }
   };
   
-  // Get status badge
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'completed':
@@ -52,7 +49,6 @@ const EarningsTab = () => {
 
   return (
     <div className="space-y-6">
-      {/* Earnings summary */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card className="bg-gradient-to-br from-primary/10 to-primary/5">
           <CardContent className="p-6">
@@ -78,14 +74,13 @@ const EarningsTab = () => {
                 <p className="text-xs text-muted-foreground mt-1">স্ট্যাটাস: প্রক্রিয়াধীন</p>
               </div>
               <div className="rounded-full bg-secondary/20 p-3">
-                <Loader2Circle className="h-6 w-6 text-secondary-foreground animate-spin-slow" />
+                <LoaderCircle className="h-6 w-6 text-secondary-foreground animate-spin-slow" />
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
       
-      {/* Earnings history */}
       <Tabs defaultValue="all">
         <div className="flex justify-between items-center mb-4">
           <TabsList>

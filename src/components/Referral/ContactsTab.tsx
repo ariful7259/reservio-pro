@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useContactManagement } from '@/hooks/useContactManagement';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -11,9 +10,10 @@ import { Check, AlertCircle, Send, Upload, UserPlus, Users, Phone, Mail, Trash2,
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import ContactList from './ContactList';
 
 const ContactsTab = () => {
-  const { contacts, loading, error, addContact, uploadCsvContacts, inviteContact, inviteAll, deleteContact } = useContactManagement();
+  const { contacts, loading, error, addContact, addBulkContacts, uploadCsvContacts, inviteContact, inviteAll, deleteContact } = useContactManagement();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -195,7 +195,6 @@ const ContactsTab = () => {
     }
   };
   
-  // Map status to status badge
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
@@ -426,93 +425,6 @@ const ContactsTab = () => {
           </Tabs>
         </CardContent>
       </Card>
-    </div>
-  );
-};
-
-interface ContactListProps {
-  contacts: Array<{
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-    status: string;
-  }>;
-  onInvite: (id: string) => void;
-  onDelete: (id: string) => void;
-  isSubmitting: boolean;
-  getStatusBadge: (status: string) => React.ReactNode;
-}
-
-const ContactList: React.FC<ContactListProps> = ({ 
-  contacts, 
-  onInvite, 
-  onDelete, 
-  isSubmitting, 
-  getStatusBadge 
-}) => {
-  if (contacts.length === 0) {
-    return (
-      <div className="text-center py-8 text-muted-foreground">
-        কোনো কন্টাক্ট নেই
-      </div>
-    );
-  }
-  
-  return (
-    <div className="overflow-x-auto">
-      <table className="w-full">
-        <thead className="bg-secondary/20">
-          <tr>
-            <th className="text-left p-3 text-sm font-medium">নাম</th>
-            <th className="text-left p-3 text-sm font-medium">ইমেইল</th>
-            <th className="text-left p-3 text-sm font-medium">ফোন</th>
-            <th className="text-left p-3 text-sm font-medium">স্ট্যাটাস</th>
-            <th className="text-left p-3 text-sm font-medium">অ্যাকশন</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y">
-          {contacts.map((contact) => (
-            <tr key={contact.id} className="hover:bg-secondary/5">
-              <td className="p-3">{contact.name}</td>
-              <td className="p-3 flex items-center gap-1">
-                <Mail className="h-3 w-3 text-muted-foreground" />
-                <span className="text-sm">{contact.email}</span>
-              </td>
-              <td className="p-3 flex items-center gap-1">
-                <Phone className="h-3 w-3 text-muted-foreground" />
-                <span className="text-sm">{contact.phone}</span>
-              </td>
-              <td className="p-3">{getStatusBadge(contact.status)}</td>
-              <td className="p-3">
-                <div className="flex items-center gap-2">
-                  {contact.status === 'pending' && (
-                    <Button 
-                      size="sm" 
-                      variant="ghost" 
-                      className="h-8 gap-1"
-                      disabled={isSubmitting}
-                      onClick={() => onInvite(contact.id)}
-                    >
-                      <Send className="h-3 w-3" />
-                      <span className="text-xs">ইনভাইট</span>
-                    </Button>
-                  )}
-                  <Button 
-                    size="sm" 
-                    variant="ghost" 
-                    className="h-8 gap-1 text-red-600 hover:text-red-700 hover:bg-red-50"
-                    disabled={isSubmitting}
-                    onClick={() => onDelete(contact.id)}
-                  >
-                    <Trash2 className="h-3 w-3" />
-                  </Button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </div>
   );
 };
