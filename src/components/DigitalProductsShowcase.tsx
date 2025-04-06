@@ -28,7 +28,7 @@ import { useToast } from "@/hooks/use-toast";
 interface ProductCardProps {
   title: string;
   description: string;
-  icon: React.ElementType; // Changed from LucideIcon
+  icon: React.ElementType;
   color: string;
   id: number;
   path: string;
@@ -140,21 +140,25 @@ const DigitalProductsShowcase = () => {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {digitalProducts.map((product) => (
-          <Card 
-            key={product.id} 
-            className="hover:shadow-md transition-all cursor-pointer hover:scale-105 transform duration-200"
-            onClick={() => handleProductClick(product)}
-          >
-            <CardContent className="p-4 flex flex-col items-center text-center">
-              <div className={`p-3 rounded-lg ${product.color} mb-3`}>
-                {React.createElement(product.icon, { className: "h-6 w-6" })}
-              </div>
-              <h3 className="font-medium">{product.title}</h3>
-              <p className="text-xs text-muted-foreground mt-1">{product.description}</p>
-            </CardContent>
-          </Card>
-        ))}
+        {digitalProducts.map((product) => {
+          const IconComponent = product.icon;
+          
+          return (
+            <Card 
+              key={product.id} 
+              className="hover:shadow-md transition-all cursor-pointer hover:scale-105 transform duration-200"
+              onClick={() => handleProductClick(product)}
+            >
+              <CardContent className="p-4 flex flex-col items-center text-center">
+                <div className={`p-3 rounded-lg ${product.color} mb-3`}>
+                  <IconComponent className="h-6 w-6" />
+                </div>
+                <h3 className="font-medium">{product.title}</h3>
+                <p className="text-xs text-muted-foreground mt-1">{product.description}</p>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );

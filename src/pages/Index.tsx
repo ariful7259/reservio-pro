@@ -2,13 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
-import CustomizableNavbar from '@/components/navigation/CustomizableNavbar';
 import TutorialGuide from '@/components/onboarding/TutorialGuide';
-import BreadcrumbTrail from '@/components/navigation/BreadcrumbTrail';
 
 // Correct import statements for the components
 import ExploreSection from '@/components/ExploreSection';
 import ServiceCard from '@/components/ServiceCard';
+import DigitalProductsShowcase from '@/components/DigitalProductsShowcase';
+import FeaturedDigitalProducts from '@/components/FeaturedDigitalProducts';
 
 // Continue with the rest of the Index component
 const Index = () => {
@@ -76,6 +76,16 @@ const Index = () => {
       
       {/* ExploreSection with fixed icon rendering */}
       <ExploreSection />
+      
+      {/* Digital Products Showcase */}
+      <div className="container mx-auto px-4">
+        <DigitalProductsShowcase />
+      </div>
+      
+      {/* Featured Digital Products */}
+      <div className="container mx-auto px-4">
+        <FeaturedDigitalProducts />
+      </div>
       
       <div className="container mx-auto px-4 py-8">
         <h2 className="text-2xl font-semibold mb-6">
