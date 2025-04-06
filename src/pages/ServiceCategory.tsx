@@ -64,7 +64,6 @@ const ServiceCategory = () => {
           }
         </h2>
         
-        {/* Display services - using mock data for now */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map(num => (
             <ServiceCard
