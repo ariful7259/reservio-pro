@@ -41,7 +41,7 @@ const SubCategoryList: React.FC<SubCategoryListProps> = ({
               className="flex items-center gap-2 p-2 border rounded-md hover:bg-gray-50 cursor-pointer transition-all"
               onClick={() => handleClick(sub.slug)}
             >
-              {sub.icon && <span className="text-xl">{sub.icon}</span>}
+              {typeof sub.icon === 'string' && <span className="text-xl">{sub.icon}</span>}
               <div className="flex flex-col">
                 <span className="text-xs font-medium">
                   {language === 'bn' ? sub.nameBN : sub.nameEN}

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -45,7 +44,7 @@ import {
   AirVent,
   ShoppingCart,
   Flame,
-  Power, // Replaced Generator with Power icon
+  Power,
   Tractor,
   Droplets,
   Wind,
@@ -70,7 +69,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -78,7 +77,7 @@ const CreatePost = () => {
   const [postType, setPostType] = useState<'rent' | 'service' | 'marketplace'>('rent');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [subcategories, setSubcategories] = useState<{name: string, value: string, icon?: JSX.Element}[]>([]);
+  const [subcategories, setSubcategories] = useState<{name: string, value: string, icon?: React.ReactNode}[]>([]);
 
   const [rentForm, setRentForm] = useState({
     title: '',
@@ -225,7 +224,7 @@ const CreatePost = () => {
       value: 'health',
       icon: <Stethoscope className="h-4 w-4 text-red-500" />,
       subcategories: [
-        { name: 'ডায়েট সাপ্লিমেন্ট', value: 'diet-supplement', icon: <Stethoscope className="h-4 w-4 text-red-500" /> },
+        { name: 'ডায়েট সা��্লিমেন্ট', value: 'diet-supplement', icon: <Stethoscope className="h-4 w-4 text-red-500" /> },
         { name: 'হেলথকেয়ার', value: 'healthcare', icon: <Stethoscope className="h-4 w-4 text-red-500" /> }
       ]
     },
@@ -276,7 +275,7 @@ const CreatePost = () => {
     } else {
       setSubcategories([]);
     }
-  }, [rentForm.category, serviceForm.category, marketplaceForm.category, postType]);
+  }, [rentForm?.category, serviceForm?.category, marketplaceForm?.category, postType]);
 
   const handleFileUpload = (files: FileList | null, type: 'rent' | 'service' | 'marketplace') => {
     if (!files) return;
@@ -300,7 +299,7 @@ const CreatePost = () => {
       
       toast({
         title: "পোস্ট সফলভাবে তৈরি হয়েছে",
-        description: "আপনার পোস্ট এখন প্রদর্শিত হবে",
+        description: "আপনার পোস্ট এখন প্র��র্শিত হবে",
       });
       
       if (type === 'rent') {
@@ -315,11 +314,14 @@ const CreatePost = () => {
 
   const getCategoryIcon = (type: 'rent' | 'service' | 'marketplace', categoryValue: string) => {
     if (type === 'rent') {
-      return rentCategories.find(c => c.value === categoryValue)?.icon;
+      const category = rentCategories.find(c => c.value === categoryValue);
+      return category ? category.icon : null;
     } else if (type === 'service') {
-      return serviceCategories.find(c => c.value === categoryValue)?.icon;
+      const category = serviceCategories.find(c => c.value === categoryValue);
+      return category ? category.icon : null;
     } else {
-      return marketplaceCategories.find(c => c.value === categoryValue)?.icon;
+      const category = marketplaceCategories.find(c => c.value === categoryValue);
+      return category ? category.icon : null;
     }
   };
 
