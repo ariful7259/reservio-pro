@@ -149,7 +149,7 @@ const DigitalProductsShowcase = () => {
           >
             <CardContent className="p-4 flex flex-col items-center text-center">
               <div className={`p-3 rounded-lg ${product.color} mb-3`}>
-                <product.icon className="h-6 w-6" />
+                {React.createElement(product.icon, { className: "h-6 w-6" })}
               </div>
               <h3 className="font-medium">{product.title}</h3>
               <p className="text-xs text-muted-foreground mt-1">{product.description}</p>
