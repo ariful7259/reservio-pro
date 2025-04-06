@@ -3,7 +3,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   ArrowRight, 
-  LucideIcon,
   Compass,
   MapPin,
   Building,
@@ -23,7 +22,7 @@ import { useToast } from "@/hooks/use-toast";
 interface ExploreCategoryProps {
   title: string;
   description: string;
-  icon: React.ElementType; // Change to React.ElementType
+  icon: React.ElementType;
   color: string;
   id: number;
   path: string;
@@ -119,21 +118,25 @@ const ExploreSection = () => {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {exploreCategories.map((category) => (
-          <Card 
-            key={category.id} 
-            className="hover:shadow-md transition-all cursor-pointer hover:scale-105 transform duration-200"
-            onClick={() => handleCategoryClick(category)}
-          >
-            <CardContent className="p-4 flex flex-col items-center text-center">
-              <div className={`p-3 rounded-lg ${category.color} mb-3`}>
-                {React.createElement(category.icon, { className: "h-6 w-6" })}
-              </div>
-              <h3 className="font-medium">{category.title}</h3>
-              <p className="text-xs text-muted-foreground mt-1">{category.description}</p>
-            </CardContent>
-          </Card>
-        ))}
+        {exploreCategories.map((category) => {
+          const IconComponent = category.icon;
+          
+          return (
+            <Card 
+              key={category.id} 
+              className="hover:shadow-md transition-all cursor-pointer hover:scale-105 transform duration-200"
+              onClick={() => handleCategoryClick(category)}
+            >
+              <CardContent className="p-4 flex flex-col items-center text-center">
+                <div className={`p-3 rounded-lg ${category.color} mb-3`}>
+                  <IconComponent className="h-6 w-6" />
+                </div>
+                <h3 className="font-medium">{category.title}</h3>
+                <p className="text-xs text-muted-foreground mt-1">{category.description}</p>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );

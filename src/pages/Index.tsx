@@ -5,7 +5,6 @@ import { useApp } from '@/context/AppContext';
 import CustomizableNavbar from '@/components/navigation/CustomizableNavbar';
 import TutorialGuide from '@/components/onboarding/TutorialGuide';
 import BreadcrumbTrail from '@/components/navigation/BreadcrumbTrail';
-import { TutorialStep } from '@/components/onboarding/TutorialGuide';
 
 // Correct import statements for the components
 import ExploreSection from '@/components/ExploreSection';
@@ -70,18 +69,12 @@ const Index = () => {
 
   return (
     <div className="pb-20">
-      {/* Replace the Navbar with CustomizableNavbar */}
-      <CustomizableNavbar />
-      
-      {/* Add BreadcrumbTrail */}
-      <div className="container px-4 py-4">
-        <BreadcrumbTrail />
-      </div>
+      {/* Navbar and breadcrumb are now handled in App.tsx */}
       
       {/* Show tutorial guide for new users */}
       {showTutorial && <TutorialGuide />}
       
-      {/* Keep the rest of the UI as is */}
+      {/* ExploreSection with fixed icon rendering */}
       <ExploreSection />
       
       <div className="container mx-auto px-4 py-8">

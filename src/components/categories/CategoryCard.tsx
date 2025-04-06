@@ -49,7 +49,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
       className="flex flex-col items-center justify-center p-3 border rounded-lg hover:bg-gray-50 transition-all cursor-pointer"
       onClick={handleClick}
     >
-      <div className="text-4xl mb-2">{icon}</div>
+      {typeof icon === 'string' && <div className="text-4xl mb-2">{icon}</div>}
       <span className="text-xs text-center font-medium">
         {language === 'bn' ? nameBN : name}
       </span>
