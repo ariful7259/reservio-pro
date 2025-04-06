@@ -7,10 +7,12 @@ import CategoryCard from '@/components/categories/CategoryCard';
 import SubCategoryList from '@/components/categories/SubCategoryList';
 import { Separator } from '@/components/ui/separator';
 import ProductFilterSidebar from '@/components/product/ProductFilterSidebar';
+import { useToast } from '@/hooks/use-toast';
 
 const ShoppingCategory = () => {
   const { id, subCategoryId } = useParams();
   const { language } = useApp();
+  const { toast } = useToast();
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
   const [selectedSubCategory, setSelectedSubCategory] = useState<any>(null);
   
@@ -33,6 +35,12 @@ const ShoppingCategory = () => {
   const handleFilterChange = (filters: any) => {
     console.log('Applied filters:', filters);
     // Implementation for filtering products
+    toast({
+      title: language === 'bn' ? "ফিল্টার প্রয়োগ করা হয়েছে" : "Filters Applied",
+      description: language === 'bn' 
+        ? "আপনার পছন্দমত ফিল্টার প্রয়োগ করা হয়েছে" 
+        : "Your selected filters have been applied"
+    });
   };
   
   if (!selectedCategory) {
@@ -80,7 +88,18 @@ const ShoppingCategory = () => {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3, 4, 5, 6].map(num => (
-              <div key={num} className="border rounded-md p-4">
+              <div 
+                key={num} 
+                className="border rounded-md p-4 cursor-pointer hover:shadow-md transition-all"
+                onClick={() => {
+                  toast({
+                    title: language === 'bn' ? "কার্টে যোগ করা হয়েছে" : "Added to Cart",
+                    description: language === 'bn' 
+                      ? `${selectedCategory.nameBN} পণ্য ${num} কার্টে যোগ করা হয়েছে` 
+                      : `${selectedCategory.nameEN} Product ${num} added to cart`
+                  });
+                }}
+              >
                 <div className="aspect-square bg-gray-200 mb-3 rounded"></div>
                 <h3 className="font-medium">
                   {language === 'bn' 

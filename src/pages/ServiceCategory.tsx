@@ -7,10 +7,12 @@ import CategoryCard from '@/components/categories/CategoryCard';
 import SubCategoryList from '@/components/categories/SubCategoryList';
 import ServiceCard from '@/components/ServiceCard';
 import { Separator } from '@/components/ui/separator';
+import { useToast } from "@/hooks/use-toast";
 
 const ServiceCategory = () => {
   const { id, subCategoryId } = useParams();
   const { language } = useApp();
+  const { toast } = useToast();
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
   const [selectedSubCategory, setSelectedSubCategory] = useState<any>(null);
   
@@ -77,7 +79,14 @@ const ServiceCategory = () => {
               price={1000 + (num * 500)}
               rating={4.5 + (num * 0.1 > 0.5 ? 0.1 : 0)}
               location={language === 'bn' ? 'ঢাকা' : 'Dhaka'}
-              onClick={() => {}}
+              onClick={() => {
+                toast({
+                  title: language === 'bn' ? "সার্ভিস বুক করা হয়েছে" : "Service Booked",
+                  description: language === 'bn' 
+                    ? `আপনি ${selectedCategory.nameBN} সার্ভিস ${num} বুক করেছেন` 
+                    : `You have booked ${selectedCategory.nameEN} Service ${num}`
+                });
+              }}
             />
           ))}
         </div>
