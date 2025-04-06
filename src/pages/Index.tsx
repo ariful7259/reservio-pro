@@ -9,12 +9,15 @@ import ExploreSection from '@/components/ExploreSection';
 import ServiceCard from '@/components/ServiceCard';
 import DigitalProductsShowcase from '@/components/DigitalProductsShowcase';
 import FeaturedDigitalProducts from '@/components/FeaturedDigitalProducts';
+import RentalBookingCalendar from '@/components/rental/RentalBookingCalendar';
+import RentalReturnSystem from '@/components/rental/RentalReturnSystem';
 
 // Continue with the rest of the Index component
 const Index = () => {
   const navigate = useNavigate();
   const { language, hasCompletedOnboarding } = useApp();
   const [showTutorial, setShowTutorial] = useState(!hasCompletedOnboarding);
+  const [activeTab, setActiveTab] = useState('services'); // Add this state for tab control
   
   // Sample data for demonstration
   const featuredServices = [
@@ -87,25 +90,74 @@ const Index = () => {
         <FeaturedDigitalProducts />
       </div>
       
+      {/* Tab navigation for services and rental features */}
       <div className="container mx-auto px-4 py-8">
-        <h2 className="text-2xl font-semibold mb-6">
-          {language === 'bn' ? "জনপ্রিয় সেবাসমূহ" : "Popular Services"}
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {featuredServices.map(service => (
-            <ServiceCard
-              key={service.id}
-              id={service.id}
-              title={service.title}
-              description={service.description}
-              image={service.image}
-              price={service.price}
-              rating={service.rating}
-              location={service.location}
-              onClick={() => handleServiceClick(service.id)}
-            />
-          ))}
+        <div className="flex border-b mb-6">
+          <button
+            className={`pb-2 px-4 ${activeTab === 'services' 
+              ? 'border-b-2 border-primary font-medium text-primary' 
+              : 'text-gray-500'
+            }`}
+            onClick={() => setActiveTab('services')}
+          >
+            {language === 'bn' ? "জনপ্রিয় সেবাসমূহ" : "Popular Services"}
+          </button>
+          <button
+            className={`pb-2 px-4 ${activeTab === 'rental-booking' 
+              ? 'border-b-2 border-primary font-medium text-primary' 
+              : 'text-gray-500'
+            }`}
+            onClick={() => setActiveTab('rental-booking')}
+          >
+            {language === 'bn' ? "রেন্টাল বুকিং সিস্টেম" : "Rental Booking System"}
+          </button>
+          <button
+            className={`pb-2 px-4 ${activeTab === 'rental-return' 
+              ? 'border-b-2 border-primary font-medium text-primary' 
+              : 'text-gray-500'
+            }`}
+            onClick={() => setActiveTab('rental-return')}
+          >
+            {language === 'bn' ? "রেন্টাল রিটার্ন সিস্টেম" : "Rental Return System"}
+          </button>
         </div>
+        
+        {/* Content based on active tab */}
+        {activeTab === 'services' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {featuredServices.map(service => (
+              <ServiceCard
+                key={service.id}
+                id={service.id}
+                title={service.title}
+                description={service.description}
+                image={service.image}
+                price={service.price}
+                rating={service.rating}
+                location={service.location}
+                onClick={() => handleServiceClick(service.id)}
+              />
+            ))}
+          </div>
+        )}
+        
+        {activeTab === 'rental-booking' && (
+          <div className="bg-slate-50 p-4 rounded-lg">
+            <h2 className="text-2xl font-semibold mb-6">
+              {language === 'bn' ? "ক্যালেন্ডার-ভিত্তিক রেন্টাল বুকিং" : "Calendar-based Rental Booking"}
+            </h2>
+            <RentalBookingCalendar />
+          </div>
+        )}
+        
+        {activeTab === 'rental-return' && (
+          <div className="bg-slate-50 p-4 rounded-lg">
+            <h2 className="text-2xl font-semibold mb-6">
+              {language === 'bn' ? "রেন্টাল রিটার্ন ম্যানেজমেন্ট" : "Rental Return Management"}
+            </h2>
+            <RentalReturnSystem />
+          </div>
+        )}
       </div>
     </div>
   );
