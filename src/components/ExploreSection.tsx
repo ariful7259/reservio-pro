@@ -29,7 +29,7 @@ interface ExploreCategoryProps {
   path: string;
 }
 
-const ExploreSection = () => {
+const ExploreSection: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -127,7 +127,7 @@ const ExploreSection = () => {
           >
             <CardContent className="p-4 flex flex-col items-center text-center">
               <div className={`p-3 rounded-lg ${category.color} mb-3`}>
-                <category.icon className="h-6 w-6" />
+                {React.createElement(category.icon, { className: "h-6 w-6" })}
               </div>
               <h3 className="font-medium">{category.title}</h3>
               <p className="text-xs text-muted-foreground mt-1">{category.description}</p>
