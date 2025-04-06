@@ -58,6 +58,8 @@ import GroupBooking from './pages/GroupBooking';
 import SocialSharing from './pages/SocialSharing';
 import LoginSessions from './pages/LoginSessions';
 import PrivacySettings from './pages/PrivacySettings';
+import AnalyticsDashboard from './pages/AnalyticsDashboard';
+import CustomizedHome from './pages/CustomizedHome';
 
 const queryClient = new QueryClient();
 
@@ -160,6 +162,11 @@ const App = () => (
                 <Route path="/community/forum" element={<CommunityForum />} />
                 <Route path="/community/group-booking" element={<GroupBooking />} />
                 <Route path="/community/social-sharing" element={<SocialSharing />} />
+                
+                {/* New Data Analytics and Personalization Routes */}
+                <Route path="/analytics" element={<AnalyticsDashboard />} />
+                <Route path="/customized-home" element={<CustomizedHome />} />
+                <Route path="/recommendations" element={<CustomizedHome />} />
                 
                 <Route path="*" element={<NotFound />} />
               </Routes>

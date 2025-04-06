@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Mic, MicOff, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import { useApp } from '@/context/AppContext';
 
 interface VoiceSearchProps {
@@ -23,6 +23,7 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
   const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
   const [supported, setSupported] = useState(true);
   const { language, isOnline } = useApp();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition)) {
@@ -37,6 +38,12 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
         setSearchTerm(transcript);
         onSearch(transcript);
         setIsListening(false);
+        
+        // Log the success for analytics
+        console.log('Voice search successful', { 
+          language: language === 'bn' ? 'bn-BD' : 'en-US', 
+          transcript 
+        });
       };
 
       recognitionInstance.onerror = (event) => {
@@ -64,7 +71,7 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
         recognition.abort();
       }
     };
-  }, [language, onSearch]);
+  }, [language, onSearch, toast]);
 
   useEffect(() => {
     if (recognition) {
@@ -98,8 +105,17 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
       try {
         recognition?.start();
         setIsListening(true);
+        
+        toast({
+          description: language === 'bn' ? 'বলুন... আপনি কী খুঁজছেন?' : 'Speak... what are you looking for?',
+        });
       } catch (error) {
         console.error('Failed to start speech recognition:', error);
+        toast({
+          title: language === 'bn' ? 'ত্রুটি হয়েছে' : 'Error occurred',
+          description: language === 'bn' ? 'ভয়েস রেকগনিশন শুরু করতে ব্যর্থ হয়েছে' : 'Failed to start voice recognition',
+          variant: "destructive",
+        });
       }
     }
   };
@@ -129,10 +145,17 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
             className={`h-8 w-8 ${isListening ? 'text-red-500 animate-pulse' : ''}`}
             onClick={toggleListening}
             disabled={!supported}
+            title={language === 'bn' ? 'ভয়েস সার্চ' : 'Voice search'}
           >
             {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
           </Button>
-          <Button type="submit" size="icon" variant="ghost" className="h-8 w-8">
+          <Button 
+            type="submit" 
+            size="icon" 
+            variant="ghost" 
+            className="h-8 w-8"
+            title={language === 'bn' ? 'অনুসন্ধান করুন' : 'Search'}
+          >
             <Search className="h-4 w-4" />
           </Button>
         </div>
