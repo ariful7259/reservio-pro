@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Smartphone, Laptop, LogOut, Clock, MapPin, AlertCircle } from 'lucide-react';
@@ -129,7 +128,7 @@ const LoginSessions = () => {
       </div>
 
       <div className="space-y-6">
-        <Alert variant="outline" className="border-amber-200 bg-amber-50">
+        <Alert className="border-amber-200 bg-amber-50">
           <AlertCircle className="h-4 w-4 text-amber-600" />
           <AlertTitle className="text-amber-600">সতর্কতা</AlertTitle>
           <AlertDescription className="text-amber-600">
