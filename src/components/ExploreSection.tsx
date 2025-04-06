@@ -18,12 +18,12 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface ExploreCategoryProps {
   title: string;
   description: string;
-  icon: LucideIcon;
+  icon: React.ElementType; // Change to React.ElementType
   color: string;
   id: number;
   path: string;
@@ -127,7 +127,7 @@ const ExploreSection = () => {
           >
             <CardContent className="p-4 flex flex-col items-center text-center">
               <div className={`p-3 rounded-lg ${category.color} mb-3`}>
-                <category.icon className="h-6 w-6" />
+                {React.createElement(category.icon, { className: "h-6 w-6" })}
               </div>
               <h3 className="font-medium">{category.title}</h3>
               <p className="text-xs text-muted-foreground mt-1">{category.description}</p>

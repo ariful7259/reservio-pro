@@ -3,7 +3,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   ArrowRight, 
-  LucideIcon,
   Rocket,
   Mail,
   BookOpen,
@@ -24,12 +23,12 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductCardProps {
   title: string;
   description: string;
-  icon: LucideIcon;
+  icon: React.ElementType; // Changed from LucideIcon
   color: string;
   id: number;
   path: string;
@@ -149,7 +148,7 @@ const DigitalProductsShowcase = () => {
           >
             <CardContent className="p-4 flex flex-col items-center text-center">
               <div className={`p-3 rounded-lg ${product.color} mb-3`}>
-                <product.icon className="h-6 w-6" />
+                {React.createElement(product.icon, { className: "h-6 w-6" })}
               </div>
               <h3 className="font-medium">{product.title}</h3>
               <p className="text-xs text-muted-foreground mt-1">{product.description}</p>
