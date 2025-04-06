@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -94,13 +93,11 @@ export const TutorialGuide = () => {
   const progress = (completedSteps / totalSteps) * 100;
 
   useEffect(() => {
-    // Load saved progress from localStorage
     const savedProgress = localStorage.getItem('tutorialProgress');
     if (savedProgress) {
       try {
         const parsedProgress = JSON.parse(savedProgress);
         setTutorialSteps(parsedProgress);
-        // Set currentStepIndex to the first uncompleted step
         const firstUncompletedIndex = parsedProgress.findIndex((step: TutorialStep) => !step.isCompleted);
         setCurrentStepIndex(firstUncompletedIndex >= 0 ? firstUncompletedIndex : 0);
       } catch (error) {
@@ -137,10 +134,7 @@ export const TutorialGuide = () => {
     setTutorialSteps(updatedSteps);
     saveProgress(updatedSteps);
     
-    // Navigate to the current step's route
     navigate(currentStep.route);
-    
-    // Close the tutorial for now
     setOpen(false);
   };
 
@@ -149,7 +143,6 @@ export const TutorialGuide = () => {
     setTutorialSteps(allCompleted);
     saveProgress(allCompleted);
     
-    // Add points for completing tutorial
     addPoints(100);
     
     toast({
