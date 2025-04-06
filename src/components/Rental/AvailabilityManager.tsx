@@ -166,7 +166,7 @@ const AvailabilityManager: React.FC<AvailabilityManagerProps> = ({
           </div>
           
           {!availabilityEnabled && (
-            <Alert variant="warning">
+            <Alert className="border-amber-500 bg-amber-50 text-amber-800">
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>আইটেম নট এভেইলেবল</AlertTitle>
               <AlertDescription>
