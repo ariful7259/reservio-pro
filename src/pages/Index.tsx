@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ExploreSection } from '@/components/ExploreSection';
-import { ServiceProviderCard } from '@/components/ServiceProviderCard';
+import ExploreSection from '@/components/ExploreSection';
+import ServiceProviderCard from '@/components/ServiceProviderCard';
 import { Badge } from '@/components/ui/badge';
 import SmartSearch from '@/components/SmartSearch';
 import { useApp } from '@/context/AppContext';
