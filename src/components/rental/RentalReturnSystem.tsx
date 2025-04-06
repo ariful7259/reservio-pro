@@ -248,7 +248,7 @@ const RentalReturnSystem = () => {
                   <div className="flex-1">
                     <div className="flex justify-between">
                       <h3 className="font-medium">{item.name}</h3>
-                      <Badge variant={item.status === 'returned' ? 'success' : 'default'}>
+                      <Badge variant={item.status === 'returned' ? 'secondary' : 'default'}>
                         {item.status === 'rented' ? 'ভাড়া নেওয়া' : 'ফেরত দেওয়া'}
                       </Badge>
                     </div>
