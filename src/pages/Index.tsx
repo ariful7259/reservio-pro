@@ -1,163 +1,321 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useApp } from '@/context/AppContext';
-import TutorialGuide from '@/components/onboarding/TutorialGuide';
-
-// Correct import statements for the components
-import ExploreSection from '@/components/ExploreSection';
-import ServiceCard from '@/components/ServiceCard';
-import DigitalProductsShowcase from '@/components/DigitalProductsShowcase';
+import { 
+  Star, 
+  MapPin,
+  ArrowRight,
+  Home,
+  Camera,
+  Building,
+  User,
+  Clock,
+  Map,
+  CreditCard,
+  Check,
+  Gift,
+  UserPlus,
+  FileText,
+  Bike,
+  ShoppingBag,
+  PenTool,
+  Globe,
+  MessageSquare,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import FeaturedDigitalProducts from '@/components/FeaturedDigitalProducts';
-import RentalBookingCalendar from '@/components/rental/RentalBookingCalendar';
-import RentalReturnSystem from '@/components/rental/RentalReturnSystem';
 
-// Continue with the rest of the Index component
 const Index = () => {
   const navigate = useNavigate();
-  const { language, hasCompletedOnboarding } = useApp();
-  const [showTutorial, setShowTutorial] = useState(!hasCompletedOnboarding);
-  const [activeTab, setActiveTab] = useState('services'); // Add this state for tab control
-  
-  // Sample data for demonstration
-  const featuredServices = [
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Banner images
+  const bannerImages = [
+    "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1511385348-a52b4a160dc2?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1618359057154-e21ae64350b6?q=80&w=1000&auto=format&fit=crop",
+  ];
+
+  // Combined Featured Listings from all categories
+  const featuredListings = [
+    // Rental listings
     {
-      id: "1",
-      title: language === 'bn' ? "ডাক্তার অ্যাপয়েন্টমেন্ট" : "Doctor Appointment",
-      description: language === 'bn' ? "বিশেষজ্ঞ ডাক্তারদের সাথে অ্যাপয়েন্টমেন্ট বুক করুন" : "Book appointments with specialist doctors",
-      image: "https://images.unsplash.com/photo-1584982751601-97dcc096659c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80",
-      price: "৳৮০০",
-      rating: 4.8,
-      location: language === 'bn' ? "ঢাকা" : "Dhaka"
+      id: "rent-1",
+      title: "৩ বেডরুম অ্যাপার্টমেন্ট",
+      location: "গুলশান, ঢাকা",
+      price: "৳২৫,০০০/মাস",
+      image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1000&auto=format&fit=crop",
+      category: "রেন্ট",
+      path: "/rent-details/1"
     },
     {
-      id: "2",
-      title: language === 'bn' ? "ইলেকট্রিশিয়ান" : "Electrician",
-      description: language === 'bn' ? "অভিজ্ঞ ইলেকট্রিশিয়ান দ্বারা ইলেকট্রিক্যাল সমস্যা সমাধান" : "Electrical problems solved by experienced electricians",
-      image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80",
-      price: "৳৫০০",
-      rating: 4.7,
-      location: language === 'bn' ? "ঢাকা" : "Dhaka"
+      id: "rent-2",
+      title: "অফিস স্পেস",
+      location: "বনানী, ঢাকা",
+      price: "৳৫০,০০০/মাস",
+      image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1000&auto=format&fit=crop",
+      category: "রেন্ট",
+      path: "/rent-details/2"
+    },
+    // Service listings
+    {
+      id: "serv-1",
+      title: "ডাক্তার কনসাল্টেশন",
+      location: "মেডিকেল সেন্টার, ঢাকা",
+      price: "৳১,৫০০",
+      image: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
+      category: "সার্ভিস",
+      path: "/services/1"
     },
     {
-      id: "3",
-      title: language === 'bn' ? "হোম ক্লিনিং" : "Home Cleaning",
-      description: language === 'bn' ? "পেশাদার ক্লিনার দ্বারা সম্পূর্ণ বাড়ি পরিষ্কার" : "Complete house cleaning by professional cleaners",
-      image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-      price: "৳১,৮০০",
-      rating: 4.9,
-      location: language === 'bn' ? "ঢাকা" : "Dhaka"
+      id: "serv-2",
+      title: "ডেন্টাল চেকআপ",
+      location: "শাইন ডেন্টাল, ঢাকা",
+      price: "৳২,০০০",
+      image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
+      category: "সার্ভিস",
+      path: "/services/2"
+    },
+    // Marketplace listings
+    {
+      id: "market-1",
+      title: "স্মার্ট ব্লাড প্রেশার মনিটর",
+      location: "ধানমন্ডি, ঢাকা",
+      price: "৳২,৫০০",
+      image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
+      category: "মার্কেটপ্লেস",
+      path: "/shopping/product/1"
     },
     {
-      id: "4",
-      title: language === 'bn' ? "ল্যাপটপ মেরামত" : "Laptop Repair",
-      description: language === 'bn' ? "সব ধরনের ল্যাপটপ মেরামত ও সার্ভিসিং" : "All types of laptop repair and servicing",
-      image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-      price: "৳৮০০+",
-      rating: 4.6,
-      location: language === 'bn' ? "ঢাকা" : "Dhaka"
+      id: "market-2",
+      title: "ডিজিটাল গ্লুকোমিটার কিট",
+      location: "উত্তরা, ঢাকা",
+      price: "৳৩,৫০০",
+      image: "https://images.unsplash.com/photo-1587854680352-936b22b91030?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
+      category: "মার্কেটপ্লেস",
+      path: "/shopping/product/2"
     },
   ];
 
-  useEffect(() => {
-    // Show tutorial for new users
-    if (!hasCompletedOnboarding) {
-      setShowTutorial(true);
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
     }
-  }, [hasCompletedOnboarding]);
-  
-  const handleServiceClick = (id: string) => {
-    navigate(`/services/${id}`);
   };
 
   return (
-    <div className="pb-20">
-      {/* Navbar and breadcrumb are now handled in App.tsx */}
-      
-      {/* Show tutorial guide for new users */}
-      {showTutorial && <TutorialGuide />}
-      
-      {/* ExploreSection with fixed icon rendering */}
-      <ExploreSection />
-      
-      {/* Digital Products Showcase */}
-      <div className="container mx-auto px-4">
-        <DigitalProductsShowcase />
+    <div className="container px-4 pt-20 pb-20">
+      {/* Banner Slider with increased size */}
+      <div className="overflow-hidden px-4 py-3 mb-6">
+        <Carousel className="w-full">
+          <CarouselContent>
+            {bannerImages.map((image, index) => (
+              <CarouselItem key={index}>
+                <div className="p-1">
+                  <div className="overflow-hidden rounded-lg aspect-[16/6] w-full">
+                    <img 
+                      src={image} 
+                      alt={`Banner ${index + 1}`} 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="left-2" />
+          <CarouselNext className="right-2" />
+        </Carousel>
       </div>
       
-      {/* Featured Digital Products */}
-      <div className="container mx-auto px-4">
+      {/* Featured Digital Products Carousel */}
+      <div className="mb-10">
         <FeaturedDigitalProducts />
       </div>
-      
-      {/* Tab navigation for services and rental features */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex border-b mb-6">
-          <button
-            className={`pb-2 px-4 ${activeTab === 'services' 
-              ? 'border-b-2 border-primary font-medium text-primary' 
-              : 'text-gray-500'
-            }`}
-            onClick={() => setActiveTab('services')}
-          >
-            {language === 'bn' ? "জনপ্রিয় সেবাসমূহ" : "Popular Services"}
-          </button>
-          <button
-            className={`pb-2 px-4 ${activeTab === 'rental-booking' 
-              ? 'border-b-2 border-primary font-medium text-primary' 
-              : 'text-gray-500'
-            }`}
-            onClick={() => setActiveTab('rental-booking')}
-          >
-            {language === 'bn' ? "রেন্টাল বুকিং সিস্টেম" : "Rental Booking System"}
-          </button>
-          <button
-            className={`pb-2 px-4 ${activeTab === 'rental-return' 
-              ? 'border-b-2 border-primary font-medium text-primary' 
-              : 'text-gray-500'
-            }`}
-            onClick={() => setActiveTab('rental-return')}
-          >
-            {language === 'bn' ? "রেন্টাল রিটার্ন সিস্টেম" : "Rental Return System"}
-          </button>
+
+      {/* Featured Listings */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold">ফিচার্ড লিস্টিং</h2>
         </div>
-        
-        {/* Content based on active tab */}
-        {activeTab === 'services' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {featuredServices.map(service => (
-              <ServiceCard
-                key={service.id}
-                id={service.id}
-                title={service.title}
-                description={service.description}
-                image={service.image}
-                price={service.price}
-                rating={service.rating}
-                location={service.location}
-                onClick={() => handleServiceClick(service.id)}
-              />
-            ))}
-          </div>
-        )}
-        
-        {activeTab === 'rental-booking' && (
-          <div className="bg-slate-50 p-4 rounded-lg">
-            <h2 className="text-2xl font-semibold mb-6">
-              {language === 'bn' ? "ক্যালেন্ডার-ভিত্তিক রেন্টাল বুকিং" : "Calendar-based Rental Booking"}
-            </h2>
-            <RentalBookingCalendar />
-          </div>
-        )}
-        
-        {activeTab === 'rental-return' && (
-          <div className="bg-slate-50 p-4 rounded-lg">
-            <h2 className="text-2xl font-semibold mb-6">
-              {language === 'bn' ? "রেন্টাল রিটার্ন ম্যানেজমেন্ট" : "Rental Return Management"}
-            </h2>
-            <RentalReturnSystem />
-          </div>
-        )}
+
+        <Tabs defaultValue="all">
+          <TabsList className="mb-4 w-full bg-secondary/50">
+            <TabsTrigger value="all" className="flex-1">সব</TabsTrigger>
+            <TabsTrigger value="rent" className="flex-1">রেন্ট</TabsTrigger>
+            <TabsTrigger value="services" className="flex-1">সার্ভিস</TabsTrigger>
+            <TabsTrigger value="marketplace" className="flex-1">মার্কেটপ্লেস</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="all">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {featuredListings.map((listing) => (
+                <Card 
+                  key={listing.id} 
+                  className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
+                  onClick={() => navigate(listing.path)}
+                >
+                  <div className="relative aspect-square">
+                    <img 
+                      src={listing.image} 
+                      alt={listing.title} 
+                      className="w-full h-full object-cover"
+                    />
+                    <Badge className="absolute top-2 right-2">{listing.category}</Badge>
+                  </div>
+                  <CardContent className="p-3">
+                    <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
+                    <div className="flex items-center text-xs text-muted-foreground mt-1">
+                      <MapPin className="h-3 w-3 mr-1" />
+                      <span>{listing.location}</span>
+                    </div>
+                    <div className="flex items-center justify-between mt-2">
+                      <p className="text-sm font-bold text-primary">{listing.price}</p>
+                      <div className="flex items-center text-xs">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
+                        <span>4.8</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            <div className="flex justify-center mt-4">
+              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/all-listings')}>
+                সব দেখুন <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="rent">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {featuredListings.filter(item => item.category === "রেন্ট").map((listing) => (
+                <Card 
+                  key={listing.id} 
+                  className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
+                  onClick={() => navigate(listing.path)}
+                >
+                  <div className="relative aspect-square">
+                    <img 
+                      src={listing.image} 
+                      alt={listing.title} 
+                      className="w-full h-full object-cover"
+                    />
+                    <Badge className="absolute top-2 right-2">{listing.category}</Badge>
+                  </div>
+                  <CardContent className="p-3">
+                    <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
+                    <div className="flex items-center text-xs text-muted-foreground mt-1">
+                      <MapPin className="h-3 w-3 mr-1" />
+                      <span>{listing.location}</span>
+                    </div>
+                    <div className="flex items-center justify-between mt-2">
+                      <p className="text-sm font-bold text-primary">{listing.price}</p>
+                      <div className="flex items-center text-xs">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
+                        <span>4.8</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            <div className="flex justify-center mt-4">
+              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/rentals')}>
+                আরও দেখুন <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="services">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {featuredListings.filter(item => item.category === "সার্ভিস").map((listing) => (
+                <Card 
+                  key={listing.id} 
+                  className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
+                  onClick={() => navigate(listing.path)}
+                >
+                  <div className="relative aspect-square">
+                    <img 
+                      src={listing.image} 
+                      alt={listing.title} 
+                      className="w-full h-full object-cover"
+                    />
+                    <Badge className="absolute top-2 right-2">{listing.category}</Badge>
+                  </div>
+                  <CardContent className="p-3">
+                    <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
+                    <div className="flex items-center text-xs text-muted-foreground mt-1">
+                      <MapPin className="h-3 w-3 mr-1" />
+                      <span>{listing.location}</span>
+                    </div>
+                    <div className="flex items-center justify-between mt-2">
+                      <p className="text-sm font-bold text-primary">{listing.price}</p>
+                      <div className="flex items-center text-xs">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
+                        <span>4.8</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            <div className="flex justify-center mt-4">
+              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/services')}>
+                আরও দেখুন <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="marketplace">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {featuredListings.filter(item => item.category === "মার্কেটপ্লেস").map((listing) => (
+                <Card 
+                  key={listing.id} 
+                  className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
+                  onClick={() => navigate(listing.path)}
+                >
+                  <div className="relative aspect-square">
+                    <img 
+                      src={listing.image} 
+                      alt={listing.title} 
+                      className="w-full h-full object-cover"
+                    />
+                    <Badge className="absolute top-2 right-2">{listing.category}</Badge>
+                  </div>
+                  <CardContent className="p-3">
+                    <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
+                    <div className="flex items-center text-xs text-muted-foreground mt-1">
+                      <MapPin className="h-3 w-3 mr-1" />
+                      <span>{listing.location}</span>
+                    </div>
+                    <div className="flex items-center justify-between mt-2">
+                      <p className="text-sm font-bold text-primary">{listing.price}</p>
+                      <div className="flex items-center text-xs">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
+                        <span>4.8</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            <div className="flex justify-center mt-4">
+              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/shopping')}>
+                আরও দেখুন <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

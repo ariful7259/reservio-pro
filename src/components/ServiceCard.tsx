@@ -8,26 +8,21 @@ import { Star } from 'lucide-react';
 interface ServiceCardProps {
   id: string;
   title: string;
-  description?: string;
-  image?: string;
-  provider?: string;
-  imageUrl?: string;
+  provider: string;
+  imageUrl: string;
   rating: number;
-  price: string | number;
+  price: number;
   discount?: number;
-  duration?: string;
+  duration: string;
   tags?: string[];
   buttonLabel?: string;
-  location?: string;
   onClick: (id: string) => void;
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({
   id,
   title,
-  description,
   provider,
-  image,
   imageUrl,
   rating,
   price,
@@ -35,24 +30,15 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   duration,
   tags = [],
   buttonLabel = "বুক করুন",
-  location,
   onClick,
 }) => {
-  // Use either image or imageUrl prop
-  const imageSource = image || imageUrl;
-  
-  // Handle price as either string or number
-  const priceDisplay = typeof price === 'string' ? price : `৳${price}`;
-  
-  // Calculate discounted price if applicable
-  const discountedPrice = discount && typeof price === 'number' ? 
-    price - (price * discount) / 100 : price;
+  const discountedPrice = discount ? price - (price * discount) / 100 : price;
 
   return (
     <Card className="overflow-hidden border service-card transition-all duration-300 hover:shadow-md hover:scale-105 cursor-pointer">
       <div className="h-48 overflow-hidden">
         <img
-          src={imageSource}
+          src={imageUrl}
           alt={title}
           className="w-full h-full object-cover"
         />
@@ -61,8 +47,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         <div className="flex items-start justify-between">
           <div>
             <h3 className="font-semibold text-lg">{title}</h3>
-            {provider && <p className="text-muted-foreground text-sm">{provider}</p>}
-            {description && <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{description}</p>}
+            <p className="text-muted-foreground text-sm">{provider}</p>
           </div>
           <div className="flex items-center gap-1 bg-amber-100 px-2 py-1 rounded text-amber-700">
             <Star className="h-3 w-3 fill-amber-500 text-amber-500" />
@@ -73,25 +58,17 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         <div className="mt-2 space-y-2">
           <div className="flex items-center gap-1">
             <span className="text-primary font-semibold">
-              {typeof discountedPrice === 'number' ? `৳${discountedPrice}` : discountedPrice}
+              ৳{discountedPrice}
             </span>
-            {discount && typeof price === 'number' && (
+            {discount && (
               <span className="text-muted-foreground text-sm line-through">
                 ৳{price}
               </span>
             )}
-            {duration && (
-              <span className="text-xs text-muted-foreground ml-auto">
-                {duration}
-              </span>
-            )}
+            <span className="text-xs text-muted-foreground ml-auto">
+              {duration}
+            </span>
           </div>
-          
-          {location && (
-            <div className="text-xs text-muted-foreground">
-              {location}
-            </div>
-          )}
           
           <div className="flex flex-wrap gap-1">
             {tags.map((tag, index) => (

@@ -104,7 +104,7 @@ const FeaturedDigitalProducts = () => {
     navigate(path);
   };
 
-  // Fix icon rendering by using a function to get the proper React component
+  // Category icons mapping with vibrant colors
   const getCategoryIcon = (category: string) => {
     switch(category) {
       case 'কোর্স': return <BookOpen className="h-4 w-4 text-purple-500" />;
