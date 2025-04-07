@@ -42,10 +42,10 @@ const ServiceProviderCard: React.FC<ServiceProviderCardProps> = ({
             <div className="flex items-center gap-1 mt-1">
               <div className="flex items-center">
                 <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
-                <span className="text-sm ml-1">{rating ? rating.toFixed(1) : '0.0'}</span>
+                <span className="text-sm ml-1">{rating.toFixed(1)}</span>
               </div>
               <span className="text-xs text-muted-foreground">
-                ({reviewCount || 0} reviews)
+                ({reviewCount} reviews)
               </span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">

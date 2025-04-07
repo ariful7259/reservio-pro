@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { 
   TrendingUp, 
   Eye, 
@@ -33,18 +33,6 @@ const StoreDashboardPreview = () => {
     { name: 'স্মার্টওয়াচ', sales: 25, change: 15 },
     { name: 'ব্লুটুথ স্পীকার', sales: 18, change: 3 },
   ];
-
-  // Helper function to safely format percentages
-  const formatPercent = (value) => {
-    if (value === undefined || value === null) return '0%';
-    return `${Math.abs(value)}%`;
-  };
-
-  // Helper function to safely format numerical values
-  const safeNumberFormat = (value) => {
-    if (value === undefined || value === null) return '0';
-    return value.toString();
-  };
   
   return (
     <div className="space-y-6">
@@ -150,15 +138,15 @@ const StoreDashboardPreview = () => {
                     <span>{product.name}</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium">{safeNumberFormat(product.sales)} বিক্রি</span>
+                    <span className="text-sm font-medium">{product.sales} বিক্রি</span>
                     <span className={`text-xs flex items-center ${
-                      (product.change || 0) > 0 ? 'text-green-600' : 'text-red-600'
+                      product.change > 0 ? 'text-green-600' : 'text-red-600'
                     }`}>
-                      {(product.change || 0) > 0 ? 
+                      {product.change > 0 ? 
                         <ArrowUp className="h-3 w-3 mr-1" /> : 
                         <ArrowDown className="h-3 w-3 mr-1" />
                       }
-                      {formatPercent(product.change)}
+                      {Math.abs(product.change)}%
                     </span>
                   </div>
                 </div>

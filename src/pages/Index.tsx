@@ -1,8 +1,8 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import ExploreSection from '@/components/ExploreSection';
-import ServiceProviderCard from '@/components/ServiceProviderCard';
+import { ExploreSection } from '@/components/ExploreSection';
+import { ServiceProviderCard } from '@/components/ServiceProviderCard';
 import { Badge } from '@/components/ui/badge';
 import SmartSearch from '@/components/SmartSearch';
 import { useApp } from '@/context/AppContext';
@@ -11,78 +11,17 @@ import PersonalizedRecommendations from '@/components/PersonalizedRecommendation
 import CustomizableHomeScreen from '@/components/CustomizableHomeScreen';
 import OfflineModeManager from '@/components/OfflineModeManager';
 import { Button } from '@/components/ui/button';
-import { Settings, BarChart2, HelpCircle } from 'lucide-react';
-import BreadcrumbNav from '@/components/BreadcrumbNav';
-import OnboardingTutorial from '@/components/OnboardingTutorial';
-import CustomizableNavigation from '@/components/CustomizableNavigation';
-import EnhancedSearch from '@/components/EnhancedSearch';
+import { Settings, BarChart2 } from 'lucide-react';
 
 function Index() {
   const navigate = useNavigate();
   const { language } = useApp();
   const { isAuthenticated } = useAuth();
-  const [showTutorial, setShowTutorial] = useState(false);
-  
-  // Mock service provider data with safe defaults
-  const mockServiceProviders = [
-    {
-      id: "sp1",
-      name: language === 'bn' ? "রহিম মিস্ত্রি" : "Rahim Mistri",
-      specialty: language === 'bn' ? "প্লাম্বিং সার্ভিসেস" : "Plumbing Services",
-      imageUrl: "https://randomuser.me/api/portraits/men/32.jpg",
-      rating: 4.8,
-      reviewCount: 124,
-      availability: language === 'bn' ? "আজ উপলব্ধ" : "Available today"
-    },
-    {
-      id: "sp2",
-      name: language === 'bn' ? "করিম আলি" : "Karim Ali",
-      specialty: language === 'bn' ? "ইলেক্ট্রিশিয়ান" : "Electrician",
-      imageUrl: "https://randomuser.me/api/portraits/men/45.jpg",
-      rating: 4.5,
-      reviewCount: 98,
-      availability: language === 'bn' ? "কাল উপলব্ধ" : "Available tomorrow"
-    },
-    {
-      id: "sp3",
-      name: language === 'bn' ? "সালমা বেগম" : "Salma Begum",
-      specialty: language === 'bn' ? "হোম ক্লিনিং" : "Home Cleaning",
-      imageUrl: "https://randomuser.me/api/portraits/women/32.jpg",
-      rating: 4.9,
-      reviewCount: 156,
-      availability: language === 'bn' ? "আজ উপলব্ধ" : "Available today"
-    },
-    {
-      id: "sp4",
-      name: language === 'bn' ? "আমির খান" : "Amir Khan",
-      specialty: language === 'bn' ? "পেইন্টিং সার্ভিস" : "Painting Service",
-      imageUrl: "https://randomuser.me/api/portraits/men/67.jpg",
-      rating: 4.3,
-      reviewCount: 78,
-      availability: language === 'bn' ? "৩ দিন পরে উপলব্ধ" : "Available in 3 days"
-    }
-  ];
-
-  const handleServiceProviderClick = (id: string) => {
-    navigate(`/services/${id}`);
-  };
-  
-  const handleSearch = (searchParams: any) => {
-    console.log('Search params:', searchParams);
-    // Navigate to search page with params
-    navigate('/search', { state: { searchParams } });
-  };
   
   return (
     <div className="container pb-20 pt-16">
-      {/* Breadcrumb Navigation */}
-      <BreadcrumbNav />
-      
-      <div className="px-4 mb-4">
-        {/* Enhanced search component with voice search */}
-        <div className="mb-6">
-          <EnhancedSearch onSearch={handleSearch} />
-        </div>
+      <div className="px-4 mb-6">
+        <SmartSearch />
         
         {isAuthenticated && (
           <div className="flex gap-2 mt-3">
@@ -104,22 +43,8 @@ function Index() {
               <BarChart2 className="h-4 w-4 mr-1" />
               {language === 'bn' ? 'অ্যানালিটিকস' : 'Analytics'}
             </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="flex-1"
-              onClick={() => setShowTutorial(true)}
-            >
-              <HelpCircle className="h-4 w-4 mr-1" />
-              {language === 'bn' ? 'টিউটোরিয়াল' : 'Tutorial'}
-            </Button>
           </div>
         )}
-      </div>
-      
-      {/* Customizable Navigation Bar */}
-      <div className="px-4">
-        <CustomizableNavigation />
       </div>
       
       {isAuthenticated ? (
@@ -154,24 +79,11 @@ function Index() {
           </Badge>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          {mockServiceProviders.map((provider) => (
-            <ServiceProviderCard 
-              key={provider.id}
-              id={provider.id}
-              name={provider.name}
-              specialty={provider.specialty}
-              imageUrl={provider.imageUrl}
-              rating={provider.rating}
-              reviewCount={provider.reviewCount}
-              availability={provider.availability}
-              onClick={handleServiceProviderClick}
-            />
+          {[1, 2, 3, 4].map((provider) => (
+            <ServiceProviderCard key={provider} />
           ))}
         </div>
       </div>
-      
-      {/* Onboarding Tutorial Dialog */}
-      {showTutorial && <OnboardingTutorial onClose={() => setShowTutorial(false)} />}
     </div>
   );
 }

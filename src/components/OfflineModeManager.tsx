@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { WifiOff, Database, ArrowDownToLine, Check } from 'lucide-react';
@@ -25,6 +26,7 @@ const OfflineModeManager: React.FC = () => {
   const [storageUsed, setStorageUsed] = useState(0);
   const [storageLimit] = useState(50); // MB
   
+  // Mock offline items data
   useEffect(() => {
     const mockItems: OfflineItem[] = [
       { id: '1', type: 'service', name: language === 'bn' ? 'প্লাম্বিং সার্ভিস' : 'Plumbing Service', size: 0.5, synced: true },
@@ -37,6 +39,7 @@ const OfflineModeManager: React.FC = () => {
     
     setOfflineItems(mockItems);
     
+    // Calculate total storage used
     const total = mockItems.reduce((acc, item) => acc + item.size, 0);
     setStorageUsed(total);
   }, [language]);
@@ -53,6 +56,7 @@ const OfflineModeManager: React.FC = () => {
     
     setIsSyncing(true);
     
+    // Simulate sync process with progress
     let progress = 0;
     const interval = setInterval(() => {
       progress += 5;
@@ -61,6 +65,7 @@ const OfflineModeManager: React.FC = () => {
       if (progress >= 100) {
         clearInterval(interval);
         
+        // Update all items to synced
         setOfflineItems(items => 
           items.map(item => ({ ...item, synced: true }))
         );
@@ -84,6 +89,7 @@ const OfflineModeManager: React.FC = () => {
       )
     );
     
+    // Recalculate storage used
     setTimeout(() => {
       const syncedItems = offlineItems.filter(item => item.synced || item.id === id);
       const total = syncedItems.reduce((acc, item) => acc + item.size, 0);
@@ -116,7 +122,7 @@ const OfflineModeManager: React.FC = () => {
             {language === 'bn' ? 'স্টোরেজ ব্যবহার' : 'Storage Usage'}
           </div>
           <div className="text-sm text-muted-foreground">
-            {storageUsed !== undefined ? storageUsed.toFixed(1) : '0.0'}/{storageLimit} MB
+            {storageUsed.toFixed(1)}/{storageLimit} MB
           </div>
         </div>
         <Progress 
@@ -178,7 +184,7 @@ const OfflineModeManager: React.FC = () => {
               {syncProgress}%
             </div>
           </div>
-          <Progress value={syncProgress} className="h-1 bg-blue-100" />
+          <Progress value={syncProgress} className="h-1 bg-blue-100" indicatorClassName="bg-blue-500" />
         </div>
       )}
       
@@ -191,7 +197,7 @@ const OfflineModeManager: React.FC = () => {
             <div>
               <div className="font-medium text-sm">{item.name}</div>
               <div className="text-xs text-muted-foreground">
-                {item.size !== undefined ? item.size.toFixed(1) : '0.0'} MB • {item.synced 
+                {item.size} MB • {item.synced 
                   ? language === 'bn' ? 'অফলাইনে উপলব্ধ' : 'Available offline'
                   : language === 'bn' ? 'শুধু অনলাইনে' : 'Online only'
                 }
