@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ExploreSection from '@/components/ExploreSection';
 import ServiceProviderCard from '@/components/ServiceProviderCard';
@@ -10,12 +11,17 @@ import PersonalizedRecommendations from '@/components/PersonalizedRecommendation
 import CustomizableHomeScreen from '@/components/CustomizableHomeScreen';
 import OfflineModeManager from '@/components/OfflineModeManager';
 import { Button } from '@/components/ui/button';
-import { Settings, BarChart2 } from 'lucide-react';
+import { Settings, BarChart2, HelpCircle } from 'lucide-react';
+import BreadcrumbNav from '@/components/BreadcrumbNav';
+import OnboardingTutorial from '@/components/OnboardingTutorial';
+import CustomizableNavigation from '@/components/CustomizableNavigation';
+import EnhancedSearch from '@/components/EnhancedSearch';
 
 function Index() {
   const navigate = useNavigate();
   const { language } = useApp();
   const { isAuthenticated } = useAuth();
+  const [showTutorial, setShowTutorial] = useState(false);
   
   // Mock service provider data with safe defaults
   const mockServiceProviders = [
@@ -61,10 +67,22 @@ function Index() {
     navigate(`/services/${id}`);
   };
   
+  const handleSearch = (searchParams: any) => {
+    console.log('Search params:', searchParams);
+    // Navigate to search page with params
+    navigate('/search', { state: { searchParams } });
+  };
+  
   return (
     <div className="container pb-20 pt-16">
-      <div className="px-4 mb-6">
-        <SmartSearch />
+      {/* Breadcrumb Navigation */}
+      <BreadcrumbNav />
+      
+      <div className="px-4 mb-4">
+        {/* Enhanced search component with voice search */}
+        <div className="mb-6">
+          <EnhancedSearch onSearch={handleSearch} />
+        </div>
         
         {isAuthenticated && (
           <div className="flex gap-2 mt-3">
@@ -86,8 +104,22 @@ function Index() {
               <BarChart2 className="h-4 w-4 mr-1" />
               {language === 'bn' ? 'অ্যানালিটিকস' : 'Analytics'}
             </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="flex-1"
+              onClick={() => setShowTutorial(true)}
+            >
+              <HelpCircle className="h-4 w-4 mr-1" />
+              {language === 'bn' ? 'টিউটোরিয়াল' : 'Tutorial'}
+            </Button>
           </div>
         )}
+      </div>
+      
+      {/* Customizable Navigation Bar */}
+      <div className="px-4">
+        <CustomizableNavigation />
       </div>
       
       {isAuthenticated ? (
@@ -137,6 +169,9 @@ function Index() {
           ))}
         </div>
       </div>
+      
+      {/* Onboarding Tutorial Dialog */}
+      {showTutorial && <OnboardingTutorial onClose={() => setShowTutorial(false)} />}
     </div>
   );
 }
