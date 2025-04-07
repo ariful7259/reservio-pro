@@ -13,8 +13,7 @@ import {
   Clock, 
   ChevronRight,
   CheckCircle2,
-  AlertCircle,
-  Bell
+  AlertCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -35,10 +34,7 @@ const Security = () => {
     biometric: false,
     loginAlerts: true,
     authenticatorApp: false,
-    emailVerification: true,
-    deviceTrustManager: false,
-    loginHistory: true,
-    sensitiveActionAlert: true,
+    emailVerification: true
   });
 
   const toggleSetting = (setting: keyof typeof securitySettings) => {
@@ -53,9 +49,6 @@ const Security = () => {
                     setting === 'biometric' ? 'বায়োমেট্রিক লগইন' : 
                     setting === 'loginAlerts' ? 'লগইন অ্যালার্ট' :
                     setting === 'authenticatorApp' ? 'অথেনটিকেটর অ্যাপ' :
-                    setting === 'deviceTrustManager' ? 'ডিভাইস ট্রাস্ট' :
-                    setting === 'loginHistory' ? 'লগইন হিস্ট্রি' :
-                    setting === 'sensitiveActionAlert' ? 'সেনসিটিভ অ্যাকশন অ্যালার্ট' :
                     'ইমেইল ভেরিফিকেশন'} ${!securitySettings[setting] ? 'এনাবল' : 'ডিজেবল'} করা হয়েছে`,
     });
   };
@@ -123,7 +116,7 @@ const Security = () => {
                 </div>
               </div>
               <Button size="sm" variant="outline" onClick={() => toggleSetting('emailVerification')}>
-                {securitySettings.emailVerification ? 'নিষ্ক্রিয় করুন' : 'সক্রিয় করুন'}
+                সক্রিয় করুন
               </Button>
             </div>
 
@@ -137,9 +130,7 @@ const Security = () => {
                   <p className="text-sm text-muted-foreground">Google Authenticator বা অন্য 2FA অ্যাপ ব্যবহার করুন</p>
                 </div>
               </div>
-              <Button size="sm" variant="outline" onClick={() => toggleSetting('authenticatorApp')}>
-                {securitySettings.authenticatorApp ? 'নিষ্ক্রিয় করুন' : 'সক্রিয় করুন'}
-              </Button>
+              <Badge className="bg-gray-100 text-gray-600 border-0">নিষ্ক্রিয়</Badge>
             </div>
 
             <div className="flex items-center justify-between p-4 rounded-lg border bg-card">
@@ -152,7 +143,7 @@ const Security = () => {
                   <p className="text-sm text-muted-foreground">ফিঙ্গারপ্রিন্ট বা ফেস আইডি দিয়ে লগইন করুন</p>
                 </div>
               </div>
-              <Badge className="bg-amber-100 text-amber-600 border-0">শীঘ্রই আসছে</Badge>
+              <Badge className="bg-gray-100 text-gray-600 border-0">নিষ্ক্রিয়</Badge>
             </div>
           </CardContent>
         </Card>
@@ -186,14 +177,6 @@ const Security = () => {
                 </div>
                 <ChevronRight className="h-4 w-4" />
               </Button>
-              
-              <Button variant="outline" className="w-full flex justify-between items-center" onClick={() => navigate('/security/trusted-devices')}>
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4" />
-                  <span>ট্রাস্টেড ডিভাইস</span>
-                </div>
-                <ChevronRight className="h-4 w-4" />
-              </Button>
             </div>
 
             <Separator />
@@ -214,79 +197,9 @@ const Security = () => {
                   onCheckedChange={() => toggleSetting('loginAlerts')}
                 />
               </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
-                    <Clock className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="font-medium">লগইন হিস্ট্রি ট্র্যাকিং</p>
-                    <p className="text-sm text-muted-foreground">আপনার অ্যাকাউন্টে লগইন হিস্ট্রি সংরক্ষণ করুন</p>
-                  </div>
-                </div>
-                <Switch 
-                  checked={securitySettings.loginHistory}
-                  onCheckedChange={() => toggleSetting('loginHistory')}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-full bg-red-100 flex items-center justify-center text-red-600">
-                    <Bell className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="font-medium">সেনসিটিভ অ্যাকশন অ্যালার্ট</p>
-                    <p className="text-sm text-muted-foreground">গুরুত্বপূর্ণ পরিবর্তন করলে নোটিফিকেশন পাবেন</p>
-                  </div>
-                </div>
-                <Switch 
-                  checked={securitySettings.sensitiveActionAlert}
-                  onCheckedChange={() => toggleSetting('sensitiveActionAlert')}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-                    <Smartphone className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="font-medium">ডিভাইস ট্রাস্ট ম্যানেজার</p>
-                    <p className="text-sm text-muted-foreground">বিশ্বস্ত ডিভাইস সেভ করুন সহজ লগইনের জন্য</p>
-                  </div>
-                </div>
-                <Switch 
-                  checked={securitySettings.deviceTrustManager}
-                  onCheckedChange={() => toggleSetting('deviceTrustManager')}
-                />
-              </div>
             </div>
           </CardContent>
         </Card>
-        
-        <Card className="border">
-          <CardHeader>
-            <CardTitle className="text-lg">প্রাইভেসি সেটিংস</CardTitle>
-          </CardHeader>
-          <CardContent className="px-5">
-            <Button className="w-full" variant="outline" onClick={() => navigate('/security/privacy')}>
-              প্রাইভেসি সেটিংস দেখুন
-            </Button>
-          </CardContent>
-        </Card>
-        
-        <div className="bg-green-50 p-4 rounded-lg border border-green-200 flex items-start gap-3">
-          <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5" />
-          <div>
-            <p className="font-medium text-green-700">নিরাপত্তা টিপস</p>
-            <p className="text-sm text-green-600">
-              নিয়মিত আপনার পাসওয়ার্ড পরিবর্তন করুন এবং শক্তিশালী ও অনন্য পাসওয়ার্ড ব্যবহার করুন। 
-              সর্বদা ২FA সক্রিয় রাখুন এবং কখনও আপনার লগইন তথ্য কারো সাথে শেয়ার করবেন না।
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   );

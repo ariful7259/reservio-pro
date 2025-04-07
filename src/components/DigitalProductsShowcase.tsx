@@ -3,6 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   ArrowRight, 
+  LucideIcon,
   Rocket,
   Mail,
   BookOpen,
@@ -11,8 +12,15 @@ import {
   ShoppingBag,
   Users,
   ChartBar,
-  Fingerprint,
-  ShieldCheck
+  Globe,
+  Briefcase,
+  FileText,
+  CreditCard,
+  Shield,
+  Video,
+  Zap,
+  ShieldCheck,
+  Fingerprint
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -21,7 +29,7 @@ import { useToast } from "@/components/ui/use-toast";
 interface ProductCardProps {
   title: string;
   description: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   color: string;
   id: number;
   path: string;
@@ -141,7 +149,6 @@ const DigitalProductsShowcase = () => {
           >
             <CardContent className="p-4 flex flex-col items-center text-center">
               <div className={`p-3 rounded-lg ${product.color} mb-3`}>
-                {/* Fixed icon rendering by using the component directly */}
                 <product.icon className="h-6 w-6" />
               </div>
               <h3 className="font-medium">{product.title}</h3>

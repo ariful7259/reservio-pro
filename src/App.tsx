@@ -49,17 +49,7 @@ import ProfileManagement from "./pages/ProfileManagement";
 import ChatPage from "./pages/ChatPage";
 import SearchPage from "./pages/SearchPage";
 import PaymentDemo from "./pages/PaymentDemo";
-import ReferralSystem from './pages/ReferralSystem';
-import RentalSystem from './pages/RentalSystem';
-import Community from './pages/Community';
-import CommunityEvents from './pages/CommunityEvents';
-import CommunityForum from './pages/CommunityForum';
-import GroupBooking from './pages/GroupBooking';
-import SocialSharing from './pages/SocialSharing';
-import LoginSessions from './pages/LoginSessions';
-import PrivacySettings from './pages/PrivacySettings';
-import AnalyticsDashboard from './pages/AnalyticsDashboard';
-import CustomizedHome from './pages/CustomizedHome';
+import ReferralSystem from "./pages/ReferralSystem";
 
 const queryClient = new QueryClient();
 
@@ -85,8 +75,6 @@ const App = () => (
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/security" element={<Security />} />
                 <Route path="/security/2fa" element={<TwoFactorAuthentication />} />
-                <Route path="/security/login-sessions" element={<LoginSessions />} />
-                <Route path="/security/privacy" element={<PrivacySettings />} />
                 <Route path="/kyc-verification" element={<KycVerification />} />
                 <Route path="/kyc-verification/:step" element={<KycVerification />} />
                 <Route path="/rentals" element={<Rentals />} />
@@ -153,21 +141,7 @@ const App = () => (
                 <Route path="/social-media" element={<NotFound />} />
                 <Route path="/product/:id" element={<DigitalProduct />} />
                 
-                {/* Rental System Routes */}
-                <Route path="/rental-system" element={<RentalSystem />} />
-                
-                {/* Community & Social Engagement */}
-                <Route path="/community" element={<Community />} />
-                <Route path="/community/events" element={<CommunityEvents />} />
-                <Route path="/community/forum" element={<CommunityForum />} />
-                <Route path="/community/group-booking" element={<GroupBooking />} />
-                <Route path="/community/social-sharing" element={<SocialSharing />} />
-                
-                {/* New Data Analytics and Personalization Routes */}
-                <Route path="/analytics" element={<AnalyticsDashboard />} />
-                <Route path="/customized-home" element={<CustomizedHome />} />
-                <Route path="/recommendations" element={<CustomizedHome />} />
-                
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <OfflineIndicator />
