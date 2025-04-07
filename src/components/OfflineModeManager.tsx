@@ -116,7 +116,7 @@ const OfflineModeManager: React.FC = () => {
             {language === 'bn' ? 'স্টোরেজ ব্যবহার' : 'Storage Usage'}
           </div>
           <div className="text-sm text-muted-foreground">
-            {storageUsed.toFixed(1)}/{storageLimit} MB
+            {storageUsed !== undefined ? storageUsed.toFixed(1) : '0.0'}/{storageLimit} MB
           </div>
         </div>
         <Progress 
@@ -191,7 +191,7 @@ const OfflineModeManager: React.FC = () => {
             <div>
               <div className="font-medium text-sm">{item.name}</div>
               <div className="text-xs text-muted-foreground">
-                {item.size} MB • {item.synced 
+                {item.size !== undefined ? item.size.toFixed(1) : '0.0'} MB • {item.synced 
                   ? language === 'bn' ? 'অফলাইনে উপলব্ধ' : 'Available offline'
                   : language === 'bn' ? 'শুধু অনলাইনে' : 'Online only'
                 }

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, BarChart2, LineChart, PieChart, Users, ShoppingBag, Repeat, TrendingUp, Filter } from 'lucide-react';
@@ -87,6 +86,11 @@ const AnalyticsDashboard = () => {
       positive: false,
     },
   ];
+
+  const renderLabel = ({ name, percent }) => {
+    if (name === undefined || percent === undefined) return '';
+    return `${name}: ${(percent * 100).toFixed(0)}%`;
+  };
   
   return (
     <div className="container px-4 pt-16 pb-20">
@@ -197,7 +201,7 @@ const AnalyticsDashboard = () => {
                       outerRadius={80}
                       fill="#8884d8"
                       dataKey="value"
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      label={renderLabel}
                     >
                       {categoryData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
