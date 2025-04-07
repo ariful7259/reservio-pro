@@ -26,7 +26,7 @@ const WalletCard: React.FC<WalletCardProps> = ({ balance, lastTransaction }) => 
 
         <div className="mb-6">
           <p className="text-sm opacity-90">ব্যালেন্স</p>
-          <p className="text-3xl font-bold">৳{balance.toLocaleString()}</p>
+          <p className="text-3xl font-bold">৳{balance != null ? balance.toLocaleString() : '0'}</p>
         </div>
 
         {lastTransaction && (
@@ -50,7 +50,7 @@ const WalletCard: React.FC<WalletCardProps> = ({ balance, lastTransaction }) => 
                 </div>
               </div>
               <span className={`font-medium ${lastTransaction.type === 'credit' ? 'text-green-300' : 'text-red-300'}`}>
-                {lastTransaction.type === 'credit' ? '+' : '-'}৳{lastTransaction.amount}
+                {lastTransaction.type === 'credit' ? '+' : '-'}৳{lastTransaction.amount != null ? lastTransaction.amount : 0}
               </span>
             </div>
           </div>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ExploreSection from '@/components/ExploreSection';
@@ -18,7 +17,7 @@ function Index() {
   const { language } = useApp();
   const { isAuthenticated } = useAuth();
   
-  // Mock service provider data
+  // Mock service provider data with safe defaults
   const mockServiceProviders = [
     {
       id: "sp1",
