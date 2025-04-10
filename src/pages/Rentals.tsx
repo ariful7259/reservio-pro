@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,6 +11,7 @@ import {
   Wrench,
   ChevronDown,
   ChevronUp,
+  ChevronRight,
   Filter,
   MapPin,
   LayoutGrid,
@@ -42,6 +42,12 @@ import {
   Warehouse,
   Camera as CameraIcon,
   Table,
+  Star,
+  Clock,
+  Clipboard,
+  Tool,
+  Settings,
+  PenTool,
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
@@ -51,6 +57,7 @@ import { Slider } from '@/components/ui/slider';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import MapView from '@/components/MapView';
+import RentalFeatures from '@/components/RentalFeatures';
 
 const Rentals = () => {
   const navigate = useNavigate();
@@ -58,7 +65,6 @@ const Rentals = () => {
   const [filterVisible, setFilterVisible] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
 
-  // Banner images for Rentals
   const bannerImages = [
     "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=1000&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1000&auto=format&fit=crop",
@@ -228,7 +234,7 @@ const Rentals = () => {
                 <LayoutGrid className="h-4 w-4" /> গ্রিড
               </TabsTrigger>
               <TabsTrigger value="map" className="flex items-center gap-1">
-                <MapIcon className="h-4 w-4" /> মানচিত্র
+                <MapIcon className="h-4 w-4" /> মান��িত্র
               </TabsTrigger>
             </TabsList>
           </Tabs>
@@ -238,7 +244,6 @@ const Rentals = () => {
         </div>
       </div>
       
-      {/* Filter options - conditionally shown */}
       {filterVisible && (
         <div className="mb-6 p-4 border rounded-lg bg-gray-50">
           <h2 className="font-medium mb-3">ফিল্টার</h2>
@@ -380,7 +385,6 @@ const Rentals = () => {
         </Collapsible>
       </div>
       
-      {/* Banner section */}
       <div className="mb-6 overflow-hidden rounded-lg">
         <Carousel className="w-full">
           <CarouselContent>
@@ -405,7 +409,6 @@ const Rentals = () => {
       
       <Separator className="my-6" />
       
-      {/* Featured Listings */}
       <div className="mb-6">
         <h2 className="text-lg font-medium mb-4">ফিচার্ড লিস্টিং</h2>
         
