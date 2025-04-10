@@ -40,11 +40,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import DigitalCreatorSolutionsMenu from './DigitalCreatorSolutionsMenu';
 
 export const SidebarDrawer = () => {
   const [activePostType, setActivePostType] = useState('rent');
-  const [digitalCreatorExpanded, setDigitalCreatorExpanded] = useState(false);
   const navigate = useNavigate();
   
   // User data
@@ -130,12 +128,6 @@ export const SidebarDrawer = () => {
         </DrawerHeader>
         
         <div className="px-4 space-y-6 py-4">
-          {/* Digital Creator Solutions Menu */}
-          <DigitalCreatorSolutionsMenu 
-            isExpanded={digitalCreatorExpanded}
-            onToggle={() => setDigitalCreatorExpanded(!digitalCreatorExpanded)}
-          />
-          
           {/* Post Your Ads Section */}
           <div className="space-y-4 p-4 border rounded-lg bg-gray-50">
             <h3 className="font-medium text-lg">বিজ্ঞাপন পোস্ট করুন</h3>
