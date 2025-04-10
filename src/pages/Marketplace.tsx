@@ -31,7 +31,8 @@ import {
   Book,
   Tv,
   Gamepad,
-  Bicycle,
+  // Replace Bicycle with ActivitySquare
+  ActivitySquare,
   Car,
   Star,
   Clock,
@@ -140,7 +141,7 @@ const Marketplace = () => {
       count: 76 
     },
     { 
-      icon: <Bicycle className="h-8 w-8" />, 
+      icon: <ActivitySquare className="h-8 w-8" />, 
       name: "স্পোর্টস", 
       path: "/shopping/category/sports", 
       count: 92 
