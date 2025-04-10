@@ -12,7 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Facebook, Instagram, Twitter, WhatsApp, Link as LinkIcon, Copy, Share2 } from 'lucide-react';
+import { Facebook, Instagram, Twitter, MessageCircle, Link as LinkIcon, Copy, Share2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
 interface SocialShareModalProps {
@@ -174,7 +174,7 @@ const SocialShareModal = ({ open, onOpenChange, item }: SocialShareModalProps) =
               className="flex items-center gap-2" 
               onClick={handleWhatsAppShare}
             >
-              <WhatsApp className="h-4 w-4" /> হোয়াটসঅ্যাপ
+              <MessageCircle className="h-4 w-4" /> হোয়াটসঅ্যাপ
             </Button>
             <Button 
               variant="outline" 
