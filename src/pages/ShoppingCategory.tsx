@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
@@ -18,6 +17,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/components/ui/use-toast';
 import { Slider } from '@/components/ui/slider';
+import SocialShareModal from '@/components/SocialShareModal';
 
 const ShoppingCategory = () => {
   const { id } = useParams<{ id: string }>();
@@ -26,6 +26,8 @@ const ShoppingCategory = () => {
   const [categoryName, setCategoryName] = useState('');
   const [products, setProducts] = useState<any[]>([]);
   const [filterVisible, setFilterVisible] = useState(false);
+  const [shareItem, setShareItem] = useState<any | null>(null);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   // Mock categories data
   const categories = [
@@ -141,12 +143,13 @@ const ShoppingCategory = () => {
     });
   };
 
-  const handleShare = (e: React.MouseEvent, productId: number) => {
+  const handleShare = (e: React.MouseEvent, product: any) => {
     e.stopPropagation();
-    toast({
-      title: "শেয়ার করুন",
-      description: "প্রোডাক্টটি শেয়ার করার লিংক কপি করা হয়েছে",
+    setShareItem({
+      ...product,
+      type: 'product',
     });
+    setShowShareModal(true);
   };
 
   return (
@@ -260,7 +263,7 @@ const ShoppingCategory = () => {
                     <Heart className="h-4 w-4 text-gray-600" />
                   </Button>
                   <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full"
-                    onClick={(e) => handleShare(e, product.id)}>
+                    onClick={(e) => handleShare(e, product)}>
                     <Share2 className="h-4 w-4 text-gray-600" />
                   </Button>
                 </div>
@@ -296,6 +299,14 @@ const ShoppingCategory = () => {
           </div>
         )}
       </div>
+
+      {shareItem && (
+        <SocialShareModal 
+          open={showShareModal}
+          onOpenChange={setShowShareModal}
+          item={shareItem}
+        />
+      )}
     </div>
   );
 };

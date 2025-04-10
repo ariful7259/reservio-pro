@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -46,9 +45,11 @@ import {
   Star,
   Clock,
   Clipboard,
-  Wrench as WrenchIcon, // Replaced Tool with WrenchIcon
+  Wrench as WrenchIcon,
   Settings,
   PenTool,
+  Share2,
+  Heart,
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
@@ -59,12 +60,17 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import MapView from '@/components/MapView';
 import RentalFeatures from '@/components/RentalFeatures';
+import SocialShareModal from '@/components/SocialShareModal';
+import { useToast } from '@/components/ui/use-toast';
 
 const Rentals = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [isExpanded, setIsExpanded] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
+  const [shareItem, setShareItem] = useState<any | null>(null);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   const bannerImages = [
     "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=1000&auto=format&fit=crop",
@@ -216,12 +222,68 @@ const Rentals = () => {
     },
   ];
 
+  const featuredServices = [
+    {
+      id: 1,
+      title: "ইলেকট্রনিক্স মেরামত",
+      image: "https://images.unsplash.com/photo-1588964895597-cfccd6e2dbf9?q=80&w=1000&auto=format&fit=crop",
+      price: "৳ ৮০০/ঘণ্টা",
+      location: "ঢাকা",
+      rating: 4.8,
+      category: "মেরামত",
+    },
+    {
+      id: 2,
+      title: "ফার্নিচার ইন্সটলেশন",
+      image: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?q=80&w=1000&auto=format&fit=crop",
+      price: "৳ ১,২০০/সেশন",
+      location: "ঢাকা",
+      rating: 4.6,
+      category: "ইন্সটলেশন",
+    },
+    {
+      id: 3,
+      title: "ড্রাইভার সার্ভিস",
+      image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1000&auto=format&fit=crop",
+      price: "৳ ১,০০০/দিন",
+      location: "ঢাকা",
+      rating: 4.7,
+      category: "ট্রান্সপোর্ট",
+    },
+    {
+      id: 4,
+      title: "ফটোগ্রাফি সার্ভিস",
+      image: "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=1000&auto=format&fit=crop",
+      price: "৳ ৩,০০০/সেশন",
+      location: "ঢাকা",
+      rating: 4.9,
+      category: "ইভেন্ট",
+    }
+  ];
+
   const toggleFilter = () => {
     setFilterVisible(!filterVisible);
   };
 
   const handleListingClick = (id: number) => {
     navigate(`/rent-details/${id}`);
+  };
+
+  const handleBookmark = (e: React.MouseEvent, rentalId: number) => {
+    e.stopPropagation();
+    toast({
+      title: "সংরক্ষিত হয়েছে",
+      description: "রেন্টাল আইটেমটি আপনার পছন্দের তালিকায় যোগ করা হয়েছে",
+    });
+  };
+
+  const handleShare = (e: React.MouseEvent, rental: any) => {
+    e.stopPropagation();
+    setShareItem({
+      ...rental,
+      type: 'rental',
+    });
+    setShowShareModal(true);
   };
 
   return (
@@ -428,7 +490,25 @@ const Rentals = () => {
                       alt={listing.title} 
                       className="w-full h-full object-cover"
                     />
-                    <Badge className="absolute top-2 right-2">{listing.category}</Badge>
+                    <Badge className="absolute top-2 left-2">{listing.category}</Badge>
+                    <div className="absolute top-2 right-2 flex flex-col gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="bg-white h-8 w-8 rounded-full"
+                        onClick={(e) => handleBookmark(e, listing.id)}
+                      >
+                        <Heart className="h-4 w-4 text-gray-600" />
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="bg-white h-8 w-8 rounded-full"
+                        onClick={(e) => handleShare(e, listing)}
+                      >
+                        <Share2 className="h-4 w-4 text-gray-600" />
+                      </Button>
+                    </div>
                   </div>
                   <div className="p-3">
                     <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
@@ -479,6 +559,90 @@ const Rentals = () => {
           </div>
         )}
       </div>
+
+      <div className="mb-6">
+        <h2 className="text-lg font-medium mb-4">ফিচার্ড সার্ভিস</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {featuredServices.map((service, index) => (
+            <Card 
+              key={index}
+              className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
+              onClick={() => navigate(`/service-detail/${service.id}`)}
+            >
+              <div className="relative aspect-square">
+                <img 
+                  src={service.image} 
+                  alt={service.title}
+                  className="w-full h-full object-cover"
+                />
+                <Badge className="absolute top-2 left-2">{service.category}</Badge>
+                <div className="absolute top-2 right-2 flex flex-col gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="bg-white h-8 w-8 rounded-full"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toast({
+                        title: "সংরক্ষিত হয়েছে",
+                        description: "সার্ভিসটি আপনার পছন্দের তালিকায় যোগ করা হয়েছে",
+                      });
+                    }}
+                  >
+                    <Heart className="h-4 w-4 text-gray-600" />
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="bg-white h-8 w-8 rounded-full"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShareItem({
+                        ...service,
+                        type: 'service',
+                      });
+                      setShowShareModal(true);
+                    }}
+                  >
+                    <Share2 className="h-4 w-4 text-gray-600" />
+                  </Button>
+                </div>
+              </div>
+              <CardContent className="p-3">
+                <h3 className="font-medium text-sm line-clamp-1">{service.title}</h3>
+                <div className="flex items-center text-xs text-muted-foreground my-1">
+                  <MapPin className="h-3 w-3 mr-1" /> 
+                  <span>{service.location}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-bold text-primary">{service.price}</p>
+                  <div className="flex items-center">
+                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                    <span className="text-xs ml-1">{service.rating}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <div className="flex justify-center mt-4">
+          <Button 
+            variant="outline" 
+            className="flex items-center gap-1"
+            onClick={() => navigate('/services')}
+          >
+            আরও দেখুন <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      {shareItem && (
+        <SocialShareModal 
+          open={showShareModal}
+          onOpenChange={setShowShareModal}
+          item={shareItem}
+        />
+      )}
     </div>
   );
 };

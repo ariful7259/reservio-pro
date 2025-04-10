@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
@@ -32,6 +31,7 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import SocialShareModal from '@/components/SocialShareModal';
 
 const ServiceDetail = () => {
   const { id } = useParams();
@@ -48,16 +48,15 @@ const ServiceDetail = () => {
   const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
+  const [showShareModal, setShowShareModal] = useState(false);
   
   useEffect(() => {
-    // Fetch item reviews
     if (id) {
       const itemReviews = getItemReviews(id);
       setReviews(itemReviews);
     }
   }, [id, getItemReviews]);
 
-  // Mock service data (in a real app, fetch this based on the ID)
   const service = {
     id: id || '1',
     title: 'ডাক্তার কনসাল্টেশন',
@@ -98,14 +97,12 @@ const ServiceDetail = () => {
       return;
     }
 
-    // In a real app, you would make an API call to book the appointment
     toast({
       title: language === 'bn' ? "অ্যাপয়েন্টমেন্ট বুক করা হয়েছে!" : "Appointment booked!",
       description: language === 'bn' ? "আপনার অ্যাপয়েন্টমেন্ট সফলভাবে বুক করা হয়েছে।" : "Your appointment has been successfully booked.",
       variant: "default",
     });
     
-    // Add points for booking
     addPoints(20);
     
     navigate('/appointments');
@@ -127,11 +124,7 @@ const ServiceDetail = () => {
   };
   
   const handleShare = () => {
-    // In a real app, you would implement sharing functionality
-    toast({
-      title: language === 'bn' ? "শেয়ার করা হয়েছে" : "Shared",
-      description: language === 'bn' ? "লিংক কপি করা হয়েছে" : "Link copied to clipboard",
-    });
+    setShowShareModal(true);
   };
   
   const handleSubmitReview = () => {
@@ -144,7 +137,6 @@ const ServiceDetail = () => {
       return;
     }
     
-    // Submit the review
     addReview({
       userId: "user-1", // Mock user ID - in a real app this would come from auth
       itemId: service.id,
@@ -153,7 +145,6 @@ const ServiceDetail = () => {
       comment: reviewComment
     });
     
-    // Reset form and close dialog
     setReviewComment('');
     setReviewRating(5);
     setShowReviewDialog(false);
@@ -464,6 +455,20 @@ const ServiceDetail = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      
+      <SocialShareModal 
+        open={showShareModal}
+        onOpenChange={setShowShareModal}
+        item={{
+          id: service.id,
+          title: service.title,
+          price: `৳${discountedPrice}`,
+          image: service.imageUrl,
+          description: service.description,
+          location: service.location,
+          type: 'service'
+        }}
+      />
     </div>
   );
 };
