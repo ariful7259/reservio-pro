@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -20,9 +21,6 @@ import {
   PenTool,
   Globe,
   MessageSquare,
-  Calendar,
-  Users,
-  MessageCircle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -75,7 +73,7 @@ const Index = () => {
       price: "৳১,৫০০",
       image: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
       category: "সার্ভিস",
-      path: "/services/1"
+      path: "/service/1"
     },
     {
       id: "serv-2",
@@ -84,7 +82,7 @@ const Index = () => {
       price: "৳২,০০০",
       image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
       category: "সার্ভিস",
-      path: "/services/2"
+      path: "/service/2"
     },
     // Marketplace listings
     {
@@ -94,7 +92,7 @@ const Index = () => {
       price: "৳২,৫০০",
       image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
       category: "মার্কেটপ্লেস",
-      path: "/shopping/product/1"
+      path: "/product/1"
     },
     {
       id: "market-2",
@@ -103,40 +101,8 @@ const Index = () => {
       price: "৳৩,৫০০",
       image: "https://images.unsplash.com/photo-1587854680352-936b22b91030?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
       category: "মার্কেটপ্লেস",
-      path: "/shopping/product/2"
+      path: "/product/2"
     },
-  ];
-
-  // Community features array
-  const communityFeatures = [
-    {
-      id: "stories",
-      title: "স্টোরি শেয়ারিং",
-      description: "আপনার অভিজ্ঞতা শেয়ার করুন",
-      icon: <FileText className="h-10 w-10 text-blue-500" />,
-      path: "/stories"
-    },
-    {
-      id: "events",
-      title: "ইভেন্ট ক্যালেন্ডার",
-      description: "কমিউনিটি ইভেন্টগুলো দেখুন ও যোগ দিন",
-      icon: <Calendar className="h-10 w-10 text-green-500" />,
-      path: "/events"
-    },
-    {
-      id: "forums",
-      title: "ফোরাম",
-      description: "কমিউনিটি আলোচনায় অংশ নিন",
-      icon: <MessageCircle className="h-10 w-10 text-purple-500" />,
-      path: "/forums"
-    },
-    {
-      id: "group-booking",
-      title: "গ্রুপ বুকিং",
-      description: "একসাথে সার্ভিস/প্রোডাক্ট বুকিং করুন",
-      icon: <Users className="h-10 w-10 text-orange-500" />,
-      path: "/group-booking"
-    }
   ];
 
   const handleSearch = (e: React.FormEvent) => {
@@ -174,34 +140,6 @@ const Index = () => {
       {/* Featured Digital Products Carousel */}
       <div className="mb-10">
         <FeaturedDigitalProducts />
-      </div>
-
-      {/* Community Features Section */}
-      <div className="mb-10">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">কমিউনিটি ফিচার</h2>
-          <Button variant="link" className="flex items-center gap-1" onClick={() => navigate('/stories')}>
-            আরও দেখুন <ArrowRight className="h-4 w-4" />
-          </Button>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {communityFeatures.map((feature) => (
-            <Card 
-              key={feature.id}
-              className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
-              onClick={() => navigate(feature.path)}
-            >
-              <CardContent className="p-6 flex flex-col items-center text-center space-y-2">
-                <div className="p-3 rounded-full bg-muted mb-2">
-                  {feature.icon}
-                </div>
-                <h3 className="font-semibold">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">{feature.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
       </div>
 
       {/* Featured Listings */}
@@ -252,7 +190,7 @@ const Index = () => {
               ))}
             </div>
             <div className="flex justify-center mt-4">
-              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/all-listings')}>
+              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/shopping')}>
                 সব দেখুন <ArrowRight className="h-4 w-4" />
               </Button>
             </div>
@@ -372,7 +310,7 @@ const Index = () => {
               ))}
             </div>
             <div className="flex justify-center mt-4">
-              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/shopping')}>
+              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/marketplace')}>
                 আরও দেখুন <ArrowRight className="h-4 w-4" />
               </Button>
             </div>

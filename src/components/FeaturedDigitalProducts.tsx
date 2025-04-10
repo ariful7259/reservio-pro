@@ -51,7 +51,7 @@ const FeaturedDigitalProducts = () => {
       image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=1000&auto=format&fit=crop",
       price: "৳৯৯৯",
       category: "ইবুক",
-      path: "/digital-products"
+      path: "/course-builder"
     },
     {
       id: "template-1",
@@ -60,7 +60,7 @@ const FeaturedDigitalProducts = () => {
       image: "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?q=80&w=1000&auto=format&fit=crop",
       price: "৳২,৫০০",
       category: "টেমপ্লেট",
-      path: "/digital-products"
+      path: "/course-builder"
     },
     {
       id: "software-1",
@@ -69,7 +69,7 @@ const FeaturedDigitalProducts = () => {
       image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?q=80&w=1000&auto=format&fit=crop",
       price: "৳৩,৫০০",
       category: "সফটওয়্যার",
-      path: "/digital-products"
+      path: "/course-builder"
     },
     {
       id: "video-1",
@@ -87,7 +87,7 @@ const FeaturedDigitalProducts = () => {
       image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1000&auto=format&fit=crop",
       price: "৳১,৯৯৯",
       category: "অডিও",
-      path: "/digital-products"
+      path: "/course-builder"
     },
     {
       id: "graphics-1",
@@ -96,7 +96,7 @@ const FeaturedDigitalProducts = () => {
       image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop",
       price: "৳১,৮০০",
       category: "গ্রাফিক্স",
-      path: "/digital-products"
+      path: "/course-builder"
     }
   ];
 
@@ -126,7 +126,7 @@ const FeaturedDigitalProducts = () => {
           variant="ghost" 
           size="sm" 
           className="flex items-center gap-1" 
-          onClick={() => navigate('/digital-products')}
+          onClick={() => navigate('/course-builder')}
         >
           সব দেখুন <ArrowRight className="h-4 w-4" />
         </Button>
@@ -157,7 +157,15 @@ const FeaturedDigitalProducts = () => {
                     <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{product.description}</p>
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-primary">{product.price}</span>
-                      <Button size="sm" variant="outline" className="gap-1">
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="gap-1"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(product.path);
+                        }}
+                      >
                         দেখুন <ArrowRight className="h-3 w-3" />
                       </Button>
                     </div>
