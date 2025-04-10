@@ -145,7 +145,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         bookingsCount: 0
       },
       joinDate: new Date().toISOString(),
-      socialProfiles: {}
+      socialProfiles: {
+        facebook: "",
+        twitter: "",
+        instagram: "",
+        linkedin: ""
+      }
     };
     
     // In a real app, you would send this to your backend

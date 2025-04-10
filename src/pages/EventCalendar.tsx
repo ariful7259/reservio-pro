@@ -143,7 +143,8 @@ const EventCalendar = () => {
         avatar: user.avatar || 'https://i.pravatar.cc/150?img=1'
       }],
       isNearby: true,
-      isFeatured: false
+      isFeatured: false,
+      isSaved: false
     };
     
     setEvents([event, ...events]);
