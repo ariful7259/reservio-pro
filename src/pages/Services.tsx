@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -30,7 +29,7 @@ import {
   GraduationCap,
   Baby,
   Bed,
-  Shower,
+  Bath,
   Palette,
   Construction,
   Star,
