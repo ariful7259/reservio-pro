@@ -1,4 +1,3 @@
-
 export const mockDiscussions = [
   {
     id: 'discussion-1',
@@ -190,7 +189,7 @@ export const mockDiscussions = [
           name: 'আকাশ আহমেদ',
           avatar: 'https://i.pravatar.cc/150?img=1'
         },
-        content: 'LeetCode এবং HackerRank এ রেগুলার প্র্যাকটিস করা জরুরি। 'Cracking the Coding Interview' বইটি ফলো করতে পারেন। আর HR ইন্টারভিউর জন্য আপনার প্রজেক্ট এবং আগের অভিজ্ঞতা বর্ণনা করার প্র্যাকটিস করুন।',
+        content: 'LeetCode এবং HackerRank এ রেগুলার প্র্যাকটিস করা জরুরি। \'Cracking the Coding Interview\' বইটি ফলো করতে পারেন। আর HR ইন্টারভিউর জন্য আপনার প্রজেক্ট এবং আগের অভিজ্ঞতা বর্ণনা করার প্র্যাকটিস করুন।',
         timestamp: '2023-05-08T12:10:00Z',
         likes: 9,
         isLiked: false
