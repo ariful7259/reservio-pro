@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -30,7 +29,8 @@ import {
   Shield,
   GanttChart,
   MailQuestion,
-  MapPin
+  MapPin,
+  Check
 } from 'lucide-react';
 
 interface RentalItem {
@@ -159,13 +159,11 @@ const RentalManagementDashboard: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<RentalItem | null>(null);
   const [availabilityMode, setAvailabilityMode] = useState(false);
 
-  // Calculate dashboard stats
   const totalItems = rentalItems.length;
   const availableItems = rentalItems.filter(item => item.status === 'available').length;
   const activeCustomers = customers.filter(customer => customer.status === 'active').length;
   const pendingRequests = requests.filter(req => req.status === 'pending').length;
 
-  // Simulated earnings
   const todayEarnings = 3500;
   const weeklyEarnings = 22500;
   const monthlyEarnings = 95000;
@@ -191,7 +189,6 @@ const RentalManagementDashboard: React.FC = () => {
     );
     
     if (action === 'approve') {
-      // Update the item's booked dates
       const request = requests.find(r => r.id === requestId);
       if (request) {
         setRentalItems(prev => 
@@ -201,7 +198,7 @@ const RentalManagementDashboard: React.FC = () => {
               bookedDates: [...(item.bookedDates || []), {
                 startDate: request.startDate,
                 endDate: request.endDate,
-                customerId: 'cust-new' // In real app would use actual customer ID
+                customerId: 'cust-new'
               }]
             } : item
           )
@@ -217,7 +214,7 @@ const RentalManagementDashboard: React.FC = () => {
     });
   };
 
-  const toggleItemAvailability = (date: Date) => {
+  const toggleItemAvailability = () => {
     if (!selectedItem) return;
     
     setAvailabilityMode(!availabilityMode);
