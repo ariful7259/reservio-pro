@@ -1,264 +1,177 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  Building, 
-  Home, 
-  Truck, 
-  Briefcase, 
-  PaintBucket, 
-  Wrench,
-  MapPin,
-  UserPlus,
-  FileText,
-  CreditCard,
-  Clock,
-  Map,
-  Bike,
-  ShoppingBag,
-  Check,
-  User,
-  Calendar,
-  Filter,
-  ArrowRight,
-  ArrowUpRight,
-} from 'lucide-react';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { 
+  Calendar, 
+  RotateCcw, 
+  DollarSign, 
+  PieChart,
+  BarChart3,
+  Wallet,
+  Truck,
+  Clock,
+  Calendar as CalendarIcon,
+  Settings,
+  ArrowRight
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import RentalBookingCalendar from './rental/RentalBookingCalendar';
+import RentalReturnSystem from './rental/RentalReturnSystem';
+import RentalManagementDashboard from './rental/RentalManagementDashboard';
+
+interface RentalItem {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  deposit: number;
+  minRental: number;
+}
 
 const RentalFeatures = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('home');
+  const [activeTab, setActiveTab] = useState('booking');
+  const [showDashboardPreview, setShowDashboardPreview] = useState(false);
 
-  // Rent features
-  const rentFeatures = [
-    { 
-      id: 'home', 
-      title: 'Find a Home', 
-      banglaTitle: 'বাসা খোঁজুন', 
-      description: 'বাসা খোঁজার সার্চ ফিচার',
-      icon: <Home className="h-16 w-16 text-primary" />,
-      path: '/rent/find-home',
-      bgColor: 'bg-primary/5',
-      buttonVariant: 'default' as const
-    },
-    { 
-      id: 'roommates', 
-      title: 'Roommates', 
-      banglaTitle: 'রুমমেট', 
-      description: 'রুমমেট খোঁজার অপশন',
-      icon: <UserPlus className="h-16 w-16 text-blue-500" />,
-      path: '/rent/roommates',
-      bgColor: 'bg-blue-50',
-      buttonVariant: 'outline' as const
-    },
-    { 
-      id: 'mess', 
-      title: 'Mess Seats', 
-      banglaTitle: 'মেস সিট', 
-      description: 'মেসের খালি সিটের তালিকা',
-      icon: <Briefcase className="h-16 w-16 text-green-500" />,
-      path: '/rent/mess-seats',
-      bgColor: 'bg-green-50',
-      buttonVariant: 'outline' as const
-    },
-    { 
-      id: 'lease', 
-      title: 'Lease Negotiation', 
-      banglaTitle: 'লিজ নেগোশিয়েশন', 
-      description: 'লিজ দর-কষাকষির সহায়তা',
-      icon: <FileText className="h-16 w-16 text-amber-500" />,
-      path: '/rent/lease',
-      bgColor: 'bg-amber-50',
-      buttonVariant: 'outline' as const
-    },
-    { 
-      id: 'property', 
-      title: 'Property Listing', 
-      banglaTitle: 'প্রপার্টি লিস্টিং', 
-      description: 'সম্পত্তি মালিকদের জন্য লিস্টিং সুবিধা',
-      icon: <Building className="h-16 w-16 text-red-500" />,
-      path: '/rent/listing',
-      bgColor: 'bg-red-50',
-      buttonVariant: 'outline' as const
-    },
-    { 
-      id: 'tenant', 
-      title: 'Tenant Management', 
-      banglaTitle: 'টেনেন্ট ম্যানেজমেন্ট', 
-      description: 'টেনেন্টদের তথ্য সংরক্ষণ ও পরিচালনা',
-      icon: <User className="h-16 w-16 text-purple-500" />,
-      path: '/rent/tenant',
-      bgColor: 'bg-purple-50',
-      buttonVariant: 'outline' as const
-    },
-    { 
-      id: 'payment', 
-      title: 'Rent Collection', 
-      banglaTitle: 'রেন্ট কালেকশন', 
-      description: 'অনলাইন ভাড়া সংগ্রহ এবং পেমেন্ট ট্র্যাকিং',
-      icon: <CreditCard className="h-16 w-16 text-pink-500" />,
-      path: '/rent/payment',
-      bgColor: 'bg-pink-50',
-      buttonVariant: 'outline' as const
-    },
-    { 
-      id: 'map', 
-      title: 'Map View', 
-      banglaTitle: 'ম্যাপ ভিউ', 
-      description: 'কাছাকাছি থাকা ভাড়ার সম্পত্তি ম্যাপে দেখা',
-      icon: <Map className="h-16 w-16 text-cyan-500" />,
-      path: '/rent/map',
-      bgColor: 'bg-cyan-50',
-      buttonVariant: 'outline' as const
-    }
-  ];
-  
-  const additionalFeatures = [
-    { 
-      id: 'browse', 
-      title: 'Browse Rental Items', 
-      banglaTitle: 'রেন্টাল আইটেম ব্রাউজ', 
-      description: 'বাইসাইকেল, বই, ইলেকট্রনিক্স, আসবাবপত্র ইত্যাদি ভাড়া নেওয়ার সুবিধা',
-      icon: <Bike className="h-10 w-10 text-indigo-500" />,
-      path: '/rent/browse',
-      color: 'text-indigo-600',
-      bgColor: 'bg-indigo-50',
-    },
-    { 
-      id: 'post', 
-      title: 'Post Items for Rent', 
-      banglaTitle: 'রেন্টের জন্য আইটেম পোস্ট', 
-      description: 'ব্যবহারকারীরা নিজেদের জিনিস ভাড়ার জন্য পোস্ট করতে পারবে',
-      icon: <ShoppingBag className="h-10 w-10 text-gray-500" />,
-      path: '/rent/post',
-      color: 'text-gray-600',
-      bgColor: 'bg-gray-50',
-    },
-    { 
-      id: 'category', 
-      title: 'Category Search', 
-      banglaTitle: 'ক্যাটাগরি সার্চ', 
-      description: 'ক্যাটাগরি অনুযায়ী ভাড়া আইটেম ব্রাউজ করা',
-      icon: <Filter className="h-10 w-10 text-orange-500" />,
-      path: '/rent/category',
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-50',
-    },
-    { 
-      id: 'agreement', 
-      title: 'Rental Agreements', 
-      banglaTitle: 'রেন্টাল এগ্রিমেন্ট', 
-      description: 'ভাড়ার চুক্তি তৈরির সুবিধা',
-      icon: <Check className="h-10 w-10 text-teal-500" />,
-      path: '/rent/agreement',
-      color: 'text-teal-600',
-      bgColor: 'bg-teal-50',
-    }
-  ];
+  const demoRentalItem: RentalItem = {
+    id: 'item-001',
+    name: 'DSLR ক্যামেরা - Canon EOS 5D',
+    description: 'প্রফেশনাল ফটোগ্রাফি এবং ভিডিওগ্রাফির জন্য উচ্চ মানের DSLR ক্যামেরা',
+    price: 1200,
+    image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+    deposit: 30, // deposit percentage
+    minRental: 1 // minimum rental days
+  };
+
+  const handleBookingComplete = (bookingData: any) => {
+    console.log('Booking completed:', bookingData);
+    // In a real app, this would save to database and redirect
+  };
+
+  const handleReturnComplete = (returnData: any) => {
+    console.log('Return completed:', returnData);
+    // In a real app, this would update database
+  };
+
+  const handleViewAllFeatures = () => {
+    navigate('/rent-anything');
+  };
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold">রেন্ট ফিচারস</h2>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="flex items-center gap-1" 
-          onClick={() => navigate('/rent-anything')}
-        >
-          সব দেখুন <ArrowRight className="h-4 w-4" />
-        </Button>
-      </div>
-      
-      <div className="overflow-hidden rounded-lg border mb-8 bg-gradient-to-r from-white to-gray-50">
-        <Tabs onValueChange={setActiveTab} value={activeTab} className="w-full">
-          <TabsList className="flex w-full h-14 justify-start gap-2 border-b bg-transparent p-2 overflow-x-auto scrollbar-thin">
-            {rentFeatures.map(feature => (
-              <TabsTrigger 
-                key={feature.id} 
-                value={feature.id}
-                className="flex-shrink-0 flex items-center gap-2 px-4 py-2 transition-all rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm"
-              >
-                <div className={`p-1 rounded-full ${feature.id === activeTab ? 'text-primary' : 'text-gray-400'}`}>
-                  {React.cloneElement(feature.icon, { className: 'h-5 w-5' })}
-                </div>
-                <span>{feature.banglaTitle}</span>
-              </TabsTrigger>
-            ))}
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle className="flex items-center justify-between">
+          <span>রেন্টাল ফিচার</span>
+          <Button variant="link" className="flex items-center gap-1 text-sm" onClick={handleViewAllFeatures}>
+            সব দেখুন <ArrowRight className="h-4 w-4" />
+          </Button>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid grid-cols-3 mb-4">
+            <TabsTrigger value="booking" className="flex items-center gap-1">
+              <Calendar className="h-4 w-4" /> বুকিং
+            </TabsTrigger>
+            <TabsTrigger value="return" className="flex items-center gap-1">
+              <RotateCcw className="h-4 w-4" /> রিটার্ন
+            </TabsTrigger>
+            <TabsTrigger value="management" className="flex items-center gap-1">
+              <Settings className="h-4 w-4" /> ম্যানেজমেন্ট
+            </TabsTrigger>
           </TabsList>
-          
-          {rentFeatures.map(feature => (
-            <TabsContent key={feature.id} value={feature.id} className="focus-visible:outline-none focus-visible:ring-0 p-6">
-              <div className={`rounded-lg ${feature.bgColor} p-8`}>
-                <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
-                  <div className="flex flex-col items-center text-center md:text-left">
-                    <div className="p-5 bg-white rounded-full shadow-md mb-4">
-                      {feature.icon}
-                    </div>
-                    <Badge variant="outline" className="mb-1">{feature.title}</Badge>
-                  </div>
-                  <div className="flex-1 text-center md:text-left">
-                    <h3 className="text-2xl font-bold mb-3">{feature.banglaTitle}</h3>
-                    <p className="text-gray-600 mb-6">{feature.description}</p>
-                    <div className="flex flex-wrap gap-3">
-                      <Button 
-                        variant={feature.buttonVariant} 
-                        size="lg"
-                        onClick={() => navigate(feature.path)}
-                        className="gap-2"
-                      >
-                        এখনই ব্যবহার করুন
-                        <ArrowUpRight className="h-4 w-4" />
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="lg"
-                        onClick={() => navigate(`${feature.path}/help`)}
-                      >
-                        আরও জানুন
-                      </Button>
-                    </div>
-                  </div>
+
+          <TabsContent value="booking">
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                ক্যালেন্ডার ভিত্তিক বুকিং সিস্টেমের মাধ্যমে আপনার পছন্দের তারিখে আইটেম বুক করুন। 
+                ডিপোজিট সিস্টেম নিশ্চিত করে অর্থের নিরাপত্তা।
+              </p>
+              
+              <RentalBookingCalendar 
+                itemName={demoRentalItem.name}
+                pricePerDay={demoRentalItem.price}
+                onBookingComplete={handleBookingComplete}
+                depositRequired={demoRentalItem.deposit}
+                minRentalDays={demoRentalItem.minRental}
+              />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="return">
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                রেন্টাল আইটেম সহজেই ফেরত দিন। আইটেমের অবস্থা অনুযায়ী ডিপোজিট ফেরত পান।
+              </p>
+              
+              <RentalReturnSystem 
+                rentalId="rent-1234"
+                itemName={demoRentalItem.name}
+                startDate={new Date(2025, 3, 10)}
+                endDate={new Date(2025, 3, 15)}
+                depositAmount={demoRentalItem.price * demoRentalItem.deposit / 100}
+                onReturnComplete={handleReturnComplete}
+              />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="management">
+            {showDashboardPreview ? (
+              <RentalManagementDashboard />
+            ) : (
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  রেন্টাল বিজনেসের জন্য সম্পূর্ণ ম্যানেজমেন্ট সিস্টেম। আপনার প্রোডাক্ট স্টক, বুকিং, এবং পেমেন্ট ট্র্যাক করুন।
+                </p>
+                
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <Card className="border">
+                    <CardContent className="p-4 flex flex-col items-center text-center">
+                      <CalendarIcon className="h-8 w-8 text-primary mb-2" />
+                      <h3 className="text-sm font-medium">স্বয়ংক্রিয় ক্যালেন্ডার</h3>
+                      <p className="text-xs text-muted-foreground mt-1">বুকিংয়ের সাথে সাথে আপডেট</p>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="border">
+                    <CardContent className="p-4 flex flex-col items-center text-center">
+                      <Truck className="h-8 w-8 text-blue-500 mb-2" />
+                      <h3 className="text-sm font-medium">ডেলিভারি ট্র্যাকিং</h3>
+                      <p className="text-xs text-muted-foreground mt-1">প্রোডাক্ট মুভমেন্ট ট্র্যাক করুন</p>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="border">
+                    <CardContent className="p-4 flex flex-col items-center text-center">
+                      <Wallet className="h-8 w-8 text-green-500 mb-2" />
+                      <h3 className="text-sm font-medium">পেমেন্ট প্রসেসিং</h3>
+                      <p className="text-xs text-muted-foreground mt-1">স্বয়ংক্রিয় হিসাব নিকাশ</p>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="border">
+                    <CardContent className="p-4 flex flex-col items-center text-center">
+                      <BarChart3 className="h-8 w-8 text-purple-500 mb-2" />
+                      <h3 className="text-sm font-medium">বিজনেস অ্যানালিটিক্স</h3>
+                      <p className="text-xs text-muted-foreground mt-1">আপনার ব্যবসার প্রবৃদ্ধি দেখুন</p>
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                <div className="flex justify-center mt-4">
+                  <Button onClick={() => setShowDashboardPreview(true)}>
+                    ড্যাশবোর্ড দেখুন
+                  </Button>
                 </div>
               </div>
-            </TabsContent>
-          ))}
+            )}
+          </TabsContent>
         </Tabs>
-      </div>
-      
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-        {additionalFeatures.map(feature => (
-          <Card 
-            key={feature.id} 
-            className="overflow-hidden hover:shadow-md transition-all cursor-pointer"
-            onClick={() => navigate(feature.path)}
-          >
-            <CardContent className="p-4 flex flex-col items-center text-center">
-              <div className={`p-3 rounded-full ${feature.bgColor} mb-3`}>
-                {feature.icon}
-              </div>
-              <h3 className={`font-medium ${feature.color}`}>{feature.banglaTitle}</h3>
-              <p className="text-xs text-muted-foreground mt-1">{feature.description}</p>
-            </CardContent>
-            <CardFooter className="p-4 pt-0 flex justify-center">
-              <Button 
-                variant="link" 
-                className={`text-sm ${feature.color}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate(feature.path);
-                }}
-              >
-                ব্যবহার করুন <ArrowRight className="h-3 w-3 ml-1" />
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
