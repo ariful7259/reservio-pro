@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 interface User {
@@ -23,10 +22,10 @@ interface User {
   };
   joinDate?: string;
   socialProfiles?: {
-    facebook?: string;
-    twitter?: string;
-    instagram?: string;
-    linkedin?: string;
+    facebook: string;
+    twitter: string;
+    instagram: string;
+    linkedin: string;
   };
 }
 
