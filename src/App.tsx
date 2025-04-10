@@ -50,6 +50,10 @@ import ChatPage from "./pages/ChatPage";
 import SearchPage from "./pages/SearchPage";
 import PaymentDemo from "./pages/PaymentDemo";
 import ReferralSystem from "./pages/ReferralSystem";
+import Stories from "./pages/Stories";
+import EventCalendar from "./pages/EventCalendar";
+import Forums from "./pages/Forums";
+import GroupBooking from "./pages/GroupBooking";
 
 const queryClient = new QueryClient();
 
@@ -121,6 +125,12 @@ const App = () => (
                 <Route path="/rewards" element={<Rewards />} />
                 <Route path="/language-settings" element={<LanguageSettings />} />
                 <Route path="/offline-mode" element={<OfflineMode />} />
+                
+                {/* Community & Social Pages */}
+                <Route path="/stories" element={<Stories />} />
+                <Route path="/events" element={<EventCalendar />} />
+                <Route path="/forums" element={<Forums />} />
+                <Route path="/group-booking" element={<GroupBooking />} />
                 
                 {/* Digital Creator Solution Routes - Enhanced with Monetization */}
                 <Route path="/create-store" element={<CreateStore />} />

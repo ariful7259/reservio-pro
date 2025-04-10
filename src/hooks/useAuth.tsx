@@ -8,6 +8,26 @@ interface User {
   avatar?: string;
   phone?: string;
   address?: string;
+  bio?: string;
+  preferences?: {
+    notifications: boolean;
+    newsletter: boolean;
+    darkMode: boolean;
+    language: string;
+  };
+  stats?: {
+    postsCount: number;
+    reviewsCount: number;
+    commentsCount: number;
+    bookingsCount: number;
+  };
+  joinDate?: string;
+  socialProfiles?: {
+    facebook?: string;
+    twitter?: string;
+    instagram?: string;
+    linkedin?: string;
+  };
 }
 
 interface AuthContextType {
@@ -31,7 +51,27 @@ const MOCK_USERS = [
     password: "password123",
     avatar: "https://i.pravatar.cc/150?img=1",
     phone: "01712345678",
-    address: "ঢাকা, বাংলাদেশ"
+    address: "ঢাকা, বাংলাদেশ",
+    bio: "সফটওয়্যার ডেভেলপার এবং টেক এন্থুসিয়াস্ট",
+    preferences: {
+      notifications: true,
+      newsletter: true,
+      darkMode: false,
+      language: "bn"
+    },
+    stats: {
+      postsCount: 12,
+      reviewsCount: 8,
+      commentsCount: 24,
+      bookingsCount: 5
+    },
+    joinDate: "2023-01-15T10:30:00Z",
+    socialProfiles: {
+      facebook: "https://facebook.com/akashahmed",
+      twitter: "https://twitter.com/akashahmed",
+      instagram: "https://instagram.com/akashahmed",
+      linkedin: "https://linkedin.com/in/akashahmed"
+    }
   }
 ];
 
@@ -90,7 +130,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       password,
       avatar: `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70)}`,
       phone: "",
-      address: ""
+      address: "",
+      bio: "",
+      preferences: {
+        notifications: true,
+        newsletter: true,
+        darkMode: false,
+        language: "bn"
+      },
+      stats: {
+        postsCount: 0,
+        reviewsCount: 0,
+        commentsCount: 0,
+        bookingsCount: 0
+      },
+      joinDate: new Date().toISOString(),
+      socialProfiles: {}
     };
     
     // In a real app, you would send this to your backend
