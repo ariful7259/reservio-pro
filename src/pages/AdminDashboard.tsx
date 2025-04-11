@@ -1,11 +1,14 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
+import UserManagement from '@/components/admin/UserManagement';
+import MarketplaceManagement from '@/components/admin/MarketplaceManagement';
+import RentalManagement from '@/components/admin/RentalManagement';
 import CategoryManagement from '@/components/admin/CategoryManagement';
 import AdvancedFeatures from '@/components/admin/AdvancedFeatures';
 import { 
@@ -15,7 +18,6 @@ import {
   Layers, 
   Settings, 
   Bell, 
-  Home, 
   Package, 
   FileText, 
   UserCog, 
@@ -34,8 +36,9 @@ import {
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const { section } = useParams();
   const { toast } = useToast();
-  const [activeModule, setActiveModule] = useState('dashboard');
+  const [activeModule, setActiveModule] = useState(section || 'dashboard');
   
   // মোট সাধারণ পরিসংখ্যান
   const stats = {
@@ -71,7 +74,7 @@ const AdminDashboard = () => {
 
   // সাইডবার মেনু আইটেম
   const sidebarItems = [
-    { id: 'dashboard', name: 'ড্যাশবোর্ড', icon: <Home size={18} /> },
+    { id: 'dashboard', name: 'ড্যাশবোর্ড', icon: <BarChart3 size={18} /> },
     { id: 'users', name: 'ব্যবহারকারী', icon: <Users size={18} /> },
     { id: 'marketplace', name: 'মার্কেটপ্লেস', icon: <ShoppingBag size={18} /> },
     { id: 'rentals', name: 'রেন্টাল', icon: <Building size={18} /> },
@@ -134,7 +137,7 @@ const AdminDashboard = () => {
         <div className="bg-white shadow-sm border-b px-6 py-3 flex justify-between items-center">
           <div>
             <Button variant="outline" size="sm" onClick={() => navigate('/')}>
-              <Home className="h-4 w-4 mr-1" /> হোম
+              <LogOut className="h-4 w-4 mr-1" /> বাহিরে ফিরুন
             </Button>
           </div>
           
@@ -337,15 +340,17 @@ const AdminDashboard = () => {
             </div>
           )}
           
-          {activeModule === 'categories' && (
-            <CategoryManagement />
-          )}
+          {activeModule === 'users' && <UserManagement />}
           
-          {activeModule === 'advanced' && (
-            <AdvancedFeatures />
-          )}
+          {activeModule === 'marketplace' && <MarketplaceManagement />}
           
-          {activeModule !== 'dashboard' && activeModule !== 'categories' && activeModule !== 'advanced' && (
+          {activeModule === 'rentals' && <RentalManagement />}
+          
+          {activeModule === 'categories' && <CategoryManagement />}
+          
+          {activeModule === 'advanced' && <AdvancedFeatures />}
+          
+          {!['dashboard', 'users', 'marketplace', 'rentals', 'categories', 'advanced'].includes(activeModule) && (
             <div className="flex flex-col items-center justify-center py-12">
               <div className="h-24 w-24 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                 {sidebarItems.find(item => item.id === activeModule)?.icon || <HelpCircle size={32} className="text-primary" />}

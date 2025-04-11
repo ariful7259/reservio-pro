@@ -58,6 +58,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const isHomePage = location.pathname === "/";
+  const isAdminPage = location.pathname.includes("/admin-dashboard");
   const { user, isAuthenticated, logout, isAdmin } = useAuth();
   const { toast } = useToast();
   
@@ -242,6 +243,11 @@ const Navbar = () => {
       // This would normally connect to a backend API to fetch actual search results
     }
   };
+
+  // Skip rendering Nav for admin pages
+  if (isAdminPage) {
+    return null;
+  }
 
   return (
     <>
