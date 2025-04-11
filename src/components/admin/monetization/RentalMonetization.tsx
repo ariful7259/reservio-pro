@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
@@ -6,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { 
@@ -77,7 +77,7 @@ const RentalMonetization: React.FC<RentalMonetizationProps> = ({ onSave, onEnabl
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="listing-duration">লিস্টিং সময়কাল</Label>
+                    <Label htmlFor="listing-duration">লিস্��িং সময়কাল</Label>
                     <Select defaultValue="30">
                       <SelectTrigger>
                         <SelectValue placeholder="সময়কাল নির্বাচন করুন" />
