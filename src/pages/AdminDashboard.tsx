@@ -11,6 +11,10 @@ import MarketplaceManagement from '@/components/admin/MarketplaceManagement';
 import RentalManagement from '@/components/admin/RentalManagement';
 import CategoryManagement from '@/components/admin/CategoryManagement';
 import AdvancedFeatures from '@/components/admin/AdvancedFeatures';
+import ServiceManagement from '@/components/admin/ServiceManagement';
+import DigitalContentManagement from '@/components/admin/DigitalContentManagement';
+import PaymentManagement from '@/components/admin/PaymentManagement';
+import ReportManagement from '@/components/admin/ReportManagement';
 import { 
   BarChart3, 
   Users, 
@@ -346,11 +350,19 @@ const AdminDashboard = () => {
           
           {activeModule === 'rentals' && <RentalManagement />}
           
+          {activeModule === 'services' && <ServiceManagement />}
+          
+          {activeModule === 'digital' && <DigitalContentManagement />}
+          
           {activeModule === 'categories' && <CategoryManagement />}
+          
+          {activeModule === 'payments' && <PaymentManagement />}
+          
+          {activeModule === 'reports' && <ReportManagement />}
           
           {activeModule === 'advanced' && <AdvancedFeatures />}
           
-          {!['dashboard', 'users', 'marketplace', 'rentals', 'categories', 'advanced'].includes(activeModule) && (
+          {!['dashboard', 'users', 'marketplace', 'rentals', 'services', 'digital', 'categories', 'payments', 'reports', 'advanced'].includes(activeModule) && (
             <div className="flex flex-col items-center justify-center py-12">
               <div className="h-24 w-24 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                 {sidebarItems.find(item => item.id === activeModule)?.icon || <HelpCircle size={32} className="text-primary" />}
