@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,8 +32,8 @@ import {
   Banknote,
   Download,
   FileSpreadsheet,
-  FilePdf,
-  FileText2,
+  File,
+  FileIcon,
   Eye,
   Filter,
   ArrowUpDown,
@@ -45,7 +44,6 @@ import {
   MessageSquare
 } from 'lucide-react';
 
-// মক ডাটা স্ট্যাটিসটিক্স
 const MOCK_SALES_STATS = [
   { date: '১ মে, ২০২৫', total: 45000, orders: 23, marketplaceRevenue: 30000, serviceRevenue: 8000, digitalRevenue: 7000 },
   { date: '২ মে, ২০২৫', total: 38000, orders: 19, marketplaceRevenue: 25000, serviceRevenue: 5000, digitalRevenue: 8000 },
@@ -248,14 +246,11 @@ const ReportManagement: React.FC = () => {
     dateRange: 'last30days'
   });
 
-  // রিপোর্ট ফিল্টারিং
   const filteredReports = reports.filter(report => {
-    // সার্চ ফিল্টার
     return report.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
       report.type.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
-  // নতুন রিপোর্ট জেনারেট করা
   const handleGenerateReport = () => {
     if (newReport.title.trim() && newReport.type) {
       const today = '৮ মে, ২০২৫';
@@ -286,7 +281,6 @@ const ReportManagement: React.FC = () => {
     }
   };
 
-  // রিপোর্ট ডাউনলোড করা
   const handleDownloadReport = (reportId: string) => {
     setReports(reports.map(report => 
       report.id === reportId ? { ...report, downloadCount: report.downloadCount + 1 } : report
@@ -298,7 +292,6 @@ const ReportManagement: React.FC = () => {
     });
   };
 
-  // রিপোর্ট ডিলিট করা
   const handleDeleteReport = (reportId: string) => {
     setReports(reports.filter(report => report.id !== reportId));
     
@@ -308,21 +301,19 @@ const ReportManagement: React.FC = () => {
     });
   };
 
-  // রিপোর্ট আইকন রেন্ডারিং
   const renderReportIcon = (format: string) => {
     switch (format) {
       case 'PDF':
-        return <FilePdf className="h-6 w-6 text-red-500" />;
+        return <File className="h-6 w-6 text-red-500" />;
       case 'CSV':
-        return <FileText2 className="h-6 w-6 text-green-500" />;
+        return <FileText className="h-6 w-6 text-green-500" />;
       case 'Excel':
         return <FileSpreadsheet className="h-6 w-6 text-blue-500" />;
       default:
-        return <FileText className="h-6 w-6 text-gray-500" />;
+        return <FileIcon className="h-6 w-6 text-gray-500" />;
     }
   };
 
-  // ডেট রেঞ্জ ফরম্যাট
   const getDateRangeLabel = (range: string) => {
     switch (range) {
       case 'today':
@@ -379,7 +370,7 @@ const ReportManagement: React.FC = () => {
       <Tabs defaultValue="sales">
         <TabsList className="grid grid-cols-6 mb-4">
           <TabsTrigger value="sales">সেলস রিপোর্ট</TabsTrigger>
-          <TabsTrigger value="user">ইউজার অ্যাকটিভিটি</TabsTrigger>
+          <TabsTrigger value="user">ইউজার অ্যাক্টিভিটি</TabsTrigger>
           <TabsTrigger value="performance">পারফরম্যান্স</TabsTrigger>
           <TabsTrigger value="commission">কমিশন</TabsTrigger>
           <TabsTrigger value="top-items">টপ আইটেম</TabsTrigger>
@@ -392,7 +383,6 @@ const ReportManagement: React.FC = () => {
               <CardTitle>সেলস রিপোর্ট - {getDateRangeLabel(dateRange)}</CardTitle>
             </CardHeader>
             <CardContent>
-              {/* সামারি স্ট্যাটস */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <div className="p-4 border rounded-lg text-center">
                   <div className="text-3xl font-bold text-primary">
@@ -404,7 +394,7 @@ const ReportManagement: React.FC = () => {
                   <div className="text-3xl font-bold text-primary">
                     {salesStats.reduce((sum, stat) => sum + stat.orders, 0)}টি
                   </div>
-                  <div className="text-sm text-muted-foreground">মোট অর্ডার</div>
+                  <div className="text-sm text-muted-foreground">ম��ট অর্ডার</div>
                 </div>
                 <div className="p-4 border rounded-lg text-center">
                   <div className="text-3xl font-bold text-primary">
@@ -420,7 +410,6 @@ const ReportManagement: React.FC = () => {
                 </div>
               </div>
               
-              {/* রেভিনিউ চার্ট */}
               <div className="border rounded-lg p-4 mb-6">
                 <h3 className="font-medium mb-4">দৈনিক রেভিনিউ ট্রেন্ড</h3>
                 <div className="h-64 flex items-center justify-center bg-slate-50 rounded-md">
@@ -429,7 +418,6 @@ const ReportManagement: React.FC = () => {
                 </div>
               </div>
               
-              {/* সেলস ডাটা টেবিল */}
               <div>
                 <h3 className="font-medium mb-4">দৈনিক সেলস ডাটা</h3>
                 <div className="rounded-md border">
@@ -470,7 +458,6 @@ const ReportManagement: React.FC = () => {
                 </div>
               </div>
               
-              {/* ক্যাটাগরি ওয়াইজ সেলস */}
               <div className="mt-6 grid md:grid-cols-2 gap-6">
                 <div className="border rounded-lg p-4">
                   <h3 className="font-medium mb-4">ক্যাটাগরি অনুযায়ী সেলস</h3>
@@ -491,7 +478,7 @@ const ReportManagement: React.FC = () => {
               
               <div className="flex justify-end gap-2 mt-6">
                 <Button variant="outline">
-                  <FilePdf className="h-4 w-4 mr-2" />
+                  <File className="h-4 w-4 mr-2" />
                   PDF এক্সপোর্ট
                 </Button>
                 <Button variant="outline">
@@ -499,7 +486,7 @@ const ReportManagement: React.FC = () => {
                   Excel এক্সপোর্ট
                 </Button>
                 <Button variant="outline">
-                  <FileText2 className="h-4 w-4 mr-2" />
+                  <FileText className="h-4 w-4 mr-2" />
                   CSV এক্সপোর্ট
                 </Button>
               </div>
@@ -510,10 +497,9 @@ const ReportManagement: React.FC = () => {
         <TabsContent value="user" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>ইউজার অ্যাকটিভিটি রিপোর্ট - {getDateRangeLabel(dateRange)}</CardTitle>
+              <CardTitle>ইউজার অ্যাক্টিভিটি রিপোর্ট - {getDateRangeLabel(dateRange)}</CardTitle>
             </CardHeader>
             <CardContent>
-              {/* সামারি স্ট্যাটস */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <div className="p-4 border rounded-lg text-center">
                   <div className="text-3xl font-bold text-primary">
@@ -541,7 +527,6 @@ const ReportManagement: React.FC = () => {
                 </div>
               </div>
               
-              {/* ইউজার ট্রেন্ড চার্ট */}
               <div className="border rounded-lg p-4 mb-6">
                 <h3 className="font-medium mb-4">ইউজার গ্রোথ ট্রেন্ড</h3>
                 <div className="h-64 flex items-center justify-center bg-slate-50 rounded-md">
@@ -550,9 +535,8 @@ const ReportManagement: React.FC = () => {
                 </div>
               </div>
               
-              {/* ইউজার ডাটা টেবিল */}
               <div>
-                <h3 className="font-medium mb-4">দৈনিক ইউজার অ্যাকটিভিটি ডাটা</h3>
+                <h3 className="font-medium mb-4">দৈনিক ইউজার অ্যাক্টিভিটি ডাটা</h3>
                 <div className="rounded-md border">
                   <table className="w-full caption-bottom text-sm">
                     <thead className="border-b">
@@ -579,7 +563,6 @@ const ReportManagement: React.FC = () => {
                 </div>
               </div>
               
-              {/* ডিভাইস এবং সোর্স অ্যানালিটিক্স */}
               <div className="mt-6 grid md:grid-cols-2 gap-6">
                 <div className="border rounded-lg p-4">
                   <h3 className="font-medium mb-4">ডিভাইস অনুযায়ী ইউজার</h3>
@@ -600,7 +583,7 @@ const ReportManagement: React.FC = () => {
               
               <div className="flex justify-end gap-2 mt-6">
                 <Button variant="outline">
-                  <FilePdf className="h-4 w-4 mr-2" />
+                  <File className="h-4 w-4 mr-2" />
                   PDF এক্সপোর্ট
                 </Button>
                 <Button variant="outline">
@@ -608,7 +591,7 @@ const ReportManagement: React.FC = () => {
                   Excel এক্সপোর্ট
                 </Button>
                 <Button variant="outline">
-                  <FileText2 className="h-4 w-4 mr-2" />
+                  <FileText className="h-4 w-4 mr-2" />
                   CSV এক্সপোর্ট
                 </Button>
               </div>
@@ -636,7 +619,6 @@ const ReportManagement: React.FC = () => {
               </div>
             </CardHeader>
             <CardContent>
-              {/* পারফরম্যান্স মেট্রিক্স */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <div className="p-4 border rounded-lg text-center">
                   <div className="text-3xl font-bold text-primary">
@@ -664,7 +646,6 @@ const ReportManagement: React.FC = () => {
                 </div>
               </div>
               
-              {/* প্রোডাক্ট পারফরম্যান্স টেবিল */}
               <div className="rounded-md border mb-6">
                 <table className="w-full caption-bottom text-sm">
                   <thead className="border-b">
@@ -696,7 +677,6 @@ const ReportManagement: React.FC = () => {
                 </table>
               </div>
               
-              {/* পারফরম্যান্স চার্ট */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="border rounded-lg p-4">
                   <h3 className="font-medium mb-4">সেলস বাই ক্যাটাগরি</h3>
@@ -717,7 +697,7 @@ const ReportManagement: React.FC = () => {
               
               <div className="flex justify-end gap-2 mt-6">
                 <Button variant="outline">
-                  <FilePdf className="h-4 w-4 mr-2" />
+                  <File className="h-4 w-4 mr-2" />
                   PDF এক্সপোর্ট
                 </Button>
                 <Button variant="outline">
@@ -735,7 +715,6 @@ const ReportManagement: React.FC = () => {
               <CardTitle>কমিশন রিপোর্ট - {getDateRangeLabel(dateRange)}</CardTitle>
             </CardHeader>
             <CardContent>
-              {/* কমিশন সামারি */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <div className="p-4 border rounded-lg text-center">
                   <div className="text-3xl font-bold text-primary">
@@ -772,7 +751,6 @@ const ReportManagement: React.FC = () => {
                 </div>
               </div>
               
-              {/* কমিশন ডাটা টেবিল */}
               <div className="rounded-md border mb-6">
                 <table className="w-full caption-bottom text-sm">
                   <thead className="border-b">
@@ -782,7 +760,7 @@ const ReportManagement: React.FC = () => {
                       <th className="h-12 px-4 text-right align-middle font-medium">মোট সেলস</th>
                       <th className="h-12 px-4 text-right align-middle font-medium">কমিশন</th>
                       <th className="h-12 px-4 text-right align-middle font-medium">রেট</th>
-                      <th className="h-12 px-4 text-right align-middle font-medium">বিক্রেতা</th>
+                      <th className="h-12 px-4 text-right align-middle font-medium">��িক্রেতা</th>
                       <th className="h-12 px-4 text-right align-middle font-medium">ট্রানজেকশন</th>
                     </tr>
                   </thead>
@@ -822,7 +800,6 @@ const ReportManagement: React.FC = () => {
                 </table>
               </div>
               
-              {/* কমিশন চার্ট */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="border rounded-lg p-4">
                   <h3 className="font-medium mb-4">ক্যাটাগরি অনুযায়ী কমিশন</h3>
@@ -843,7 +820,7 @@ const ReportManagement: React.FC = () => {
               
               <div className="flex justify-end gap-2 mt-6">
                 <Button variant="outline">
-                  <FilePdf className="h-4 w-4 mr-2" />
+                  <File className="h-4 w-4 mr-2" />
                   PDF এক্সপোর্ট
                 </Button>
                 <Button variant="outline">
@@ -983,7 +960,7 @@ const ReportManagement: React.FC = () => {
               
               <div className="flex justify-end gap-2">
                 <Button variant="outline">
-                  <FilePdf className="h-4 w-4 mr-2" />
+                  <File className="h-4 w-4 mr-2" />
                   PDF এক্সপোর্ট
                 </Button>
                 <Button variant="outline">
