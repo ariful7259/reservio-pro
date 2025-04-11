@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -27,6 +26,7 @@ import {
   Settings
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAdminConfig } from '@/context/AdminConfigContext';
 
 import RentalMonetization from './monetization/RentalMonetization';
 import ServiceMonetization from './monetization/ServiceMonetization';
@@ -37,6 +37,9 @@ import CrossPlatformMonetization from './monetization/CrossPlatformMonetization'
 const MonetizationDashboard = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("rental");
+  const { monetizationSettings } = useAdminConfig();
+
+  const totalRevenue = 154500;
 
   const handleSave = () => {
     toast({
@@ -48,7 +51,7 @@ const MonetizationDashboard = () => {
   const handleEnable = (feature: string) => {
     toast({
       title: `${feature} সক্রিয় করা হয়েছে`,
-      description: "এই ফিচারটি এখন লাইভ আছে এবং ব্যবহারকারীরা এটি দেখতে পাবে",
+      description: "এই ফিচারটি এখন লাইব আছে এবং ব্যবহারকারীরা এটি দেখতে পাবে",
     });
   };
 
