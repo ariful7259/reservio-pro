@@ -395,7 +395,7 @@ const UserManagement = () => {
                           <TableCell>{user.role}</TableCell>
                           <TableCell>
                             <Badge variant={
-                              user.status === 'সক্রিয়' ? 'success' : 
+                              user.status === 'সক্রিয়' ? 'default' : 
                               user.status === 'সসপেন্ডেড' ? 'warning' : 
                               'destructive'
                             }>
@@ -404,7 +404,7 @@ const UserManagement = () => {
                           </TableCell>
                           <TableCell>
                             <Badge variant={
-                              user.kycStatus === 'যাচাইকৃত' ? 'success' : 
+                              user.kycStatus === 'যাচাইকৃত' ? 'default' : 
                               user.kycStatus === 'পেন্ডিং' ? 'warning' : 
                               'outline'
                             }>
@@ -997,7 +997,7 @@ const UserManagement = () => {
                     <TableCell>NID</TableCell>
                     <TableCell>জাকির হোসেন</TableCell>
                     <TableCell>
-                      <Badge variant="success">অনুমোদিত</Badge>
+                      <Badge variant="default">অনুমোদিত</Badge>
                     </TableCell>
                     <TableCell className="text-right">
                       <Button variant="ghost" size="sm">
