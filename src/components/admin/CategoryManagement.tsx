@@ -32,7 +32,8 @@ import {
   MoveDown,
   MoveUp,
   Eye,
-  FilterX
+  FilterX,
+  Palette
 } from 'lucide-react';
 
 // ক্যাটাগরি টাইপ ডিফাইন
@@ -954,3 +955,4 @@ const CategoryManagement: React.FC = () => {
 };
 
 export default CategoryManagement;
+

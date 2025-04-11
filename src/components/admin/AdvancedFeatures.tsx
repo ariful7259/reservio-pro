@@ -1,1710 +1,1695 @@
 
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/components/ui/use-toast';
-import { 
-  ShieldCheck, 
-  Eye, 
-  EyeOff, 
-  Lock, 
-  FileCode, 
-  Database, 
-  Activity, 
-  LineChart, 
-  Code, 
-  RotateCw, 
-  Fingerprint,
-  History,
-  Bot,
-  Rocket,
-  FileJson,
-  Puzzle,
-  Network,
-  BarChart,
-  Filter,
-  Languages,
-  Users,
+import {
   Globe,
-  MailCheck,
-  DollarSign,
-  Star,
+  Database,
+  Settings,
+  BarChart,
+  RefreshCw,
+  Server,
   Zap,
-  Gift,
-  Settings
+  Lock,
+  Shield,
+  CreditCard,
+  CircleDollarSign,
+  Users,
+  Code,
+  Webhook,
+  Compass,
+  FileJson,
+  CloudCog,
+  Key,
+  Wifi,
+  AlertCircle,
+  ArrowRight,
+  Send,
+  ChevronRight,
+  FileText,
+  Bell,
+  Smartphone,
+  PlusCircle,
+  Edit,
+  Trash2,
+  Check,
+  X,
+  Upload,
+  Download,
+  UserCog,
+  Boxes,
+  BarChart3,
+  ShoppingBag,
+  Calendar,
+  MessageSquare
 } from 'lucide-react';
 
-interface ApiEndpoint {
+// ইন্টারফেস ডিফিনিশন
+interface ApiKeyType {
   id: string;
   name: string;
-  path: string;
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
-  isActive: boolean;
-  cacheTime: number;
-  rateLimit: number;
+  key: string;
+  createdAt: string;
+  lastUsed: string | null;
+  permissions: string[];
+  status: 'active' | 'expired' | 'revoked';
 }
 
-interface AiFeature {
+interface WebhookType {
+  id: string;
+  name: string;
+  url: string;
+  events: string[];
+  createdAt: string;
+  lastTriggered: string | null;
+  status: 'active' | 'inactive';
+  secret: string;
+}
+
+interface IntegrationType {
   id: string;
   name: string;
   description: string;
-  isEnabled: boolean;
-  usageQuota: number;
-  usageCount: number;
-  model: string;
+  icon: string;
+  status: 'connected' | 'disconnected' | 'pending';
+  lastSynced: string | null;
+  category: 'payment' | 'marketing' | 'shipping' | 'communication' | 'analytics';
 }
 
-interface IntegrationService {
+interface MonetizationSettingType {
   id: string;
   name: string;
-  type: string;
-  isConnected: boolean;
-  apiKey?: string;
-  lastSynced?: string;
+  description: string;
+  value: string | number | boolean;
+  category: 'commission' | 'fee' | 'discount' | 'promotion' | 'tax';
 }
 
-interface MonetizationSettings {
+interface SecuritySettingType {
   id: string;
   name: string;
-  percentage: number;
-  isEnabled: boolean;
-  minimumAmount: number;
+  description: string;
+  value: string | boolean;
+  category: 'authentication' | 'data' | 'access' | 'compliance';
 }
 
-const initialApiEndpoints: ApiEndpoint[] = [
+// সাম্পল ডাটা
+const sampleApiKeys: ApiKeyType[] = [
   {
-    id: 'api1',
-    name: 'প্রোডাক্ট এপিআই',
-    path: '/api/v1/products',
-    method: 'GET',
-    isActive: true,
-    cacheTime: 60,
-    rateLimit: 100
+    id: 'key1',
+    name: 'প্রোডাকশন API কী',
+    key: 'pk_live_5f3c2e8d7f8g9h0i1j2k3l4m5n6o7p8',
+    createdAt: '2023-06-15T10:30:00Z',
+    lastUsed: '2023-08-20T14:45:00Z',
+    permissions: ['read', 'write', 'products', 'orders'],
+    status: 'active'
   },
   {
-    id: 'api2',
-    name: 'অর্ডার এপিআই',
-    path: '/api/v1/orders',
-    method: 'POST',
-    isActive: true,
-    cacheTime: 0,
-    rateLimit: 50
+    id: 'key2',
+    name: 'ডেভেলপমেন্ট API কী',
+    key: 'pk_test_1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6',
+    createdAt: '2023-07-10T08:15:00Z',
+    lastUsed: '2023-08-18T11:20:00Z',
+    permissions: ['read', 'write', 'products'],
+    status: 'active'
   },
   {
-    id: 'api3',
-    name: 'ইউজার এপিআই',
-    path: '/api/v1/users',
-    method: 'GET',
-    isActive: false,
-    cacheTime: 300,
-    rateLimit: 30
+    id: 'key3',
+    name: 'রিডঅনলি API কী',
+    key: 'pk_ro_9p8o7n6m5l4k3j2i1h0g9f8e7d6c5b',
+    createdAt: '2023-05-05T09:45:00Z',
+    lastUsed: null,
+    permissions: ['read'],
+    status: 'expired'
   }
 ];
 
-const initialAiFeatures: AiFeature[] = [
+const sampleWebhooks: WebhookType[] = [
   {
-    id: 'ai1',
-    name: 'স্মার্ট ক্যাটাগরি ক্লাসিফিকেশন',
-    description: 'প্রোডাক্টকে সঠিক ক্যাটাগরিতে অটোমেটিক অ্যাসাইন করে',
-    isEnabled: true,
-    usageQuota: 1000,
-    usageCount: 320,
-    model: 'gpt-3.5'
+    id: 'wh1',
+    name: 'অর্ডার আপডেট',
+    url: 'https://myapp.com/webhooks/orders',
+    events: ['order.created', 'order.updated', 'order.completed'],
+    createdAt: '2023-06-20T11:00:00Z',
+    lastTriggered: '2023-08-19T16:30:00Z',
+    status: 'active',
+    secret: 'whsec_1234567890abcdef'
   },
   {
-    id: 'ai2',
-    name: 'প্রোডাক্ট ডেসক্রিপশন জেনারেটর',
-    description: 'প্রোডাক্টের জন্য আকর্ষণীয় ডেসক্রিপশন অটোমেটিক তৈরি করে',
-    isEnabled: true,
-    usageQuota: 500,
-    usageCount: 187,
-    model: 'gpt-4'
-  },
-  {
-    id: 'ai3',
-    name: 'ইমেজ মডারেশন',
-    description: 'ইমেজগুলি অটোমেটিক মডারেট করে',
-    isEnabled: false,
-    usageQuota: 2000,
-    usageCount: 0,
-    model: 'content-filter-v2'
+    id: 'wh2',
+    name: 'পেমেন্ট নোটিফিকেশন',
+    url: 'https://myapp.com/webhooks/payments',
+    events: ['payment.successful', 'payment.failed'],
+    createdAt: '2023-07-05T13:45:00Z',
+    lastTriggered: '2023-08-15T10:20:00Z',
+    status: 'active',
+    secret: 'whsec_abcdefghijklmnop'
   }
 ];
 
-const initialIntegrations: IntegrationService[] = [
+const sampleIntegrations: IntegrationType[] = [
   {
     id: 'int1',
-    name: 'পেমেন্ট গেটওয়ে',
-    type: 'payment',
-    isConnected: true,
-    apiKey: '***********************',
-    lastSynced: '১ ঘন্টা আগে'
+    name: 'বিকাশ পেমেন্ট গেটওয়ে',
+    description: 'বিকাশের মাধ্যমে পেমেন্ট গ্রহণ করুন',
+    icon: 'CreditCard',
+    status: 'connected',
+    lastSynced: '2023-08-20T09:30:00Z',
+    category: 'payment'
   },
   {
     id: 'int2',
-    name: 'ইমেইল মার্কেটিং',
-    type: 'email',
-    isConnected: true,
-    apiKey: '***********************',
-    lastSynced: '২ দিন আগে'
+    name: 'এসএমএস মার্কেটিং',
+    description: 'বাল্ক এসএমএস পাঠান',
+    icon: 'MessageSquare',
+    status: 'connected',
+    lastSynced: '2023-08-18T14:15:00Z',
+    category: 'marketing'
   },
   {
     id: 'int3',
-    name: 'এসএমএস গেটওয়ে',
-    type: 'sms',
-    isConnected: false
+    name: 'পাঠাও শিপিং',
+    description: 'পাঠাও শিপিং নেটওয়ার্কের সাথে সংযোগ',
+    icon: 'Compass',
+    status: 'disconnected',
+    lastSynced: null,
+    category: 'shipping'
   },
   {
     id: 'int4',
-    name: 'এনালিটিক্স সার্ভিস',
-    type: 'analytics',
-    isConnected: true,
-    apiKey: '***********************',
-    lastSynced: '১২ ঘন্টা আগে'
+    name: 'গুগল অ্যানালিটিক্স',
+    description: 'ব্যবহারকারী আচরণ ট্র্যাক করুন',
+    icon: 'BarChart',
+    status: 'connected',
+    lastSynced: '2023-08-19T12:00:00Z',
+    category: 'analytics'
   }
 ];
 
-const initialMonetizationSettings: MonetizationSettings[] = [
+const sampleMonetizationSettings: MonetizationSettingType[] = [
   {
     id: 'mon1',
-    name: 'মার্কেটপ্লেস কমিশন',
-    percentage: 5,
-    isEnabled: true,
-    minimumAmount: 100
+    name: 'প্ল্যাটফর্ম কমিশন হার',
+    description: 'সমস্ত বিক্রয়ের জন্য প্ল্যাটফর্ম কমিশন শতাংশ',
+    value: 5,
+    category: 'commission'
   },
   {
     id: 'mon2',
-    name: 'সার্ভিস কমিশন',
-    percentage: 10,
-    isEnabled: true,
-    minimumAmount: 50
+    name: 'প্রিমিয়াম লিস্টিং ফি',
+    description: 'প্রিমিয়াম স্পটে লিস্টিং এর জন্য অতিরিক্ত ফি',
+    value: 100,
+    category: 'fee'
   },
   {
     id: 'mon3',
-    name: 'রেন্টাল কমিশন',
-    percentage: 8,
-    isEnabled: true,
-    minimumAmount: 200
+    name: 'নতুন ব্যবহারকারী ডিসকাউন্ট',
+    description: 'নতুন ব্যবহারকারীদের জন্য প্রথম অর্ডারে ডিসকাউন্ট',
+    value: 10,
+    category: 'discount'
   },
   {
     id: 'mon4',
-    name: 'ডিজিটাল প্রোডাক্ট কমিশন',
-    percentage: 15,
-    isEnabled: true,
-    minimumAmount: 0
+    name: 'রেফারেল বোনাস',
+    description: 'রেফারেল থেকে নতুন ব্যবহারকারী যোগদান করলে বোনাস',
+    value: 50,
+    category: 'promotion'
   },
   {
     id: 'mon5',
-    name: 'রেফারেল বোনাস',
-    percentage: 2,
-    isEnabled: false,
-    minimumAmount: 0
+    name: 'ভ্যাট শতাংশ',
+    description: 'অর্ডারের উপর প্রযোজ্য ভ্যাট শতাংশ',
+    value: 15,
+    category: 'tax'
   }
 ];
 
-const AdvancedFeatures: React.FC = () => {
-  const { toast } = useToast();
-  const [apiEndpoints, setApiEndpoints] = useState<ApiEndpoint[]>(initialApiEndpoints);
-  const [aiFeatures, setAiFeatures] = useState<AiFeature[]>(initialAiFeatures);
-  const [integrations, setIntegrations] = useState<IntegrationService[]>(initialIntegrations);
-  const [monetizationSettings, setMonetizationSettings] = useState<MonetizationSettings[]>(initialMonetizationSettings);
-  const [selectedMonetization, setSelectedMonetization] = useState<MonetizationSettings | null>(null);
-  const [newMonetization, setNewMonetization] = useState<Partial<MonetizationSettings>>({
-    name: '',
-    percentage: 5,
-    isEnabled: true,
-    minimumAmount: 0
-  });
-  const [isEditMonetizationOpen, setIsEditMonetizationOpen] = useState(false);
-  
-  // API স্ট্যাটাস টগল করা
-  const toggleApiStatus = (id: string) => {
-    setApiEndpoints(apiEndpoints.map(api => 
-      api.id === id ? { ...api, isActive: !api.isActive } : api
-    ));
-    
-    const api = apiEndpoints.find(a => a.id === id);
-    if (api) {
-      toast({
-        title: `API ${api.isActive ? 'নিষ্ক্রিয়' : 'সক্রিয়'} করা হয়েছে`,
-        description: `${api.name} এখন ${api.isActive ? 'নিষ্ক্রিয়' : 'সক্রিয়'} অবস্থায় আছে।`,
-      });
-    }
-  };
-  
-  // AI ফিচার টগল করা
-  const toggleAiFeature = (id: string) => {
-    setAiFeatures(aiFeatures.map(feature => 
-      feature.id === id ? { ...feature, isEnabled: !feature.isEnabled } : feature
-    ));
-    
-    const feature = aiFeatures.find(f => f.id === id);
-    if (feature) {
-      toast({
-        title: `AI ফিচার ${feature.isEnabled ? 'নিষ্ক্রিয়' : 'সক্রিয়'} করা হয়েছে`,
-        description: `${feature.name} এখন ${feature.isEnabled ? 'নিষ্ক্রিয়' : 'সক্রিয়'} অবস্থায় আছে।`,
-      });
-    }
-  };
-  
-  // ইন্টিগ্রেশন সেভ করা
-  const saveIntegration = (id: string, apiKey: string) => {
-    setIntegrations(integrations.map(integration => 
-      integration.id === id ? { 
-        ...integration, 
-        isConnected: true, 
-        apiKey, 
-        lastSynced: 'এখন' 
-      } : integration
-    ));
-    
-    toast({
-      title: "ইন্টিগ্রেশন সংযুক্ত করা হয়েছে",
-      description: "API কী সফলভাবে সংরক্ষণ করা হয়েছে এবং সার্ভিস সংযুক্ত করা হয়েছে।",
-    });
-  };
-  
-  // মানিটাইজেশন সেটিংস আপডেট করা
-  const updateMonetizationSetting = () => {
-    if (!selectedMonetization) return;
-    
-    setMonetizationSettings(monetizationSettings.map(setting => 
-      setting.id === selectedMonetization.id ? { 
-        ...setting, 
-        percentage: Number(newMonetization.percentage) || setting.percentage,
-        minimumAmount: Number(newMonetization.minimumAmount) || setting.minimumAmount,
-        isEnabled: newMonetization.isEnabled !== undefined ? newMonetization.isEnabled : setting.isEnabled
-      } : setting
-    ));
-    
-    setIsEditMonetizationOpen(false);
-    
-    toast({
-      title: "মানিটাইজেশন সেটিংস আপডেট করা হয়েছে",
-      description: `${selectedMonetization.name} এর সেটিংস সফলভাবে আপডেট করা হয়েছে।`,
-    });
-  };
-  
-  // মানিটাইজেশন এডিট দিয়ালগ ওপেন করা
-  const openEditMonetization = (setting: MonetizationSettings) => {
-    setSelectedMonetization(setting);
-    setNewMonetization({
-      name: setting.name,
-      percentage: setting.percentage,
-      minimumAmount: setting.minimumAmount,
-      isEnabled: setting.isEnabled
-    });
-    setIsEditMonetizationOpen(true);
-  };
-  
-  // মানিটাইজেশন টগল করা
-  const toggleMonetization = (id: string) => {
-    setMonetizationSettings(monetizationSettings.map(setting => 
-      setting.id === id ? { ...setting, isEnabled: !setting.isEnabled } : setting
-    ));
-    
-    const setting = monetizationSettings.find(s => s.id === id);
-    if (setting) {
-      toast({
-        title: `${setting.name} ${setting.isEnabled ? 'নিষ্ক্রিয়' : 'সক্রিয়'} করা হয়েছে`,
-        description: `${setting.name} এখন ${setting.isEnabled ? 'নিষ্ক্রিয়' : 'সক্রিয়'} অবস্থায় আছে।`,
-      });
-    }
-  };
+const sampleSecuritySettings: SecuritySettingType[] = [
+  {
+    id: 'sec1',
+    name: 'টু-ফ্যাক্টর অথেনটিকেশন',
+    description: 'সমস্ত অ্যাডমিন অ্যাকাউন্টের জন্য 2FA বাধ্যতামূলক করুন',
+    value: true,
+    category: 'authentication'
+  },
+  {
+    id: 'sec2',
+    name: 'ডাটা এনক্রিপশন',
+    description: 'সমস্ত সংবেদনশীল ডাটা এনক্রিপ্ট করে সংরক্ষণ করুন',
+    value: true,
+    category: 'data'
+  },
+  {
+    id: 'sec3',
+    name: 'IP রেস্ট্রিকশন',
+    description: 'অ্যাডমিন পরিষেবাগুলি নির্দিষ্ট IP অ্যাড্রেস থেকে অ্যাক্সেস সীমিত করুন',
+    value: false,
+    category: 'access'
+  },
+  {
+    id: 'sec4',
+    name: 'GDPR কমপ্লায়েন্স',
+    description: 'GDPR নীতিমালা অনুসরণ করুন',
+    value: true,
+    category: 'compliance'
+  },
+  {
+    id: 'sec5',
+    name: 'অটো লগআউট সময়',
+    description: 'নিষ্ক্রিয়তার পরে স্বয়ংক্রিয়ভাবে লগআউট হওয়ার সময় (মিনিটে)',
+    value: '30',
+    category: 'authentication'
+  }
+];
 
+const AdvancedFeatures = () => {
+  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState('apis');
+  const [apiKeys, setApiKeys] = useState<ApiKeyType[]>(sampleApiKeys);
+  const [webhooks, setWebhooks] = useState<WebhookType[]>(sampleWebhooks);
+  const [integrations, setIntegrations] = useState<IntegrationType[]>(sampleIntegrations);
+  const [monetizationSettings, setMonetizationSettings] = useState<MonetizationSettingType[]>(sampleMonetizationSettings);
+  const [securitySettings, setSecuritySettings] = useState<SecuritySettingType[]>(sampleSecuritySettings);
+  
+  const [newApiKeyOpen, setNewApiKeyOpen] = useState(false);
+  const [newWebhookOpen, setNewWebhookOpen] = useState(false);
+  const [newIntegrationOpen, setNewIntegrationOpen] = useState(false);
+  const [configureIntegrationOpen, setConfigureIntegrationOpen] = useState(false);
+  const [selectedIntegration, setSelectedIntegration] = useState<IntegrationType | null>(null);
+  
+  // API কী তৈরি করুন
+  const createApiKey = () => {
+    toast({
+      title: "API কী তৈরি করা হয়েছে",
+      description: "আপনার নতুন API কী সফলভাবে তৈরি করা হয়েছে।",
+    });
+    setNewApiKeyOpen(false);
+  };
+  
+  // API কী রিজেনারেট করুন
+  const regenerateApiKey = (keyId: string) => {
+    toast({
+      title: "API কী রিজেনারেট করা হয়েছে",
+      description: "আপনার API কী সফলভাবে রিজেনারেট করা হয়েছে।",
+    });
+  };
+  
+  // API কী রিভোক করুন
+  const revokeApiKey = (keyId: string) => {
+    const updatedKeys = apiKeys.map(key => 
+      key.id === keyId ? { ...key, status: 'revoked' as const } : key
+    );
+    setApiKeys(updatedKeys);
+    
+    toast({
+      title: "API কী রিভোক করা হয়েছে",
+      description: "আপনার API কী সফলভাবে রিভোক করা হয়েছে।",
+    });
+  };
+  
+  // ওয়েবহুক তৈরি করুন
+  const createWebhook = () => {
+    toast({
+      title: "ওয়েবহুক তৈরি করা হয়েছে",
+      description: "আপনার নতুন ওয়েবহুক সফলভাবে তৈরি করা হয়েছে।",
+    });
+    setNewWebhookOpen(false);
+  };
+  
+  // ওয়েবহুক অ্যাকটিভেট/ডিঅ্যাকটিভেট করুন
+  const toggleWebhookStatus = (webhookId: string) => {
+    const updatedWebhooks = webhooks.map(webhook => {
+      if (webhook.id === webhookId) {
+        return {
+          ...webhook,
+          status: webhook.status === 'active' ? 'inactive' as const : 'active' as const
+        };
+      }
+      return webhook;
+    });
+    
+    setWebhooks(updatedWebhooks);
+    
+    toast({
+      title: "ওয়েবহুক স্ট্যাটাস আপডেট করা হয়েছে",
+      description: "ওয়েবহুক স্ট্যাটাস সফলভাবে আপডেট করা হয়েছে।",
+    });
+  };
+  
+  // ইন্টিগ্রেশন কনফিগার করুন
+  const configureIntegration = (integration: IntegrationType) => {
+    setSelectedIntegration(integration);
+    setConfigureIntegrationOpen(true);
+  };
+  
+  // ইন্টিগ্রেশন কানেক্ট/ডিসকানেক্ট করুন
+  const toggleIntegrationStatus = (integrationId: string) => {
+    const updatedIntegrations = integrations.map(integration => {
+      if (integration.id === integrationId) {
+        return {
+          ...integration,
+          status: integration.status === 'connected' ? 'disconnected' as const : 'connected' as const,
+          lastSynced: integration.status === 'disconnected' ? new Date().toISOString() : integration.lastSynced
+        };
+      }
+      return integration;
+    });
+    
+    setIntegrations(updatedIntegrations);
+    
+    toast({
+      title: "ইন্টিগ্রেশন স্ট্যাটাস আপডেট করা হয়েছে",
+      description: "ইন্টিগ্রেশন স্ট্যাটাস সফলভাবে আপডেট করা হয়েছে।",
+    });
+  };
+  
+  // মনিটাইজেশন সেটিংস আপডেট করুন
+  const updateMonetizationSetting = (settingId: string, newValue: string | number | boolean) => {
+    const updatedSettings = monetizationSettings.map(setting => {
+      if (setting.id === settingId) {
+        return { ...setting, value: newValue };
+      }
+      return setting;
+    });
+    
+    setMonetizationSettings(updatedSettings);
+    
+    toast({
+      title: "সেটিং আপডেট করা হয়েছে",
+      description: "মনিটাইজেশন সেটিং সফলভাবে আপডেট করা হয়েছে।",
+    });
+  };
+  
+  // সিকিউরিটি সেটিংস আপডেট করুন
+  const updateSecuritySetting = (settingId: string, newValue: string | boolean) => {
+    const updatedSettings = securitySettings.map(setting => {
+      if (setting.id === settingId) {
+        return { ...setting, value: newValue };
+      }
+      return setting;
+    });
+    
+    setSecuritySettings(updatedSettings);
+    
+    toast({
+      title: "সিকিউরিটি সেটিং আপডেট করা হয়েছে",
+      description: "সিকিউরিটি সেটিং সফলভাবে আপডেট করা হয়েছে।",
+    });
+  };
+  
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">অ্যাডভান্স ফিচার</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">অ্যাডভান্সড ফিচার সেটিংস</h1>
+      </div>
       
-      <Tabs defaultValue="api">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList className="grid grid-cols-5 w-full">
-          <TabsTrigger value="api" className="flex items-center gap-1">
-            <Network className="h-4 w-4" /> API ম্যানেজমেন্ট
+          <TabsTrigger value="apis" className="flex items-center">
+            <Code className="h-4 w-4 mr-2" />
+            <span>API ম্যানেজমেন্ট</span>
           </TabsTrigger>
-          <TabsTrigger value="ai" className="flex items-center gap-1">
-            <Bot className="h-4 w-4" /> AI ফিচার
+          <TabsTrigger value="integrations" className="flex items-center">
+            <Webhook className="h-4 w-4 mr-2" />
+            <span>ইন্টিগ্রেশন</span>
           </TabsTrigger>
-          <TabsTrigger value="integrations" className="flex items-center gap-1">
-            <Puzzle className="h-4 w-4" /> ইন্টিগ্রেশন
+          <TabsTrigger value="monetization" className="flex items-center">
+            <CircleDollarSign className="h-4 w-4 mr-2" />
+            <span>মনিটাইজেশন</span>
           </TabsTrigger>
-          <TabsTrigger value="monetization" className="flex items-center gap-1">
-            <DollarSign className="h-4 w-4" /> মানিটাইজেশন
+          <TabsTrigger value="security" className="flex items-center">
+            <Shield className="h-4 w-4 mr-2" />
+            <span>সিকিউরিটি</span>
           </TabsTrigger>
-          <TabsTrigger value="advanced" className="flex items-center gap-1">
-            <Settings className="h-4 w-4" /> অ্যাডভান্স সেটিংস
+          <TabsTrigger value="system" className="flex items-center">
+            <CloudCog className="h-4 w-4 mr-2" />
+            <span>সিস্টেম</span>
           </TabsTrigger>
         </TabsList>
         
-        {/* API ম্যানেজমেন্ট */}
-        <TabsContent value="api" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileCode className="h-5 w-5 text-blue-500" />
-                  API এন্ডপয়েন্ট ম্যানেজমেন্ট
-                </CardTitle>
-                <CardDescription>
-                  আপনার অ্যাপ্লিকেশনের API এন্ডপয়েন্টগুলি সক্রিয় বা নিষ্ক্রিয় করুন।
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {apiEndpoints.map(api => (
-                    <div key={api.id} className="flex items-center justify-between p-4 border rounded-lg">
-                      <div>
-                        <h3 className="font-medium">{api.name}</h3>
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <Badge className="mr-2">{api.method}</Badge>
-                          <code className="text-xs bg-slate-100 px-2 py-1 rounded-sm">{api.path}</code>
-                        </div>
-                        <div className="flex items-center gap-4 mt-1">
-                          <div className="text-xs">
-                            <span className="text-muted-foreground">ক্যাশ:</span> {api.cacheTime > 0 ? `${api.cacheTime}s` : 'নিষ্ক্রিয়'}
+        {/* API ম্যানেজমেন্ট ট্যাব */}
+        <TabsContent value="apis" className="space-y-6">
+          <Card>
+            <CardHeader className="pb-4">
+              <div className="flex justify-between items-center">
+                <CardTitle>API কী ম্যানেজমেন্ট</CardTitle>
+                <Dialog open={newApiKeyOpen} onOpenChange={setNewApiKeyOpen}>
+                  <DialogTrigger asChild>
+                    <Button>
+                      <Key className="h-4 w-4 mr-2" />
+                      নতুন API কী
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[525px]">
+                    <DialogHeader>
+                      <DialogTitle>নতুন API কী তৈরি করুন</DialogTitle>
+                      <DialogDescription>
+                        আপনার অ্যাপ্লিকেশনের জন্য নতুন API কী তৈরি করুন। এই কী ব্যবহার করে API কলগুলি অথেন্টিকেট হবে।
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="keyName" className="text-right">
+                          নাম
+                        </Label>
+                        <Input
+                          id="keyName"
+                          placeholder="উদাহরণ: মোবাইল অ্যাপ API কী"
+                          className="col-span-3"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="permissions" className="text-right">
+                          পারমিশন
+                        </Label>
+                        <div className="col-span-3 space-y-2">
+                          <div className="flex items-center space-x-2">
+                            <input type="checkbox" id="perm-read" className="checkbox" defaultChecked />
+                            <Label htmlFor="perm-read">রিড (ডাটা দেখা)</Label>
                           </div>
-                          <div className="text-xs">
-                            <span className="text-muted-foreground">রেট লিমিট:</span> {api.rateLimit}/মিনিট
+                          <div className="flex items-center space-x-2">
+                            <input type="checkbox" id="perm-write" className="checkbox" />
+                            <Label htmlFor="perm-write">রাইট (ডাটা সংশোধন)</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <input type="checkbox" id="perm-delete" className="checkbox" />
+                            <Label htmlFor="perm-delete">ডিলিট (ডাটা মুছে ফেলা)</Label>
                           </div>
                         </div>
                       </div>
-                      <div className="flex flex-col items-end gap-2">
-                        <Switch
-                          id={`api-${api.id}`}
-                          checked={api.isActive}
-                          onCheckedChange={() => toggleApiStatus(api.id)}
-                        />
-                        <Badge 
-                          variant={api.isActive ? 'default' : 'outline'} 
-                          className={api.isActive ? 'bg-green-500' : ''}
-                        >
-                          {api.isActive ? 'সক্রিয়' : 'নিষ্ক্রিয়'}
-                        </Badge>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="expires" className="text-right">
+                          এক্সপায়ার
+                        </Label>
+                        <Select defaultValue="never">
+                          <SelectTrigger className="col-span-3">
+                            <SelectValue placeholder="মেয়াদ শেষ হওয়ার সময়" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="30days">৩০ দিন</SelectItem>
+                            <SelectItem value="90days">৯০ দিন</SelectItem>
+                            <SelectItem value="180days">১৮০ দিন</SelectItem>
+                            <SelectItem value="1year">১ বছর</SelectItem>
+                            <SelectItem value="never">কখনও না</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
-                  ))}
-                  
-                  <Button className="w-full">
-                    নতুন API এন্ডপয়েন্ট যোগ করুন
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Database className="h-5 w-5 text-indigo-500" />
-                  API সেটিংস
-                </CardTitle>
-                <CardDescription>
-                  অ্যাপ্লিকেশনের API সেটিংস কনফিগার করুন।
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="rate-limit">গ্লোবাল রেট লিমিট (রিকোয়েস্ট/মিনিট)</Label>
-                    <Input id="rate-limit" type="number" defaultValue="100" />
-                  </div>
-                  
-                  <div className="grid gap-2">
-                    <Label htmlFor="cache-time">ডিফল্ট ক্যাশ টাইম (সেকেন্ড)</Label>
-                    <Input id="cache-time" type="number" defaultValue="60" />
-                  </div>
-                  
-                  <div className="grid gap-2">
-                    <Label htmlFor="timeout">টাইমআউট (সেকেন্ড)</Label>
-                    <Input id="timeout" type="number" defaultValue="30" />
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Switch id="compress" defaultChecked />
-                    <Label htmlFor="compress">রেসপন্স কম্প্রেশন সক্রিয় করুন</Label>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Switch id="cors" defaultChecked />
-                    <Label htmlFor="cors">CORS সক্রিয় করুন</Label>
-                  </div>
-                  
-                  <div className="grid gap-2">
-                    <Label htmlFor="allowed-origins">অনুমোদিত অরিজিন (কমা দিয়ে আলাদা করুন)</Label>
-                    <Input id="allowed-origins" defaultValue="*" />
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Switch id="auth-required" defaultChecked />
-                    <Label htmlFor="auth-required">API কী অথেনটিকেশন প্রয়োজন</Label>
-                  </div>
-                  
-                  <div className="mt-2">
-                    <Button>সেটিংস সেভ করুন</Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="md:col-span-2">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Activity className="h-5 w-5 text-emerald-500" />
-                  API ট্র্যাফিক মনিটর
-                </CardTitle>
-                <CardDescription>
-                  API কলের ট্র্যাফিক মনিটর করুন এবং পারফরম্যান্স বিশ্লেষণ করুন।
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[300px] bg-slate-50 rounded-lg border flex items-center justify-center">
-                  <div className="text-center">
-                    <LineChart className="h-12 w-12 mx-auto text-slate-300" />
-                    <p className="mt-4 text-muted-foreground">API ট্র্যাফিক রিপোর্ট এখানে দেখানো হবে</p>
-                  </div>
-                </div>
-                
-                <Separator className="my-6" />
-                
+                    <DialogFooter>
+                      <Button type="submit" onClick={createApiKey}>কী তৈরি করুন</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left py-3 px-4">নাম</th>
+                      <th className="text-left py-3 px-4">API কী</th>
+                      <th className="text-left py-3 px-4">তৈরি হয়েছে</th>
+                      <th className="text-left py-3 px-4">শেষ ব্যবহার</th>
+                      <th className="text-left py-3 px-4">স্ট্যাটাস</th>
+                      <th className="text-right py-3 px-4">অ্যাকশন</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {apiKeys.map((apiKey) => (
+                      <tr key={apiKey.id} className="border-b">
+                        <td className="py-3 px-4">{apiKey.name}</td>
+                        <td className="py-3 px-4">
+                          <code className="bg-slate-100 px-2 py-1 rounded text-xs font-mono">
+                            {apiKey.key.substring(0, 10)}...
+                          </code>
+                        </td>
+                        <td className="py-3 px-4 text-muted-foreground">
+                          {new Date(apiKey.createdAt).toLocaleDateString('bn-BD')}
+                        </td>
+                        <td className="py-3 px-4 text-muted-foreground">
+                          {apiKey.lastUsed 
+                            ? new Date(apiKey.lastUsed).toLocaleDateString('bn-BD')
+                            : 'ব্যবহৃত হয়নি'}
+                        </td>
+                        <td className="py-3 px-4">
+                          <Badge variant={apiKey.status === 'active' ? 'default' : 'secondary'} className={
+                            apiKey.status === 'active' 
+                              ? 'bg-green-500' 
+                              : apiKey.status === 'expired' 
+                                ? 'bg-amber-500' 
+                                : 'bg-red-500'
+                          }>
+                            {apiKey.status === 'active' 
+                              ? 'অ্যাকটিভ' 
+                              : apiKey.status === 'expired' 
+                                ? 'মেয়াদোত্তীর্ণ' 
+                                : 'প্রত্যাহার করা হয়েছে'}
+                          </Badge>
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <div className="flex justify-end gap-2">
+                            <Button 
+                              variant="outline"
+                              size="sm"
+                              onClick={() => regenerateApiKey(apiKey.id)}
+                              disabled={apiKey.status !== 'active'}
+                            >
+                              <RefreshCw className="h-4 w-4 mr-1" />
+                              রিজেনারেট
+                            </Button>
+                            <Button 
+                              variant="outline"
+                              size="sm"
+                              onClick={() => revokeApiKey(apiKey.id)}
+                              disabled={apiKey.status !== 'active'}
+                              className="text-red-500 border-red-200 hover:text-red-600"
+                            >
+                              <Lock className="h-4 w-4 mr-1" />
+                              রিভোক
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="pb-4">
+              <div className="flex justify-between items-center">
+                <CardTitle>ওয়েবহুক কনফিগারেশন</CardTitle>
+                <Dialog open={newWebhookOpen} onOpenChange={setNewWebhookOpen}>
+                  <DialogTrigger asChild>
+                    <Button>
+                      <Webhook className="h-4 w-4 mr-2" />
+                      নতুন ওয়েবহুক
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[525px]">
+                    <DialogHeader>
+                      <DialogTitle>নতুন ওয়েবহুক তৈরি করুন</DialogTitle>
+                      <DialogDescription>
+                        ইভেন্ট ট্রিগার হলে আপনার সিস্টেমে নোটিফিকেশন পাঠানোর জন্য ওয়েবহুক কনফিগার করুন।
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="webhookName" className="text-right">
+                          নাম
+                        </Label>
+                        <Input
+                          id="webhookName"
+                          placeholder="উদাহরণ: অর্ডার আপডেট"
+                          className="col-span-3"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="webhookUrl" className="text-right">
+                          এন্ডপয়েন্ট URL
+                        </Label>
+                        <Input
+                          id="webhookUrl"
+                          placeholder="https://example.com/webhook"
+                          className="col-span-3"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-start gap-4">
+                        <Label htmlFor="events" className="text-right">
+                          ইভেন্টস
+                        </Label>
+                        <div className="col-span-3 space-y-2">
+                          <div className="flex items-center space-x-2">
+                            <input type="checkbox" id="evt-order" className="checkbox" />
+                            <Label htmlFor="evt-order">অর্ডার (তৈরি, আপডেট, সম্পন্ন)</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <input type="checkbox" id="evt-payment" className="checkbox" />
+                            <Label htmlFor="evt-payment">পেমেন্ট (সফল, ব্যর্থ)</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <input type="checkbox" id="evt-user" className="checkbox" />
+                            <Label htmlFor="evt-user">ব্যবহারকারী (সাইন আপ, আপডেট)</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <input type="checkbox" id="evt-product" className="checkbox" />
+                            <Label htmlFor="evt-product">প্রোডাক্ট (তৈরি, আপডেট, মুছে ফেলা)</Label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button type="submit" onClick={createWebhook}>ওয়েবহুক তৈরি করুন</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {webhooks.map((webhook) => (
+                  <Card key={webhook.id}>
+                    <CardContent className="p-4">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <h3 className="font-medium">{webhook.name}</h3>
+                            <Switch
+                              checked={webhook.status === 'active'}
+                              onCheckedChange={() => toggleWebhookStatus(webhook.id)}
+                            />
+                          </div>
+                          
+                          <div className="text-sm text-muted-foreground">
+                            <p className="truncate">{webhook.url}</p>
+                            <p className="mt-1">তৈরি: {new Date(webhook.createdAt).toLocaleDateString('bn-BD')}</p>
+                            <p>শেষ ট্রিগার: {webhook.lastTriggered 
+                              ? new Date(webhook.lastTriggered).toLocaleDateString('bn-BD')
+                              : 'কখনও না'}</p>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <p className="text-sm font-medium mb-2">ইভেন্টস</p>
+                          <div className="flex flex-wrap gap-1">
+                            {webhook.events.map((event, index) => (
+                              <Badge key={index} variant="outline" className="whitespace-nowrap">
+                                {event}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-col justify-between">
+                          <div className="flex justify-end gap-2">
+                            <Button variant="outline" size="sm">
+                              <Edit className="h-4 w-4 mr-1" />
+                              এডিট
+                            </Button>
+                            <Button variant="outline" size="sm" className="text-red-500 border-red-200 hover:text-red-600">
+                              <Trash2 className="h-4 w-4 mr-1" />
+                              ডিলিট
+                            </Button>
+                          </div>
+                          
+                          <div className="mt-4">
+                            <p className="text-xs text-muted-foreground">সিক্রেট কী</p>
+                            <div className="flex items-center">
+                              <code className="bg-slate-100 px-2 py-1 rounded text-xs font-mono mr-2">
+                                {webhook.secret.substring(0, 10)}...
+                              </code>
+                              <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                                <RefreshCw className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle>API ডকুমেন্টেশন</CardTitle>
+              <CardDescription>
+                আপনার API ব্যবহারের জন্য ডকুমেন্টেশন এবং গাইড
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="p-4 bg-blue-50 rounded-lg">
-                    <h3 className="font-medium flex items-center gap-2 mb-1">
-                      <Activity className="h-4 w-4 text-blue-500" />
-                      মোট রিকোয়েস্ট
-                    </h3>
-                    <p className="text-2xl font-bold">12,345</p>
-                    <p className="text-xs text-muted-foreground">গত ২৪ ঘন্টা</p>
-                  </div>
+                  <Card className="hover:shadow-md transition-all">
+                    <CardContent className="p-4 flex flex-col items-center text-center">
+                      <FileJson className="h-10 w-10 text-primary mb-2 mt-2" />
+                      <h3 className="font-medium">API রেফারেন্স</h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        সমস্ত API এন্ডপয়েন্ট এবং পরামিতির পূর্ণ ডকুমেন্টেশন
+                      </p>
+                      <Button variant="link" className="mt-2">
+                        দেখুন <ArrowRight className="h-4 w-4 ml-1" />
+                      </Button>
+                    </CardContent>
+                  </Card>
                   
-                  <div className="p-4 bg-green-50 rounded-lg">
-                    <h3 className="font-medium flex items-center gap-2 mb-1">
-                      <Activity className="h-4 w-4 text-green-500" />
-                      সফল রিকোয়েস্ট
-                    </h3>
-                    <p className="text-2xl font-bold">11,892</p>
-                    <p className="text-xs text-muted-foreground">96.3% সফল হার</p>
-                  </div>
+                  <Card className="hover:shadow-md transition-all">
+                    <CardContent className="p-4 flex flex-col items-center text-center">
+                      <Code className="h-10 w-10 text-primary mb-2 mt-2" />
+                      <h3 className="font-medium">কোড উদাহরণ</h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        বিভিন্ন প্রোগ্রামিং ভাষায় API ব্যবহারের উদাহরণ
+                      </p>
+                      <Button variant="link" className="mt-2">
+                        দেখুন <ArrowRight className="h-4 w-4 ml-1" />
+                      </Button>
+                    </CardContent>
+                  </Card>
                   
-                  <div className="p-4 bg-red-50 rounded-lg">
-                    <h3 className="font-medium flex items-center gap-2 mb-1">
-                      <Activity className="h-4 w-4 text-red-500" />
-                      ব্যর্থ রিকোয়েস্ট
-                    </h3>
-                    <p className="text-2xl font-bold">453</p>
-                    <p className="text-xs text-muted-foreground">3.7% ব্যর্থতার হার</p>
-                  </div>
+                  <Card className="hover:shadow-md transition-all">
+                    <CardContent className="p-4 flex flex-col items-center text-center">
+                      <FileText className="h-10 w-10 text-primary mb-2 mt-2" />
+                      <h3 className="font-medium">টিউটোরিয়াল</h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        স্টেপ-বাই-স্টেপ গাইড এবং আমাদের API ব্যবহারের টিউটোরিয়াল
+                      </p>
+                      <Button variant="link" className="mt-2">
+                        দেখুন <ArrowRight className="h-4 w-4 ml-1" />
+                      </Button>
+                    </CardContent>
+                  </Card>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+                
+                <div className="bg-slate-50 p-4 rounded-md">
+                  <p className="text-sm font-medium mb-2">দ্রুত API উদাহরণ (cURL)</p>
+                  <pre className="bg-slate-900 text-slate-50 p-3 rounded-md text-xs overflow-x-auto">
+                    <code>
+                      curl -X GET "https://api.example.com/v1/products" \<br />
+                      {'  '}-H "Authorization: Bearer YOUR_API_KEY" \<br />
+                      {'  '}-H "Content-Type: application/json"
+                    </code>
+                  </pre>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
         
-        {/* AI ফিচার */}
-        <TabsContent value="ai" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="md:col-span-2">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Bot className="h-5 w-5 text-purple-500" />
-                  AI ফিচার কনফিগারেশন
-                </CardTitle>
-                <CardDescription>
-                  আপনার অ্যাপ্লিকেশনের AI ভিত্তিক ফিচার সক্রিয় বা নিষ্ক্রিয় করুন এবং কনফিগার করুন।
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {aiFeatures.map(feature => (
-                    <div key={feature.id} className="p-4 border rounded-lg">
-                      <div className="flex justify-between items-start">
-                        <h3 className="font-medium">{feature.name}</h3>
-                        <Switch
-                          id={`ai-${feature.id}`}
-                          checked={feature.isEnabled}
-                          onCheckedChange={() => toggleAiFeature(feature.id)}
-                        />
+        {/* ইন্টিগ্রেশন ট্যাব */}
+        <TabsContent value="integrations" className="space-y-6">
+          <Card>
+            <CardHeader className="pb-4">
+              <div className="flex justify-between items-center">
+                <CardTitle>ইন্টিগ্রেশন</CardTitle>
+                <Dialog open={newIntegrationOpen} onOpenChange={setNewIntegrationOpen}>
+                  <DialogTrigger asChild>
+                    <Button>
+                      <Webhook className="h-4 w-4 mr-2" />
+                      নতুন ইন্টিগ্রেশন
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[525px]">
+                    <DialogHeader>
+                      <DialogTitle>নতুন ইন্টিগ্রেশন যোগ করুন</DialogTitle>
+                      <DialogDescription>
+                        আপনার সিস্টেমে তৃতীয় পক্ষের পরিষেবা ইন্টিগ্রেট করুন।
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="py-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <Card className="cursor-pointer hover:border-primary/50 transition-all">
+                          <CardContent className="p-4 flex flex-col items-center text-center">
+                            <CreditCard className="h-10 w-10 text-blue-500 mb-2 mt-2" />
+                            <h3 className="font-medium">নগদ পেমেন্ট</h3>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              নগদ পেমেন্ট গেটওয়ে ইন্টিগ্রেশন
+                            </p>
+                          </CardContent>
+                        </Card>
+                        
+                        <Card className="cursor-pointer hover:border-primary/50 transition-all">
+                          <CardContent className="p-4 flex flex-col items-center text-center">
+                            <MessageSquare className="h-10 w-10 text-green-500 mb-2 mt-2" />
+                            <h3 className="font-medium">SMS API</h3>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              এসএমএস এপিআই ইন্টিগ্রেশন
+                            </p>
+                          </CardContent>
+                        </Card>
+                        
+                        <Card className="cursor-pointer hover:border-primary/50 transition-all">
+                          <CardContent className="p-4 flex flex-col items-center text-center">
+                            <Truck className="h-10 w-10 text-amber-500 mb-2 mt-2" />
+                            <h3 className="font-medium">শিপিং সার্ভিস</h3>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              কুরিয়ার পার্টনার ইন্টিগ্রেশন
+                            </p>
+                          </CardContent>
+                        </Card>
+                        
+                        <Card className="cursor-pointer hover:border-primary/50 transition-all">
+                          <CardContent className="p-4 flex flex-col items-center text-center">
+                            <BarChart className="h-10 w-10 text-purple-500 mb-2 mt-2" />
+                            <h3 className="font-medium">অ্যানালিটিক্স</h3>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              অ্যানালিটিক্স ইন্টিগ্রেশন
+                            </p>
+                          </CardContent>
+                        </Card>
                       </div>
                       
-                      <p className="text-sm text-muted-foreground mt-1">{feature.description}</p>
-                      
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-                        <div>
-                          <h4 className="text-xs text-muted-foreground">AI মডেল</h4>
-                          <p className="text-sm font-medium">{feature.model}</p>
-                        </div>
-                        <div>
-                          <h4 className="text-xs text-muted-foreground">কোটা</h4>
-                          <p className="text-sm font-medium">{feature.usageQuota} কল/মাস</p>
-                        </div>
-                        <div>
-                          <h4 className="text-xs text-muted-foreground">ব্যবহার</h4>
-                          <p className="text-sm font-medium">{feature.usageCount} কল ({Math.round((feature.usageCount / feature.usageQuota) * 100)}%)</p>
-                        </div>
-                      </div>
-                      
-                      <div className="mt-3 w-full bg-gray-200 rounded-full h-1.5">
-                        <div 
-                          className="bg-purple-600 h-1.5 rounded-full" 
-                          style={{ width: `${Math.min(100, Math.round((feature.usageCount / feature.usageQuota) * 100))}%` }}
-                        ></div>
-                      </div>
-                      
-                      <div className="mt-4 flex justify-end gap-2">
-                        <Button variant="outline" size="sm">
-                          <RotateCw className="h-4 w-4 mr-2" />
-                          কোটা রিসেট
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          <Settings className="h-4 w-4 mr-2" />
-                          কনফিগার
+                      <div className="mt-4">
+                        <p className="text-sm text-muted-foreground">
+                          কাস্টম ইন্টিগ্রেশন সেটআপ করতে চান?
+                        </p>
+                        <Button variant="outline" className="mt-2 w-full">
+                          <Webhook className="h-4 w-4 mr-2" />
+                          কাস্টম ইন্টিগ্রেশন
                         </Button>
                       </div>
                     </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {integrations.map((integration) => (
+                  <Card key={integration.id} className={integration.status === 'connected' ? 'border-green-200' : ''}>
+                    <CardContent className="p-4">
+                      <div className="flex flex-col">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center">
+                            {integration.icon === 'CreditCard' && <CreditCard className="h-6 w-6 text-blue-500 mr-2" />}
+                            {integration.icon === 'MessageSquare' && <MessageSquare className="h-6 w-6 text-green-500 mr-2" />}
+                            {integration.icon === 'Compass' && <Compass className="h-6 w-6 text-amber-500 mr-2" />}
+                            {integration.icon === 'BarChart' && <BarChart className="h-6 w-6 text-purple-500 mr-2" />}
+                            <h3 className="font-medium">{integration.name}</h3>
+                          </div>
+                          <Badge variant="outline" className={
+                            integration.status === 'connected' 
+                              ? 'bg-green-100 text-green-800 hover:bg-green-100' 
+                              : 'bg-slate-100'
+                          }>
+                            {integration.status === 'connected' 
+                              ? 'সংযুক্ত' 
+                              : 'অসংযুক্ত'}
+                          </Badge>
+                        </div>
+                        
+                        <p className="text-sm text-muted-foreground mt-2">
+                          {integration.description}
+                        </p>
+                        
+                        <div className="mt-2 text-xs text-muted-foreground">
+                          {integration.lastSynced && (
+                            <p>সর্বশেষ সিঙ্ক: {new Date(integration.lastSynced).toLocaleDateString('bn-BD')}</p>
+                          )}
+                        </div>
+                        
+                        <div className="mt-4 flex justify-between">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => configureIntegration(integration)}
+                          >
+                            <Settings className="h-4 w-4 mr-1" />
+                            কনফিগার
+                          </Button>
+                          
+                          <Button 
+                            variant={integration.status === 'connected' ? 'default' : 'outline'} 
+                            size="sm"
+                            onClick={() => toggleIntegrationStatus(integration.id)}
+                          >
+                            {integration.status === 'connected' ? (
+                              <>
+                                <X className="h-4 w-4 mr-1" />
+                                ডিসকানেক্ট
+                              </>
+                            ) : (
+                              <>
+                                <Check className="h-4 w-4 mr-1" />
+                                কানেক্ট
+                              </>
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+                
+                <Card className="border-dashed">
+                  <CardContent className="p-4 flex flex-col items-center justify-center min-h-[180px] text-center cursor-pointer" onClick={() => setNewIntegrationOpen(true)}>
+                    <PlusCircle className="h-10 w-10 text-muted-foreground" />
+                    <p className="mt-2 font-medium">নতুন ইন্টিগ্রেশন যোগ করুন</p>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      আরও তৃতীয় পক্ষের পরিষেবা যোগ করুন
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle>ইন্টিগ্রেশন কিট</CardTitle>
+              <CardDescription>
+                ডেভেলপারদের জন্য টুল এবং সম্পদ
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Card className="hover:shadow-md transition-all">
+                  <CardContent className="p-4">
+                    <Smartphone className="h-8 w-8 text-primary mb-2" />
+                    <h3 className="font-medium">মোবাইল এসডিকে</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      আমাদের মোবাইল এসডিকে ব্যবহার করে আপনার অ্যাপ তৈরি করুন
+                    </p>
+                    <div className="flex mt-4">
+                      <Badge className="mr-2">Android</Badge>
+                      <Badge>iOS</Badge>
+                    </div>
+                    <Button className="w-full mt-4">
+                      <Download className="h-4 w-4 mr-2" />
+                      ডাউনলোড
+                    </Button>
+                  </CardContent>
+                </Card>
+                
+                <Card className="hover:shadow-md transition-all">
+                  <CardContent className="p-4">
+                    <Code className="h-8 w-8 text-primary mb-2" />
+                    <h3 className="font-medium">ফ্রন্টএন্ড লাইব্রেরি</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      আমাদের ফ্রন্টএন্ড লাইব্রেরি ব্যবহার করে ওয়েব ইন্টিগ্রেশন করুন
+                    </p>
+                    <div className="flex mt-4">
+                      <Badge className="mr-2">React</Badge>
+                      <Badge className="mr-2">Angular</Badge>
+                      <Badge>Vue</Badge>
+                    </div>
+                    <Button className="w-full mt-4">
+                      <Globe className="h-4 w-4 mr-2" />
+                      ডকুমেন্টেশন
+                    </Button>
+                  </CardContent>
+                </Card>
+                
+                <Card className="hover:shadow-md transition-all">
+                  <CardContent className="p-4">
+                    <Server className="h-8 w-8 text-primary mb-2" />
+                    <h3 className="font-medium">সার্ভার এসডিকে</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      আপনার ব্যাকএন্ড সিস্টেমে ইন্টিগ্রেশন করুন
+                    </p>
+                    <div className="flex mt-4">
+                      <Badge className="mr-2">Node.js</Badge>
+                      <Badge className="mr-2">PHP</Badge>
+                      <Badge>Python</Badge>
+                    </div>
+                    <Button className="w-full mt-4">
+                      <Upload className="h-4 w-4 mr-2" />
+                      ইন্সটল গাইড
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        {/* মনিটাইজেশন ট্যাব */}
+        <TabsContent value="monetization" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="md:col-span-2">
+              <CardHeader className="pb-4">
+                <CardTitle>মনিটাইজেশন সেটিংস</CardTitle>
+                <CardDescription>
+                  আপনার প্ল্যাটফর্মের আর্থিক কনফিগারেশন পরিচালনা করুন
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {monetizationSettings.map((setting) => (
+                    <div key={setting.id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 border rounded-md">
+                      <div className="mb-2 sm:mb-0">
+                        <p className="font-medium">{setting.name}</p>
+                        <p className="text-sm text-muted-foreground">{setting.description}</p>
+                      </div>
+                      
+                      <div className="w-full sm:w-1/3 lg:w-1/4">
+                        {typeof setting.value === 'boolean' ? (
+                          <Switch
+                            checked={setting.value}
+                            onCheckedChange={(checked) => updateMonetizationSetting(setting.id, checked)}
+                          />
+                        ) : (
+                          <div className="flex">
+                            <Input
+                              type={typeof setting.value === 'number' ? 'number' : 'text'}
+                              value={setting.value.toString()}
+                              onChange={(e) => {
+                                const newValue = typeof setting.value === 'number' ? 
+                                  parseFloat(e.target.value) : 
+                                  e.target.value;
+                                updateMonetizationSetting(setting.id, newValue);
+                              }}
+                              className="rounded-r-none"
+                            />
+                            {setting.category === 'commission' || setting.category === 'discount' || setting.category === 'tax' ? (
+                              <span className="flex items-center justify-center px-3 border border-l-0 rounded-r-md bg-slate-50">%</span>
+                            ) : setting.category === 'fee' ? (
+                              <span className="flex items-center justify-center px-3 border border-l-0 rounded-r-md bg-slate-50">৳</span>
+                            ) : null}
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   ))}
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="pb-4">
+                <CardTitle>মনিটাইজেশন ড্যাশবোর্ড</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-md">
+                    <div className="flex items-center">
+                      <CircleDollarSign className="h-5 w-5 text-green-600 mr-2" />
+                      <span>মোট রেভিনিউ</span>
+                    </div>
+                    <div>
+                      <span className="text-lg font-semibold">৳ 8,92,450</span>
+                    </div>
+                  </div>
                   
-                  <div className="border-dashed border-2 rounded-lg p-6 text-center">
-                    <Bot className="h-12 w-12 mx-auto text-muted-foreground" />
-                    <h3 className="font-medium mt-2">নতুন AI ফিচার যোগ করুন</h3>
-                    <p className="text-sm text-muted-foreground mt-1">আপনার অ্যাপ্লিকেশনে নতুন AI ফিচার যোগ করতে বাটনে ক্লিক করুন।</p>
-                    <Button className="mt-4">
-                      নতুন AI ফিচার
+                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded-md">
+                    <div className="flex items-center">
+                      <ShoppingBag className="h-5 w-5 text-blue-600 mr-2" />
+                      <span>মোট বিক্রয়</span>
+                    </div>
+                    <div>
+                      <span className="text-lg font-semibold">৳ 5,34,200</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-purple-50 rounded-md">
+                    <div className="flex items-center">
+                      <Calendar className="h-5 w-5 text-purple-600 mr-2" />
+                      <span>মাসিক আয়</span>
+                    </div>
+                    <div>
+                      <span className="text-lg font-semibold">৳ 1,24,650</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-amber-50 rounded-md">
+                    <div className="flex items-center">
+                      <Users className="h-5 w-5 text-amber-600 mr-2" />
+                      <span>সক্রিয় সেলার</span>
+                    </div>
+                    <div>
+                      <span className="text-lg font-semibold">128</span>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6">
+                    <Button className="w-full">
+                      <BarChart3 className="h-4 w-4 mr-2" />
+                      সম্পূর্ণ আর্থিক রিপোর্ট
                     </Button>
                   </div>
                 </div>
               </CardContent>
             </Card>
-            
+          </div>
+          
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle>পেমেন্ট মেথড কনফিগারেশন</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 border rounded-md">
+                  <div className="flex items-center">
+                    <div className="w-12 h-12 bg-amber-100 rounded-md flex items-center justify-center">
+                      <CreditCard className="h-6 w-6 text-amber-600" />
+                    </div>
+                    <div className="ml-4">
+                      <p className="font-medium">বিকাশ</p>
+                      <p className="text-sm text-muted-foreground">মার্চেন্ট অ্যাকাউন্ট কনফিগার করা আছে</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <Switch checked={true} />
+                    <Button variant="outline" size="sm">
+                      <Settings className="h-4 w-4 mr-2" />
+                      কনফিগার করুন
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between p-4 border rounded-md">
+                  <div className="flex items-center">
+                    <div className="w-12 h-12 bg-green-100 rounded-md flex items-center justify-center">
+                      <CreditCard className="h-6 w-6 text-green-600" />
+                    </div>
+                    <div className="ml-4">
+                      <p className="font-medium">নগদ</p>
+                      <p className="text-sm text-muted-foreground">মার্চেন্ট অ্যাকাউন্ট কনফিগার করা আছে</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <Switch checked={true} />
+                    <Button variant="outline" size="sm">
+                      <Settings className="h-4 w-4 mr-2" />
+                      কনফিগার করুন
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between p-4 border rounded-md">
+                  <div className="flex items-center">
+                    <div className="w-12 h-12 bg-blue-100 rounded-md flex items-center justify-center">
+                      <CreditCard className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <div className="ml-4">
+                      <p className="font-medium">ক্রেডিট কার্ড</p>
+                      <p className="text-sm text-muted-foreground">স্ট্রাইপ পেমেন্ট গেটওয়ে</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <Switch checked={false} />
+                    <Button variant="outline" size="sm">
+                      <Settings className="h-4 w-4 mr-2" />
+                      কনফিগার করুন
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between p-4 border rounded-md">
+                  <div className="flex items-center">
+                    <div className="w-12 h-12 bg-slate-100 rounded-md flex items-center justify-center">
+                      <CreditCard className="h-6 w-6 text-slate-600" />
+                    </div>
+                    <div className="ml-4">
+                      <p className="font-medium">ক্যাশ অন ডেলিভারি</p>
+                      <p className="text-sm text-muted-foreground">হাতে টাকা বুঝে পেয়ে ডেলিভারি</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <Switch checked={true} />
+                    <Button variant="outline" size="sm">
+                      <Settings className="h-4 w-4 mr-2" />
+                      কনফিগার করুন
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="p-4 border rounded-md border-dashed flex items-center justify-center cursor-pointer hover:bg-slate-50">
+                  <Button variant="outline">
+                    <PlusCircle className="h-4 w-4 mr-2" />
+                    নতুন পেমেন্ট মেথড যোগ করুন
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        {/* সিকিউরিটি ট্যাব */}
+        <TabsContent value="security" className="space-y-6">
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle>সিকিউরিটি সেটিংস</CardTitle>
+              <CardDescription>
+                প্ল্যাটফর্ম সিকিউরিটি প্রিফারেন্স কনফিগার করুন
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {securitySettings.map((setting) => (
+                  <div key={setting.id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 border rounded-md">
+                    <div className="mb-2 sm:mb-0">
+                      <p className="font-medium">{setting.name}</p>
+                      <p className="text-sm text-muted-foreground">{setting.description}</p>
+                    </div>
+                    
+                    <div>
+                      {typeof setting.value === 'boolean' ? (
+                        <Switch
+                          checked={setting.value}
+                          onCheckedChange={(checked) => updateSecuritySetting(setting.id, checked)}
+                        />
+                      ) : (
+                        <Input
+                          type="text"
+                          value={setting.value.toString()}
+                          onChange={(e) => updateSecuritySetting(setting.id, e.target.value)}
+                          className="w-24"
+                        />
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Rocket className="h-5 w-5 text-amber-500" />
-                  AI ইন্টিগ্রেশন সেটিংস
-                </CardTitle>
-                <CardDescription>
-                  AI সার্ভিস প্রোভাইডার সেটিংস কনফিগার করুন।
-                </CardDescription>
+              <CardHeader className="pb-4">
+                <CardTitle>অ্যাডমিন অ্যাকসেস লগ</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="openai-key">OpenAI API কী</Label>
-                    <Input id="openai-key" type="password" value="sk-*********************" />
-                  </div>
-                  
-                  <div className="grid gap-2">
-                    <Label htmlFor="ai-model">ডিফল্ট AI মডেল</Label>
-                    <Select defaultValue="gpt-3.5">
-                      <SelectTrigger>
-                        <SelectValue placeholder="একটি মডেল নির্বাচন করুন" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="gpt-3.5">GPT-3.5 Turbo</SelectItem>
-                        <SelectItem value="gpt-4">GPT-4</SelectItem>
-                        <SelectItem value="gpt-4-turbo">GPT-4 Turbo</SelectItem>
-                        <SelectItem value="claude-3">Claude 3</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="grid gap-2">
-                    <Label htmlFor="max-tokens">মাক্সিমাম টোকেন</Label>
-                    <Input id="max-tokens" type="number" defaultValue="4096" />
-                  </div>
-                  
-                  <div className="grid gap-2">
-                    <Label htmlFor="temperature">টেমপারেচার</Label>
-                    <Input id="temperature" type="number" step="0.1" defaultValue="0.7" />
-                    <p className="text-xs text-muted-foreground">কম মান বেশি নির্ভরযোগ্য রেসপন্স, বেশি মান বেশি ক্রিয়েটিভ রেসপন্স।</p>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Switch id="content-filter" defaultChecked />
-                    <Label htmlFor="content-filter">কন্টেন্ট ফিল্টারিং সক্রিয় করুন</Label>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Switch id="log-ai-calls" defaultChecked />
-                    <Label htmlFor="log-ai-calls">AI কল লগিং</Label>
-                  </div>
-                  
-                  <Button className="w-full">
-                    সেটিংস সেভ করুন
-                  </Button>
-                  
-                  <Separator />
-                  
-                  <div className="pt-2">
-                    <h3 className="font-medium text-sm mb-3">AI ব্যবহার সারাংশ</h3>
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">মাসিক কল:</span>
-                        <span>507 / 1,000</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">টোকেন ব্যবহার:</span>
-                        <span>1.2M / 5M</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">বিলিং সাইকেল:</span>
-                        <span>১৫ দিন বাকি</span>
+                  <div className="flex justify-between items-center p-3 border rounded-md">
+                    <div>
+                      <p className="font-medium">সুপার অ্যাডমিন লগইন</p>
+                      <p className="text-xs text-muted-foreground">২২ আগস্ট, ২০২৩ - ১০:৩০ AM</p>
+                      <div className="flex items-center mt-1">
+                        <Wifi className="h-3 w-3 text-green-600 mr-1" />
+                        <span className="text-xs text-muted-foreground">১০৩.৬৫.৮৯.১২২</span>
                       </div>
                     </div>
+                    <Badge className="bg-green-500">সফল</Badge>
                   </div>
+                  
+                  <div className="flex justify-between items-center p-3 border rounded-md">
+                    <div>
+                      <p className="font-medium">কন্টেন্ট মডারেটর পাসওয়ার্ড চেঞ্জ</p>
+                      <p className="text-xs text-muted-foreground">২১ আগস্ট, ২০২৩ - ০৩:১৫ PM</p>
+                      <div className="flex items-center mt-1">
+                        <Wifi className="h-3 w-3 text-green-600 mr-1" />
+                        <span className="text-xs text-muted-foreground">১০৩.৬৫.৮৯.১২২</span>
+                      </div>
+                    </div>
+                    <Badge className="bg-green-500">সফল</Badge>
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-3 border rounded-md">
+                    <div>
+                      <p className="font-medium">সুপার অ্যাডমিন লগইন</p>
+                      <p className="text-xs text-muted-foreground">২১ আগস্ট, ২০২৩ - ০৯:৪৫ AM</p>
+                      <div className="flex items-center mt-1">
+                        <Wifi className="h-3 w-3 text-red-600 mr-1" />
+                        <span className="text-xs text-muted-foreground">১৮৯.২৩.৪৫.১৩৪</span>
+                      </div>
+                    </div>
+                    <Badge variant="outline" className="border-red-200 text-red-600">ব্যর্থ</Badge>
+                  </div>
+                  
+                  <Button variant="outline" className="w-full">
+                    <FileText className="h-4 w-4 mr-2" />
+                    সম্পূর্ণ লগ দেখুন
+                  </Button>
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="md:col-span-3">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <History className="h-5 w-5 text-blue-500" />
-                  AI কল হিস্টরি
-                </CardTitle>
-                <CardDescription>
-                  সাম্প্রতিক AI API কল এবং রেসপন্স দেখুন।
-                </CardDescription>
+            <Card>
+              <CardHeader className="pb-4">
+                <CardTitle>সিকিউরিটি অ্যালার্ট</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="relative overflow-x-auto shadow-sm rounded-lg border">
-                  <table className="w-full text-sm text-left">
-                    <thead className="text-xs uppercase bg-gray-50">
-                      <tr>
-                        <th scope="col" className="px-6 py-3">তারিখ</th>
-                        <th scope="col" className="px-6 py-3">ফিচার</th>
-                        <th scope="col" className="px-6 py-3">মডেল</th>
-                        <th scope="col" className="px-6 py-3">টোকেন</th>
-                        <th scope="col" className="px-6 py-3">সময়</th>
-                        <th scope="col" className="px-6 py-3">স্ট্যাটাস</th>
-                        <th scope="col" className="px-6 py-3 text-right">অ্যাকশন</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="bg-white border-b">
-                        <td className="px-6 py-4">১৫ আগস্ট, ২০২৩</td>
-                        <td className="px-6 py-4">ক্যাটাগরি ক্লাসিফিকেশন</td>
-                        <td className="px-6 py-4">gpt-3.5</td>
-                        <td className="px-6 py-4">256</td>
-                        <td className="px-6 py-4">1.2s</td>
-                        <td className="px-6 py-4">
-                          <Badge className="bg-green-500">সফল</Badge>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <Button variant="ghost" size="sm">বিস্তারিত</Button>
-                        </td>
-                      </tr>
-                      <tr className="bg-white border-b">
-                        <td className="px-6 py-4">১৫ আগস্ট, ২০২৩</td>
-                        <td className="px-6 py-4">ডেসক্রিপশন জেনারেটর</td>
-                        <td className="px-6 py-4">gpt-4</td>
-                        <td className="px-6 py-4">512</td>
-                        <td className="px-6 py-4">2.5s</td>
-                        <td className="px-6 py-4">
-                          <Badge className="bg-green-500">সফল</Badge>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <Button variant="ghost" size="sm">বিস্তারিত</Button>
-                        </td>
-                      </tr>
-                      <tr className="bg-white border-b">
-                        <td className="px-6 py-4">১৫ আগস্ট, ২০২৩</td>
-                        <td className="px-6 py-4">ইমেজ মডারেশন</td>
-                        <td className="px-6 py-4">content-filter-v2</td>
-                        <td className="px-6 py-4">--</td>
-                        <td className="px-6 py-4">0.8s</td>
-                        <td className="px-6 py-4">
-                          <Badge variant="outline" className="text-red-500 border-red-300">ব্যর্থ</Badge>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <Button variant="ghost" size="sm">বিস্তারিত</Button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                
-                <div className="mt-4 flex justify-center">
-                  <Button variant="outline">আরও দেখুন</Button>
+                <div className="space-y-4">
+                  <div className="p-3 bg-amber-50 border border-amber-200 rounded-md">
+                    <div className="flex items-center">
+                      <AlertCircle className="h-5 w-5 text-amber-600 mr-2" />
+                      <p className="font-medium text-amber-800">অস্বাভাবিক লগইন প্রচেষ্টা</p>
+                    </div>
+                    <p className="text-sm text-amber-700 mt-1">১৯ আগস্ট, ২০২৩ - ০৭:২০ PM থেকে একটি অস্বাভাবিক অবস্থান থেকে একাধিক লগইন প্রচেষ্টা করা হয়েছে।</p>
+                    <div className="mt-2">
+                      <Button variant="outline" size="sm" className="border-amber-300 text-amber-800 bg-amber-50 hover:bg-amber-100">
+                        পর্যালোচনা করুন
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+                    <div className="flex items-center">
+                      <AlertCircle className="h-5 w-5 text-red-600 mr-2" />
+                      <p className="font-medium text-red-800">API কী দুর্ব্যবহার</p>
+                    </div>
+                    <p className="text-sm text-red-700 mt-1">১৮ আগস্ট, ২০২৩ - ১১:৩০ AM থেকে একটি API কী-এর ব্যবহার রেট লিমিট বারবার অতিক্রম করেছে।</p>
+                    <div className="mt-2">
+                      <Button variant="outline" size="sm" className="border-red-300 text-red-800 bg-red-50 hover:bg-red-100">
+                        পর্যালোচনা করুন
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="p-3 bg-slate-50 border border-slate-200 rounded-md">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center">
+                        <Bell className="h-5 w-5 text-slate-600 mr-2" />
+                        <p className="font-medium text-slate-800">সিকিউরিটি স্ক্যান</p>
+                      </div>
+                      <Badge variant="outline" className="border-green-300 text-green-600">আপডেটেড</Badge>
+                    </div>
+                    <p className="text-sm text-slate-600 mt-1">২০ আগস্ট, ২০২৩ - নিরাপত্তা স্ক্যান সফলভাবে সম্পন্ন হয়েছে। কোনো ভালনারাবিলিটি পাওয়া যায়নি।</p>
+                  </div>
+                  
+                  <Button variant="default" className="w-full">
+                    <Shield className="h-4 w-4 mr-2" />
+                    সিকিউরিটি অডিট রান করুন
+                  </Button>
                 </div>
               </CardContent>
             </Card>
           </div>
-        </TabsContent>
-        
-        {/* ইন্টিগ্রেশন */}
-        <TabsContent value="integrations" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {integrations.map(integration => (
-              <Card key={integration.id}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    {integration.type === 'payment' && <DollarSign className="h-5 w-5 text-green-500" />}
-                    {integration.type === 'email' && <MailCheck className="h-5 w-5 text-blue-500" />}
-                    {integration.type === 'sms' && <MessageSquare className="h-5 w-5 text-purple-500" />}
-                    {integration.type === 'analytics' && <BarChart className="h-5 w-5 text-amber-500" />}
-                    {integration.name}
-                  </CardTitle>
-                  <CardDescription>
-                    {integration.type === 'payment' && 'আপনার অ্যাপ্লিকেশনের জন্য পেমেন্ট গেটওয়ে সার্ভিস কনফিগার করুন।'}
-                    {integration.type === 'email' && 'ইমেইল মার্কেটিং সার্ভিস সেটআপ করে নিউজলেটার এবং ট্রানজেকশনাল ইমেইল পাঠান।'}
-                    {integration.type === 'sms' && 'ব্যবহারকারীদের এসএমএস বার্তা পাঠাতে এসএমএস গেটওয়ে সংযোগ করুন।'}
-                    {integration.type === 'analytics' && 'ব্যবহারকারীদের আচরণ ট্র্যাক করতে অ্যানালিটিক্স সার্ভিস কনফিগার করুন।'}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {integration.isConnected ? (
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <Badge className="bg-green-500">সংযুক্ত</Badge>
-                        {integration.lastSynced && (
-                          <span className="text-xs text-muted-foreground">শেষ সিঙ্ক: {integration.lastSynced}</span>
-                        )}
-                      </div>
-                      
-                      <div className="grid gap-2">
-                        <Label>API কী</Label>
-                        <div className="relative">
-                          <Input type="password" value={integration.apiKey} readOnly />
-                          <Button variant="ghost" size="icon" className="absolute right-0 top-0">
-                            <Eye className="h-4 w-4" />
+          
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle>অ্যাডমিন অ্যাকাউন্ট কনফিগারেশন</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="flex flex-col items-center">
+                        <div className="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mt-2">
+                          <UserCog className="h-8 w-8 text-slate-600" />
+                        </div>
+                        <h3 className="font-medium mt-2">সুপার অ্যাডমিন</h3>
+                        <p className="text-sm text-muted-foreground">সর্বোচ্চ অ্যাকসেস লেভেল</p>
+                        <div className="mt-4 w-full">
+                          <Button variant="outline" className="w-full">
+                            <Settings className="h-4 w-4 mr-2" />
+                            অ্যাকসেস কনফিগার
                           </Button>
                         </div>
                       </div>
-                      
-                      <div className="flex gap-2">
-                        <Button variant="outline" className="flex-1">
-                          <RotateCw className="h-4 w-4 mr-2" />
-                          সিঙ্ক করুন
-                        </Button>
-                        <Button variant="outline" className="flex-1">
-                          <Settings className="h-4 w-4 mr-2" />
-                          সেটিংস
-                        </Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <div className="grid gap-2">
-                        <Label>API কী</Label>
-                        <Input placeholder="আপনার API কী দিন" />
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <Switch id={`test-${integration.id}`} />
-                        <Label htmlFor={`test-${integration.id}`}>সংযোগের আগে টেস্ট করুন</Label>
-                      </div>
-                      
-                      <Button 
-                        className="w-full"
-                        onClick={() => saveIntegration(integration.id, 'new-api-key-12345')}
-                      >
-                        সংযোগ করুন
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-            
-            <Card className="md:col-span-2">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileJson className="h-5 w-5 text-indigo-500" />
-                  ওয়েবহুক কনফিগারেশন
-                </CardTitle>
-                <CardDescription>
-                  এক্সটারনাল সিস্টেমের সাথে কানেক্ট করতে ওয়েবহুক কনফিগার করুন।
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="grid gap-2">
-                      <Label>ইনবাউন্ড ওয়েবহুক URL</Label>
-                      <div className="relative">
-                        <Input value="https://yourapp.com/api/webhooks/incoming" readOnly />
-                        <Button variant="ghost" size="icon" className="absolute right-0 top-0">
-                          <FileCode className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      <p className="text-xs text-muted-foreground">এই এন্ডপয়েন্টে পাঠানো রিকোয়েস্টগুলি আপনার অ্যাপে প্রসেস করা হবে।</p>
-                    </div>
-                    
-                    <div className="grid gap-2">
-                      <Label>ওয়েবহুক সিক্রেট</Label>
-                      <div className="relative">
-                        <Input type="password" value="whsec_***********************" readOnly />
-                        <Button variant="ghost" size="icon" className="absolute right-0 top-0">
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      <p className="text-xs text-muted-foreground">এই সিক্রেট ওয়েবহুক পেলোডের ভেরিফিকেশনে ব্যবহার করা হয়।</p>
-                    </div>
-                  </div>
+                    </CardContent>
+                  </Card>
                   
-                  <div className="overflow-x-auto">
-                    <table className="w-full border-collapse">
-                      <thead>
-                        <tr className="border-b">
-                          <th className="text-left py-2 px-4">ইভেন্ট</th>
-                          <th className="text-left py-2 px-4">আউটবাউন্ড URL</th>
-                          <th className="text-left py-2 px-4">সক্রিয়?</th>
-                          <th className="text-left py-2 px-4"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr className="border-b">
-                          <td className="py-2 px-4">new-order</td>
-                          <td className="py-2 px-4">https://external-service.com/webhooks/orders</td>
-                          <td className="py-2 px-4">
-                            <Switch defaultChecked />
-                          </td>
-                          <td className="py-2 px-4">
-                            <Button variant="ghost" size="sm">এডিট</Button>
-                          </td>
-                        </tr>
-                        <tr className="border-b">
-                          <td className="py-2 px-4">payment-success</td>
-                          <td className="py-2 px-4">https://external-service.com/webhooks/payments</td>
-                          <td className="py-2 px-4">
-                            <Switch defaultChecked />
-                          </td>
-                          <td className="py-2 px-4">
-                            <Button variant="ghost" size="sm">এডিট</Button>
-                          </td>
-                        </tr>
-                        <tr className="border-b">
-                          <td className="py-2 px-4">new-user</td>
-                          <td className="py-2 px-4">https://external-service.com/webhooks/users</td>
-                          <td className="py-2 px-4">
-                            <Switch />
-                          </td>
-                          <td className="py-2 px-4">
-                            <Button variant="ghost" size="sm">এডিট</Button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="flex flex-col items-center">
+                        <div className="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mt-2">
+                          <Users className="h-8 w-8 text-slate-600" />
+                        </div>
+                        <h3 className="font-medium mt-2">কন্টেন্ট মডারেটর</h3>
+                        <p className="text-sm text-muted-foreground">কন্টেন্ট অ্যাপ্রুভাল, এডিট</p>
+                        <div className="mt-4 w-full">
+                          <Button variant="outline" className="w-full">
+                            <Settings className="h-4 w-4 mr-2" />
+                            অ্যাকসেস কনফিগার
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                   
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="flex flex-col items-center">
+                        <div className="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mt-2">
+                          <Boxes className="h-8 w-8 text-slate-600" />
+                        </div>
+                        <h3 className="font-medium mt-2">হেল্পডেস্ক অ্যাডমিন</h3>
+                        <p className="text-sm text-muted-foreground">সাপোর্ট ও রিফান্ড</p>
+                        <div className="mt-4 w-full">
+                          <Button variant="outline" className="w-full">
+                            <Settings className="h-4 w-4 mr-2" />
+                            অ্যাকসেস কনফিগার
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                <div className="flex justify-center mt-4">
                   <Button>
-                    নতুন ওয়েবহুক ইভেন্ট
+                    <PlusCircle className="h-4 w-4 mr-2" />
+                    নতুন অ্যাডমিন রোল তৈরি করুন
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
         
-        {/* মানিটাইজেশন */}
-        <TabsContent value="monetization" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="md:col-span-2">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <DollarSign className="h-5 w-5 text-green-500" />
-                  কমিশন এবং ফি সেটিংস
-                </CardTitle>
-                <CardDescription>
-                  বিভিন্ন ধরনের ট্রানজেকশনের জন্য কমিশন এবং ফি কনফিগার করুন।
-                </CardDescription>
+        {/* সিস্টেম ট্যাব */}
+        <TabsContent value="system" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader className="pb-4">
+                <CardTitle>সিস্টেম স্ট্যাটাস</CardTitle>
               </CardHeader>
               <CardContent>
-                <Dialog open={isEditMonetizationOpen} onOpenChange={setIsEditMonetizationOpen}>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>মানিটাইজেশন সেটিংস আপডেট করুন</DialogTitle>
-                      <DialogDescription>
-                        {selectedMonetization?.name} এর কমিশন এবং সেটিংস আপডেট করুন।
-                      </DialogDescription>
-                    </DialogHeader>
-                    
-                    <div className="grid gap-4 py-4">
-                      <div className="grid gap-2">
-                        <Label htmlFor="edit-percentage">কমিশন শতাংশ (%)</Label>
-                        <Input
-                          id="edit-percentage"
-                          type="number"
-                          min="0"
-                          max="100"
-                          step="0.1"
-                          value={newMonetization.percentage}
-                          onChange={(e) => setNewMonetization({
-                            ...newMonetization,
-                            percentage: parseFloat(e.target.value)
-                          })}
-                        />
-                      </div>
-                      
-                      <div className="grid gap-2">
-                        <Label htmlFor="edit-minimum">ন্যূনতম পরিমাণ (৳)</Label>
-                        <Input
-                          id="edit-minimum"
-                          type="number"
-                          min="0"
-                          value={newMonetization.minimumAmount}
-                          onChange={(e) => setNewMonetization({
-                            ...newMonetization,
-                            minimumAmount: parseInt(e.target.value)
-                          })}
-                        />
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <Switch
-                          id="edit-enabled"
-                          checked={newMonetization.isEnabled}
-                          onCheckedChange={(checked) => setNewMonetization({
-                            ...newMonetization,
-                            isEnabled: checked
-                          })}
-                        />
-                        <Label htmlFor="edit-enabled">এই মানিটাইজেশন সক্রিয় রাখুন</Label>
-                      </div>
-                    </div>
-                    
-                    <DialogFooter>
-                      <Button variant="outline" onClick={() => setIsEditMonetizationOpen(false)}>বাতিল</Button>
-                      <Button onClick={updateMonetizationSetting}>সেভ করুন</Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-                
                 <div className="space-y-4">
-                  {monetizationSettings.map(setting => (
-                    <div key={setting.id} className="p-4 border rounded-lg">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-medium">{setting.name}</h3>
-                          <div className="flex items-center gap-2 mt-1">
-                            <Badge className="bg-green-500">{setting.percentage}%</Badge>
-                            <span className="text-xs text-muted-foreground">
-                              ন্যূনতম ৳{setting.minimumAmount}
-                            </span>
-                          </div>
-                        </div>
-                        <Switch
-                          id={`monetization-${setting.id}`}
-                          checked={setting.isEnabled}
-                          onCheckedChange={() => toggleMonetization(setting.id)}
-                        />
+                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-md">
+                    <div className="flex items-center">
+                      <Server className="h-5 w-5 text-green-600 mr-2" />
+                      <span>অ্যাপ্লিকেশন সার্ভার</span>
+                    </div>
+                    <Badge className="bg-green-500">অপারেশনাল</Badge>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-md">
+                    <div className="flex items-center">
+                      <Database className="h-5 w-5 text-green-600 mr-2" />
+                      <span>ডাটাবেস</span>
+                    </div>
+                    <Badge className="bg-green-500">অপারেশনাল</Badge>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-md">
+                    <div className="flex items-center">
+                      <Webhook className="h-5 w-5 text-green-600 mr-2" />
+                      <span>API সার্ভিস</span>
+                    </div>
+                    <Badge className="bg-green-500">অপারেশনাল</Badge>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-amber-50 rounded-md">
+                    <div className="flex items-center">
+                      <Zap className="h-5 w-5 text-amber-600 mr-2" />
+                      <span>ব্যাকগ্রাউন্ড প্রসেসিং</span>
+                    </div>
+                    <Badge className="bg-amber-500">ধীর পারফরম্যান্স</Badge>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-md">
+                    <div className="flex items-center">
+                      <Send className="h-5 w-5 text-green-600 mr-2" />
+                      <span>ইমেইল সিস্টেম</span>
+                    </div>
+                    <Badge className="bg-green-500">অপারেশনাল</Badge>
+                  </div>
+                </div>
+                
+                <Separator className="my-4" />
+                
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">সিস্টেম রিসোর্স</p>
+                  
+                  <div className="space-y-3">
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-muted-foreground">CPU ব্যবহার</span>
+                        <span>45%</span>
                       </div>
-                      
-                      <div className="mt-4 flex justify-end gap-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => openEditMonetization(setting)}
-                        >
-                          <Settings className="h-4 w-4 mr-2" />
-                          কনফিগার
-                        </Button>
+                      <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-blue-500 rounded-full" style={{ width: '45%' }}></div>
                       </div>
                     </div>
-                  ))}
-                  
-                  <Button className="w-full">
-                    নতুন মানিটাইজেশন রুল যোগ করুন
-                  </Button>
+                    
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-muted-foreground">মেমোরি ব্যবহার</span>
+                        <span>68%</span>
+                      </div>
+                      <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-amber-500 rounded-full" style={{ width: '68%' }}></div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-muted-foreground">ডিস্ক স্পেস</span>
+                        <span>32%</span>
+                      </div>
+                      <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-green-500 rounded-full" style={{ width: '32%' }}></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
             
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-amber-500" />
-                  প্রমোশনাল অফার
-                </CardTitle>
-                <CardDescription>
-                  স্পেশাল অফার এবং ডিসকাউন্ট কনফিগার করুন।
-                </CardDescription>
+              <CardHeader className="pb-4">
+                <CardTitle>সিস্টেম ম্যানেজমেন্ট</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="grid gap-2">
-                    <Label>নতুন বিক্রেতাদের জন্য অফার</Label>
-                    <Select defaultValue="fee-waiver">
-                      <SelectTrigger>
-                        <SelectValue placeholder="অফার সিলেক্ট করুন" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="fee-waiver">ফি-ওয়েভার</SelectItem>
-                        <SelectItem value="discount">কমিশন ডিসকাউন্ট</SelectItem>
-                        <SelectItem value="free-listing">ফ্রি লিস্টিং</SelectItem>
-                        <SelectItem value="none">কোন অফার নেই</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="grid gap-2">
-                    <Label>ডিসকাউন্ট শতাংশ</Label>
-                    <Input type="number" min="0" max="100" defaultValue="50" />
-                  </div>
-                  
-                  <div className="grid gap-2">
-                    <Label>অফারের সময়কাল (দিন)</Label>
-                    <Input type="number" min="1" defaultValue="30" />
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label>ফেস্টিভাল ডিসকাউন্ট</Label>
-                      <Switch defaultChecked />
+                  <div className="flex justify-between items-center p-3 border rounded-md">
+                    <div>
+                      <p className="font-medium">ম্যানুয়াল ব্যাকআপ</p>
+                      <p className="text-sm text-muted-foreground">পূর্ণ সিস্টেম ব্যাকআপ তৈরি করুন</p>
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      বিশেষ উৎসবের সময় অর্থ লেনদেনে ডিসকাউন্ট অফার করুন।
-                    </p>
+                    <Button variant="outline">
+                      <Upload className="h-4 w-4 mr-2" />
+                      ব্যাকআপ নিন
+                    </Button>
                   </div>
                   
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label>রেফারেল ডিসকাউন্ট</Label>
-                      <Switch />
+                  <div className="flex justify-between items-center p-3 border rounded-md">
+                    <div>
+                      <p className="font-medium">ক্যাশে ক্লিয়ার করুন</p>
+                      <p className="text-sm text-muted-foreground">সিস্টেম ক্যাশে রিফ্রেশ করুন</p>
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      ব্যবহারকারীরা যখন নতুন ব্যবহারকারী রেফার করে তখন ডিসকাউন্ট দিন।
-                    </p>
+                    <Button variant="outline">
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      ক্লিয়ার
+                    </Button>
                   </div>
                   
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label>ফিডব্যাক ইনসেন্টিভ</Label>
-                      <Switch defaultChecked />
+                  <div className="flex justify-between items-center p-3 border rounded-md">
+                    <div>
+                      <p className="font-medium">সিস্টেম লগ</p>
+                      <p className="text-sm text-muted-foreground">লগ ফাইল দেখুন এবং ডাউনলোড করুন</p>
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      রিভিউ বা ফিডব্যাক দেওয়ার জন্য ইনসেন্টিভ দিন।
-                    </p>
+                    <Button variant="outline">
+                      <FileText className="h-4 w-4 mr-2" />
+                      লগ দেখুন
+                    </Button>
                   </div>
                   
-                  <Button className="w-full">
-                    সেটিংস সেভ করুন
+                  <div className="flex justify-between items-center p-3 border rounded-md">
+                    <div>
+                      <p className="font-medium">ম্যানটেনেন্স মোড</p>
+                      <p className="text-sm text-muted-foreground">সাইট ম্যানটেনেন্স মোডে রাখুন</p>
+                    </div>
+                    <Switch checked={false} />
+                  </div>
+                </div>
+                
+                <Separator className="my-4" />
+                
+                <p className="text-sm font-medium mb-3">সিস্টেম আপডেট</p>
+                
+                <div className="p-4 bg-amber-50 border border-amber-200 rounded-md mb-4">
+                  <div className="flex items-center mb-2">
+                    <AlertCircle className="h-5 w-5 text-amber-600 mr-2" />
+                    <p className="font-medium text-amber-800">নতুন আপডেট উপলব্ধ</p>
+                  </div>
+                  <p className="text-sm text-amber-700">ভার্সন 2.5.0 উপলব্ধ রয়েছে। আপনি বর্তমানে ভার্সন 2.4.8 ব্যবহার করছেন।</p>
+                  <Button className="mt-3 bg-amber-600 hover:bg-amber-700">
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    আপডেট ইনস্টল করুন
                   </Button>
+                </div>
+                
+                <div className="p-3 border rounded-md">
+                  <p className="text-sm font-medium">সর্বশেষ আপডেট: ২০ আগস্ট, ২০২৩</p>
+                  <p className="text-xs text-muted-foreground mt-1">ভার্সন 2.4.8 ইনস্টল করা হয়েছে</p>
                 </div>
               </CardContent>
             </Card>
-            
-            <Card className="md:col-span-3">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Gift className="h-5 w-5 text-purple-500" />
-                  লয়্যালটি প্রোগ্রাম
-                </CardTitle>
-                <CardDescription>
-                  ব্যবহারকারীদের পুরস্কৃত করতে লয়্যালটি পয়েন্ট এবং মেম্বারশিপ সিস্টেম কনফিগার করুন।
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Tabs defaultValue="points">
-                  <TabsList className="grid grid-cols-2 w-[400px]">
-                    <TabsTrigger value="points">লয়্যালটি পয়েন্ট</TabsTrigger>
-                    <TabsTrigger value="tiers">মেম্বারশিপ টিয়ার</TabsTrigger>
+          </div>
+          
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle>এনভায়রনমেন্ট কনফিগারেশন</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <Tabs defaultValue="production">
+                  <TabsList className="w-full grid grid-cols-3">
+                    <TabsTrigger value="production">প্রোডাকশন</TabsTrigger>
+                    <TabsTrigger value="staging">স্টেজিং</TabsTrigger>
+                    <TabsTrigger value="development">ডেভেলপমেন্ট</TabsTrigger>
                   </TabsList>
                   
-                  <TabsContent value="points" className="mt-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-4">
-                        <div className="grid gap-2">
-                          <Label>পয়েন্ট টু কারেন্সি রেশিও</Label>
-                          <div className="flex items-center gap-2">
-                            <Input type="number" defaultValue="100" className="w-24" />
-                            <span className="text-sm">পয়েন্ট</span>
-                            <span>=</span>
-                            <Input type="number" defaultValue="1" className="w-24" />
-                            <span className="text-sm">টাকা</span>
-                          </div>
+                  <TabsContent value="production" className="pt-4">
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="p-3 border rounded-md">
+                          <p className="text-sm font-medium">প্রোডাকশন সার্ভার</p>
+                          <code className="block bg-slate-50 p-2 rounded-md text-xs mt-2 overflow-x-auto">
+                            SERVER_HOST=production.example.com<br />
+                            SERVER_PORT=443<br />
+                            SSL_ENABLED=true
+                          </code>
                         </div>
                         
-                        <div className="grid gap-2">
-                          <Label>প্রতি অর্ডারে পয়েন্ট</Label>
-                          <div className="flex items-center gap-2">
-                            <Input type="number" defaultValue="5" className="w-24" />
-                            <span className="text-sm">পয়েন্ট প্রতি</span>
-                            <Input type="number" defaultValue="100" className="w-24" />
-                            <span className="text-sm">টাকায়</span>
-                          </div>
+                        <div className="p-3 border rounded-md">
+                          <p className="text-sm font-medium">ডাটাবেস কনফিগ</p>
+                          <code className="block bg-slate-50 p-2 rounded-md text-xs mt-2 overflow-x-auto">
+                            DB_HOST=db-prod.example.com<br />
+                            DB_PORT=5432<br />
+                            DB_TYPE=postgres
+                          </code>
                         </div>
                         
-                        <div className="grid gap-2">
-                          <Label>মেক্সিমাম ডিসকাউন্ট পারসেন্টেজ</Label>
-                          <div className="flex items-center gap-2">
-                            <Input type="number" defaultValue="50" className="w-24" />
-                            <span className="text-sm">%</span>
-                          </div>
+                        <div className="p-3 border rounded-md">
+                          <p className="text-sm font-medium">অ্যাপ্লিকেশন সেটিংস</p>
+                          <code className="block bg-slate-50 p-2 rounded-md text-xs mt-2 overflow-x-auto">
+                            APP_ENV=production<br />
+                            DEBUG_MODE=false<br />
+                            LOG_LEVEL=error
+                          </code>
                         </div>
                         
-                        <div className="flex items-center space-x-2">
-                          <Switch id="points-enabled" defaultChecked />
-                          <Label htmlFor="points-enabled">লয়্যালটি পয়েন্ট সিস্টেম সক্রিয় করুন</Label>
+                        <div className="p-3 border rounded-md">
+                          <p className="text-sm font-medium">পেমেন্ট সেটিংস</p>
+                          <code className="block bg-slate-50 p-2 rounded-md text-xs mt-2 overflow-x-auto">
+                            PAYMENT_GATEWAY=live<br />
+                            PAYMENT_DEBUG=false<br />
+                            PAYMENT_TIMEOUT=30
+                          </code>
                         </div>
                       </div>
                       
-                      <div className="space-y-4">
-                        <h3 className="font-medium">পয়েন্ট আর্নিং ইভেন্ট</h3>
-                        
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <ShoppingBag className="h-4 w-4 text-muted-foreground" />
-                              <Label>প্রোডাক্ট কেনা</Label>
-                            </div>
-                            <Switch defaultChecked />
-                          </div>
-                          
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <Star className="h-4 w-4 text-muted-foreground" />
-                              <Label>রিভিউ দেওয়া</Label>
-                            </div>
-                            <Switch defaultChecked />
-                          </div>
-                          
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <Users className="h-4 w-4 text-muted-foreground" />
-                              <Label>রেফারেল</Label>
-                            </div>
-                            <Switch defaultChecked />
-                          </div>
-                          
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <Globe className="h-4 w-4 text-muted-foreground" />
-                              <Label>সোশ্যাল শেয়ার</Label>
-                            </div>
-                            <Switch defaultChecked />
-                          </div>
-                          
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <Calendar className="h-4 w-4 text-muted-foreground" />
-                              <Label>জন্মদিন বোনাস</Label>
-                            </div>
-                            <Switch defaultChecked />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-6 flex justify-end">
-                      <Button>সেটিংস সেভ করুন</Button>
+                      <Button variant="outline" className="w-full">
+                        <Settings className="h-4 w-4 mr-2" />
+                        কনফিগারেশন এডিট করুন
+                      </Button>
                     </div>
                   </TabsContent>
                   
-                  <TabsContent value="tiers" className="mt-4">
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <Card>
-                          <CardContent className="p-4">
-                            <div className="text-center py-4">
-                              <Badge variant="outline" className="mb-2">স্ট্যান্ডার্ড</Badge>
-                              <h3 className="font-bold text-lg">নতুন সদস্য</h3>
-                              <p className="text-sm text-muted-foreground">০-১,০০০ পয়েন্ট</p>
-                            </div>
-                            <Separator className="my-2" />
-                            <div className="space-y-2 py-2">
-                              <div className="flex justify-between text-sm">
-                                <span>বিশেষ অফার</span>
-                                <span>নেই</span>
-                              </div>
-                              <div className="flex justify-between text-sm">
-                                <span>পয়েন্ট মাল্টিপ্লায়ার</span>
-                                <span>1x</span>
-                              </div>
-                              <div className="flex justify-between text-sm">
-                                <span>ফ্রি শিপিং</span>
-                                <span><X className="h-4 w-4 text-red-500" /></span>
-                              </div>
-                            </div>
-                            <Button variant="outline" className="w-full mt-4">এডিট</Button>
-                          </CardContent>
-                        </Card>
-                        
-                        <Card>
-                          <CardContent className="p-4">
-                            <div className="text-center py-4">
-                              <Badge className="mb-2 bg-amber-500">গোল্ড</Badge>
-                              <h3 className="font-bold text-lg">নিয়মিত সদস্য</h3>
-                              <p className="text-sm text-muted-foreground">১,০০০-৫,০০০ পয়েন্ট</p>
-                            </div>
-                            <Separator className="my-2" />
-                            <div className="space-y-2 py-2">
-                              <div className="flex justify-between text-sm">
-                                <span>বিশেষ অফার</span>
-                                <span>5% ডিসকাউন্ট</span>
-                              </div>
-                              <div className="flex justify-between text-sm">
-                                <span>পয়েন্ট মাল্টিপ্লায়ার</span>
-                                <span>1.2x</span>
-                              </div>
-                              <div className="flex justify-between text-sm">
-                                <span>ফ্রি শিপিং</span>
-                                <span>৩,০০০+ অর্ডারে</span>
-                              </div>
-                            </div>
-                            <Button variant="outline" className="w-full mt-4">এডিট</Button>
-                          </CardContent>
-                        </Card>
-                        
-                        <Card>
-                          <CardContent className="p-4">
-                            <div className="text-center py-4">
-                              <Badge className="mb-2 bg-indigo-500">প্লাটিনাম</Badge>
-                              <h3 className="font-bold text-lg">প্রিমিয়াম সদস্য</h3>
-                              <p className="text-sm text-muted-foreground">৫,০০০+ পয়েন্ট</p>
-                            </div>
-                            <Separator className="my-2" />
-                            <div className="space-y-2 py-2">
-                              <div className="flex justify-between text-sm">
-                                <span>বিশেষ অফার</span>
-                                <span>10% ডিসকাউন্ট</span>
-                              </div>
-                              <div className="flex justify-between text-sm">
-                                <span>পয়েন্ট মাল্টিপ্লায়ার</span>
-                                <span>1.5x</span>
-                              </div>
-                              <div className="flex justify-between text-sm">
-                                <span>ফ্রি শিপিং</span>
-                                <span><Check className="h-4 w-4 text-green-500" /></span>
-                              </div>
-                            </div>
-                            <Button variant="outline" className="w-full mt-4">এডিট</Button>
-                          </CardContent>
-                        </Card>
+                  <TabsContent value="staging" className="pt-4">
+                    <div className="flex items-center justify-center p-12">
+                      <div className="text-center">
+                        <Settings className="h-12 w-12 text-muted-foreground mx-auto" />
+                        <p className="mt-4 font-medium">স্টেজিং এনভায়রনমেন্ট কনফিগারেশন</p>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          স্টেজিং এনভায়রনমেন্ট কনফিগার করতে বাটনে ক্লিক করুন
+                        </p>
+                        <Button className="mt-4">
+                          <Plus className="h-4 w-4 mr-2" />
+                          স্টেজিং কনফিগ সেটআপ
+                        </Button>
                       </div>
-                      
-                      <div className="flex justify-center">
-                        <Button>
-                          নতুন মেম্বারশিপ টিয়ার যোগ করুন
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="development" className="pt-4">
+                    <div className="flex items-center justify-center p-12">
+                      <div className="text-center">
+                        <Settings className="h-12 w-12 text-muted-foreground mx-auto" />
+                        <p className="mt-4 font-medium">ডেভেলপমেন্ট এনভায়রনমেন্ট কনফিগারেশন</p>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          ডেভেলপমেন্ট এনভায়রনমেন্ট কনফিগার করতে বাটনে ক্লিক করুন
+                        </p>
+                        <Button className="mt-4">
+                          <Plus className="h-4 w-4 mr-2" />
+                          ডেভেলপমেন্ট কনফিগ সেটআপ
                         </Button>
                       </div>
                     </div>
                   </TabsContent>
                 </Tabs>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-        
-        {/* অ্যাডভান্স সেটিংস */}
-        <TabsContent value="advanced" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <ShieldCheck className="h-5 w-5 text-red-500" />
-                  সিকিউরিটি সেটিংস
-                </CardTitle>
-                <CardDescription>
-                  অ্যাপ্লিকেশনের সিকিউরিটি ফিচার কনফিগার করুন।
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">টু-ফ্যাক্টর অথেনটিকেশন</h3>
-                      <p className="text-sm text-muted-foreground">অ্যাডমিন লগইন এর জন্য 2FA বাধ্যতামূলক করুন।</p>
-                    </div>
-                    <Switch id="2fa-required" defaultChecked />
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">অ্যাডমিন সেশন টাইমআউট</h3>
-                      <p className="text-sm text-muted-foreground">নিষ্ক্রিয়তার পরে অ্যাডমিন সেশন শেষ করুন।</p>
-                    </div>
-                    <Select defaultValue="30">
-                      <SelectTrigger className="w-[100px]">
-                        <SelectValue placeholder="টাইমআউট" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="15">১৫ মিনিট</SelectItem>
-                        <SelectItem value="30">৩০ মিনিট</SelectItem>
-                        <SelectItem value="60">৬০ মিনিট</SelectItem>
-                        <SelectItem value="never">কখনো নয়</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">API কী রোটেশন</h3>
-                      <p className="text-sm text-muted-foreground">নিয়মিত অন্তর API কী পরিবর্তন করুন।</p>
-                    </div>
-                    <Select defaultValue="90">
-                      <SelectTrigger className="w-[100px]">
-                        <SelectValue placeholder="সময়কাল" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="30">৩০ দিন</SelectItem>
-                        <SelectItem value="60">৬০ দিন</SelectItem>
-                        <SelectItem value="90">৯০ দিন</SelectItem>
-                        <SelectItem value="never">কখনো নয়</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">পাসওয়ার্ড পলিসি</h3>
-                      <p className="text-sm text-muted-foreground">পাসওয়ার্ডের জন্য ন্যূনতম প্রয়োজনীয়তা সেট করুন।</p>
-                    </div>
-                    <Select defaultValue="strong">
-                      <SelectTrigger className="w-[100px]">
-                        <SelectValue placeholder="স্ট্রেংথ" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="basic">বেসিক</SelectItem>
-                        <SelectItem value="medium">মিডিয়াম</SelectItem>
-                        <SelectItem value="strong">স্ট্রং</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">অ্যাকাউন্ট লকআউট</h3>
-                      <p className="text-sm text-muted-foreground">বারবার লগইন ব্যর্থতার পরে অ্যাকাউন্ট লক করুন।</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Input 
-                        type="number" 
-                        className="w-16" 
-                        defaultValue="5" 
-                        min="1" 
-                        max="10"
-                      />
-                      <span className="text-sm">ব্যর্থ প্রচেষ্টা</span>
-                    </div>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">অ্যাডমিন অ্যাকশন লগিং</h3>
-                      <p className="text-sm text-muted-foreground">সকল অ্যাডমিন কার্যকলাপ লগ করুন।</p>
-                    </div>
-                    <Switch id="action-logging" defaultChecked />
-                  </div>
-                  
-                  <Button className="w-full mt-2">
-                    সিকিউরিটি সেটিংস সেভ করুন
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Languages className="h-5 w-5 text-blue-500" />
-                  লোকালাইজেশন সেটিংস
-                </CardTitle>
-                <CardDescription>
-                  ভাষা এবং রিজিয়নাল সেটিংস কনফিগার করুন।
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="grid gap-2">
-                    <Label>ডিফল্ট ভাষা</Label>
-                    <Select defaultValue="bn">
-                      <SelectTrigger>
-                        <SelectValue placeholder="ভাষা নির্বাচন করুন" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="bn">বাংলা</SelectItem>
-                        <SelectItem value="en">ইংরেজি</SelectItem>
-                        <SelectItem value="hi">হিন্দি</SelectItem>
-                        <SelectItem value="ar">আরবি</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="grid gap-2">
-                    <Label>ডিফল্ট কারেন্সি</Label>
-                    <Select defaultValue="bdt">
-                      <SelectTrigger>
-                        <SelectValue placeholder="কারেন্সি নির্বাচন করুন" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="bdt">বাংলাদেশি টাকা (৳)</SelectItem>
-                        <SelectItem value="usd">ইউএস ডলার ($)</SelectItem>
-                        <SelectItem value="eur">ইউরো (€)</SelectItem>
-                        <SelectItem value="inr">ভারতীয় রুপি (₹)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="grid gap-2">
-                    <Label>ডিফল্ট টাইমজোন</Label>
-                    <Select defaultValue="asia-dhaka">
-                      <SelectTrigger>
-                        <SelectValue placeholder="টাইমজোন নির্বাচন করুন" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="asia-dhaka">এশিয়া/ঢাকা (GMT+6)</SelectItem>
-                        <SelectItem value="utc">UTC (GMT+0)</SelectItem>
-                        <SelectItem value="asia-kolkata">এশিয়া/কলকাতা (GMT+5:30)</SelectItem>
-                        <SelectItem value="america-new_york">আমেরিকা/নিউ ইয়র্ক (GMT-4)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="grid gap-2">
-                    <Label>তারিখ ফরম্যাট</Label>
-                    <Select defaultValue="dd-mm-yyyy">
-                      <SelectTrigger>
-                        <SelectValue placeholder="ফরম্যাট নির্বাচন করুন" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="dd-mm-yyyy">দিন-মাস-বছর (31-12-2023)</SelectItem>
-                        <SelectItem value="mm-dd-yyyy">মাস-দিন-বছর (12-31-2023)</SelectItem>
-                        <SelectItem value="yyyy-mm-dd">বছর-মাস-দিন (2023-12-31)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="grid gap-2">
-                    <Label>সময় ফরম্যাট</Label>
-                    <Select defaultValue="24h">
-                      <SelectTrigger>
-                        <SelectValue placeholder="ফরম্যাট নির্বাচন করুন" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="12h">12-ঘণ্টা (AM/PM)</SelectItem>
-                        <SelectItem value="24h">24-ঘণ্টা</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">সর্বদা ব্যবহারকারীর ভাষা</h3>
-                      <p className="text-sm text-muted-foreground">ব্যবহারকারীর ভাষা পছন্দ অনুযায়ী সামগ্রী দেখান।</p>
-                    </div>
-                    <Switch id="user-language" defaultChecked />
-                  </div>
-                  
-                  <div className="grid gap-2">
-                    <Label htmlFor="translation-file">অনুবাদ ফাইল আপলোড করুন</Label>
-                    <div className="border border-dashed rounded-lg p-4 text-center">
-                      <Upload className="h-8 w-8 mx-auto text-muted-foreground" />
-                      <p className="text-sm text-muted-foreground mt-2">অনুবাদ JSON ফাইল ড্র্যাগ করুন অথবা</p>
-                      <Button variant="outline" className="mt-2">ফাইল আপলোড করুন</Button>
-                    </div>
-                  </div>
-                  
-                  <Button className="w-full mt-2">
-                    লোকালাইজেশন সেটিংস সেভ করুন
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Filter className="h-5 w-5 text-purple-500" />
-                  কন্টেন্ট মডারেশন সেটিংস
-                </CardTitle>
-                <CardDescription>
-                  কন্টেন্ট মডারেশন পলিসি কনফিগার করুন।
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">অটো মডারেশন</h3>
-                      <p className="text-sm text-muted-foreground">AI দিয়ে কন্টেন্ট অটোমেটিক মডারেট করুন।</p>
-                    </div>
-                    <Switch id="auto-moderation" defaultChecked />
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div>
-                    <h3 className="font-medium mb-2">নিষিদ্ধ শব্দ ফিল্টার</h3>
-                    <Textarea 
-                      placeholder="কমা দিয়ে শব্দ আলাদা করুন" 
-                      defaultValue="অশ্লীল, আপত্তিজনক, আক্রমণাত্মক"
-                      className="h-20"
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">মডারেশন ওয়ার্কফ্লো</h3>
-                      <p className="text-sm text-muted-foreground">কন্টেন্ট পাবলিশ করার আগে মডারেশন প্রয়োজন।</p>
-                    </div>
-                    <Select defaultValue="ai-first">
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="ওয়ার্কফ্লো" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="ai-first">AI, তারপর ম্যানুয়াল</SelectItem>
-                        <SelectItem value="manual-only">শুধু ম্যানুয়াল</SelectItem>
-                        <SelectItem value="ai-only">শুধু AI</SelectItem>
-                        <SelectItem value="none">মডারেশন নেই</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">ইমেজ মডারেশন</h3>
-                      <p className="text-sm text-muted-foreground">অযাচিত ইমেজ আপলোড প্রতিরোধ করুন।</p>
-                    </div>
-                    <Switch id="image-moderation" defaultChecked />
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">ইউজার রিপোর্ট সিস্টেম</h3>
-                      <p className="text-sm text-muted-foreground">ব্যবহারকারীদের আপত্তিজনক কন্টেন্ট রিপোর্ট করতে দিন।</p>
-                    </div>
-                    <Switch id="user-report" defaultChecked />
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">কমেন্ট মডারেশন</h3>
-                      <p className="text-sm text-muted-foreground">ইউজার কমেন্ট মডারেট করুন।</p>
-                    </div>
-                    <Select defaultValue="auto">
-                      <SelectTrigger className="w-[160px]">
-                        <SelectValue placeholder="মডারেশন টাইপ" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="auto">অটোমেটিক</SelectItem>
-                        <SelectItem value="manual">ম্যানুয়াল</SelectItem>
-                        <SelectItem value="post">পোস্ট-মডারেশন</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <Button className="w-full mt-2">
-                    মডারেশন সেটিংস সেভ করুন
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Fingerprint className="h-5 w-5 text-green-500" />
-                  ব্যাকআপ এবং রিস্টোর
-                </CardTitle>
-                <CardDescription>
-                  ডাটা ব্যাকআপ এবং রিস্টোর সেটিংস কনফিগার করুন।
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">অটোমেটিক ব্যাকআপ</h3>
-                      <p className="text-sm text-muted-foreground">নিয়মিত ডাটাবেস ব্যাকআপ সক্রিয় করুন।</p>
-                    </div>
-                    <Switch id="auto-backup" defaultChecked />
-                  </div>
-                  
-                  <div className="grid gap-2">
-                    <Label>ব্যাকআপ ফ্রিকোয়েন্সি</Label>
-                    <Select defaultValue="daily">
-                      <SelectTrigger>
-                        <SelectValue placeholder="ফ্রিকোয়েন্সি নির্বাচন করুন" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="hourly">প্রতি ঘণ্টায়</SelectItem>
-                        <SelectItem value="daily">দৈনিক</SelectItem>
-                        <SelectItem value="weekly">সাপ্তাহিক</SelectItem>
-                        <SelectItem value="monthly">মাসিক</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="grid gap-2">
-                    <Label>ব্যাকআপ লোকেশন</Label>
-                    <Select defaultValue="cloud">
-                      <SelectTrigger>
-                        <SelectValue placeholder="লোকেশন নির্বাচন করুন" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="local">লোকাল স্টোরেজ</SelectItem>
-                        <SelectItem value="cloud">ক্লাউড স্টোরেজ</SelectItem>
-                        <SelectItem value="both">উভয়</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="grid gap-2">
-                    <Label>ব্যাকআপ রিটেনশন</Label>
-                    <div className="flex items-center gap-2">
-                      <Input type="number" defaultValue="30" className="w-20" />
-                      <span className="text-sm">দিন</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      এই সময়ের পরে পুরনো ব্যাকআপ ফাইল মুছে ফেলা হবে।
-                    </p>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="space-y-2">
-                    <h3 className="font-medium">ম্যানুয়াল ব্যাকআপ</h3>
-                    <p className="text-sm text-muted-foreground">বর্তমান ডাটাবেসের ম্যানুয়াল ব্যাকআপ নিন।</p>
-                    <div className="flex gap-2">
-                      <Button className="flex-1">
-                        <Download className="h-4 w-4 mr-2" />
-                        এখন ব্যাকআপ নিন
-                      </Button>
-                      <Button variant="outline" className="flex-1">
-                        <FileJson className="h-4 w-4 mr-2" />
-                        সেটিংস এক্সপোর্ট
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="space-y-2">
-                    <h3 className="font-medium">রিস্টোর ফ্রম ব্যাকআপ</h3>
-                    <p className="text-sm text-muted-foreground">আগের ব্যাকআপ থেকে ডাটা রিস্টোর করুন।</p>
-                    <div className="border border-dashed rounded-lg p-4 text-center">
-                      <Upload className="h-8 w-8 mx-auto text-muted-foreground" />
-                      <p className="text-sm text-muted-foreground mt-2">ব্যাকআপ ফাইল ড্র্যাগ করুন অথবা</p>
-                      <Button variant="outline" className="mt-2">ফাইল আপলোড করুন</Button>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
@@ -1712,3 +1697,4 @@ const AdvancedFeatures: React.FC = () => {
 };
 
 export default AdvancedFeatures;
+
