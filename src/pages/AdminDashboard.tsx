@@ -17,6 +17,7 @@ import ReportManagement from '@/components/admin/ReportManagement';
 import Analytics from '@/components/admin/Analytics';
 import SupportTicket from '@/components/admin/SupportTicket';
 import Settings from '@/components/admin/Settings';
+import MonetizationTab from '@/components/admin/MonetizationTab';
 import { 
   BarChart3, 
   Users, 
@@ -37,7 +38,8 @@ import {
   Truck,
   Palette,
   BookOpen,
-  LogOut
+  LogOut,
+  DollarSign
 } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -78,7 +80,7 @@ const AdminDashboard = () => {
     contentCreators: 3
   };
 
-  // সাইডবার মেনু আইটেম
+  // সাইডবার মেনু আইটেম - মনিটাইজেশন ট্যাব যোগ করলাম
   const sidebarItems = [
     { id: 'dashboard', name: 'ড্যাশবোর্ড', icon: <BarChart3 size={18} /> },
     { id: 'users', name: 'ব্যবহারকারী', icon: <Users size={18} /> },
@@ -88,6 +90,7 @@ const AdminDashboard = () => {
     { id: 'digital', name: 'ডিজিটাল কন্টেন্ট', icon: <BookOpen size={18} /> },
     { id: 'categories', name: 'ক্যাটাগরি ম্যানেজমেন্ট', icon: <Layers size={18} /> },
     { id: 'payments', name: 'পেমেন্ট ম্যানেজমেন্ট', icon: <Banknote size={18} /> },
+    { id: 'monetization', name: 'মানিটাইজেশন', icon: <DollarSign size={18} /> },
     { id: 'reports', name: 'রিপোর্ট', icon: <FileText size={18} /> },
     { id: 'analytics', name: 'অ্যানালিটিক্স', icon: <BarChart size={18} /> },
     { id: 'support', name: 'সাপোর্ট টিকেট', icon: <MessageSquare size={18} /> },
@@ -360,6 +363,8 @@ const AdminDashboard = () => {
           
           {activeModule === 'payments' && <PaymentManagement />}
           
+          {activeModule === 'monetization' && <MonetizationTab />}
+          
           {activeModule === 'reports' && <ReportManagement />}
           
           {activeModule === 'analytics' && <Analytics />}
@@ -371,7 +376,7 @@ const AdminDashboard = () => {
           {activeModule === 'advanced' && <AdvancedFeatures />}
           
           {!['dashboard', 'users', 'marketplace', 'rentals', 'services', 'digital', 'categories', 
-             'payments', 'reports', 'analytics', 'support', 'settings', 'advanced'].includes(activeModule) && (
+             'payments', 'reports', 'analytics', 'support', 'settings', 'advanced', 'monetization'].includes(activeModule) && (
             <div className="flex flex-col items-center justify-center py-12">
               <div className="h-24 w-24 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                 {sidebarItems.find(item => item.id === activeModule)?.icon || <HelpCircle size={32} className="text-primary" />}
