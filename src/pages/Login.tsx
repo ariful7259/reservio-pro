@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,7 +37,18 @@ const Login = () => {
   const [loginType, setLoginType] = useState<"user" | "admin">("user");
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, isAuthenticated, isAdmin } = useAuth();
+  
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isAuthenticated) {
+      if (isAdmin) {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/profile");
+      }
+    }
+  }, [isAuthenticated, isAdmin, navigate]);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,27 +64,24 @@ const Login = () => {
     try {
       await login(values.email, values.password);
       
+      // লগইন সফল হলে বার্তা প্রদর্শন
+      toast({
+        title: "লগইন সফল",
+        description: "আপনি সফলভাবে লগইন করেছেন",
+      });
+      
+      // লগইন প্রকার অনুসারে রিডাইরেক্ট
       if (loginType === "admin") {
-        // অ্যাডমিন চেক করা
-        if (values.email === "admin@example.com" && values.password === "admin123456") {
-          toast({
-            title: "অ্যাডমিন লগইন সফল",
-            description: "আপনি সফলভাবে অ্যাডমিন হিসেবে লগইন করেছেন",
-          });
+        if (values.email === "admin@example.com") {
           navigate("/admin-dashboard");
         } else {
           toast({
             title: "অ্যাডমিন লগইন ব্যর্থ",
-            description: "আপনার ইমেইল বা পাসওয়ার্ড ভুল, অথবা আপনার অ্যাডমিন অ্যাকসেস নেই",
+            description: "আপনার অ্যাডমিন অ্যাকসেস নেই",
             variant: "destructive",
           });
         }
       } else {
-        // সাধারণ ব্যবহারকারী লগইন
-        toast({
-          title: "লগইন সফল",
-          description: "আপনি সফলভাবে লগইন করেছেন",
-        });
         navigate("/profile");
       }
     } catch (error) {

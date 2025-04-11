@@ -32,6 +32,7 @@ import {
   Calendar as CalendarIcon,
   MessageCircle,
   UsersRound,
+  LogIn,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -49,12 +50,16 @@ import {
   DropdownMenuPortal,
 } from '@/components/ui/dropdown-menu';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
 
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const isHomePage = location.pathname === "/";
+  const { user, isAuthenticated, logout, isAdmin } = useAuth();
+  const { toast } = useToast();
   
   const navLinks = [
     { title: 'হোম', path: '/', icon: <Home className="h-5 w-5" /> },
@@ -65,9 +70,29 @@ const Navbar = () => {
   ];
 
   // Profile menu items
-  const profileMenuItems = [
-    { icon: <User className="h-5 w-5" />, name: "ব্যক্তিগত তথ্য", path: "/profile/personal" },
-    { icon: <LogOut className="h-5 w-5" />, name: "লগআউট", path: "/logout" },
+  const profileMenuItems = isAuthenticated ? [
+    { icon: <User className="h-5 w-5" />, name: "প্রোফাইল", path: "/profile-management" },
+    { 
+      icon: <Shield className="h-5 w-5" />, 
+      name: "অ্যাডমিন ড্যাশবোর্ড", 
+      path: "/admin-dashboard",
+      show: isAdmin 
+    },
+    { 
+      icon: <LogOut className="h-5 w-5" />, 
+      name: "লগআউট", 
+      path: "#",
+      onClick: () => {
+        logout();
+        toast({
+          title: "লগআউট সফল",
+          description: "আপনি সফলভাবে লগআউট হয়েছেন",
+        });
+        navigate("/login");
+      } 
+    },
+  ] : [
+    { icon: <LogIn className="h-5 w-5" />, name: "লগইন", path: "/login" },
   ];
 
   // New community features menu items
@@ -279,20 +304,43 @@ const Navbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon" className="rounded-full overflow-hidden">
-                  <User className="h-5 w-5" />
+                  {user ? (
+                    <img 
+                      src={user.avatar || "https://i.pravatar.cc/150?img=1"} 
+                      alt={user.name}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <User className="h-5 w-5" />
+                  )}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>প্রোফাইল</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  {user ? user.name : "অ্যাকাউন্ট"}
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {profileMenuItems.map((item, index) => (
-                  <DropdownMenuItem key={index} asChild>
-                    <Link to={item.path} className="flex items-center gap-2">
-                      {item.icon}
-                      <span>{item.name}</span>
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
+                {profileMenuItems
+                  .filter(item => !item.hasOwnProperty('show') || item.show)
+                  .map((item, index) => (
+                    <DropdownMenuItem key={index} asChild>
+                      {item.onClick ? (
+                        <button 
+                          onClick={item.onClick} 
+                          className="flex items-center gap-2 w-full"
+                        >
+                          {item.icon}
+                          <span>{item.name}</span>
+                        </button>
+                      ) : (
+                        <Link to={item.path} className="flex items-center gap-2">
+                          {item.icon}
+                          <span>{item.name}</span>
+                        </Link>
+                      )}
+                    </DropdownMenuItem>
+                  ))
+                }
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

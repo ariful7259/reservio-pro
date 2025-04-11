@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
@@ -21,7 +20,8 @@ import {
   ShieldCheck,
   Fingerprint,
   Users,
-  Award
+  Award,
+  LogIn,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
@@ -40,28 +40,30 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
 
 export const SidebarDrawer = () => {
   const [activePostType, setActivePostType] = useState('rent');
   const navigate = useNavigate();
-  
-  // User data
-  const user = {
-    name: 'আব্দুল্লাহ আল মামুন',
-    phone: '+৮৮০১৭১২৩৪৫৬৭৮',
-    email: 'abdullah@example.com',
-    image: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80',
-  };
+  const { user, isAuthenticated, logout, isAdmin } = useAuth();
+  const { toast } = useToast();
   
   // Profile menu items
   const profileMenuItems = [
-    { icon: <User className="h-5 w-5" />, name: "ব্যক্তিগত তথ্য", path: "/profile/personal" },
+    { icon: <User className="h-5 w-5" />, name: "ব্যক্তিগত তথ্য", path: "/profile-management" },
     { icon: <MessageSquare className="h-5 w-5" />, name: "নোটিফিকেশন", path: "/notifications", badge: 2 },
     { icon: <Wallet className="h-5 w-5" />, name: "ওয়ালেট", path: "/wallet" },
     { icon: <ShieldCheck className="h-5 w-5" />, name: "সিকিউরিটি", path: "/security" },
     { icon: <Fingerprint className="h-5 w-5" />, name: "KYC ভেরিফিকেশন", path: "/kyc-verification" },
     { icon: <Lightbulb className="h-5 w-5" />, name: "ইউটিলিটিস", path: "/utilities" },
     { icon: <HelpCircle className="h-5 w-5" />, name: "হেল্প এন্ড সাপোর্ট", path: "/help" },
+    { 
+      icon: <ShieldCheck className="h-5 w-5" />, 
+      name: "অ্যাডমিন ড্যাশবোর্ড", 
+      path: "/admin-dashboard",
+      show: isAdmin 
+    },
   ];
 
   const videoAds = [
@@ -85,6 +87,15 @@ export const SidebarDrawer = () => {
     },
   ];
 
+  const handleLogout = () => {
+    logout();
+    toast({
+      title: "লগআউট সফল",
+      description: "আপনি সফলভাবে লগআউট হয়েছেন",
+    });
+    navigate("/login");
+  };
+
   return (
     <Drawer direction="left">
       <DrawerTrigger asChild>
@@ -95,36 +106,53 @@ export const SidebarDrawer = () => {
       </DrawerTrigger>
       <DrawerContent className="w-[85%] max-w-[350px] h-[100vh] overflow-y-auto left-0 right-auto">
         <DrawerHeader className="border-b pb-4">
-          <div className="flex items-center gap-3">
-            <Avatar>
-              <AvatarImage src={user.image} alt={user.name} />
-              <AvatarFallback>AI</AvatarFallback>
-            </Avatar>
-            <div>
-              <DrawerTitle className="text-lg">{user.name}</DrawerTitle>
-              <p className="text-sm text-muted-foreground">{user.phone}</p>
+          {isAuthenticated && user ? (
+            <div className="flex items-center gap-3">
+              <Avatar>
+                <AvatarImage src={user.avatar || ""} alt={user.name} />
+                <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <div>
+                <DrawerTitle className="text-lg">{user.name}</DrawerTitle>
+                <p className="text-sm text-muted-foreground">{user.phone || user.email}</p>
+              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild className="ml-auto">
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {profileMenuItems
+                    .filter(item => !item.hasOwnProperty('show') || item.show)
+                    .map((item, index) => (
+                    <DropdownMenuItem key={index} asChild>
+                      <Link to={item.path} className="flex items-center gap-2 w-full">
+                        {item.icon}
+                        <span>{item.name}</span>
+                        {item.badge && (
+                          <Badge variant="destructive" className="ml-auto">{item.badge}</Badge>
+                        )}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild className="ml-auto">
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <ChevronDown className="h-4 w-4" />
+          ) : (
+            <div className="flex items-center justify-between w-full">
+              <DrawerTitle className="text-lg">Reservio</DrawerTitle>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => navigate("/login")}>
+                  <LogIn className="h-4 w-4 mr-2" />
+                  লগইন
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {profileMenuItems.map((item, index) => (
-                  <DropdownMenuItem key={index} asChild>
-                    <Link to={item.path} className="flex items-center gap-2 w-full">
-                      {item.icon}
-                      <span>{item.name}</span>
-                      {item.badge && (
-                        <Badge variant="destructive" className="ml-auto">{item.badge}</Badge>
-                      )}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+                <Button onClick={() => navigate("/signup")}>
+                  সাইন আপ
+                </Button>
+              </div>
+            </div>
+          )}
         </DrawerHeader>
         
         <div className="px-4 space-y-6 py-4">
@@ -216,15 +244,30 @@ export const SidebarDrawer = () => {
         </div>
         
         <DrawerFooter>
-          <Separator className="mb-4" />
-          <Button 
-            variant="outline" 
-            className="w-full border-red-200 text-red-500 hover:bg-red-50 hover:text-red-600"
-            onClick={() => navigate("/logout")}
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            লগ আউট
-          </Button>
+          {isAuthenticated ? (
+            <>
+              <Separator className="mb-4" />
+              <Button 
+                variant="outline" 
+                className="w-full border-red-200 text-red-500 hover:bg-red-50 hover:text-red-600"
+                onClick={handleLogout}
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                লগ আউট
+              </Button>
+            </>
+          ) : (
+            <>
+              <Separator className="mb-4" />
+              <Button 
+                className="w-full"
+                onClick={() => navigate("/login")}
+              >
+                <LogIn className="h-4 w-4 mr-2" />
+                লগইন করুন
+              </Button>
+            </>
+          )}
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
