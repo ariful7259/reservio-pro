@@ -104,7 +104,7 @@ const MOCK_PRODUCTS = [
     category: 'ইলেকট্রনিক্স', 
     subCategory: 'ক্যামেরা',
     price: '৬৫,০০০ ৳', 
-    seller: 'ফটোগ্রাফার'স হাব', 
+    seller: "ফটোগ্রাফার'স হাব", 
     sellerVerified: false,
     status: 'rejected', 
     stock: 3,
