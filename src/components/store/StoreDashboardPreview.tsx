@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   BarChart, 
@@ -116,12 +115,59 @@ const categoryData = [
   { name: 'অন্যান্য', value: 10 },
 ];
 
-// পাই চার্টের জন্য কালার
+// পাই চার্টের জ���্য কালার
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#9F7AEA', '#F87171'];
 
 const StoreDashboardPreview = () => {
   const [timeRange, setTimeRange] = useState('সাপ্তাহিক');
   const [chartView, setChartView] = useState('bar');
+  
+  // Function to render the appropriate chart based on selected view
+  const renderSalesChart = () => {
+    if (chartView === 'bar') {
+      return (
+        <BarChart
+          data={salesData}
+          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <ChartTooltip content={<ChartTooltipContent />} />
+          <Bar dataKey="sales" name="বিক্রয়" fill="#8884d8" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="orders" name="অর্ডার" fill="#82ca9d" radius={[4, 4, 0, 0]} />
+        </BarChart>
+      );
+    } else if (chartView === 'line') {
+      return (
+        <LineChart
+          data={salesData}
+          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <ChartTooltip content={<ChartTooltipContent />} />
+          <Line type="monotone" dataKey="sales" name="বিক্রয়" stroke="#8884d8" strokeWidth={2} dot={{ r: 4 }} />
+          <Line type="monotone" dataKey="orders" name="অর্ডার" stroke="#82ca9d" strokeWidth={2} dot={{ r: 4 }} />
+        </LineChart>
+      );
+    } else {
+      return (
+        <AreaChart
+          data={salesData}
+          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <ChartTooltip content={<ChartTooltipContent />} />
+          <Area type="monotone" dataKey="sales" name="বিক্রয়" stroke="#8884d8" fill="#8884d8" fillOpacity={0.3} />
+          <Area type="monotone" dataKey="orders" name="অর্ডার" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.3} />
+        </AreaChart>
+      );
+    }
+  };
   
   return (
     <div className="space-y-6">
@@ -246,47 +292,7 @@ const StoreDashboardPreview = () => {
                     orders: { label: "অর্ডার", color: "#82ca9d" }
                   }}
                 >
-                  {chartView === 'bar' && (
-                    <BarChart
-                      data={salesData}
-                      margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Bar dataKey="sales" name="বিক্রয়" fill="#8884d8" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="orders" name="অর্ডার" fill="#82ca9d" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  )}
-                  
-                  {chartView === 'line' && (
-                    <LineChart
-                      data={salesData}
-                      margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Line type="monotone" dataKey="sales" name="বিক্রয়" stroke="#8884d8" strokeWidth={2} dot={{ r: 4 }} />
-                      <Line type="monotone" dataKey="orders" name="অর্ডার" stroke="#82ca9d" strokeWidth={2} dot={{ r: 4 }} />
-                    </LineChart>
-                  )}
-                  
-                  {chartView === 'area' && (
-                    <AreaChart
-                      data={salesData}
-                      margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Area type="monotone" dataKey="sales" name="বিক্রয়" stroke="#8884d8" fill="#8884d8" fillOpacity={0.3} />
-                      <Area type="monotone" dataKey="orders" name="অর্ডার" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.3} />
-                    </AreaChart>
-                  )}
+                  {renderSalesChart()}
                 </ChartContainer>
               </div>
             </CardContent>
@@ -410,7 +416,7 @@ const StoreDashboardPreview = () => {
             <CardTitle className="text-lg flex justify-between items-center">
               <span>শীর্ষ বিক্রিত পণ্য</span>
               <Button variant="ghost" size="sm" className="h-8 gap-1">
-                <Filter className="h-4 w-4" /> ফিল্টার
+                <Filter className="h-4 w-4" /> ফিল��টার
               </Button>
             </CardTitle>
           </CardHeader>
