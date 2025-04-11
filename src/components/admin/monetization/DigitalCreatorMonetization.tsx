@@ -5,16 +5,15 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { Checkbox } from '@/components/ui/checkbox';
 import { 
-  BadgePercent, 
-  CalendarDays, 
+  DollarSign, 
+  BookOpen, 
+  Video, 
   Users, 
-  BookOpen,
-  Video,
-  FileText
+  Calendar
 } from 'lucide-react';
 
 interface DigitalCreatorMonetizationProps {
@@ -23,47 +22,47 @@ interface DigitalCreatorMonetizationProps {
 }
 
 const DigitalCreatorMonetization: React.FC<DigitalCreatorMonetizationProps> = ({ onSave, onEnable }) => {
-  const [courseSalesCommissionEnabled, setCourseSalesCommissionEnabled] = useState(true);
+  const [courseSaleCommissionEnabled, setCourseSaleCommissionEnabled] = useState(true);
   const [subscriptionModelEnabled, setSubscriptionModelEnabled] = useState(true);
   const [premiumMembershipEnabled, setPremiumMembershipEnabled] = useState(false);
   const [oneOnOneSessionEnabled, setOneOnOneSessionEnabled] = useState(false);
-  const [digitalProductSalesEnabled, setDigitalProductSalesEnabled] = useState(false);
+  const [digitalProductSaleEnabled, setDigitalProductSaleEnabled] = useState(false);
 
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Course Sales Commission */}
+        {/* Course Sale Commission */}
         <Card>
           <CardContent className="p-6">
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-4">
-                <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center mt-1">
-                  <BadgePercent className="h-5 w-5 text-green-600" />
+                <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mt-1">
+                  <BookOpen className="h-5 w-5 text-blue-600" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="font-semibold text-lg">কোর্স বিক্রয় কমিশন</h3>
-                    <Badge variant={courseSalesCommissionEnabled ? "success" : "outline"}>
-                      {courseSalesCommissionEnabled ? "সক্রিয়" : "নিষ্ক্রিয়"}
+                    <Badge variant={courseSaleCommissionEnabled ? "success" : "outline"}>
+                      {courseSaleCommissionEnabled ? "সক্রিয়" : "নিষ্ক্রিয়"}
                     </Badge>
                   </div>
                   <p className="text-sm text-muted-foreground mt-1">
-                    প্রতিটি কোর্স বিক্রয়ে নির্দিষ্ট শতাংশ কমিশন
+                    কোর্স ও টিউটোরিয়াল বিক্রয়ের উপর কমিশন
                   </p>
                 </div>
               </div>
               <div className="flex items-center">
                 <Switch 
-                  checked={courseSalesCommissionEnabled} 
+                  checked={courseSaleCommissionEnabled} 
                   onCheckedChange={(checked) => {
-                    setCourseSalesCommissionEnabled(checked);
+                    setCourseSaleCommissionEnabled(checked);
                     if (checked) onEnable("কোর্স বিক্রয় কমিশন");
                   }} 
                 />
               </div>
             </div>
 
-            {courseSalesCommissionEnabled && (
+            {courseSaleCommissionEnabled && (
               <div className="mt-6 space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -138,8 +137,8 @@ const DigitalCreatorMonetization: React.FC<DigitalCreatorMonetizationProps> = ({
           <CardContent className="p-6">
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-4">
-                <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mt-1">
-                  <CalendarDays className="h-5 w-5 text-blue-600" />
+                <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center mt-1">
+                  <DollarSign className="h-5 w-5 text-purple-600" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
@@ -149,7 +148,7 @@ const DigitalCreatorMonetization: React.FC<DigitalCreatorMonetizationProps> = ({
                     </Badge>
                   </div>
                   <p className="text-sm text-muted-foreground mt-1">
-                    মাসিক সাবস্ক্রিপশন ফি দিয়ে অসীম কন্টেন্ট অ্যাক্সেস
+                    ক্রিয়েটরদের কন্টেন্ট অ্যাক্সেসের জন্য সাবস্ক্রিপশন ফি
                   </p>
                 </div>
               </div>
@@ -252,8 +251,8 @@ const DigitalCreatorMonetization: React.FC<DigitalCreatorMonetizationProps> = ({
           <CardContent className="p-6">
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-4">
-                <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center mt-1">
-                  <Users className="h-5 w-5 text-purple-600" />
+                <div className="h-10 w-10 rounded-full bg-amber-100 flex items-center justify-center mt-1">
+                  <Users className="h-5 w-5 text-amber-600" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
@@ -263,7 +262,7 @@ const DigitalCreatorMonetization: React.FC<DigitalCreatorMonetizationProps> = ({
                     </Badge>
                   </div>
                   <p className="text-sm text-muted-foreground mt-1">
-                    অতিরিক্ত ফিচার এবং সেবার জন্য অ্যাডভান্সড প্ল্যান
+                    ক্রিয়েটরদের জন্য বিশেষ ফিচার সহ মেম্বারশিপ
                   </p>
                 </div>
               </div>
@@ -281,64 +280,44 @@ const DigitalCreatorMonetization: React.FC<DigitalCreatorMonetizationProps> = ({
             {premiumMembershipEnabled && (
               <div className="mt-6 space-y-4">
                 <div className="space-y-4">
-                  <div className="border rounded-lg p-4">
-                    <div className="flex justify-between items-center mb-2">
-                      <h4 className="font-medium">বেসিক প্ল্যান</h4>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline">ফ্রি</Badge>
-                        <Switch checked />
+                  <div className="grid grid-cols-1 gap-4">
+                    <div className="border rounded-lg p-4">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <h4 className="font-medium">বেসিক প্ল্যান</h4>
+                          <p className="text-sm text-muted-foreground">৫টি কোর্স, বেসিক ফিচার</p>
+                        </div>
+                        <div>
+                          <Badge>৳১,৫০০/মাসিক</Badge>
+                        </div>
                       </div>
                     </div>
-                    <div className="space-y-1">
-                      <p className="text-sm text-muted-foreground">• লিমিটেড কোর্স অ্যাক্সেস</p>
-                      <p className="text-sm text-muted-foreground">• বেসিক ফিচার</p>
-                      <p className="text-sm text-muted-foreground">• বিজ্ঞাপন সহ</p>
-                    </div>
-                  </div>
-                  
-                  <div className="border rounded-lg p-4">
-                    <div className="flex justify-between items-center mb-2">
-                      <h4 className="font-medium">প্রো প্ল্যান</h4>
-                      <div className="flex items-center gap-2">
-                        <Input 
-                          type="number"
-                          defaultValue="599"
-                          placeholder="মূল্য"
-                          className="w-24"
-                        />
-                        <Switch checked />
+
+                    <div className="border rounded-lg p-4">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <h4 className="font-medium">পেশাদার প্ল্যান</h4>
+                          <p className="text-sm text-muted-foreground">২০টি কোর্স, মাঝারি ফিচার</p>
+                        </div>
+                        <div>
+                          <Badge>৳৩,০০০/মাসিক</Badge>
+                        </div>
                       </div>
                     </div>
-                    <div className="space-y-1">
-                      <p className="text-sm text-muted-foreground">• সমস্ত কোর্স অ্যাক্সেস</p>
-                      <p className="text-sm text-muted-foreground">• এক্সক্লুসিভ ছাড়</p>
-                      <p className="text-sm text-muted-foreground">• বিজ্ঞাপন ছাড়া</p>
-                      <p className="text-sm text-muted-foreground">• সার্টিফিকেট</p>
-                    </div>
-                  </div>
-                  
-                  <div className="border rounded-lg p-4 border-purple-200 bg-purple-50">
-                    <div className="flex justify-between items-center mb-2">
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-medium">প্রিমিয়াম প্ল্যান</h4>
-                        <Badge variant="premium">জনপ্রিয়</Badge>
+
+                    <div className="border rounded-lg p-4 border-amber-200 bg-amber-50">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-medium">বিজনেস প্ল্যান</h4>
+                            <Badge variant="premium">জনপ্রিয়</Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground">অসীম কোর্স, সকল ফিচার</p>
+                        </div>
+                        <div>
+                          <Badge variant="premium">৳৬,৫০০/মাসিক</Badge>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Input 
-                          type="number"
-                          defaultValue="999"
-                          placeholder="মূল্য"
-                          className="w-24"
-                        />
-                        <Switch checked />
-                      </div>
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-sm text-muted-foreground">• সমস্ত প্রো ফিচার</p>
-                      <p className="text-sm text-muted-foreground">• অফিসিয়াল সার্টিফিকেশন</p>
-                      <p className="text-sm text-muted-foreground">• গ্রুপ কোচিং সেশন</p>
-                      <p className="text-sm text-muted-foreground">• এডিটর্স চয়েস কন্টেন্ট</p>
-                      <p className="text-sm text-muted-foreground">• ফ্রি নিউজলেটার</p>
                     </div>
                   </div>
                 </div>
@@ -346,7 +325,7 @@ const DigitalCreatorMonetization: React.FC<DigitalCreatorMonetizationProps> = ({
                 <Separator />
                 
                 <div className="flex justify-end">
-                  <Button size="sm" onClick={onSave}>মেম্বারশিপ প্ল্যান সেভ করুন</Button>
+                  <Button size="sm" onClick={onSave}>মেম্বারশিপ সেটিংস সেভ করুন</Button>
                 </div>
               </div>
             )}
@@ -446,7 +425,7 @@ const DigitalCreatorMonetization: React.FC<DigitalCreatorMonetizationProps> = ({
           </CardContent>
         </Card>
 
-        {/* Digital Product Sales */}
+        {/* Digital Product Sale */}
         <Card>
           <CardContent className="p-6">
             <div className="flex items-start justify-between">
@@ -457,27 +436,27 @@ const DigitalCreatorMonetization: React.FC<DigitalCreatorMonetizationProps> = ({
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="font-semibold text-lg">ডিজিটাল পণ্য বিক্রয়</h3>
-                    <Badge variant={digitalProductSalesEnabled ? "success" : "outline"}>
-                      {digitalProductSalesEnabled ? "সক্রিয়" : "নিষ্ক্রিয়"}
+                    <Badge variant={digitalProductSaleEnabled ? "success" : "outline"}>
+                      {digitalProductSaleEnabled ? "সক্রিয়" : "নিষ্ক্রিয়"}
                     </Badge>
                   </div>
                   <p className="text-sm text-muted-foreground mt-1">
-                    ই-বুক, টেমপ্লেট, সফটওয়্যার টুল ইত্যাদি বিক্রয়
+                    ই-বুক, টেমপ্লেট, সফটওয়্যার টুল ইত্যাদি বিক্���য়
                   </p>
                 </div>
               </div>
               <div className="flex items-center">
                 <Switch 
-                  checked={digitalProductSalesEnabled} 
+                  checked={digitalProductSaleEnabled} 
                   onCheckedChange={(checked) => {
-                    setDigitalProductSalesEnabled(checked);
+                    setDigitalProductSaleEnabled(checked);
                     if (checked) onEnable("ডিজিটাল পণ্য বিক্রয়");
                   }} 
                 />
               </div>
             </div>
 
-            {digitalProductSalesEnabled && (
+            {digitalProductSaleEnabled && (
               <div className="mt-6 space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
