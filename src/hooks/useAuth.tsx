@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 interface User {
@@ -8,6 +9,7 @@ interface User {
   phone?: string;
   address?: string;
   bio?: string;
+  role?: "user" | "admin"; // রোল যুক্ত করলাম
   preferences?: {
     notifications: boolean;
     newsletter: boolean;
@@ -33,6 +35,7 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isAdmin: boolean; // অ্যাডমিন চেক করার জন্য
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
   logout: () => void;
@@ -52,6 +55,7 @@ const MOCK_USERS = [
     phone: "01712345678",
     address: "ঢাকা, বাংলাদেশ",
     bio: "সফটওয়্যার ডেভেলপার এবং টেক এন্থুসিয়াস্ট",
+    role: "user",
     preferences: {
       notifications: true,
       newsletter: true,
@@ -70,6 +74,36 @@ const MOCK_USERS = [
       twitter: "https://twitter.com/akashahmed",
       instagram: "https://instagram.com/akashahmed",
       linkedin: "https://linkedin.com/in/akashahmed"
+    }
+  },
+  {
+    id: "2",
+    name: "অ্যাডমিন",
+    email: "admin@example.com",
+    password: "admin123456",
+    avatar: "https://i.pravatar.cc/150?img=2",
+    role: "admin",
+    phone: "01712345679",
+    address: "ঢাকা, বাংলাদেশ",
+    bio: "সিস্টেম অ্যাডমিনিস্ট্রেটর",
+    preferences: {
+      notifications: true,
+      newsletter: false,
+      darkMode: true,
+      language: "bn"
+    },
+    stats: {
+      postsCount: 0,
+      reviewsCount: 0,
+      commentsCount: 0,
+      bookingsCount: 0
+    },
+    joinDate: "2022-01-15T10:30:00Z",
+    socialProfiles: {
+      facebook: "",
+      twitter: "",
+      instagram: "",
+      linkedin: ""
     }
   }
 ];
@@ -127,6 +161,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       name,
       email,
       password,
+      role: "user" as const,
       avatar: `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70)}`,
       phone: "",
       address: "",
@@ -186,12 +221,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // অ্যাডমিন কিনা চেক
+  const isAdmin = user?.role === "admin";
+
   return (
     <AuthContext.Provider
       value={{
         user,
         isAuthenticated: !!user,
         isLoading,
+        isAdmin,
         login,
         signup,
         logout,

@@ -54,6 +54,7 @@ import Stories from "./pages/Stories";
 import EventCalendar from "./pages/EventCalendar";
 import Forums from "./pages/Forums";
 import GroupBooking from "./pages/GroupBooking";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const queryClient = new QueryClient();
 
@@ -106,6 +107,10 @@ const App = () => (
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/profile-management" element={<ProfileManagement />} />
+                
+                {/* Admin Routes */}
+                <Route path="/admin-dashboard" element={<AdminDashboard />} />
+                <Route path="/admin-dashboard/:section" element={<AdminDashboard />} />
                 
                 {/* Chat System */}
                 <Route path="/messages" element={<ChatPage />} />
