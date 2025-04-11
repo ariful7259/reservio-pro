@@ -55,7 +55,7 @@ const MOCK_USERS = [
     phone: "01712345678",
     address: "ঢাকা, বাংলাদেশ",
     bio: "সফটওয়্যার ডেভেলপার এবং টেক এন্থুসিয়াস্ট",
-    role: "user",
+    role: "user" as const,
     preferences: {
       notifications: true,
       newsletter: true,
@@ -82,7 +82,7 @@ const MOCK_USERS = [
     email: "admin@example.com",
     password: "admin123456",
     avatar: "https://i.pravatar.cc/150?img=2",
-    role: "admin",
+    role: "admin" as const,
     phone: "01712345679",
     address: "ঢাকা, বাংলাদেশ",
     bio: "সিস্টেম অ্যাডমিনিস্ট্রেটর",
@@ -134,7 +134,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     if (foundUser) {
       const { password: _, ...userWithoutPassword } = foundUser;
-      setUser(userWithoutPassword);
+      setUser(userWithoutPassword as User);
       localStorage.setItem("user", JSON.stringify(userWithoutPassword));
     } else {
       throw new Error("Invalid credentials");
@@ -193,7 +193,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     // Set the user in state (without the password)
     const { password: _, ...userWithoutPassword } = newUser;
-    setUser(userWithoutPassword);
+    setUser(userWithoutPassword as User);
     localStorage.setItem("user", JSON.stringify(userWithoutPassword));
     
     setIsLoading(false);
@@ -215,7 +215,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (userIndex >= 0) {
         MOCK_USERS[userIndex] = {
           ...MOCK_USERS[userIndex],
-          ...userData
+          ...userData,
+          // Ensure role remains the correct type
+          role: (userData.role || MOCK_USERS[userIndex].role) as "user" | "admin"
         };
       }
     }
