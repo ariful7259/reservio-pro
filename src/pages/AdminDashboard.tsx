@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,12 +14,15 @@ import ServiceManagement from '@/components/admin/ServiceManagement';
 import DigitalContentManagement from '@/components/admin/DigitalContentManagement';
 import PaymentManagement from '@/components/admin/PaymentManagement';
 import ReportManagement from '@/components/admin/ReportManagement';
+import Analytics from '@/components/admin/Analytics';
+import SupportTicket from '@/components/admin/SupportTicket';
+import Settings from '@/components/admin/Settings';
 import { 
   BarChart3, 
   Users, 
   ShoppingBag, 
   Layers, 
-  Settings, 
+  Settings as SettingsIcon, 
   Bell, 
   Package, 
   FileText, 
@@ -89,7 +91,7 @@ const AdminDashboard = () => {
     { id: 'reports', name: 'রিপোর্ট', icon: <FileText size={18} /> },
     { id: 'analytics', name: 'অ্যানালিটিক্স', icon: <BarChart size={18} /> },
     { id: 'support', name: 'সাপোর্ট টিকেট', icon: <MessageSquare size={18} /> },
-    { id: 'settings', name: 'সেটিংস', icon: <Settings size={18} /> },
+    { id: 'settings', name: 'সেটিংস', icon: <SettingsIcon size={18} /> },
     { id: 'advanced', name: 'অ্যাডভান্স ফিচার', icon: <ShieldCheck size={18} /> },
   ];
   
@@ -360,9 +362,16 @@ const AdminDashboard = () => {
           
           {activeModule === 'reports' && <ReportManagement />}
           
+          {activeModule === 'analytics' && <Analytics />}
+          
+          {activeModule === 'support' && <SupportTicket />}
+          
+          {activeModule === 'settings' && <Settings />}
+          
           {activeModule === 'advanced' && <AdvancedFeatures />}
           
-          {!['dashboard', 'users', 'marketplace', 'rentals', 'services', 'digital', 'categories', 'payments', 'reports', 'advanced'].includes(activeModule) && (
+          {!['dashboard', 'users', 'marketplace', 'rentals', 'services', 'digital', 'categories', 
+             'payments', 'reports', 'analytics', 'support', 'settings', 'advanced'].includes(activeModule) && (
             <div className="flex flex-col items-center justify-center py-12">
               <div className="h-24 w-24 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                 {sidebarItems.find(item => item.id === activeModule)?.icon || <HelpCircle size={32} className="text-primary" />}
