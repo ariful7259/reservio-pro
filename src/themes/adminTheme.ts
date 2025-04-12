@@ -52,6 +52,12 @@ export const adminTheme = {
       primary: 'linear-gradient(to right, #2262C6, #3C7DEF)',
       secondary: 'linear-gradient(to right, #6E59A5, #9B87F5)',
       accent: 'linear-gradient(to right, #00A389, #00C9A7)'
+    },
+    // নতুন ফ্যান্সি গ্র্যাডিয়েন্ট
+    fancy: {
+      blue: 'linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)',
+      purple: 'linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)',
+      green: 'linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%)'
     }
   },
   shadows: {
@@ -79,6 +85,11 @@ export const adminTheme = {
     xl: '2rem',      // 32px
     '2xl': '2.5rem', // 40px
     '3xl': '3rem'    // 48px
+  },
+  animation: {
+    fast: '0.2s',
+    default: '0.3s',
+    slow: '0.5s'
   }
 };
 
@@ -135,4 +146,3 @@ export const applyAdminTheme = (element: HTMLElement, isDarkMode: boolean = fals
     element.style.setProperty('--radius-xl', adminTheme.borderRadius.xl);
   }
 };
-

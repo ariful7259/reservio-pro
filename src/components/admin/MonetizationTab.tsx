@@ -19,7 +19,7 @@ const MonetizationTab = () => {
       }}
     >
       <Card 
-        className="overflow-hidden transition-all duration-300"
+        className="overflow-hidden transition-all duration-300 card-hover-effect card-shimmer"
         style={{
           background: isDarkMode 
             ? `linear-gradient(135deg, ${adminTheme.colors.dark.surface} 0%, rgba(55, 65, 81, 0.8) 100%)` 
@@ -30,13 +30,18 @@ const MonetizationTab = () => {
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.boxShadow = adminTheme.shadows.hover;
-          e.currentTarget.style.transform = 'translateY(-2px)';
+          e.currentTarget.style.transform = 'translateY(-3px)';
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.boxShadow = adminTheme.shadows.card;
           e.currentTarget.style.transform = 'translateY(0)';
         }}
       >
+        <div className="absolute top-0 left-0 w-full h-2" style={{ 
+          background: adminTheme.gradients.primary,
+          borderTopLeftRadius: adminTheme.borderRadius.xl,
+          borderTopRightRadius: adminTheme.borderRadius.xl,
+        }}></div>
         <CardContent className="p-0">
           <MonetizationDashboard />
         </CardContent>

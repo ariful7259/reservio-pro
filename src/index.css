@@ -35,7 +35,7 @@
  
     --radius: 0.5rem;
     
-    /* Admin থিম ভেরিয়েবলস */
+    /* অ্যাডমিন থিম ভেরিয়েবলস */
     --admin-primary: 214 77% 46%; /* #2262C6 */
     --admin-secondary: 263 29% 48%; /* #6E59A5 */
     --admin-accent: 169 100% 32%; /* #00A389 */
@@ -129,6 +129,12 @@
   to { transform: scale(1); opacity: 1; }
 }
 
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out forwards;
 }
@@ -139,6 +145,10 @@
 
 .animate-scale-in {
   animation: scaleIn 0.3s ease-out forwards;
+}
+
+.animate-pulse-effect {
+  animation: pulse 2s ease-in-out infinite;
 }
 
 /* Staggered animations for lists */
@@ -170,6 +180,11 @@
   
   .card-gradient-accent {
     background: linear-gradient(135deg, rgba(0, 163, 137, 0.05) 0%, rgba(0, 201, 167, 0.1) 100%);
+  }
+  
+  /* নতুন গ্র্যাডিয়েন্ট ক্লাস যোগ করছি */
+  .card-hover-effect {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
   }
   
   /* বাটন গ্র্যাডিয়েন্ট ক্লাস */
@@ -212,9 +227,37 @@
     transform: translateY(-3px);
   }
   
+  /* গ্লাস ইফেক্ট এবং মর্ফিজম */
+  .glass-effect {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-md;
+  }
+  
+  .glass-effect-dark {
+    @apply bg-gray-900/70 backdrop-blur-md border border-gray-800/50 shadow-md;
+  }
+  
+  /* নতুন ইন্টারএক্টিভ হোভার ইফেক্ট */
+  .interactive-hover {
+    @apply relative overflow-hidden transition-all duration-300 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:to-white/10 before:translate-x-full before:transition-transform before:duration-500 hover:before:translate-x-0;
+  }
+  
   /* ডার্ক মোড গ্লাস এফেক্ট */
   .dark-glass {
     @apply dark:bg-gray-900/40 dark:backdrop-blur-lg dark:border dark:border-gray-800/50;
+  }
+  
+  /* নতুন বাটন ইফেক্ট */
+  .button-pop {
+    @apply active:scale-95 transition-transform;
+  }
+  
+  /* WCAG AA কমপ্লায়েন্ট টেক্সট কন্ট্রাস্ট */
+  .text-accessible {
+    @apply text-gray-900 dark:text-gray-50;
+  }
+  
+  .text-accessible-muted {
+    @apply text-gray-700 dark:text-gray-300;
   }
 }
 
@@ -227,3 +270,42 @@
   @apply bg-gray-700 hover:bg-gray-600 text-white;
 }
 
+/* নতুন অ্যানিমেশন ইফেক্ট */
+.card-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* 3D হোভার ইফেক্ট */
+.hover-3d {
+  transition: transform 0.3s ease;
+  transform: perspective(1000px) rotateX(0) rotateY(0);
+}
+
+.hover-3d:hover {
+  transform: perspective(1000px) rotateX(2deg) rotateY(2deg);
+}
