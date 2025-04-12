@@ -34,6 +34,19 @@
     --ring: 222.2 84% 4.9%;
  
     --radius: 0.5rem;
+    
+    /* Admin থিম ভেরিয়েবলস */
+    --admin-primary: 214 77% 46%; /* #2262C6 */
+    --admin-secondary: 263 29% 48%; /* #6E59A5 */
+    --admin-accent: 169 100% 32%; /* #00A389 */
+    --admin-background: 214 75% 97%; /* #F5F8FC */
+    --admin-success: 151 74% 40%; /* #10B981 */
+    --admin-warning: 35 92% 50%; /* #F59E0B */
+    --admin-error: 0 84% 60%; /* #EF4444 */
+    --admin-info: 217 91% 60%; /* #3B82F6 */
+    --admin-text-primary: 215 28% 17%; /* #1F2937 */
+    --admin-text-secondary: 214 16% 32%; /* #4B5563 */
+    --admin-text-muted: 215 12% 47%; /* #6B7280 */
   }
  
   .dark {
@@ -64,6 +77,16 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+    
+    /* ডার্ক মোড অ্যাডমিন থিম ভেরিয়েবলস */
+    --admin-primary: 214 95% 67%; /* #60A5FA */
+    --admin-secondary: 263 85% 76%; /* #A78BFA */
+    --admin-accent: 158 64% 52%; /* #34D399 */
+    --admin-background: 215 28% 17%; /* #1F2937 */
+    --admin-surface: 217 19% 27%; /* #374151 */
+    --admin-text-primary: 210 20% 98%; /* #F9FAFB */
+    --admin-text-secondary: 210 16% 93%; /* #E5E7EB */
+    --admin-text-muted: 217 14% 83%; /* #D1D5DB */
   }
 }
  
@@ -129,3 +152,78 @@
 .stagger-item:nth-child(8) { animation-delay: 0.4s; }
 .stagger-item:nth-child(9) { animation-delay: 0.45s; }
 .stagger-item:nth-child(10) { animation-delay: 0.5s; }
+
+/* ইউটিলিটি ক্লাস যোগ করা */
+@layer utilities {
+  /* কার্ড গ্র্যাডিয়েন্ট ক্লাস */
+  .card-gradient-light {
+    @apply bg-gradient-to-br from-white to-gray-100;
+  }
+  
+  .card-gradient-primary {
+    background: linear-gradient(135deg, rgba(34, 98, 198, 0.05) 0%, rgba(60, 125, 239, 0.1) 100%);
+  }
+  
+  .card-gradient-secondary {
+    background: linear-gradient(135deg, rgba(110, 89, 165, 0.05) 0%, rgba(155, 135, 245, 0.1) 100%);
+  }
+  
+  .card-gradient-accent {
+    background: linear-gradient(135deg, rgba(0, 163, 137, 0.05) 0%, rgba(0, 201, 167, 0.1) 100%);
+  }
+  
+  /* বাটন গ্র্যাডিয়েন্ট ক্লাস */
+  .btn-gradient-primary {
+    background: linear-gradient(to right, #2262C6, #3C7DEF);
+  }
+  
+  .btn-gradient-secondary {
+    background: linear-gradient(to right, #6E59A5, #9B87F5);
+  }
+  
+  .btn-gradient-accent {
+    background: linear-gradient(to right, #00A389, #00C9A7);
+  }
+  
+  /* শ্যাডো ক্লাস */
+  .shadow-card {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
+  }
+  
+  .shadow-hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12), 0 3px 6px rgba(0, 0, 0, 0.08);
+  }
+  
+  .shadow-button {
+    box-shadow: 0 2px 4px rgba(34, 98, 198, 0.15), 0 1px 2px rgba(34, 98, 198, 0.1);
+  }
+  
+  /* ট্রানজিশন ক্লাস */
+  .transition-smooth {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  /* হোভার ইফেক্ট ক্লাস */
+  .hover-lift {
+    @apply transition-all duration-300;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-3px);
+  }
+  
+  /* ডার্ক মোড গ্লাস এফেক্ট */
+  .dark-glass {
+    @apply dark:bg-gray-900/40 dark:backdrop-blur-lg dark:border dark:border-gray-800/50;
+  }
+}
+
+/* ডার্ক মোড ইউটিলিটি ক্লাস */
+.dark .card-dark {
+  @apply bg-gray-800 border-gray-700;
+}
+
+.dark .btn-dark {
+  @apply bg-gray-700 hover:bg-gray-600 text-white;
+}
+

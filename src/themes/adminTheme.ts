@@ -19,6 +19,19 @@ export const adminTheme = {
       secondary: '#4B5563',
       muted: '#6B7280',
       light: '#9CA3AF'
+    },
+    // ডার্ক মোড কালার
+    dark: {
+      background: '#1F2937',
+      surface: '#374151',
+      primary: '#60A5FA',
+      secondary: '#A78BFA',
+      accent: '#34D399',
+      text: {
+        primary: '#F9FAFB',
+        secondary: '#E5E7EB',
+        muted: '#D1D5DB'
+      }
     }
   },
   gradients: {
@@ -32,7 +45,13 @@ export const adminTheme = {
       primary: 'linear-gradient(135deg, rgba(34, 98, 198, 0.05) 0%, rgba(60, 125, 239, 0.1) 100%)',
       secondary: 'linear-gradient(135deg, rgba(110, 89, 165, 0.05) 0%, rgba(155, 135, 245, 0.1) 100%)',
       accent: 'linear-gradient(135deg, rgba(0, 163, 137, 0.05) 0%, rgba(0, 201, 167, 0.1) 100%)',
-      light: 'linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 1) 100%)'
+      light: 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%)'
+    },
+    // নতুন গ্র্যাডিয়েন্ট
+    button: {
+      primary: 'linear-gradient(to right, #2262C6, #3C7DEF)',
+      secondary: 'linear-gradient(to right, #6E59A5, #9B87F5)',
+      accent: 'linear-gradient(to right, #00A389, #00C9A7)'
     }
   },
   shadows: {
@@ -51,34 +70,69 @@ export const adminTheme = {
     xl: '0.75rem',
     '2xl': '1rem',
     full: '9999px'
+  },
+  spacing: {
+    xs: '0.5rem',    // 8px
+    sm: '0.75rem',   // 12px
+    md: '1rem',      // 16px
+    lg: '1.5rem',    // 24px
+    xl: '2rem',      // 32px
+    '2xl': '2.5rem', // 40px
+    '3xl': '3rem'    // 48px
   }
 };
 
-export const applyAdminTheme = (element: HTMLElement): void => {
+export const applyAdminTheme = (element: HTMLElement, isDarkMode: boolean = false): void => {
   // Apply theme colors to CSS variables
   if (element) {
-    // Base colors
-    element.style.setProperty('--color-primary', adminTheme.colors.primary);
-    element.style.setProperty('--color-secondary', adminTheme.colors.secondary);
-    element.style.setProperty('--color-accent', adminTheme.colors.accent);
-    element.style.setProperty('--color-background', adminTheme.colors.background);
-    element.style.setProperty('--color-primary-light', adminTheme.colors.primaryLight);
-    element.style.setProperty('--color-secondary-light', adminTheme.colors.secondaryLight);
-    element.style.setProperty('--color-accent-light', adminTheme.colors.accentLight);
+    if (isDarkMode) {
+      // ডার্ক মোডের জন্য কালার অ্যাপ্লাই করা
+      element.style.setProperty('--color-primary', adminTheme.colors.dark.primary);
+      element.style.setProperty('--color-secondary', adminTheme.colors.dark.secondary);
+      element.style.setProperty('--color-accent', adminTheme.colors.dark.accent);
+      element.style.setProperty('--color-background', adminTheme.colors.dark.background);
+      element.style.setProperty('--color-surface', adminTheme.colors.dark.surface);
+      
+      // টেক্সট কালার
+      element.style.setProperty('--color-text-primary', adminTheme.colors.dark.text.primary);
+      element.style.setProperty('--color-text-secondary', adminTheme.colors.dark.text.secondary);
+      element.style.setProperty('--color-text-muted', adminTheme.colors.dark.text.muted);
+    } else {
+      // লাইট মোডের জন্য কালার অ্যাপ্লাই করা
+      element.style.setProperty('--color-primary', adminTheme.colors.primary);
+      element.style.setProperty('--color-secondary', adminTheme.colors.secondary);
+      element.style.setProperty('--color-accent', adminTheme.colors.accent);
+      element.style.setProperty('--color-background', adminTheme.colors.background);
+      element.style.setProperty('--color-primary-light', adminTheme.colors.primaryLight);
+      element.style.setProperty('--color-secondary-light', adminTheme.colors.secondaryLight);
+      element.style.setProperty('--color-accent-light', adminTheme.colors.accentLight);
+      
+      // টেক্সট কালার
+      element.style.setProperty('--color-text-primary', adminTheme.colors.text.primary);
+      element.style.setProperty('--color-text-secondary', adminTheme.colors.text.secondary);
+      element.style.setProperty('--color-text-muted', adminTheme.colors.text.muted);
+    }
     
-    // Text colors
-    element.style.setProperty('--color-text-primary', adminTheme.colors.text.primary);
-    element.style.setProperty('--color-text-secondary', adminTheme.colors.text.secondary);
-    element.style.setProperty('--color-text-muted', adminTheme.colors.text.muted);
-    
-    // Gradients
+    // গ্র্যাডিয়েন্ট
     element.style.setProperty('--gradient-primary', adminTheme.gradients.primary);
     element.style.setProperty('--gradient-secondary', adminTheme.gradients.secondary);
     element.style.setProperty('--gradient-accent', adminTheme.gradients.accent);
+    element.style.setProperty('--gradient-card-light', adminTheme.gradients.card.light);
     
-    // Shadows
+    // শ্যাডো
     element.style.setProperty('--shadow-card', adminTheme.shadows.card);
     element.style.setProperty('--shadow-hover', adminTheme.shadows.hover);
     element.style.setProperty('--shadow-button', adminTheme.shadows.button);
+    
+    // স্পেসিং
+    element.style.setProperty('--spacing-md', adminTheme.spacing.md);
+    element.style.setProperty('--spacing-lg', adminTheme.spacing.lg);
+    element.style.setProperty('--spacing-xl', adminTheme.spacing.xl);
+    
+    // বর্ডার রেডিয়াস
+    element.style.setProperty('--radius-md', adminTheme.borderRadius.md);
+    element.style.setProperty('--radius-lg', adminTheme.borderRadius.lg);
+    element.style.setProperty('--radius-xl', adminTheme.borderRadius.xl);
   }
 };
+
