@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -18,7 +19,25 @@ import {
   CircleDollarSign,
   LayoutGrid,
   Map as MapIcon,
-  Locate
+  Locate,
+  Smartphone,
+  Laptop,
+  Camera,
+  HeartPulse,
+  Headphones,
+  Watch,
+  Shirt,
+  Baby,
+  Utensils,
+  Book,
+  Tv,
+  Gamepad,
+  ActivitySquare,
+  Car,
+  Home,
+  ArrowDown,
+  ArrowUp,
+  Building
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -41,6 +60,10 @@ const Shopping = () => {
   const [showMoreCategories, setShowMoreCategories] = useState(false);
   const [shareItem, setShareItem] = useState<any | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [priceRange, setPriceRange] = useState<number[]>([1000, 10000]);
+  const [distanceRange, setDistanceRange] = useState<number[]>([5]);
+  const [sortBy, setSortBy] = useState('recommended');
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Banner images for Shopping
   const bannerImages = [
@@ -51,16 +74,44 @@ const Shopping = () => {
     "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?q=80&w=1000&auto=format&fit=crop",
   ];
 
+  // ক্যাটাগরি আইকন কালার
+  const categoryIconColors = {
+    electronics: 'bg-blue-100 text-blue-600',
+    fashion: 'bg-pink-100 text-pink-600',
+    grocery: 'bg-green-100 text-green-600',
+    mobile: 'bg-purple-100 text-purple-600',
+    healthcare: 'bg-red-100 text-red-600',
+    books: 'bg-amber-100 text-amber-600',
+    kitchen: 'bg-orange-100 text-orange-600',
+    kids: 'bg-yellow-100 text-yellow-600',
+    computer: 'bg-indigo-100 text-indigo-600',
+    camera: 'bg-emerald-100 text-emerald-600',
+    audio: 'bg-violet-100 text-violet-600',
+    smartwatch: 'bg-cyan-100 text-cyan-600',
+    sports: 'bg-lime-100 text-lime-600',
+    auto: 'bg-gray-100 text-gray-600',
+    home: 'bg-teal-100 text-teal-600',
+    other: 'bg-slate-100 text-slate-600',
+  };
+
   // Categories
   const categories = [
-    { id: "electronics", name: "এলেকট্রনিক্স", icon: <Package className="h-8 w-8 mb-2" />, count: 245 },
-    { id: "fashion", name: "ফ্যাশন", icon: <ShoppingBag className="h-8 w-8 mb-2" />, count: 189 },
-    { id: "grocery", name: "গ্রোসারি", icon: <Tag className="h-8 w-8 mb-2" />, count: 156 },
-    { id: "mobile", name: "মোবাইল", icon: <Package className="h-8 w-8 mb-2" />, count: 127 },
-    { id: "healthcare", name: "হেলথকেয়ার", icon: <Package className="h-8 w-8 mb-2" />, count: 98 },
-    { id: "books", name: "বই", icon: <Package className="h-8 w-8 mb-2" />, count: 67 },
-    { id: "kitchen", name: "কিচেন", icon: <Package className="h-8 w-8 mb-2" />, count: 54 },
-    { id: "kids", name: "বাচ্চাদের", icon: <Package className="h-8 w-8 mb-2" />, count: 43 },
+    { id: "electronics", name: "এলেকট্রনিক্স", icon: <Laptop className="h-8 w-8 mb-2" />, count: 245, color: categoryIconColors.electronics },
+    { id: "fashion", name: "ফ্যাশন", icon: <Shirt className="h-8 w-8 mb-2" />, count: 189, color: categoryIconColors.fashion },
+    { id: "grocery", name: "গ্রোসারি", icon: <Tag className="h-8 w-8 mb-2" />, count: 156, color: categoryIconColors.grocery },
+    { id: "mobile", name: "মোবাইল", icon: <Smartphone className="h-8 w-8 mb-2" />, count: 127, color: categoryIconColors.mobile },
+    { id: "healthcare", name: "হেলথকেয়ার", icon: <HeartPulse className="h-8 w-8 mb-2" />, count: 98, color: categoryIconColors.healthcare },
+    { id: "books", name: "বই", icon: <Book className="h-8 w-8 mb-2" />, count: 67, color: categoryIconColors.books },
+    { id: "kitchen", name: "কিচেন", icon: <Utensils className="h-8 w-8 mb-2" />, count: 54, color: categoryIconColors.kitchen },
+    { id: "kids", name: "বাচ্চাদের", icon: <Baby className="h-8 w-8 mb-2" />, count: 43, color: categoryIconColors.kids },
+    { id: "computer", name: "কম্পিউটার", icon: <Laptop className="h-8 w-8 mb-2" />, count: 120, color: categoryIconColors.computer },
+    { id: "camera", name: "ক্যামেরা", icon: <Camera className="h-8 w-8 mb-2" />, count: 65, color: categoryIconColors.camera },
+    { id: "audio", name: "অডিও", icon: <Headphones className="h-8 w-8 mb-2" />, count: 78, color: categoryIconColors.audio },
+    { id: "smartwatch", name: "স্মার্টওয়াচ", icon: <Watch className="h-8 w-8 mb-2" />, count: 56, color: categoryIconColors.smartwatch },
+    { id: "sports", name: "স্পোর্টস", icon: <ActivitySquare className="h-8 w-8 mb-2" />, count: 92, color: categoryIconColors.sports },
+    { id: "auto", name: "অটো", icon: <Car className="h-8 w-8 mb-2" />, count: 64, color: categoryIconColors.auto },
+    { id: "home", name: "হোম", icon: <Home className="h-8 w-8 mb-2" />, count: 105, color: categoryIconColors.home },
+    { id: "other", name: "অন্যান্য", icon: <ShoppingBag className="h-8 w-8 mb-2" />, count: 145, color: categoryIconColors.other },
   ];
 
   // Products
@@ -203,6 +254,35 @@ const Shopping = () => {
     setShowShareModal(true);
   };
 
+  const handlePriceRangeChange = (value: number[]) => {
+    setPriceRange(value);
+  };
+
+  const handleDistanceRangeChange = (value: number[]) => {
+    setDistanceRange(value);
+  };
+
+  const handleSortChange = (value: string) => {
+    setSortBy(value);
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle search functionality
+    toast({
+      title: "অনুসন্ধান করা হচ্ছে",
+      description: `"${searchTerm}" এর জন্য ফলাফল দেখানো হচ্ছে`,
+    });
+  };
+
+  // টপ সেলার স্টোর
+  const topSellers = [
+    { id: 1, name: "টপটেক ইলেকট্রনিক্স", verified: true, rating: 4.8, products: 250 },
+    { id: 2, name: "ফ্যাশন হাউস", verified: true, rating: 4.6, products: 180 },
+    { id: 3, name: "গ্যাজেট ওয়ার্ল্ড", verified: false, rating: 4.5, products: 125 },
+    { id: 4, name: "হোম ডেকোর", verified: true, rating: 4.7, products: 95 },
+  ];
+
   return (
     <div className="container px-4 pt-20 pb-20">
       {/* Header with search bar */}
@@ -226,51 +306,67 @@ const Shopping = () => {
       </div>
       
       <div className="mb-6">
-        <div className="relative">
+        <form onSubmit={handleSearch} className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="প্রোডাক্ট খুঁজুন" className="pl-9 pr-16" />
+          <Input 
+            placeholder="প্রোডাক্ট খুঁজুন" 
+            className="pl-9 pr-16" 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
           <Button 
+            type="submit"
             variant="default" 
             size="sm" 
             className="absolute right-1 top-1/2 transform -translate-y-1/2"
           >
             খুঁজুন
           </Button>
-        </div>
+        </form>
       </div>
 
       {/* Filter panel - conditionally rendered */}
       {filterVisible && (
-        <div className="mb-6 p-4 border rounded-lg bg-gray-50">
+        <div className="mb-6 p-4 border rounded-lg bg-gray-50 dark:bg-gray-800 animate-fade-in">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="font-medium">ফিল্টার সেটিংস</h2>
+            <Button variant="ghost" size="sm" onClick={handleFilterToggle}>
+              <ChevronUp className="h-4 w-4" />
+            </Button>
+          </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <h3 className="text-sm font-medium mb-2">ক্যাটেগরি</h3>
               <div className="grid grid-cols-2 gap-2">
-                <Button variant="outline" size="sm" className="justify-start">
-                  <Package className="h-4 w-4 mr-2" /> এলেকট্রনিক্স
-                </Button>
-                <Button variant="outline" size="sm" className="justify-start">
-                  <ShoppingBag className="h-4 w-4 mr-2" /> ফ্যাশন
-                </Button>
-                <Button variant="outline" size="sm" className="justify-start">
-                  <Tag className="h-4 w-4 mr-2" /> গ্রোসারি
-                </Button>
-                <Button variant="outline" size="sm" className="justify-start">
-                  <Package className="h-4 w-4 mr-2" /> মোবাইল
-                </Button>
+                {categories.slice(0, 4).map((category) => (
+                  <Button 
+                    key={category.id}
+                    variant="outline" 
+                    size="sm" 
+                    className="justify-start"
+                    onClick={() => handleCategoryClick(category.id)}
+                  >
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-2 ${category.color}`}>
+                      {category.icon}
+                    </div>
+                    {category.name}
+                  </Button>
+                ))}
               </div>
             </div>
             
             <div>
               <h3 className="text-sm font-medium mb-2">দাম সীমা</h3>
               <Slider
-                defaultValue={[1000, 10000]}
+                value={priceRange}
                 max={20000}
                 step={500}
+                onValueChange={handlePriceRangeChange}
               />
               <div className="flex justify-between mt-2">
-                <div className="text-sm">৳500</div>
-                <div className="text-sm">৳20,000</div>
+                <div className="text-sm">৳{priceRange[0].toLocaleString()}</div>
+                <div className="text-sm">৳{priceRange[1].toLocaleString()}</div>
               </div>
             </div>
             
@@ -313,6 +409,9 @@ const Shopping = () => {
                   <SelectItem value="khulna">খুলনা</SelectItem>
                   <SelectItem value="rajshahi">রাজশাহী</SelectItem>
                   <SelectItem value="sylhet">সিলেট</SelectItem>
+                  <SelectItem value="barishal">বরিশাল</SelectItem>
+                  <SelectItem value="rangpur">রংপুর</SelectItem>
+                  <SelectItem value="mymensingh">ময়মনসিংহ</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -321,9 +420,10 @@ const Shopping = () => {
               <h3 className="text-sm font-medium mb-2">দূরত্ব</h3>
               <div className="px-2">
                 <Slider
-                  defaultValue={[5]}
+                  value={distanceRange}
                   max={20}
                   step={1}
+                  onValueChange={handleDistanceRangeChange}
                 />
                 <div className="flex justify-between mt-1 text-xs text-muted-foreground">
                   <span>1 কিমি</span>
@@ -331,6 +431,22 @@ const Shopping = () => {
                   <span>20 কিমি</span>
                 </div>
               </div>
+            </div>
+            
+            <div>
+              <h3 className="text-sm font-medium mb-2">সর্টিং</h3>
+              <Select value={sortBy} onValueChange={handleSortChange}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="সর্ট করুন" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="recommended">রেকমেন্ডেড</SelectItem>
+                  <SelectItem value="price_low">দাম (কম থেকে বেশি)</SelectItem>
+                  <SelectItem value="price_high">দাম (বেশি থেকে কম)</SelectItem>
+                  <SelectItem value="rating">রেটিং</SelectItem>
+                  <SelectItem value="newest">নতুন</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           
@@ -345,13 +461,15 @@ const Shopping = () => {
       <div className="mb-6">
         <h2 className="text-lg font-medium mb-4">ক্যাটেগরি</h2>
         <div className="grid grid-cols-4 gap-3">
-          {categories.slice(0, 4).map((category, index) => (
+          {categories.slice(0, 8).map((category, index) => (
             <div 
               key={index}
               className="flex flex-col items-center justify-center p-3 border rounded-lg hover:bg-gray-50 transition-all cursor-pointer"
               onClick={() => handleCategoryClick(category.id)}
             >
-              {category.icon}
+              <div className={`h-16 w-16 rounded-full ${category.color} flex items-center justify-center mb-2`}>
+                {category.icon}
+              </div>
               <span className="text-xs text-center font-medium">{category.name}</span>
               <Badge variant="outline" className="mt-2 text-xs">{category.count}</Badge>
             </div>
@@ -360,13 +478,15 @@ const Shopping = () => {
         
         {showMoreCategories && (
           <div className="grid grid-cols-4 gap-3 mt-3">
-            {categories.slice(4).map((category, index) => (
+            {categories.slice(8).map((category, index) => (
               <div 
                 key={index}
                 className="flex flex-col items-center justify-center p-3 border rounded-lg hover:bg-gray-50 transition-all cursor-pointer"
                 onClick={() => handleCategoryClick(category.id)}
               >
-                {category.icon}
+                <div className={`h-16 w-16 rounded-full ${category.color} flex items-center justify-center mb-2`}>
+                  {category.icon}
+                </div>
                 <span className="text-xs text-center font-medium">{category.name}</span>
                 <Badge variant="outline" className="mt-2 text-xs">{category.count}</Badge>
               </div>
@@ -423,6 +543,43 @@ const Shopping = () => {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-medium">ফিচার্ড প্রোডাক্ট</h2>
+          <div className="flex items-center text-sm gap-2">
+            <span className="text-muted-foreground">সর্ট করুন:</span>
+            <Select value={sortBy} onValueChange={handleSortChange}>
+              <SelectTrigger className="h-8 w-[140px] text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="recommended">রেকমেন্ডেড</SelectItem>
+                <SelectItem value="price_low">
+                  <div className="flex items-center">
+                    <CircleDollarSign className="h-3 w-3 mr-1" />
+                    <ArrowUp className="h-3 w-3 mr-1" />
+                    দাম (কম থেকে বেশি)
+                  </div>
+                </SelectItem>
+                <SelectItem value="price_high">
+                  <div className="flex items-center">
+                    <CircleDollarSign className="h-3 w-3 mr-1" />
+                    <ArrowDown className="h-3 w-3 mr-1" />
+                    দাম (বেশি থেকে কম)
+                  </div>
+                </SelectItem>
+                <SelectItem value="rating">
+                  <div className="flex items-center">
+                    <Star className="h-3 w-3 mr-1" />
+                    রেটিং
+                  </div>
+                </SelectItem>
+                <SelectItem value="newest">
+                  <div className="flex items-center">
+                    <Clock className="h-3 w-3 mr-1" />
+                    নতুন
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         
         {viewMode === 'grid' && (
@@ -480,15 +637,17 @@ const Shopping = () => {
         
         {viewMode === 'map' && (
           <div className="mb-4">
-            <MapView 
-              listings={products.map(product => ({
-                id: product.id,
-                title: product.name,
-                location: product.location,
-                latitude: product.latitude,
-                longitude: product.longitude
-              }))}
-            />
+            <div className="h-[450px] mb-4 border rounded-lg overflow-hidden">
+              <MapView 
+                listings={products.map(product => ({
+                  id: product.id,
+                  title: product.name,
+                  location: product.location,
+                  latitude: product.latitude,
+                  longitude: product.longitude
+                }))}
+              />
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
               {products.slice(0, 3).map((product) => (
                 <Card 
@@ -519,6 +678,36 @@ const Shopping = () => {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Top Seller Stores */}
+      <div className="mb-8">
+        <h2 className="text-lg font-medium mb-4">টপ সেলার দোকান</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {topSellers.map((seller) => (
+            <Card key={seller.id} className="hover:shadow-md transition-all">
+              <CardContent className="p-4">
+                <div className="flex flex-col items-center text-center">
+                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                    <Building className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-sm font-medium flex items-center gap-1">
+                    {seller.name}
+                    {seller.verified && (
+                      <Badge variant="outline" className="h-4 text-[10px] bg-blue-100 text-blue-600 border-blue-200">ভেরিফাইড</Badge>
+                    )}
+                  </h3>
+                  <div className="flex items-center mt-1">
+                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                    <span className="text-xs ml-1">{seller.rating}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">{seller.products}+ প্রোডাক্ট</p>
+                  <Button variant="outline" size="sm" className="mt-2 w-full">দোকান দেখুন</Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
 
       {/* Social Share Modal */}

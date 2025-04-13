@@ -38,6 +38,10 @@ import {
   Clock,
   Share2,
   Heart,
+  Search,
+  CircleDollarSign,
+  ArrowDown,
+  ArrowUp,
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
@@ -46,6 +50,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Slider } from '@/components/ui/slider';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
 import MapView from '@/components/MapView';
 import SocialShareModal from '@/components/SocialShareModal';
 import { useToast } from '@/components/ui/use-toast';
@@ -58,6 +63,9 @@ const Marketplace = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
   const [shareItem, setShareItem] = useState<any | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [priceRange, setPriceRange] = useState([1000, 50000]);
+  const [sortBy, setSortBy] = useState('recommended');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const bannerImages = [
     "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=1000&auto=format&fit=crop",
@@ -67,102 +75,138 @@ const Marketplace = () => {
     "https://images.unsplash.com/photo-1591085686350-798c0f9faa7f?q=80&w=1000&auto=format&fit=crop",
   ];
 
+  // ক্যাটাগরি আইকন কালার
+  const categoryIconColors = {
+    mobile: 'bg-purple-100 text-purple-600',
+    computer: 'bg-blue-100 text-blue-600',
+    camera: 'bg-emerald-100 text-emerald-600',
+    health: 'bg-red-100 text-red-600',
+    audio: 'bg-indigo-100 text-indigo-600',
+    smartwatch: 'bg-cyan-100 text-cyan-600',
+    fashion: 'bg-pink-100 text-pink-600',
+    kids: 'bg-amber-100 text-amber-600',
+    kitchen: 'bg-orange-100 text-orange-600',
+    books: 'bg-green-100 text-green-600',
+    tv: 'bg-slate-100 text-slate-600',
+    gaming: 'bg-red-100 text-red-600',
+    sports: 'bg-lime-100 text-lime-600',
+    auto: 'bg-gray-100 text-gray-600',
+    home: 'bg-yellow-100 text-yellow-600',
+    other: 'bg-violet-100 text-violet-600',
+  };
+
   const marketplaceCategories = [
     { 
       icon: <Smartphone className="h-8 w-8" />, 
       name: "মোবাইল", 
       path: "/shopping/category/mobile", 
-      count: 378 
+      count: 378,
+      color: categoryIconColors.mobile
     },
     { 
       icon: <Laptop className="h-8 w-8" />, 
       name: "কম্পিউটার", 
       path: "/shopping/category/computer", 
-      count: 245 
+      count: 245,
+      color: categoryIconColors.computer
     },
     { 
       icon: <Camera className="h-8 w-8" />, 
       name: "ক্যামেরা", 
       path: "/shopping/category/camera", 
-      count: 112 
+      count: 112,
+      color: categoryIconColors.camera
     },
     { 
       icon: <HeartPulse className="h-8 w-8" />, 
       name: "হেলথ", 
       path: "/shopping/category/health", 
-      count: 143 
+      count: 143,
+      color: categoryIconColors.health
     },
     { 
       icon: <Headphones className="h-8 w-8" />, 
       name: "অডিও", 
       path: "/shopping/category/audio", 
-      count: 98 
+      count: 98,
+      color: categoryIconColors.audio
     },
     { 
       icon: <Watch className="h-8 w-8" />, 
       name: "স্মার্টওয়াচ", 
       path: "/shopping/category/smartwatch", 
-      count: 67 
+      count: 67,
+      color: categoryIconColors.smartwatch
     },
     { 
       icon: <Shirt className="h-8 w-8" />, 
       name: "ফ্যাশন", 
       path: "/shopping/category/fashion", 
-      count: 286 
+      count: 286,
+      color: categoryIconColors.fashion
     },
     { 
       icon: <Baby className="h-8 w-8" />, 
       name: "কিডস", 
       path: "/shopping/category/kids", 
-      count: 124 
+      count: 124,
+      color: categoryIconColors.kids
     },
     { 
       icon: <Utensils className="h-8 w-8" />, 
       name: "কিচেন", 
       path: "/shopping/category/kitchen", 
-      count: 156 
+      count: 156,
+      color: categoryIconColors.kitchen
     },
     { 
       icon: <Book className="h-8 w-8" />, 
       name: "বই", 
       path: "/shopping/category/books", 
-      count: 198 
+      count: 198,
+      color: categoryIconColors.books
     },
     { 
       icon: <Tv className="h-8 w-8" />, 
       name: "টিভি", 
       path: "/shopping/category/tv", 
-      count: 87 
+      count: 87,
+      color: categoryIconColors.tv
     },
     { 
       icon: <Gamepad className="h-8 w-8" />, 
       name: "গেমিং", 
       path: "/shopping/category/gaming", 
-      count: 76 
+      count: 76,
+      color: categoryIconColors.gaming
     },
     { 
       icon: <ActivitySquare className="h-8 w-8" />, 
       name: "স্পোর্টস", 
       path: "/shopping/category/sports", 
-      count: 92 
+      count: 92,
+      color: categoryIconColors.sports
     },
     { 
       icon: <Car className="h-8 w-8" />, 
       name: "অটো", 
       path: "/shopping/category/auto", 
-      count: 64 
+      count: 64,
+      color: categoryIconColors.auto
     },
     { 
       icon: <Home className="h-8 w-8" />, 
       name: "হোম", 
       path: "/shopping/category/home", 
-      count: 223 
+      count: 223,
+      color: categoryIconColors.home
     },
     { 
       icon: <ShoppingBag className="h-8 w-8" />, 
       name: "অন্যান্য", 
       path: "/shopping/category/other", 
-      count: 145 
+      count: 145,
+      color: categoryIconColors.other
     }
   ];
 
@@ -282,6 +326,31 @@ const Marketplace = () => {
     setShowShareModal(true);
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle search functionality
+    toast({
+      title: "অনুসন্ধান করা হচ্ছে",
+      description: `"${searchTerm}" এর জন্য ফলাফল দেখানো হচ্ছে`,
+    });
+  };
+
+  const handlePriceRangeChange = (value: number[]) => {
+    setPriceRange(value);
+  };
+
+  const handleSortChange = (value: string) => {
+    setSortBy(value);
+  };
+  
+  // মার্কেটপ্লেস পরিষেবা প্রদানকারীরা
+  const marketplaceProviders = [
+    { id: 1, name: "টপটেক ইলেকট্রনিক্স", verified: true, rating: 4.8, sales: 1250 },
+    { id: 2, name: "ফ্যাশন হাউস", verified: true, rating: 4.6, sales: 950 },
+    { id: 3, name: "বুক হেভেন", verified: false, rating: 4.3, sales: 580 },
+    { id: 4, name: "কিচেন সাপ্লাই", verified: true, rating: 4.7, sales: 850 },
+  ];
+
   return (
     <div className="container px-4 pt-20 pb-20">
       <div className="flex items-center justify-between mb-6">
@@ -302,11 +371,37 @@ const Marketplace = () => {
           </Button>
         </div>
       </div>
+
+      <div className="mb-6">
+        <form onSubmit={handleSearch} className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input 
+            placeholder="প্রোডাক্ট খুঁজুন" 
+            className="pl-9 pr-16" 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <Button 
+            type="submit"
+            variant="default" 
+            size="sm" 
+            className="absolute right-1 top-1/2 transform -translate-y-1/2"
+          >
+            খুঁজুন
+          </Button>
+        </form>
+      </div>
       
       {filterVisible && (
-        <div className="mb-6 p-4 border rounded-lg bg-gray-50">
-          <h2 className="font-medium mb-3">ফিল্টার</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="mb-6 p-4 border rounded-lg bg-gray-50 dark:bg-gray-800 animate-fade-in">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="font-medium">ফিল্টার সেটিংস</h2>
+            <Button variant="ghost" size="sm" onClick={toggleFilter}>
+              <ChevronUp className="h-4 w-4" />
+            </Button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="text-sm font-medium mb-1 block">লোকেশন</label>
               <div className="flex items-center gap-2">
@@ -321,6 +416,9 @@ const Marketplace = () => {
                     <SelectItem value="khulna">খুলনা</SelectItem>
                     <SelectItem value="rajshahi">রাজশাহী</SelectItem>
                     <SelectItem value="sylhet">সিলেট</SelectItem>
+                    <SelectItem value="barishal">বরিশাল</SelectItem>
+                    <SelectItem value="rangpur">রংপুর</SelectItem>
+                    <SelectItem value="mymensingh">ময়মনসিংহ</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -332,11 +430,33 @@ const Marketplace = () => {
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="ক্যাটাগরি" />
                 </SelectTrigger>
+                <SelectContent className="max-h-[200px]">
+                  {marketplaceCategories.map((category, index) => (
+                    <SelectItem key={index} value={category.path.split('/').pop() || ''}>
+                      <div className="flex items-center gap-2">
+                        <div className={`p-1 rounded-full ${category.color.split(' ').slice(0, 2).join(' ')}`}>
+                          {category.icon}
+                        </div>
+                        <span>{category.name}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium mb-1 block">সর্টিং</label>
+              <Select value={sortBy} onValueChange={handleSortChange}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="সর্ট করুন" />
+                </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="mobile">মোবাইল</SelectItem>
-                  <SelectItem value="laptop">ল্যাপটপ</SelectItem>
-                  <SelectItem value="camera">ক্যামেরা</SelectItem>
-                  <SelectItem value="audio">অডিও</SelectItem>
+                  <SelectItem value="recommended">রেকমেন্ডেড</SelectItem>
+                  <SelectItem value="price_low">দাম (কম থেকে বেশি)</SelectItem>
+                  <SelectItem value="price_high">দাম (বেশি থেকে কম)</SelectItem>
+                  <SelectItem value="rating">রেটিং</SelectItem>
+                  <SelectItem value="newest">নতুন প্রোডাক্ট</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -345,14 +465,14 @@ const Marketplace = () => {
               <label className="text-sm font-medium mb-1 block">মূল্য সীমা</label>
               <div className="px-2">
                 <Slider
-                  defaultValue={[10000]}
+                  value={priceRange}
                   max={100000}
                   step={1000}
+                  onValueChange={handlePriceRangeChange}
                 />
                 <div className="flex justify-between mt-1 text-xs text-muted-foreground">
-                  <span>৳১,০০০</span>
-                  <span>৳৫০,০০০</span>
-                  <span>৳১,০০,০০০</span>
+                  <span>৳{priceRange[0].toLocaleString()}</span>
+                  <span>৳{priceRange[1].toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -372,6 +492,21 @@ const Marketplace = () => {
                 </div>
               </div>
             </div>
+            
+            <div>
+              <label className="text-sm font-medium mb-1 block">ডেলিভারি সময়</label>
+              <Select defaultValue="any">
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="ডেলিভারি সময়" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="any">যেকোনো সময়</SelectItem>
+                  <SelectItem value="1day">১ দিনের মধ্যে</SelectItem>
+                  <SelectItem value="3days">৩ দিনের মধ্যে</SelectItem>
+                  <SelectItem value="7days">৭ দিনের মধ্যে</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
           
           <div className="flex gap-2 mt-4">
@@ -390,7 +525,7 @@ const Marketplace = () => {
               to={category.path}
               className="flex flex-col items-center justify-center transition-all hover:scale-105"
             >
-              <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+              <div className={`h-16 w-16 rounded-full ${category.color} flex items-center justify-center mb-2`}>
                 {category.icon}
               </div>
               <span className="text-xs text-center mb-1">{category.name}</span>
@@ -412,7 +547,7 @@ const Marketplace = () => {
                   to={category.path}
                   className="flex flex-col items-center justify-center transition-all hover:scale-105"
                 >
-                  <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                  <div className={`h-16 w-16 rounded-full ${category.color} flex items-center justify-center mb-2`}>
                     {category.icon}
                   </div>
                   <span className="text-xs text-center mb-1">{category.name}</span>
@@ -469,7 +604,46 @@ const Marketplace = () => {
       <Separator className="my-6" />
       
       <div className="mb-6">
-        <h2 className="text-lg font-medium mb-4">ফিচার্ড প্রোডাক্ট</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-medium">ফিচার্ড প্রোডাক্ট</h2>
+          <div className="flex items-center text-sm gap-2">
+            <span className="text-muted-foreground">সর্ট করুন:</span>
+            <Select value={sortBy} onValueChange={handleSortChange}>
+              <SelectTrigger className="h-8 w-[140px] text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="recommended">রেকমেন্ডেড</SelectItem>
+                <SelectItem value="price_low">
+                  <div className="flex items-center">
+                    <CircleDollarSign className="h-3 w-3 mr-1" />
+                    <ArrowUp className="h-3 w-3 mr-1" />
+                    দাম (কম থেকে বেশি)
+                  </div>
+                </SelectItem>
+                <SelectItem value="price_high">
+                  <div className="flex items-center">
+                    <CircleDollarSign className="h-3 w-3 mr-1" />
+                    <ArrowDown className="h-3 w-3 mr-1" />
+                    দাম (বেশি থেকে কম)
+                  </div>
+                </SelectItem>
+                <SelectItem value="rating">
+                  <div className="flex items-center">
+                    <Star className="h-3 w-3 mr-1" />
+                    রেটিং
+                  </div>
+                </SelectItem>
+                <SelectItem value="newest">
+                  <div className="flex items-center">
+                    <Clock className="h-3 w-3 mr-1" />
+                    নতুন
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
         
         {viewMode === 'grid' && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -528,15 +702,17 @@ const Marketplace = () => {
         
         {viewMode === 'map' && (
           <div className="mb-4">
-            <MapView 
-              listings={featuredProducts.map(product => ({
-                id: product.id,
-                title: product.title,
-                location: product.location,
-                latitude: product.latitude,
-                longitude: product.longitude
-              }))}
-            />
+            <div className="h-[450px] mb-4 border rounded-lg overflow-hidden">
+              <MapView 
+                listings={featuredProducts.map(product => ({
+                  id: product.id,
+                  title: product.title,
+                  location: product.location,
+                  latitude: product.latitude,
+                  longitude: product.longitude
+                }))}
+              />
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
               {featuredProducts.slice(0, 3).map((product) => (
                 <Card 
@@ -569,6 +745,35 @@ const Marketplace = () => {
             </div>
           </div>
         )}
+      </div>
+
+      <div className="mb-6">
+        <h2 className="text-lg font-medium mb-4">টপ সেলার দোকান</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {marketplaceProviders.map((provider) => (
+            <Card key={provider.id} className="hover:shadow-md transition-all">
+              <CardContent className="p-4">
+                <div className="flex flex-col items-center text-center">
+                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                    <Building className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-sm font-medium flex items-center gap-1">
+                    {provider.name}
+                    {provider.verified && (
+                      <Badge variant="outline" className="h-4 text-[10px] bg-blue-100 text-blue-600 border-blue-200">ভেরিফাইড</Badge>
+                    )}
+                  </h3>
+                  <div className="flex items-center mt-1">
+                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                    <span className="text-xs ml-1">{provider.rating}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">{provider.sales}+ অর্ডার</p>
+                  <Button variant="outline" size="sm" className="mt-2 w-full">দোকান দেখুন</Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
 
       {shareItem && (

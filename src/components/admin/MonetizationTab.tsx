@@ -7,8 +7,11 @@ import { useTheme } from '@/components/ThemeProvider';
 import MapView from '@/components/MapView';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Map, Navigation, Package, ShoppingCart, Clock, Truck } from 'lucide-react';
+import { Map, Navigation, Package, ShoppingCart, Clock, Truck, Search, ArrowLeft, Filter, Building, Car, HeartPulse, Smartphone, Laptop, Camera, Book, Home, Utensils, Baby, Shirt, Watch, Headphones, Tv, Gamepad, ActivitySquare } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 // সিমুলেটেড ডেলিভারি ডাটা (আসল অ্যাপে এটি API থেকে আসবে)
 const mockActiveDeliveries = [
@@ -73,6 +76,8 @@ const MonetizationTab = () => {
   const [activeDeliveryTab, setActiveDeliveryTab] = useState('marketplace');
   const [selectedDelivery, setSelectedDelivery] = useState(mockActiveDeliveries[0]);
   const [showDeliveryMap, setShowDeliveryMap] = useState(false);
+  const [deliveryStatusFilter, setDeliveryStatusFilter] = useState('all');
+  const [deliverySearchTerm, setDeliverySearchTerm] = useState('');
   
   // ডেলিভারিটি ম্যাপে দেখানোর জন্য হ্যান্ডলার
   const handleTrackDelivery = (delivery) => {
@@ -86,7 +91,15 @@ const MonetizationTab = () => {
   
   // ফিল্টার করা ডেলিভারি লিস্ট
   const filteredDeliveries = mockActiveDeliveries.filter(
-    delivery => activeDeliveryTab === 'all' || delivery.type === activeDeliveryTab
+    delivery => {
+      const matchesType = activeDeliveryTab === 'all' || delivery.type === activeDeliveryTab;
+      const matchesStatus = deliveryStatusFilter === 'all' || delivery.status === deliveryStatusFilter;
+      const matchesSearch = delivery.title.toLowerCase().includes(deliverySearchTerm.toLowerCase()) || 
+                            delivery.providerName.toLowerCase().includes(deliverySearchTerm.toLowerCase()) ||
+                            delivery.orderId.toLowerCase().includes(deliverySearchTerm.toLowerCase());
+      
+      return matchesType && matchesStatus && matchesSearch;
+    }
   );
   
   // ম্যাপ বন্ধ করার জন্য হ্যান্ডলার
@@ -130,13 +143,25 @@ const MonetizationTab = () => {
           {showDeliveryMap ? (
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium flex items-center">
-                  <Map className="w-5 h-5 mr-2" />
-                  ডেলিভারি ট্র্যাকিং
-                </h3>
-                <Button variant="outline" size="sm" onClick={handleCloseMap}>
-                  ড্যাশবোর্ডে ফিরে যান
-                </Button>
+                <div className="flex items-center">
+                  <Button variant="ghost" size="icon" onClick={handleCloseMap} className="mr-2">
+                    <ArrowLeft className="w-5 h-5" />
+                  </Button>
+                  <h3 className="text-lg font-medium flex items-center">
+                    <Map className="w-5 h-5 mr-2" />
+                    ডেলিভারি ট্র্যাকিং
+                  </h3>
+                </div>
+                <Badge 
+                  variant="outline" 
+                  className={`px-3 py-1 ${
+                    selectedDelivery.status === 'অন দ্য ওয়ে' 
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' 
+                      : 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300'
+                  }`}
+                >
+                  {selectedDelivery.status}
+                </Badge>
               </div>
               
               <div className="bg-card p-4 rounded-lg mb-4 border">
@@ -145,35 +170,7 @@ const MonetizationTab = () => {
                     <h4 className="font-medium">{selectedDelivery.title}</h4>
                     <p className="text-sm text-muted-foreground">অর্ডার আইডি: {selectedDelivery.orderId}</p>
                   </div>
-                  <div className="flex items-center">
-                    <div className={`px-3 py-1 rounded-full text-sm ${
-                      selectedDelivery.status === 'অন দ্য ওয়ে' 
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' 
-                        : 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300'
-                    }`}>
-                      {selectedDelivery.status}
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4 mt-4">
-                  <div className="space-y-1">
-                    <p className="text-xs text-muted-foreground">প্রভাইডার</p>
-                    <p className="text-sm font-medium">{selectedDelivery.providerName}</p>
-                    <p className="text-xs">{selectedDelivery.providerLocation}</p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-xs text-muted-foreground">গ্রাহকের ঠিকানা</p>
-                    <p className="text-sm">{selectedDelivery.customerLocation}</p>
-                  </div>
-                </div>
-                
-                <div className="mt-4 flex items-center justify-between text-sm">
-                  <div className="flex items-center">
-                    <Clock className="w-4 h-4 mr-1 text-muted-foreground" />
-                    <span>আনুমানিক সময়: {selectedDelivery.estimatedDelivery}</span>
-                  </div>
-                  <div className={`px-2 py-1 rounded-full text-xs ${
+                  <div className={`px-3 py-1 rounded-full text-xs ${
                     selectedDelivery.type === 'marketplace' 
                       ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
                       : selectedDelivery.type === 'service'
@@ -187,9 +184,47 @@ const MonetizationTab = () => {
                       : 'রেন্টাল'}
                   </div>
                 </div>
+                
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                  <div className="space-y-1">
+                    <p className="text-xs text-muted-foreground">প্রভাইডার</p>
+                    <div className="flex items-center gap-2">
+                      <div className="bg-primary/10 p-2 rounded-full">
+                        <Building className="h-4 w-4 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">{selectedDelivery.providerName}</p>
+                        <p className="text-xs">{selectedDelivery.providerLocation}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-xs text-muted-foreground">গ্রাহকের ঠিকানা</p>
+                    <div className="flex items-center gap-2">
+                      <div className="bg-primary/10 p-2 rounded-full">
+                        <Home className="h-4 w-4 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm">গ্রাহক</p>
+                        <p className="text-xs">{selectedDelivery.customerLocation}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-4 flex items-center justify-between text-sm">
+                  <div className="flex items-center">
+                    <Clock className="w-4 h-4 mr-1 text-muted-foreground" />
+                    <span>আনুমানিক সময়: {selectedDelivery.estimatedDelivery}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Truck className="w-4 h-4 mr-1 text-primary" />
+                    <span className="text-primary font-medium">চলমান ডেলিভারি</span>
+                  </div>
+                </div>
               </div>
               
-              <div className="rounded-lg overflow-hidden border">
+              <div className="rounded-lg overflow-hidden border h-[400px]">
                 <MapView 
                   listings={[
                     {
@@ -220,6 +255,26 @@ const MonetizationTab = () => {
                   filterTypes={['customer', 'provider', 'delivery']}
                 />
               </div>
+
+              <div className="mt-4 flex justify-between items-center">
+                <div className="flex items-center text-muted-foreground text-sm">
+                  <div className="flex items-center mr-4">
+                    <div className="w-3 h-3 rounded-full bg-blue-500 mr-1"></div>
+                    <span>প্রভাইডার</span>
+                  </div>
+                  <div className="flex items-center mr-4">
+                    <div className="w-3 h-3 rounded-full bg-green-500 mr-1"></div>
+                    <span>গ্রাহক</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 rounded-full bg-red-500 mr-1"></div>
+                    <span>ডেলিভারি</span>
+                  </div>
+                </div>
+                <Button variant="outline" size="sm" onClick={handleCloseMap}>
+                  ড্যাশবোর্ডে ফিরে যান
+                </Button>
+              </div>
             </div>
           ) : (
             <div className="p-6">
@@ -248,7 +303,40 @@ const MonetizationTab = () => {
                 </TabsContent>
                 
                 <TabsContent value="deliveries">
-                  <div className="mt-4">
+                  <div className="mt-4 space-y-4">
+                    <div className="flex gap-2 flex-wrap items-center">
+                      <div className="relative flex-1 min-w-[200px]">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input 
+                          placeholder="অর্ডার বা প্রভাইডার খুঁজুন" 
+                          className="pl-9" 
+                          value={deliverySearchTerm}
+                          onChange={(e) => setDeliverySearchTerm(e.target.value)}
+                        />
+                      </div>
+                      
+                      <div className="flex items-center gap-2">
+                        <Select 
+                          value={deliveryStatusFilter} 
+                          onValueChange={setDeliveryStatusFilter}
+                        >
+                          <SelectTrigger className="w-[140px] h-9">
+                            <SelectValue placeholder="স্ট্যাটাস" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">সব স্ট্যাটাস</SelectItem>
+                            <SelectItem value="প্রসেসিং">প্রসেসিং</SelectItem>
+                            <SelectItem value="অন দ্য ওয়ে">অন দ্য ওয়ে</SelectItem>
+                            <SelectItem value="প্রস্তুতিমূলক">প্রস্তুতিমূলক</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        
+                        <div className="flex h-9 items-center">
+                          <Filter className="h-4 w-4 ml-2 text-muted-foreground" />
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="flex items-center gap-2 mb-4">
                       <Button 
                         variant={activeDeliveryTab === 'all' ? 'default' : 'outline'} 
@@ -350,4 +438,3 @@ const MonetizationTab = () => {
 };
 
 export default MonetizationTab;
-
