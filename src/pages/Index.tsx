@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -73,7 +72,7 @@ const Index = () => {
       price: "৳১,৫০০",
       image: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
       category: "সার্ভিস",
-      path: "/services/1"
+      path: "/appointment-booking"
     },
     {
       id: "2",
@@ -82,7 +81,7 @@ const Index = () => {
       price: "৳২,০০০",
       image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
       category: "সার্ভিস",
-      path: "/services/2"
+      path: "/appointment-booking"
     },
     // Marketplace listings
     {
@@ -112,7 +111,6 @@ const Index = () => {
     }
   };
 
-  // Fixed click handler function to ensure proper navigation
   const handleListingClick = (path: string) => {
     navigate(path);
   };
