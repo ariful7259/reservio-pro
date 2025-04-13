@@ -112,6 +112,11 @@ const Index = () => {
     }
   };
 
+  // Fixed click handler function to ensure proper navigation
+  const handleListingClick = (path: string) => {
+    navigate(path);
+  };
+
   return (
     <div className="container px-4 pt-20 pb-20">
       {/* Banner Slider with increased size */}
@@ -162,7 +167,7 @@ const Index = () => {
                 <Card 
                   key={listing.id} 
                   className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
-                  onClick={() => navigate(listing.path)}
+                  onClick={() => handleListingClick(listing.path)}
                 >
                   <div className="relative aspect-square">
                     <img 
@@ -202,7 +207,7 @@ const Index = () => {
                 <Card 
                   key={listing.id} 
                   className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
-                  onClick={() => navigate(listing.path)}
+                  onClick={() => handleListingClick(listing.path)}
                 >
                   <div className="relative aspect-square">
                     <img 
@@ -242,7 +247,7 @@ const Index = () => {
                 <Card 
                   key={listing.id} 
                   className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
-                  onClick={() => navigate(listing.path)}
+                  onClick={() => handleListingClick(listing.path)}
                 >
                   <div className="relative aspect-square">
                     <img 
@@ -282,7 +287,7 @@ const Index = () => {
                 <Card 
                   key={listing.id} 
                   className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
-                  onClick={() => navigate(listing.path)}
+                  onClick={() => handleListingClick(listing.path)}
                 >
                   <div className="relative aspect-square">
                     <img 
