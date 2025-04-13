@@ -65,7 +65,7 @@ const Index = () => {
       category: "রেন্ট",
       path: "/rent-details/2"
     },
-    // Service listings
+    // Service listings - Updated paths to appointment-booking
     {
       id: "1",
       title: "ডাক্তার কনসাল্টেশন",
@@ -84,7 +84,7 @@ const Index = () => {
       category: "সার্ভিস",
       path: "/appointment-booking"
     },
-    // Marketplace listings
+    // Marketplace listings - Updated paths to product
     {
       id: "1",
       title: "স্মার্ট ব্লাড প্রেশার মনিটর",
@@ -164,7 +164,7 @@ const Index = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {featuredListings.map((listing) => (
                 <Card 
-                  key={listing.id} 
+                  key={`all-${listing.id}-${listing.category}`}
                   className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
                   onClick={() => handleListingClick(listing.path)}
                 >
@@ -204,7 +204,7 @@ const Index = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {featuredListings.filter(item => item.category === "রেন্ট").map((listing) => (
                 <Card 
-                  key={listing.id} 
+                  key={`rent-${listing.id}`}
                   className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
                   onClick={() => handleListingClick(listing.path)}
                 >
@@ -244,7 +244,7 @@ const Index = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {featuredListings.filter(item => item.category === "সার্ভিস").map((listing) => (
                 <Card 
-                  key={listing.id} 
+                  key={`service-${listing.id}`}
                   className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
                   onClick={() => handleListingClick(listing.path)}
                 >
@@ -284,7 +284,7 @@ const Index = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {featuredListings.filter(item => item.category === "মার্কেটপ্লেস").map((listing) => (
                 <Card 
-                  key={listing.id} 
+                  key={`marketplace-${listing.id}`}
                   className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
                   onClick={() => handleListingClick(listing.path)}
                 >
