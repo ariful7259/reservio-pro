@@ -11,13 +11,25 @@ interface TimeSlot {
   available: boolean;
 }
 
-interface TimeSlotPickerProps {
-  onSelectTimeSlot: (date: Date, slotId: string) => void;
+export interface TimeSlotPickerProps {
+  selectedDate?: Date;
+  onDateSelect: (date: Date) => void;
+  selectedTimeSlot?: string | null;
+  onTimeSlotSelect: (slotId: string) => void;
+  availableDays?: string[];
+  onSelectTimeSlot?: (date: Date, slotId: string) => void;
 }
 
-const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({ onSelectTimeSlot }) => {
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
+const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({ 
+  selectedDate,
+  onDateSelect,
+  selectedTimeSlot,
+  onTimeSlotSelect,
+  availableDays,
+  onSelectTimeSlot
+}) => {
+  const [localSelectedDate, setLocalSelectedDate] = useState<Date>(selectedDate || new Date());
+  const [localSelectedSlot, setLocalSelectedSlot] = useState<string | null>(selectedTimeSlot || null);
 
   // Generate 7 days from today
   const dateList = Array.from({ length: 7 }, (_, i) => addDays(new Date(), i));
@@ -36,13 +48,21 @@ const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({ onSelectTimeSlot }) => 
   ];
 
   const handleDateSelect = (date: Date) => {
-    setSelectedDate(date);
-    setSelectedSlot(null);
+    setLocalSelectedDate(date);
+    if (onDateSelect) {
+      onDateSelect(date);
+    }
+    setLocalSelectedSlot(null);
   };
 
   const handleSlotSelect = (slotId: string) => {
-    setSelectedSlot(slotId);
-    onSelectTimeSlot(selectedDate, slotId);
+    setLocalSelectedSlot(slotId);
+    if (onTimeSlotSelect) {
+      onTimeSlotSelect(slotId);
+    }
+    if (onSelectTimeSlot) {
+      onSelectTimeSlot(localSelectedDate, slotId);
+    }
   };
 
   const formatBengaliDay = (date: Date) => {
@@ -74,7 +94,7 @@ const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({ onSelectTimeSlot }) => 
                 key={date.toString()}
                 onClick={() => handleDateSelect(date)}
                 className={`flex flex-col items-center justify-center p-2 rounded-lg min-w-16 ${
-                  isSameDay(date, selectedDate)
+                  (selectedDate && isSameDay(date, selectedDate)) || isSameDay(date, localSelectedDate)
                     ? 'bg-primary text-white'
                     : 'bg-secondary/50'
                 }`}
@@ -99,7 +119,7 @@ const TimeSlotPicker: React.FC<TimeSlotPickerProps> = ({ onSelectTimeSlot }) => 
                 disabled={!slot.available}
                 onClick={() => handleSlotSelect(slot.id)}
                 className={`time-slot py-2 px-2 rounded-md border text-center ${
-                  selectedSlot === slot.id ? 'selected' : ''
+                  (selectedTimeSlot === slot.id) || (localSelectedSlot === slot.id) ? 'selected bg-primary/10 border-primary' : ''
                 } ${
                   !slot.available
                     ? 'opacity-50 cursor-not-allowed bg-gray-100'
