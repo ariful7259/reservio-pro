@@ -48,7 +48,7 @@ const Index = () => {
   const featuredListings = [
     // Rental listings
     {
-      id: "rent-1",
+      id: "1",
       title: "৩ বেডরুম অ্যাপার্টমেন্ট",
       location: "গুলশান, ঢাকা",
       price: "৳২৫,০০০/মাস",
@@ -57,7 +57,7 @@ const Index = () => {
       path: "/rent-details/1"
     },
     {
-      id: "rent-2",
+      id: "2",
       title: "অফিস স্পেস",
       location: "বনানী, ঢাকা",
       price: "৳৫০,০০০/মাস",
@@ -67,26 +67,26 @@ const Index = () => {
     },
     // Service listings
     {
-      id: "serv-1",
+      id: "1",
       title: "ডাক্তার কনসাল্টেশন",
       location: "মেডিকেল সেন্টার, ঢাকা",
       price: "৳১,৫০০",
       image: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
       category: "সার্ভিস",
-      path: "/service/1"
+      path: "/services/1"
     },
     {
-      id: "serv-2",
+      id: "2",
       title: "ডেন্টাল চেকআপ",
       location: "শাইন ডেন্টাল, ঢাকা",
       price: "৳২,০০০",
       image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
       category: "সার্ভিস",
-      path: "/service/2"
+      path: "/services/2"
     },
     // Marketplace listings
     {
-      id: "market-1",
+      id: "1",
       title: "স্মার্ট ব্লাড প্রেশার মনিটর",
       location: "ধানমন্ডি, ঢাকা",
       price: "৳২,৫০০",
@@ -95,7 +95,7 @@ const Index = () => {
       path: "/product/1"
     },
     {
-      id: "market-2",
+      id: "2",
       title: "ডিজিটাল গ্লুকোমিটার কিট",
       location: "উত্তরা, ঢাকা",
       price: "৳৩,৫০০",

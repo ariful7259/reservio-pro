@@ -567,7 +567,7 @@ const Rentals = () => {
             <Card 
               key={index}
               className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
-              onClick={() => navigate(`/service-detail/${service.id}`)}
+              onClick={() => navigate(`/services/${service.id}`)}
             >
               <div className="relative aspect-square">
                 <img 

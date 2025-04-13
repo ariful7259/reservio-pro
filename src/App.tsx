@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -55,6 +56,8 @@ import EventCalendar from "./pages/EventCalendar";
 import Forums from "./pages/Forums";
 import GroupBooking from "./pages/GroupBooking";
 import AdminDashboard from "./pages/AdminDashboard";
+import ProductDetail from "./pages/ProductDetail";
+import RentDetail from "./pages/RentDetail";
 
 const queryClient = new QueryClient();
 
@@ -155,7 +158,8 @@ const App = () => (
                   <Route path="/video-hosting" element={<NotFound />} />
                   <Route path="/affiliate" element={<NotFound />} />
                   <Route path="/social-media" element={<NotFound />} />
-                  <Route path="/product/:id" element={<DigitalProduct />} />
+                  <Route path="/product/:id" element={<ProductDetail />} />
+                  <Route path="/rent-details/:id" element={<RentDetail />} />
                   
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />

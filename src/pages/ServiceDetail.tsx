@@ -1,474 +1,614 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
-  ArrowLeft, 
+  ChevronRight, 
+  Star, 
+  Calendar, 
   Clock, 
   MapPin, 
-  Calendar, 
   User, 
-  Star, 
+  Share2, 
+  Heart, 
+  MessageSquare, 
   Check, 
-  Heart,
-  MessageCircle,
-  Share2
+  X, 
+  Phone, 
+  Mail,
+  Info,
+  BadgeCheck,
+  AlertCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import TimeSlotPicker from '@/components/TimeSlotPicker';
+import { Badge } from '@/components/ui/badge';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { useToast } from '@/components/ui/use-toast';
-import { useApp } from '@/context/AppContext';
-import { 
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Progress } from '@/components/ui/progress';
 import SocialShareModal from '@/components/SocialShareModal';
+import MapView from '@/components/MapView';
+import TimeSlotPicker from '@/components/TimeSlotPicker';
+
+// মক ডেটা - একে সার্ভারে নিয়ে যাওয়া উচিত
+const services = [
+  {
+    id: "1",
+    title: "ডাক্তার কনসাল্টেশন",
+    location: "মেডিকেল সেন্টার, ঢাকা",
+    price: "৳১,৫০০",
+    discountPrice: "৳১,৮০০",
+    discountPercent: "১৬%",
+    images: [
+      "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
+      "https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
+      "https://images.unsplash.com/photo-1631815587646-b84fb6e925b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80"
+    ],
+    category: "স্বাস্থ্যসেবা",
+    description: "অভিজ্ঞ বিশেষজ্ঞ চিকিৎসকের সাথে পূর্ণাঙ্গ কনসাল্টেশন সেবা। আমাদের চিকিৎসকগণ ১০+ বছরের অভিজ্ঞতা সম্পন্ন এবং বিভিন্ন আন্তর্জাতিক হাসপাতালে কাজের অভিজ্ঞতা আছে। সেবার মধ্যে রয়েছে সম্পূর্ণ শারীরিক পরীক্ষা, রোগ নির্ণয়, ঔষধ ও চিকিৎসা পরামর্শ, এবং প্রয়োজনে টেস্ট সুপারিশ।",
+    inclusions: [
+      "৩০ মিনিট কনসাল্টেশন",
+      "মেডিকেল হিস্ট্রি রিভিউ",
+      "প্রিসক্রিপশন",
+      "ফলোআপ পরামর্শ (৭ দিন)"
+    ],
+    exclusions: [
+      "ল্যাব টেস্ট",
+      "ওষুধের খরচ"
+    ],
+    provider: {
+      name: "ডাঃ আহমেদ হোসেন",
+      title: "কার্ডিওলজিস্ট",
+      education: "এমবিবিএস, এফসিপিএস (কার্ডিওলজি)",
+      experience: "১২ বছর",
+      photo: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
+      rating: 4.8,
+      reviews: 120,
+      verified: true
+    },
+    availabilityDays: ["শনিবার", "রবিবার", "মঙ্গলবার", "বৃহস্পতিবার"],
+    availabilityTime: "সকাল ১০টা - রাত ৮টা",
+    latitude: 23.7937,
+    longitude: 90.4137,
+    duration: "৩০ মিনিট",
+    createdAt: "২০২৫-০৩-২০",
+    viewCount: 1350
+  },
+  {
+    id: "2",
+    title: "ডেন্টাল চেকআপ",
+    location: "শাইন ডেন্টাল, ঢাকা",
+    price: "৳২,০০০",
+    discountPrice: "৳২,৫০০",
+    discountPercent: "২০%",
+    images: [
+      "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
+      "https://images.unsplash.com/photo-1606811857731-c55f0c92fdd5?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
+      "https://images.unsplash.com/photo-1629909613654-28e377c37b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80"
+    ],
+    category: "ডেন্টাল কেয়ার",
+    description: "আমাদের ডেন্টাল চেকআপ প্যাকেজে রয়েছে পূর্ণাঙ্গ দাঁতের পরীক্ষা, প্রোফেশনাল ক্লিনিং, এবং ফ্লোরাইড ট্রিটমেন্ট। আমাদের অভিজ্ঞ দন্ত চিকিৎসকগণ আপনার দাঁতের স্বাস্থ্য পরীক্ষা করে প্রয়োজনীয় পরামর্শ দিবেন এবং সম্ভাব্য সমস্যাগুলি চিহ্নিত করবেন।",
+    inclusions: [
+      "সম্পূর্ণ দাঁতের পরীক্ষা",
+      "স্কেলিং এবং পলিশিং",
+      "ফ্লোরাইড ট্রিটমেন্ট",
+      "দাঁতের এক্স-রে",
+      "পরামর্শ সেশন"
+    ],
+    exclusions: [
+      "দাঁত ফিলিং",
+      "রুট ক্যানাল",
+      "অন্যান্য প্রসিডিউর"
+    ],
+    provider: {
+      name: "ডাঃ নাজনীন আক্তার",
+      title: "ডেন্টাল সার্জন",
+      education: "বিডিএস, এমএস (কনজারভেটিভ ডেন্টিস্ট্রি)",
+      experience: "৮ বছর",
+      photo: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
+      rating: 4.7,
+      reviews: 95,
+      verified: true
+    },
+    availabilityDays: ["শনিবার", "সোমবার", "বুধবার", "বৃহস্পতিবার", "শুক্রবার"],
+    availabilityTime: "সকাল ১১টা - সন্ধ্যা ৭টা",
+    latitude: 23.8103,
+    longitude: 90.3420,
+    duration: "৪৫ মিনিট",
+    createdAt: "২০২৫-০৩-২৫",
+    viewCount: 980
+  }
+];
 
 const ServiceDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { language, favorites, addToFavorites, removeFromFavorites, isFavorite, addReview, getItemReviews, addPoints } = useApp();
-  
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState<{
-    date: Date;
-    slotId: string;
-  } | null>(null);
-  
-  const [reviews, setReviews] = useState<any[]>([]);
-  const [showReviewDialog, setShowReviewDialog] = useState(false);
-  const [reviewRating, setReviewRating] = useState(5);
-  const [reviewComment, setReviewComment] = useState('');
+  const [service, setService] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('details');
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
-  
+  const [bookmarked, setBookmarked] = useState(false);
+
+  // ডেটা লোড করা
   useEffect(() => {
+    // আসল অ্যাপে এখানে API কল থাকবে
+    const fetchService = () => {
+      setLoading(true);
+      try {
+        const foundService = services.find(item => item.id === id);
+        if (foundService) {
+          setService(foundService);
+        } else {
+          toast({
+            title: "সার্ভিস পাওয়া যায়নি",
+            description: "আপনার অনুরোধকৃত সার্ভিস খুঁজে পাওয়া যায়নি।",
+            variant: "destructive"
+          });
+          navigate('/services');
+        }
+      } catch (error) {
+        toast({
+          title: "একটি সমস্যা হয়েছে",
+          description: "ডেটা লোড করতে সমস্যা হয়েছে। দয়া করে পরে আবার চেষ্টা করুন।",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (id) {
-      const itemReviews = getItemReviews(id);
-      setReviews(itemReviews);
+      fetchService();
     }
-  }, [id, getItemReviews]);
+  }, [id, toast, navigate]);
 
-  const service = {
-    id: id || '1',
-    title: 'ডাক্তার কনসাল্টেশন',
-    provider: 'মেডিকেল সেন্টার',
-    providerImage: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80',
-    imageUrl: 'https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500&q=80',
-    rating: 4.8,
-    reviewCount: 127,
-    price: 1500,
-    discount: 10,
-    duration: '৩০ মিনিট',
-    location: 'মেডিকেল সেন্টার, ঢাকা',
-    description: 'অভিজ্ঞ বিশেষজ্ঞ ডাক্তারদের পরামর্শ পান আপনার সুবিধা অনুযায়ী সময়ে। অ্যাপয়েন্টমেন্ট নিয়ে বিশেষজ্ঞ ডাক্তারের সাথে কথা বলুন এবং আপনার সমস্যার সমাধান পান। সরাসরি ডাক্তারের সাথে কথা বলতে পারবেন, প্রেসক্রিপশন পাবেন এবং ফলোআপ পরামর্শও পাবেন।',
-    features: [
-      'বিশেষজ্ঞ ডাক্তারের পরামর্শ',
-      'ডিজিটাল প্রেসক্রিপশন',
-      'ফলোআপ কনসাল্টেশন',
-      'মেডিকেল টেস্ট রিপোর্ট রিভিউ',
-    ],
-    tags: ['মেডিকেল', 'অনলাইন'],
-  };
-
-  const discountedPrice = service.discount 
-    ? service.price - (service.price * service.discount) / 100 
-    : service.price;
-
-  const handleSelectTimeSlot = (date: Date, slotId: string) => {
-    setSelectedTimeSlot({ date, slotId });
+  const handleTimeSlotSelect = (timeSlot: string) => {
+    setSelectedTimeSlot(timeSlot);
   };
 
   const handleBookNow = () => {
-    if (!selectedTimeSlot) {
+    if (!selectedDate || !selectedTimeSlot) {
       toast({
-        title: language === 'bn' ? "সময় নির্বাচন করুন" : "Select a time slot",
-        description: language === 'bn' ? "অ্যাপয়েন্টমেন্ট বুক করতে একটি সময় নির্বাচন করুন" : "Please select a time to book your appointment",
-        variant: "destructive",
+        title: "তারিখ এবং সময় নির্বাচন করুন",
+        description: "অ্যাপয়েন্টমেন্ট বুক করতে তারিখ এবং সময় নির্বাচন করুন।",
+        variant: "destructive"
       });
       return;
     }
 
     toast({
-      title: language === 'bn' ? "অ্যাপয়েন্টমেন্ট বুক করা হয়েছে!" : "Appointment booked!",
-      description: language === 'bn' ? "আপনার অ্যাপয়েন্টমেন্ট সফলভাবে বুক করা হয়েছে।" : "Your appointment has been successfully booked.",
-      variant: "default",
+      title: "অ্যাপয়েন্টমেন্ট বুক করা হয়েছে",
+      description: `আপনার অ্যাপয়েন্টমেন্ট বুক করা হয়েছে: ${selectedDate.toLocaleDateString()} ${selectedTimeSlot}`,
     });
-    
-    addPoints(20);
-    
-    navigate('/appointments');
+    // navigate('/appointments');
   };
-  
-  const handleToggleFavorite = () => {
-    if (isFavorite(service.id)) {
-      removeFromFavorites(service.id);
-    } else {
-      addToFavorites({
-        id: service.id,
-        type: 'service',
-        title: service.title,
-        image: service.imageUrl,
-        price: discountedPrice,
-        location: service.location
-      });
-    }
+
+  const handleBookmark = () => {
+    setBookmarked(!bookmarked);
+    toast({
+      title: bookmarked ? "বুকমার্ক থেকে সরানো হয়েছে" : "বুকমার্ক করা হয়েছে",
+      description: bookmarked 
+        ? "সার্ভিসটি আপনার বুকমার্ক থেকে সরানো হয়েছে।" 
+        : "সার্ভিসটি আপনার বুকমার্ক লিস্টে যোগ করা হয়েছে।",
+    });
   };
-  
+
   const handleShare = () => {
     setShowShareModal(true);
   };
-  
-  const handleSubmitReview = () => {
-    if (!reviewComment.trim()) {
-      toast({
-        title: language === 'bn' ? "অসম্পূর্ণ ফর্ম" : "Incomplete form",
-        description: language === 'bn' ? "দয়া করে একটি মন্তব্য লিখুন" : "Please write a comment",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    addReview({
-      userId: "user-1", // Mock user ID - in a real app this would come from auth
-      itemId: service.id,
-      itemType: 'service',
-      rating: reviewRating,
-      comment: reviewComment
-    });
-    
-    setReviewComment('');
-    setReviewRating(5);
-    setShowReviewDialog(false);
-  };
+
+  if (loading) {
+    return (
+      <div className="container pt-20 pb-10">
+        <div className="flex items-center justify-center h-96">
+          <div className="flex flex-col items-center gap-2">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+            <p>লোড হচ্ছে...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!service) {
+    return (
+      <div className="container pt-20 pb-10">
+        <div className="flex flex-col items-center justify-center h-96 gap-4">
+          <X className="h-16 w-16 text-destructive" />
+          <h2 className="text-2xl font-bold">সার্ভিস পাওয়া যায়নি</h2>
+          <p className="text-muted-foreground">আপনার অনুরোধকৃত সার্ভিস খুঁজে পাওয়া যায়নি।</p>
+          <Button onClick={() => navigate('/services')}>সার্ভিস পেজে ফিরে যান</Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="container px-4 pt-16 pb-20">
-      <div className="flex items-center gap-3 mb-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate(-1)}
+    <div className="container pt-20 pb-10">
+      {/* ব্রেডক্রাম্ব */}
+      <div className="flex items-center gap-1 text-sm mb-4">
+        <Button 
+          variant="link" 
+          className="p-0 h-auto"
+          onClick={() => navigate('/')}
         >
-          <ArrowLeft className="h-5 w-5" />
+          হোম
         </Button>
-        <h1 className="text-xl font-semibold">{language === 'bn' ? 'সার্ভিস বিবরণ' : 'Service Details'}</h1>
+        <ChevronRight className="h-3 w-3" />
+        <Button 
+          variant="link" 
+          className="p-0 h-auto"
+          onClick={() => navigate('/services')}
+        >
+          সার্ভিস
+        </Button>
+        <ChevronRight className="h-3 w-3" />
+        <Button 
+          variant="link" 
+          className="p-0 h-auto font-medium"
+          onClick={() => navigate(`/services/category/${service.category}`)}
+        >
+          {service.category}
+        </Button>
+        <ChevronRight className="h-3 w-3" />
+        <span className="text-muted-foreground">{service.title}</span>
       </div>
 
-      <div className="mb-6 rounded-lg overflow-hidden relative">
-        <img
-          src={service.imageUrl}
-          alt={service.title}
-          className="w-full h-48 object-cover"
-        />
-        <div className="absolute top-2 right-2 flex flex-col gap-2">
-          <Button 
-            variant="outline" 
-            size="icon" 
-            className="bg-white/80 backdrop-blur-sm h-10 w-10 rounded-full"
-            onClick={handleToggleFavorite}
-          >
-            <Heart 
-              className={`h-5 w-5 ${isFavorite(service.id) ? 'fill-red-500 text-red-500' : 'text-gray-600'}`}
-            />
-          </Button>
-          <Button 
-            variant="outline" 
-            size="icon" 
-            className="bg-white/80 backdrop-blur-sm h-10 w-10 rounded-full"
-            onClick={handleShare}
-          >
-            <Share2 className="h-5 w-5 text-gray-600" />
-          </Button>
-        </div>
-      </div>
-
+      {/* ছবি গ্যালারি */}
       <div className="mb-6">
-        <div className="flex items-start justify-between">
-          <div>
-            <h2 className="text-2xl font-bold">{service.title}</h2>
-            <div className="flex items-center gap-2 mt-1">
-              <div className="flex items-center gap-1">
-                <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
-                <span className="text-sm">{service.rating.toFixed(1)}</span>
-              </div>
-              <span className="text-sm text-muted-foreground">
-                ({service.reviewCount} {language === 'bn' ? 'রিভিউস' : 'reviews'})
-              </span>
-              <Button variant="ghost" size="sm" className="text-primary text-sm px-2 h-6" onClick={() => setShowReviewDialog(true)}>
-                <MessageCircle className="h-3 w-3 mr-1" />
-                {language === 'bn' ? 'রিভিউ লিখুন' : 'Write a review'}
-              </Button>
-            </div>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="text-lg font-bold text-primary">
-              ৳{discountedPrice}
-            </span>
-            {service.discount && (
-              <span className="text-sm line-through text-muted-foreground">
-                ৳{service.price}
-              </span>
-            )}
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3 mt-4">
-          <div className="h-10 w-10 rounded-full overflow-hidden">
-            <img
-              src={service.providerImage}
-              alt={service.provider}
-              className="h-full w-full object-cover"
-            />
-          </div>
-          <div>
-            <h3 className="font-medium">{service.provider}</h3>
-          </div>
-        </div>
-
-        <div className="mt-4 space-y-2">
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">{service.duration}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <MapPin className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">{service.location}</span>
-          </div>
-        </div>
-      </div>
-
-      <Tabs defaultValue="details" className="mb-6">
-        <TabsList className="w-full">
-          <TabsTrigger value="details" className="flex-1">{language === 'bn' ? 'বিবরণ' : 'Details'}</TabsTrigger>
-          <TabsTrigger value="reviews" className="flex-1">{language === 'bn' ? 'রিভিউ' : 'Reviews'}</TabsTrigger>
-          <TabsTrigger value="booking" className="flex-1">{language === 'bn' ? 'বুকিং' : 'Booking'}</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="details" className="mt-4">
-          <div className="space-y-4">
-            <div>
-              <h3 className="font-semibold mb-2">{language === 'bn' ? 'বিবরণ' : 'Description'}</h3>
-              <p className="text-sm text-muted-foreground">{service.description}</p>
-            </div>
-            
-            <Separator />
-            
-            <div>
-              <h3 className="font-semibold mb-2">{language === 'bn' ? 'বৈশিষ্ট্য' : 'Features'}</h3>
-              <ul className="space-y-2">
-                {service.features.map((feature, index) => (
-                  <li key={index} className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-green-500" />
-                    <span className="text-sm">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            
-            <Separator />
-            
-            <div>
-              <h3 className="font-semibold mb-2">{language === 'bn' ? 'ট্যাগস' : 'Tags'}</h3>
-              <div className="flex flex-wrap gap-2">
-                {service.tags.map((tag, index) => (
-                  <Badge key={index} variant="secondary">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="reviews" className="mt-4">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold">{language === 'bn' ? 'রিভিউ ও রেটিং' : 'Reviews & Ratings'}</h3>
-              <Button variant="outline" size="sm" onClick={() => setShowReviewDialog(true)}>
-                {language === 'bn' ? 'রিভিউ লিখুন' : 'Write a review'}
-              </Button>
-            </div>
-            
-            {reviews.length === 0 ? (
-              <div className="text-center py-8 border rounded-lg bg-muted/10">
-                <MessageCircle className="h-12 w-12 text-muted-foreground mx-auto mb-3 opacity-50" />
-                <h3 className="text-lg font-medium mb-1">
-                  {language === 'bn' ? 'কোন রিভিউ নেই' : 'No reviews yet'}
-                </h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  {language === 'bn'
-                    ? 'এই সেবার জন্য প্রথম রিভিউ দিন'
-                    : 'Be the first to review this service'}
-                </p>
-                <Button variant="outline" onClick={() => setShowReviewDialog(true)}>
-                  {language === 'bn' ? 'রিভিউ লিখুন' : 'Write a review'}
-                </Button>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {reviews.map((review) => (
-                  <Card key={review.id}>
-                    <CardContent className="p-4">
-                      <div className="flex justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="bg-primary/10 h-10 w-10 rounded-full flex items-center justify-center">
-                            <User className="h-5 w-5 text-primary" />
-                          </div>
-                          <div>
-                            <div className="font-medium">
-                              {language === 'bn' ? 'ব্যবহারকারী' : 'User'}
-                            </div>
-                            <div className="text-xs text-muted-foreground">
-                              {new Date(review.createdAt).toLocaleDateString()}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`h-4 w-4 ${
-                                i < review.rating
-                                  ? 'fill-yellow-400 text-yellow-400'
-                                  : 'text-gray-300'
-                              }`}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      <p className="text-sm mt-3">{review.comment}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="booking" className="mt-4">
-          <div className="space-y-4">
-            <TimeSlotPicker onSelectTimeSlot={handleSelectTimeSlot} />
-            
-            <Card className="border shadow-sm">
-              <CardContent className="p-4">
-                <h3 className="text-lg font-semibold mb-3">
-                  {language === 'bn' ? 'বুকিং সারাংশ' : 'Booking Summary'}
-                </h3>
-                
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">
-                      {language === 'bn' ? 'সার্ভিস' : 'Service'}
-                    </span>
-                    <span>{service.title}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">
-                      {language === 'bn' ? 'সময়কাল' : 'Duration'}
-                    </span>
-                    <span>{service.duration}</span>
-                  </div>
-                  {selectedTimeSlot && (
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">
-                        {language === 'bn' ? 'সময়' : 'Time'}
-                      </span>
-                      <span>{selectedTimeSlot.date.toLocaleDateString()}</span>
-                    </div>
-                  )}
-                  <Separator />
-                  <div className="flex justify-between font-semibold">
-                    <span>{language === 'bn' ? 'মোট' : 'Total'}</span>
-                    <span>৳{discountedPrice}</span>
+        <Carousel className="w-full">
+          <CarouselContent>
+            {service.images.map((image: string, index: number) => (
+              <CarouselItem key={index}>
+                <div className="p-1">
+                  <div className="overflow-hidden rounded-lg aspect-video w-full">
+                    <img 
+                      src={image} 
+                      alt={`${service.title} ছবি ${index + 1}`} 
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-            
-            <Button
-              onClick={handleBookNow}
-              className="w-full"
-            >
-              {language === 'bn' ? 'এখনই বুক করুন' : 'Book Now'}
-            </Button>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="left-2" />
+          <CarouselNext className="right-2" />
+        </Carousel>
+      </div>
+
+      {/* প্রোডাক্ট শিরোনাম ও অ্যাকশন */}
+      <div className="flex justify-between items-start mb-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold">{service.title}</h1>
+            <Badge>{service.category}</Badge>
           </div>
-        </TabsContent>
-      </Tabs>
-      
-      <Dialog open={showReviewDialog} onOpenChange={setShowReviewDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              {language === 'bn' ? 'রিভিউ লিখুন' : 'Write a Review'}
-            </DialogTitle>
-            <DialogDescription>
-              {language === 'bn'
-                ? 'আপনার অভিজ্ঞতা অন্যদের সাথে শেয়ার করুন'
-                : 'Share your experience with others'}
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="py-4">
-            <h4 className="text-sm font-medium mb-2">
-              {language === 'bn' ? 'রেটিং' : 'Rating'}
-            </h4>
-            <Select value={reviewRating.toString()} onValueChange={(value) => setReviewRating(parseInt(value))}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="5">★★★★★ (5)</SelectItem>
-                <SelectItem value="4">★★★★☆ (4)</SelectItem>
-                <SelectItem value="3">★★★☆☆ (3)</SelectItem>
-                <SelectItem value="2">★★☆☆☆ (2)</SelectItem>
-                <SelectItem value="1">★☆☆☆☆ (1)</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <h4 className="text-sm font-medium mb-2 mt-4">
-              {language === 'bn' ? 'মন্তব্য' : 'Comment'}
-            </h4>
-            <Textarea 
-              placeholder={language === 'bn' ? 'আপনার অভিজ্ঞতা সম্পর্কে লিখুন...' : 'Write about your experience...'}
-              value={reviewComment}
-              onChange={(e) => setReviewComment(e.target.value)}
-              rows={4}
-            />
+          <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+            <MapPin className="h-4 w-4" />
+            <span>{service.location}</span>
           </div>
           
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowReviewDialog(false)}>
-              {language === 'bn' ? 'বাতিল' : 'Cancel'}
-            </Button>
-            <Button onClick={handleSubmitReview}>
-              {language === 'bn' ? 'জমা দিন' : 'Submit'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          <div className="flex items-center gap-3 mt-2">
+            <div className="flex items-center">
+              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+              <span className="text-sm ml-1">{service.provider.rating}</span>
+            </div>
+            <span className="text-sm text-muted-foreground">({service.provider.reviews} রিভিউ)</span>
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            size="icon"
+            onClick={handleBookmark}
+            className={bookmarked ? "text-red-500" : ""}
+          >
+            <Heart className={`h-4 w-4 ${bookmarked ? "fill-red-500" : ""}`} />
+          </Button>
+          <Button 
+            variant="outline" 
+            size="icon"
+            onClick={handleShare}
+          >
+            <Share2 className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* মূল তথ্য */}
+        <div className="w-full md:w-2/3">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="w-full grid grid-cols-3">
+              <TabsTrigger value="details">বিবরণ</TabsTrigger>
+              <TabsTrigger value="provider">সেবা প্রদানকারী</TabsTrigger>
+              <TabsTrigger value="reviews">রিভিউসমূহ</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="details" className="mt-4">
+              <Card>
+                <CardContent className="p-6">
+                  <h3 className="text-lg font-medium mb-4">সার্ভিস বিবরণ</h3>
+                  <p className="text-muted-foreground mb-4">{service.description}</p>
+                  
+                  <div className="my-6">
+                    <h4 className="text-sm font-medium mb-3">সার্ভিসে অন্তর্ভুক্ত</h4>
+                    <ul className="space-y-2">
+                      {service.inclusions.map((item: string, index: number) => (
+                        <li key={index} className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-600" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  {service.exclusions && service.exclusions.length > 0 && (
+                    <div className="my-6">
+                      <h4 className="text-sm font-medium mb-3">সার্ভিসে অন্তর্ভুক্ত নয়</h4>
+                      <ul className="space-y-2">
+                        {service.exclusions.map((item: string, index: number) => (
+                          <li key={index} className="flex items-center gap-2">
+                            <X className="h-4 w-4 text-red-600" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  
+                  <Separator className="my-6" />
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-5 w-5 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">সময়কাল</p>
+                        <p className="text-sm text-muted-foreground">{service.duration}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <Calendar className="h-5 w-5 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">উপলব্ধ দিন</p>
+                        <p className="text-sm text-muted-foreground">{service.availabilityDays.join(', ')}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-5 w-5 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">উপলব্ধ সময়</p>
+                        <p className="text-sm text-muted-foreground">{service.availabilityTime}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-5 w-5 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">অবস্থান</p>
+                        <p className="text-sm text-muted-foreground">{service.location}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6">
+                    <h4 className="text-sm font-medium mb-3">অবস্থান</h4>
+                    <div className="h-60 rounded-lg overflow-hidden">
+                      <MapView 
+                        listings={[{
+                          id: service.id,
+                          title: service.title,
+                          location: service.location,
+                          latitude: service.latitude,
+                          longitude: service.longitude
+                        }]}
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="provider" className="mt-4">
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-20 h-20 rounded-full overflow-hidden">
+                      <img 
+                        src={service.provider.photo} 
+                        alt={service.provider.name} 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-lg font-medium">{service.provider.name}</h3>
+                        {service.provider.verified && (
+                          <BadgeCheck className="h-5 w-5 text-blue-500" />
+                        )}
+                      </div>
+                      <p className="text-sm text-muted-foreground">{service.provider.title}</p>
+                      
+                      <div className="flex items-center gap-2 mt-1">
+                        <div className="flex items-center">
+                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          <span className="text-sm ml-1">{service.provider.rating}</span>
+                        </div>
+                        <span className="text-sm text-muted-foreground">({service.provider.reviews} রিভিউ)</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Separator className="my-4" />
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <h4 className="text-sm font-medium mb-2">শিক্ষাগত যোগ্যতা</h4>
+                      <p className="text-sm text-muted-foreground">{service.provider.education}</p>
+                    </div>
+                    
+                    <div>
+                      <h4 className="text-sm font-medium mb-2">অভিজ্ঞতা</h4>
+                      <p className="text-sm text-muted-foreground">{service.provider.experience}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2 mt-6">
+                    <Button variant="outline" className="flex items-center gap-2">
+                      <Phone className="h-4 w-4" />
+                      যোগাযোগ করুন
+                    </Button>
+                    <Button variant="outline" className="flex items-center gap-2">
+                      <Mail className="h-4 w-4" />
+                      মেসেজ পাঠান
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="reviews" className="mt-4">
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-medium">রিভিউসমূহ</h3>
+                    <Badge variant="outline">{service.provider.reviews} রিভিউ</Badge>
+                  </div>
+                  
+                  <div className="flex items-center gap-6 p-4 bg-gray-50 rounded-lg mb-6">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold">{service.provider.rating}</div>
+                      <div className="flex items-center justify-center mt-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star 
+                            key={star} 
+                            className={`h-4 w-4 ${star <= Math.floor(service.provider.rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`} 
+                          />
+                        ))}
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1">{service.provider.reviews} রিভিউ</div>
+                    </div>
+                    
+                    <div className="flex-1">
+                      <div className="space-y-1">
+                        {[5, 4, 3, 2, 1].map((rating) => (
+                          <div key={rating} className="flex items-center gap-2">
+                            <div className="text-xs w-2">{rating}</div>
+                            <Star className="h-3 w-3 text-yellow-400" />
+                            <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                              <div 
+                                className="h-full bg-yellow-400 rounded-full"
+                                style={{ 
+                                  width: `${rating === 5 ? 65 : rating === 4 ? 25 : rating === 3 ? 7 : rating === 2 ? 2 : 1}%` 
+                                }}
+                              ></div>
+                            </div>
+                            <div className="text-xs text-muted-foreground w-8">
+                              {rating === 5 ? '65%' : rating === 4 ? '25%' : rating === 3 ? '7%' : rating === 2 ? '2%' : '1%'}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="text-center p-6">
+                    <MessageSquare className="h-12 w-12 mx-auto text-gray-300 mb-2" />
+                    <p className="text-muted-foreground">সার্ভিসটি ব্যবহার করার পর এখানে আপনার রিভিউ দিতে পারবেন।</p>
+                    <Button className="mt-4">রিভিউ দেখুন</Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
+        
+        {/* সাইডবার - বুকিং ও মূল্য */}
+        <div className="w-full md:w-1/3">
+          <Card className="overflow-hidden">
+            <CardHeader className="pb-0">
+              <CardTitle className="flex justify-between items-center">
+                <div className="flex items-end gap-2">
+                  <span className="text-xl font-bold">{service.price}</span>
+                  {service.discountPrice && (
+                    <>
+                      <span className="text-sm line-through text-muted-foreground">{service.discountPrice}</span>
+                      <Badge variant="outline" className="bg-red-50 border-red-200 text-red-600 text-xs">{service.discountPercent} ছাড়</Badge>
+                    </>
+                  )}
+                </div>
+              </CardTitle>
+            </CardHeader>
+            
+            <CardContent className="p-6">
+              <div className="mb-4">
+                <h4 className="text-sm font-medium mb-2">অ্যাপয়েন্টমেন্ট তারিখ নির্বাচন করুন</h4>
+                <div className="border rounded-md p-4">
+                  <TimeSlotPicker 
+                    selectedDate={selectedDate}
+                    onDateSelect={setSelectedDate}
+                    selectedTimeSlot={selectedTimeSlot}
+                    onTimeSlotSelect={handleTimeSlotSelect}
+                    availableDays={service.availabilityDays}
+                  />
+                </div>
+              </div>
+              
+              <div className="space-y-3 mb-4">
+                <div className="flex items-center justify-between text-sm">
+                  <span>সার্ভিস চার্জ</span>
+                  <span>{service.price}</span>
+                </div>
+                {service.discount && (
+                  <div className="flex items-center justify-between text-sm text-green-600">
+                    <span>ডিসকাউন্ট</span>
+                    <span>-৳{parseInt(service.discountPrice.replace(/[^\d]/g, '')) - parseInt(service.price.replace(/[^\d]/g, ''))}</span>
+                  </div>
+                )}
+                <Separator />
+                <div className="flex items-center justify-between font-medium">
+                  <span>মোট</span>
+                  <span>{service.price}</span>
+                </div>
+              </div>
+              
+              <Button 
+                className="w-full" 
+                onClick={handleBookNow}
+              >
+                অ্যাপয়েন্টমেন্ট বুক করুন
+              </Button>
+              
+              <div className="flex items-start gap-2 mt-4 p-3 bg-amber-50 rounded-md">
+                <Info className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm text-amber-800 font-medium">গুরুত্বপূর্ণ তথ্য</p>
+                  <p className="text-xs text-amber-700">অ্যাপয়েন্টমেন্ট বাতিল করতে ২৪ ঘণ্টা আগে জানাতে হবে। অন্যথায় ২০% চার্জ কাটা হবে।</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
       
-      <SocialShareModal 
-        open={showShareModal}
-        onOpenChange={setShowShareModal}
-        item={{
-          id: service.id,
-          title: service.title,
-          price: `৳${discountedPrice}`,
-          image: service.imageUrl,
-          description: service.description,
-          location: service.location,
-          type: 'service'
-        }}
-      />
+      {/* সোশ্যাল শেয়ার মোডাল */}
+      {service && (
+        <SocialShareModal 
+          open={showShareModal}
+          onOpenChange={setShowShareModal}
+          item={{
+            ...service,
+            type: 'service',
+          }}
+        />
+      )}
     </div>
   );
 };
