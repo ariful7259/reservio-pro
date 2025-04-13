@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -37,8 +36,10 @@ import {
   Home,
   ArrowDown,
   ArrowUp,
-  Building
+  Building,
+  Clock
 } from 'lucide-react';
+
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -65,7 +66,6 @@ const Shopping = () => {
   const [sortBy, setSortBy] = useState('recommended');
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Banner images for Shopping
   const bannerImages = [
     "https://images.unsplash.com/photo-1607082349566-187342175e2f?q=80&w=1000&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1607082350899-7e105aa886ae?q=80&w=1000&auto=format&fit=crop",
@@ -74,7 +74,6 @@ const Shopping = () => {
     "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?q=80&w=1000&auto=format&fit=crop",
   ];
 
-  // ক্যাটাগরি আইকন কালার
   const categoryIconColors = {
     electronics: 'bg-blue-100 text-blue-600',
     fashion: 'bg-pink-100 text-pink-600',
@@ -94,7 +93,6 @@ const Shopping = () => {
     other: 'bg-slate-100 text-slate-600',
   };
 
-  // Categories
   const categories = [
     { id: "electronics", name: "এলেকট্রনিক্স", icon: <Laptop className="h-8 w-8 mb-2" />, count: 245, color: categoryIconColors.electronics },
     { id: "fashion", name: "ফ্যাশন", icon: <Shirt className="h-8 w-8 mb-2" />, count: 189, color: categoryIconColors.fashion },
@@ -114,7 +112,6 @@ const Shopping = () => {
     { id: "other", name: "অন্যান্য", icon: <ShoppingBag className="h-8 w-8 mb-2" />, count: 145, color: categoryIconColors.other },
   ];
 
-  // Products
   const products = [
     {
       id: 1,
@@ -275,7 +272,6 @@ const Shopping = () => {
     });
   };
 
-  // টপ সেলার স্টোর
   const topSellers = [
     { id: 1, name: "টপটেক ইলেকট্রনিক্স", verified: true, rating: 4.8, products: 250 },
     { id: 2, name: "ফ্যাশন হাউস", verified: true, rating: 4.6, products: 180 },
@@ -285,7 +281,6 @@ const Shopping = () => {
 
   return (
     <div className="container px-4 pt-20 pb-20">
-      {/* Header with search bar */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">মার্কেটপ্লেস</h1>
         <div className="flex gap-2">
@@ -325,7 +320,6 @@ const Shopping = () => {
         </form>
       </div>
 
-      {/* Filter panel - conditionally rendered */}
       {filterVisible && (
         <div className="mb-6 p-4 border rounded-lg bg-gray-50 dark:bg-gray-800 animate-fade-in">
           <div className="flex justify-between items-center mb-4">
@@ -457,7 +451,6 @@ const Shopping = () => {
         </div>
       )}
 
-      {/* Categories section */}
       <div className="mb-6">
         <h2 className="text-lg font-medium mb-4">ক্যাটেগরি</h2>
         <div className="grid grid-cols-4 gap-3">
@@ -514,7 +507,6 @@ const Shopping = () => {
         </div>
       </div>
       
-      {/* Banner section */}
       <div className="mb-6 overflow-hidden rounded-lg">
         <Carousel className="w-full">
           <CarouselContent>
@@ -539,7 +531,6 @@ const Shopping = () => {
 
       <Separator className="my-6" />
 
-      {/* Featured Products */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-medium">ফিচার্ড প্রোডাক্ট</h2>
@@ -680,7 +671,6 @@ const Shopping = () => {
         )}
       </div>
 
-      {/* Top Seller Stores */}
       <div className="mb-8">
         <h2 className="text-lg font-medium mb-4">টপ সেলার দোকান</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -710,7 +700,6 @@ const Shopping = () => {
         </div>
       </div>
 
-      {/* Social Share Modal */}
       {shareItem && (
         <SocialShareModal 
           open={showShareModal}
