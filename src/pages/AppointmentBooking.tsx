@@ -18,6 +18,14 @@ const AppointmentBooking = () => {
     setSelectedDate(date);
     setSelectedSlot(slotId);
   };
+
+  const handleDateSelect = (date: Date) => {
+    setSelectedDate(date);
+  };
+
+  const handleTimeSlotSelect = (slotId: string) => {
+    setSelectedSlot(slotId);
+  };
   
   const handleBookAppointment = async () => {
     if (!isOnline) {
@@ -93,7 +101,13 @@ const AppointmentBooking = () => {
         </Card>
         
         <div className="space-y-6">
-          <TimeSlotPicker onSelectTimeSlot={handleSelectTimeSlot} />
+          <TimeSlotPicker 
+            selectedDate={selectedDate}
+            onDateSelect={handleDateSelect}
+            selectedTimeSlot={selectedSlot}
+            onTimeSlotSelect={handleTimeSlotSelect}
+            onSelectTimeSlot={handleSelectTimeSlot}
+          />
           
           <Card>
             <CardContent className="p-4">
