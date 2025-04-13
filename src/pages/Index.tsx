@@ -4,22 +4,6 @@ import {
   Star, 
   MapPin,
   ArrowRight,
-  Home,
-  Camera,
-  Building,
-  User,
-  Clock,
-  Map,
-  CreditCard,
-  Check,
-  Gift,
-  UserPlus,
-  FileText,
-  Bike,
-  ShoppingBag,
-  PenTool,
-  Globe,
-  MessageSquare,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -64,7 +48,7 @@ const Index = () => {
       category: "রেন্ট",
       path: "/rent-details/2"
     },
-    // Service listings - Updated paths to appointment-booking
+    // Service listings - Updated paths to service detail pages
     {
       id: "1",
       title: "ডাক্তার কনসাল্টেশন",
@@ -83,7 +67,7 @@ const Index = () => {
       category: "সার্ভিস",
       path: "/services/2"
     },
-    // Marketplace listings - Updated paths to product
+    // Marketplace listings - Updated paths to product detail pages
     {
       id: "1",
       title: "স্মার্ট ব্লাড প্রেশার মনিটর",

@@ -158,6 +158,8 @@ const App = () => (
                   <Route path="/video-hosting" element={<NotFound />} />
                   <Route path="/affiliate" element={<NotFound />} />
                   <Route path="/social-media" element={<NotFound />} />
+                  
+                  {/* Product, Service and Rental Detail Pages */}
                   <Route path="/product/:id" element={<ProductDetail />} />
                   <Route path="/rent-details/:id" element={<RentDetail />} />
                   
