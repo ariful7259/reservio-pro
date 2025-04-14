@@ -107,41 +107,32 @@ const App = () => (
                   <Route path="/feedback" element={<Feedback />} />
                   <Route path="/qr-scanner" element={<QrScanner />} />
                   
-                  {/* Authentication Routes */}
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />
                   <Route path="/profile-management" element={<ProfileManagement />} />
                   
-                  {/* Admin Routes */}
                   <Route path="/admin-dashboard" element={<AdminDashboard />} />
                   <Route path="/admin-dashboard/:section" element={<AdminDashboard />} />
                   
-                  {/* Chat System */}
                   <Route path="/messages" element={<ChatPage />} />
                   
-                  {/* Advanced Search */}
                   <Route path="/search" element={<SearchPage />} />
                   
-                  {/* Payment System */}
                   <Route path="/payment" element={<PaymentDemo />} />
                   
-                  {/* Referral System */}
                   <Route path="/referral" element={<ReferralSystem />} />
                   
-                  {/* New Pages */}
                   <Route path="/favorites" element={<Favorites />} />
                   <Route path="/reviews" element={<Reviews />} />
                   <Route path="/rewards" element={<Rewards />} />
                   <Route path="/language-settings" element={<LanguageSettings />} />
                   <Route path="/offline-mode" element={<OfflineMode />} />
                   
-                  {/* Community & Social Pages */}
                   <Route path="/stories" element={<Stories />} />
                   <Route path="/events" element={<EventCalendar />} />
                   <Route path="/forums" element={<Forums />} />
                   <Route path="/group-booking" element={<GroupBooking />} />
                   
-                  {/* Digital Creator Solution Routes - Enhanced with Monetization */}
                   <Route path="/create-store" element={<CreateStore />} />
                   <Route path="/course-builder" element={<CourseBuilder />} />
                   <Route path="/email-automation" element={<NotFound />} />
@@ -159,12 +150,10 @@ const App = () => (
                   <Route path="/affiliate" element={<NotFound />} />
                   <Route path="/social-media" element={<NotFound />} />
                   
-                  {/* Product, Service and Rental Detail Pages */}
                   <Route path="/product/:id" element={<ProductDetail />} />
                   <Route path="/rent-details/:id" element={<RentDetail />} />
                   <Route path="/product-order/:id" element={<ProductOrder />} />
                   
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
                 <OfflineIndicator />

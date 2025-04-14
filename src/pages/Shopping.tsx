@@ -227,7 +227,7 @@ const Shopping = () => {
   };
 
   const handleProductClick = (id: number) => {
-    navigate(`/shopping/product/${id}`);
+    navigate(`/product-order/${id}`);
   };
 
   const handleCategoryClick = (categoryId: string) => {
