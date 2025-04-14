@@ -44,7 +44,6 @@ const ShoppingCategory = () => {
   const [sortBy, setSortBy] = useState('recommended');
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
 
-  // Mock categories data
   const categories = [
     { id: "electronics", name: "এলেকট্রনিক্স" },
     { id: "fashion", name: "ফ্যাশন" },
@@ -64,7 +63,6 @@ const ShoppingCategory = () => {
     { id: "other", name: "অন্যান্য" },
   ];
 
-  // ক্যাটাগরি আইকন কালার
   const categoryIconColors = {
     electronics: 'bg-blue-100 text-blue-600',
     fashion: 'bg-pink-100 text-pink-600',
@@ -84,7 +82,6 @@ const ShoppingCategory = () => {
     other: 'bg-slate-100 text-slate-600',
   };
 
-  // Mock products data
   const mockProducts = [
     {
       id: 1,
@@ -92,7 +89,7 @@ const ShoppingCategory = () => {
       image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop",
       price: "৳ 2,500",
       originalPrice: "৳ 3,200",
-      location: "গুলশান, ঢাকা",
+      location: "গুলশান, ���াকা",
       rating: 4.8,
       reviews: 245,
       category: "electronics",
@@ -156,7 +153,6 @@ const ShoppingCategory = () => {
     },
   ];
 
-  // Mock subcategories for filters
   const subcategories = {
     electronics: ["ল্যাপটপ", "মোবাইল এক্সেসরিজ", "কম্পিউটার পার্টস", "গেমিং"],
     fashion: ["পুরুষদের", "মহিলাদের", "শীতের পোশাক", "জুতা"],
@@ -170,7 +166,7 @@ const ShoppingCategory = () => {
     audio: ["হেডফোন", "স্পিকার", "মাইক্রোফোন", "ইয়ারফোন"],
     smartwatch: ["স্মার্ট ওয়াচ", "ফিটনেস ট্র্যাকার", "রানিং ওয়াচ", "অ্যাকসেসরিজ"],
     sports: ["ক্রিকেট", "ফুটবল", "স্বাস্থ্য সামগ্রী", "সাইকেল"],
-    auto: ["কার অ্যাকসেসরিজ", "মোটরসাইকেল গিয়ার", "পার্টস", "টুলস"],
+    auto: ["���ার অ্যাকসেসরিজ", "মোটরসাইকেল গিয়ার", "পার্টস", "টুলস"],
     home: ["আসবাবপত্র", "আলোকসজ্জা", "গার্ডেন", "ডেকোর"],
     grocery: ["খাদ্য", "পানীয়", "মসলা", "স্ন্যাকস"],
     other: ["গিফট", "পার্টি সামগ্রী", "অফিস সামগ্রী", "পেট সামগ্রী"],
@@ -178,13 +174,11 @@ const ShoppingCategory = () => {
 
   useEffect(() => {
     if (id) {
-      // Find category name
       const category = categories.find(c => c.id === id);
       if (category) {
         setCategoryName(category.name);
       }
 
-      // Filter products by category ID
       const filteredProducts = mockProducts.filter(product => product.category === id);
       setProducts(filteredProducts);
     }
@@ -225,29 +219,30 @@ const ShoppingCategory = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle search functionality
     toast({
       title: "অনুসন্ধান করা হচ্ছে",
       description: `"${searchTerm}" এর জন্য ফলাফল দেখানো হচ্ছে`,
     });
   };
 
-  // ক্যাটাগরির জন্য সাবক্যাটাগরি
   const getSubcategories = (categoryId: string | undefined) => {
     if (!categoryId || !subcategories[categoryId as keyof typeof subcategories]) {
       return [];
     }
     return subcategories[categoryId as keyof typeof subcategories];
   };
-  
+
   const currentSubcategories = getSubcategories(id);
 
-  // For map view
   const productsWithGeoData = products.map(product => ({
     ...product,
     latitude: 23.7937 + (Math.random() * 0.1 - 0.05),
     longitude: 90.4065 + (Math.random() * 0.1 - 0.05),
   }));
+
+  const handleStoreClick = (storeId: number) => {
+    navigate(`/store/${storeId}`);
+  };
 
   return (
     <div className="container px-4 pt-20 pb-20">
@@ -417,7 +412,6 @@ const ShoppingCategory = () => {
         </div>
       )}
 
-      {/* Products display section */}
       <div className="mb-6">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-2">
@@ -572,7 +566,6 @@ const ShoppingCategory = () => {
         )}
       </div>
 
-      {/* Top Sellers in this category */}
       <div className="mb-8">
         <h2 className="text-lg font-medium mb-4">এই ক্যাটাগরিতে টপ বিক্রেতা</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -594,7 +587,14 @@ const ShoppingCategory = () => {
                     <span className="text-xs ml-1">{4.5 + seller * 0.1}</span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">{50 + seller * 25}+ প্রোডাক্ট</p>
-                  <Button variant="outline" size="sm" className="mt-2 w-full">দোকান দেখুন</Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="mt-2 w-full"
+                    onClick={() => handleStoreClick(seller)}
+                  >
+                    দোকান দেখুন
+                  </Button>
                 </div>
               </CardContent>
             </Card>
