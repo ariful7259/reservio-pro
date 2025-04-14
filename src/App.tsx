@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -58,6 +57,7 @@ import GroupBooking from "./pages/GroupBooking";
 import AdminDashboard from "./pages/AdminDashboard";
 import ProductDetail from "./pages/ProductDetail";
 import RentDetail from "./pages/RentDetail";
+import ProductOrder from "./pages/ProductOrder";
 
 const queryClient = new QueryClient();
 
@@ -162,6 +162,7 @@ const App = () => (
                   {/* Product, Service and Rental Detail Pages */}
                   <Route path="/product/:id" element={<ProductDetail />} />
                   <Route path="/rent-details/:id" element={<RentDetail />} />
+                  <Route path="/product-order/:id" element={<ProductOrder />} />
                   
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />

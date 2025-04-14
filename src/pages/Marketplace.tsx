@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -31,7 +30,6 @@ import {
   Book,
   Tv,
   Gamepad,
-  // Replace Bicycle with ActivitySquare
   ActivitySquare,
   Car,
   Star,
@@ -75,7 +73,6 @@ const Marketplace = () => {
     "https://images.unsplash.com/photo-1591085686350-798c0f9faa7f?q=80&w=1000&auto=format&fit=crop",
   ];
 
-  // ক্যাটাগরি আইকন কালার
   const categoryIconColors = {
     mobile: 'bg-purple-100 text-purple-600',
     computer: 'bg-blue-100 text-blue-600',
@@ -306,7 +303,7 @@ const Marketplace = () => {
   };
 
   const handleProductClick = (id: number) => {
-    navigate(`/product/${id}`);
+    navigate(`/product-order/${id}`);
   };
 
   const handleBookmark = (e: React.MouseEvent, productId: number) => {
@@ -343,7 +340,6 @@ const Marketplace = () => {
     setSortBy(value);
   };
   
-  // মার্কেটপ্লেস পরিষেবা প্রদানকারীরা
   const marketplaceProviders = [
     { id: 1, name: "টপটেক ইলেকট্রনিক্স", verified: true, rating: 4.8, sales: 1250 },
     { id: 2, name: "ফ্যাশন হাউস", verified: true, rating: 4.6, sales: 950 },
@@ -630,7 +626,7 @@ const Marketplace = () => {
                 </SelectItem>
                 <SelectItem value="rating">
                   <div className="flex items-center">
-                    <Star className="h-3 w-3 mr-1" />
+                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
                     রেটিং
                   </div>
                 </SelectItem>
