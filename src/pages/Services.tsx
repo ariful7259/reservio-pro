@@ -260,7 +260,7 @@ const Services = () => {
   };
 
   const handleServiceClick = (id: number) => {
-    navigate(`/service-detail/${id}`);
+    navigate(`/appointment-booking`);
   };
 
   const handleBookmark = (e: React.MouseEvent, serviceId: number) => {
