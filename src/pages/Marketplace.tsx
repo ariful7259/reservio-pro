@@ -41,6 +41,17 @@ import {
   ArrowDown,
   ArrowUp,
 } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import MapView from '@/components/MapView';
+import SocialShareModal from '@/components/SocialShareModal';
+import { useToast } from '@/hooks/use-toast';
 
 const Marketplace = () => {
   const navigate = useNavigate();
