@@ -41,17 +41,6 @@ import {
   ArrowDown,
   ArrowUp,
 } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
-import MapView from '@/components/MapView';
-import SocialShareModal from '@/components/SocialShareModal';
-import { useToast } from '@/components/ui/use-toast';
 
 const Marketplace = () => {
   const navigate = useNavigate();
@@ -347,6 +336,10 @@ const Marketplace = () => {
     { id: 4, name: "কিচেন সাপ্লাই", verified: true, rating: 4.7, sales: 850 },
   ];
 
+  const handleStoreClick = (storeId: number) => {
+    navigate(`/store/${storeId}`);
+  };
+
   return (
     <div className="container px-4 pt-20 pb-20">
       <div className="flex items-center justify-between mb-6">
@@ -566,7 +559,7 @@ const Marketplace = () => {
                   </>
                 ) : (
                   <>
-                    <ChevronDown className="h-4 w-4" /> আরও দেখুন
+                    <ChevronDown className="h-4 w-4" /> ���রও দেখুন
                   </>
                 )}
               </Button>
@@ -764,7 +757,14 @@ const Marketplace = () => {
                     <span className="text-xs ml-1">{provider.rating}</span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">{provider.sales}+ অর্ডার</p>
-                  <Button variant="outline" size="sm" className="mt-2 w-full">দোকান দেখুন</Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="mt-2 w-full"
+                    onClick={() => handleStoreClick(provider.id)}
+                  >
+                    দোকান দেখুন
+                  </Button>
                 </div>
               </CardContent>
             </Card>

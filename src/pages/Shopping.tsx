@@ -272,6 +272,10 @@ const Shopping = () => {
     });
   };
 
+  const handleStoreClick = (storeId: number) => {
+    navigate(`/store/${storeId}`);
+  };
+
   const topSellers = [
     { id: 1, name: "টপটেক ইলেকট্রনিক্স", verified: true, rating: 4.8, products: 250 },
     { id: 2, name: "ফ্যাশন হাউস", verified: true, rating: 4.6, products: 180 },
@@ -421,7 +425,7 @@ const Shopping = () => {
                 />
                 <div className="flex justify-between mt-1 text-xs text-muted-foreground">
                   <span>1 কিমি</span>
-                  <span>10 কিমি</span>
+                  <span>10 ক���মি</span>
                   <span>20 কিমি</span>
                 </div>
               </div>
@@ -692,7 +696,14 @@ const Shopping = () => {
                     <span className="text-xs ml-1">{seller.rating}</span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">{seller.products}+ প্রোডাক্ট</p>
-                  <Button variant="outline" size="sm" className="mt-2 w-full">দোকান দেখুন</Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="mt-2 w-full"
+                    onClick={() => handleStoreClick(seller.id)}
+                  >
+                    দোকান দেখুন
+                  </Button>
                 </div>
               </CardContent>
             </Card>
