@@ -42,7 +42,7 @@ const FeaturedDigitalProducts = () => {
       image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1000&auto=format&fit=crop",
       price: "৳৫,৯৯৯",
       category: "কোর্স",
-      path: "/digital-products/courses"
+      path: "/course-builder"
     },
     {
       id: "ebook-1",
@@ -51,7 +51,7 @@ const FeaturedDigitalProducts = () => {
       image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=1000&auto=format&fit=crop",
       price: "৳৯৯৯",
       category: "ইবুক",
-      path: "/digital-products/ebooks"
+      path: "/course-builder"
     },
     {
       id: "template-1",
@@ -60,7 +60,7 @@ const FeaturedDigitalProducts = () => {
       image: "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?q=80&w=1000&auto=format&fit=crop",
       price: "৳২,৫০০",
       category: "টেমপ্লেট",
-      path: "/digital-products/templates"
+      path: "/course-builder"
     },
     {
       id: "software-1",
@@ -69,7 +69,7 @@ const FeaturedDigitalProducts = () => {
       image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?q=80&w=1000&auto=format&fit=crop",
       price: "৳৩,৫০০",
       category: "সফটওয়্যার",
-      path: "/digital-products/software"
+      path: "/course-builder"
     },
     {
       id: "video-1",
@@ -77,8 +77,8 @@ const FeaturedDigitalProducts = () => {
       description: "প্রফেশনাল ভিডিও এডিটিং টেকনিক শিখুন",
       image: "https://images.unsplash.com/photo-1574717024453-354056aafa98?q=80&w=1000&auto=format&fit=crop",
       price: "৳৪,৫০০",
-      category: "ভিডিও",
-      path: "/digital-products/videos"
+      category: "কোর্স",
+      path: "/course-builder"
     },
     {
       id: "audio-1",
@@ -87,7 +87,7 @@ const FeaturedDigitalProducts = () => {
       image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1000&auto=format&fit=crop",
       price: "৳১,৯৯৯",
       category: "অডিও",
-      path: "/digital-products/audio"
+      path: "/course-builder"
     },
     {
       id: "graphics-1",
@@ -96,7 +96,7 @@ const FeaturedDigitalProducts = () => {
       image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop",
       price: "৳১,৮০০",
       category: "গ্রাফিক্স",
-      path: "/digital-products/graphics"
+      path: "/course-builder"
     }
   ];
 
@@ -126,7 +126,7 @@ const FeaturedDigitalProducts = () => {
           variant="ghost" 
           size="sm" 
           className="flex items-center gap-1" 
-          onClick={() => navigate('/digital-products')}
+          onClick={() => navigate('/course-builder')}
         >
           সব দেখুন <ArrowRight className="h-4 w-4" />
         </Button>
