@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -17,9 +18,13 @@ import {
   Scissors,
   FileText,
   Wrench,
-  ShieldCheck
+  ShieldCheck,
+  Palette,
+  Camera,
+  BookOpen,
+  DollarSign
 } from 'lucide-react';
-import { ServiceCard } from '@/components/ServiceCard';
+import ServiceCard from '@/components/ServiceCard';
 import { useToast } from '@/components/ui/use-toast';
 import { usePostContext } from '@/context/PostContext';
 

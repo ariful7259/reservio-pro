@@ -8,31 +8,45 @@ import { Star } from 'lucide-react';
 interface ServiceCardProps {
   id: string;
   title: string;
-  provider: string;
+  provider?: string;
   imageUrl: string;
   rating: number;
-  price: number;
+  price: number | string;
   discount?: number;
-  duration: string;
+  duration?: string;
+  location?: string;
   tags?: string[];
   buttonLabel?: string;
-  onClick: (id: string) => void;
+  onClick: (id: string | number) => void;
+  service?: any; // For backwards compatibility
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({
   id,
   title,
-  provider,
+  provider = "",
   imageUrl,
   rating,
   price,
   discount,
   duration,
+  location,
   tags = [],
   buttonLabel = "বুক করুন",
   onClick,
+  service, // For backwards compatibility
 }) => {
-  const discountedPrice = discount ? price - (price * discount) / 100 : price;
+  // For backwards compatibility with existing code
+  if (service) {
+    id = service.id || id;
+    title = service.title || title;
+    imageUrl = service.imageUrl || imageUrl;
+    rating = service.rating || rating;
+    price = service.price || price;
+    location = service.location || location;
+  }
+  
+  const discountedPrice = discount ? Number(price) - (Number(price) * discount) / 100 : price;
 
   return (
     <Card className="overflow-hidden border service-card transition-all duration-300 hover:shadow-md hover:scale-105 cursor-pointer">
@@ -47,7 +61,13 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         <div className="flex items-start justify-between">
           <div>
             <h3 className="font-semibold text-lg">{title}</h3>
-            <p className="text-muted-foreground text-sm">{provider}</p>
+            {provider && <p className="text-muted-foreground text-sm">{provider}</p>}
+            {location && (
+              <div className="flex items-center text-xs text-muted-foreground mt-1">
+                <MapPin className="h-3 w-3 mr-1" /> 
+                <span>{location}</span>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-1 bg-amber-100 px-2 py-1 rounded text-amber-700">
             <Star className="h-3 w-3 fill-amber-500 text-amber-500" />
@@ -65,18 +85,22 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
                 ৳{price}
               </span>
             )}
-            <span className="text-xs text-muted-foreground ml-auto">
-              {duration}
-            </span>
+            {duration && (
+              <span className="text-xs text-muted-foreground ml-auto">
+                {duration}
+              </span>
+            )}
           </div>
           
-          <div className="flex flex-wrap gap-1">
-            {tags.map((tag, index) => (
-              <Badge key={index} variant="secondary" className="text-xs">
-                {tag}
-              </Badge>
-            ))}
-          </div>
+          {tags.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {tags.map((tag, index) => (
+                <Badge key={index} variant="secondary" className="text-xs">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          )}
         </div>
       </CardContent>
       <CardFooter className="p-4 pt-0">

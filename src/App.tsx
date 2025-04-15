@@ -3,7 +3,8 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from "@/components/ui/toaster";
-import { Navbar } from '@/components/Navbar';
+import Navbar from '@/components/Navbar';
+import OfflineIndicator from '@/components/OfflineIndicator';
 
 import Index from '@/pages/Index';
 import NotFound from '@/pages/NotFound';
