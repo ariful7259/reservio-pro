@@ -1,10 +1,11 @@
-
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from "@/components/ui/toaster";
 import Navbar from '@/components/Navbar';
 import OfflineIndicator from '@/components/OfflineIndicator';
+import { AuthProvider } from '@/hooks/useAuth';
+import { AppProvider } from '@/context/AppContext';
 
 import Index from '@/pages/Index';
 import NotFound from '@/pages/NotFound';
@@ -77,68 +78,72 @@ const App = () => {
 
   return (
     <ThemeProvider defaultTheme="system" storageKey="ui-theme">
-      <PostProvider>
-        <Router>
-          <div className="flex flex-col min-h-screen">
-            {isOffline && <OfflineIndicator />}
-            <Navbar />
-            <main className="flex-1">
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/offline" element={<OfflineMode />} />
-                <Route path="/qr-scanner" element={<QrScanner />} />
-                <Route path="/services" element={<Services />} />
-                <Route path="/service/:id" element={<ServiceDetail />} />
-                <Route path="/service-category/:category" element={<ServiceCategory />} />
-                <Route path="/shopping" element={<Shopping />} />
-                <Route path="/shopping-category/:category" element={<ShoppingCategory />} />
-                <Route path="/product/:id" element={<ProductDetail />} />
-                <Route path="/rent-anything" element={<RentAnything />} />
-                <Route path="/rent-details/:id" element={<RentDetail />} />
-                <Route path="/wallet" element={<Wallet />} />
-                <Route path="/rentals" element={<Rentals />} />
-                <Route path="/rental-category/:categoryId" element={<RentalCategoryPage />} />
-                <Route path="/housing" element={<Housing />} />
-                <Route path="/help" element={<Help />} />
-                <Route path="/favorites" element={<Favorites />} />
-                <Route path="/feedback" element={<Feedback />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/profile-management" element={<ProfileManagement />} />
-                <Route path="/create-post" element={<CreatePost />} />
-                <Route path="/2fa" element={<TwoFactorAuthentication />} />
-                <Route path="/security" element={<Security />} />
-                <Route path="/language" element={<LanguageSettings />} />
-                <Route path="/rewards" element={<Rewards />} />
-                <Route path="/order/:id" element={<ProductOrder />} />
-                <Route path="/referral" element={<ReferralSystem />} />
-                <Route path="/notifications" element={<Notifications />} />
-                <Route path="/chat" element={<ChatPage />} />
-                <Route path="/digital-product/:id" element={<DigitalProduct />} />
-                <Route path="/appointment-booking/:id" element={<AppointmentBooking />} />
-                <Route path="/appointments" element={<Appointments />} />
-                <Route path="/group-booking/:id" element={<GroupBooking />} />
-                <Route path="/store/:id" element={<StoreDetails />} />
-                <Route path="/create-store" element={<CreateStore />} />
-                <Route path="/kyc" element={<KycVerification />} />
-                <Route path="/forums" element={<Forums />} />
-                <Route path="/events" element={<EventCalendar />} />
-                <Route path="/course-builder" element={<CourseBuilder />} />
-                <Route path="/community/:id" element={<PaidCommunity />} />
-                <Route path="/payment-demo" element={<PaymentDemo />} />
-                <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="/stories" element={<Stories />} />
-                <Route path="/search" element={<SearchPage />} />
-                <Route path="/my-services" element={<MyServices />} />
-                <Route path="/utilities" element={<Utilities />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </main>
-          </div>
-          <Toaster />
-        </Router>
-      </PostProvider>
+      <AuthProvider>
+        <AppProvider>
+          <PostProvider>
+            <Router>
+              <div className="flex flex-col min-h-screen">
+                {isOffline && <OfflineIndicator />}
+                <Navbar />
+                <main className="flex-1">
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
+                    <Route path="/offline" element={<OfflineMode />} />
+                    <Route path="/qr-scanner" element={<QrScanner />} />
+                    <Route path="/services" element={<Services />} />
+                    <Route path="/service/:id" element={<ServiceDetail />} />
+                    <Route path="/service-category/:category" element={<ServiceCategory />} />
+                    <Route path="/shopping" element={<Shopping />} />
+                    <Route path="/shopping-category/:category" element={<ShoppingCategory />} />
+                    <Route path="/product/:id" element={<ProductDetail />} />
+                    <Route path="/rent-anything" element={<RentAnything />} />
+                    <Route path="/rent-details/:id" element={<RentDetail />} />
+                    <Route path="/wallet" element={<Wallet />} />
+                    <Route path="/rentals" element={<Rentals />} />
+                    <Route path="/rental-category/:categoryId" element={<RentalCategoryPage />} />
+                    <Route path="/housing" element={<Housing />} />
+                    <Route path="/help" element={<Help />} />
+                    <Route path="/favorites" element={<Favorites />} />
+                    <Route path="/feedback" element={<Feedback />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/profile-management" element={<ProfileManagement />} />
+                    <Route path="/create-post" element={<CreatePost />} />
+                    <Route path="/2fa" element={<TwoFactorAuthentication />} />
+                    <Route path="/security" element={<Security />} />
+                    <Route path="/language" element={<LanguageSettings />} />
+                    <Route path="/rewards" element={<Rewards />} />
+                    <Route path="/order/:id" element={<ProductOrder />} />
+                    <Route path="/referral" element={<ReferralSystem />} />
+                    <Route path="/notifications" element={<Notifications />} />
+                    <Route path="/chat" element={<ChatPage />} />
+                    <Route path="/digital-product/:id" element={<DigitalProduct />} />
+                    <Route path="/appointment-booking/:id" element={<AppointmentBooking />} />
+                    <Route path="/appointments" element={<Appointments />} />
+                    <Route path="/group-booking/:id" element={<GroupBooking />} />
+                    <Route path="/store/:id" element={<StoreDetails />} />
+                    <Route path="/create-store" element={<CreateStore />} />
+                    <Route path="/kyc" element={<KycVerification />} />
+                    <Route path="/forums" element={<Forums />} />
+                    <Route path="/events" element={<EventCalendar />} />
+                    <Route path="/course-builder" element={<CourseBuilder />} />
+                    <Route path="/community/:id" element={<PaidCommunity />} />
+                    <Route path="/payment-demo" element={<PaymentDemo />} />
+                    <Route path="/admin" element={<AdminDashboard />} />
+                    <Route path="/stories" element={<Stories />} />
+                    <Route path="/search" element={<SearchPage />} />
+                    <Route path="/my-services" element={<MyServices />} />
+                    <Route path="/utilities" element={<Utilities />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </main>
+              </div>
+              <Toaster />
+            </Router>
+          </PostProvider>
+        </AppProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 };
