@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -59,12 +60,17 @@ import {
   WifiOff,
   Languages,
   Calendar,
-  Layout
+  Layout,
+  Activity,
+  LineChart
 } from 'lucide-react';
 import ServiceCardCustomization from '@/components/admin/ServiceCardCustomization';
 import OfflineConfiguration from '@/components/admin/OfflineConfiguration';
 import LanguageManager from '@/components/admin/LanguageManager';
 import RentalCalendarConfiguration from '@/components/admin/RentalCalendarConfiguration';
+import ThemeManagement from '@/components/admin/ThemeManagement';
+import UserExperienceTracking from '@/components/admin/UserExperienceTracking';
+import MonetizationTracking from '@/components/admin/MonetizationTracking';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -99,7 +105,7 @@ const AdminDashboard = () => {
   // Recent transactions
   const recentTransactions = [
     { id: 'TX-5872', amount: '৳ 2,450', type: 'বিক্রয়', user: 'রহিম আহমেদ', status: 'সম্পন্ন', time: '15 মিনিট আগে' },
-    { id: 'TX-5871', amount: '৳ 1,200', type: 'রেন্টাল', user: 'করিম খান', status: 'প্রক্রিয়াধীন', time: '32 মিনিট আগে' },
+    {id: 'TX-5871', amount: '৳ 1,200', type: 'রেন্টাল', user: 'করিম খান', status: 'প্রক্রিয়াধীন', time: '32 মিনিট আগে' },
     { id: 'TX-5870', amount: '৳ 3,500', type: 'সার্ভিস', user: 'নাদিয়া ইসলাম', status: 'সম্পন্ন', time: '1 ঘন্টা আগে' },
     { id: 'TX-5869', amount: '৳ 850', type: 'ডিজিটাল', user: 'সাকিব হাসান', status: 'সম্পন্ন', time: '2 ঘন্টা আগে' },
   ];
@@ -132,6 +138,9 @@ const AdminDashboard = () => {
     { id: 'offline-config', name: 'অফলাইন মোড', icon: <WifiOff size={18} /> },
     { id: 'language-manager', name: 'ভাষা ম্যানেজার', icon: <Languages size={18} /> },
     { id: 'calendar-config', name: 'ক্যালেন্ডার কনফিগ', icon: <Calendar size={18} /> },
+    { id: 'theme-management', name: 'থিম ম্যানেজমেন্ট', icon: <Palette size={18} /> },
+    { id: 'user-experience', name: 'ইউজার এক্সপেরিয়েন্স', icon: <Activity size={18} /> },
+    { id: 'monetization-tracking', name: 'মোনিটাইজেশন ট্র্যাকিং', icon: <LineChart size={18} /> },
   ];
   
   const handleModuleChange = (moduleId) => {
@@ -448,9 +457,16 @@ const AdminDashboard = () => {
             
             {activeModule === 'calendar-config' && <RentalCalendarConfiguration />}
             
+            {activeModule === 'theme-management' && <ThemeManagement />}
+            
+            {activeModule === 'user-experience' && <UserExperienceTracking />}
+            
+            {activeModule === 'monetization-tracking' && <MonetizationTracking />}
+            
             {!['dashboard', 'users', 'marketplace', 'rentals', 'services', 'digital', 'categories', 
                'payments', 'reports', 'analytics', 'support', 'settings', 'advanced', 'monetization',
-               'service-card', 'offline-config', 'language-manager', 'calendar-config'].includes(activeModule) && (
+               'service-card', 'offline-config', 'language-manager', 'calendar-config', 'theme-management',
+               'user-experience', 'monetization-tracking'].includes(activeModule) && (
               <div className="flex flex-col items-center justify-center py-12">
                 <div className="h-24 w-24 rounded-full flex items-center justify-center mb-4"
                   style={{ backgroundColor: adminTheme.colors.primaryLight }}>
