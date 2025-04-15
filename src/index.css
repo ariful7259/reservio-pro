@@ -36,17 +36,17 @@
     --radius: 0.5rem;
     
     /* অ্যাডমিন থিম ভেরিয়েবলস */
-    --admin-primary: 212 100% 58%; /* Soft Blue #3B82F6 */
-    --admin-secondary: 271 85% 46%; /* Rich Purple #6D28D9 */
-    --admin-accent: 160 82% 40%; /* Vibrant Green #10B981 */
-    --admin-background: 210 20% 98%; /* Light Clean Background #F8FAFC */
-    --admin-success: 134 61% 41%; /* Success Green #16A34A */
-    --admin-warning: 35 85% 45%; /* Warning Orange #D97706 */
-    --admin-error: 0 84% 53%; /* Error Red #DC2626 */
-    --admin-info: 217 91% 52%; /* Info Blue #2563EB */
-    --admin-text-primary: 215 28% 17%; /* Deep Charcoal #1F2937 */
-    --admin-text-secondary: 214 16% 32%; /* Soft Gray #4B5563 */
-    --admin-text-muted: 215 12% 47%; /* Lighter Gray #6B7280 */
+    --admin-primary: 214 77% 46%; /* #2262C6 */
+    --admin-secondary: 263 29% 48%; /* #6E59A5 */
+    --admin-accent: 169 100% 32%; /* #00A389 */
+    --admin-background: 214 75% 97%; /* #F5F8FC */
+    --admin-success: 151 74% 40%; /* #10B981 */
+    --admin-warning: 35 92% 50%; /* #F59E0B */
+    --admin-error: 0 84% 60%; /* #EF4444 */
+    --admin-info: 217 91% 60%; /* #3B82F6 */
+    --admin-text-primary: 215 28% 17%; /* #1F2937 */
+    --admin-text-secondary: 214 16% 32%; /* #4B5563 */
+    --admin-text-muted: 215 12% 47%; /* #6B7280 */
   }
  
   .dark {
@@ -79,14 +79,14 @@
     --ring: 212.7 26.8% 83.9%;
     
     /* ডার্ক মোড অ্যাডমিন থিম ভেরিয়েবলস */
-    --admin-primary: 214 92% 67%; /* Soft Blue #60A5FA */
-    --admin-secondary: 262 82% 73%; /* Soft Purple #A78BFA */
-    --admin-accent: 157 65% 55%; /* Mint Green #34D399 */
-    --admin-background: 222 48% 12%; /* Deep Navy #111827 */
-    --admin-surface: 217 32% 17%; /* Dark Gray-Blue #1F2937 */
-    --admin-text-primary: 210 20% 98%; /* Off-White #F9FAFB */
-    --admin-text-secondary: 210 16% 93%; /* Light Gray #E5E7EB */
-    --admin-text-muted: 217 14% 83%; /* Pale Gray #D1D5DB */
+    --admin-primary: 214 95% 67%; /* #60A5FA */
+    --admin-secondary: 263 85% 76%; /* #A78BFA */
+    --admin-accent: 158 64% 52%; /* #34D399 */
+    --admin-background: 215 28% 17%; /* #1F2937 */
+    --admin-surface: 217 19% 27%; /* #374151 */
+    --admin-text-primary: 210 20% 98%; /* #F9FAFB */
+    --admin-text-secondary: 210 16% 93%; /* #E5E7EB */
+    --admin-text-muted: 217 14% 83%; /* #D1D5DB */
   }
 }
  
@@ -151,6 +151,7 @@
   animation: pulse 2s ease-in-out infinite;
 }
 
+/* Staggered animations for lists */
 .stagger-item:nth-child(1) { animation-delay: 0.05s; }
 .stagger-item:nth-child(2) { animation-delay: 0.1s; }
 .stagger-item:nth-child(3) { animation-delay: 0.15s; }
@@ -162,7 +163,9 @@
 .stagger-item:nth-child(9) { animation-delay: 0.45s; }
 .stagger-item:nth-child(10) { animation-delay: 0.5s; }
 
+/* ইউটিলিটি ক্লাস যোগ করা */
 @layer utilities {
+  /* কার্ড গ্র্যাডিয়েন্ট ক্লাস */
   .card-gradient-light {
     @apply bg-gradient-to-br from-white to-gray-100;
   }
@@ -179,10 +182,12 @@
     background: linear-gradient(135deg, rgba(0, 163, 137, 0.05) 0%, rgba(0, 201, 167, 0.1) 100%);
   }
   
+  /* নতুন গ্র্যাডিয়েন্ট ক্লাস যোগ করছি */
   .card-hover-effect {
     @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
   }
   
+  /* বাটন গ্র্যাডিয়েন্ট ক্লাস */
   .btn-gradient-primary {
     background: linear-gradient(to right, #2262C6, #3C7DEF);
   }
@@ -195,6 +200,7 @@
     background: linear-gradient(to right, #00A389, #00C9A7);
   }
   
+  /* শ্যাডো ক্লাস */
   .shadow-card {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
   }
@@ -207,10 +213,12 @@
     box-shadow: 0 2px 4px rgba(34, 98, 198, 0.15), 0 1px 2px rgba(34, 98, 198, 0.1);
   }
   
+  /* ট্রানজিশন ক্লাস */
   .transition-smooth {
     @apply transition-all duration-300 ease-in-out;
   }
   
+  /* হোভার ইফেক্ট ক্লাস */
   .hover-lift {
     @apply transition-all duration-300;
   }
@@ -219,6 +227,7 @@
     transform: translateY(-3px);
   }
   
+  /* গ্লাস ইফেক্ট এবং মর্ফিজম */
   .glass-effect {
     @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-md;
   }
@@ -227,18 +236,22 @@
     @apply bg-gray-900/70 backdrop-blur-md border border-gray-800/50 shadow-md;
   }
   
+  /* নতুন ইন্টারএক্টিভ হোভার ইফেক্ট */
   .interactive-hover {
     @apply relative overflow-hidden transition-all duration-300 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:to-white/10 before:translate-x-full before:transition-transform before:duration-500 hover:before:translate-x-0;
   }
   
+  /* ডার্ক মোড গ্লাস এফেক্ট */
   .dark-glass {
     @apply dark:bg-gray-900/40 dark:backdrop-blur-lg dark:border dark:border-gray-800/50;
   }
   
+  /* নতুন বাটন ইফেক্ট */
   .button-pop {
     @apply active:scale-95 transition-transform;
   }
   
+  /* WCAG AA কমপ্লায়েন্ট টেক্সট কন্ট্রাস্ট */
   .text-accessible {
     @apply text-gray-900 dark:text-gray-50;
   }
@@ -248,6 +261,7 @@
   }
 }
 
+/* ডার্ক মোড ইউটিলিটি ক্লাস */
 .dark .card-dark {
   @apply bg-gray-800 border-gray-700;
 }
@@ -256,6 +270,7 @@
   @apply bg-gray-700 hover:bg-gray-600 text-white;
 }
 
+/* নতুন অ্যানিমেশন ইফেক্ট */
 .card-shimmer {
   position: relative;
   overflow: hidden;
@@ -285,6 +300,7 @@
   }
 }
 
+/* 3D হোভার ইফেক্ট */
 .hover-3d {
   transition: transform 0.3s ease;
   transform: perspective(1000px) rotateX(0) rotateY(0);

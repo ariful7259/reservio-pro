@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -44,7 +45,7 @@ import {
   AirVent,
   ShoppingCart,
   Flame,
-  Power,
+  Power, // Replaced Generator with Power icon
   Tractor,
   Droplets,
   Wind,
@@ -70,21 +71,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { useToast } from "@/components/ui/use-toast";
-import { usePostContext } from '@/context/PostContext';
-import { useFileUpload } from '@/hooks/useFileUpload';
 
 const CreatePost = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { addRentPost, addServicePost, addMarketplacePost } = usePostContext();
   const [postType, setPostType] = useState<'rent' | 'service' | 'marketplace'>('rent');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [subcategories, setSubcategories] = useState<{name: string, value: string, icon?: JSX.Element}[]>([]);
-
-  const rentFileUpload = useFileUpload();
-  const serviceFileUpload = useFileUpload();
-  const marketplaceFileUpload = useFileUpload();
 
   const [rentForm, setRentForm] = useState({
     title: '',
@@ -94,6 +88,7 @@ const CreatePost = () => {
     price: '',
     period: 'month',
     description: '',
+    images: [] as File[]
   });
 
   const [serviceForm, setServiceForm] = useState({
@@ -105,6 +100,7 @@ const CreatePost = () => {
     duration: '',
     timeUnit: 'minutes',
     description: '',
+    images: [] as File[]
   });
 
   const [marketplaceForm, setMarketplaceForm] = useState({
@@ -115,6 +111,7 @@ const CreatePost = () => {
     discountPrice: '',
     tags: '',
     description: '',
+    images: [] as File[]
   });
 
   const rentCategories = [
@@ -284,96 +281,36 @@ const CreatePost = () => {
   const handleFileUpload = (files: FileList | null, type: 'rent' | 'service' | 'marketplace') => {
     if (!files) return;
     
+    const fileArray = Array.from(files);
+    
     if (type === 'rent') {
-      rentFileUpload.handleFileUpload(files);
+      setRentForm({...rentForm, images: [...rentForm.images, ...fileArray]});
     } else if (type === 'service') {
-      serviceFileUpload.handleFileUpload(files);
+      setServiceForm({...serviceForm, images: [...serviceForm.images, ...fileArray]});
     } else {
-      marketplaceFileUpload.handleFileUpload(files);
+      setMarketplaceForm({...marketplaceForm, images: [...marketplaceForm.images, ...fileArray]});
     }
   };
 
   const handleSubmit = (type: 'rent' | 'service' | 'marketplace') => {
     setIsSubmitting(true);
     
-    if (type === 'rent') {
-      addRentPost({
-        ...rentForm,
-        imageUrls: rentFileUpload.fileUrls
-      });
+    setTimeout(() => {
+      setIsSubmitting(false);
       
       toast({
         title: "পোস্ট সফলভাবে তৈরি হয়েছে",
-        description: "আপনার রেন্টাল পোস্ট এখন প্রদর্শিত হবে",
+        description: "আপনার পোস্ট এখন প্রদর্শিত হবে",
       });
       
-      setRentForm({
-        title: '',
-        category: '',
-        subcategory: '',
-        location: '',
-        price: '',
-        period: 'month',
-        description: '',
-      });
-      rentFileUpload.clearFiles();
-      
-      navigate('/rentals');
-    } else if (type === 'service') {
-      addServicePost({
-        ...serviceForm,
-        imageUrls: serviceFileUpload.fileUrls
-      });
-      
-      toast({
-        title: "পোস্ট সফলভাবে তৈরি হয়েছে",
-        description: "আপনার সার্ভিস পোস্ট এখন প্রদর্শিত হবে",
-      });
-      
-      setServiceForm({
-        title: '',
-        category: '',
-        subcategory: '',
-        location: '',
-        price: '',
-        duration: '',
-        timeUnit: 'minutes',
-        description: '',
-      });
-      serviceFileUpload.clearFiles();
-      
-      navigate('/services');
-    } else {
-      const tagsArray = marketplaceForm.tags.split(',')
-        .map(tag => tag.trim())
-        .filter(tag => tag.length > 0);
-      
-      addMarketplacePost({
-        ...marketplaceForm,
-        tags: tagsArray,
-        imageUrls: marketplaceFileUpload.fileUrls
-      });
-      
-      toast({
-        title: "পোস্ট সফলভাবে তৈরি হয়েছে",
-        description: "আপনার প্রোডাক্ট এখন প্রদর্শিত হবে",
-      });
-      
-      setMarketplaceForm({
-        title: '',
-        category: '',
-        subcategory: '',
-        price: '',
-        discountPrice: '',
-        tags: '',
-        description: '',
-      });
-      marketplaceFileUpload.clearFiles();
-      
-      navigate('/shopping');
-    }
-    
-    setIsSubmitting(false);
+      if (type === 'rent') {
+        navigate('/rentals');
+      } else if (type === 'service') {
+        navigate('/services');
+      } else {
+        navigate('/shopping');
+      }
+    }, 1500);
   };
 
   const getCategoryIcon = (type: 'rent' | 'service' | 'marketplace', categoryValue: string) => {
@@ -533,24 +470,9 @@ const CreatePost = () => {
                       আপলোড করুন
                     </Button>
                   </div>
-                  {rentFileUpload.fileUrls.length > 0 && (
+                  {rentForm.images.length > 0 && (
                     <div className="mt-2">
-                      <p className="text-sm text-muted-foreground">{rentFileUpload.fileUrls.length} টি ছবি আপলোড করা হয়েছে</p>
-                      <div className="grid grid-cols-4 gap-2 mt-2">
-                        {rentFileUpload.fileUrls.map((url, index) => (
-                          <div key={index} className="relative">
-                            <img src={url} alt={`preview ${index}`} className="h-20 w-full object-cover rounded" />
-                            <Button 
-                              variant="destructive" 
-                              size="icon" 
-                              className="absolute -top-2 -right-2 h-6 w-6 rounded-full"
-                              onClick={() => rentFileUpload.removeFile(index)}
-                            >
-                              ✕
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
+                      <p className="text-sm text-muted-foreground">{rentForm.images.length} টি ছবি আপলোড করা হয়েছে</p>
                     </div>
                   )}
                 </div>
@@ -734,24 +656,9 @@ const CreatePost = () => {
                       আপলোড করুন
                     </Button>
                   </div>
-                  {serviceFileUpload.fileUrls.length > 0 && (
+                  {serviceForm.images.length > 0 && (
                     <div className="mt-2">
-                      <p className="text-sm text-muted-foreground">{serviceFileUpload.fileUrls.length} টি ছবি আপলোড করা হয়েছে</p>
-                      <div className="grid grid-cols-4 gap-2 mt-2">
-                        {serviceFileUpload.fileUrls.map((url, index) => (
-                          <div key={index} className="relative">
-                            <img src={url} alt={`preview ${index}`} className="h-20 w-full object-cover rounded" />
-                            <Button 
-                              variant="destructive" 
-                              size="icon" 
-                              className="absolute -top-2 -right-2 h-6 w-6 rounded-full"
-                              onClick={() => serviceFileUpload.removeFile(index)}
-                            >
-                              ✕
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
+                      <p className="text-sm text-muted-foreground">{serviceForm.images.length} টি ছবি আপলোড করা হয়েছে</p>
                     </div>
                   )}
                 </div>
@@ -892,24 +799,9 @@ const CreatePost = () => {
                       আপলোড করুন
                     </Button>
                   </div>
-                  {marketplaceFileUpload.fileUrls.length > 0 && (
+                  {marketplaceForm.images.length > 0 && (
                     <div className="mt-2">
-                      <p className="text-sm text-muted-foreground">{marketplaceFileUpload.fileUrls.length} টি ছবি আপলোড করা হয়েছে</p>
-                      <div className="grid grid-cols-4 gap-2 mt-2">
-                        {marketplaceFileUpload.fileUrls.map((url, index) => (
-                          <div key={index} className="relative">
-                            <img src={url} alt={`preview ${index}`} className="h-20 w-full object-cover rounded" />
-                            <Button 
-                              variant="destructive" 
-                              size="icon" 
-                              className="absolute -top-2 -right-2 h-6 w-6 rounded-full"
-                              onClick={() => marketplaceFileUpload.removeFile(index)}
-                            >
-                              ✕
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
+                      <p className="text-sm text-muted-foreground">{marketplaceForm.images.length} টি ছবি আপলোড করা হয়েছে</p>
                     </div>
                   )}
                 </div>

@@ -1,59 +1,63 @@
 
-// Modern minimal theme configuration
+// Admin dashboard theme configuration
+
 export const adminTheme = {
   colors: {
-    primary: '#4A90E2', // Modern trustworthy blue
-    secondary: '#50E3C2', // Fresh mint green
-    accent: '#FF6B6B', // Warm engaging red
-    background: '#F8FAFC', // Clean subtle background
-    primaryLight: 'rgba(74, 144, 226, 0.1)',
-    secondaryLight: 'rgba(80, 227, 194, 0.1)',
-    accentLight: 'rgba(255, 107, 107, 0.1)',
-    success: '#34D399', // Positive green
-    warning: '#F59E0B', // Clear warning orange
-    error: '#EF4444', // Strong error red
-    info: '#3B82F6', // Informative blue
+    primary: '#2262C6', // নীল
+    secondary: '#6E59A5', // বেগুনি
+    accent: '#00A389', // সবুজ
+    background: '#F5F8FC', // হালকা নীল-সাদা
+    primaryLight: 'rgba(34, 98, 198, 0.1)',
+    secondaryLight: 'rgba(110, 89, 165, 0.1)',
+    accentLight: 'rgba(0, 163, 137, 0.1)',
+    success: '#10B981',
+    warning: '#F59E0B',
+    error: '#EF4444',
+    info: '#3B82F6',
     text: {
-      primary: '#1E293B', // Clear readable dark
-      secondary: '#475569', // Balanced gray
-      muted: '#64748B', // Subtle text
-      light: '#94A3B8' // Light text
+      primary: '#1F2937',
+      secondary: '#4B5563',
+      muted: '#6B7280',
+      light: '#9CA3AF'
     },
+    // ডার্ক মোড কালার
     dark: {
-      background: '#0F172A', // Rich navy background
-      surface: '#1E293B', // Elevated surface
-      primary: '#60A5FA', // Bright blue
-      secondary: '#5EEAD4', // Cyan
-      accent: '#FF6B6B', // Preserved accent
+      background: '#1F2937',
+      surface: '#374151',
+      primary: '#60A5FA',
+      secondary: '#A78BFA',
+      accent: '#34D399',
       text: {
-        primary: '#F8FAFC', // Clear white
-        secondary: '#E2E8F0', // Soft white
-        muted: '#CBD5E1' // Muted text
+        primary: '#F9FAFB',
+        secondary: '#E5E7EB',
+        muted: '#D1D5DB'
       }
     }
   },
   gradients: {
-    primary: 'linear-gradient(to right, #4A90E2, #60A5FA)',
-    secondary: 'linear-gradient(to right, #50E3C2, #5EEAD4)',
-    accent: 'linear-gradient(to right, #FF6B6B, #FF8787)',
-    success: 'linear-gradient(to right, #34D399, #10B981)',
-    warning: 'linear-gradient(to right, #F59E0B, #FBBF24)',
-    error: 'linear-gradient(to right, #EF4444, #DC2626)',
+    primary: 'linear-gradient(to right, #2262C6, #3C7DEF)',
+    secondary: 'linear-gradient(to right, #6E59A5, #9B87F5)',
+    accent: 'linear-gradient(to right, #00A389, #00C9A7)',
+    success: 'linear-gradient(to right, #059669, #10B981)',
+    warning: 'linear-gradient(to right, #D97706, #F59E0B)',
+    error: 'linear-gradient(to right, #DC2626, #EF4444)',
     card: {
-      primary: 'linear-gradient(135deg, rgba(74, 144, 226, 0.05) 0%, rgba(96, 165, 250, 0.1) 100%)',
-      secondary: 'linear-gradient(135deg, rgba(80, 227, 194, 0.05) 0%, rgba(94, 234, 212, 0.1) 100%)',
-      accent: 'linear-gradient(135deg, rgba(255, 107, 107, 0.05) 0%, rgba(255, 135, 135, 0.1) 100%)',
-      light: 'linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.4) 100%)'
+      primary: 'linear-gradient(135deg, rgba(34, 98, 198, 0.05) 0%, rgba(60, 125, 239, 0.1) 100%)',
+      secondary: 'linear-gradient(135deg, rgba(110, 89, 165, 0.05) 0%, rgba(155, 135, 245, 0.1) 100%)',
+      accent: 'linear-gradient(135deg, rgba(0, 163, 137, 0.05) 0%, rgba(0, 201, 167, 0.1) 100%)',
+      light: 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%)'
     },
+    // নতুন গ্র্যাডিয়েন্ট
     button: {
-      primary: 'linear-gradient(to right, #4A90E2, #60A5FA)',
-      secondary: 'linear-gradient(to right, #50E3C2, #5EEAD4)',
-      accent: 'linear-gradient(to right, #FF6B6B, #FF8787)'
+      primary: 'linear-gradient(to right, #2262C6, #3C7DEF)',
+      secondary: 'linear-gradient(to right, #6E59A5, #9B87F5)',
+      accent: 'linear-gradient(to right, #00A389, #00C9A7)'
     },
+    // নতুন ফ্যান্সি গ্র্যাডিয়েন্ট
     fancy: {
-      blue: 'linear-gradient(120deg, #60A5FA 0%, #93C5FD 100%)',
-      mint: 'linear-gradient(120deg, #50E3C2 0%, #5EEAD4 100%)',
-      coral: 'linear-gradient(120deg, #FF6B6B 0%, #FF8787 100%)'
+      blue: 'linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)',
+      purple: 'linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)',
+      green: 'linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%)'
     }
   },
   shadows: {
@@ -62,8 +66,8 @@ export const adminTheme = {
     lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
     xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
     card: '0 4px 12px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04)',
-    hover: '0 6px 16px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08)',
-    button: '0 2px 4px rgba(74, 144, 226, 0.15), 0 1px 2px rgba(74, 144, 226, 0.1)'
+    hover: '0 6px 16px rgba(0, 0, 0, 0.12), 0 3px 6px rgba(0, 0, 0, 0.08)',
+    button: '0 2px 4px rgba(34, 98, 198, 0.15), 0 1px 2px rgba(34, 98, 198, 0.1)'
   },
   borderRadius: {
     sm: '0.25rem',
