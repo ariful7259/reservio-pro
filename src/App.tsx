@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '@/components/ThemeProvider';
@@ -58,7 +57,6 @@ import Stories from '@/pages/Stories';
 import SearchPage from '@/pages/SearchPage';
 import MyServices from '@/pages/MyServices';
 import Utilities from '@/pages/Utilities';
-import { PostProvider } from '@/context/PostContext';
 
 import '@/App.css';
 
