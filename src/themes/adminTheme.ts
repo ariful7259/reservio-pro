@@ -1,59 +1,55 @@
-
 // Admin dashboard theme configuration
 
 export const adminTheme = {
   colors: {
-    primary: '#4361EE', // নতুন উজ্জ্বল নীল
-    secondary: '#7209B7', // নতুন গাঢ় বেগুনি
-    accent: '#06D6A0', // নতুন উজ্জ্বল সবুজ
-    background: '#F8F9FD', // আরও হালকা নীল-সাদা
-    primaryLight: 'rgba(67, 97, 238, 0.1)',
-    secondaryLight: 'rgba(114, 9, 183, 0.1)',
-    accentLight: 'rgba(6, 214, 160, 0.1)',
-    success: '#10B981',
-    warning: '#F59E0B',
-    error: '#EF4444',
-    info: '#3B82F6',
+    primary: '#3B82F6', // Softer, more friendly blue
+    secondary: '#6D28D9', // Rich, elegant purple
+    accent: '#10B981', // Vibrant, positive green
+    background: '#F8FAFC', // Light, clean background
+    primaryLight: 'rgba(59, 130, 246, 0.1)',
+    secondaryLight: 'rgba(109, 40, 217, 0.1)',
+    accentLight: 'rgba(16, 185, 129, 0.1)',
+    success: '#16A34A',
+    warning: '#D97706',
+    error: '#DC2626',
+    info: '#2563EB',
     text: {
-      primary: '#1F2937',
-      secondary: '#4B5563',
-      muted: '#6B7280',
-      light: '#9CA3AF'
+      primary: '#1F2937', // Deep charcoal
+      secondary: '#4B5563', // Soft gray
+      muted: '#6B7280', // Lighter gray
+      light: '#9CA3AF' // Pale gray
     },
-    // ডার্ক মোড কালার
     dark: {
-      background: '#111827',
-      surface: '#1F2937',
-      primary: '#60A5FA',
-      secondary: '#A78BFA',
-      accent: '#34D399',
+      background: '#111827', // Deep navy
+      surface: '#1F2937', // Dark gray-blue
+      primary: '#60A5FA', // Soft blue
+      secondary: '#A78BFA', // Soft purple
+      accent: '#34D399', // Mint green
       text: {
-        primary: '#F9FAFB',
-        secondary: '#E5E7EB',
-        muted: '#D1D5DB'
+        primary: '#F9FAFB', // Off-white
+        secondary: '#E5E7EB', // Light gray
+        muted: '#D1D5DB' // Pale gray
       }
     }
   },
   gradients: {
-    primary: 'linear-gradient(to right, #4361EE, #4895EF)',
-    secondary: 'linear-gradient(to right, #7209B7, #B5179E)',
-    accent: 'linear-gradient(to right, #06D6A0, #0CC78C)',
-    success: 'linear-gradient(to right, #059669, #10B981)',
+    primary: 'linear-gradient(to right, #3B82F6, #4895EF)',
+    secondary: 'linear-gradient(to right, #6D28D9, #B5179E)',
+    accent: 'linear-gradient(to right, #10B981, #0CC78C)',
+    success: 'linear-gradient(to right, #059669, #16A34A)',
     warning: 'linear-gradient(to right, #D97706, #F59E0B)',
     error: 'linear-gradient(to right, #DC2626, #EF4444)',
     card: {
-      primary: 'linear-gradient(135deg, rgba(67, 97, 238, 0.05) 0%, rgba(72, 149, 239, 0.1) 100%)',
-      secondary: 'linear-gradient(135deg, rgba(114, 9, 183, 0.05) 0%, rgba(181, 23, 158, 0.1) 100%)',
-      accent: 'linear-gradient(135deg, rgba(6, 214, 160, 0.05) 0%, rgba(12, 199, 140, 0.1) 100%)',
+      primary: 'linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(68, 159, 245, 0.1) 100%)',
+      secondary: 'linear-gradient(135deg, rgba(109, 40, 217, 0.05) 0%, rgba(181, 23, 158, 0.1) 100%)',
+      accent: 'linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(12, 199, 140, 0.1) 100%)',
       light: 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%)'
     },
-    // নতুন গ্র্যাডিয়েন্ট
     button: {
-      primary: 'linear-gradient(to right, #4361EE, #4895EF)',
-      secondary: 'linear-gradient(to right, #7209B7, #B5179E)',
-      accent: 'linear-gradient(to right, #06D6A0, #0CC78C)'
+      primary: 'linear-gradient(to right, #3B82F6, #4895EF)',
+      secondary: 'linear-gradient(to right, #6D28D9, #B5179E)',
+      accent: 'linear-gradient(to right, #10B981, #0CC78C)'
     },
-    // নতুন ফ্যান্সি গ্র্যাডিয়েন্ট
     fancy: {
       blue: 'linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)',
       purple: 'linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)',

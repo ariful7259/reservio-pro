@@ -35,17 +35,17 @@
     --radius: 0.5rem;
     
     /* অ্যাডমিন থিম ভেরিয়েবলস */
-    --admin-primary: 231 86% 60%; /* #4361EE */
-    --admin-secondary: 286 91% 38%; /* #7209B7 */
-    --admin-accent: 166 97% 43%; /* #06D6A0 */
-    --admin-background: 220 54% 98%; /* #F8F9FD */
-    --admin-success: 151 74% 40%; /* #10B981 */
-    --admin-warning: 35 92% 50%; /* #F59E0B */
-    --admin-error: 0 84% 60%; /* #EF4444 */
-    --admin-info: 217 91% 60%; /* #3B82F6 */
-    --admin-text-primary: 215 28% 17%; /* #1F2937 */
-    --admin-text-secondary: 214 16% 32%; /* #4B5563 */
-    --admin-text-muted: 215 12% 47%; /* #6B7280 */
+    --admin-primary: 212 100% 58%; /* Soft Blue #3B82F6 */
+    --admin-secondary: 271 85% 46%; /* Rich Purple #6D28D9 */
+    --admin-accent: 160 82% 40%; /* Vibrant Green #10B981 */
+    --admin-background: 210 20% 98%; /* Light Clean Background #F8FAFC */
+    --admin-success: 134 61% 41%; /* Success Green #16A34A */
+    --admin-warning: 35 85% 45%; /* Warning Orange #D97706 */
+    --admin-error: 0 84% 53%; /* Error Red #DC2626 */
+    --admin-info: 217 91% 52%; /* Info Blue #2563EB */
+    --admin-text-primary: 215 28% 17%; /* Deep Charcoal #1F2937 */
+    --admin-text-secondary: 214 16% 32%; /* Soft Gray #4B5563 */
+    --admin-text-muted: 215 12% 47%; /* Lighter Gray #6B7280 */
   }
  
   .dark {
@@ -78,14 +78,14 @@
     --ring: 212.7 26.8% 83.9%;
     
     /* ডার্ক মোড অ্যাডমিন থিম ভেরিয়েবলস */
-    --admin-primary: 214 95% 67%; /* #60A5FA */
-    --admin-secondary: 263 85% 76%; /* #A78BFA */
-    --admin-accent: 158 64% 52%; /* #34D399 */
-    --admin-background: 224 48% 12%; /* #111827 */
-    --admin-surface: 217 19% 27%; /* #374151 */
-    --admin-text-primary: 210 20% 98%; /* #F9FAFB */
-    --admin-text-secondary: 210 16% 93%; /* #E5E7EB */
-    --admin-text-muted: 217 14% 83%; /* #D1D5DB */
+    --admin-primary: 214 92% 67%; /* Soft Blue #60A5FA */
+    --admin-secondary: 262 82% 73%; /* Soft Purple #A78BFA */
+    --admin-accent: 157 65% 55%; /* Mint Green #34D399 */
+    --admin-background: 222 48% 12%; /* Deep Navy #111827 */
+    --admin-surface: 217 32% 17%; /* Dark Gray-Blue #1F2937 */
+    --admin-text-primary: 210 20% 98%; /* Off-White #F9FAFB */
+    --admin-text-secondary: 210 16% 93%; /* Light Gray #E5E7EB */
+    --admin-text-muted: 217 14% 83%; /* Pale Gray #D1D5DB */
   }
 }
  
