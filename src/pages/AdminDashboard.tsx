@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -56,8 +55,16 @@ import {
   DollarSign,
   Home,
   Menu,
-  PanelLeft
+  PanelLeft,
+  WifiOff,
+  Languages,
+  Calendar,
+  Layout
 } from 'lucide-react';
+import ServiceCardCustomization from '@/components/admin/ServiceCardCustomization';
+import OfflineConfiguration from '@/components/admin/OfflineConfiguration';
+import LanguageManager from '@/components/admin/LanguageManager';
+import RentalCalendarConfiguration from '@/components/admin/RentalCalendarConfiguration';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -121,6 +128,10 @@ const AdminDashboard = () => {
     { id: 'support', name: 'সাপোর্ট টিকেট', icon: <MessageSquare size={18} /> },
     { id: 'settings', name: 'সেটিংস', icon: <SettingsIcon size={18} /> },
     { id: 'advanced', name: 'অ্যাডভান্স ফিচার', icon: <ShieldCheck size={18} /> },
+    { id: 'service-card', name: 'সার্ভিস কার্ড', icon: <Layout size={18} /> },
+    { id: 'offline-config', name: 'অফলাইন মোড', icon: <WifiOff size={18} /> },
+    { id: 'language-manager', name: 'ভাষা ম্যানেজার', icon: <Languages size={18} /> },
+    { id: 'calendar-config', name: 'ক্যালেন্ডার কনফিগ', icon: <Calendar size={18} /> },
   ];
   
   const handleModuleChange = (moduleId) => {
@@ -428,9 +439,18 @@ const AdminDashboard = () => {
             {activeModule === 'settings' && <Settings />}
             
             {activeModule === 'advanced' && <AdvancedFeatures />}
+
+            {activeModule === 'service-card' && <ServiceCardCustomization />}
+            
+            {activeModule === 'offline-config' && <OfflineConfiguration />}
+            
+            {activeModule === 'language-manager' && <LanguageManager />}
+            
+            {activeModule === 'calendar-config' && <RentalCalendarConfiguration />}
             
             {!['dashboard', 'users', 'marketplace', 'rentals', 'services', 'digital', 'categories', 
-               'payments', 'reports', 'analytics', 'support', 'settings', 'advanced', 'monetization'].includes(activeModule) && (
+               'payments', 'reports', 'analytics', 'support', 'settings', 'advanced', 'monetization',
+               'service-card', 'offline-config', 'language-manager', 'calendar-config'].includes(activeModule) && (
               <div className="flex flex-col items-center justify-center py-12">
                 <div className="h-24 w-24 rounded-full flex items-center justify-center mb-4"
                   style={{ backgroundColor: adminTheme.colors.primaryLight }}>

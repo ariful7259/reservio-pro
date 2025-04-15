@@ -34,19 +34,57 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 }) => {
   const discountedPrice = discount ? price - (price * discount) / 100 : price;
 
+  // CSS ভেরিয়েবলগুলি থেকে স্টাইল পাবে - এই ভেরিয়েবলগুলি অ্যাডমিন প্যানেল থেকে সেট করা হবে
+  const cardStyle = {
+    '--service-card-border-radius': 'var(--service-card-border-radius, 0.75rem)',
+    '--service-card-shadow': 'var(--service-card-shadow, 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06))',
+    '--service-card-background': 'var(--service-card-background, white)',
+    '--service-card-image-height': 'var(--service-card-image-height, 48%)',
+    '--service-card-text-color': 'var(--service-card-text-color, inherit)',
+    '--service-card-title-size': 'var(--service-card-title-size, 1.125rem)',
+    '--service-card-transition-speed': 'var(--service-card-transition-speed, 300ms)',
+    '--service-card-hover-scale': 'var(--service-card-hover-scale, 1.05)',
+  } as React.CSSProperties;
+
   return (
-    <Card className="overflow-hidden border service-card transition-all duration-300 hover:shadow-md hover:scale-105 cursor-pointer">
-      <div className="h-48 overflow-hidden">
+    <Card 
+      className="overflow-hidden border service-card transition-all duration-300 hover:shadow-md hover:scale-105 cursor-pointer"
+      style={{
+        borderRadius: 'var(--service-card-border-radius)',
+        boxShadow: 'var(--service-card-shadow)',
+        backgroundColor: 'var(--service-card-background)',
+        transition: `all var(--service-card-transition-speed) ease-in-out`,
+        ...cardStyle
+      }}
+    >
+      <div 
+        className="overflow-hidden"
+        style={{
+          height: 'var(--service-card-image-height, 12rem)'
+        }}
+      >
         <img
           src={imageUrl}
           alt={title}
           className="w-full h-full object-cover"
         />
       </div>
-      <CardContent className="p-4">
+      <CardContent 
+        className="p-4"
+        style={{
+          color: 'var(--service-card-text-color)'
+        }}
+      >
         <div className="flex items-start justify-between">
           <div>
-            <h3 className="font-semibold text-lg">{title}</h3>
+            <h3 
+              className="font-semibold"
+              style={{
+                fontSize: 'var(--service-card-title-size, 1.125rem)'
+              }}
+            >
+              {title}
+            </h3>
             <p className="text-muted-foreground text-sm">{provider}</p>
           </div>
           <div className="flex items-center gap-1 bg-amber-100 px-2 py-1 rounded text-amber-700">
