@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -651,4 +652,532 @@ const MonetizationTracking: React.FC = () => {
                           <span className="font-medium">56,890</span>
                         </div>
                         <div className="overflow-hidden h-4 mb-2 text-xs flex rounded bg-blue-50">
-                          <div style={{ width: "100%" }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500">
+                          <div style={{ width: "100%" }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
+                        </div>
+                      </div>
+                      
+                      <div className="relative pt-1">
+                        <div className="flex justify-between text-sm mb-1">
+                          <span>প্রোডাক্ট ভিউ</span>
+                          <span className="font-medium">32,456</span>
+                        </div>
+                        <div className="overflow-hidden h-4 mb-2 text-xs flex rounded bg-blue-50">
+                          <div style={{ width: "57%" }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
+                        </div>
+                      </div>
+                      
+                      <div className="relative pt-1">
+                        <div className="flex justify-between text-sm mb-1">
+                          <span>অ্যাড টু কার্ট</span>
+                          <span className="font-medium">12,765</span>
+                        </div>
+                        <div className="overflow-hidden h-4 mb-2 text-xs flex rounded bg-blue-50">
+                          <div style={{ width: "22%" }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
+                        </div>
+                      </div>
+                      
+                      <div className="relative pt-1">
+                        <div className="flex justify-between text-sm mb-1">
+                          <span>চেকআউট</span>
+                          <span className="font-medium">5,428</span>
+                        </div>
+                        <div className="overflow-hidden h-4 mb-2 text-xs flex rounded bg-blue-50">
+                          <div style={{ width: "9.6%" }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
+                        </div>
+                      </div>
+                      
+                      <div className="relative pt-1">
+                        <div className="flex justify-between text-sm mb-1">
+                          <span>কম্পলিট পেমেন্ট</span>
+                          <span className="font-medium">2,745</span>
+                        </div>
+                        <div className="overflow-hidden h-4 mb-2 text-xs flex rounded bg-blue-50">
+                          <div style={{ width: "4.8%" }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-4 text-center">
+                      <div className="text-sm text-muted-foreground">অভারঅল কনভার্সন রেট</div>
+                      <div className="text-xl font-bold text-blue-600">4.8%</div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base">কনট্রিবিউশন বাই চ্যানেল</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-4">
+                    <div className="h-64">
+                      <PieChart>
+                        {/* Chart would render here in a real implementation */}
+                        <div></div>
+                      </PieChart>
+                    </div>
+                    
+                    <div className="space-y-2 mt-4">
+                      {channelBreakdown.map((channel, index) => (
+                        <div key={index} className="flex justify-between items-center">
+                          <div className="flex items-center gap-2">
+                            <div 
+                              className="w-3 h-3 rounded-full" 
+                              style={{ 
+                                backgroundColor: [
+                                  "#3B82F6", "#8B5CF6", "#10B981", 
+                                  "#F59E0B", "#EC4899"
+                                ][index % 5] 
+                              }}
+                            ></div>
+                            <span className="text-sm">{channel.name}</span>
+                          </div>
+                          <div className="text-sm font-medium">{channel.value}%</div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="rules" className="space-y-4">
+              <div className="flex justify-between items-center">
+                <h3 className="text-lg font-medium">মোনিটাইজেশন রুলস কনফিগারেশন</h3>
+                
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm">
+                    <Filter className="h-4 w-4 mr-2" />
+                    ফিল্টার
+                  </Button>
+                  
+                  <Button variant="default" size="sm" onClick={handleSaveConfig}>
+                    <Save className="h-4 w-4 mr-2" />
+                    কনফিগারেশন সেভ করুন
+                  </Button>
+                </div>
+              </div>
+              
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base">অ্যাক্টিভ মোনিটাইজেশন রুলস</CardTitle>
+                  <CardDescription>
+                    এই রুলগুলি আপনার প্ল্যাটফর্মে রাজস্ব উৎপন্ন করছে। রুলস টগল করে অন/অফ করুন।
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="text-left py-3 px-4 text-sm font-medium">রুল নাম</th>
+                          <th className="text-left py-3 px-4 text-sm font-medium">টাইপ</th>
+                          <th className="text-left py-3 px-4 text-sm font-medium">টার্গেট ফিচার</th>
+                          <th className="text-right py-3 px-4 text-sm font-medium">পারফরম্যান্স</th>
+                          <th className="text-right py-3 px-4 text-sm font-medium">রাজস্ব</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium">স্ট্যাটাস</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {monetizationRules.map((rule, index) => (
+                          <tr key={index} className="border-b last:border-b-0 hover:bg-gray-50">
+                            <td className="py-3 px-4">
+                              <div className="font-medium">{rule.name}</div>
+                              <div className="text-xs text-muted-foreground">
+                                {getMonetizationTypeText(rule.type, rule.value)}
+                              </div>
+                            </td>
+                            <td className="py-3 px-4">
+                              <Badge variant="outline" className="font-normal">
+                                {rule.type}
+                              </Badge>
+                            </td>
+                            <td className="py-3 px-4">
+                              <div className="flex items-center gap-1">
+                                {getFeatureIcon(rule.targetFeature)}
+                                <span>{featurePerformance.find(f => f.id === rule.targetFeature)?.name || rule.targetFeature}</span>
+                              </div>
+                            </td>
+                            <td className="py-3 px-4 text-right">
+                              <Badge 
+                                variant="secondary" 
+                                className={`font-normal ${
+                                  rule.performance === 'high' ? 'bg-green-100 text-green-800' : 
+                                  rule.performance === 'medium' ? 'bg-blue-100 text-blue-800' : 
+                                  'bg-amber-100 text-amber-800'
+                                }`}
+                              >
+                                {rule.performance === 'high' ? 'উচ্চ' : 
+                                 rule.performance === 'medium' ? 'মাঝারি' : 'নিম্ন'}
+                              </Badge>
+                            </td>
+                            <td className="py-3 px-4 text-right font-medium">
+                              ৳ {(rule.revenueGenerated / 1000).toFixed(0)}K
+                            </td>
+                            <td className="py-3 px-4 text-center">
+                              <Switch 
+                                checked={rule.active} 
+                                onCheckedChange={(checked) => handleRuleToggle(rule.id, checked)}
+                              />
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base">নতুন মোনিটাইজেশন রুল যোগ করুন</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="rule-name">রুল নাম</Label>
+                          <Input 
+                            id="rule-name" 
+                            placeholder="রুলের নাম লিখুন"
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="rule-type">রুল টাইপ</Label>
+                          <Select defaultValue="fee">
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="fee">ফিক্সড ফি</SelectItem>
+                              <SelectItem value="percentage">পারসেন্টেজ কমিশন</SelectItem>
+                              <SelectItem value="subscription">সাবস্ক্রিপশন</SelectItem>
+                              <SelectItem value="cpm">CPM</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="rule-value">ভ্যালু</Label>
+                          <Input 
+                            id="rule-value" 
+                            type="number" 
+                            placeholder="রুল ভ্যালু"
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="target-feature">টার্গেট ফিচার</Label>
+                          <Select defaultValue="marketplace">
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {featurePerformance.map((feature) => (
+                                <SelectItem key={feature.id} value={feature.id}>
+                                  {feature.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Button className="w-full">
+                          <Zap className="h-4 w-4 mr-2" />
+                          নতুন রুল যোগ করুন
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base">অটোমেটিক প্রাইসিং অপটিমাইজেশন</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <div className="font-medium">অটোমেটিক প্রাইস অপটিমাইজেশন</div>
+                          <div className="text-sm text-muted-foreground">ডেমান্ড এবং কম্পিটিশন অনুসারে প্রাইস অ্যাডজাস্ট করুন</div>
+                        </div>
+                        <Switch defaultChecked={true} />
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <div className="font-medium">ডাইনামিক কমিশন</div>
+                          <div className="text-sm text-muted-foreground">ইউজার অ্যাকটিভিটি অনুসারে কমিশন রেট পরিবর্তন করুন</div>
+                        </div>
+                        <Switch defaultChecked={false} />
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <div className="font-medium">সিজনাল প্রোমোশন</div>
+                          <div className="text-sm text-muted-foreground">মৌসুম অনুসারে স্পেশাল ডিসকাউন্ট অফার করুন</div>
+                        </div>
+                        <Switch defaultChecked={true} />
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="price-range">প্রাইস ফ্লাকচুয়েশন রেঞ্জ</Label>
+                        <div className="flex items-center gap-2">
+                          <Input id="min-price" defaultValue="80" className="w-20" />
+                          <span>% - </span>
+                          <Input id="max-price" defaultValue="120" className="w-20" />
+                          <span>%</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">বেস প্রাইসের 80% থেকে 120% পর্যন্ত পরিবর্তন করা যাবে</p>
+                      </div>
+                      
+                      <Button className="w-full" variant="outline">
+                        <AlarmClock className="h-4 w-4 mr-2" />
+                        নেক্সট অপটিমাইজেশন রান শিডিউল করুন
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="reports" className="space-y-4">
+              <div className="flex justify-between items-center">
+                <h3 className="text-lg font-medium">মোনিটাইজেশন রিপোর্টস</h3>
+                
+                <div className="flex gap-2">
+                  <Select
+                    value={timeRange}
+                    onValueChange={setTimeRange}
+                  >
+                    <SelectTrigger className="w-40">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="week">সাপ্তাহিক</SelectItem>
+                      <SelectItem value="month">মাসিক</SelectItem>
+                      <SelectItem value="quarter">ত্রৈমাসিক</SelectItem>
+                      <SelectItem value="year">বার্ষিক</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  
+                  <Button variant="outline" size="sm" onClick={handleDownloadReport}>
+                    <Download className="h-4 w-4 mr-2" />
+                    রিপোর্ট ডাউনলোড
+                  </Button>
+                </div>
+              </div>
+              
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base">ফোরকাস্ট vs অ্যাকচুয়াল রেভিনিউ</CardTitle>
+                </CardHeader>
+                <CardContent className="p-4">
+                  <div className="h-80">
+                    <BarChart>
+                      {/* Chart would render here in a real implementation */}
+                      <div></div>
+                    </BarChart>
+                  </div>
+                  
+                  <div className="flex flex-wrap gap-3 mt-2 justify-center">
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                      <span className="text-sm">প্রকৃত রাজস্ব</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-3 rounded-full bg-blue-200"></div>
+                      <span className="text-sm">অনুমানিত রাজস্ব</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base">রুল পারফরম্যান্স</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b">
+                            <th className="text-left py-2 px-4 text-sm font-medium">রুল</th>
+                            <th className="text-right py-2 px-4 text-sm font-medium">রাজস্ব</th>
+                            <th className="text-right py-2 px-4 text-sm font-medium">ROI</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {monetizationRules
+                            .filter(rule => rule.active)
+                            .sort((a, b) => b.revenueGenerated - a.revenueGenerated)
+                            .slice(0, 5)
+                            .map((rule, index) => (
+                              <tr key={index} className="border-b last:border-b-0 hover:bg-gray-50">
+                                <td className="py-2 px-4 text-sm">{rule.name}</td>
+                                <td className="py-2 px-4 text-sm text-right">
+                                  ৳ {(rule.revenueGenerated / 1000).toFixed(0)}K
+                                </td>
+                                <td className="py-2 px-4 text-sm text-right">
+                                  <Badge 
+                                    variant="secondary" 
+                                    className={`font-normal ${
+                                      rule.performance === 'high' ? 'bg-green-100 text-green-800' : 
+                                      rule.performance === 'medium' ? 'bg-blue-100 text-blue-800' : 
+                                      'bg-amber-100 text-amber-800'
+                                    }`}
+                                  >
+                                    {rule.performance === 'high' ? 'উচ্চ' : 
+                                     rule.performance === 'medium' ? 'মাঝারি' : 'নিম্ন'}
+                                  </Badge>
+                                </td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base">ফিচার পারফরম্যান্স</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b">
+                            <th className="text-left py-2 px-4 text-sm font-medium">ফিচার</th>
+                            <th className="text-right py-2 px-4 text-sm font-medium">রাজস্ব</th>
+                            <th className="text-right py-2 px-4 text-sm font-medium">প্রবৃদ্ধি</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {featurePerformance
+                            .sort((a, b) => b.revenue - a.revenue)
+                            .slice(0, 5)
+                            .map((feature, index) => (
+                              <tr key={index} className="border-b last:border-b-0 hover:bg-gray-50">
+                                <td className="py-2 px-4 text-sm">{feature.name}</td>
+                                <td className="py-2 px-4 text-sm text-right">
+                                  ৳ {(feature.revenue / 1000).toFixed(0)}K
+                                </td>
+                                <td className="py-2 px-4 text-sm text-right">
+                                  <span className={feature.growth > 0 ? "text-green-600" : "text-red-600"}>
+                                    {feature.growth > 0 ? "+" : ""}{feature.growth}%
+                                  </span>
+                                </td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base">ইউজার আর্নিংস</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b">
+                            <th className="text-left py-2 px-4 text-sm font-medium">ইউজার টাইপ</th>
+                            <th className="text-right py-2 px-4 text-sm font-medium">গড় আয়</th>
+                            <th className="text-right py-2 px-4 text-sm font-medium">পরিবর্তন</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {[
+                            { type: "নতুন ইউজার", avg: 450, change: 12.5 },
+                            { type: "নিয়মিত ইউজার", avg: 1250, change: 8.2 },
+                            { type: "প্রিমিয়াম ইউজার", avg: 3200, change: 15.8 },
+                            { type: "মার্চেন্ট", avg: 8500, change: 5.3 },
+                            { type: "এন্টারপ্রাইজ", avg: 25000, change: -2.1 },
+                          ].map((user, index) => (
+                            <tr key={index} className="border-b last:border-b-0 hover:bg-gray-50">
+                              <td className="py-2 px-4 text-sm">{user.type}</td>
+                              <td className="py-2 px-4 text-sm text-right">
+                                ৳ {user.avg.toLocaleString()}
+                              </td>
+                              <td className="py-2 px-4 text-sm text-right">
+                                <span className={user.change > 0 ? "text-green-600" : "text-red-600"}>
+                                  {user.change > 0 ? "+" : ""}{user.change}%
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base">স্কেডিউলড রিপোর্টস</CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-medium">দৈনিক রাজস্ব সারাংশ</h4>
+                        <Badge>Daily</Badge>
+                      </div>
+                      <div className="text-sm text-muted-foreground">প্রতিদিন সকাল ৯টায় ইমেইলে পাঠানো হবে</div>
+                    </div>
+                    
+                    <Separator />
+                    
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-medium">সাপ্তাহিক মোনিটাইজেশন রিপোর্ট</h4>
+                        <Badge>Weekly</Badge>
+                      </div>
+                      <div className="text-sm text-muted-foreground">প্রতি সোমবার সকাল ১০টায় ইমেইলে পাঠানো হবে</div>
+                    </div>
+                    
+                    <Separator />
+                    
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-medium">মাসিক পারফরম্যান্স বিশ্লেষণ</h4>
+                        <Badge>Monthly</Badge>
+                      </div>
+                      <div className="text-sm text-muted-foreground">প্রতি মাসের ১ তারিখে পাঠানো হবে</div>
+                    </div>
+                    
+                    <Button variant="outline" className="w-full mt-2">
+                      <Bell className="h-4 w-4 mr-2" />
+                      নতুন রিপোর্ট স্কেডিউল করুন
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default MonetizationTracking;
+
