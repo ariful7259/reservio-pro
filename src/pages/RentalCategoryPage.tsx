@@ -319,25 +319,43 @@ const RentalCategoryPage = () => {
   const [shareItem, setShareItem] = useState<any | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
 
+  // ডিবাগিং তথ্য লগ করা
+  useEffect(() => {
+    console.log("Current categoryId from URL:", categoryId);
+    console.log("Available categories:", Object.keys(categoryData));
+    console.log("Category found:", categoryId && categoryData[categoryId as keyof typeof categoryData] ? "Yes" : "No");
+  }, [categoryId]);
+
   // ক্যাটাগরি ডেটা লোড করা
   const category = categoryId && categoryData[categoryId as keyof typeof categoryData];
   
   useEffect(() => {
+    if (!categoryId) {
+      toast({
+        title: "ক্যাটাগরি আইডি পাওয়া যায়নি",
+        description: "URL এ ক্যাটাগরি আইডি অনুপস্থিত। মূল পৃষ্ঠায় ফিরে যাচ্ছি।",
+        variant: "destructive"
+      });
+      navigate('/rentals');
+      return;
+    }
+    
     if (!category) {
       toast({
         title: "ক্যাটাগরি পাওয়া যায়নি",
-        description: "দুঃখিত, নির্বাচিত ক্যাটাগরি পাওয়া যায়নি। মূল পৃষ্ঠায় ফিরে যাচ্ছি।",
+        description: `দুঃখিত, "${categoryId}" ক্যাটাগরি পাওয়া যায়নি। মূল পৃষ্ঠায় ফিরে যাচ্ছি।`,
         variant: "destructive"
       });
       navigate('/rentals');
     }
-  }, [category, navigate, toast]);
+  }, [category, categoryId, navigate, toast]);
 
   if (!category) {
     return null;
   }
 
   const handleListingClick = (id: number) => {
+    console.log(`Navigating to rent details for item ID: ${id}`);
     navigate(`/rent-details/${id}`);
   };
 
@@ -364,6 +382,7 @@ const RentalCategoryPage = () => {
 
   const handleBookNow = (e: React.MouseEvent, rentalId: number) => {
     e.stopPropagation();
+    console.log(`Booking now for item ID: ${rentalId}`);
     navigate(`/rent-details/${rentalId}`);
   };
 

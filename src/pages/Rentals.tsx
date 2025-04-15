@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -206,7 +205,7 @@ const Rentals = () => {
       title: "টয়োটা কোরোলা",
       location: "মিরপুর, ঢাকা",
       price: "৳৫,০০০/দিন",
-      image: "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=1000&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1494965408869-eaa3f722e40d?q=80&w=1000&auto=format&fit=crop",
       category: "car",
       latitude: 23.8103,
       longitude: 90.3420
@@ -235,7 +234,7 @@ const Rentals = () => {
     },
     {
       id: 2,
-      title: "ফার্নিচার ইন্সটলেশন",
+      title: "ফা���্নিচার ইন্সটলেশন",
       image: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?q=80&w=1000&auto=format&fit=crop",
       price: "৳ ১,২০০/সেশন",
       location: "ঢাকা",
