@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -27,91 +28,91 @@ import { usePostContext } from '@/context/PostContext';
 
 const services = [
   {
-    id: 1,
+    id: "1",
     title: 'ওয়েব ডিজাইন',
     category: 'ডিজাইন',
-    price: '5000',
+    price: 5000,
     rating: 4.5,
     location: 'ঢাকা',
     imageUrl: 'https://images.unsplash.com/photo-1518770660439-464c4c52ef1c?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8d2ViJTIwZGVzaWdufGVufDB8fDB8fHx8MA%3D%3D',
   },
   {
-    id: 2,
+    id: "2",
     title: 'গ্রাফিক ডিজাইন',
     category: 'ডিজাইন',
-    price: '3000',
+    price: 3000,
     rating: 4.2,
     location: 'চট্টগ্রাম',
     imageUrl: 'https://images.unsplash.com/photo-1589818347339-796b9c151a99?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGdyYXBoaWMlMjBkZXNpZ258ZW58MHx8MHx8fDA%3D',
   },
   {
-    id: 3,
+    id: "3",
     title: 'এসি সার্ভিসিং',
     category: 'সার্ভিসিং',
-    price: '800',
+    price: 800,
     rating: 4.8,
     location: 'ঢাকা',
     imageUrl: 'https://images.unsplash.com/photo-1629244844299-950f4ca3c95d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGFjJTIwc2VydmljZXxlbnwwfHwwfHx8fDA%3D',
   },
   {
-    id: 4,
+    id: "4",
     title: 'প্লাম্বিং',
     category: 'সার্ভিসিং',
-    price: '500',
+    price: 500,
     rating: 4.0,
     location: 'খুলনা',
     imageUrl: 'https://images.unsplash.com/photo-1621905249984-14d8ca69a573?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cGx1bWJpbmd8ZW58MHx8MHx8fDA%3D',
   },
   {
-    id: 5,
+    id: "5",
     title: 'ওয়েডিং ফটোগ্রাফি',
     category: 'ফটোগ্রাফি',
-    price: '15000',
+    price: 15000,
     rating: 4.9,
     location: 'ঢাকা',
     imageUrl: 'https://images.unsplash.com/photo-1593054063742-993c478c404f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8d2VkZGluZyUyMHBob3RvZ3JhcGh5fGVufDB8fDB8fHx8MA%3D%3D',
   },
   {
-    id: 6,
+    id: "6",
     title: 'ইভেন্ট ফটোগ্রাফি',
     category: 'ফটোগ্রাফি',
-    price: '10000',
+    price: 10000,
     rating: 4.6,
     location: 'চট্টগ্রাম',
     imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e0e3b0d91f5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGV2ZW50JTIwcGhvdG9ncmFwaHl8ZW58MHx8MHx8fDA%3D',
   },
   {
-    id: 7,
+    id: "7",
     title: 'টিউটরিং',
     category: 'শিক্ষা',
-    price: '800',
+    price: 800,
     rating: 4.7,
     location: 'ঢাকা',
     imageUrl: 'https://images.unsplash.com/photo-1521737827429-2217e2c4c756?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dHV0b3Jpbmd8ZW58MHx8MHx8fDA%3D',
   },
   {
-    id: 8,
+    id: "8",
     title: 'ভাষা শিক্ষা',
     category: 'শিক্ষা',
-    price: '1200',
+    price: 1200,
     rating: 4.3,
     location: 'সিলেট',
     imageUrl: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bGFuZ3VhZ2UlMjBlZHVjYXRpb258ZW58MHx8MHx8fDA%3D',
   },
   {
-    id: 9,
+    id: "9",
     title: 'আইনজীবী পরামর্শ',
     category: 'আইন',
-    price: '2000',
+    price: 2000,
     rating: 4.5,
     location: 'ঢাকা',
     imageUrl: 'https://images.unsplash.com/photo-1585548496630-3c17d1f4eb91?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bGF3JTIwYWR2aWNlfGVufDB8fDB8fHx8MA%3D%3D',
   },
   {
-    id: 10,
+    id: "10",
     title: 'আর্থিক পরামর্শ',
     category: 'অর্থ',
-    price: '3000',
+    price: 3000,
     rating: 4.2,
     location: 'চট্টগ্রাম',
     imageUrl: 'https://images.unsplash.com/photo-1554224155-16962255d31e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZmluYW5jaWFsJTIwYWR2aWNlfGVufDB8fDB8fHx8MA%3D%3D',
@@ -165,37 +166,37 @@ const categories = [
 
 const popularServices = [
   {
-    id: 11,
+    id: "11",
     title: 'ঘর পরিষ্কার',
     category: 'ক্লিনিং',
-    price: '1000',
+    price: 1000,
     rating: 4.7,
     location: 'ঢাকা',
     imageUrl: 'https://images.unsplash.com/photo-1562447832-c1c07c29368a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aG91c2UlMjBjbGVhbmluZ3xlbnwwfHwwfHx8fDA%3D',
   },
   {
-    id: 12,
+    id: "12",
     title: 'গাড়ি ধোয়া',
     category: 'ক্লিনিং',
-    price: '500',
+    price: 500,
     rating: 4.5,
     location: 'চট্টগ্রাম',
     imageUrl: 'https://images.unsplash.com/photo-1549317474-3924846b0a74?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y2FyJTIwd2FzaGluZ3xlbnwwfHwwfHx8fDA%3D',
   },
   {
-    id: 13,
+    id: "13",
     title: 'ডাক্তার',
     category: 'স্বাস্থ্য',
-    price: '1500',
+    price: 1500,
     rating: 4.9,
     location: 'ঢাকা',
     imageUrl: 'https://images.unsplash.com/photo-1532938314630-e96f17bb43e3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZG9jdG9yfGVufDB8fDB8fHx8MA%3D%3D',
   },
   {
-    id: 14,
+    id: "14",
     title: 'ফিজিওথেরাপিস্ট',
     category: 'স্বাস্থ্য',
-    price: '1200',
+    price: 1200,
     rating: 4.6,
     location: 'খুলনা',
     imageUrl: 'https://images.unsplash.com/photo-1576683444140-a19ca64a9594?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGhpemlvdGhlcmFwaXN0fGVufDB8fDB8fHx8MA%3D%3D',
@@ -213,13 +214,13 @@ const Services = () => {
     if (searchQuery.trim()) {
       toast({
         title: "অনুসন্ধান করা হচ্ছে",
-        description: `"${searchQuery}" এর জন্য ফলাফল দেখা��ো হচ্ছে`,
+        description: `"${searchQuery}" এর জন্য ফলাফল দেখানো হচ্ছে`,
       });
       navigate(`/search?q=${encodeURIComponent(searchQuery)}&type=service`);
     }
   };
   
-  const handleServiceClick = (id: number) => {
+  const handleServiceClick = (id: string | number) => {
     navigate(`/service/${id}`);
   };
   
@@ -326,9 +327,14 @@ const Services = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {popularServices.map((service) => (
             <ServiceCard 
-              key={service.id} 
-              service={service} 
-              onClick={() => handleServiceClick(service.id)}
+              key={service.id}
+              id={service.id}
+              title={service.title}
+              imageUrl={service.imageUrl}
+              rating={service.rating}
+              price={service.price}
+              location={service.location}
+              onClick={handleServiceClick}
             />
           ))}
         </div>
@@ -344,9 +350,14 @@ const Services = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {services.map((service) => (
             <ServiceCard 
-              key={service.id} 
-              service={service} 
-              onClick={() => handleServiceClick(service.id)}
+              key={service.id}
+              id={service.id}
+              title={service.title}
+              imageUrl={service.imageUrl}
+              rating={service.rating}
+              price={service.price}
+              location={service.location}
+              onClick={handleServiceClick}
             />
           ))}
         </div>

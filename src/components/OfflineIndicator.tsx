@@ -18,7 +18,7 @@ const OfflineIndicator: React.FC = () => {
         variant: "destructive",
       });
     }
-  }, [isOnline, language, toast]);
+  }, [isOnline, language]);
   
   if (isOnline) return null;
   

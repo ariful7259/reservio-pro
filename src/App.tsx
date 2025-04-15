@@ -55,7 +55,6 @@ import Stories from '@/pages/Stories';
 import SearchPage from '@/pages/SearchPage';
 import MyServices from '@/pages/MyServices';
 import Utilities from '@/pages/Utilities';
-import { OfflineIndicator } from '@/components/OfflineIndicator';
 import { PostProvider } from '@/context/PostContext';
 
 import '@/App.css';
