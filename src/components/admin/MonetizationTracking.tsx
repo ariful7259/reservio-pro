@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { BarChart, AreaChart, PieChart } from 'recharts';
+import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
@@ -33,6 +32,38 @@ import {
   Save,
   Share2
 } from 'lucide-react';
+
+// Note: In a real application, these would be actual chart components from recharts
+// For this implementation, we're just showing placeholders
+const BarChart = ({ children }) => (
+  <div className="w-full h-full flex items-center justify-center bg-gray-50 rounded-md">
+    <div className="text-center">
+      <BarChart3 className="mx-auto h-8 w-8 text-muted-foreground" />
+      <p className="mt-2 text-sm text-muted-foreground">বার চার্ট প্লেসহোল্ডার</p>
+      {children}
+    </div>
+  </div>
+);
+
+const AreaChart = ({ children }) => (
+  <div className="w-full h-full flex items-center justify-center bg-gray-50 rounded-md">
+    <div className="text-center">
+      <LineChart className="mx-auto h-8 w-8 text-muted-foreground" />
+      <p className="mt-2 text-sm text-muted-foreground">এরিয়া চার্ট প্লেসহোল্ডার</p>
+      {children}
+    </div>
+  </div>
+);
+
+const PieChart = ({ children }) => (
+  <div className="w-full h-full flex items-center justify-center bg-gray-50 rounded-md">
+    <div className="text-center">
+      <PieChartIcon className="mx-auto h-8 w-8 text-muted-foreground" />
+      <p className="mt-2 text-sm text-muted-foreground">পাই চার্ট প্লেসহোল্ডার</p>
+      {children}
+    </div>
+  </div>
+);
 
 interface RevenueData {
   date: string;
@@ -623,458 +654,3 @@ const MonetizationTracking: React.FC = () => {
                 <Card>
                   <CardHeader className="pb-2">
                     <CardTitle className="text-base">কনভার্সন ফানেল</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-4">
-                    <div className="space-y-4 mt-2">
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-sm">
-                          <span>ভিজিটর</span>
-                          <span className="font-medium">45,000</span>
-                        </div>
-                        <div className="w-full h-4 bg-blue-100 rounded-sm">
-                          <div className="h-4 bg-blue-500 rounded-sm" style={{ width: '100%' }}></div>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-sm">
-                          <span>পণ্য/সার্ভিস দেখা</span>
-                          <span className="font-medium">28,500 (63.3%)</span>
-                        </div>
-                        <div className="w-full h-4 bg-purple-100 rounded-sm">
-                          <div className="h-4 bg-purple-500 rounded-sm" style={{ width: '63.3%' }}></div>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-sm">
-                          <span>কার্টে যোগ</span>
-                          <span className="font-medium">12,800 (28.4%)</span>
-                        </div>
-                        <div className="w-full h-4 bg-green-100 rounded-sm">
-                          <div className="h-4 bg-green-500 rounded-sm" style={{ width: '28.4%' }}></div>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-sm">
-                          <span>চেকআউট শুরু</span>
-                          <span className="font-medium">6,200 (13.8%)</span>
-                        </div>
-                        <div className="w-full h-4 bg-amber-100 rounded-sm">
-                          <div className="h-4 bg-amber-500 rounded-sm" style={{ width: '13.8%' }}></div>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-sm">
-                          <span>পেমেন্ট সম্পন্ন</span>
-                          <span className="font-medium">4,850 (10.8%)</span>
-                        </div>
-                        <div className="w-full h-4 bg-red-100 rounded-sm">
-                          <div className="h-4 bg-red-500 rounded-sm" style={{ width: '10.8%' }}></div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-4 p-3 bg-gray-50 rounded-md">
-                      <h4 className="text-sm font-medium mb-1">ড্রপ-অফ পয়েন্ট বিশ্লেষণ</h4>
-                      <p className="text-xs text-muted-foreground">
-                        সবচেয়ে বেশি ব্যবহারকারী কার্ট থেকে চেকআউটে যাওয়ার সময় ড্রপ-অফ করছে (6,600 জন)। 
-                        শিপিং চার্জ এবং চেকআউট পেজ অপ্টিমাইজেশন পরীক্ষা করুন।
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base">সেলস চ্যানেল ব্রেকডাউন</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-4">
-                    <div className="h-64 flex items-center justify-center">
-                      <div className="relative w-48 h-48 border-8 border-blue-500 rounded-full flex items-center justify-center">
-                        <div className="absolute inset-0">
-                          {channelBreakdown.map((item, index) => {
-                            // সকল চ্যানেলের ব্যবহার করে একটি পাই চার্টের মতো ভিজ্যুয়াল দেখাবে
-                            return (
-                              <div 
-                                key={index}
-                                className="absolute"
-                                style={{
-                                  top: index === 0 ? '15%' : index === 1 ? '65%' : index === 2 ? '30%' : index === 3 ? '50%' : '80%',
-                                  left: index === 0 ? '15%' : index === 1 ? '65%' : index === 2 ? '75%' : index === 3 ? '30%' : '55%',
-                                }}
-                              >
-                                <div className="text-xs font-medium">{item.value}%</div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                        <div className="text-center">
-                          <div className="text-lg font-bold">সেলস চ্যানেল</div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2 mt-4">
-                      {channelBreakdown.map((item, index) => (
-                        <div key={index} className="flex items-center gap-2">
-                          <div 
-                            className="w-3 h-3 rounded-full" 
-                            style={{ 
-                              backgroundColor: 
-                                index === 0 ? "#3B82F6" : 
-                                index === 1 ? "#8B5CF6" : 
-                                index === 2 ? "#10B981" : 
-                                index === 3 ? "#F59E0B" : 
-                                "#EC4899" 
-                            }}
-                          ></div>
-                          <div className="flex justify-between w-full text-sm">
-                            <span>{item.name}</span>
-                            <div className="flex items-center gap-2">
-                              <span>{item.value}%</span>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="rules" className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="font-medium">সক্রিয় মোনিটাইজেশন রুল</h3>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">
-                    {monetizationRules.filter(rule => rule.active).length} / {monetizationRules.length} এনাবল করা
-                  </span>
-                  <Button variant="outline" size="sm">
-                    <Filter className="h-4 w-4 mr-1" />
-                    ফিল্টার
-                  </Button>
-                </div>
-              </div>
-              
-              <Card>
-                <CardContent className="p-0">
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b">
-                          <th className="text-left py-3 px-4 text-sm font-medium">নাম</th>
-                          <th className="text-left py-3 px-4 text-sm font-medium">ফিচার</th>
-                          <th className="text-left py-3 px-4 text-sm font-medium">মূল্য</th>
-                          <th className="text-right py-3 px-4 text-sm font-medium">আয়</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium">পারফরম্যান্স</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium">স্ট্যাটাস</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {monetizationRules.map((rule, index) => (
-                          <tr key={index} className="border-b last:border-b-0 hover:bg-gray-50">
-                            <td className="py-3 px-4 font-medium">{rule.name}</td>
-                            <td className="py-3 px-4">
-                              <div className="flex items-center gap-2">
-                                <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center">
-                                  {getFeatureIcon(rule.targetFeature)}
-                                </div>
-                                <span className="text-sm">
-                                  {featurePerformance.find(f => f.id === rule.targetFeature)?.name || rule.targetFeature}
-                                </span>
-                              </div>
-                            </td>
-                            <td className="py-3 px-4">
-                              <div className="flex items-center gap-2">
-                                <span>{getMonetizationTypeText(rule.type, rule.value)}</span>
-                                <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                                  <Zap className="h-3.5 w-3.5" />
-                                </Button>
-                              </div>
-                            </td>
-                            <td className="py-3 px-4 text-right font-medium">
-                              ৳ {(rule.revenueGenerated / 1000).toFixed(0)}K
-                            </td>
-                            <td className="py-3 px-4 text-center">
-                              <div className="flex justify-center">
-                                <Badge variant={
-                                  rule.performance === 'high' ? 'success' : 
-                                  rule.performance === 'medium' ? 'default' : 'secondary'
-                                }>
-                                  {rule.performance === 'high' ? 'উচ্চ' : 
-                                   rule.performance === 'medium' ? 'মাঝারি' : 'নিম্ন'}
-                                </Badge>
-                              </div>
-                            </td>
-                            <td className="py-3 px-4 text-center">
-                              <div className="flex items-center justify-center gap-2">
-                                <Switch 
-                                  id={`rule-${rule.id}`}
-                                  checked={rule.active}
-                                  onCheckedChange={(checked) => handleRuleToggle(rule.id, checked)}
-                                  className="data-[state=checked]:bg-green-500"
-                                />
-                                <span className="text-sm text-muted-foreground">
-                                  {rule.active ? 'এনাবল' : 'ডিজেবল'}
-                                </span>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-base">মোনিটাইজেশন রুল পারফরম্যান্স</CardTitle>
-                  <CardDescription>
-                    বিভিন্ন মোনিটাইজেশন রুলের কার্যকারিতা এবং রাজস্ব উৎপাদনের তুলনা।
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="p-4">
-                  <div className="h-64">
-                    <BarChart 
-                      data={monetizationRules.sort((a, b) => b.revenueGenerated - a.revenueGenerated)} 
-                      width={500} 
-                      height={250}
-                      margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                    >
-                      {/* Chart would render here in a real implementation */}
-                    </BarChart>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                    <div>
-                      <h4 className="text-sm font-medium">উচ্চ পারফর্মিং রুল সারাংশ</h4>
-                      <div className="mt-2">
-                        <ul className="text-sm space-y-2">
-                          <li className="flex gap-2">
-                            <ArrowUpRight className="h-4 w-4 text-green-600 mt-0.5" />
-                            <span>
-                              <strong>ফিচার্ড লিস্টিং</strong> হল সবচেয়ে বেশি রাজস্ব উৎপাদনকারী মোনিটাইজেশন রুল, মোট রাজস্বের 18% যোগান দিচ্ছে।
-                            </span>
-                          </li>
-                          <li className="flex gap-2">
-                            <ArrowUpRight className="h-4 w-4 text-green-600 mt-0.5" />
-                            <span>
-                              <strong>সার্ভিস কমিশন</strong> গত মাসে রাজস্ব 15% বৃদ্ধি পেয়েছে, যা নতুন সার্ভিস প্রভাইডারদের যোগদান বৃদ্ধির কারণে।
-                            </span>
-                          </li>
-                          <li className="flex gap-2">
-                            <ArrowUpRight className="h-4 w-4 text-green-600 mt-0.5" />
-                            <span>
-                              <strong>ডিজিটাল কন্টেন্ট রয়্যালটি</strong> এর কনভার্সন রেট সবচেয়ে বেশি (8.9%), উচ্চ মানের কন্টেন্টের কারণে।
-                            </span>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <h4 className="text-sm font-medium">উন্নয়নের সুপারিশ</h4>
-                      <div className="mt-2">
-                        <ul className="text-sm space-y-2">
-                          <li className="flex gap-2">
-                            <Zap className="h-4 w-4 text-amber-600 mt-0.5" />
-                            <span>
-                              <strong>অ্যাড ডিসপ্লে</strong> রুলের সিপিএম মূল্য বাড়ান, যেহেতু ট্রাফিক উল্লেখযোগ্যভাবে বেড়েছে।
-                            </span>
-                          </li>
-                          <li className="flex gap-2">
-                            <Zap className="h-4 w-4 text-amber-600 mt-0.5" />
-                            <span>
-                              <strong>সাবস্ক্রিপশন প্ল্যান</strong> পুনরায় এনাবল করুন নতুন ফিচার এবং আকর্ষণীয় মূল্য পয়েন্ট সহ।
-                            </span>
-                          </li>
-                          <li className="flex gap-2">
-                            <Zap className="h-4 w-4 text-amber-600 mt-0.5" />
-                            <span>
-                              <strong>অ্যাফিলিয়েট কমিশন</strong> হার বাড়িয়ে বড় অ্যাফিলিয়েটদের আকর্ষণ করুন।
-                            </span>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="reports" className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="font-medium">রিপোর্ট এবং বিশ্লেষণ</h3>
-                <Button variant="outline" size="sm" onClick={handleDownloadReport}>
-                  <Download className="h-4 w-4 mr-2" />
-                  ডাউনলোড রিপোর্ট
-                </Button>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base">রাজস্ব ফোরকাস্ট</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-4">
-                    <div className="h-60">
-                      <LineChart 
-                        data={[
-                          { month: 'জুন', actual: 1050000, forecast: 1050000 },
-                          { month: 'জুলাই', actual: 0, forecast: 1120000 },
-                          { month: 'আগস্ট', actual: 0, forecast: 1180000 },
-                          { month: 'সেপ্টেম্বর', actual: 0, forecast: 1280000 },
-                          { month: 'অক্টোবর', actual: 0, forecast: 1350000 },
-                          { month: 'নভেম্বর', actual: 0, forecast: 1450000 },
-                        ]} 
-                        width={500} 
-                        height={200}
-                        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                      >
-                        {/* Chart would render here in a real implementation */}
-                      </LineChart>
-                    </div>
-                    
-                    <div className="mt-3 space-y-1">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">বর্তমান মাসের ফোরকাস্ট</span>
-                        <span className="font-medium">৳ 11.2L</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">বার্ষিক ফোরকাস্ট</span>
-                        <span className="font-medium">৳ 1.2Cr</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">বার্ষিক গ্রোথ রেট</span>
-                        <span className="font-medium text-green-600">+18.5%</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base">মাসিক প্রতিবেদন</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-4">
-                    <div className="space-y-4">
-                      <div className="flex justify-between">
-                        <div className="space-y-1">
-                          <div className="text-sm text-muted-foreground">মোট রাজস্ব</div>
-                          <div className="text-xl font-bold">৳ 14.7L</div>
-                        </div>
-                        
-                        <div className="space-y-1 text-right">
-                          <div className="text-sm text-muted-foreground">গত মাস থেকে পরিবর্তন</div>
-                          <div className="text-xl font-bold text-green-600">+12.5%</div>
-                        </div>
-                      </div>
-                      
-                      <Separator />
-                      
-                      <div className="space-y-3">
-                        <h4 className="text-sm font-medium">ফিচার ব্রেকডাউন</h4>
-                        <div className="space-y-2">
-                          {[
-                            { name: 'মার্কেটপ্লেস', value: 450000, growth: 12.5 },
-                            { name: 'সার্ভিস', value: 320000, growth: 15.2 },
-                            { name: 'রেন্টাল', value: 280000, growth: 8.7 },
-                            { name: 'ডিজিটাল কন্টেন্ট', value: 150000, growth: 20.3 },
-                            { name: 'প্রিমিয়াম মেম্বারশিপ', value: 85000, growth: 25.6 },
-                          ].map((item, index) => (
-                            <div key={index} className="flex justify-between">
-                              <span className="text-sm">{item.name}</span>
-                              <div className="flex items-center gap-2">
-                                <span className="text-sm font-medium">৳ {(item.value / 1000).toFixed(0)}K</span>
-                                <span className={`text-xs ${item.growth > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                  {item.growth > 0 ? '+' : ''}{item.growth}%
-                                </span>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      <div className="flex justify-end pt-2">
-                        <Button variant="link" size="sm" className="text-blue-600" onClick={handleDownloadReport}>
-                          পুরো রিপোর্ট দেখুন
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-              
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-base">মোনিটাইজেশন ইনসাইট</CardTitle>
-                </CardHeader>
-                <CardContent className="p-4">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="bg-blue-50 rounded-lg p-4">
-                      <div className="flex gap-2 items-center mb-2">
-                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                          <TrendingUp className="h-4 w-4 text-blue-600" />
-                        </div>
-                        <h3 className="font-medium">ফিচার লিস্টিং পারফরম্যান্স</h3>
-                      </div>
-                      <p className="text-sm">
-                        প্রিমিয়াম লিস্টিং ফিচার 24% বৃদ্ধি পেয়েছে, যা মোট প্রিমিয়াম লিস্টিংয়ে 320টি নতুন বিক্রেতা যোগ হয়েছে।
-                      </p>
-                      <Button variant="link" size="sm" className="mt-2 p-0 h-auto text-blue-600">
-                        আরও জানুন
-                      </Button>
-                    </div>
-                    
-                    <div className="bg-purple-50 rounded-lg p-4">
-                      <div className="flex gap-2 items-center mb-2">
-                        <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                          <AlarmClock className="h-4 w-4 text-purple-600" />
-                        </div>
-                        <h3 className="font-medium">ভিজিট টু পারচেজ টাইম</h3>
-                      </div>
-                      <p className="text-sm">
-                        গড় ভিজিট টু পারচেজ টাইম 35% হ্রাস পেয়েছে (8.2 দিন থেকে 5.3 দিনে), যা প্রোডাক্ট পেজ অপটিমাইজেশন প্রচেষ্টার ফলাফল।
-                      </p>
-                      <Button variant="link" size="sm" className="mt-2 p-0 h-auto text-purple-600">
-                        আরও জানুন
-                      </Button>
-                    </div>
-                    
-                    <div className="bg-green-50 rounded-lg p-4">
-                      <div className="flex gap-2 items-center mb-2">
-                        <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                          <Zap className="h-4 w-4 text-green-600" />
-                        </div>
-                        <h3 className="font-medium">ক্রস-সেলিং সাকসেস</h3>
-                      </div>
-                      <p className="text-sm">
-                        রিলেটেড প্রোডাক্ট সাজেশন ফিচার থেকে 18% অতিরিক্ত রাজস্ব আয় হয়েছে, গত ত্রৈমাসিকের চাইতে 5% বেশি।
-                      </p>
-                      <Button variant="link" size="sm" className="mt-2 p-0 h-auto text-green-600">
-                        আরও জানুন
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-          
-          <div className="flex justify-end mt-6">
-            <Button onClick={handleSaveConfig}>
-              <Save className="h-4 w-4 mr-2" />
-              কনফিগারেশন সেভ করুন
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-};
-
-export default MonetizationTracking;

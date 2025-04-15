@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -111,7 +110,6 @@ const ThemeManagement: React.FC = () => {
     '#0369a1', // গাঢ় নীল
   ]);
 
-  // থিম পরিবর্তনের ফাংশন
   const handleColorChange = (
     category: keyof ThemeState['colors'], 
     color: string
@@ -125,7 +123,6 @@ const ThemeManagement: React.FC = () => {
     });
   };
 
-  // নেস্টেড প্রোপার্টি পরিবর্তনের ফাংশন
   const handleNestedColorChange = (
     parent: 'text' | 'dark', 
     child: string,
@@ -143,7 +140,6 @@ const ThemeManagement: React.FC = () => {
     });
   };
 
-  // নেস্টেড প্রোপার্টির আরও গভীর স্তরে পরিবর্তনের ফাংশন
   const handleDeepNestedColorChange = (
     parent: 'dark', 
     child: 'text',
@@ -165,7 +161,6 @@ const ThemeManagement: React.FC = () => {
     });
   };
 
-  // অন্যান্য থিম প্রোপার্টি পরিবর্তনের ফাংশন
   const handlePropertyChange = (
     category: keyof Omit<ThemeState, 'colors' | 'darkMode'>,
     property: string,
@@ -180,7 +175,6 @@ const ThemeManagement: React.FC = () => {
     });
   };
 
-  // ডার্ক মোড টগল ফাংশন
   const handleDarkModeToggle = (enabled: boolean) => {
     setTheme({
       ...theme,
@@ -188,10 +182,8 @@ const ThemeManagement: React.FC = () => {
     });
   };
 
-  // প্রিভিউ বাটন ক্লিক ফাংশন
   const handlePreviewTheme = () => {
     setPreviewTheme(true);
-    // adminTheme পাবলিক অবজেক্টের ভ্যালু মডিফাই করি না, কেবল প্রিভিউ দেখাই
     const previewRoot = document.getElementById('theme-preview-container');
     if (previewRoot) {
       applyAdminTheme(previewRoot, theme.darkMode);
@@ -203,7 +195,6 @@ const ThemeManagement: React.FC = () => {
     });
   };
 
-  // থিম রিসেট ফাংশন
   const handleResetTheme = () => {
     setTheme({
       colors: {
@@ -253,15 +244,11 @@ const ThemeManagement: React.FC = () => {
     });
   };
 
-  // থিম সেভ ফাংশন
   const handleSaveTheme = () => {
     console.log('Saving theme:', theme);
-    // এখানে API কলের মাধ্যমে থিম সেভ করা হবে
-    
     toast({
       title: "থিম সফলভাবে সেভ করা হয়েছে",
-      description: "আপনার পরিবর্তিত থিম সেটিংস সেভ করা হয়েছে।",
-      icon: <CheckCircle2 className="h-4 w-4 text-green-500" />
+      description: "আপনার পরিবর্তিত থিম সেটিংস সেভ করা হয়েছে।"
     });
   };
 
