@@ -1,172 +1,146 @@
 
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ThemeProvider } from "./components/ThemeProvider";
-import { AppProvider } from "./context/AppContext";
-import { AuthProvider } from "./hooks/useAuth";
-import { AdminConfigProvider } from "./context/AdminConfigContext";
-import OfflineIndicator from "./components/OfflineIndicator";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
-import Services from "./pages/Services";
-import ServiceDetail from "./pages/ServiceDetail";
-import Appointments from "./pages/Appointments";
-import Wallet from "./pages/Wallet";
-import Profile from "./pages/Profile";
-import Security from "./pages/Security";
-import KycVerification from "./pages/KycVerification";
-import TwoFactorAuthentication from "./pages/TwoFactorAuthentication";
-import Housing from "./pages/Housing";
-import Shopping from "./pages/Shopping";
-import RentAnything from "./pages/RentAnything";
-import Navbar from "./components/Navbar";
-import MyServices from "./pages/MyServices";
-import Rentals from "./pages/Rentals";
-import Utilities from "./pages/Utilities";
-import Help from "./pages/Help";
-import Notifications from "./pages/Notifications";
-import CreatePost from "./pages/CreatePost";
-import PaidCommunity from "./pages/PaidCommunity";
-import CreateStore from "./pages/CreateStore";
-import CourseBuilder from "./pages/CourseBuilder";
-import DigitalProduct from "./pages/DigitalProduct";
-import ServiceCategory from "./pages/ServiceCategory";
-import ShoppingCategory from "./pages/ShoppingCategory";
-import Favorites from "./pages/Favorites";
-import Reviews from "./pages/Reviews";
-import Rewards from "./pages/Rewards";
-import Onboarding from "./pages/Onboarding";
-import LanguageSettings from "./pages/LanguageSettings";
-import OfflineMode from "./pages/OfflineMode";
-import Feedback from "./pages/Feedback";
-import AppointmentBooking from "./pages/AppointmentBooking";
-import QrScanner from "./pages/QrScanner";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import ProfileManagement from "./pages/ProfileManagement";
-import ChatPage from "./pages/ChatPage";
-import SearchPage from "./pages/SearchPage";
-import PaymentDemo from "./pages/PaymentDemo";
-import ReferralSystem from "./pages/ReferralSystem";
-import Stories from "./pages/Stories";
-import EventCalendar from "./pages/EventCalendar";
-import Forums from "./pages/Forums";
-import GroupBooking from "./pages/GroupBooking";
-import AdminDashboard from "./pages/AdminDashboard";
-import ProductDetail from "./pages/ProductDetail";
-import RentDetail from "./pages/RentDetail";
-import ProductOrder from "./pages/ProductOrder";
-import RentalCategoryPage from "./pages/RentalCategoryPage";
+import { Navbar } from '@/components/Navbar';
 
-const queryClient = new QueryClient();
+import Index from '@/pages/Index';
+import NotFound from '@/pages/NotFound';
+import Login from '@/pages/Login';
+import Signup from '@/pages/Signup';
+import OfflineMode from '@/pages/OfflineMode';
+import QrScanner from '@/pages/QrScanner';
+import Services from '@/pages/Services';
+import ServiceDetail from '@/pages/ServiceDetail';
+import ServiceCategory from '@/pages/ServiceCategory';
+import Shopping from '@/pages/Shopping';
+import ShoppingCategory from '@/pages/ShoppingCategory';
+import ProductDetail from '@/pages/ProductDetail';
+import RentAnything from '@/pages/RentAnything';
+import RentDetail from '@/pages/RentDetail';
+import Wallet from '@/pages/Wallet';
+import Rentals from '@/pages/Rentals';
+import RentalCategoryPage from '@/pages/RentalCategoryPage';
+import Housing from '@/pages/Housing';
+import Help from '@/pages/Help';
+import Favorites from '@/pages/Favorites';
+import Feedback from '@/pages/Feedback';
+import Profile from '@/pages/Profile';
+import ProfileManagement from '@/pages/ProfileManagement';
+import CreatePost from '@/pages/CreatePost';
+import TwoFactorAuthentication from '@/pages/TwoFactorAuthentication';
+import Security from '@/pages/Security';
+import LanguageSettings from '@/pages/LanguageSettings';
+import Rewards from '@/pages/Rewards';
+import ProductOrder from '@/pages/ProductOrder';
+import ReferralSystem from '@/pages/ReferralSystem';
+import Notifications from '@/pages/Notifications';
+import ChatPage from '@/pages/ChatPage';
+import DigitalProduct from '@/pages/DigitalProduct';
+import AppointmentBooking from '@/pages/AppointmentBooking';
+import Appointments from '@/pages/Appointments';
+import GroupBooking from '@/pages/GroupBooking';
+import StoreDetails from '@/pages/StoreDetails';
+import CreateStore from '@/pages/CreateStore';
+import KycVerification from '@/pages/KycVerification';
+import Forums from '@/pages/Forums';
+import EventCalendar from '@/pages/EventCalendar';
+import CourseBuilder from '@/pages/CourseBuilder';
+import PaidCommunity from '@/pages/PaidCommunity';
+import PaymentDemo from '@/pages/PaymentDemo';
+import AdminDashboard from '@/pages/AdminDashboard';
+import Stories from '@/pages/Stories';
+import SearchPage from '@/pages/SearchPage';
+import MyServices from '@/pages/MyServices';
+import Utilities from '@/pages/Utilities';
+import { OfflineIndicator } from '@/components/OfflineIndicator';
+import { PostProvider } from '@/context/PostContext';
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider defaultTheme="light">
-      <AuthProvider>
-        <AppProvider>
-          <AdminConfigProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter>
-                <Navbar />
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/onboarding" element={<Onboarding />} />
-                  <Route path="/services" element={<Services />} />
-                  <Route path="/services/:id" element={<ServiceDetail />} />
-                  <Route path="/services/category/:id" element={<ServiceCategory />} />
-                  <Route path="/appointments" element={<Appointments />} />
-                  <Route path="/appointment-booking" element={<AppointmentBooking />} />
-                  <Route path="/wallet" element={<Wallet />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/security" element={<Security />} />
-                  <Route path="/security/2fa" element={<TwoFactorAuthentication />} />
-                  <Route path="/kyc-verification" element={<KycVerification />} />
-                  <Route path="/kyc-verification/:step" element={<KycVerification />} />
-                  <Route path="/rentals" element={<Rentals />} />
-                  <Route path="/rental-category/:categoryId" element={<RentalCategoryPage />} />
-                  <Route path="/shopping" element={<Shopping />} />
-                  <Route path="/shopping/category/:id" element={<ShoppingCategory />} />
-                  <Route path="/marketplace" element={<Shopping />} />
-                  <Route path="/notifications" element={<Notifications />} />
-                  <Route path="/rent-anything" element={<RentAnything />} />
-                  <Route path="/rent/apartment" element={<Housing />} />
-                  <Route path="/rent/house" element={<Housing />} />
-                  <Route path="/rent/car" element={<Housing />} />
-                  <Route path="/rent/office" element={<Housing />} />
-                  <Route path="/rent/event-space" element={<Housing />} />
-                  <Route path="/rent/equipment" element={<Housing />} />
-                  <Route path="/rent/shop" element={<Housing />} />
-                  <Route path="/rent/others" element={<Housing />} />
-                  <Route path="/my-services" element={<MyServices />} />
-                  <Route path="/utilities" element={<Utilities />} />
-                  <Route path="/help" element={<Help />} />
-                  <Route path="/create-post" element={<CreatePost />} />
-                  <Route path="/feedback" element={<Feedback />} />
-                  <Route path="/qr-scanner" element={<QrScanner />} />
-                  
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<Signup />} />
-                  <Route path="/profile-management" element={<ProfileManagement />} />
-                  
-                  <Route path="/admin-dashboard" element={<AdminDashboard />} />
-                  <Route path="/admin-dashboard/:section" element={<AdminDashboard />} />
-                  
-                  <Route path="/messages" element={<ChatPage />} />
-                  
-                  <Route path="/search" element={<SearchPage />} />
-                  
-                  <Route path="/payment" element={<PaymentDemo />} />
-                  
-                  <Route path="/referral" element={<ReferralSystem />} />
-                  
-                  <Route path="/favorites" element={<Favorites />} />
-                  <Route path="/reviews" element={<Reviews />} />
-                  <Route path="/rewards" element={<Rewards />} />
-                  <Route path="/language-settings" element={<LanguageSettings />} />
-                  <Route path="/offline-mode" element={<OfflineMode />} />
-                  
-                  <Route path="/stories" element={<Stories />} />
-                  <Route path="/events" element={<EventCalendar />} />
-                  <Route path="/forums" element={<Forums />} />
-                  <Route path="/group-booking" element={<GroupBooking />} />
-                  
-                  <Route path="/create-store" element={<CreateStore />} />
-                  <Route path="/course-builder" element={<CourseBuilder />} />
-                  <Route path="/email-automation" element={<NotFound />} />
-                  <Route path="/event-hosting" element={<NotFound />} />
-                  <Route path="/one-on-one" element={<NotFound />} />
-                  <Route path="/digital-products" element={<NotFound />} />
-                  <Route path="/paid-community" element={<PaidCommunity />} />
-                  <Route path="/audience-analytics" element={<NotFound />} />
-                  <Route path="/multi-channel" element={<NotFound />} />
-                  <Route path="/reseller-program" element={<NotFound />} />
-                  <Route path="/content-planner" element={<NotFound />} />
-                  <Route path="/payment-gateway" element={<NotFound />} />
-                  <Route path="/drm" element={<NotFound />} />
-                  <Route path="/video-hosting" element={<NotFound />} />
-                  <Route path="/affiliate" element={<NotFound />} />
-                  <Route path="/social-media" element={<NotFound />} />
-                  
-                  <Route path="/product/:id" element={<ProductDetail />} />
-                  <Route path="/rent-details/:id" element={<RentDetail />} />
-                  <Route path="/product-order/:id" element={<ProductOrder />} />
-                  
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-                <OfflineIndicator />
-              </BrowserRouter>
-            </TooltipProvider>
-          </AdminConfigProvider>
-        </AppProvider>
-      </AuthProvider>
+import '@/App.css';
+
+const App = () => {
+  const [isOffline, setIsOffline] = React.useState(false);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  return (
+    <ThemeProvider defaultTheme="system" storageKey="ui-theme">
+      <PostProvider>
+        <Router>
+          <div className="flex flex-col min-h-screen">
+            {isOffline && <OfflineIndicator />}
+            <Navbar />
+            <main className="flex-1">
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/offline" element={<OfflineMode />} />
+                <Route path="/qr-scanner" element={<QrScanner />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/service/:id" element={<ServiceDetail />} />
+                <Route path="/service-category/:category" element={<ServiceCategory />} />
+                <Route path="/shopping" element={<Shopping />} />
+                <Route path="/shopping-category/:category" element={<ShoppingCategory />} />
+                <Route path="/product/:id" element={<ProductDetail />} />
+                <Route path="/rent-anything" element={<RentAnything />} />
+                <Route path="/rent-details/:id" element={<RentDetail />} />
+                <Route path="/wallet" element={<Wallet />} />
+                <Route path="/rentals" element={<Rentals />} />
+                <Route path="/rental-category/:categoryId" element={<RentalCategoryPage />} />
+                <Route path="/housing" element={<Housing />} />
+                <Route path="/help" element={<Help />} />
+                <Route path="/favorites" element={<Favorites />} />
+                <Route path="/feedback" element={<Feedback />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/profile-management" element={<ProfileManagement />} />
+                <Route path="/create-post" element={<CreatePost />} />
+                <Route path="/2fa" element={<TwoFactorAuthentication />} />
+                <Route path="/security" element={<Security />} />
+                <Route path="/language" element={<LanguageSettings />} />
+                <Route path="/rewards" element={<Rewards />} />
+                <Route path="/order/:id" element={<ProductOrder />} />
+                <Route path="/referral" element={<ReferralSystem />} />
+                <Route path="/notifications" element={<Notifications />} />
+                <Route path="/chat" element={<ChatPage />} />
+                <Route path="/digital-product/:id" element={<DigitalProduct />} />
+                <Route path="/appointment-booking/:id" element={<AppointmentBooking />} />
+                <Route path="/appointments" element={<Appointments />} />
+                <Route path="/group-booking/:id" element={<GroupBooking />} />
+                <Route path="/store/:id" element={<StoreDetails />} />
+                <Route path="/create-store" element={<CreateStore />} />
+                <Route path="/kyc" element={<KycVerification />} />
+                <Route path="/forums" element={<Forums />} />
+                <Route path="/events" element={<EventCalendar />} />
+                <Route path="/course-builder" element={<CourseBuilder />} />
+                <Route path="/community/:id" element={<PaidCommunity />} />
+                <Route path="/payment-demo" element={<PaymentDemo />} />
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/stories" element={<Stories />} />
+                <Route path="/search" element={<SearchPage />} />
+                <Route path="/my-services" element={<MyServices />} />
+                <Route path="/utilities" element={<Utilities />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+          </div>
+          <Toaster />
+        </Router>
+      </PostProvider>
     </ThemeProvider>
-  </QueryClientProvider>
-);
+  );
+};
 
 export default App;
