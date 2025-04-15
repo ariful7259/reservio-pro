@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,15 +12,13 @@ import {
   Clock,
   ChevronRight,
   Plus,
-  Building,
-  Stethoscope,
-  Scissors,
-  FileText,
-  Wrench,
-  ShieldCheck,
   Palette,
   Camera,
   BookOpen,
+  ShieldCheck,
+  Scissors,
+  FileText,
+  Wrench,
   DollarSign
 } from 'lucide-react';
 import ServiceCard from '@/components/ServiceCard';
@@ -54,7 +51,7 @@ const services = [
     price: '800',
     rating: 4.8,
     location: 'ঢাকা',
-    imageUrl: 'https://images.unsplash.com/photo-1629244844299-950f4ca3c95d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGFjJTIwc2VydmljZXxlbnwwfHwwfHx8MA%3D%3D',
+    imageUrl: 'https://images.unsplash.com/photo-1629244844299-950f4ca3c95d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGFjJTIwc2VydmljZXxlbnwwfHwwfHx8fDA%3D',
   },
   {
     id: 4,
@@ -216,7 +213,7 @@ const Services = () => {
     if (searchQuery.trim()) {
       toast({
         title: "অনুসন্ধান করা হচ্ছে",
-        description: `"${searchQuery}" এর জন্য ফলাফল দেখানো হচ্ছে`,
+        description: `"${searchQuery}" এর জন্য ফলাফল দেখা��ো হচ্ছে`,
       });
       navigate(`/search?q=${encodeURIComponent(searchQuery)}&type=service`);
     }
