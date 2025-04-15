@@ -2,58 +2,58 @@
 
 export const adminTheme = {
   colors: {
-    primary: '#3B82F6', // Softer, more friendly blue
-    secondary: '#6D28D9', // Rich, elegant purple
-    accent: '#10B981', // Vibrant, positive green
-    background: '#F8FAFC', // Light, clean background
-    primaryLight: 'rgba(59, 130, 246, 0.1)',
-    secondaryLight: 'rgba(109, 40, 217, 0.1)',
-    accentLight: 'rgba(16, 185, 129, 0.1)',
-    success: '#16A34A',
-    warning: '#D97706',
-    error: '#DC2626',
-    info: '#2563EB',
+    primary: '#4A90E2', // Modern, trustworthy blue
+    secondary: '#50E3C2', // Fresh mint green
+    accent: '#FF6B6B', // Warm, engaging red
+    background: '#F8FAFC', // Clean, subtle background
+    primaryLight: 'rgba(74, 144, 226, 0.1)',
+    secondaryLight: 'rgba(80, 227, 194, 0.1)',
+    accentLight: 'rgba(255, 107, 107, 0.1)',
+    success: '#34D399', // Positive green
+    warning: '#F59E0B', // Clear warning orange
+    error: '#EF4444', // Strong error red
+    info: '#3B82F6', // Informative blue
     text: {
-      primary: '#1F2937', // Deep charcoal
-      secondary: '#4B5563', // Soft gray
-      muted: '#6B7280', // Lighter gray
-      light: '#9CA3AF' // Pale gray
+      primary: '#1E293B', // Clear, readable dark
+      secondary: '#475569', // Balanced gray
+      muted: '#64748B', // Subtle text
+      light: '#94A3B8' // Light text
     },
     dark: {
-      background: '#111827', // Deep navy
-      surface: '#1F2937', // Dark gray-blue
-      primary: '#60A5FA', // Soft blue
-      secondary: '#A78BFA', // Soft purple
-      accent: '#34D399', // Mint green
+      background: '#0F172A', // Rich navy background
+      surface: '#1E293B', // Elevated surface
+      primary: '#60A5FA', // Bright blue
+      secondary: '#5EEAD4', // Cyan
+      accent: '#FF6B6B', // Preserved accent
       text: {
-        primary: '#F9FAFB', // Off-white
-        secondary: '#E5E7EB', // Light gray
-        muted: '#D1D5DB' // Pale gray
+        primary: '#F8FAFC', // Clear white
+        secondary: '#E2E8F0', // Soft white
+        muted: '#CBD5E1' // Muted text
       }
     }
   },
   gradients: {
-    primary: 'linear-gradient(to right, #3B82F6, #4895EF)',
-    secondary: 'linear-gradient(to right, #6D28D9, #B5179E)',
-    accent: 'linear-gradient(to right, #10B981, #0CC78C)',
-    success: 'linear-gradient(to right, #059669, #16A34A)',
-    warning: 'linear-gradient(to right, #D97706, #F59E0B)',
-    error: 'linear-gradient(to right, #DC2626, #EF4444)',
+    primary: 'linear-gradient(to right, #4A90E2, #60A5FA)',
+    secondary: 'linear-gradient(to right, #50E3C2, #5EEAD4)',
+    accent: 'linear-gradient(to right, #FF6B6B, #FF8787)',
+    success: 'linear-gradient(to right, #34D399, #10B981)',
+    warning: 'linear-gradient(to right, #F59E0B, #FBBF24)',
+    error: 'linear-gradient(to right, #EF4444, #DC2626)',
     card: {
-      primary: 'linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(68, 159, 245, 0.1) 100%)',
-      secondary: 'linear-gradient(135deg, rgba(109, 40, 217, 0.05) 0%, rgba(181, 23, 158, 0.1) 100%)',
-      accent: 'linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(12, 199, 140, 0.1) 100%)',
-      light: 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%)'
+      primary: 'linear-gradient(135deg, rgba(74, 144, 226, 0.05) 0%, rgba(96, 165, 250, 0.1) 100%)',
+      secondary: 'linear-gradient(135deg, rgba(80, 227, 194, 0.05) 0%, rgba(94, 234, 212, 0.1) 100%)',
+      accent: 'linear-gradient(135deg, rgba(255, 107, 107, 0.05) 0%, rgba(255, 135, 135, 0.1) 100%)',
+      light: 'linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.4) 100%)'
     },
     button: {
-      primary: 'linear-gradient(to right, #3B82F6, #4895EF)',
-      secondary: 'linear-gradient(to right, #6D28D9, #B5179E)',
-      accent: 'linear-gradient(to right, #10B981, #0CC78C)'
+      primary: 'linear-gradient(to right, #4A90E2, #60A5FA)',
+      secondary: 'linear-gradient(to right, #50E3C2, #5EEAD4)',
+      accent: 'linear-gradient(to right, #FF6B6B, #FF8787)'
     },
     fancy: {
-      blue: 'linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)',
-      purple: 'linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)',
-      green: 'linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%)'
+      blue: 'linear-gradient(120deg, #60A5FA 0%, #93C5FD 100%)',
+      mint: 'linear-gradient(120deg, #50E3C2 0%, #5EEAD4 100%)',
+      coral: 'linear-gradient(120deg, #FF6B6B 0%, #FF8787 100%)'
     }
   },
   shadows: {
@@ -62,8 +62,8 @@ export const adminTheme = {
     lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
     xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
     card: '0 4px 12px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04)',
-    hover: '0 6px 16px rgba(0, 0, 0, 0.12), 0 3px 6px rgba(0, 0, 0, 0.08)',
-    button: '0 2px 4px rgba(34, 98, 198, 0.15), 0 1px 2px rgba(34, 98, 198, 0.1)'
+    hover: '0 6px 16px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08)',
+    button: '0 2px 4px rgba(74, 144, 226, 0.15), 0 1px 2px rgba(74, 144, 226, 0.1)'
   },
   borderRadius: {
     sm: '0.25rem',
