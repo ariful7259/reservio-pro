@@ -1,11 +1,11 @@
-// Admin dashboard theme configuration
 
+// Modern minimal theme configuration
 export const adminTheme = {
   colors: {
-    primary: '#4A90E2', // Modern, trustworthy blue
+    primary: '#4A90E2', // Modern trustworthy blue
     secondary: '#50E3C2', // Fresh mint green
-    accent: '#FF6B6B', // Warm, engaging red
-    background: '#F8FAFC', // Clean, subtle background
+    accent: '#FF6B6B', // Warm engaging red
+    background: '#F8FAFC', // Clean subtle background
     primaryLight: 'rgba(74, 144, 226, 0.1)',
     secondaryLight: 'rgba(80, 227, 194, 0.1)',
     accentLight: 'rgba(255, 107, 107, 0.1)',
@@ -14,7 +14,7 @@ export const adminTheme = {
     error: '#EF4444', // Strong error red
     info: '#3B82F6', // Informative blue
     text: {
-      primary: '#1E293B', // Clear, readable dark
+      primary: '#1E293B', // Clear readable dark
       secondary: '#475569', // Balanced gray
       muted: '#64748B', // Subtle text
       light: '#94A3B8' // Light text
