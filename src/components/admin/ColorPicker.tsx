@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { EyeDropper, Check } from 'lucide-react';
+import { Pipette, Check } from 'lucide-react';
 
 interface ColorPickerProps {
   color: string;

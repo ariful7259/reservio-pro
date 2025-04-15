@@ -11,6 +11,7 @@ import { Slider } from '@/components/ui/slider';
 import { Calendar } from '@/components/ui/calendar';
 import { Separator } from '@/components/ui/separator';
 import { ColorPicker } from '@/components/admin/ColorPicker';
+import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 
 import { 
@@ -381,7 +382,7 @@ const RentalCalendarConfiguration = () => {
                     <Label>ক্যালেন্ডার ভিউ টাইপ</Label>
                     <Select
                       value={calendarConfig.viewType}
-                      onValueChange={(value) => handleConfigChange('', 'viewType', value)}
+                      onValueChange={(value) => handleConfigChange('viewType', 'viewType', value)}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="ভিউ টাইপ নির্বাচন করুন" />
@@ -413,7 +414,7 @@ const RentalCalendarConfiguration = () => {
                     <Label>টাইম স্লট ডিউরেশন (মিনিট)</Label>
                     <Select
                       value={calendarConfig.timeSlotDuration.toString()}
-                      onValueChange={(value) => handleConfigChange('', 'timeSlotDuration', parseInt(value))}
+                      onValueChange={(value) => handleConfigChange('timeSlotDuration', 'timeSlotDuration', parseInt(value))}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="টাইম স্লট ডিউরেশন নির্বাচন করুন" />
@@ -432,7 +433,7 @@ const RentalCalendarConfiguration = () => {
                       <Switch 
                         id="show-unavailable"
                         checked={calendarConfig.showUnavailableDays}
-                        onCheckedChange={(value) => handleConfigChange('', 'showUnavailableDays', value)}
+                        onCheckedChange={(value) => handleConfigChange('showUnavailableDays', 'showUnavailableDays', value)}
                       />
                       <Label htmlFor="show-unavailable">অনুপলব্ধ দিনগুলি দেখান</Label>
                     </div>
@@ -441,7 +442,7 @@ const RentalCalendarConfiguration = () => {
                       <Switch 
                         id="show-price"
                         checked={calendarConfig.showPriceInCalendar}
-                        onCheckedChange={(value) => handleConfigChange('', 'showPriceInCalendar', value)}
+                        onCheckedChange={(value) => handleConfigChange('showPriceInCalendar', 'showPriceInCalendar', value)}
                       />
                       <Label htmlFor="show-price">ক্যালেন্ডারে মূল্য দেখান</Label>
                     </div>
@@ -450,7 +451,7 @@ const RentalCalendarConfiguration = () => {
                       <Switch 
                         id="hide-past"
                         checked={calendarConfig.hidePastDays}
-                        onCheckedChange={(value) => handleConfigChange('', 'hidePastDays', value)}
+                        onCheckedChange={(value) => handleConfigChange('hidePastDays', 'hidePastDays', value)}
                       />
                       <Label htmlFor="hide-past">অতীত দিনগুলি লুকান</Label>
                     </div>
@@ -459,7 +460,7 @@ const RentalCalendarConfiguration = () => {
                       <Switch 
                         id="scroll-to-current"
                         checked={calendarConfig.scrollToCurrentTime}
-                        onCheckedChange={(value) => handleConfigChange('', 'scrollToCurrentTime', value)}
+                        onCheckedChange={(value) => handleConfigChange('scrollToCurrentTime', 'scrollToCurrentTime', value)}
                       />
                       <Label htmlFor="scroll-to-current">বর্তমান সময়ে স্ক্রল করুন</Label>
                     </div>
@@ -517,7 +518,7 @@ const RentalCalendarConfiguration = () => {
                       <Switch 
                         id="multi-day"
                         checked={calendarConfig.allowMultiDayBooking}
-                        onCheckedChange={(value) => handleConfigChange('', 'allowMultiDayBooking', value)}
+                        onCheckedChange={(value) => handleConfigChange('allowMultiDayBooking', 'allowMultiDayBooking', value)}
                       />
                       <Label htmlFor="multi-day">একাধিক দিন বুকিং অনুমতি দিন</Label>
                     </div>
@@ -530,7 +531,7 @@ const RentalCalendarConfiguration = () => {
                       min={0} 
                       max={30} 
                       step={1}
-                      onValueChange={(value) => handleConfigChange('', 'minDaysBeforeBooking', value[0])}
+                      onValueChange={(value) => handleConfigChange('minDaysBeforeBooking', 'minDaysBeforeBooking', value[0])}
                     />
                     <div className="flex justify-between text-xs text-muted-foreground">
                       <span>0 দিন</span>
@@ -545,7 +546,7 @@ const RentalCalendarConfiguration = () => {
                       min={7} 
                       max={365} 
                       step={1}
-                      onValueChange={(value) => handleConfigChange('', 'maxDaysInAdvance', value[0])}
+                      onValueChange={(value) => handleConfigChange('maxDaysInAdvance', 'maxDaysInAdvance', value[0])}
                     />
                     <div className="flex justify-between text-xs text-muted-foreground">
                       <span>7 দিন</span>
@@ -558,7 +559,7 @@ const RentalCalendarConfiguration = () => {
                       <Switch 
                         id="approval-required"
                         checked={calendarConfig.bookingApprovalRequired}
-                        onCheckedChange={(value) => handleConfigChange('', 'bookingApprovalRequired', value)}
+                        onCheckedChange={(value) => handleConfigChange('bookingApprovalRequired', 'bookingApprovalRequired', value)}
                       />
                       <Label htmlFor="approval-required">বুকিং অনুমোদন প্রয়োজন</Label>
                     </div>
@@ -573,7 +574,7 @@ const RentalCalendarConfiguration = () => {
                       min={0} 
                       max={7} 
                       step={1}
-                      onValueChange={(value) => handleConfigChange('', 'bufferBetweenBookings', value[0])}
+                      onValueChange={(value) => handleConfigChange('bufferBetweenBookings', 'bufferBetweenBookings', value[0])}
                     />
                     <div className="flex justify-between text-xs text-muted-foreground">
                       <span>0 দিন</span>
@@ -588,7 +589,7 @@ const RentalCalendarConfiguration = () => {
                       min={1} 
                       max={14} 
                       step={1}
-                      onValueChange={(value) => handleConfigChange('', 'minBookingDuration', value[0])}
+                      onValueChange={(value) => handleConfigChange('minBookingDuration', 'minBookingDuration', value[0])}
                     />
                     <div className="flex justify-between text-xs text-muted-foreground">
                       <span>1 দিন</span>
@@ -603,7 +604,7 @@ const RentalCalendarConfiguration = () => {
                       min={1} 
                       max={90} 
                       step={1}
-                      onValueChange={(value) => handleConfigChange('', 'maxBookingDuration', value[0])}
+                      onValueChange={(value) => handleConfigChange('maxBookingDuration', 'maxBookingDuration', value[0])}
                     />
                     <div className="flex justify-between text-xs text-muted-foreground">
                       <span>1 দিন</span>
