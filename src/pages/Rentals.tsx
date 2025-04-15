@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -61,7 +62,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import MapView from '@/components/MapView';
 import RentalFeatures from '@/components/RentalFeatures';
 import SocialShareModal from '@/components/SocialShareModal';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 const Rentals = () => {
   const navigate = useNavigate();
@@ -84,97 +85,97 @@ const Rentals = () => {
     { 
       icon: <Laptop className="h-8 w-8" />, 
       name: "ইলেকট্রনিক্স", 
-      path: "/rent/electronics", 
+      path: "/rental-category/electronics", 
       count: 324 
     },
     { 
       icon: <Car className="h-8 w-8" />, 
       name: "পরিবহন", 
-      path: "/rent/transport", 
+      path: "/rental-category/transport", 
       count: 178 
     },
     { 
       icon: <Tent className="h-8 w-8" />, 
       name: "ইভেন্ট সামগ্রী", 
-      path: "/rent/event", 
+      path: "/rental-category/event", 
       count: 89 
     },
     { 
       icon: <Armchair className="h-8 w-8" />, 
       name: "ঘরোয়া সামগ্রী", 
-      path: "/rent/home", 
+      path: "/rental-category/home", 
       count: 145 
     },
     { 
       icon: <BookOpen className="h-8 w-8" />, 
       name: "শিক্ষা সামগ্রী", 
-      path: "/rent/education", 
+      path: "/rental-category/education", 
       count: 65 
     },
     { 
       icon: <Tractor className="h-8 w-8" />, 
       name: "কৃষি যন্ত্রপাতি", 
-      path: "/rent/agriculture", 
+      path: "/rental-category/agriculture", 
       count: 42 
     },
     { 
       icon: <Store className="h-8 w-8" />, 
       name: "ব্যবসায়িক সামগ্রী", 
-      path: "/rent/business", 
+      path: "/rental-category/business", 
       count: 86 
     },
     { 
       icon: <Hammer className="h-8 w-8" />, 
       name: "কারিগরি টুলস", 
-      path: "/rent/tools", 
+      path: "/rental-category/tools", 
       count: 96 
     },
     { 
       icon: <Building className="h-8 w-8" />, 
       name: "অ্যাপার্টমেন্ট/ফ্ল্যাট", 
-      path: "/rent/apartment", 
+      path: "/rental-category/apartment", 
       count: 187 
     },
     { 
       icon: <Home className="h-8 w-8" />, 
       name: "বাসা/বাড়ি", 
-      path: "/rent/house", 
+      path: "/rental-category/house", 
       count: 156 
     },
     { 
       icon: <User className="h-8 w-8" />, 
       name: "মেস/হোস্টেল", 
-      path: "/rent/hostel", 
+      path: "/rental-category/hostel", 
       count: 83 
     },
     { 
       icon: <DoorOpen className="h-8 w-8" />, 
       name: "সিঙ্গেল রুম/শেয়ারড", 
-      path: "/rent/room", 
+      path: "/rental-category/room", 
       count: 119 
     },
     { 
       icon: <Briefcase className="h-8 w-8" />, 
       name: "কমার্শিয়াল স্পেস", 
-      path: "/rent/commercial", 
+      path: "/rental-category/commercial", 
       count: 76 
     },
     { 
       icon: <HotelIcon className="h-8 w-8" />, 
       name: "গেস্ট হাউস/স্বল্পমেয়াদী", 
-      path: "/rent/guesthouse", 
+      path: "/rental-category/guesthouse", 
       count: 59 
     },
     { 
       icon: <HomeIcon className="h-8 w-8" />, 
       name: "গ্রামীণ বাসস্থান", 
-      path: "/rent/rural", 
+      path: "/rental-category/rural", 
       count: 47 
     },
     { 
       icon: <Camera className="h-8 w-8" />, 
       name: "স্টুডিও/স্পেশাল স্পেস", 
-      path: "/rent/studio", 
+      path: "/rental-category/studio", 
       count: 35 
     }
   ];
@@ -297,7 +298,7 @@ const Rentals = () => {
                 <LayoutGrid className="h-4 w-4" /> গ্রিড
               </TabsTrigger>
               <TabsTrigger value="map" className="flex items-center gap-1">
-                <MapIcon className="h-4 w-4" /> মান��িত্র
+                <MapIcon className="h-4 w-4" /> মানচিত্র
               </TabsTrigger>
             </TabsList>
           </Tabs>

@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -58,6 +59,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ProductDetail from "./pages/ProductDetail";
 import RentDetail from "./pages/RentDetail";
 import ProductOrder from "./pages/ProductOrder";
+import RentalCategoryPage from "./pages/RentalCategoryPage";
 
 const queryClient = new QueryClient();
 
@@ -87,6 +89,7 @@ const App = () => (
                   <Route path="/kyc-verification" element={<KycVerification />} />
                   <Route path="/kyc-verification/:step" element={<KycVerification />} />
                   <Route path="/rentals" element={<Rentals />} />
+                  <Route path="/rental-category/:categoryId" element={<RentalCategoryPage />} />
                   <Route path="/shopping" element={<Shopping />} />
                   <Route path="/shopping/category/:id" element={<ShoppingCategory />} />
                   <Route path="/marketplace" element={<Shopping />} />
