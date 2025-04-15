@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '@/components/ThemeProvider';
@@ -131,6 +132,7 @@ const App = () => {
                     <Route path="/community/:id" element={<PaidCommunity />} />
                     <Route path="/payment-demo" element={<PaymentDemo />} />
                     <Route path="/admin" element={<AdminDashboard />} />
+                    <Route path="/admin-dashboard" element={<AdminDashboard />} />
                     <Route path="/stories" element={<Stories />} />
                     <Route path="/search" element={<SearchPage />} />
                     <Route path="/my-services" element={<MyServices />} />
