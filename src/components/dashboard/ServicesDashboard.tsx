@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   BarChart, 
@@ -75,7 +74,7 @@ const servicesList = [
   { 
     id: 1, 
     name: 'ডাক্তার পরামর্শ', 
-    category: 'মেডিকেল', a
+    category: 'মেডিকেল',
     price: '৳ ১,০০০', 
     duration: '৩০ মিনিট', 
     bookings: 45, 
