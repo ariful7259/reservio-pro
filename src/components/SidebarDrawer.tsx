@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
@@ -23,6 +22,7 @@ import {
   Users,
   Award,
   LogIn,
+  Store
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
@@ -35,6 +35,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuGroup,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
@@ -64,6 +65,20 @@ export const SidebarDrawer = () => {
     },
   ];
 
+  // Add seller center menu items
+  const sellerCenterItems = [
+    { 
+      icon: <Store className="h-5 w-5 text-primary" />, 
+      name: "বিক্রেতা ড্যাশবোর্ড", 
+      path: "/seller-dashboard" 
+    },
+    { 
+      icon: <Plus className="h-5 w-5 text-green-500" />, 
+      name: "ব্যবসা তৈরি", 
+      path: "/create-store" 
+    }
+  ];
+
   const videoAds = [
     {
       thumbnail: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1000&auto=format&fit=crop",
@@ -89,7 +104,7 @@ export const SidebarDrawer = () => {
     logout();
     toast({
       title: "লগআউট সফল",
-      description: "আপনি সফলভাবে লগআউট হয়েছেন",
+      description: "��পনি সফলভাবে লগআউট হয়েছেন",
     });
     navigate("/login");
   };
@@ -154,6 +169,34 @@ export const SidebarDrawer = () => {
         </DrawerHeader>
         
         <div className="px-4 space-y-6 py-4">
+          {/* Seller Center Section */}
+          {isAuthenticated && (
+            <div className="space-y-4 p-4 border rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-100">
+              <div className="flex items-center gap-3">
+                <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
+                  <Store className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-medium text-lg">বিক্রেতা কেন্দ্র</h3>
+                  <p className="text-sm">আপনার ব্যবসা ম্যানেজ করুন</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {sellerCenterItems.map((item, index) => (
+                  <Button 
+                    key={index}
+                    variant="outline" 
+                    className="flex flex-col items-center justify-center h-20 gap-1 p-2 bg-white"
+                    onClick={() => navigate(item.path)}
+                  >
+                    {item.icon}
+                    <span className="text-xs text-center">{item.name}</span>
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Post Your Ads Section */}
           <div className="space-y-4 p-4 border rounded-lg bg-gray-50">
             <h3 className="font-medium text-lg">বিজ্ঞাপন পোস্ট করুন</h3>
