@@ -32,7 +32,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   Tabs, 
   TabsContent, 
@@ -66,8 +66,12 @@ const SellerDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [active, setActive] = useState('overview');
+  const { isAuthenticated, user } = useAuth();
   const { profile, isLoading, error } = useSellerProfile();
-  const { isAuthenticated } = useAuth();
+  
+  console.log("Auth State:", { isAuthenticated, user });
+  console.log("Seller Profile:", { profile, isLoading, error });
+  console.log("Current Path:", location.pathname);
   
   useEffect(() => {
     if (!isAuthenticated) {

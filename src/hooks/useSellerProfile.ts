@@ -23,6 +23,7 @@ export function useSellerProfile() {
     async function fetchSellerProfile() {
       try {
         if (!isAuthenticated || !user) {
+          setProfile(null);
           setError('User not authenticated');
           setIsLoading(false);
           return;
@@ -35,18 +36,29 @@ export function useSellerProfile() {
           .single();
 
         if (error) {
+          console.error('Error fetching seller profile:', error);
           setError(error.message);
+          setProfile(null);
         } else {
+          console.log('Seller profile fetched:', data);
           setProfile(data);
+          setError(null);
         }
       } catch (err) {
+        console.error('Exception in fetch seller profile:', err);
         setError(err instanceof Error ? err.message : 'An error occurred');
+        setProfile(null);
       } finally {
         setIsLoading(false);
       }
     }
 
-    fetchSellerProfile();
+    if (isAuthenticated && user) {
+      fetchSellerProfile();
+    } else {
+      setIsLoading(false);
+      setProfile(null);
+    }
   }, [isAuthenticated, user]);
 
   return { profile, isLoading, error };
