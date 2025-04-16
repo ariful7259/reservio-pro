@@ -11,24 +11,57 @@ export type Database = {
     Tables: {
       seller_profiles: {
         Row: {
+          address: string | null
+          bio: string | null
           business_name: string | null
+          content_settings: Json | null
           created_at: string | null
+          email: string | null
           id: string
+          logo_url: string | null
+          marketplace_settings: Json | null
+          payment_methods: Json | null
+          phone: string | null
+          rental_settings: Json | null
           seller_type: Database["public"]["Enums"]["seller_type"]
+          service_settings: Json | null
+          terms_conditions: string | null
           updated_at: string | null
         }
         Insert: {
+          address?: string | null
+          bio?: string | null
           business_name?: string | null
+          content_settings?: Json | null
           created_at?: string | null
+          email?: string | null
           id: string
+          logo_url?: string | null
+          marketplace_settings?: Json | null
+          payment_methods?: Json | null
+          phone?: string | null
+          rental_settings?: Json | null
           seller_type: Database["public"]["Enums"]["seller_type"]
+          service_settings?: Json | null
+          terms_conditions?: string | null
           updated_at?: string | null
         }
         Update: {
+          address?: string | null
+          bio?: string | null
           business_name?: string | null
+          content_settings?: Json | null
           created_at?: string | null
+          email?: string | null
           id?: string
+          logo_url?: string | null
+          marketplace_settings?: Json | null
+          payment_methods?: Json | null
+          phone?: string | null
+          rental_settings?: Json | null
           seller_type?: Database["public"]["Enums"]["seller_type"]
+          service_settings?: Json | null
+          terms_conditions?: string | null
           updated_at?: string | null
         }
         Relationships: []
