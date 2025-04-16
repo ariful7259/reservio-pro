@@ -24,7 +24,7 @@ export function useSellerProfile() {
       try {
         if (!isAuthenticated || !user) {
           setProfile(null);
-          setError('User not authenticated');
+          setError('অনুগ্রহ করে লগইন করুন');
           setIsLoading(false);
           return;
         }
@@ -36,17 +36,17 @@ export function useSellerProfile() {
           .single();
 
         if (error) {
-          console.error('Error fetching seller profile:', error);
+          console.error('সেলার প্রোফাইল লোড করতে সমস্যা:', error);
           setError(error.message);
           setProfile(null);
         } else {
-          console.log('Seller profile fetched:', data);
+          console.log('সেলার প্রোফাইল লোড হয়েছে:', data);
           setProfile(data);
           setError(null);
         }
       } catch (err) {
-        console.error('Exception in fetch seller profile:', err);
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        console.error('সেলার প্রোফাইল লোড করতে ব্যর্থ:', err);
+        setError(err instanceof Error ? err.message : 'একটি সমস্যা হয়েছে');
         setProfile(null);
       } finally {
         setIsLoading(false);

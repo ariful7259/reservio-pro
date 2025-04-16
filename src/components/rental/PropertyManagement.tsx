@@ -1,0 +1,35 @@
+
+import React from 'react';
+import { 
+  Building,
+  Plus,
+  Calendar 
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+const PropertyManagement = () => {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex justify-between items-center">
+          <span>সম্পত্তি ব্যবস্থাপনা</span>
+          <Button size="sm">
+            <Plus className="h-4 w-4 mr-2" />
+            নতুন সম্পত্তি
+          </Button>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {/* Property list will be implemented here */}
+          <div className="text-center text-muted-foreground">
+            সম্পত্তি তালিকা শীঘ্রই আসছে
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default PropertyManagement;

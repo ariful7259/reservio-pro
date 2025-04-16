@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   BarChart, 
@@ -47,6 +46,8 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
+import ProductManagement from '../marketplace/ProductManagement';
+import OrderTracking from '../marketplace/OrderTracking';
 
 // সেলস ডেটা
 const salesData = [
@@ -163,6 +164,12 @@ const MarketplaceDashboard = () => {
           icon={<Truck className="h-5 w-5" />}
           color="amber"
         />
+      </div>
+      
+      {/* পণ্য এবং অর্ডার ম্যানেজমেন্ট */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <ProductManagement />
+        <OrderTracking />
       </div>
       
       {/* সেলস এন্ড অর্ডার চার্ট */}
