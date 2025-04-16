@@ -1,11 +1,9 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -31,7 +29,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useToast } from "@/hooks/use-toast";
-import { Camera, Edit, Loader2, LogOut, ShieldCheck, User } from "lucide-react";
+import { Camera, Edit, Loader2, LogOut, ShieldCheck, User, Store, Building, Wrench, Video, BarChart3 } from "lucide-react";
 
 const profileFormSchema = z.object({
   name: z.string().min(2, "নাম কমপক্ষে ২ অক্ষর হতে হবে"),
@@ -54,14 +52,13 @@ const ProfileManagement = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("general");
-  
-  // Redirect if not logged in
+
   React.useEffect(() => {
     if (!isAuthenticated) {
       navigate("/login");
     }
   }, [isAuthenticated, navigate]);
-  
+
   const profileForm = useForm<z.infer<typeof profileFormSchema>>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
@@ -71,7 +68,7 @@ const ProfileManagement = () => {
       address: user?.address || "",
     },
   });
-  
+
   const securityForm = useForm<z.infer<typeof securityFormSchema>>({
     resolver: zodResolver(securityFormSchema),
     defaultValues: {
@@ -80,15 +77,13 @@ const ProfileManagement = () => {
       confirmNewPassword: "",
     },
   });
-  
+
   const isProfileSubmitting = profileForm.formState.isSubmitting;
   const isSecuritySubmitting = securityForm.formState.isSubmitting;
-  
+
   const onProfileSubmit = async (values: z.infer<typeof profileFormSchema>) => {
     try {
-      // In a real app, you'd send this to your backend
       updateUserProfile(values);
-      
       toast({
         title: "প্রোফাইল আপডেট সম্পন্ন",
         description: "আপনার প্রোফাইল তথ্য সফলভাবে আপডেট করা হয়েছে",
@@ -102,17 +97,14 @@ const ProfileManagement = () => {
       });
     }
   };
-  
+
   const onSecuritySubmit = async (values: z.infer<typeof securityFormSchema>) => {
     try {
-      // In a real app, you'd send this to your backend
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
       toast({
         title: "পাসওয়ার্ড আপডেট সম্পন্ন",
         description: "আপনার পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে",
       });
-      
       securityForm.reset({
         currentPassword: "",
         newPassword: "",
@@ -136,7 +128,40 @@ const ProfileManagement = () => {
     });
     navigate("/login");
   };
-  
+
+  const sellerMenuItems = [
+    {
+      title: 'মার্কেটপ্লেস',
+      icon: Store,
+      description: 'আপনার পণ্য বিক্রি করুন',
+      path: '/seller-dashboard/marketplace'
+    },
+    {
+      title: 'রেন্টাল',
+      icon: Building,
+      description: 'আপনার সম্পত্তি ভাড়া দিন',
+      path: '/seller-dashboard/rental'
+    },
+    {
+      title: 'সার্ভিস',
+      icon: Wrench,
+      description: 'আপনার সেবা প্রদান করুন',
+      path: '/seller-dashboard/services'
+    },
+    {
+      title: 'কন্টেন্ট',
+      icon: Video,
+      description: 'ডিজিটাল কন্টেন্ট তৈরি করুন',
+      path: '/seller-dashboard/content'
+    },
+    {
+      title: 'অ্যানালিটিক্স',
+      icon: BarChart3,
+      description: 'আপনার ব্যবসার পরিসংখ্যান দেখুন',
+      path: '/seller-dashboard/analytics'
+    }
+  ];
+
   if (!user) {
     return null;
   }
@@ -182,12 +207,15 @@ const ProfileManagement = () => {
 
           <div className="flex-1">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid grid-cols-2 mb-4">
+              <TabsList className="grid grid-cols-3 mb-4">
                 <TabsTrigger value="general" className="flex gap-2 items-center">
                   <User className="h-4 w-4" /> প্রোফাইল তথ্য
                 </TabsTrigger>
                 <TabsTrigger value="security" className="flex gap-2 items-center">
                   <ShieldCheck className="h-4 w-4" /> সিকিউরিটি
+                </TabsTrigger>
+                <TabsTrigger value="seller" className="flex gap-2 items-center">
+                  <Store className="h-4 w-4" /> বিক্রেতা কেন্দ্র
                 </TabsTrigger>
               </TabsList>
               
@@ -332,6 +360,36 @@ const ProfileManagement = () => {
                         </Button>
                       </form>
                     </Form>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="seller">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>বিক্রেতা কেন্দ্র</CardTitle>
+                    <CardDescription>
+                      আপনার বিক্রয় এবং সেবা সামগ্রী পরিচালনা করুন
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {sellerMenuItems.map((item, index) => (
+                        <Card key={index} className="cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => navigate(item.path)}>
+                          <CardContent className="p-6">
+                            <div className="flex flex-col items-center text-center gap-4">
+                              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                                <item.icon className="h-6 w-6 text-primary" />
+                              </div>
+                              <div>
+                                <h3 className="font-medium mb-1">{item.title}</h3>
+                                <p className="text-sm text-muted-foreground">{item.description}</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
                   </CardContent>
                 </Card>
               </TabsContent>
