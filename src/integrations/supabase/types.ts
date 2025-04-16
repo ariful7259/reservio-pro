@@ -9,7 +9,30 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      seller_profiles: {
+        Row: {
+          business_name: string | null
+          created_at: string | null
+          id: string
+          seller_type: Database["public"]["Enums"]["seller_type"]
+          updated_at: string | null
+        }
+        Insert: {
+          business_name?: string | null
+          created_at?: string | null
+          id: string
+          seller_type: Database["public"]["Enums"]["seller_type"]
+          updated_at?: string | null
+        }
+        Update: {
+          business_name?: string | null
+          created_at?: string | null
+          id?: string
+          seller_type?: Database["public"]["Enums"]["seller_type"]
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +41,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      seller_type: "marketplace" | "rental" | "service" | "content"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +156,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      seller_type: ["marketplace", "rental", "service", "content"],
+    },
   },
 } as const

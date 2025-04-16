@@ -1,6 +1,7 @@
-
-import React, { useState } from 'react';
-import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { useSellerProfile } from '@/hooks/useSellerProfile';
+import { toast } from '@/hooks/use-toast';
 import { 
   Store, 
   Package, 
@@ -53,30 +54,81 @@ import {
 
 import StoreDashboardPreview from '@/components/store/StoreDashboardPreview';
 
-// Dashboard Components
-import MarketplaceDashboard from '@/components/dashboard/MarketplaceDashboard';
-import RentalDashboard from '@/components/dashboard/RentalDashboard';
-import ServicesDashboard from '@/components/dashboard/ServicesDashboard';
-import ContentDashboard from '@/components/dashboard/ContentDashboard';
-import IntegratedDashboard from '@/components/dashboard/IntegratedDashboard';
-
 const SellerDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [active, setActive] = useState('overview');
+  const { profile, isLoading, error } = useSellerProfile();
   
+  useEffect(() => {
+    if (!isLoading && profile) {
+      const currentPath = location.pathname;
+      const allowedPaths = getAllowedPaths(profile.seller_type);
+      
+      if (!currentPath.includes('/seller-dashboard/' + profile.seller_type) && 
+          !currentPath.endsWith('/seller-dashboard')) {
+        toast({
+          title: "অননুমোদিত অ্যাক্সেস",
+          description: "আপনি শুধু আপনার সেলার টাইপের ড্যাশবোর্ড দেখতে পারবেন",
+          variant: "destructive"
+        });
+        navigate('/seller-dashboard/' + profile.seller_type);
+      }
+    }
+  }, [isLoading, profile, location.pathname, navigate]);
+
+  const getAllowedPaths = (sellerType: string) => {
+    const basePaths = ['/seller-dashboard'];
+    switch(sellerType) {
+      case 'marketplace':
+        return [...basePaths, '/seller-dashboard/marketplace'];
+      case 'rental':
+        return [...basePaths, '/seller-dashboard/rental'];
+      case 'service':
+        return [...basePaths, '/seller-dashboard/services'];
+      case 'content':
+        return [...basePaths, '/seller-dashboard/content'];
+      default:
+        return basePaths;
+    }
+  };
+  
+  if (isLoading) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="flex items-center justify-center min-h-screen">Error: {error}</div>;
+  }
+
+  if (!profile) {
+    return <div className="flex items-center justify-center min-h-screen">No seller profile found</div>;
+  }
+
   return (
     <SidebarProvider>
       <div className="flex w-full min-h-screen pt-16">
-        <DashboardSidebar active={active} setActive={setActive} />
+        <DashboardSidebar 
+          active={active} 
+          setActive={setActive} 
+          sellerType={profile.seller_type}
+        />
         
         <div className="flex-1 p-4 md:p-6">
           <Routes>
             <Route path="/" element={<IntegratedDashboard />} />
-            <Route path="/marketplace" element={<MarketplaceDashboard />} />
-            <Route path="/rental" element={<RentalDashboard />} />
-            <Route path="/services" element={<ServicesDashboard />} />
-            <Route path="/content" element={<ContentDashboard />} />
+            {profile.seller_type === 'marketplace' && (
+              <Route path="/marketplace" element={<MarketplaceDashboard />} />
+            )}
+            {profile.seller_type === 'rental' && (
+              <Route path="/rental" element={<RentalDashboard />} />
+            )}
+            {profile.seller_type === 'service' && (
+              <Route path="/services" element={<ServicesDashboard />} />
+            )}
+            {profile.seller_type === 'content' && (
+              <Route path="/content" element={<ContentDashboard />} />
+            )}
             <Route path="/analytics" element={<DashboardAnalytics />} />
             <Route path="/customers" element={<CustomerManagement />} />
             <Route path="/orders" element={<OrderManagement />} />
@@ -91,7 +143,15 @@ const SellerDashboard = () => {
   );
 };
 
-const DashboardSidebar = ({ active, setActive }: { active: string, setActive: (tab: string) => void }) => {
+const DashboardSidebar = ({ 
+  active, 
+  setActive, 
+  sellerType 
+}: { 
+  active: string;
+  setActive: (tab: string) => void;
+  sellerType: string;
+}) => {
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -100,27 +160,32 @@ const DashboardSidebar = ({ active, setActive }: { active: string, setActive: (t
       title: 'সমন্বিত ড্যাশবোর্ড',
       icon: Home,
       path: '/seller-dashboard',
-      exact: true
+      exact: true,
+      show: true
     },
     {
       title: 'বিক্রেতা ড্যাশবোর্ড',
       icon: Store,
-      path: '/seller-dashboard/marketplace'
+      path: '/seller-dashboard/marketplace',
+      show: sellerType === 'marketplace'
     },
     {
       title: 'রেন্টাল ড্যাশবোর্ড',
       icon: Building,
-      path: '/seller-dashboard/rental'
+      path: '/seller-dashboard/rental',
+      show: sellerType === 'rental'
     },
     {
       title: 'সার্ভিস ড্যাশবোর্ড',
       icon: Wrench,
-      path: '/seller-dashboard/services'
+      path: '/seller-dashboard/services',
+      show: sellerType === 'service'
     },
     {
       title: 'কন্টেন্ট ড্যাশবোর্ড',
       icon: Video,
-      path: '/seller-dashboard/content'
+      path: '/seller-dashboard/content',
+      show: sellerType === 'content'
     },
     {
       title: 'অ্যানালিটিক্স',
@@ -159,6 +224,8 @@ const DashboardSidebar = ({ active, setActive }: { active: string, setActive: (t
     }
   ];
   
+  const filteredMenuItems = menuItems.filter(item => item.show);
+  
   return (
     <Sidebar variant="floating">
       <SidebarHeader className="border-b border-slate-200 p-4">
@@ -173,7 +240,7 @@ const DashboardSidebar = ({ active, setActive }: { active: string, setActive: (t
           <SidebarGroupLabel>ড্যাশবোর্ড</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => (
+              {filteredMenuItems.map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton 
                     isActive={
@@ -206,7 +273,6 @@ const DashboardSidebar = ({ active, setActive }: { active: string, setActive: (t
   );
 };
 
-// Placeholder Components to be replaced with actual implementations
 const DashboardAnalytics = () => (
   <div className="space-y-4">
     <h1 className="text-2xl font-bold mb-6">অ্যানালিটিক্স</h1>
