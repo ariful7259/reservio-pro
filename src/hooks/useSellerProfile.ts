@@ -11,6 +11,17 @@ export interface SellerProfile {
   business_name: string | null;
   created_at: string;
   updated_at: string;
+  address: string | null;
+  phone: string | null;
+  email: string | null;
+  bio: string | null;
+  terms_conditions: string | null;
+  logo_url: string | null;
+  payment_methods: any | null;
+  marketplace_settings: any | null;
+  rental_settings: any | null;
+  service_settings: any | null;
+  content_settings: any | null;
 }
 
 export function useSellerProfile() {
@@ -22,18 +33,21 @@ export function useSellerProfile() {
   useEffect(() => {
     async function fetchSellerProfile() {
       try {
-        if (!isAuthenticated || !user) {
+        if (!isAuthenticated || !user || !user.id) {
           setProfile(null);
           setError('অনুগ্রহ করে লগইন করুন');
           setIsLoading(false);
           return;
         }
 
+        // ব্যবহারকারীর আইডি সঠিক ফরম্যাটে আছে কিনা তা পরীক্ষা করি
+        console.log('ব্যবহারকারীর আইডি লোড করছি:', user.id);
+        
         const { data, error } = await supabase
           .from('seller_profiles')
           .select('*')
           .eq('id', user.id)
-          .single();
+          .maybeSingle();
 
         if (error) {
           console.error('সেলার প্রোফাইল লোড করতে সমস্যা:', error);

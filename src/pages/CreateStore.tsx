@@ -148,7 +148,7 @@ const CreateStore = () => {
 
   // ফর্ম জমা দেওয়ার হ্যান্ডলার
   const onSubmit = async (data: FormValues) => {
-    if (!isAuthenticated || !user) {
+    if (!isAuthenticated || !user || !user.id) {
       toast({
         title: "লগইন করুন",
         description: "দয়া করে প্রথমে লগইন করুন",
@@ -182,6 +182,14 @@ const CreateStore = () => {
         publication_schedule: data.contentSettings?.publicationSchedule || {},
       };
 
+      console.log('ব্যবহারকারীর আইডি:', user.id);
+      console.log('ডাটা ইনসার্ট করছি:', {
+        id: user.id,
+        seller_type: data.sellerType,
+        business_name: data.businessName,
+        // ... বাকি ডাটা
+      });
+
       // সুপাবেস-এ ডাটা জমা দেওয়া
       const { data: insertedData, error } = await supabase
         .from('seller_profiles')
@@ -201,7 +209,10 @@ const CreateStore = () => {
         })
         .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('ব্যবসা তৈরি ব্যর্থ:', error);
+        throw error;
+      }
 
       toast({
         title: "সফল",
