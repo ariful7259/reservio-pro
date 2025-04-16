@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useSellerProfile } from '@/hooks/useSellerProfile';
@@ -52,6 +53,12 @@ import {
   SidebarGroupContent
 } from '@/components/ui/sidebar';
 
+// Import the dashboard components
+import IntegratedDashboard from '@/components/dashboard/IntegratedDashboard';
+import MarketplaceDashboard from '@/components/dashboard/MarketplaceDashboard';
+import RentalDashboard from '@/components/dashboard/RentalDashboard';
+import ServicesDashboard from '@/components/dashboard/ServicesDashboard';
+import ContentDashboard from '@/components/dashboard/ContentDashboard';
 import StoreDashboardPreview from '@/components/store/StoreDashboardPreview';
 
 const SellerDashboard = () => {
