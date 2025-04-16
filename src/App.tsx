@@ -60,6 +60,8 @@ import ProductDetail from "./pages/ProductDetail";
 import RentDetail from "./pages/RentDetail";
 import ProductOrder from "./pages/ProductOrder";
 import RentalCategoryPage from "./pages/RentalCategoryPage";
+import StoreDetails from "./pages/StoreDetails";
+import SellerDashboard from "./pages/SellerDashboard";
 
 const queryClient = new QueryClient();
 
@@ -116,6 +118,7 @@ const App = () => (
                   
                   <Route path="/admin-dashboard" element={<AdminDashboard />} />
                   <Route path="/admin-dashboard/:section" element={<AdminDashboard />} />
+                  <Route path="/seller-dashboard/*" element={<SellerDashboard />} />
                   
                   <Route path="/messages" element={<ChatPage />} />
                   
@@ -156,6 +159,7 @@ const App = () => (
                   <Route path="/product/:id" element={<ProductDetail />} />
                   <Route path="/rent-details/:id" element={<RentDetail />} />
                   <Route path="/product-order/:id" element={<ProductOrder />} />
+                  <Route path="/store/:id" element={<StoreDetails />} />
                   
                   <Route path="*" element={<NotFound />} />
                 </Routes>
