@@ -25,8 +25,6 @@ import {
   Percent, 
   UserPlus,
   CheckCircle,
-  TimerIcon,
-  XCircle,
   ChevronRight,
   ArrowUp,
   ArrowDown,
@@ -726,9 +724,5 @@ const StatCard = ({
     </Card>
   );
 };
-
-const TimerIcon = ({ className }: { className?: string }) => (
-  <Clock className={className} />
-);
 
 export default ServicesDashboard;
