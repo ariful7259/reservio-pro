@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useSellerProfile } from '@/hooks/useSellerProfile';
+import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
 import { 
   Store, 
@@ -27,7 +27,8 @@ import {
   Share2,
   Key,
   DollarSign,
-  Receipt
+  Receipt,
+  LogIn
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -66,8 +67,19 @@ const SellerDashboard = () => {
   const location = useLocation();
   const [active, setActive] = useState('overview');
   const { profile, isLoading, error } = useSellerProfile();
+  const { isAuthenticated } = useAuth();
   
   useEffect(() => {
+    if (!isAuthenticated) {
+      toast({
+        title: "অননুমোদিত অ্যাক্সেস",
+        description: "ড্যাশবোর্ড ব্যবহারের জন্য অনুগ্রহ করে লগইন করুন",
+        variant: "destructive"
+      });
+      navigate('/login', { state: { from: location.pathname } });
+      return;
+    }
+    
     if (!isLoading && profile) {
       const currentPath = location.pathname;
       const allowedPaths = getAllowedPaths(profile.seller_type);
@@ -82,7 +94,7 @@ const SellerDashboard = () => {
         navigate('/seller-dashboard/' + profile.seller_type);
       }
     }
-  }, [isLoading, profile, location.pathname, navigate]);
+  }, [isLoading, profile, location.pathname, navigate, isAuthenticated]);
 
   const getAllowedPaths = (sellerType: string) => {
     const basePaths = ['/seller-dashboard'];
@@ -100,6 +112,18 @@ const SellerDashboard = () => {
     }
   };
   
+  if (!isAuthenticated) {
+    return (
+      <div className="flex items-center justify-center min-h-screen flex-col gap-4">
+        <h2 className="text-xl">সেলার ড্যাশবোর্ড ব্যবহারের জন্য লগইন করুন</h2>
+        <Button onClick={() => navigate('/login', { state: { from: location.pathname } })}>
+          <LogIn className="h-4 w-4 mr-2" />
+          লগইন করুন
+        </Button>
+      </div>
+    );
+  }
+
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
@@ -109,7 +133,14 @@ const SellerDashboard = () => {
   }
 
   if (!profile) {
-    return <div className="flex items-center justify-center min-h-screen">No seller profile found</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen flex-col gap-4">
+        <div>No seller profile found. You need to create a seller profile first.</div>
+        <Button onClick={() => navigate('/create-store')}>
+          Create Seller Profile
+        </Button>
+      </div>
+    );
   }
 
   return (

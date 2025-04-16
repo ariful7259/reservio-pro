@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 
 export type SellerType = 'marketplace' | 'rental' | 'service' | 'content';
 
@@ -16,13 +17,12 @@ export function useSellerProfile() {
   const [profile, setProfile] = useState<SellerProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { user, isAuthenticated } = useAuth();
 
   useEffect(() => {
     async function fetchSellerProfile() {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-        
-        if (!user) {
+        if (!isAuthenticated || !user) {
           setError('User not authenticated');
           setIsLoading(false);
           return;
@@ -47,7 +47,7 @@ export function useSellerProfile() {
     }
 
     fetchSellerProfile();
-  }, []);
+  }, [isAuthenticated, user]);
 
   return { profile, isLoading, error };
 }
