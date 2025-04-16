@@ -25,6 +25,7 @@ import {
   Percent, 
   UserPlus,
   CheckCircle,
+  XCircle,
   ChevronRight,
   ArrowUp,
   ArrowDown,
@@ -414,7 +415,7 @@ const ServicesDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader className="pb-2 flex flex-row items-center justify-between">
-            <CardTitle>সার্ভিস ম্যানেজমেন্ট</CardTitle>
+            <CardTitle>সার্ভিস ম্যানেজম��ন্ট</CardTitle>
             <div className="flex gap-2">
               <Input 
                 placeholder="সার্ভিস খুঁজুন" 
