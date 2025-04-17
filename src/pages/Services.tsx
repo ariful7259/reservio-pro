@@ -259,8 +259,8 @@ const Services = () => {
     setFilterVisible(!filterVisible);
   };
 
-  const handleServiceClick = (id: number) => {
-    navigate(`/appointment-booking`);
+  const handleServiceClick = (serviceId: number) => {
+    navigate(`/services/${serviceId}`);
   };
 
   const handleBookmark = (e: React.MouseEvent, serviceId: number) => {
