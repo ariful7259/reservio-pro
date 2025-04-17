@@ -4,13 +4,38 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Star, MapPin, Clock, Calendar, User, Phone } from 'lucide-react';
+import { Star, MapPin, Clock, Calendar, User, Phone, Shield, AlertTriangle } from 'lucide-react';
 import P2PPaymentModal from '@/components/P2PPaymentModal';
+import { useToast } from "@/components/ui/use-toast";
+import OfflineIndicator from '@/components/housing/OfflineIndicator';
+import { useAuth } from '@/hooks/useAuth';
 
 const ServiceDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const { user, isAuthenticated } = useAuth();
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  // ইন্টারনেট সংযোগ ট্র্যাক করুন
+  React.useEffect(() => {
+    function handleOnline() {
+      setIsOnline(true);
+    }
+
+    function handleOffline() {
+      setIsOnline(false);
+    }
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   // Mock service data - In a real app, this would come from an API
   const serviceData = {
@@ -27,20 +52,48 @@ const ServiceDetails = () => {
     experience: "৫ বছর",
     completedJobs: "১২০+",
     availability: "সকাল ৯টা - রাত ৮টা",
-    contact: "০১৭৪৯-০০০০০০"
+    contact: "০১৭৪৯-০০০০০০",
+    disputeRate: "১%", // বিবাদের হার যোগ করা হয়েছে
+    avgResolutionTime: "৪৮ ঘন্টা", // বিবাদ সমাধানের গড় সময়
+    verifiedProvider: true, // প্রোভাইডার ভেরিফাইড কিনা
+    insuranceAvailable: true, // সার্ভিসে ইনস্যুরেন্স কভারেজ আছে কিনা
   };
 
   const handleBooking = () => {
+    if (!isAuthenticated) {
+      toast({
+        title: "দয়া করে লগইন করুন",
+        description: "পেমেন্ট করার জন্য আপনাকে প্রথমে লগইন করতে হবে",
+        variant: "destructive",
+      });
+      navigate('/login?redirect=service/' + id);
+      return;
+    }
+    
+    if (!isOnline) {
+      toast({
+        title: "অফলাইন মোড",
+        description: "পেমেন্ট করার জন্য ইন্টারনেট সংযোগ প্রয়োজন।",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsPaymentModalOpen(true);
   };
 
   const handlePaymentComplete = () => {
     setIsPaymentModalOpen(false);
-    // Here you would typically navigate or show success message
+    toast({
+      title: "বুকিং সফল",
+      description: "আপনার পেমেন্ট সফলভাবে কমপ্লিট হয়েছে।",
+    });
   };
 
   return (
     <div className="container px-4 pt-20 pb-20">
+      <OfflineIndicator isOnline={isOnline} language="bn" />
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
           <div className="overflow-hidden rounded-lg">
@@ -53,7 +106,14 @@ const ServiceDetails = () => {
           
           <Card>
             <CardContent className="p-4">
-              <h1 className="text-2xl font-bold mb-2">{serviceData.title}</h1>
+              <h1 className="text-2xl font-bold mb-2">
+                {serviceData.title}
+                {serviceData.verifiedProvider && 
+                  <Badge variant="outline" className="ml-2 text-blue-600 bg-blue-50 border-blue-200">
+                    <Shield className="h-3 w-3 mr-1" /> ভেরিফাইড প্রোভাইডার
+                  </Badge>
+                }
+              </h1>
               <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
                 <MapPin className="h-4 w-4" />
                 <span>{serviceData.location}</span>
@@ -93,6 +153,12 @@ const ServiceDetails = () => {
                   <Phone className="h-5 w-5 text-primary" />
                   <span>{serviceData.contact}</span>
                 </div>
+                
+                {/* বিবাদের হার এবং গড় সমাধান সময় (যোগ করা হয়েছে) */}
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-amber-500" />
+                  <span>বিবাদের হার: {serviceData.disputeRate} (গড় সমাধান সময়: {serviceData.avgResolutionTime})</span>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -114,6 +180,34 @@ const ServiceDetails = () => {
                 <li>১০০% নিরাপদ পেমেন্ট</li>
                 <li>ভেরিফাইড সার্ভিস প্রোভাইডার</li>
                 <li>২৪/৭ কাস্টমার সাপোর্ট</li>
+                {serviceData.insuranceAvailable && (
+                  <li className="font-semibold">সার্ভিস ইনস্যুরেন্স কভারড</li>
+                )}
+              </ul>
+            </CardContent>
+          </Card>
+
+          {/* উন্নত নিরাপত্তা ফিচার তথ্য কার্ড (নতুন যোগ করা হয়েছে) */}
+          <Card className="bg-green-50 border border-green-100">
+            <CardContent className="p-4">
+              <h3 className="text-lg font-semibold text-green-800 mb-2">উন্নত নিরাপত্তা ফিচার</h3>
+              <ul className="list-disc list-inside text-sm text-green-700 space-y-2">
+                <li>
+                  <span className="font-medium">মাল্টিফ্যাক্টর ভেরিফিকেশন:</span> 
+                  <p className="ml-5 mt-1">ফোন এবং ইমেল ভেরিফিকেশন দ্বারা উচ্চ নিরাপত্তা নিশ্চিত করা হয়</p>
+                </li>
+                <li>
+                  <span className="font-medium">ডিসপিউট রেজোলিউশন:</span> 
+                  <p className="ml-5 mt-1">যেকোনো বিবাদ ৪৮ ঘন্টার মধ্যে সমাধান করা হয়</p>
+                </li>
+                <li>
+                  <span className="font-medium">রিয়েল-টাইম মনিটরিং:</span> 
+                  <p className="ml-5 mt-1">সকল লেনদেন রিয়েল-টাইমে মনিটর করা হয়</p>
+                </li>
+                <li>
+                  <span className="font-medium">ট্র্যাকেবল ট্রানজেকশন:</span> 
+                  <p className="ml-5 mt-1">প্রতিটি লেনদেন পূর্ণরূপে ট্র্যাক করা যায়</p>
+                </li>
               </ul>
             </CardContent>
           </Card>
@@ -130,6 +224,7 @@ const ServiceDetails = () => {
           priceUnit: serviceData.priceUnit,
           owner: serviceData.provider
         }}
+        onPaymentComplete={handlePaymentComplete}
       />
     </div>
   );
