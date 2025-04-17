@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -378,7 +377,7 @@ const ServiceManagement = () => {
                 ফিল্টার
                 <ChevronDown className="h-4 w-4" />
               </Button>
-            </DropdownMenuT>
+            </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem>
                 <Check className="h-4 w-4 mr-2" />
@@ -511,6 +510,5 @@ const ServiceManagement = () => {
 
 export default ServiceManagement;
 
-// For UI demonstration purposes
 const Brush = Wrench;
 const Flower = Wrench;
