@@ -63,6 +63,18 @@ import RentalCategoryPage from "./pages/RentalCategoryPage";
 import StoreDetails from "./pages/StoreDetails";
 import SellerDashboard from "./pages/SellerDashboard";
 
+// Import dashboard components
+import { DashboardLayout } from "./pages/dashboard/DashboardLayout";
+import MarketplaceDashboard from "./pages/dashboard/marketplace/MarketplaceDashboard";
+import ProductManagement from "./pages/dashboard/marketplace/ProductManagement";
+import OrderTracking from "./pages/dashboard/marketplace/OrderTracking";
+import RentalDashboard from "./pages/dashboard/rental/RentalDashboard";
+import PropertyManagement from "./pages/dashboard/rental/PropertyManagement";
+import ServiceDashboard from "./pages/dashboard/service/ServiceDashboard";
+import ServiceManagement from "./pages/dashboard/service/ServiceManagement";
+import ContentDashboard from "./pages/dashboard/content/ContentDashboard";
+import ContentManagement from "./pages/dashboard/content/ContentManagement";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -119,6 +131,22 @@ const App = () => (
                   <Route path="/admin-dashboard" element={<AdminDashboard />} />
                   <Route path="/admin-dashboard/:section" element={<AdminDashboard />} />
                   <Route path="/seller-dashboard/*" element={<SellerDashboard />} />
+                  
+                  {/* Dashboard Routes */}
+                  <Route path="/dashboard" element={<DashboardLayout />}>
+                    <Route path="marketplace" element={<MarketplaceDashboard />} />
+                    <Route path="marketplace/products" element={<ProductManagement />} />
+                    <Route path="marketplace/orders" element={<OrderTracking />} />
+                    
+                    <Route path="rental" element={<RentalDashboard />} />
+                    <Route path="rental/properties" element={<PropertyManagement />} />
+                    
+                    <Route path="service" element={<ServiceDashboard />} />
+                    <Route path="service/services" element={<ServiceManagement />} />
+                    
+                    <Route path="content" element={<ContentDashboard />} />
+                    <Route path="content/contents" element={<ContentManagement />} />
+                  </Route>
                   
                   <Route path="/messages" element={<ChatPage />} />
                   
