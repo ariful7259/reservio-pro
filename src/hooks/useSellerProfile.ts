@@ -43,6 +43,8 @@ export function useSellerProfile() {
         // ব্যবহারকারীর আইডি সঠিক ফরম্যাটে আছে কিনা তা পরীক্ষা করি
         console.log('ব্যবহারকারীর আইডি লোড করছি:', user.id);
         
+        // এখানে আমরা text কে UUID তে রূপান্তর করার প্রয়োজন নেই,
+        // কেবল যে id টি আছে সেটি ব্যবহার করব এবং মোটামুটি সিঙ্গেল রিটার্নের জন্য maybeSingle() ব্যবহার করব
         const { data, error } = await supabase
           .from('seller_profiles')
           .select('*')

@@ -54,7 +54,6 @@ import {
   SidebarGroupContent
 } from '@/components/ui/sidebar';
 
-// Import the dashboard components
 import IntegratedDashboard from '@/components/dashboard/IntegratedDashboard';
 import MarketplaceDashboard from '@/components/dashboard/MarketplaceDashboard';
 import RentalDashboard from '@/components/dashboard/RentalDashboard';
@@ -86,16 +85,10 @@ const SellerDashboard = () => {
     
     if (!isLoading && profile) {
       const currentPath = location.pathname;
-      const allowedPaths = getAllowedPaths(profile.seller_type);
+      const sellerType = profile.seller_type;
       
-      if (!currentPath.includes('/seller-dashboard/' + profile.seller_type) && 
-          !currentPath.endsWith('/seller-dashboard')) {
-        toast({
-          title: "অননুমোদিত অ্যাক্সেস",
-          description: "আপনি শুধু আপনার সেলার টাইপের ড্যাশবোর্ড দেখতে পারবেন",
-          variant: "destructive"
-        });
-        navigate('/seller-dashboard/' + profile.seller_type);
+      if (currentPath === '/seller-dashboard') {
+        navigate(`/seller-dashboard/${sellerType}`, { replace: true });
       }
     }
   }, [isLoading, profile, location.pathname, navigate, isAuthenticated]);
@@ -133,15 +126,20 @@ const SellerDashboard = () => {
   }
 
   if (error) {
-    return <div className="flex items-center justify-center min-h-screen">Error: {error}</div>;
+    return <div className="flex items-center justify-center min-h-screen flex-col gap-4">
+      <div>Error: {error}</div>
+      <Button onClick={() => navigate('/create-store')}>
+        ব্যবসা তৈরি করুন
+      </Button>
+    </div>;
   }
 
   if (!profile) {
     return (
       <div className="flex items-center justify-center min-h-screen flex-col gap-4">
-        <div>No seller profile found. You need to create a seller profile first.</div>
+        <div>আপনার কোন বিক্রেতা প্রোফাইল নেই। প্রথমে একটি বিক্রেতা প্রোফাইল তৈরি করুন।</div>
         <Button onClick={() => navigate('/create-store')}>
-          Create Seller Profile
+          ব্যবসা তৈরি করুন
         </Button>
       </div>
     );
