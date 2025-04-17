@@ -129,39 +129,6 @@ const ProfileManagement = () => {
     navigate("/login");
   };
 
-  const sellerMenuItems = [
-    {
-      title: 'মার্কেটপ্লেস',
-      icon: Store,
-      description: 'আপনার পণ্য বিক্রি করুন',
-      path: '/seller-dashboard/marketplace'
-    },
-    {
-      title: 'রেন্টাল',
-      icon: Building,
-      description: 'আপনার সম্পত্তি ভাড়া দিন',
-      path: '/seller-dashboard/rental'
-    },
-    {
-      title: 'সার্ভিস',
-      icon: Wrench,
-      description: 'আপনার সেবা প্রদান করুন',
-      path: '/seller-dashboard/services'
-    },
-    {
-      title: 'কন্টেন্ট',
-      icon: Video,
-      description: 'ডিজিটাল কন্টেন্ট তৈরি করুন',
-      path: '/seller-dashboard/content'
-    },
-    {
-      title: 'অ্যানালিটিক্স',
-      icon: BarChart3,
-      description: 'আপনার ব্যবসার পরিসংখ্যান দেখুন',
-      path: '/seller-dashboard/analytics'
-    }
-  ];
-
   if (!user) {
     return null;
   }
@@ -207,15 +174,12 @@ const ProfileManagement = () => {
 
           <div className="flex-1">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid grid-cols-3 mb-4">
+              <TabsList className="grid grid-cols-2 mb-4">
                 <TabsTrigger value="general" className="flex gap-2 items-center">
                   <User className="h-4 w-4" /> প্রোফাইল তথ্য
                 </TabsTrigger>
                 <TabsTrigger value="security" className="flex gap-2 items-center">
                   <ShieldCheck className="h-4 w-4" /> সিকিউরিটি
-                </TabsTrigger>
-                <TabsTrigger value="seller" className="flex gap-2 items-center">
-                  <Store className="h-4 w-4" /> বিক্রেতা কেন্দ্র
                 </TabsTrigger>
               </TabsList>
               
@@ -360,36 +324,6 @@ const ProfileManagement = () => {
                         </Button>
                       </form>
                     </Form>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="seller">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>বিক্রেতা কেন্দ্র</CardTitle>
-                    <CardDescription>
-                      আপনার বিক্রয় এবং সেবা সামগ্রী পরিচালনা করুন
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {sellerMenuItems.map((item, index) => (
-                        <Card key={index} className="cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => navigate(item.path)}>
-                          <CardContent className="p-6">
-                            <div className="flex flex-col items-center text-center gap-4">
-                              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                                <item.icon className="h-6 w-6 text-primary" />
-                              </div>
-                              <div>
-                                <h3 className="font-medium mb-1">{item.title}</h3>
-                                <p className="text-sm text-muted-foreground">{item.description}</p>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
                   </CardContent>
                 </Card>
               </TabsContent>

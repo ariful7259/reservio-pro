@@ -21,8 +21,7 @@ import {
   Fingerprint,
   Users,
   Award,
-  LogIn,
-  Store
+  LogIn
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
@@ -48,7 +47,6 @@ export const SidebarDrawer = () => {
   const { user, isAuthenticated, logout, isAdmin } = useAuth();
   const { toast } = useToast();
   
-  // Profile menu items
   const profileMenuItems = [
     { icon: <User className="h-5 w-5" />, name: "ব্যক্তিগত তথ্য", path: "/profile-management" },
     { icon: <MessageSquare className="h-5 w-5" />, name: "নোটিফিকেশন", path: "/notifications", badge: 2 },
@@ -63,20 +61,6 @@ export const SidebarDrawer = () => {
       path: "/admin-dashboard",
       show: isAdmin 
     },
-  ];
-
-  // Add seller center menu items
-  const sellerCenterItems = [
-    { 
-      icon: <Store className="h-5 w-5 text-primary" />, 
-      name: "বিক্রেতা ড্যাশবোর্ড", 
-      path: "/seller-dashboard" 
-    },
-    { 
-      icon: <Plus className="h-5 w-5 text-green-500" />, 
-      name: "ব্যবসা তৈরি", 
-      path: "/create-store" 
-    }
   ];
 
   const videoAds = [
@@ -169,35 +153,6 @@ export const SidebarDrawer = () => {
         </DrawerHeader>
         
         <div className="px-4 space-y-6 py-4">
-          {/* Seller Center Section */}
-          {isAuthenticated && (
-            <div className="space-y-4 p-4 border rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-100">
-              <div className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
-                  <Store className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-medium text-lg">বিক্রেতা কেন্দ্র</h3>
-                  <p className="text-sm">আপনার ব্যবসা ম্যানেজ করুন</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                {sellerCenterItems.map((item, index) => (
-                  <Button 
-                    key={index}
-                    variant="outline" 
-                    className="flex flex-col items-center justify-center h-20 gap-1 p-2 bg-white"
-                    onClick={() => navigate(item.path)}
-                  >
-                    {item.icon}
-                    <span className="text-xs text-center">{item.name}</span>
-                  </Button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Post Your Ads Section */}
           <div className="space-y-4 p-4 border rounded-lg bg-gray-50">
             <h3 className="font-medium text-lg">বিজ্ঞাপন পোস্ট করুন</h3>
             <p className="text-sm text-gray-600">আপনার পণ্য, সেবা, বা প্রপার্টি বিজ্ঞাপন দিতে এখনই পোস্ট করুন</p>
@@ -209,7 +164,6 @@ export const SidebarDrawer = () => {
             </Link>
           </div>
           
-          {/* Referral System */}
           <div className="space-y-4 p-4 border rounded-lg bg-gradient-to-r from-primary/10 to-purple-100 border-primary/20">
             <div className="flex items-center gap-3">
               <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
@@ -228,7 +182,6 @@ export const SidebarDrawer = () => {
             </Link>
           </div>
           
-          {/* Video Ad Carousel */}
           <div className="space-y-2">
             <h3 className="font-medium">নতুন ভিডিও</h3>
             <Carousel className="w-full">
