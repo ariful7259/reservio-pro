@@ -9,7 +9,7 @@ import {
   Building,
   CreditCard,
   Briefcase,
-  Tool,
+  Wrench,
   Scale,
   Settings,
   HelpCircle,
@@ -55,7 +55,7 @@ const menuItems = [
   },
   {
     title: 'হোম সার্ভিসেস',
-    icon: Tool,
+    icon: Wrench,
     path: '/home-services',
   },
   {

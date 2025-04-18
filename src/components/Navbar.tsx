@@ -20,7 +20,7 @@ import {
   FileText,
   CreditCard,
   Scale,
-  Tool,
+  Wrench,
   LogIn,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
