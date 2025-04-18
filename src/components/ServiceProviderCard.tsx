@@ -3,8 +3,6 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Star } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
 
 interface ServiceProviderCardProps {
   id: string;
@@ -27,25 +25,6 @@ const ServiceProviderCard: React.FC<ServiceProviderCardProps> = ({
   availability,
   onClick,
 }) => {
-  const navigate = useNavigate();
-  const { toast } = useToast();
-
-  const handleAppointmentClick = () => {
-    // First call the original onClick handler
-    onClick(id);
-    
-    // Show toast
-    toast({
-      title: "অ্যাপয়েন্টমেন্ট",
-      description: `${name} এর সাথে অ্যাপয়েন্টমেন্টের জন্য অনুরোধ করা হচ্ছে...`,
-    });
-    
-    // Navigate to appointment booking page
-    setTimeout(() => {
-      navigate(`/book-appointment/${id}`);
-    }, 500);
-  };
-
   return (
     <Card className="border overflow-hidden">
       <CardContent className="p-4">
@@ -78,7 +57,7 @@ const ServiceProviderCard: React.FC<ServiceProviderCardProps> = ({
           <Button
             variant="outline"
             className="w-full"
-            onClick={handleAppointmentClick}
+            onClick={() => onClick(id)}
           >
             অ্যাপয়েন্টমেন্ট নিন
           </Button>

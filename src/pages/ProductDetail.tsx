@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
@@ -26,6 +27,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { useToast } from '@/components/ui/use-toast';
 import SocialShareModal from '@/components/SocialShareModal';
 
+// মক ডেটা - একে সার্ভারে নিয়ে যাওয়া উচিত
 const products = [
   {
     id: "1",
@@ -110,7 +112,9 @@ const ProductDetail = () => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
 
+  // ডেটা লোড করা
   useEffect(() => {
+    // আসল অ্যাপে এখানে API কল থাকবে
     const fetchProduct = () => {
       setLoading(true);
       try {
@@ -158,10 +162,6 @@ const ProductDetail = () => {
       title: "কার্টে যোগ করা হয়েছে",
       description: `${product.title} কার্টে যোগ করা হয়েছে।`,
     });
-    
-    setTimeout(() => {
-      navigate('/shopping/cart');
-    }, 1000);
   };
 
   const handleBuyNow = () => {
@@ -169,10 +169,7 @@ const ProductDetail = () => {
       title: "এখনই কিনুন",
       description: "আপনাকে চেকআউট পেজে নিয়ে যাওয়া হচ্ছে।",
     });
-    
-    setTimeout(() => {
-      navigate('/checkout');
-    }, 500);
+    // navigate('/checkout');
   };
 
   const handleBookmark = () => {
@@ -187,17 +184,6 @@ const ProductDetail = () => {
 
   const handleShare = () => {
     setShowShareModal(true);
-  };
-
-  const handleContact = () => {
-    toast({
-      title: "যোগায��গ",
-      description: "বিক্রেতার সাথে যোগাযোগ করা হচ্ছে...",
-    });
-    
-    setTimeout(() => {
-      navigate(`/contact/${product.seller.name}`);
-    }, 500);
   };
 
   if (loading) {
@@ -228,6 +214,7 @@ const ProductDetail = () => {
 
   return (
     <div className="container pt-20 pb-10">
+      {/* ব্রেডক্রাম্ব */}
       <div className="flex items-center gap-1 text-sm mb-4">
         <Button 
           variant="link" 
@@ -257,6 +244,7 @@ const ProductDetail = () => {
       </div>
 
       <div className="flex flex-col md:flex-row gap-6">
+        {/* বাম অংশ - ছবি */}
         <div className="w-full md:w-2/5">
           <Carousel className="w-full">
             <CarouselContent>
@@ -299,6 +287,7 @@ const ProductDetail = () => {
           </div>
         </div>
         
+        {/* ডান অংশ - প্রোডাক্ট তথ্য */}
         <div className="w-full md:w-3/5">
           <div className="flex justify-between items-start">
             <h1 className="text-2xl font-bold">{product.title}</h1>
@@ -411,20 +400,12 @@ const ProductDetail = () => {
           
           <div className="flex items-center gap-2 mb-2">
             <p className="text-sm">বিক্রেতা:</p>
-            <p className="text-sm font-medium">{product?.seller?.name}</p>
-            {product?.seller?.verified && (
+            <p className="text-sm font-medium">{product.seller.name}</p>
+            {product.seller.verified && (
               <Badge variant="outline" className="h-5 text-xs border-green-500 text-green-600">
                 <Check className="h-3 w-3 mr-1" /> যাচাইকৃত
               </Badge>
             )}
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="ml-auto"
-              onClick={handleContact}
-            >
-              যোগাযোগ করুন
-            </Button>
           </div>
         </div>
       </div>
@@ -518,6 +499,7 @@ const ProductDetail = () => {
         </Tabs>
       </div>
       
+      {/* সোশ্যাল শেয়ার মোডাল */}
       {product && (
         <SocialShareModal 
           open={showShareModal}

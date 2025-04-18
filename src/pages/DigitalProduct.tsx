@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
@@ -30,6 +31,7 @@ const DigitalProduct = () => {
   const { toast } = useToast();
   const [wishlist, setWishlist] = useState(false);
 
+  // Mock product data - in a real app, this would come from an API
   const product = {
     id: id,
     title: "প্রিমিয়াম UI ডিজাইন টেমপ্লেট কালেকশন",
@@ -94,10 +96,6 @@ const DigitalProduct = () => {
       title: "কার্টে যোগ করা হয়েছে",
       description: `${product.title} কার্টে যোগ করা হয়েছে।`,
     });
-    
-    setTimeout(() => {
-      navigate('/digital-products/cart');
-    }, 1000);
   };
 
   const handleBuyNow = () => {
@@ -105,10 +103,8 @@ const DigitalProduct = () => {
       title: "চেকআউট প্রক্রিয়া শুরু হচ্ছে",
       description: "আপনাকে পেমেন্ট পেজে নিয়ে যাওয়া হচ্ছে...",
     });
-    
-    setTimeout(() => {
-      navigate('/checkout');
-    }, 500);
+    // In a real app, redirect to checkout
+    // navigate('/checkout');
   };
 
   const handleToggleWishlist = () => {
@@ -131,6 +127,7 @@ const DigitalProduct = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Product Images */}
         <div>
           <div className="overflow-hidden rounded-lg aspect-video mb-4">
             <img 
@@ -152,6 +149,7 @@ const DigitalProduct = () => {
           </div>
         </div>
 
+        {/* Product Details */}
         <div>
           <div className="mb-4">
             <h2 className="text-2xl font-bold mb-2">{product.title}</h2>
@@ -206,6 +204,7 @@ const DigitalProduct = () => {
               </Button>
             </div>
 
+            {/* Creator Info */}
             <Card className="mb-6">
               <CardContent className="p-4">
                 <div className="flex items-center gap-4">
@@ -239,6 +238,7 @@ const DigitalProduct = () => {
         </div>
       </div>
 
+      {/* Product Tabs */}
       <div className="mt-8">
         <Tabs defaultValue="features">
           <TabsList className="w-full grid grid-cols-4 mb-6">
@@ -280,7 +280,7 @@ const DigitalProduct = () => {
                 <CardContent className="p-4 flex flex-col items-center text-center">
                   <MessageSquare className="h-8 w-8 text-purple-500 mb-2" />
                   <h3 className="font-medium">২৪/৭ সাপোর্ট</h3>
-                  <p className="text-sm text-muted-foreground">যেকোনো সমস্যা হলে আমাদের সাপোর্ট টিম সাহায্য করবে</p>
+                  <p className="text-sm text-muted-foreground">যেকোনো সমস্যায় সাপোর্ট টিম সাহায্য করবে</p>
                 </CardContent>
               </Card>
             </div>
@@ -413,6 +413,7 @@ const DigitalProduct = () => {
         </Tabs>
       </div>
       
+      {/* Related Products */}
       <div className="mt-12">
         <h2 className="text-xl font-bold mb-4">সম্পর্কিত প্রোডাক্ট</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
