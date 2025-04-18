@@ -303,12 +303,13 @@ const CreatePost = () => {
         description: "আপনার পোস্ট এখন প্রদর্শিত হবে",
       });
       
+      // Update navigation paths to match the correct routes
       if (type === 'rent') {
-        navigate('/rentals');
+        navigate('/rentals', { replace: true });
       } else if (type === 'service') {
-        navigate('/services');
+        navigate('/services', { replace: true });
       } else {
-        navigate('/shopping');
+        navigate('/shopping', { replace: true });
       }
     }, 1500);
   };
