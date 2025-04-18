@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
@@ -33,6 +32,7 @@ import {
   MessageCircle,
   UsersRound,
   LogIn,
+  Bell
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -48,10 +48,12 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
   DropdownMenuPortal,
+  
 } from '@/components/ui/dropdown-menu';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 
 const Navbar = () => {
   const location = useLocation();
@@ -306,7 +308,52 @@ const Navbar = () => {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+
+            {/* Add Notifications Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Bell className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-80">
+                <DropdownMenuLabel>নোটিফিকেশন</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                
+                <Tabs defaultValue="notifications">
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="notifications">নোটিফিকেশন</TabsTrigger>
+                    <TabsTrigger value="messages">মেসেজ</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="notifications" className="max-h-[300px] overflow-y-auto">
+                    <div className="space-y-2 p-2">
+                      <div className="flex items-start gap-2 rounded-lg p-2 hover:bg-accent">
+                        <Bell className="h-5 w-5 text-primary" />
+                        <div>
+                          <p className="text-sm font-medium">নতুন পোস্ট যুক্ত হয়েছে</p>
+                          <p className="text-xs text-muted-foreground">১০ মিনিট আগে</p>
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="messages" className="max-h-[300px] overflow-y-auto">
+                    <div className="space-y-2 p-2">
+                      <div className="flex items-start gap-2 rounded-lg p-2 hover:bg-accent">
+                        <MessageSquare className="h-5 w-5 text-primary" />
+                        <div>
+                          <p className="text-sm font-medium">নতুন মেসেজ</p>
+                          <p className="text-xs text-muted-foreground">১৫ মিনিট আগে</p>
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </DropdownMenuContent>
+            </DropdownMenu>
             
+            {/* Profile Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon" className="rounded-full overflow-hidden">
