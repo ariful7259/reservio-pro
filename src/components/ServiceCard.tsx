@@ -1,9 +1,10 @@
-
 import React from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Star } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 interface ServiceCardProps {
   id: string;
@@ -33,6 +34,24 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   onClick,
 }) => {
   const discountedPrice = discount ? price - (price * discount) / 100 : price;
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleBookClick = () => {
+    // First call the original onClick handler
+    onClick(id);
+    
+    // Show toast
+    toast({
+      title: "বুকিং",
+      description: `${title} বুক করা হচ্ছে...`,
+    });
+    
+    // Navigate to booking page
+    setTimeout(() => {
+      navigate(`/service-booking/${id}`);
+    }, 500);
+  };
 
   // CSS ভেরিয়েবলগুলি থেকে স্টাইল পাবে - এই ভেরিয়েবলগুলি অ্যাডমিন প্যানেল থেকে সেট করা হবে
   const cardStyle = {
@@ -121,7 +140,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         <Button
           variant="default"
           className="w-full"
-          onClick={() => onClick(id)}
+          onClick={handleBookClick}
         >
           {buttonLabel}
         </Button>
