@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useContactManagement } from '@/hooks/useContactManagement';
-import { useMobileContacts } from '@/hooks/useMobileContacts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,19 +10,16 @@ import { Check, AlertCircle, Send, Upload, UserPlus, Users, Phone, Mail, Trash2,
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Progress } from '@/components/ui/progress';
 import ContactList from './ContactList';
 
 const ContactsTab = () => {
   const { contacts, loading, error, addContact, addBulkContacts, uploadCsvContacts, inviteContact, inviteAll, deleteContact } = useContactManagement();
-  const { uploadMobileContacts, isLoading: isUploadingMobileContacts, progress } = useMobileContacts();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [bulkContacts, setBulkContacts] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showMobileContactsDialog, setShowMobileContactsDialog] = useState(false);
   const { toast } = useToast();
   const [dialogOpen, setDialogOpen] = useState(false);
   
@@ -199,21 +195,6 @@ const ContactsTab = () => {
     }
   };
   
-  const handleMobileContactsUpload = async () => {
-    const result = await uploadMobileContacts();
-    if (result) {
-      setShowMobileContactsDialog(false);
-      // If there are rewards, show a toast notification
-      if (result.reward > 0) {
-        toast({
-          title: "বোনাস পেয়েছেন!",
-          description: `আপনি ${result.added} টি নতুন কন্টাক্ট যোগ করে ${result.reward}৳ বোনাস পেয়েছেন!`,
-          variant: "default",
-        });
-      }
-    }
-  };
-  
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
@@ -367,68 +348,10 @@ const ContactsTab = () => {
               </DialogContent>
             </Dialog>
             
-            <Dialog open={showMobileContactsDialog} onOpenChange={setShowMobileContactsDialog}>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="w-full gap-2" onClick={() => setShowMobileContactsDialog(true)}>
-                  <Smartphone className="h-4 w-4" />
-                  মোবাইল কন্টাক্ট
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>মোবাইল কন্টাক্ট আপলোড করুন</DialogTitle>
-                  <DialogDescription>
-                    আপনার মোবাইল থেকে সব কন্টাক্ট আপলোড করুন এবং বোনাস অর্জন করুন। প্রতি নতুন কন্টাক্টের জন্য ১০৳ বোনাস।
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4">
-                  {isUploadingMobileContacts && (
-                    <div className="space-y-2">
-                      <Progress value={progress} className="w-full" />
-                      <p className="text-sm text-center text-muted-foreground">
-                        {progress < 30 && "কন্টাক্ট তালিকা লোড হচ্ছে..."}
-                        {progress >= 30 && progress < 60 && "কন্টাক্ট যাচাই করা হচ্ছে..."}
-                        {progress >= 60 && progress < 100 && "কন্টাক্ট আপলোড করা হচ্ছে..."}
-                        {progress >= 100 && "সম্পন্ন হয়েছে!"}
-                      </p>
-                    </div>
-                  )}
-
-                  <div className="bg-secondary/20 p-4 rounded-md">
-                    <h4 className="font-medium flex items-center gap-2 mb-2">
-                      <Check className="h-4 w-4 text-green-600" />
-                      বৈশিষ্ট্য
-                    </h4>
-                    <ul className="text-sm space-y-1 ml-6 list-disc">
-                      <li>সমস্ত কন্টাক্ট স্বয়ংক্রিয়ভাবে আপলোড হবে</li>
-                      <li>শুধুমাত্র বৈধ বাংলাদেশী নম্বর যোগ্য</li>
-                      <li>প্রতি নতুন যোগ্য কন্টাক্টের জন্য ১০৳ বোনাস</li>
-                      <li>ডুপ্লিকেট নম্বরের জন্য বোনাস নেই</li>
-                    </ul>
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button 
-                    type="button" 
-                    disabled={isUploadingMobileContacts}
-                    onClick={handleMobileContactsUpload}
-                    className="w-full"
-                  >
-                    {isUploadingMobileContacts ? (
-                      <span className="flex items-center gap-2">
-                        <span className="animate-spin">◌</span>
-                        প্রসেসিং...
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-2">
-                        <Smartphone className="h-4 w-4" />
-                        কন্টাক্ট আপলোড করুন
-                      </span>
-                    )}
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+            <Button variant="outline" className="w-full gap-2">
+              <Smartphone className="h-4 w-4" />
+              মোবাইল কন্টাক্ট
+            </Button>
           </CardContent>
         </Card>
       </div>

@@ -1,9 +1,9 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "./components/ThemeProvider";
 import { AppProvider } from "./context/AppContext";
 import { AuthProvider } from "./hooks/useAuth";
 import { AdminConfigProvider } from "./context/AdminConfigContext";
@@ -79,121 +79,125 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <AppProvider>
-        <AdminConfigProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <Navbar />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/onboarding" element={<Onboarding />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/services/:id" element={<ServiceDetails />} />
-              <Route path="/services/category/:id" element={<ServiceCategory />} />
-              <Route path="/appointments" element={<Appointments />} />
-              <Route path="/appointment-booking" element={<AppointmentBooking />} />
-              <Route path="/wallet" element={<Wallet />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/security" element={<Security />} />
-              <Route path="/security/2fa" element={<TwoFactorAuthentication />} />
-              <Route path="/kyc-verification" element={<KycVerification />} />
-              <Route path="/kyc-verification/:step" element={<KycVerification />} />
-              <Route path="/rentals" element={<Rentals />} />
-              <Route path="/rental-category/:categoryId" element={<RentalCategoryPage />} />
-              <Route path="/shopping" element={<Shopping />} />
-              <Route path="/shopping/category/:id" element={<ShoppingCategory />} />
-              <Route path="/marketplace" element={<Shopping />} />
-              <Route path="/notifications" element={<Notifications />} />
-              <Route path="/rent-anything" element={<RentAnything />} />
-              <Route path="/rent/apartment" element={<Housing />} />
-              <Route path="/rent/house" element={<Housing />} />
-              <Route path="/rent/car" element={<Housing />} />
-              <Route path="/rent/office" element={<Housing />} />
-              <Route path="/rent/event-space" element={<Housing />} />
-              <Route path="/rent/equipment" element={<Housing />} />
-              <Route path="/rent/shop" element={<Housing />} />
-              <Route path="/rent/others" element={<Housing />} />
-              <Route path="/my-services" element={<MyServices />} />
-              <Route path="/utilities" element={<Utilities />} />
-              <Route path="/help" element={<Help />} />
-              <Route path="/create-post" element={<CreatePost />} />
-              <Route path="/feedback" element={<Feedback />} />
-              <Route path="/qr-scanner" element={<QrScanner />} />
-              
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/profile-management" element={<ProfileManagement />} />
-              
-              <Route path="/admin-dashboard" element={<AdminDashboard />} />
-              <Route path="/admin-dashboard/:section" element={<AdminDashboard />} />
-              <Route path="/seller-dashboard/*" element={<SellerDashboard />} />
-              
-              {/* Dashboard Routes */}
-              <Route path="/dashboard" element={<DashboardLayout />}>
-                <Route path="marketplace" element={<MarketplaceDashboard />} />
-                <Route path="marketplace/products" element={<ProductManagement />} />
-                <Route path="marketplace/orders" element={<OrderTracking />} />
-                
-                <Route path="rental" element={<RentalDashboard />} />
-                <Route path="rental/properties" element={<PropertyManagement />} />
-                
-                <Route path="service" element={<ServiceDashboard />} />
-                <Route path="service/services" element={<ServiceManagement />} />
-                
-                <Route path="content" element={<ContentDashboard />} />
-                <Route path="content/contents" element={<ContentManagement />} />
-              </Route>
-              
-              <Route path="/messages" element={<ChatPage />} />
-              
-              <Route path="/search" element={<SearchPage />} />
-              
-              <Route path="/payment" element={<PaymentDemo />} />
-              
-              <Route path="/referral" element={<ReferralSystem />} />
-              
-              <Route path="/favorites" element={<Favorites />} />
-              <Route path="/reviews" element={<Reviews />} />
-              <Route path="/rewards" element={<Rewards />} />
-              <Route path="/language-settings" element={<LanguageSettings />} />
-              <Route path="/offline-mode" element={<OfflineMode />} />
-              
-              <Route path="/stories" element={<Stories />} />
-              <Route path="/events" element={<EventCalendar />} />
-              <Route path="/forums" element={<Forums />} />
-              <Route path="/group-booking" element={<GroupBooking />} />
-              
-              <Route path="/create-store" element={<CreateStore />} />
-              <Route path="/course-builder" element={<CourseBuilder />} />
-              <Route path="/email-automation" element={<NotFound />} />
-              <Route path="/event-hosting" element={<NotFound />} />
-              <Route path="/one-on-one" element={<NotFound />} />
-              <Route path="/digital-products" element={<NotFound />} />
-              <Route path="/paid-community" element={<PaidCommunity />} />
-              <Route path="/audience-analytics" element={<NotFound />} />
-              <Route path="/multi-channel" element={<NotFound />} />
-              <Route path="/reseller-program" element={<NotFound />} />
-              <Route path="/content-planner" element={<NotFound />} />
-              <Route path="/payment-gateway" element={<NotFound />} />
-              <Route path="/drm" element={<NotFound />} />
-              <Route path="/video-hosting" element={<NotFound />} />
-              <Route path="/affiliate" element={<NotFound />} />
-              <Route path="/social-media" element={<NotFound />} />
-              
-              <Route path="/product/:id" element={<ProductDetail />} />
-              <Route path="/rent-details/:id" element={<RentDetail />} />
-              <Route path="/product-order/:id" element={<ProductOrder />} />
-              <Route path="/store/:id" element={<StoreDetails />} />
-              
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-            <OfflineIndicator />
-          </TooltipProvider>
-        </AdminConfigProvider>
-      </AppProvider>
-    </AuthProvider>
+    <ThemeProvider defaultTheme="light">
+      <AuthProvider>
+        <AppProvider>
+          <AdminConfigProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <Navbar />
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/onboarding" element={<Onboarding />} />
+                  <Route path="/services" element={<Services />} />
+                  <Route path="/services/:id" element={<ServiceDetails />} />
+                  <Route path="/services/category/:id" element={<ServiceCategory />} />
+                  <Route path="/appointments" element={<Appointments />} />
+                  <Route path="/appointment-booking" element={<AppointmentBooking />} />
+                  <Route path="/wallet" element={<Wallet />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/security" element={<Security />} />
+                  <Route path="/security/2fa" element={<TwoFactorAuthentication />} />
+                  <Route path="/kyc-verification" element={<KycVerification />} />
+                  <Route path="/kyc-verification/:step" element={<KycVerification />} />
+                  <Route path="/rentals" element={<Rentals />} />
+                  <Route path="/rental-category/:categoryId" element={<RentalCategoryPage />} />
+                  <Route path="/shopping" element={<Shopping />} />
+                  <Route path="/shopping/category/:id" element={<ShoppingCategory />} />
+                  <Route path="/marketplace" element={<Shopping />} />
+                  <Route path="/notifications" element={<Notifications />} />
+                  <Route path="/rent-anything" element={<RentAnything />} />
+                  <Route path="/rent/apartment" element={<Housing />} />
+                  <Route path="/rent/house" element={<Housing />} />
+                  <Route path="/rent/car" element={<Housing />} />
+                  <Route path="/rent/office" element={<Housing />} />
+                  <Route path="/rent/event-space" element={<Housing />} />
+                  <Route path="/rent/equipment" element={<Housing />} />
+                  <Route path="/rent/shop" element={<Housing />} />
+                  <Route path="/rent/others" element={<Housing />} />
+                  <Route path="/my-services" element={<MyServices />} />
+                  <Route path="/utilities" element={<Utilities />} />
+                  <Route path="/help" element={<Help />} />
+                  <Route path="/create-post" element={<CreatePost />} />
+                  <Route path="/feedback" element={<Feedback />} />
+                  <Route path="/qr-scanner" element={<QrScanner />} />
+                  
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                  <Route path="/profile-management" element={<ProfileManagement />} />
+                  
+                  <Route path="/admin-dashboard" element={<AdminDashboard />} />
+                  <Route path="/admin-dashboard/:section" element={<AdminDashboard />} />
+                  <Route path="/seller-dashboard/*" element={<SellerDashboard />} />
+                  
+                  {/* Dashboard Routes */}
+                  <Route path="/dashboard" element={<DashboardLayout />}>
+                    <Route path="marketplace" element={<MarketplaceDashboard />} />
+                    <Route path="marketplace/products" element={<ProductManagement />} />
+                    <Route path="marketplace/orders" element={<OrderTracking />} />
+                    
+                    <Route path="rental" element={<RentalDashboard />} />
+                    <Route path="rental/properties" element={<PropertyManagement />} />
+                    
+                    <Route path="service" element={<ServiceDashboard />} />
+                    <Route path="service/services" element={<ServiceManagement />} />
+                    
+                    <Route path="content" element={<ContentDashboard />} />
+                    <Route path="content/contents" element={<ContentManagement />} />
+                  </Route>
+                  
+                  <Route path="/messages" element={<ChatPage />} />
+                  
+                  <Route path="/search" element={<SearchPage />} />
+                  
+                  <Route path="/payment" element={<PaymentDemo />} />
+                  
+                  <Route path="/referral" element={<ReferralSystem />} />
+                  
+                  <Route path="/favorites" element={<Favorites />} />
+                  <Route path="/reviews" element={<Reviews />} />
+                  <Route path="/rewards" element={<Rewards />} />
+                  <Route path="/language-settings" element={<LanguageSettings />} />
+                  <Route path="/offline-mode" element={<OfflineMode />} />
+                  
+                  <Route path="/stories" element={<Stories />} />
+                  <Route path="/events" element={<EventCalendar />} />
+                  <Route path="/forums" element={<Forums />} />
+                  <Route path="/group-booking" element={<GroupBooking />} />
+                  
+                  <Route path="/create-store" element={<CreateStore />} />
+                  <Route path="/course-builder" element={<CourseBuilder />} />
+                  <Route path="/email-automation" element={<NotFound />} />
+                  <Route path="/event-hosting" element={<NotFound />} />
+                  <Route path="/one-on-one" element={<NotFound />} />
+                  <Route path="/digital-products" element={<NotFound />} />
+                  <Route path="/paid-community" element={<PaidCommunity />} />
+                  <Route path="/audience-analytics" element={<NotFound />} />
+                  <Route path="/multi-channel" element={<NotFound />} />
+                  <Route path="/reseller-program" element={<NotFound />} />
+                  <Route path="/content-planner" element={<NotFound />} />
+                  <Route path="/payment-gateway" element={<NotFound />} />
+                  <Route path="/drm" element={<NotFound />} />
+                  <Route path="/video-hosting" element={<NotFound />} />
+                  <Route path="/affiliate" element={<NotFound />} />
+                  <Route path="/social-media" element={<NotFound />} />
+                  
+                  <Route path="/product/:id" element={<ProductDetail />} />
+                  <Route path="/rent-details/:id" element={<RentDetail />} />
+                  <Route path="/product-order/:id" element={<ProductOrder />} />
+                  <Route path="/store/:id" element={<StoreDetails />} />
+                  
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+                <OfflineIndicator />
+              </BrowserRouter>
+            </TooltipProvider>
+          </AdminConfigProvider>
+        </AppProvider>
+      </AuthProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 

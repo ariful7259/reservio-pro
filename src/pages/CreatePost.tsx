@@ -295,24 +295,6 @@ const CreatePost = () => {
   const handleSubmit = (type: 'rent' | 'service' | 'marketplace') => {
     setIsSubmitting(true);
     
-    // Create the post object based on the type
-    const postData = type === 'rent' 
-      ? rentForm
-      : type === 'service'
-      ? serviceForm 
-      : marketplaceForm;
-      
-    // Store the post in localStorage to persist it
-    const storageKey = `${type}-posts`;
-    const existingPosts = JSON.parse(localStorage.getItem(storageKey) || '[]');
-    const newPost = {
-      id: Date.now(),
-      ...postData,
-      createdAt: new Date().toISOString()
-    };
-    
-    localStorage.setItem(storageKey, JSON.stringify([newPost, ...existingPosts]));
-    
     setTimeout(() => {
       setIsSubmitting(false);
       
@@ -321,13 +303,12 @@ const CreatePost = () => {
         description: "আপনার পোস্ট এখন প্রদর্শিত হবে",
       });
       
-      // Navigate to the appropriate section with the new post
       if (type === 'rent') {
-        navigate(`/rentals?new=${newPost.id}`, { replace: true });
+        navigate('/rentals');
       } else if (type === 'service') {
-        navigate(`/services?new=${newPost.id}`, { replace: true });
+        navigate('/services');
       } else {
-        navigate(`/shopping?new=${newPost.id}`, { replace: true });
+        navigate('/shopping');
       }
     }, 1500);
   };

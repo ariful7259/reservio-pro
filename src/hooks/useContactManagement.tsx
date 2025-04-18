@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -7,22 +8,21 @@ interface Contact {
   email: string;
   phone: string;
   status: 'pending' | 'invited' | 'joined' | 'invalid' | 'duplicate';
-  rewardStatus?: 'eligible' | 'rewarded' | 'ineligible';
 }
 
 export const useContactManagement = () => {
   const { user } = useAuth();
   const [contacts, setContacts] = useState<Contact[]>([
-    { id: '1', name: 'হাসান আহমেদ', email: 'hasan@example.com', phone: '01712345678', status: 'pending', rewardStatus: 'eligible' },
-    { id: '2', name: 'ফারহানা বেগম', email: 'farhana@example.com', phone: '01812345678', status: 'invited', rewardStatus: 'eligible' },
-    { id: '3', name: 'কামাল হোসেন', email: 'kamal@example.com', phone: '01912345678', status: 'joined', rewardStatus: 'rewarded' },
-    { id: '4', name: 'সাদিয়া আক্তার', email: 'sadia@example.com', phone: '01512345678', status: 'invalid', rewardStatus: 'ineligible' },
-    { id: '5', name: 'নাজমুল হক', email: 'nazmul@example.com', phone: '01612345678', status: 'duplicate', rewardStatus: 'ineligible' },
+    { id: '1', name: 'হাসান আহমেদ', email: 'hasan@example.com', phone: '01712345678', status: 'pending' },
+    { id: '2', name: 'ফারহানা বেগম', email: 'farhana@example.com', phone: '01812345678', status: 'invited' },
+    { id: '3', name: 'কামাল হোসেন', email: 'kamal@example.com', phone: '01912345678', status: 'joined' },
+    { id: '4', name: 'সাদিয়া আক্তার', email: 'sadia@example.com', phone: '01512345678', status: 'invalid' },
+    { id: '5', name: 'নাজমুল হক', email: 'nazmul@example.com', phone: '01612345678', status: 'duplicate' },
   ]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const addContact = async (contact: Omit<Contact, 'id' | 'status' | 'rewardStatus'>) => {
+  const addContact = async (contact: Omit<Contact, 'id' | 'status'>) => {
     setLoading(true);
     try {
       // Check if contact already exists
@@ -44,7 +44,6 @@ export const useContactManagement = () => {
         id: Date.now().toString(),
         ...contact,
         status: 'pending',
-        rewardStatus: 'eligible',
       };
 
       setContacts(prev => [...prev, newContact]);
@@ -57,7 +56,7 @@ export const useContactManagement = () => {
     }
   };
 
-  const addBulkContacts = async (contactList: Array<Omit<Contact, 'id' | 'status' | 'rewardStatus'>>) => {
+  const addBulkContacts = async (contactList: Array<Omit<Contact, 'id' | 'status'>>) => {
     setLoading(true);
     try {
       // In a real implementation, this would be an API call
@@ -69,33 +68,22 @@ export const useContactManagement = () => {
 
       const newContacts = contactList.map(contact => {
         const isDuplicate =
-          (contact.email && existingEmails.has(contact.email)) || 
-          (contact.phone && existingPhones.has(contact.phone));
+          existingEmails.has(contact.email) || existingPhones.has(contact.phone);
 
         return {
           id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
           ...contact,
           status: isDuplicate ? ('duplicate' as const) : ('pending' as const),
-          rewardStatus: isDuplicate ? ('ineligible' as const) : ('eligible' as const),
         };
       });
 
       setContacts(prev => [...prev, ...newContacts]);
-      
-      // Calculate rewards for the user
-      const eligibleContacts = newContacts.filter(c => c.status === 'pending');
-      if (eligibleContacts.length > 0) {
-        // In a real implementation, this would call an API to add rewards to the user's wallet
-        console.log(`Adding ${eligibleContacts.length * 10} rewards to user's wallet`);
-      }
-      
       setLoading(false);
 
       return {
         total: contactList.length,
         added: newContacts.filter(c => c.status === 'pending').length,
         duplicates: newContacts.filter(c => c.status === 'duplicate').length,
-        reward: newContacts.filter(c => c.status === 'pending').length * 10, // 10 taka per valid contact
       };
     } catch (err) {
       setError('কন্টাক্ট যোগ করতে সমস্যা হয়েছে।');
@@ -104,7 +92,6 @@ export const useContactManagement = () => {
         total: 0,
         added: 0,
         duplicates: 0,
-        reward: 0,
         error: true,
       };
     }

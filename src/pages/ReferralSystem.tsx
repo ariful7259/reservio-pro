@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useReferralData } from '@/hooks/useReferralData';
@@ -15,27 +15,12 @@ import SocialShareTab from '@/components/Referral/SocialShareTab';
 import AnalyticsTab from '@/components/Referral/AnalyticsTab';
 import KycTab from '@/components/Referral/KycTab';
 import { Steps } from '@/components/ui/steps';
-import { useToast } from '@/hooks/use-toast';
 
 const ReferralSystem = () => {
   const [activeTab, setActiveTab] = useState('invite');
   const { user } = useAuth();
   const { referralData } = useReferralData();
   const { contacts } = useContactManagement();
-  const { toast } = useToast();
-  
-  useEffect(() => {
-    // Get tab from URL hash if it exists
-    const hash = window.location.hash.replace('#', '');
-    if (hash && ['invite', 'earnings', 'contacts', 'leaderboard', 'milestones', 'social', 'analytics', 'kyc'].includes(hash)) {
-      setActiveTab(hash);
-    }
-  }, []);
-
-  // Update hash when tab changes
-  useEffect(() => {
-    window.location.hash = activeTab;
-  }, [activeTab]);
   
   const steps = [
     { id: 'invite', label: 'ইনভাইট করুন' },

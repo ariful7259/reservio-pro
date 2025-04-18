@@ -1,9 +1,7 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* আমাদের ডিজাইন টোকেন ইমপোর্ট করুন */
-@import './themes/design-tokens.css';
  
 @layer base {
   :root {
