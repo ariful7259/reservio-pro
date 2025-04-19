@@ -99,8 +99,8 @@ export const applyAdminTheme = (element: HTMLElement, isDarkMode: boolean = fals
     if (isDarkMode) {
       // Apply dark mode colors
       element.style.setProperty('--color-primary', theme?.colors.dark.primary || adminTheme.colors.dark.primary);
-      element.style.setProperty('--color-secondary', theme?.colors.dark.surface || adminTheme.colors.dark.secondary);
-      element.style.setProperty('--color-accent', theme?.colors.dark.primary || adminTheme.colors.dark.accent);
+      element.style.setProperty('--color-secondary', theme?.colors.dark.surface || adminTheme.colors.dark.surface);
+      element.style.setProperty('--color-accent', theme?.colors.dark.primary || adminTheme.colors.dark.primary);
       element.style.setProperty('--color-background', theme?.colors.dark.background || adminTheme.colors.dark.background);
       element.style.setProperty('--color-surface', theme?.colors.dark.surface || adminTheme.colors.dark.surface);
       

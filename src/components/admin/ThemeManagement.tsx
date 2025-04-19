@@ -11,7 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { adminTheme, applyAdminTheme } from '@/themes/adminTheme';
 import { Palette, Sun, Moon, Brush, Grid3X3, ArrowRightLeft, RefreshCw, Save, CheckCircle2 } from 'lucide-react';
 import { ColorPicker } from './ColorPicker';
-import { useThemeContext } from '@/context/themeContext';
+import { useThemeContext } from '@/context/ThemeContext';
 
 interface ThemeState {
   colors: {
