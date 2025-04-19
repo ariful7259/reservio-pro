@@ -23,11 +23,11 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import SocialShareModal from '@/components/SocialShareModal';
 import { useShoppingState } from '@/hooks/useShoppingState';
-import ProductReview from '@/components/ProductReview';
-import OnboardingTutorial from '@/components/OnboardingTutorial';
+import { ProductReview } from '@/components/ProductReview';
+import { OnboardingTutorial } from '@/components/OnboardingTutorial';
 
 const products = [
   {
