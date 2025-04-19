@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
@@ -26,8 +25,10 @@ import { Badge } from '@/components/ui/badge';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { useToast } from '@/components/ui/use-toast';
 import SocialShareModal from '@/components/SocialShareModal';
+import { useShoppingState } from '@/hooks/useShoppingState';
+import ProductReview from '@/components/ProductReview';
+import OnboardingTutorial from '@/components/OnboardingTutorial';
 
-// মক ডেটা - একে সার্ভারে নিয়ে যাওয়া উচিত
 const products = [
   {
     id: "1",
@@ -105,6 +106,7 @@ const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { addToCart, toggleWishlist, isInWishlist, addLoyaltyPoints } = useShoppingState();
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -112,9 +114,7 @@ const ProductDetail = () => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
 
-  // ডেটা লোড করা
   useEffect(() => {
-    // আসল অ্যাপে এখানে API কল থাকবে
     const fetchProduct = () => {
       setLoading(true);
       try {
@@ -158,10 +158,24 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
-    toast({
-      title: "কার্টে যোগ করা হয়েছে",
-      description: `${product.title} কার্টে যোগ করা হয়েছে।`,
-    });
+    if (product) {
+      addToCart({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        quantity: quantity,
+        image: product.images[0]
+      });
+      
+      addLoyaltyPoints(10);
+      
+      toast({
+        title: "কার্টে যোগ করা হয়েছে",
+        description: `${product.title} কার্টে যোগ করা হয়েছে।`,
+      });
+      
+      navigate('/cart');
+    }
   };
 
   const handleBuyNow = () => {
@@ -169,7 +183,6 @@ const ProductDetail = () => {
       title: "এখনই কিনুন",
       description: "আপনাকে চেকআউট পেজে নিয়ে যাওয়া হচ্ছে।",
     });
-    // navigate('/checkout');
   };
 
   const handleBookmark = () => {
@@ -212,9 +225,10 @@ const ProductDetail = () => {
     );
   }
 
+  const isWishlisted = product ? isInWishlist(product.id) : false;
+
   return (
     <div className="container pt-20 pb-10">
-      {/* ব্রেডক্রাম্ব */}
       <div className="flex items-center gap-1 text-sm mb-4">
         <Button 
           variant="link" 
@@ -244,7 +258,6 @@ const ProductDetail = () => {
       </div>
 
       <div className="flex flex-col md:flex-row gap-6">
-        {/* বাম অংশ - ছবি */}
         <div className="w-full md:w-2/5">
           <Carousel className="w-full">
             <CarouselContent>
@@ -287,7 +300,6 @@ const ProductDetail = () => {
           </div>
         </div>
         
-        {/* ডান অংশ - প্রোডাক্ট তথ্য */}
         <div className="w-full md:w-3/5">
           <div className="flex justify-between items-start">
             <h1 className="text-2xl font-bold">{product.title}</h1>
@@ -443,73 +455,27 @@ const ProductDetail = () => {
             </Card>
           </TabsContent>
           
-          <TabsContent value="reviews" className="mt-4">
+          <TabsContent value="reviews">
             <Card>
               <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-medium">রিভিউসমূহ</h3>
-                  <Badge variant="outline">{product.seller.reviews} রিভিউ</Badge>
-                </div>
-                
-                <div className="flex items-center gap-6 p-4 bg-gray-50 rounded-lg mb-6">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold">{product.seller.rating}</div>
-                    <div className="flex items-center justify-center mt-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star 
-                          key={star} 
-                          className={`h-4 w-4 ${star <= Math.floor(product.seller.rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`} 
-                        />
-                      ))}
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1">{product.seller.reviews} রিভিউ</div>
-                  </div>
-                  
-                  <div className="flex-1">
-                    <div className="space-y-1">
-                      {[5, 4, 3, 2, 1].map((rating) => (
-                        <div key={rating} className="flex items-center gap-2">
-                          <div className="text-xs w-2">{rating}</div>
-                          <Star className="h-3 w-3 text-yellow-400" />
-                          <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                            <div 
-                              className="h-full bg-yellow-400 rounded-full"
-                              style={{ 
-                                width: `${rating === 5 ? 70 : rating === 4 ? 20 : rating === 3 ? 5 : rating === 2 ? 3 : 2}%` 
-                              }}
-                            ></div>
-                          </div>
-                          <div className="text-xs text-muted-foreground w-8">
-                            {rating === 5 ? '70%' : rating === 4 ? '20%' : rating === 3 ? '5%' : rating === 2 ? '3%' : '2%'}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="text-center p-6">
-                  <MessageSquare className="h-12 w-12 mx-auto text-gray-300 mb-2" />
-                  <p className="text-muted-foreground">প্রোডাক্টটি কেনার পর এখানে আপনার রিভিউ দিতে পারবেন।</p>
-                  <Button className="mt-4">রিভিউ দেখুন</Button>
-                </div>
+                <h3 className="text-lg font-medium mb-4">রিভিউ লিখুন</h3>
+                <ProductReview productId={product?.id || ''} />
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
       </div>
       
-      {/* সোশ্যাল শেয়ার মোডাল */}
-      {product && (
-        <SocialShareModal 
-          open={showShareModal}
-          onOpenChange={setShowShareModal}
-          item={{
-            ...product,
-            type: 'product',
-          }}
-        />
-      )}
+      <OnboardingTutorial />
+      
+      <SocialShareModal 
+        open={showShareModal}
+        onOpenChange={setShowShareModal}
+        item={{
+          ...product,
+          type: 'product',
+        }}
+      />
     </div>
   );
 };
