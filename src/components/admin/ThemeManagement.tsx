@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { adminTheme, applyAdminTheme } from '@/themes/adminTheme';
 import { Palette, Sun, Moon, Brush, Grid3X3, ArrowRightLeft, RefreshCw, Save, CheckCircle2 } from 'lucide-react';
 import { ColorPicker } from './ColorPicker';
+import { useThemeContext } from '@/context/themeContext';
 
 interface ThemeState {
   colors: {
@@ -55,47 +56,9 @@ interface ThemeState {
 
 const ThemeManagement: React.FC = () => {
   const { toast } = useToast();
+  const { theme: currentTheme, updateTheme, isDarkMode } = useThemeContext();
   const [previewTheme, setPreviewTheme] = useState<boolean>(false);
-  const [theme, setTheme] = useState<ThemeState>({
-    colors: {
-      primary: adminTheme.colors.primary,
-      secondary: adminTheme.colors.secondary,
-      accent: adminTheme.colors.accent,
-      background: adminTheme.colors.background,
-      success: adminTheme.colors.success,
-      warning: adminTheme.colors.warning,
-      error: adminTheme.colors.error,
-      info: adminTheme.colors.info,
-      text: {
-        primary: adminTheme.colors.text.primary,
-        secondary: adminTheme.colors.text.secondary,
-        muted: adminTheme.colors.text.muted,
-      },
-      dark: {
-        background: adminTheme.colors.dark.background,
-        surface: adminTheme.colors.dark.surface,
-        primary: adminTheme.colors.dark.primary,
-        text: {
-          primary: adminTheme.colors.dark.text.primary,
-        }
-      }
-    },
-    gradients: {
-      primary: adminTheme.gradients.primary,
-      secondary: adminTheme.gradients.secondary,
-      accent: adminTheme.gradients.accent,
-    },
-    shadows: {
-      card: adminTheme.shadows.card,
-      button: adminTheme.shadows.button,
-    },
-    borderRadius: {
-      sm: adminTheme.borderRadius.sm,
-      md: adminTheme.borderRadius.md,
-      lg: adminTheme.borderRadius.lg,
-    },
-    darkMode: false
-  });
+  const [theme, setTheme] = useState<ThemeState>(() => currentTheme);
 
   const [demoColors, setDemoColors] = useState([
     '#2262C6', // নীল
@@ -245,10 +208,10 @@ const ThemeManagement: React.FC = () => {
   };
 
   const handleSaveTheme = () => {
-    console.log('Saving theme:', theme);
+    updateTheme(theme);
     toast({
       title: "থিম সফলভাবে সেভ করা হয়েছে",
-      description: "আপনার পরিবর্তিত থিম সেটিংস সেভ করা হয়েছে।"
+      description: "আপনার পরিবর্তিত থিম সেটিংস সেভ করা হয়েছে এবং প্রয়োগ করা হয়েছে।"
     });
   };
 

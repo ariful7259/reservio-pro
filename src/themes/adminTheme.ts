@@ -1,4 +1,3 @@
-
 // Admin dashboard theme configuration
 
 export const adminTheme = {
@@ -25,8 +24,6 @@ export const adminTheme = {
       background: '#1F2937',
       surface: '#374151',
       primary: '#60A5FA',
-      secondary: '#A78BFA',
-      accent: '#34D399',
       text: {
         primary: '#F9FAFB',
         secondary: '#E5E7EB',
@@ -94,55 +91,51 @@ export const adminTheme = {
 };
 
 export const applyAdminTheme = (element: HTMLElement, isDarkMode: boolean = false): void => {
-  // Apply theme colors to CSS variables
   if (element) {
+    // Get saved theme from localStorage
+    const savedTheme = localStorage.getItem('admin-theme');
+    const theme = savedTheme ? JSON.parse(savedTheme) : null;
+    
     if (isDarkMode) {
-      // ডার্ক মোডের জন্য কালার অ্যাপ্লাই করা
-      element.style.setProperty('--color-primary', adminTheme.colors.dark.primary);
-      element.style.setProperty('--color-secondary', adminTheme.colors.dark.secondary);
-      element.style.setProperty('--color-accent', adminTheme.colors.dark.accent);
-      element.style.setProperty('--color-background', adminTheme.colors.dark.background);
-      element.style.setProperty('--color-surface', adminTheme.colors.dark.surface);
+      // Apply dark mode colors
+      element.style.setProperty('--color-primary', theme?.colors.dark.primary || adminTheme.colors.dark.primary);
+      element.style.setProperty('--color-secondary', theme?.colors.dark.surface || adminTheme.colors.dark.secondary);
+      element.style.setProperty('--color-accent', theme?.colors.dark.primary || adminTheme.colors.dark.accent);
+      element.style.setProperty('--color-background', theme?.colors.dark.background || adminTheme.colors.dark.background);
+      element.style.setProperty('--color-surface', theme?.colors.dark.surface || adminTheme.colors.dark.surface);
       
-      // টেক্সট কালার
-      element.style.setProperty('--color-text-primary', adminTheme.colors.dark.text.primary);
-      element.style.setProperty('--color-text-secondary', adminTheme.colors.dark.text.secondary);
-      element.style.setProperty('--color-text-muted', adminTheme.colors.dark.text.muted);
+      // Text colors
+      element.style.setProperty('--color-text-primary', theme?.colors.dark.text.primary || adminTheme.colors.dark.text.primary);
+      element.style.setProperty('--color-text-secondary', theme?.colors.dark.text.primary || adminTheme.colors.dark.text.secondary);
+      element.style.setProperty('--color-text-muted', theme?.colors.dark.text.primary || adminTheme.colors.dark.text.muted);
     } else {
-      // লাইট মোডের জন্য কালার অ্যাপ্লাই করা
-      element.style.setProperty('--color-primary', adminTheme.colors.primary);
-      element.style.setProperty('--color-secondary', adminTheme.colors.secondary);
-      element.style.setProperty('--color-accent', adminTheme.colors.accent);
-      element.style.setProperty('--color-background', adminTheme.colors.background);
-      element.style.setProperty('--color-primary-light', adminTheme.colors.primaryLight);
-      element.style.setProperty('--color-secondary-light', adminTheme.colors.secondaryLight);
-      element.style.setProperty('--color-accent-light', adminTheme.colors.accentLight);
+      // Apply light mode colors
+      element.style.setProperty('--color-primary', theme?.colors.primary || adminTheme.colors.primary);
+      element.style.setProperty('--color-secondary', theme?.colors.secondary || adminTheme.colors.secondary);
+      element.style.setProperty('--color-accent', theme?.colors.accent || adminTheme.colors.accent);
+      element.style.setProperty('--color-background', theme?.colors.background || adminTheme.colors.background);
+      element.style.setProperty('--color-primary-light', theme?.colors.primaryLight || adminTheme.colors.primaryLight);
+      element.style.setProperty('--color-secondary-light', theme?.colors.secondaryLight || adminTheme.colors.secondaryLight);
+      element.style.setProperty('--color-accent-light', theme?.colors.accentLight || adminTheme.colors.accentLight);
       
-      // টেক্সট কালার
-      element.style.setProperty('--color-text-primary', adminTheme.colors.text.primary);
-      element.style.setProperty('--color-text-secondary', adminTheme.colors.text.secondary);
-      element.style.setProperty('--color-text-muted', adminTheme.colors.text.muted);
+      // Text colors
+      element.style.setProperty('--color-text-primary', theme?.colors.text.primary || adminTheme.colors.text.primary);
+      element.style.setProperty('--color-text-secondary', theme?.colors.text.secondary || adminTheme.colors.text.secondary);
+      element.style.setProperty('--color-text-muted', theme?.colors.text.muted || adminTheme.colors.text.muted);
     }
     
-    // গ্র্যাডিয়েন্ট
-    element.style.setProperty('--gradient-primary', adminTheme.gradients.primary);
-    element.style.setProperty('--gradient-secondary', adminTheme.gradients.secondary);
-    element.style.setProperty('--gradient-accent', adminTheme.gradients.accent);
-    element.style.setProperty('--gradient-card-light', adminTheme.gradients.card.light);
+    // Gradients
+    element.style.setProperty('--gradient-primary', theme?.gradients.primary || adminTheme.gradients.primary);
+    element.style.setProperty('--gradient-secondary', theme?.gradients.secondary || adminTheme.gradients.secondary);
+    element.style.setProperty('--gradient-accent', theme?.gradients.accent || adminTheme.gradients.accent);
     
-    // শ্যাডো
-    element.style.setProperty('--shadow-card', adminTheme.shadows.card);
-    element.style.setProperty('--shadow-hover', adminTheme.shadows.hover);
-    element.style.setProperty('--shadow-button', adminTheme.shadows.button);
+    // Shadows
+    element.style.setProperty('--shadow-card', theme?.shadows.card || adminTheme.shadows.card);
+    element.style.setProperty('--shadow-button', theme?.shadows.button || adminTheme.shadows.button);
     
-    // স্পেসিং
-    element.style.setProperty('--spacing-md', adminTheme.spacing.md);
-    element.style.setProperty('--spacing-lg', adminTheme.spacing.lg);
-    element.style.setProperty('--spacing-xl', adminTheme.spacing.xl);
-    
-    // বর্ডার রেডিয়াস
-    element.style.setProperty('--radius-md', adminTheme.borderRadius.md);
-    element.style.setProperty('--radius-lg', adminTheme.borderRadius.lg);
-    element.style.setProperty('--radius-xl', adminTheme.borderRadius.xl);
+    // Border radius
+    element.style.setProperty('--radius-sm', theme?.borderRadius.sm || adminTheme.borderRadius.sm);
+    element.style.setProperty('--radius-md', theme?.borderRadius.md || adminTheme.borderRadius.md);
+    element.style.setProperty('--radius-lg', theme?.borderRadius.lg || adminTheme.borderRadius.lg);
   }
 };
