@@ -10,9 +10,9 @@ const ReferralStats = () => {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {[...Array(6)].map((_, i) => (
-          <Card key={i}>
+          <Card key={i} className="animate-pulse">
             <CardContent className="p-4">
               <Skeleton className="h-4 w-full mb-2" />
               <Skeleton className="h-10 w-3/4" />
@@ -59,17 +59,23 @@ const ReferralStats = () => {
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {stats.map((stat, index) => (
-        <Card key={index} className="bg-card hover:bg-accent/5 transition-colors">
+        <Card 
+          key={index} 
+          className="bg-card hover:bg-accent/5 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg stagger-item animate-fade-in"
+          style={{ animationDelay: `${index * 100}ms` }}
+        >
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="rounded-full p-2 bg-secondary/20">
+              <div className="rounded-full p-2 bg-secondary/20 animate-pulse-soft">
                 {stat.icon}
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">{stat.title}</p>
-                <h4 className="text-xl font-bold">{stat.value}</h4>
+                <h4 className="text-xl font-bold animate-scale-in">
+                  {stat.value}
+                </h4>
               </div>
             </div>
           </CardContent>

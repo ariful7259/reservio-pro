@@ -1,18 +1,18 @@
-
 import React, { useState } from 'react';
 import { useReferralData } from '@/hooks/useReferralData';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from '@/hooks/use-toast';
 import { Copy, Facebook, Twitter, Mail, Share2, CheckCircle2 } from 'lucide-react';
 import QRCode from 'react-qr-code';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const InviteTab = () => {
   const { referralData, loading, shareReferral } = useReferralData();
-  const { toast } = useToast();
   const [copied, setCopied] = useState(false);
+  const isMobile = useIsMobile();
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -24,19 +24,9 @@ const InviteTab = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleShareClick = (platform: string) => {
-    if (!referralData) return;
-    
-    // Find the template ID for the platform
-    const template = referralData.socialTemplates.find(t => t.platform === platform);
-    if (template) {
-      shareReferral(platform, template.id);
-    }
-  };
-
   if (loading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 animate-pulse">
         <Card>
           <CardHeader>
             <Skeleton className="h-6 w-48 mb-2" />
@@ -47,18 +37,7 @@ const InviteTab = () => {
             <div className="flex gap-2">
               <Skeleton className="h-10 w-28" />
               <Skeleton className="h-10 w-28" />
-              <Skeleton className="h-10 w-28" />
             </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <Skeleton className="h-6 w-48 mb-2" />
-            <Skeleton className="h-4 w-full" />
-          </CardHeader>
-          <CardContent className="flex justify-center">
-            <Skeleton className="h-48 w-48" />
           </CardContent>
         </Card>
       </div>
@@ -69,11 +48,11 @@ const InviteTab = () => {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="animate-fade-in">
         <CardHeader>
-          <CardTitle>ইনভাইট করুন এবং উপার্জন করুন</CardTitle>
-          <CardDescription>
-            বন্ধুদের আমন্ত্রণ জানিয়ে প্রতি রেফারেলে {referralData.referralRate} টাকা উপার্জন করুন। বন্ধুরাও পাবেন একই পরিমাণ বোনাস!
+          <CardTitle className="text-xl md:text-2xl">ইনভাইট করুন এবং উপার্জন করুন</CardTitle>
+          <CardDescription className="text-sm md:text-base">
+            বন্ধুদের আমন্ত্রণ জানিয়ে প্রতি রেফারেলে {referralData.referralRate} টাকা উপার্জন করুন
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -81,93 +60,56 @@ const InviteTab = () => {
             <Input 
               value={referralData.referralLink}
               readOnly
-              className="flex-1 bg-secondary/10"
+              className="flex-1 bg-secondary/10 animate-slide-in"
             />
             <Button 
               onClick={() => copyToClipboard(referralData.referralLink)}
-              className="gap-2"
+              className="gap-2 transition-all duration-300 transform active:scale-95"
             >
-              {copied ? <CheckCircle2 className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              {copied ? <CheckCircle2 className="h-4 w-4 animate-scale-in" /> : <Copy className="h-4 w-4" />}
               {copied ? 'কপি করা হয়েছে!' : 'কপি করুন'}
             </Button>
           </div>
-          
-          <div>
-            <p className="text-sm text-muted-foreground mb-2">আপনার রেফারেল কোড:</p>
-            <div className="flex items-center gap-2">
-              <code className="bg-secondary/20 px-3 py-1 rounded-md font-bold text-lg">
-                {referralData.referralCode}
-              </code>
+
+          <div className="pt-4 grid grid-cols-2 md:grid-cols-4 gap-2">
+            {[
+              { icon: <Facebook className="h-5 w-5" />, label: 'ফেসবুক', color: 'bg-[#3b5998]' },
+              { icon: <Twitter className="h-5 w-5" />, label: 'টুইটার', color: 'bg-[#1DA1F2]' },
+              { icon: <Share2 className="h-5 w-5" />, label: 'হোয়াটসঅ্যাপ', color: 'bg-[#25D366]' },
+              { icon: <Mail className="h-5 w-5" />, label: 'ইমেইল', color: 'bg-[#EA4335]' }
+            ].map((item, index) => (
               <Button 
-                size="sm" 
+                key={index}
                 variant="outline"
-                onClick={() => copyToClipboard(referralData.referralCode)}
+                className={`${item.color} text-white hover:opacity-90 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg animate-fade-in flex items-center justify-center gap-2 h-12`}
+                style={{ animationDelay: `${index * 100}ms` }}
               >
-                কপি
+                {item.icon}
+                {!isMobile && <span>{item.label}</span>}
               </Button>
-            </div>
-          </div>
-          
-          <div className="pt-2">
-            <p className="text-sm mb-3">শেয়ার করুন:</p>
-            <div className="flex flex-wrap gap-2">
-              <Button 
-                variant="outline" 
-                className="gap-2 bg-[#3b5998] text-white hover:bg-[#3b5998]/80 hover:text-white"
-                onClick={() => handleShareClick('facebook')}
-              >
-                <Facebook className="h-4 w-4" />
-                ফেসবুক
-              </Button>
-              <Button 
-                variant="outline" 
-                className="gap-2 bg-[#1DA1F2] text-white hover:bg-[#1DA1F2]/80 hover:text-white"
-                onClick={() => handleShareClick('twitter')}
-              >
-                <Twitter className="h-4 w-4" />
-                টুইটার
-              </Button>
-              <Button 
-                variant="outline" 
-                className="gap-2 bg-[#25D366] text-white hover:bg-[#25D366]/80 hover:text-white"
-                onClick={() => handleShareClick('whatsapp')}
-              >
-                <Share2 className="h-4 w-4" />
-                হোয়াটসঅ্যাপ
-              </Button>
-              <Button 
-                variant="outline" 
-                className="gap-2 bg-[#EA4335] text-white hover:bg-[#EA4335]/80 hover:text-white"
-                onClick={() => handleShareClick('email')}
-              >
-                <Mail className="h-4 w-4" />
-                ইমেইল
-              </Button>
-            </div>
+            ))}
           </div>
         </CardContent>
       </Card>
-      
-      <Card>
+
+      <Card className="animate-fade-in" style={{ animationDelay: '300ms' }}>
         <CardHeader>
-          <CardTitle>QR কোড</CardTitle>
-          <CardDescription>
-            রেফারেল লিঙ্ক শেয়ার করতে QR কোড স্ক্যান করুন
-          </CardDescription>
+          <CardTitle className="text-lg md:text-xl">QR কোড</CardTitle>
+          <CardDescription>রেফারেল লিঙ্ক শেয়ার করতে QR কোড স্ক্যান করুন</CardDescription>
         </CardHeader>
-        <CardContent className="flex justify-center mb-4">
-          <div className="bg-white p-3 rounded-lg">
+        <CardContent className="flex justify-center p-6">
+          <div className="bg-white p-3 rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105">
             <QRCode 
               value={referralData.referralLink}
-              size={180}
+              size={isMobile ? 150 : 200}
               level="H"
             />
           </div>
         </CardContent>
       </Card>
-      
-      {referralData.campaigns.some(c => c.isActive) && (
-        <Card className="border-2 border-dashed border-primary/50 bg-primary/5">
+
+      {referralData.campaigns?.some(c => c.isActive) && (
+        <Card className="border-2 border-dashed border-primary/50 bg-primary/5 animate-fade-in" style={{ animationDelay: '600ms' }}>
           <CardHeader>
             <CardTitle className="text-primary">সক্রিয় ক্যাম্পেইন</CardTitle>
             <CardDescription>
