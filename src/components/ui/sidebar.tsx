@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { cn } from "@/lib/utils"
@@ -216,5 +215,3 @@ export function SidebarBackdrop() {
     />
   );
 }
-
-// No need for the duplicate exports at the end

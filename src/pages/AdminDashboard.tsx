@@ -14,7 +14,8 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarProvider
+  SidebarProvider,
+  SidebarBackdrop
 } from '@/components/ui/sidebar';
 import UserManagementEnhanced from '@/components/admin/UserManagementEnhanced';
 import MarketplaceManagement from '@/components/admin/MarketplaceManagement';
@@ -79,6 +80,7 @@ const AdminDashboard = () => {
   const { section } = useParams();
   const { toast } = useToast();
   const [activeModule, setActiveModule] = useState(section || 'dashboard');
+  const [showNotifications, setShowNotifications] = useState(false);
   
   useEffect(() => {
     const adminContainer = document.getElementById('admin-dashboard-container');
@@ -149,6 +151,30 @@ const AdminDashboard = () => {
     },
   ];
   
+  const notifications = [
+    {
+      id: 1,
+      title: "নতুন অর্ডার",
+      message: "৩টি নতুন অর্ডার এসেছে",
+      time: "২ মিনিট আগে",
+      read: false
+    },
+    {
+      id: 2,
+      title: "নতুন রিভিউ",
+      message: "একটি নতুন প্রোডাক্ট রিভিউ পোস্ট করা হয়েছে",
+      time: "১০ মিনিট আগে",
+      read: false
+    },
+    {
+      id: 3,
+      title: "লো স্টক অ্যালার্ট",
+      message: "৫টি প্রোডাক্টের স্টক কম",
+      time: "৩০ মিনিট আগে",
+      read: true
+    }
+  ];
+
   const handleModuleChange = (moduleId) => {
     setActiveModule(moduleId);
     toast({
@@ -217,17 +243,57 @@ const AdminDashboard = () => {
         <div className="flex-1 overflow-y-auto">
           <div className="bg-white shadow-sm border-b px-6 py-3 flex justify-between items-center sticky top-0 z-10">
             <div className="flex items-center gap-2">
-              <SidebarTrigger />
+              <SidebarTrigger>
+                <Menu className="h-4 w-4" />
+              </SidebarTrigger>
               <Button variant="outline" size="sm" onClick={() => navigate('/')}>
                 <Home className="h-4 w-4 mr-1" /> হোম পেইজে ফিরুন
               </Button>
             </div>
             
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="icon" className="relative">
-                <Bell />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">8</span>
-              </Button>
+              <div className="relative">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="relative"
+                  onClick={() => setShowNotifications(!showNotifications)}
+                >
+                  <Bell className="h-5 w-5" />
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                    {notifications.filter(n => !n.read).length}
+                  </span>
+                </Button>
+                
+                {showNotifications && (
+                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg z-50 border border-gray-100">
+                    <div className="p-4 border-b border-gray-100">
+                      <h3 className="text-lg font-semibold">নোটিফিকেশন</h3>
+                    </div>
+                    <div className="max-h-[400px] overflow-y-auto">
+                      {notifications.map((notification) => (
+                        <div 
+                          key={notification.id}
+                          className={`p-4 border-b border-gray-100 hover:bg-gray-50 ${
+                            notification.read ? 'opacity-70' : ''
+                          }`}
+                        >
+                          <div className="flex justify-between items-start">
+                            <h4 className="font-medium">{notification.title}</h4>
+                            <span className="text-xs text-gray-500">{notification.time}</span>
+                          </div>
+                          <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="p-4 text-center border-t border-gray-100">
+                      <Button variant="link" className="text-primary text-sm">
+                        সব নোটিফিকেশন দেখুন
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
               
               <div className="flex items-center">
                 <div className="w-8 h-8 text-white rounded-full flex items-center justify-center"
@@ -494,6 +560,8 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
+      
+      <SidebarBackdrop />
     </SidebarProvider>
   );
 };
