@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Star, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from '@/hooks/use-toast';
 
 interface ProductReviewProps {
   productId: string;
@@ -12,7 +12,6 @@ interface ProductReviewProps {
 export const ProductReview = ({ productId }: ProductReviewProps) => {
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState('');
-  const { toast } = useToast();
 
   const handleSubmitReview = () => {
     if (rating === 0) {

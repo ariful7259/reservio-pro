@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from '@/hooks/use-toast';
 
 export type Language = 'bn' | 'en';
 
@@ -141,7 +141,7 @@ const initialRewards = [
 ];
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { toast } = useToast();
+  // Don't use useToast here, use the imported toast function directly
   
   // Initialize state from localStorage or defaults
   const [favorites, setFavorites] = useState<FavoriteItem[]>(() => {
@@ -240,7 +240,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
-  }, [language, toast]);
+  }, [language]);
 
   // Favorites Functions
   const addToFavorites = (item: FavoriteItem) => {
