@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -62,7 +61,8 @@ import {
   Calendar,
   Layout,
   Activity,
-  LineChart
+  LineChart,
+  QrCode
 } from 'lucide-react';
 import ServiceCardCustomization from '@/components/admin/ServiceCardCustomization';
 import OfflineConfiguration from '@/components/admin/OfflineConfiguration';
@@ -71,6 +71,8 @@ import RentalCalendarConfiguration from '@/components/admin/RentalCalendarConfig
 import ThemeManagement from '@/components/admin/ThemeManagement';
 import UserExperienceTracking from '@/components/admin/UserExperienceTracking';
 import MonetizationTracking from '@/components/admin/MonetizationTracking';
+import ReferralManagement from '@/components/admin/ReferralManagement';
+import QRCodeManagement from '@/components/admin/QRCodeManagement';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -78,7 +80,6 @@ const AdminDashboard = () => {
   const { toast } = useToast();
   const [activeModule, setActiveModule] = useState(section || 'dashboard');
   
-  // Apply admin theme on component mount
   useEffect(() => {
     const adminContainer = document.getElementById('admin-dashboard-container');
     if (adminContainer) {
@@ -86,7 +87,6 @@ const AdminDashboard = () => {
     }
   }, []);
   
-  // Stats data
   const stats = {
     totalUsers: 2458,
     totalOrders: 1247,
@@ -94,7 +94,6 @@ const AdminDashboard = () => {
     activeListings: 845
   };
   
-  // Today's stats
   const todayStats = {
     newUsers: 24,
     newOrders: 47,
@@ -102,7 +101,6 @@ const AdminDashboard = () => {
     newListings: 18
   };
   
-  // Recent transactions
   const recentTransactions = [
     { id: 'TX-5872', amount: '৳ 2,450', type: 'বিক্রয়', user: 'রহিম আহমেদ', status: 'সম্পন্ন', time: '15 মিনিট আগে' },
     {id: 'TX-5871', amount: '৳ 1,200', type: 'রেন্টাল', user: 'করিম খান', status: 'প্রক্রিয়াধীন', time: '32 মিনিট আগে' },
@@ -110,7 +108,6 @@ const AdminDashboard = () => {
     { id: 'TX-5869', amount: '৳ 850', type: 'ডিজিটাল', user: 'সাকিব হাসান', status: 'সম্পন্ন', time: '2 ঘন্টা আগে' },
   ];
   
-  // Pending approvals
   const pendingItems = {
     products: 12,
     services: 8,
@@ -118,7 +115,6 @@ const AdminDashboard = () => {
     contentCreators: 3
   };
 
-  // Sidebar menu items
   const sidebarItems = [
     { id: 'dashboard', name: 'ড্যাশবোর্ড', icon: <BarChart3 size={18} /> },
     { id: 'users', name: 'ব্যবহারকারী', icon: <Users size={18} /> },
@@ -141,6 +137,16 @@ const AdminDashboard = () => {
     { id: 'theme-management', name: 'থিম ম্যানেজমেন্ট', icon: <Palette size={18} /> },
     { id: 'user-experience', name: 'ইউজার এক্সপেরিয়েন্স', icon: <Activity size={18} /> },
     { id: 'monetization-tracking', name: 'মোনিটাইজেশন ট্র্যাকিং', icon: <LineChart size={18} /> },
+    { 
+      id: 'referrals', 
+      name: 'রেফারেল সিস্টেম', 
+      icon: <Users size={18} /> 
+    },
+    { 
+      id: 'qrcodes', 
+      name: 'QR কোড', 
+      icon: <QrCode size={18} /> 
+    },
   ];
   
   const handleModuleChange = (moduleId) => {
@@ -154,7 +160,6 @@ const AdminDashboard = () => {
   return (
     <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen flex w-full" id="admin-dashboard-container" style={{ backgroundColor: adminTheme.colors.background }}>
-        {/* Collapsible Sidebar using shadcn/ui sidebar component */}
         <Sidebar>
           <SidebarHeader className="p-4 border-b">
             <h2 className="text-xl font-bold flex items-center" style={{ color: adminTheme.colors.primary }}>
@@ -209,9 +214,7 @@ const AdminDashboard = () => {
           </SidebarContent>
         </Sidebar>
         
-        {/* Main content area */}
         <div className="flex-1 overflow-y-auto">
-          {/* Top bar */}
           <div className="bg-white shadow-sm border-b px-6 py-3 flex justify-between items-center sticky top-0 z-10">
             <div className="flex items-center gap-2">
               <SidebarTrigger />
@@ -236,13 +239,11 @@ const AdminDashboard = () => {
             </div>
           </div>
           
-          {/* Content */}
           <div className="p-6">
             {activeModule === 'dashboard' && (
               <div className="space-y-6">
                 <h1 className="text-2xl font-bold">ড্যাশবোর্ড</h1>
                 
-                {/* Stats cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   <Card className="overflow-hidden shadow-md bg-gradient-to-br from-white to-blue-50/30 border-blue-100/50">
                     <CardContent className="p-6 flex justify-between items-center">
@@ -300,10 +301,8 @@ const AdminDashboard = () => {
                   </Card>
                 </div>
                 
-                {/* Traffic analytics and activity charts */}
                 <DashboardCharts />
                 
-                {/* Recent transactions */}
                 <Card className="overflow-hidden shadow-md border border-gray-100">
                   <CardHeader className="pb-2 bg-white">
                     <CardTitle className="text-lg">সাম্প্রতিক ট্রানজেকশন</CardTitle>
@@ -353,7 +352,6 @@ const AdminDashboard = () => {
                   </CardContent>
                 </Card>
                 
-                {/* Pending approvals */}
                 <Card className="overflow-hidden shadow-md border border-gray-100">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-lg">অনুমোদন প্রয়োজন</CardTitle>
@@ -448,7 +446,7 @@ const AdminDashboard = () => {
             {activeModule === 'settings' && <Settings />}
             
             {activeModule === 'advanced' && <AdvancedFeatures />}
-
+            
             {activeModule === 'service-card' && <ServiceCardCustomization />}
             
             {activeModule === 'offline-config' && <OfflineConfiguration />}
@@ -463,10 +461,14 @@ const AdminDashboard = () => {
             
             {activeModule === 'monetization-tracking' && <MonetizationTracking />}
             
+            {activeModule === 'referrals' && <ReferralManagement />}
+            
+            {activeModule === 'qrcodes' && <QRCodeManagement />}
+            
             {!['dashboard', 'users', 'marketplace', 'rentals', 'services', 'digital', 'categories', 
                'payments', 'reports', 'analytics', 'support', 'settings', 'advanced', 'monetization',
                'service-card', 'offline-config', 'language-manager', 'calendar-config', 'theme-management',
-               'user-experience', 'monetization-tracking'].includes(activeModule) && (
+               'user-experience', 'monetization-tracking', 'referrals', 'qrcodes'].includes(activeModule) && (
               <div className="flex flex-col items-center justify-center py-12">
                 <div className="h-24 w-24 rounded-full flex items-center justify-center mb-4"
                   style={{ backgroundColor: adminTheme.colors.primaryLight }}>
