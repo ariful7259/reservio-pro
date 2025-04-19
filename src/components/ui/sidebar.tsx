@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { cn } from "@/lib/utils"
@@ -59,9 +60,11 @@ export function useSidebarContext() {
   return context;
 }
 
-interface SidebarProps extends React.HTMLAttributes<HTMLElement> {}
+interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
+  variant?: string;
+}
 
-export function Sidebar({ className, ...props }: SidebarProps) {
+export function Sidebar({ className, variant, ...props }: SidebarProps) {
   const { isOpen } = useSidebarContext();
 
   return (
@@ -214,18 +217,4 @@ export function SidebarBackdrop() {
   );
 }
 
-export {
-  SidebarProvider,
-  Sidebar,
-  SidebarHeader,
-  SidebarContent,
-  SidebarFooter,
-  SidebarTrigger,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
-  SidebarBackdrop,
-};
+// No need for the duplicate exports at the end

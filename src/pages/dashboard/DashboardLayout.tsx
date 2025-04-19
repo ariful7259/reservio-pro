@@ -245,7 +245,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ type = 'market
           "fixed top-16 bottom-0 z-30 transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0",
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         )}>
-          <Sidebar variant="floating">
+          <Sidebar className="bg-white shadow-sm">
             <SidebarHeader className="border-b border-slate-200 p-4">
               <div className="flex items-center gap-2">
                 {type === 'marketplace' && <Store className="h-6 w-6 text-primary" />}

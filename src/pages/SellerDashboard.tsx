@@ -267,7 +267,7 @@ const DashboardSidebar = ({
   const filteredMenuItems = menuItems.filter(item => item.show);
   
   return (
-    <Sidebar variant="floating">
+    <Sidebar className="bg-white shadow-sm">
       <SidebarHeader className="border-b border-slate-200 p-4">
         <div className="flex items-center gap-2">
           <Store className="h-6 w-6 text-primary" />
