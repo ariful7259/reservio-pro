@@ -7,21 +7,31 @@ import {
   Building,
   ShoppingBag,
   ChevronDown,
-  Plus
+  Plus,
+  Bell
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SidebarDrawer } from '@/components/SidebarDrawer';
+import { NotificationDrawer } from '@/components/NotificationDrawer';
+import DigitalCreatorModal from '@/components/DigitalCreatorModal';
 
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const [notificationOpen, setNotificationOpen] = useState(false);
+  const [digitalCreatorOpen, setDigitalCreatorOpen] = useState(false);
   const isAdminPage = location.pathname.includes("/admin-dashboard");
   
   const navLinks = [
     { title: 'হোম', path: '/', icon: <Home className="h-5 w-5" /> },
     { title: 'রেন্ট', path: '/rentals', icon: <Building className="h-5 w-5" /> },
-    { title: 'পোস্ট করুন', path: '/create-post', icon: <Plus className="h-5 w-5" /> },
+    { 
+      title: 'পোস্ট করুন', 
+      path: '/create-post', 
+      icon: <Plus className="h-5 w-5" />,
+      asButton: true
+    },
     { title: 'সার্ভিস', path: '/services', icon: <Search className="h-5 w-5" /> },
     { title: 'মার্কেটপ্লেস', path: '/shopping', icon: <ShoppingBag className="h-5 w-5" /> },
   ];
@@ -33,9 +43,7 @@ const Navbar = () => {
     }
   };
 
-  if (isAdminPage) {
-    return null;
-  }
+  if (isAdminPage) return null;
 
   return (
     <>
@@ -67,25 +75,34 @@ const Navbar = () => {
               </Button>
             </form>
           </div>
+          <div className="flex gap-2 items-center relative">
+            <Button variant="ghost" size="icon" onClick={() => setNotificationOpen(true)}>
+              <Bell className="h-6 w-6" />
+              <span className="sr-only">নোটিফিকেশন</span>
+            </Button>
+            <NotificationDrawer open={notificationOpen} onOpenChange={setNotificationOpen} />
+          </div>
         </header>
       </div>
+
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t h-16 z-40">
         <div className="grid grid-cols-5 h-full">
           {navLinks.map((link) => {
             const isActive = location.pathname === link.path;
-            // Special handling for create post button with regular link (no popover needed)
             if (link.title === 'পোস্ট করুন') {
               return (
-                <Link
+                <button
+                  type="button"
                   key={link.path}
-                  to={link.path}
-                  className="flex flex-col items-center justify-center text-primary"
+                  onClick={() => setDigitalCreatorOpen(true)}
+                  className="flex flex-col items-center justify-center text-primary focus:outline-none"
+                  tabIndex={0}
                 >
                   <div className="bg-primary rounded-full h-10 w-10 flex items-center justify-center mb-1">
                     <Plus className="h-6 w-6 text-white" />
                   </div>
                   <span className="text-xs mt-1 font-medium">{link.title}</span>
-                </Link>
+                </button>
               );
             }
             return (
@@ -106,6 +123,7 @@ const Navbar = () => {
           })}
         </div>
       </nav>
+      <DigitalCreatorModal open={digitalCreatorOpen} onOpenChange={setDigitalCreatorOpen} />
     </>
   );
 };
