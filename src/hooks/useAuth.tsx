@@ -272,12 +272,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Update mock database
       const userIndex = MOCK_USERS.findIndex(u => u.id === user.id);
       if (userIndex >= 0) {
-        MOCK_USERS[userIndex] = {
+        // Fix: Ensure role is properly typed when updating MOCK_USERS
+        const updatedMockUser = {
           ...MOCK_USERS[userIndex],
           ...userData,
-          // Ensure role remains the correct type
+          // Explicitly cast the role to the correct type when updating
           role: (userData.role || MOCK_USERS[userIndex].role) as "user" | "admin" | "seller"
         };
+        MOCK_USERS[userIndex] = updatedMockUser;
       }
     }
   };
