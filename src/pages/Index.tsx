@@ -15,8 +15,8 @@ import FeaturedDigitalProducts from '@/components/FeaturedDigitalProducts';
 const Index = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
 
+  // Banner images
   const bannerImages = [
     "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
@@ -27,7 +27,9 @@ const Index = () => {
     "https://images.unsplash.com/photo-1618359057154-e21ae64350b6?q=80&w=1000&auto=format&fit=crop",
   ];
 
+  // Combined Featured Listings from all categories
   const featuredListings = [
+    // Rental listings
     {
       id: "1",
       title: "৩ বেডরুম অ্যাপার্টমেন্ট",
@@ -46,6 +48,7 @@ const Index = () => {
       category: "রেন্ট",
       path: "/rent-details/2"
     },
+    // Service listings - Updated paths to service detail pages
     {
       id: "1",
       title: "ডাক্তার কনসাল্টেশন",
@@ -64,6 +67,7 @@ const Index = () => {
       category: "সার্ভিস",
       path: "/services/2"
     },
+    // Marketplace listings - Updated paths to product detail pages
     {
       id: "1",
       title: "স্মার্ট ব্লাড প্রেশার মনিটর",
@@ -95,13 +99,9 @@ const Index = () => {
     navigate(path);
   };
 
-  const uniqueCategories = [
-    'all',
-    ...Array.from(new Set(featuredListings.map(item => item.category)))
-  ];
-
   return (
     <div className="container px-4 pt-20 pb-20">
+      {/* Banner Slider with increased size */}
       <div className="overflow-hidden px-4 py-3 mb-6">
         <Carousel className="w-full">
           <CarouselContent>
@@ -124,25 +124,15 @@ const Index = () => {
         </Carousel>
       </div>
       
+      {/* Featured Digital Products Carousel */}
       <div className="mb-10">
         <FeaturedDigitalProducts />
       </div>
 
+      {/* Featured Listings */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold">ফিচার্ড লিস্টিং</h2>
-        </div>
-
-        <div className="flex gap-2 mb-4">
-          {uniqueCategories.map(cat => (
-            <Button
-              key={cat}
-              variant={selectedCategory === cat ? "default" : "outline"}
-              onClick={() => setSelectedCategory(cat)}
-            >
-              {cat === 'all' ? 'সব ক্যাটাগরি' : cat}
-            </Button>
-          ))}
         </div>
 
         <Tabs defaultValue="all">
@@ -155,38 +145,36 @@ const Index = () => {
 
           <TabsContent value="all">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {featuredListings
-                .filter(listing => selectedCategory === 'all' ? true : listing.category === selectedCategory)
-                .map((listing) => (
-                  <Card 
-                    key={`all-${listing.id}-${listing.category}`}
-                    className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
-                    onClick={() => handleListingClick(listing.path)}
-                  >
-                    <div className="relative aspect-square">
-                      <img 
-                        src={listing.image} 
-                        alt={listing.title} 
-                        className="w-full h-full object-cover"
-                      />
-                      <Badge className="absolute top-2 right-2">{listing.category}</Badge>
+              {featuredListings.map((listing) => (
+                <Card 
+                  key={`all-${listing.id}-${listing.category}`}
+                  className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
+                  onClick={() => handleListingClick(listing.path)}
+                >
+                  <div className="relative aspect-square">
+                    <img 
+                      src={listing.image} 
+                      alt={listing.title} 
+                      className="w-full h-full object-cover"
+                    />
+                    <Badge className="absolute top-2 right-2">{listing.category}</Badge>
+                  </div>
+                  <CardContent className="p-3">
+                    <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
+                    <div className="flex items-center text-xs text-muted-foreground mt-1">
+                      <MapPin className="h-3 w-3 mr-1" />
+                      <span>{listing.location}</span>
                     </div>
-                    <CardContent className="p-3">
-                      <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
-                      <div className="flex items-center text-xs text-muted-foreground mt-1">
-                        <MapPin className="h-3 w-3 mr-1" />
-                        <span>{listing.location}</span>
+                    <div className="flex items-center justify-between mt-2">
+                      <p className="text-sm font-bold text-primary">{listing.price}</p>
+                      <div className="flex items-center text-xs">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
+                        <span>4.8</span>
                       </div>
-                      <div className="flex items-center justify-between mt-2">
-                        <p className="text-sm font-bold text-primary">{listing.price}</p>
-                        <div className="flex items-center text-xs">
-                          <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
-                          <span>4.8</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
             <div className="flex justify-center mt-4">
               <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/shopping')}>
