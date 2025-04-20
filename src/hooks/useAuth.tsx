@@ -32,6 +32,11 @@ interface User {
   };
 }
 
+// Define the interface for the mock user to include password field
+interface MockUser extends User {
+  password: string;
+}
+
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
@@ -47,7 +52,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Mock user data for demo purposes
-const MOCK_USERS = [
+const MOCK_USERS: MockUser[] = [
   {
     id: "1",
     name: "আকাশ আহমেদ",
@@ -214,13 +219,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw new Error("User already exists");
     }
     
-    // Create new user with all required properties - fixing the type issue here
-    const newUser = {
+    // Create new user with all required properties
+    const newUser: MockUser = {
       id: Date.now().toString(),
       name,
       email,
       password,
-      role: "user" as "user", // Explicitly typing as "user" to match expected type
+      role: "user", // Explicitly typing as "user"
       avatar: `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70)}`,
       phone: "",
       address: "",
@@ -252,7 +257,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     // Set the user in state (without the password)
     const { password: _, ...userWithoutPassword } = newUser;
-    setUser(userWithoutPassword as User);
+    setUser(userWithoutPassword);
     localStorage.setItem("user", JSON.stringify(userWithoutPassword));
     
     setIsLoading(false);
@@ -272,14 +277,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Update mock database
       const userIndex = MOCK_USERS.findIndex(u => u.id === user.id);
       if (userIndex >= 0) {
-        // Fix: Ensure role is properly typed when updating MOCK_USERS
-        const updatedMockUser = {
-          ...MOCK_USERS[userIndex],
+        // Find existing user to update
+        const existingMockUser = MOCK_USERS[userIndex];
+        
+        // Update user with correct type handling
+        MOCK_USERS[userIndex] = {
+          ...existingMockUser,
           ...userData,
-          // Explicitly cast the role to the correct type when updating
-          role: (userData.role || MOCK_USERS[userIndex].role) as "user" | "admin" | "seller"
+          // Preserve original password
+          password: existingMockUser.password,
+          // Preserve original role if not explicitly changed
+          role: (userData.role ?? existingMockUser.role) as "user" | "admin" | "seller"
         };
-        MOCK_USERS[userIndex] = updatedMockUser;
       }
     }
   };
