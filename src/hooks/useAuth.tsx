@@ -214,13 +214,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw new Error("User already exists");
     }
     
-    // Create new user with all required properties
+    // Create new user with all required properties - fixing the type issue here
     const newUser = {
       id: Date.now().toString(),
       name,
       email,
       password,
-      role: "user" as const,
+      role: "user" as "user", // Explicitly typing as "user" to match expected type
       avatar: `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70)}`,
       phone: "",
       address: "",
