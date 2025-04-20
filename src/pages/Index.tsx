@@ -11,12 +11,13 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import FeaturedDigitalProducts from '@/components/FeaturedDigitalProducts';
+import { usePostStore } from '@/store/usePostStore';
 
 const Index = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const posts = usePostStore((state) => state.posts);
 
-  // Banner images
   const bannerImages = [
     "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
@@ -27,9 +28,7 @@ const Index = () => {
     "https://images.unsplash.com/photo-1618359057154-e21ae64350b6?q=80&w=1000&auto=format&fit=crop",
   ];
 
-  // Combined Featured Listings from all categories
-  const featuredListings = [
-    // Rental listings
+  const defaultFeaturedListings = [
     {
       id: "1",
       title: "৩ বেডরুম অ্যাপার্টমেন্ট",
@@ -48,7 +47,6 @@ const Index = () => {
       category: "রেন্ট",
       path: "/rent-details/2"
     },
-    // Service listings - Updated paths to service detail pages
     {
       id: "1",
       title: "ডাক্তার কনসাল্টেশন",
@@ -67,7 +65,6 @@ const Index = () => {
       category: "সার্ভিস",
       path: "/services/2"
     },
-    // Marketplace listings - Updated paths to product detail pages
     {
       id: "1",
       title: "স্মার্ট ব্লাড প্রেশার মনিটর",
@@ -88,6 +85,57 @@ const Index = () => {
     },
   ];
 
+  const postToFeaturedListing = (post) => {
+    if (post.type === 'rent') {
+      return {
+        id: post.id,
+        title: post.title,
+        location: post.location || '',
+        price: `৳${post.price || '---'}/${post.period === 'month' ? 'মাস' : post.period === 'day' ? 'দিন' : 'ঘন্টা'}`,
+        image: post.images?.[0] || "https://placehold.co/400x400?text=Rent",
+        category: "রেন্ট",
+        path: `/rent-details/${post.id}`
+      };
+    }
+    if (post.type === 'service') {
+      return {
+        id: post.id,
+        title: post.title,
+        location: post.location || '',
+        price: `৳${post.price || '---'}`,
+        image: post.images?.[0] || "https://placehold.co/400x400?text=Service",
+        category: "সার্ভিস",
+        path: `/services/${post.id}`
+      };
+    }
+    if (post.type === 'marketplace') {
+      return {
+        id: post.id,
+        title: post.title,
+        location: '', // Not all marketplace posts have a location
+        price: `৳${post.price || '---'}`,
+        image: post.images?.[0] || "https://placehold.co/400x400?text=Product",
+        category: "মার্কেটপ্লেস",
+        path: `/product/${post.id}`
+      };
+    }
+    return null;
+  };
+
+  const allListings = [
+    ...posts.map(postToFeaturedListing),
+    ...defaultFeaturedListings
+  ];
+
+  const getListings = (cat: string) =>
+    allListings.filter((item) => {
+      if (cat === "all") return true;
+      if (cat === "rent") return item.category === "রেন্ট";
+      if (cat === "services") return item.category === "সার্ভিস";
+      if (cat === "marketplace") return item.category === "মার্কেটপ্লেস";
+      return false;
+    });
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
@@ -101,7 +149,6 @@ const Index = () => {
 
   return (
     <div className="container px-4 pt-20 pb-20">
-      {/* Banner Slider with increased size */}
       <div className="overflow-hidden px-4 py-3 mb-6">
         <Carousel className="w-full">
           <CarouselContent>
@@ -124,12 +171,10 @@ const Index = () => {
         </Carousel>
       </div>
       
-      {/* Featured Digital Products Carousel */}
       <div className="mb-10">
         <FeaturedDigitalProducts />
       </div>
 
-      {/* Featured Listings */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold">ফিচার্ড লিস্টিং</h2>
@@ -145,7 +190,7 @@ const Index = () => {
 
           <TabsContent value="all">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {featuredListings.map((listing) => (
+              {getListings('all').map((listing) => (
                 <Card 
                   key={`all-${listing.id}-${listing.category}`}
                   className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
@@ -185,7 +230,7 @@ const Index = () => {
 
           <TabsContent value="rent">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {featuredListings.filter(item => item.category === "রেন্ট").map((listing) => (
+              {getListings('rent').map((listing) => (
                 <Card 
                   key={`rent-${listing.id}`}
                   className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
@@ -225,7 +270,7 @@ const Index = () => {
 
           <TabsContent value="services">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {featuredListings.filter(item => item.category === "সার্ভিস").map((listing) => (
+              {getListings('services').map((listing) => (
                 <Card 
                   key={`service-${listing.id}`}
                   className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
@@ -265,7 +310,7 @@ const Index = () => {
 
           <TabsContent value="marketplace">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {featuredListings.filter(item => item.category === "মার্কেটপ্লেস").map((listing) => (
+              {getListings('marketplace').map((listing) => (
                 <Card 
                   key={`marketplace-${listing.id}`}
                   className="overflow-hidden cursor-pointer hover:shadow-md transition-all"

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -45,7 +44,7 @@ import {
   AirVent,
   ShoppingCart,
   Flame,
-  Power, // Replaced Generator with Power icon
+  Power,
   Tractor,
   Droplets,
   Wind,
@@ -71,6 +70,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { useToast } from "@/components/ui/use-toast";
+import { usePostStore } from '@/store/usePostStore';
 
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -263,6 +263,8 @@ const CreatePost = () => {
     }
   ];
 
+  const addPost = usePostStore((state) => state.addPost);
+
   useEffect(() => {
     if (postType === 'rent' && rentForm.category) {
       const category = rentCategories.find(c => c.value === rentForm.category);
@@ -294,15 +296,63 @@ const CreatePost = () => {
 
   const handleSubmit = (type: 'rent' | 'service' | 'marketplace') => {
     setIsSubmitting(true);
-    
+
+    const uid = Date.now().toString() + Math.random().toString(36).substring(2);
+    let newPost: any;
+    if (type === 'rent') {
+      newPost = {
+        id: uid,
+        type: 'rent',
+        title: rentForm.title,
+        description: rentForm.description,
+        category: rentForm.category,
+        subcategory: rentForm.subcategory,
+        location: rentForm.location,
+        price: rentForm.price,
+        images: [],
+        period: rentForm.period,
+        createdAt: new Date()
+      };
+    } else if (type === 'service') {
+      newPost = {
+        id: uid,
+        type: 'service',
+        title: serviceForm.title,
+        description: serviceForm.description,
+        category: serviceForm.category,
+        subcategory: serviceForm.subcategory,
+        location: serviceForm.location,
+        price: serviceForm.price,
+        images: [],
+        duration: serviceForm.duration,
+        timeUnit: serviceForm.timeUnit,
+        createdAt: new Date()
+      };
+    } else {
+      newPost = {
+        id: uid,
+        type: 'marketplace',
+        title: marketplaceForm.title,
+        description: marketplaceForm.description,
+        category: marketplaceForm.category,
+        subcategory: marketplaceForm.subcategory,
+        price: marketplaceForm.price,
+        discountPrice: marketplaceForm.discountPrice,
+        tags: marketplaceForm.tags,
+        images: [],
+        createdAt: new Date()
+      };
+    }
+
     setTimeout(() => {
       setIsSubmitting(false);
-      
+      addPost(newPost);
+
       toast({
         title: "পোস্ট সফলভাবে তৈরি হয়েছে",
         description: "আপনার পোস্ট এখন প্রদর্শিত হবে",
       });
-      
+
       if (type === 'rent') {
         navigate('/rentals');
       } else if (type === 'service') {
