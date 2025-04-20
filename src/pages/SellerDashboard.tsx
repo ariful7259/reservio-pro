@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useSellerProfile } from '@/hooks/useSellerProfile';
@@ -264,7 +265,7 @@ const DashboardSidebar = ({
     }
   ];
   
-  const filteredMenuItems = menuItems.filter(item => item.show);
+  const filteredMenuItems = menuItems.filter(item => item.show !== false);
   
   return (
     <Sidebar className="bg-white shadow-sm">

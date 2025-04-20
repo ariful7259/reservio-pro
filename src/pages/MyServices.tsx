@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -11,55 +11,88 @@ import {
   MessageSquare, 
   ListCheck, 
   Store, 
-  BookmarkCheck 
+  BookmarkCheck,
+  UserPlus
 } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 const MyServices = () => {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('bookings');
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuth();
   
   useEffect(() => {
     const tab = searchParams.get('tab');
     if (tab) {
       setActiveTab(tab);
     }
-  }, [searchParams]);
+    
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: location.pathname } });
+    }
+  }, [searchParams, isAuthenticated, navigate]);
+
+  if (!isAuthenticated) {
+    return (
+      <div className="container px-4 pt-20 pb-20 flex flex-col items-center justify-center min-h-[60vh]">
+        <h2 className="text-xl mb-4">আপনার সার্ভিস দেখতে লগইন করুন</h2>
+        <Button onClick={() => navigate('/login', { state: { from: location.pathname } })}>
+          <UserPlus className="h-4 w-4 mr-2" />
+          লগইন করুন
+        </Button>
+      </div>
+    );
+  }
 
   const emptyStates = {
     bookings: {
       icon: <Calendar className="h-10 w-10 text-muted-foreground" />,
       message: "আপনি এখনো কোন বুকিং করেননি",
-      action: "বুকিং করুন"
+      action: "বুকিং করুন",
+      path: "/rentals"
     },
     appointments: {
       icon: <Calendar className="h-10 w-10 text-muted-foreground" />,
       message: "আপনি এখনো কোন অ্যাপয়েন্টমেন্ট নিন নি",
-      action: "অ্যাপয়েন্টমেন্ট নিন"
+      action: "অ্যাপয়েন্টমেন্ট নিন",
+      path: "/services"
     },
     shortlists: {
       icon: <Bookmark className="h-10 w-10 text-muted-foreground" />,
       message: "আপনি এখনো কোন শর্টলিস্ট করেননি",
-      action: "সার্ভিস খুঁজুন"
+      action: "সার্ভিস খুঁজুন",
+      path: "/services"
     },
     contactedProperties: {
       icon: <MessageSquare className="h-10 w-10 text-muted-foreground" />,
       message: "আপনি এখনো কোন প্রোপার্টির সাথে যোগাযোগ করেননি",
-      action: "প্রোপার্টি খুঁজুন"
+      action: "প্রোপার্টি খুঁজুন",
+      path: "/rentals"
     },
     listings: {
       icon: <ListCheck className="h-10 w-10 text-muted-foreground" />,
       message: "আপনি এখনো কোন লিস্টিং করেননি",
-      action: "লিস্টিং করুন"
+      action: "লিস্টিং করুন",
+      path: "/create-post"
     },
     shop: {
       icon: <Store className="h-10 w-10 text-muted-foreground" />,
       message: "আপনি এখনো কোন প্রোডাক্ট কিনেননি",
-      action: "শপিং করুন"
+      action: "শপিং করুন",
+      path: "/shopping"
     },
     recommendations: {
       icon: <BookmarkCheck className="h-10 w-10 text-muted-foreground" />,
       message: "আপনার জন্য এখনও কোন রেকমেন্ডেশন নেই",
-      action: "সার্ভিস ব্রাউজ করুন"
+      action: "সার্ভিস ব্রাউজ করুন",
+      path: "/services"
+    },
+    sellerDashboard: {
+      icon: <Store className="h-10 w-10 text-muted-foreground" />,
+      message: "আপনি এখনো কোন বিক্রেতা অ্যাকাউন্ট তৈরি করেননি",
+      action: "বিক্রেতা অ্যাকাউন্ট তৈরি করুন",
+      path: "/create-store"
     }
   };
 
@@ -77,6 +110,7 @@ const MyServices = () => {
             <TabsTrigger value="listings">আমার লিস্টিংস</TabsTrigger>
             <TabsTrigger value="shop">আমার শপ</TabsTrigger>
             <TabsTrigger value="recommendations">স্মার্ট রেকমেন্ডেশন</TabsTrigger>
+            <TabsTrigger value="sellerDashboard">বিক্রেতা ড্যাশবোর্ড</TabsTrigger>
           </TabsList>
         </div>
 
@@ -87,7 +121,7 @@ const MyServices = () => {
                 {state.icon}
               </div>
               <p className="text-muted-foreground">{state.message}</p>
-              <Button>{state.action}</Button>
+              <Button onClick={() => navigate(state.path)}>{state.action}</Button>
             </div>
           </TabsContent>
         ))}

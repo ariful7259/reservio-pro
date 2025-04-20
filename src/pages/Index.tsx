@@ -1,10 +1,12 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Star, 
   MapPin,
   ArrowRight,
+  LogIn,
+  Store,
+  User
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,11 +15,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import FeaturedDigitalProducts from '@/components/FeaturedDigitalProducts';
 import { usePostStore, Post, PostType } from '@/store/usePostStore';
+import { useAuth } from '@/hooks/useAuth';
 
 const Index = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const { posts, getPostsByType } = usePostStore();
+  const { isAuthenticated, user, isAdmin, isSeller } = useAuth();
 
   const bannerImages = [
     "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop",
@@ -86,7 +90,6 @@ const Index = () => {
     },
   ];
 
-  // Function to format the post data for display
   const postToFeaturedListing = (post: Post) => {
     const defaultImage = post.type === 'rent' 
       ? "https://placehold.co/400x400?text=Rent" 
@@ -94,7 +97,6 @@ const Index = () => {
         ? "https://placehold.co/400x400?text=Service"
         : "https://placehold.co/400x400?text=Product";
         
-    // Use the first uploaded image or default if none
     const displayImage = post.images && post.images.length > 0 && post.images[0] !== "" 
       ? post.images[0] 
       : defaultImage;
@@ -135,10 +137,8 @@ const Index = () => {
     return null;
   };
 
-  // Convert all posts to featured listings format
   const userPosts = posts.map(postToFeaturedListing).filter(Boolean);
   
-  // Combine with default listings
   const allListings = [
     ...userPosts,
     ...defaultFeaturedListings
@@ -167,6 +167,33 @@ const Index = () => {
 
   return (
     <div className="container px-4 pt-20 pb-20">
+      <div className="flex flex-wrap justify-center gap-2 mb-6">
+        {!isAuthenticated ? (
+          <Button onClick={() => navigate('/login')} variant="outline" className="flex items-center gap-1">
+            <LogIn className="h-4 w-4" /> লগইন
+          </Button>
+        ) : (
+          <>
+            <Button onClick={() => navigate('/my-services')} variant="outline" className="flex items-center gap-1">
+              <User className="h-4 w-4" /> আমার সার্ভিস
+            </Button>
+            {isSeller && (
+              <Button onClick={() => navigate('/seller-dashboard')} variant="outline" className="flex items-center gap-1">
+                <Store className="h-4 w-4" /> বিক্রেতা কেন্দ্র
+              </Button>
+            )}
+            {isAdmin && (
+              <Button onClick={() => navigate('/admin-dashboard')} variant="outline" className="flex items-center gap-1">
+                <Store className="h-4 w-4" /> অ্যাডমিন প্যানেল
+              </Button>
+            )}
+          </>
+        )}
+        <Button onClick={() => navigate('/create-post')} variant="default" className="flex items-center gap-1">
+          পোস্ট করুন
+        </Button>
+      </div>
+
       <div className="overflow-hidden px-4 py-3 mb-6">
         <Carousel className="w-full">
           <CarouselContent>

@@ -9,7 +9,8 @@ interface User {
   phone?: string;
   address?: string;
   bio?: string;
-  role?: "user" | "admin"; // রোল যুক্ত করলাম
+  role?: "user" | "admin" | "seller"; // রোল যুক্ত করলাম
+  sellerType?: "marketplace" | "rental" | "service" | "content"; // সেলার টাইপ যুক্ত করলাম
   preferences?: {
     notifications: boolean;
     newsletter: boolean;
@@ -36,6 +37,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   isAdmin: boolean; // অ্যাডমিন চেক করার জন্য
+  isSeller: boolean; // সেলার চেক করার জন্য
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
   logout: () => void;
@@ -105,6 +107,63 @@ const MOCK_USERS = [
       instagram: "",
       linkedin: ""
     }
+  },
+  {
+    id: "3",
+    name: "মার্কেটপ্লেস সেলার",
+    email: "market@example.com",
+    password: "password123",
+    avatar: "https://i.pravatar.cc/150?img=3",
+    role: "seller" as const,
+    sellerType: "marketplace" as const,
+    phone: "01712345680",
+    address: "ঢাকা, বাংলাদেশ",
+    bio: "প্রোডাক্ট বিক্রয়কারী",
+    preferences: {
+      notifications: true,
+      newsletter: true,
+      darkMode: false,
+      language: "bn"
+    },
+    joinDate: "2023-03-15T10:30:00Z"
+  },
+  {
+    id: "4",
+    name: "রেন্টাল সেলার",
+    email: "rental@example.com",
+    password: "password123",
+    avatar: "https://i.pravatar.cc/150?img=4",
+    role: "seller" as const,
+    sellerType: "rental" as const,
+    phone: "01712345681",
+    address: "ঢাকা, বাংলাদেশ",
+    bio: "প্রোপার্টি ভাড়া প্রদানকারী",
+    preferences: {
+      notifications: true,
+      newsletter: true,
+      darkMode: false,
+      language: "bn"
+    },
+    joinDate: "2023-04-15T10:30:00Z"
+  },
+  {
+    id: "5",
+    name: "সার্ভিস সেলার",
+    email: "service@example.com",
+    password: "password123",
+    avatar: "https://i.pravatar.cc/150?img=5",
+    role: "seller" as const,
+    sellerType: "service" as const,
+    phone: "01712345682",
+    address: "ঢাকা, বাংলাদেশ",
+    bio: "সার্ভিস প্রদানকারী",
+    preferences: {
+      notifications: true,
+      newsletter: true,
+      darkMode: false,
+      language: "bn"
+    },
+    joinDate: "2023-05-15T10:30:00Z"
   }
 ];
 
@@ -217,14 +276,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           ...MOCK_USERS[userIndex],
           ...userData,
           // Ensure role remains the correct type
-          role: (userData.role || MOCK_USERS[userIndex].role) as "user" | "admin"
+          role: (userData.role || MOCK_USERS[userIndex].role) as "user" | "admin" | "seller"
         };
       }
     }
   };
 
-  // অ্যাডমিন কিনা চেক
+  // অ্যাডমিন এবং সেলার কিনা চেক
   const isAdmin = user?.role === "admin";
+  const isSeller = user?.role === "seller";
 
   return (
     <AuthContext.Provider
@@ -233,6 +293,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticated: !!user,
         isLoading,
         isAdmin,
+        isSeller,
         login,
         signup,
         logout,

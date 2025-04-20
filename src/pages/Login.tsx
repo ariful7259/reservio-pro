@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,8 +24,9 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { Eye, EyeOff, Loader2, Shield } from "lucide-react";
+import { Eye, EyeOff, Loader2, Shield, Store } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useSellerProfile } from "@/hooks/useSellerProfile";
 
 const formSchema = z.object({
   email: z.string().email("ইমেইল অবৈধ"),
@@ -34,21 +35,31 @@ const formSchema = z.object({
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [loginType, setLoginType] = useState<"user" | "admin">("user");
+  const [loginType, setLoginType] = useState<"user" | "admin" | "seller">("user");
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
   const { login, isAuthenticated, isAdmin } = useAuth();
   
   // Redirect if already logged in
   useEffect(() => {
     if (isAuthenticated) {
+      const from = location.state?.from || "/profile";
+      
+      if (from.includes('/seller-dashboard')) {
+        navigate(from);
+        return;
+      }
+      
       if (isAdmin) {
         navigate("/admin-dashboard");
+      } else if (loginType === "seller") {
+        navigate("/seller-dashboard");
       } else {
-        navigate("/profile");
+        navigate(from);
       }
     }
-  }, [isAuthenticated, isAdmin, navigate]);
+  }, [isAuthenticated, isAdmin, navigate, location.state?.from, loginType]);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -81,8 +92,11 @@ const Login = () => {
             variant: "destructive",
           });
         }
+      } else if (loginType === "seller") {
+        navigate("/seller-dashboard");
       } else {
-        navigate("/profile");
+        const from = location.state?.from || "/profile";
+        navigate(from);
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -91,6 +105,31 @@ const Login = () => {
         description: "আপনার ইমেইল বা পাসওয়ার্ড ভুল",
         variant: "destructive",
       });
+    }
+  };
+
+  // ডিমো ইউজার অ্যাকাউন্টস গুলো
+  const demoAccounts = {
+    user: { email: "akash@example.com", password: "password123" },
+    admin: { email: "admin@example.com", password: "admin123456" },
+    marketplace: { email: "market@example.com", password: "password123" },
+    rental: { email: "rental@example.com", password: "password123" },
+    service: { email: "service@example.com", password: "password123" },
+  };
+
+  const handleDemoLogin = (type: string) => {
+    if (type in demoAccounts) {
+      const account = demoAccounts[type as keyof typeof demoAccounts];
+      form.setValue("email", account.email);
+      form.setValue("password", account.password);
+      
+      if (type === "admin") {
+        setLoginType("admin");
+      } else if (type !== "user") {
+        setLoginType("seller");
+      } else {
+        setLoginType("user");
+      }
     }
   };
 
@@ -105,17 +144,26 @@ const Login = () => {
           <Tabs
             defaultValue="user"
             value={loginType}
-            onValueChange={(value) => setLoginType(value as "user" | "admin")}
+            onValueChange={(value) => setLoginType(value as "user" | "admin" | "seller")}
             className="mb-4"
           >
-            <TabsList className="grid grid-cols-2 w-full">
+            <TabsList className="grid grid-cols-3 w-full">
               <TabsTrigger value="user">ব্যবহারকারী</TabsTrigger>
+              <TabsTrigger value="seller">বিক্রেতা</TabsTrigger>
               <TabsTrigger value="admin">অ্যাডমিন</TabsTrigger>
             </TabsList>
             <TabsContent value="user">
               <p className="text-sm text-center text-muted-foreground mb-4">
                 সাধারণ ব্যবহারকারী হিসেবে লগইন করুন
               </p>
+            </TabsContent>
+            <TabsContent value="seller">
+              <div className="flex items-center justify-center space-x-2 mb-4">
+                <Store className="h-5 w-5 text-primary" />
+                <p className="text-sm text-center text-muted-foreground">
+                  বিক্রেতা হিসেবে লগইন করতে আপনার বিক্রেতা শংসাপত্র ব্যবহার করুন
+                </p>
+              </div>
             </TabsContent>
             <TabsContent value="admin">
               <div className="flex items-center justify-center space-x-2 mb-4">
@@ -176,11 +224,36 @@ const Login = () => {
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" /> অপেক্ষা করুন
                   </>
                 ) : (
-                  loginType === "admin" ? "অ্যাডমিন লগইন" : "লগইন করুন"
+                  loginType === "admin" 
+                    ? "অ্যাডমিন লগইন" 
+                    : loginType === "seller"
+                      ? "বিক্রেতা লগইন"
+                      : "লগইন করুন"
                 )}
               </Button>
             </form>
           </Form>
+
+          <div className="mt-6">
+            <p className="text-sm text-center mb-2 text-muted-foreground">ডেমো অ্যাকাউন্টস:</p>
+            <div className="grid grid-cols-2 gap-2">
+              <Button variant="outline" size="sm" onClick={() => handleDemoLogin("user")}>
+                ব্যবহারকারী
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => handleDemoLogin("admin")}>
+                অ্যাডমিন
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => handleDemoLogin("marketplace")}>
+                মার্কেটপ্লেস
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => handleDemoLogin("rental")}>
+                রেন্টাল
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => handleDemoLogin("service")}>
+                সার্ভিস
+              </Button>
+            </div>
+          </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
           <div className="text-center text-sm">
