@@ -34,11 +34,19 @@ interface PostStore {
   posts: Post[];
   addPost: (post: Post) => void;
   setPosts: (posts: Post[]) => void;
+  
+  // Helper function to get posts by type
+  getPostsByType: (type: PostType) => Post[];
 }
 
 // Initial demo posts (convert your demo posts here or keep in Index for now)
-export const usePostStore = create<PostStore>((set) => ({
+export const usePostStore = create<PostStore>((set, get) => ({
   posts: [],
   addPost: (post) => set((state) => ({ posts: [post, ...state.posts] })),
   setPosts: (posts) => set({ posts }),
+  
+  // Helper function to get posts by type
+  getPostsByType: (type) => {
+    return get().posts.filter(post => post.type === type);
+  }
 }));

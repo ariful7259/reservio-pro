@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Star, 
@@ -11,12 +12,12 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import FeaturedDigitalProducts from '@/components/FeaturedDigitalProducts';
-import { usePostStore } from '@/store/usePostStore';
+import { usePostStore, Post, PostType } from '@/store/usePostStore';
 
 const Index = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
-  const posts = usePostStore((state) => state.posts);
+  const { posts, getPostsByType } = usePostStore();
 
   const bannerImages = [
     "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop",
@@ -85,14 +86,26 @@ const Index = () => {
     },
   ];
 
-  const postToFeaturedListing = (post) => {
+  // Function to format the post data for display
+  const postToFeaturedListing = (post: Post) => {
+    const defaultImage = post.type === 'rent' 
+      ? "https://placehold.co/400x400?text=Rent" 
+      : post.type === 'service'
+        ? "https://placehold.co/400x400?text=Service"
+        : "https://placehold.co/400x400?text=Product";
+        
+    // Use the first uploaded image or default if none
+    const displayImage = post.images && post.images.length > 0 && post.images[0] !== "" 
+      ? post.images[0] 
+      : defaultImage;
+    
     if (post.type === 'rent') {
       return {
         id: post.id,
         title: post.title,
         location: post.location || '',
         price: `৳${post.price || '---'}/${post.period === 'month' ? 'মাস' : post.period === 'day' ? 'দিন' : 'ঘন্টা'}`,
-        image: post.images?.[0] || "https://placehold.co/400x400?text=Rent",
+        image: displayImage,
         category: "রেন্ট",
         path: `/rent-details/${post.id}`
       };
@@ -103,7 +116,7 @@ const Index = () => {
         title: post.title,
         location: post.location || '',
         price: `৳${post.price || '---'}`,
-        image: post.images?.[0] || "https://placehold.co/400x400?text=Service",
+        image: displayImage,
         category: "সার্ভিস",
         path: `/services/${post.id}`
       };
@@ -112,9 +125,9 @@ const Index = () => {
       return {
         id: post.id,
         title: post.title,
-        location: '', // Not all marketplace posts have a location
+        location: post.location || '', 
         price: `৳${post.price || '---'}`,
-        image: post.images?.[0] || "https://placehold.co/400x400?text=Product",
+        image: displayImage,
         category: "মার্কেটপ্লেস",
         path: `/product/${post.id}`
       };
@@ -122,19 +135,24 @@ const Index = () => {
     return null;
   };
 
+  // Convert all posts to featured listings format
+  const userPosts = posts.map(postToFeaturedListing).filter(Boolean);
+  
+  // Combine with default listings
   const allListings = [
-    ...posts.map(postToFeaturedListing),
+    ...userPosts,
     ...defaultFeaturedListings
   ];
 
-  const getListings = (cat: string) =>
-    allListings.filter((item) => {
+  const getListings = (cat: string) => {
+    return allListings.filter((item) => {
       if (cat === "all") return true;
       if (cat === "rent") return item.category === "রেন্ট";
       if (cat === "services") return item.category === "সার্ভিস";
       if (cat === "marketplace") return item.category === "মার্কেটপ্লেস";
       return false;
     });
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
