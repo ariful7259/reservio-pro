@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useSellerProfile } from '@/hooks/useSellerProfile';
@@ -85,11 +84,28 @@ const SellerDashboard = () => {
     }
     
     if (!isLoading && profile) {
+      // Redirect to type-specific dashboard if on general seller dashboard
       const currentPath = location.pathname;
       const sellerType = profile.seller_type;
       
       if (currentPath === '/seller-dashboard') {
-        navigate(`/seller-dashboard/${sellerType}`, { replace: true });
+        switch(sellerType) {
+          case 'marketplace':
+            navigate('/dashboard/marketplace', { replace: true });
+            break;
+          case 'rental':
+            navigate('/dashboard/rental', { replace: true });
+            break;
+          case 'service':
+            navigate('/dashboard/service', { replace: true });
+            break;
+          case 'content':
+            navigate('/dashboard/content', { replace: true });
+            break;
+          default:
+            // Keep them on the general dashboard if no specific type
+            break;
+        }
       }
     }
   }, [isLoading, profile, location.pathname, navigate, isAuthenticated]);
