@@ -65,14 +65,14 @@ const Navbar = () => {
   const navLinks = [
     { title: 'হোম', path: '/', icon: <Home className="h-5 w-5" /> },
     { title: 'রেন্ট', path: '/rentals', icon: <Building className="h-5 w-5" /> },
+    { title: 'পোস্ট করুন', path: '/create-post', icon: <Plus className="h-5 w-5" /> },
     { title: 'সার্ভিস', path: '/services', icon: <Search className="h-5 w-5" /> },
     { title: 'মার্কেটপ্লেস', path: '/shopping', icon: <ShoppingBag className="h-5 w-5" /> },
   ];
 
-  // Profile menu items updated
+  // Profile menu items
   const profileMenuItems = isAuthenticated ? [
     { icon: <User className="h-5 w-5" />, name: "প্রোফাইল", path: "/profile-management" },
-    { icon: <Store className="h-5 w-5" />, name: "বিক্রেতা ড্যাশবোর্ড", path: "/seller-dashboard" },
     { 
       icon: <Shield className="h-5 w-5" />, 
       name: "অ্যাডমিন ড্যাশবোর্ড", 
