@@ -6,7 +6,8 @@ import {
   ArrowRight,
   LogIn,
   Store,
-  User
+  User,
+  Briefcase
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -21,7 +22,7 @@ const Index = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const { posts, getPostsByType } = usePostStore();
-  const { isAuthenticated, user, isAdmin, isSeller } = useAuth();
+  const { isAuthenticated, user, isSeller, isAdmin } = useAuth();
 
   const bannerImages = [
     "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop",
@@ -178,20 +179,21 @@ const Index = () => {
               <User className="h-4 w-4" /> আমার সার্ভিস
             </Button>
             {isSeller && (
-              <Button onClick={() => navigate('/seller-dashboard')} variant="outline" className="flex items-center gap-1">
+              <Button 
+                onClick={() => navigate(user?.sellerType ? `/dashboard/${user.sellerType}` : '/seller-dashboard')} 
+                variant="outline" 
+                className="flex items-center gap-1"
+              >
                 <Store className="h-4 w-4" /> বিক্রেতা কেন্দ্র
               </Button>
             )}
             {isAdmin && (
               <Button onClick={() => navigate('/admin-dashboard')} variant="outline" className="flex items-center gap-1">
-                <Store className="h-4 w-4" /> অ্যাডমিন প্যানেল
+                <Briefcase className="h-4 w-4" /> অ্যাডমিন প্যানেল
               </Button>
             )}
           </>
         )}
-        <Button onClick={() => navigate('/create-post')} variant="default" className="flex items-center gap-1">
-          পোস্ট করুন
-        </Button>
       </div>
 
       <div className="overflow-hidden px-4 py-3 mb-6">
