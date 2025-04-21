@@ -91,6 +91,20 @@ const App = () => (
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/onboarding" element={<Onboarding />} />
+                  
+                  {/* Seller Dashboard Routes */}
+                  <Route path="/seller-dashboard/*" element={<SellerDashboard />} />
+                  <Route path="/dashboard/*" element={<DashboardLayout />}>
+                    <Route path="marketplace/*" element={<MarketplaceDashboard />} />
+                    <Route path="rental/*" element={<RentalDashboard />} />
+                    <Route path="service/*" element={<ServiceDashboard />} />
+                    <Route path="content/*" element={<ContentDashboard />} />
+                  </Route>
+                  
+                  {/* Admin Dashboard Route */}
+                  <Route path="/admin-dashboard/*" element={<AdminDashboard />} />
+                  
+                  {/* Regular Routes */}
                   <Route path="/services" element={<Services />} />
                   <Route path="/services/:id" element={<ServiceDetails />} />
                   <Route path="/services/category/:id" element={<ServiceCategory />} />
@@ -127,67 +141,6 @@ const App = () => (
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />
                   <Route path="/profile-management" element={<ProfileManagement />} />
-                  
-                  <Route path="/admin-dashboard" element={<AdminDashboard />} />
-                  <Route path="/admin-dashboard/:section" element={<AdminDashboard />} />
-                  <Route path="/seller-dashboard/*" element={<SellerDashboard />} />
-                  
-                  {/* Dashboard Routes */}
-                  <Route path="/dashboard" element={<DashboardLayout />}>
-                    <Route path="marketplace" element={<MarketplaceDashboard />} />
-                    <Route path="marketplace/products" element={<ProductManagement />} />
-                    <Route path="marketplace/orders" element={<OrderTracking />} />
-                    
-                    <Route path="rental" element={<RentalDashboard />} />
-                    <Route path="rental/properties" element={<PropertyManagement />} />
-                    
-                    <Route path="service" element={<ServiceDashboard />} />
-                    <Route path="service/services" element={<ServiceManagement />} />
-                    
-                    <Route path="content" element={<ContentDashboard />} />
-                    <Route path="content/contents" element={<ContentManagement />} />
-                  </Route>
-                  
-                  <Route path="/messages" element={<ChatPage />} />
-                  
-                  <Route path="/search" element={<SearchPage />} />
-                  
-                  <Route path="/payment" element={<PaymentDemo />} />
-                  
-                  <Route path="/referral" element={<ReferralSystem />} />
-                  
-                  <Route path="/favorites" element={<Favorites />} />
-                  <Route path="/reviews" element={<Reviews />} />
-                  <Route path="/rewards" element={<Rewards />} />
-                  <Route path="/language-settings" element={<LanguageSettings />} />
-                  <Route path="/offline-mode" element={<OfflineMode />} />
-                  
-                  <Route path="/stories" element={<Stories />} />
-                  <Route path="/events" element={<EventCalendar />} />
-                  <Route path="/forums" element={<Forums />} />
-                  <Route path="/group-booking" element={<GroupBooking />} />
-                  
-                  <Route path="/create-store" element={<CreateStore />} />
-                  <Route path="/course-builder" element={<CourseBuilder />} />
-                  <Route path="/email-automation" element={<NotFound />} />
-                  <Route path="/event-hosting" element={<NotFound />} />
-                  <Route path="/one-on-one" element={<NotFound />} />
-                  <Route path="/digital-products" element={<NotFound />} />
-                  <Route path="/paid-community" element={<PaidCommunity />} />
-                  <Route path="/audience-analytics" element={<NotFound />} />
-                  <Route path="/multi-channel" element={<NotFound />} />
-                  <Route path="/reseller-program" element={<NotFound />} />
-                  <Route path="/content-planner" element={<NotFound />} />
-                  <Route path="/payment-gateway" element={<NotFound />} />
-                  <Route path="/drm" element={<NotFound />} />
-                  <Route path="/video-hosting" element={<NotFound />} />
-                  <Route path="/affiliate" element={<NotFound />} />
-                  <Route path="/social-media" element={<NotFound />} />
-                  
-                  <Route path="/product/:id" element={<ProductDetail />} />
-                  <Route path="/rent-details/:id" element={<RentDetail />} />
-                  <Route path="/product-order/:id" element={<ProductOrder />} />
-                  <Route path="/store/:id" element={<StoreDetails />} />
                   
                   <Route path="*" element={<NotFound />} />
                 </Routes>
