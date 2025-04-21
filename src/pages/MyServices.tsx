@@ -15,12 +15,13 @@ import {
   UserPlus
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { toast } from '@/hooks/use-toast';
 
 const MyServices = () => {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('bookings');
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, isSeller } = useAuth();
   
   useEffect(() => {
     const tab = searchParams.get('tab');
@@ -31,7 +32,36 @@ const MyServices = () => {
     if (!isAuthenticated) {
       navigate('/login', { state: { from: location.pathname } });
     }
-  }, [searchParams, isAuthenticated, navigate]);
+    
+    // Redirect sellers to their dashboard based on their type
+    if (isAuthenticated && isSeller && user?.sellerType) {
+      // Show toast notification
+      toast({
+        title: "বিক্রেতা ড্যাশবোর্ডে স্বাগতম",
+        description: "আপনি একজন বিক্রেতা, আপনার ড্যাশবোর্ডে রিডাইরেক্ট করা হচ্ছে।",
+      });
+      
+      // Redirect to the appropriate dashboard based on seller type
+      setTimeout(() => {
+        switch(user.sellerType) {
+          case 'marketplace':
+            navigate('/dashboard/marketplace');
+            break;
+          case 'rental':
+            navigate('/dashboard/rental');
+            break;
+          case 'service':
+            navigate('/dashboard/service');
+            break;
+          case 'content':
+            navigate('/dashboard/content');
+            break;
+          default:
+            navigate('/seller-dashboard');
+        }
+      }, 1500);
+    }
+  }, [searchParams, isAuthenticated, navigate, isSeller, user]);
 
   if (!isAuthenticated) {
     return (
@@ -90,9 +120,17 @@ const MyServices = () => {
     },
     sellerDashboard: {
       icon: <Store className="h-10 w-10 text-muted-foreground" />,
-      message: "আপনি এখনো কোন বিক্রেতা অ্যাকাউন্ট তৈরি করেননি",
-      action: "বিক্রেতা অ্যাকাউন্ট তৈরি করুন",
-      path: "/create-store"
+      message: isSeller 
+        ? "আপনার বিক্রেতা ড্যাশবোর্ডে যান"
+        : "আপনি এখনো কোন বিক্রেতা অ্যাকাউন্ট তৈরি করেননি",
+      action: isSeller 
+        ? "ড্যাশবোর্ডে যান" 
+        : "বিক্রেতা অ্যাকাউন্ট তৈরি করুন",
+      path: isSeller 
+        ? (user?.sellerType 
+            ? `/dashboard/${user.sellerType}` 
+            : "/seller-dashboard")
+        : "/create-store"
     }
   };
 
