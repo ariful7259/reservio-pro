@@ -88,7 +88,7 @@ export const SidebarDrawer = () => {
     logout();
     toast({
       title: "লগআউট সফল",
-      description: "��পনি সফলভাবে লগআউট হয়েছেন",
+      description: "আপনি সফলভাবে লগআউট হয়েছেন",
     });
     navigate("/login");
   };
@@ -234,6 +234,31 @@ export const SidebarDrawer = () => {
               <CarouselPrevious className="left-1 h-8 w-8" />
               <CarouselNext className="right-1 h-8 w-8" />
             </Carousel>
+
+            {isAuthenticated && (
+              <div className="space-y-4 mt-4 p-4 border rounded-lg bg-gray-50">
+                <div className="flex items-center gap-2">
+                  <User className="h-5 w-5 text-primary" />
+                  <h3 className="font-medium">আমার সার্ভিস</h3>
+                </div>
+                <Button 
+                  onClick={() => navigate('/my-services')} 
+                  variant="outline" 
+                  className="w-full"
+                >
+                  আমার সার্ভিস দেখুন
+                </Button>
+                {isAdmin && (
+                  <Button 
+                    onClick={() => navigate(user?.sellerType ? `/dashboard/${user.sellerType}` : '/seller-dashboard')} 
+                    variant="outline" 
+                    className="w-full mt-2"
+                  >
+                    বিক্রেতা কেন্দ্র
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
         </div>
         
