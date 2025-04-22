@@ -1,145 +1,235 @@
 
-import React from 'react';
-import { User, ShieldCheck, CreditCard, Bell, LogOut, Users, Settings, Fingerprint } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Switch } from '@/components/ui/switch';
-import { useNavigate } from 'react-router-dom';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import React from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  // Mock user data
-  const user = {
-    name: 'আব্দুল্লাহ আল মামুন',
-    email: 'abdullah@example.com',
-    phone: '+৮৮০১৭১২৩৪৫৬৭৮',
-    image: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80',
+  if (!user) {
+    // ব্যবহারকারী লগইন না থাকলে লগইন পৃষ্ঠায় রিডাইরেক্ট করুন
+    React.useEffect(() => {
+      navigate("/login");
+    }, [navigate]);
+    
+    return null;
+  }
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
   };
 
-  const menuItems = [
-    { icon: <User className="h-5 w-5" />, label: 'ব্যক্তিগত তথ্য', action: () => {} },
-    { icon: <ShieldCheck className="h-5 w-5" />, label: 'সিকিউরিটি', action: () => navigate('/security') },
-    { icon: <Fingerprint className="h-5 w-5" />, label: 'KYC ভেরিফিকেশন', action: () => navigate('/kyc-verification') },
-    { icon: <CreditCard className="h-5 w-5" />, label: 'পেমেন্ট মেথড', action: () => {} },
-    { icon: <Bell className="h-5 w-5" />, label: 'নোটিফিকেশন', action: () => navigate('/notifications') },
-    { icon: <Users className="h-5 w-5" />, label: 'রেফার ফ্রেন্ড', action: () => {} },
-    { icon: <Settings className="h-5 w-5" />, label: 'সেটিংস', action: () => {} },
-  ];
-
   return (
-    <div className="container px-4 pt-20 pb-20">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">প্রোফাইল</h1>
-      </div>
-
-      <Card className="border mb-6">
-        <CardContent className="p-5">
-          <div className="flex items-center gap-4">
-            <div className="h-16 w-16 rounded-full overflow-hidden">
-              <img
-                src={user.image}
-                alt={user.name}
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <div>
-              <h2 className="font-semibold text-lg">{user.name}</h2>
-              <p className="text-sm text-muted-foreground">{user.phone}</p>
-              <p className="text-sm text-muted-foreground">{user.email}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="border mb-6">
-        <CardContent className="p-5">
-          <div className="flex justify-between items-center mb-2">
-            <h3 className="font-semibold">KYC স্ট্যাটাস</h3>
-            <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200">পেন্ডিং</Badge>
-          </div>
-          <Progress value={50} className="h-2 mb-2" />
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">৫০% সম্পূর্ণ</span>
-            <span className="text-amber-600">পেন্ডিং</span>
-          </div>
-          <p className="text-sm text-muted-foreground mt-3 mb-4">আপনার KYC প্রক্রিয়া সম্পূর্ণ করতে বাকি স্টেপগুলো শেষ করুন</p>
-          <Button variant="outline" className="w-full" onClick={() => navigate('/kyc-verification')}>
-            KYC সম্পূর্ণ করুন
-          </Button>
-        </CardContent>
-      </Card>
-
-      <Card className="border mb-6">
-        <CardContent className="p-5">
-          <div className="flex justify-between items-center mb-2">
-            <h3 className="font-semibold">সিকিউরিটি স্কোর</h3>
-            <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200">যাচাই করুন</Badge>
-          </div>
-          <Progress value={70} className="h-2 mb-2" />
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">৭০% সুরক্ষিত</span>
-            <span className="text-amber-600">সুপারিশ</span>
-          </div>
-          <p className="text-sm text-muted-foreground mt-3 mb-4">উন্নত নিরাপত্তার জন্য ২FA সক্রিয় করুন</p>
-          <Button variant="outline" className="w-full" onClick={() => navigate('/security')}>
-            নিরাপত্তা বাড়ান
-          </Button>
-        </CardContent>
-      </Card>
-
-      <h2 className="font-semibold text-lg mb-4">অ্যাকাউন্ট সেটিংস</h2>
-      
-      <div className="space-y-1 mb-6">
-        {menuItems.map((item, index) => (
-          <button
-            key={index}
-            className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors"
-            onClick={item.action}
-          >
-            <div className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                {item.icon}
+    <div className="container px-4 pt-24 pb-16">
+      <div className="flex flex-col md:flex-row gap-6">
+        <div className="w-full md:w-1/3">
+          <Card>
+            <CardHeader className="text-center">
+              <Avatar className="w-24 h-24 mx-auto mb-4">
+                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <CardTitle className="text-2xl">{user.name}</CardTitle>
+              <p className="text-muted-foreground">{user.email}</p>
+              <p className="mt-2 text-sm bg-primary/10 text-primary rounded-full px-2 py-1 inline-block">
+                {user.role === "admin" ? "অ্যাডমিন" : user.role === "seller" ? "বিক্রেতা" : "ব্যবহারকারী"}
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {user.phone && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">ফোন</span>
+                    <span>{user.phone}</span>
+                  </div>
+                )}
+                {user.address && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">ঠিকানা</span>
+                    <span>{user.address}</span>
+                  </div>
+                )}
+                {user.joinDate && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">যোগদান</span>
+                    <span>{new Date(user.joinDate).toLocaleDateString("bn-BD")}</span>
+                  </div>
+                )}
+                <Button variant="destructive" className="w-full mt-4" onClick={handleLogout}>
+                  লগআউট
+                </Button>
               </div>
-              <span>{item.label}</span>
-            </div>
-            <div className="text-muted-foreground">
-              {index === 3 ? (
-                <Switch />
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-5 w-5"
-                >
-                  <polyline points="9 18 15 12 9 6" />
-                </svg>
-              )}
-            </div>
-          </button>
-        ))}
+            </CardContent>
+          </Card>
+        </div>
+        
+        <div className="w-full md:w-2/3">
+          <Tabs defaultValue="info">
+            <TabsList className="w-full">
+              <TabsTrigger value="info" className="flex-1">ব্যবহারকারী তথ্য</TabsTrigger>
+              <TabsTrigger value="activities" className="flex-1">কার্যক্রম</TabsTrigger>
+              <TabsTrigger value="settings" className="flex-1">সেটিংস</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="info" className="mt-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>ব্যবহারকারী তথ্য</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {user.bio && (
+                    <div className="mb-4">
+                      <h3 className="font-medium mb-2">পরিচিতি</h3>
+                      <p className="text-muted-foreground">{user.bio}</p>
+                    </div>
+                  )}
+                  
+                  {user.stats && (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                      <div className="bg-muted rounded-md p-4 text-center">
+                        <p className="text-2xl font-bold">{user.stats.postsCount}</p>
+                        <p className="text-sm text-muted-foreground">পোস্ট</p>
+                      </div>
+                      <div className="bg-muted rounded-md p-4 text-center">
+                        <p className="text-2xl font-bold">{user.stats.reviewsCount}</p>
+                        <p className="text-sm text-muted-foreground">রিভিউ</p>
+                      </div>
+                      <div className="bg-muted rounded-md p-4 text-center">
+                        <p className="text-2xl font-bold">{user.stats.commentsCount}</p>
+                        <p className="text-sm text-muted-foreground">কমেন্ট</p>
+                      </div>
+                      <div className="bg-muted rounded-md p-4 text-center">
+                        <p className="text-2xl font-bold">{user.stats.bookingsCount}</p>
+                        <p className="text-sm text-muted-foreground">বুকিং</p>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {user.socialProfiles && Object.values(user.socialProfiles).some(Boolean) && (
+                    <div className="mt-6">
+                      <h3 className="font-medium mb-2">সোশ্যাল মিডিয়া</h3>
+                      <div className="flex gap-2">
+                        {user.socialProfiles.facebook && (
+                          <a 
+                            href={user.socialProfiles.facebook} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm"
+                          >
+                            ফেসবুক
+                          </a>
+                        )}
+                        {user.socialProfiles.twitter && (
+                          <a 
+                            href={user.socialProfiles.twitter} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="bg-blue-100 text-blue-500 px-3 py-1 rounded-full text-sm"
+                          >
+                            টুইটার
+                          </a>
+                        )}
+                        {user.socialProfiles.instagram && (
+                          <a 
+                            href={user.socialProfiles.instagram} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-sm"
+                          >
+                            ইনস্টাগ্রাম
+                          </a>
+                        )}
+                        {user.socialProfiles.linkedin && (
+                          <a 
+                            href={user.socialProfiles.linkedin} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
+                          >
+                            লিংকডইন
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="activities" className="mt-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>সাম্প্রতিক কার্যক্রম</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground text-center py-8">
+                    কোন সাম্প্রতিক কার্যক্রম নেই
+                  </p>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="settings" className="mt-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>অ্যাকাউন্ট সেটিংস</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {user.preferences && (
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center border-b pb-2">
+                        <div>
+                          <h3 className="font-medium">নোটিফিকেশন</h3>
+                          <p className="text-sm text-muted-foreground">নোটিফিকেশন সক্রিয়/নিষ্ক্রিয় করুন</p>
+                        </div>
+                        <Button variant="outline" disabled>
+                          {user.preferences.notifications ? "সক্রিয়" : "নিষ্ক্রিয়"}
+                        </Button>
+                      </div>
+                      
+                      <div className="flex justify-between items-center border-b pb-2">
+                        <div>
+                          <h3 className="font-medium">নিউজলেটার</h3>
+                          <p className="text-sm text-muted-foreground">নিউজলেটার সাবস্ক্রিপশন</p>
+                        </div>
+                        <Button variant="outline" disabled>
+                          {user.preferences.newsletter ? "সাবস্ক্রাইবড" : "আনসাবস্ক্রাইবড"}
+                        </Button>
+                      </div>
+                      
+                      <div className="flex justify-between items-center border-b pb-2">
+                        <div>
+                          <h3 className="font-medium">ডার্ক মোড</h3>
+                          <p className="text-sm text-muted-foreground">অ্যাপের থিম পরিবর্তন করুন</p>
+                        </div>
+                        <Button variant="outline" disabled>
+                          {user.preferences.darkMode ? "ডার্ক" : "লাইট"}
+                        </Button>
+                      </div>
+                      
+                      <div className="flex justify-between items-center border-b pb-2">
+                        <div>
+                          <h3 className="font-medium">ভাষা</h3>
+                          <p className="text-sm text-muted-foreground">অ্যাপের ভাষা পরিবর্তন করুন</p>
+                        </div>
+                        <Button variant="outline" disabled>
+                          {user.preferences.language === "bn" ? "বাংলা" : "English"}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
-
-      <Separator className="my-6" />
-
-      <Button 
-        variant="outline" 
-        className="w-full border-red-200 text-red-500 hover:bg-red-50 hover:text-red-600"
-      >
-        <LogOut className="h-4 w-4 mr-2" />
-        লগ আউট
-      </Button>
     </div>
   );
 };

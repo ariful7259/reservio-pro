@@ -1,5 +1,5 @@
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/Header';
 import Index from './pages/Index';
 import MyServices from './pages/MyServices';
@@ -12,6 +12,7 @@ import ServiceManagement from './pages/dashboard/service/ServiceManagement';
 import ProductManagement from './components/marketplace/ProductManagement';
 import ContentManagement from './components/content/ContentManagement';
 import Login from './pages/Login';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -21,6 +22,10 @@ function App() {
         <Route path="/" element={<Index />} />
         <Route path="/my-services" element={<MyServices />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<Profile />} />
+        
+        {/* Redirect route for /profile when it's not found */}
+        <Route path="*" element={<Navigate to="/" replace />} />
         
         {/* Marketplace Dashboard Routes */}
         <Route path="/dashboard/marketplace" element={<DashboardLayout type="marketplace" />}>
