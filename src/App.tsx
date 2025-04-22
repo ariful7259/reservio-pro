@@ -1,3 +1,4 @@
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Index from './pages/Index';
@@ -10,6 +11,7 @@ import ContentDashboard from './pages/dashboard/content/ContentDashboard';
 import ServiceManagement from './pages/dashboard/service/ServiceManagement';
 import ProductManagement from './components/marketplace/ProductManagement';
 import ContentManagement from './components/content/ContentManagement';
+import Login from './pages/Login';
 
 function App() {
   return (
@@ -18,6 +20,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/my-services" element={<MyServices />} />
+        <Route path="/login" element={<Login />} />
         
         {/* Marketplace Dashboard Routes */}
         <Route path="/dashboard/marketplace" element={<DashboardLayout type="marketplace" />}>
