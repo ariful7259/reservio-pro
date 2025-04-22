@@ -26,6 +26,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { Eye, EyeOff, Loader2, Shield, Store } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useSellerProfile } from "@/hooks/useSellerProfile";
 
 const formSchema = z.object({
   email: z.string().email("ইমেইল অবৈধ"),
@@ -43,8 +44,7 @@ const Login = () => {
   // Redirect if already logged in
   useEffect(() => {
     if (isAuthenticated) {
-      // লগইন করা থাকলে default profile পেজে যাবে বা from থেকে আসা পেজে যাবে
-      const from = location.state?.from?.pathname || "/profile";
+      const from = location.state?.from || "/profile";
       
       if (from.includes('/seller-dashboard')) {
         navigate(from);
@@ -95,8 +95,8 @@ const Login = () => {
       } else if (loginType === "seller") {
         navigate("/seller-dashboard");
       } else {
-        // লগইন সফল হলে profile পেজে যাওয়া উচিত
-        navigate("/profile");
+        const from = location.state?.from || "/profile";
+        navigate(from);
       }
     } catch (error) {
       console.error("Login error:", error);

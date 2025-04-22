@@ -274,10 +274,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ type = 'market
                             navigate(item.path);
                             if (isMobileMenuOpen) setIsMobileMenuOpen(false);
                           }}
+                          tooltip={item.title}
                         >
-                          <item.icon className="h-5 w-5 mr-3" />
+                          <item.icon className="h-5 w-5" />
                           <span>{item.title}</span>
-                          <ChevronRight className="h-4 w-4 ml-auto opacity-50" />
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                     ))}
@@ -287,20 +287,26 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ type = 'market
             </SidebarContent>
             
             <SidebarFooter className="border-t border-slate-200 p-4">
-              <Button 
-                variant="outline" 
-                className="w-full" 
-                onClick={() => navigate('/')}
-              >
-                <Home className="h-4 w-4 mr-2" />
-                হোম পেজে ফিরে যান
-              </Button>
+              <div className="flex flex-col gap-2">
+                <Button variant="outline" size="sm" className="w-full justify-start gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  সাপোর্ট
+                </Button>
+              </div>
             </SidebarFooter>
           </Sidebar>
         </div>
         
+        {/* Overlay for mobile menu */}
+        {isMobileMenuOpen && (
+          <div 
+            className="fixed inset-0 bg-black/30 z-20 lg:hidden"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
+        
         {/* Main content */}
-        <div className="flex-1 p-4 lg:p-6 pt-16 lg:pt-6 ml-0 lg:ml-60">
+        <div className="flex-1 p-4 md:p-6 lg:p-8 overflow-auto">
           <Outlet />
         </div>
       </div>
