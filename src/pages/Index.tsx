@@ -218,38 +218,6 @@ const Index = () => {
       <div className="mb-10">
         <FeaturedDigitalProducts />
       </div>
-      
-      <div className="flex flex-col md:flex-row gap-6 mb-6">
-        <div className="flex-1 bg-white rounded-lg shadow-md p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <Store className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold">পোস্ট করুন</h2>
-          </div>
-          <div className="flex flex-col gap-3">
-            <Button variant="outline" onClick={() => navigate('/create-post?rental')}>
-              রেন্টাল পোস্ট করুন
-            </Button>
-            <Button variant="outline" onClick={() => navigate('/create-post?service')}>
-              সার্ভিস পোস্ট করুন
-            </Button>
-            <Button variant="outline" onClick={() => navigate('/create-post?marketplace')}>
-              প্রোডাক্ট পোস্ট করুন
-            </Button>
-          </div>
-        </div>
-        <div className="flex-1 bg-white rounded-lg shadow-md p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <User className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold">আমার সার্ভিস</h2>
-          </div>
-          <div className="flex flex-col gap-3">
-            <Button variant="outline" onClick={() => navigate('/my-services?tab=bookings')}>আমার বুকিংস</Button>
-            <Button variant="outline" onClick={() => navigate('/my-services?tab=appointments')}>আমার অ্যাপয়েন্টমেন্ট</Button>
-            <Button variant="outline" onClick={() => navigate('/my-services?tab=listings')}>আমার লিস্টিংস</Button>
-            <Button variant="outline" onClick={() => navigate('/my-services?tab=sellerDashboard')}>বিক্রেতা ড্যাশবোর্ড</Button>
-          </div>
-        </div>
-      </div>
 
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
