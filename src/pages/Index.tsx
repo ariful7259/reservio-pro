@@ -175,9 +175,6 @@ const Index = () => {
           </Button>
         ) : (
           <>
-            <Button onClick={() => navigate('/my-services')} variant="outline" className="flex items-center gap-1">
-              <User className="h-4 w-4" /> আমার সার্ভিস
-            </Button>
             {isSeller && (
               <Button 
                 onClick={() => navigate(user?.sellerType ? `/dashboard/${user.sellerType}` : '/seller-dashboard')} 
