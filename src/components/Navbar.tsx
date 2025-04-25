@@ -112,9 +112,21 @@ const Navbar = () => {
   const communityFeatures = [
     { 
       icon: <FileIcon className="h-4 w-4 text-blue-500" />, 
-      name: "স্টোরি শেয়ারিং", 
-      path: "/stories",
-      description: "অভিজ্ঞতা শেয়ার করুন" 
+      name: "বিজ্ঞাপন পোস্ট করুন", 
+      path: "/create-post",
+      description: "আপনার পণ্য, সেবা, বা প্রপার্টি বিজ্ঞাপন দিতে এখনই পোস্ট করুন" 
+    },
+    { 
+      icon: <Users className="h-4 w-4 text-purple-500" />, 
+      name: "রেফারেল সিস্টেম", 
+      path: "/referral",
+      description: "বন্ধুদের আমন্ত্রণ জানিয়ে উপার্জন করুন" 
+    },
+    { 
+      icon: <Video className="h-4 w-4 text-green-500" />, 
+      name: "নতুন ভিডিও", 
+      path: "/videos",
+      description: "আমাদের নতুন সার্ভিস দেখুন এবং বুক করুন" 
     },
     { 
       icon: <CalendarIcon className="h-4 w-4 text-green-500" />, 
@@ -132,7 +144,7 @@ const Navbar = () => {
       icon: <UsersRound className="h-4 w-4 text-orange-500" />, 
       name: "গ্রুপ বুকিং", 
       path: "/group-booking",
-      description: "এক��াথে সার্ভিস/প্রোডাক্ট নিন" 
+      description: "একসাথে সার্ভিস/প্রোডাক্ট নিন" 
     },
   ];
 
@@ -214,7 +226,7 @@ const Navbar = () => {
       icon: <Shield className="h-4 w-4 text-emerald-500" />, 
       name: "কপি প্রোটেকশন", 
       path: "/drm",
-      description: "কন��টেন্ট চুরি ও কপি হওয়া ঠেকান"
+      description: "কনটেন্ট চুরি ও কপি হওয়া ঠেকান"
     },
     { 
       icon: <Video className="h-4 w-4 text-rose-500" />, 

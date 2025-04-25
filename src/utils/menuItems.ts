@@ -1,6 +1,17 @@
-
 export const getMenuItems = (language: 'en' | 'bn') => {
-  return [
+  const items = [
+    {
+      title: language === 'bn' ? 'বিজ্ঞাপন পোস্ট' : 'Create Ad',
+      href: '/create-post',
+    },
+    {
+      title: language === 'bn' ? 'রেফারেল সিস্টেম' : 'Referral System',
+      href: '/referral',
+    },
+    {
+      title: language === 'bn' ? 'নতুন ভিডিও' : 'New Videos',
+      href: '/videos',
+    },
     {
       title: language === 'bn' ? 'হোম' : 'Home',
       href: '/',
@@ -50,6 +61,8 @@ export const getMenuItems = (language: 'en' | 'bn') => {
       href: '/offline-mode',
     },
   ];
+  
+  return items;
 };
 
 export const getSettingsItems = (language: 'en' | 'bn') => {
