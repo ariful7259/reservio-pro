@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 interface User {
@@ -172,6 +171,7 @@ const MOCK_USERS: MockUser[] = [
   }
 ];
 
+// Fix the AuthProvider component to make sure it's properly defined as a React functional component
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -225,7 +225,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       name,
       email,
       password,
-      role: "user", // Explicitly typing as "user"
+      role: "user" as const,
       avatar: `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70)}`,
       phone: "",
       address: "",
