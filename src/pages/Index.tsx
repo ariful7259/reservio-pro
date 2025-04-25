@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Star, 
-  MapPin,
-  ArrowRight,
-  LogIn,
-  Store,
-  User,
-  Briefcase
-} from 'lucide-react';
+import { Star, MapPin, ArrowRight, LogIn, Store, User, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -17,91 +9,72 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import FeaturedDigitalProducts from '@/components/FeaturedDigitalProducts';
 import { usePostStore, Post, PostType } from '@/store/usePostStore';
 import { useAuth } from '@/hooks/useAuth';
-
 const Index = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
-  const { posts, getPostsByType } = usePostStore();
-  const { isAuthenticated, user, isSeller, isAdmin } = useAuth();
-
-  const bannerImages = [
-    "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1511385348-a52b4a160dc2?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1618359057154-e21ae64350b6?q=80&w=1000&auto=format&fit=crop",
-  ];
-
-  const defaultFeaturedListings = [
-    {
-      id: "1",
-      title: "৩ বেডরুম অ্যাপার্টমেন্ট",
-      location: "গুলশান, ঢাকা",
-      price: "৳২৫,০০০/মাস",
-      image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1000&auto=format&fit=crop",
-      category: "রেন্ট",
-      path: "/rent-details/1"
-    },
-    {
-      id: "2",
-      title: "অফিস স্পেস",
-      location: "বনানী, ঢাকা",
-      price: "৳৫০,০০০/মাস",
-      image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1000&auto=format&fit=crop",
-      category: "রেন্ট",
-      path: "/rent-details/2"
-    },
-    {
-      id: "1",
-      title: "ডাক্তার কনসাল্টেশন",
-      location: "মেডিকেল সেন্টার, ঢাকা",
-      price: "৳১,৫০০",
-      image: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
-      category: "সার্ভিস",
-      path: "/services/1"
-    },
-    {
-      id: "2",
-      title: "ডেন্টাল চেকআপ",
-      location: "শাইন ডেন্টাল, ঢাকা",
-      price: "৳২,০০০",
-      image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
-      category: "সার্ভিস",
-      path: "/services/2"
-    },
-    {
-      id: "1",
-      title: "স্মার্ট ব্লাড প্রেশার মনিটর",
-      location: "ধানমন্ডি, ঢাকা",
-      price: "৳২,৫০০",
-      image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
-      category: "মার্কেটপ্লেস",
-      path: "/product/1"
-    },
-    {
-      id: "2",
-      title: "ডিজিটাল গ্লুকোমিটার কিট",
-      location: "উত্তরা, ঢাকা",
-      price: "৳৩,৫০০",
-      image: "https://images.unsplash.com/photo-1587854680352-936b22b91030?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
-      category: "মার্কেটপ্লেস",
-      path: "/product/2"
-    },
-  ];
-
+  const {
+    posts,
+    getPostsByType
+  } = usePostStore();
+  const {
+    isAuthenticated,
+    user,
+    isSeller,
+    isAdmin
+  } = useAuth();
+  const bannerImages = ["https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1511385348-a52b4a160dc2?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1618359057154-e21ae64350b6?q=80&w=1000&auto=format&fit=crop"];
+  const defaultFeaturedListings = [{
+    id: "1",
+    title: "৩ বেডরুম অ্যাপার্টমেন্ট",
+    location: "গুলশান, ঢাকা",
+    price: "৳২৫,০০০/মাস",
+    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1000&auto=format&fit=crop",
+    category: "রেন্ট",
+    path: "/rent-details/1"
+  }, {
+    id: "2",
+    title: "অফিস স্পেস",
+    location: "বনানী, ঢাকা",
+    price: "৳৫০,০০০/মাস",
+    image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1000&auto=format&fit=crop",
+    category: "রেন্ট",
+    path: "/rent-details/2"
+  }, {
+    id: "1",
+    title: "ডাক্তার কনসাল্টেশন",
+    location: "মেডিকেল সেন্টার, ঢাকা",
+    price: "৳১,৫০০",
+    image: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
+    category: "সার্ভিস",
+    path: "/services/1"
+  }, {
+    id: "2",
+    title: "ডেন্টাল চেকআপ",
+    location: "শাইন ডেন্টাল, ঢাকা",
+    price: "৳২,০০০",
+    image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
+    category: "সার্ভিস",
+    path: "/services/2"
+  }, {
+    id: "1",
+    title: "স্মার্ট ব্লাড প্রেশার মনিটর",
+    location: "ধানমন্ডি, ঢাকা",
+    price: "৳২,৫০০",
+    image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
+    category: "মার্কেটপ্লেস",
+    path: "/product/1"
+  }, {
+    id: "2",
+    title: "ডিজিটাল গ্লুকোমিটার কিট",
+    location: "উত্তরা, ঢাকা",
+    price: "৳৩,৫০০",
+    image: "https://images.unsplash.com/photo-1587854680352-936b22b91030?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
+    category: "মার্কেটপ্লেস",
+    path: "/product/2"
+  }];
   const postToFeaturedListing = (post: Post) => {
-    const defaultImage = post.type === 'rent' 
-      ? "https://placehold.co/400x400?text=Rent" 
-      : post.type === 'service'
-        ? "https://placehold.co/400x400?text=Service"
-        : "https://placehold.co/400x400?text=Product";
-        
-    const displayImage = post.images && post.images.length > 0 && post.images[0] !== "" 
-      ? post.images[0] 
-      : defaultImage;
-    
+    const defaultImage = post.type === 'rent' ? "https://placehold.co/400x400?text=Rent" : post.type === 'service' ? "https://placehold.co/400x400?text=Service" : "https://placehold.co/400x400?text=Product";
+    const displayImage = post.images && post.images.length > 0 && post.images[0] !== "" ? post.images[0] : defaultImage;
     if (post.type === 'rent') {
       return {
         id: post.id,
@@ -128,7 +101,7 @@ const Index = () => {
       return {
         id: post.id,
         title: post.title,
-        location: post.location || '', 
+        location: post.location || '',
         price: `৳${post.price || '---'}`,
         image: displayImage,
         category: "মার্কেটপ্লেস",
@@ -137,16 +110,10 @@ const Index = () => {
     }
     return null;
   };
-
   const userPosts = posts.map(postToFeaturedListing).filter(Boolean);
-  
-  const allListings = [
-    ...userPosts,
-    ...defaultFeaturedListings
-  ];
-
+  const allListings = [...userPosts, ...defaultFeaturedListings];
   const getListings = (cat: string) => {
-    return allListings.filter((item) => {
+    return allListings.filter(item => {
       if (cat === "all") return true;
       if (cat === "rent") return item.category === "রেন্ট";
       if (cat === "services") return item.category === "সার্ভিস";
@@ -154,64 +121,40 @@ const Index = () => {
       return false;
     });
   };
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
     }
   };
-
   const handleListingClick = (path: string) => {
     navigate(path);
   };
-
-  return (
-    <div className="container px-4 pt-20 pb-20">
+  return <div className="container px-4 pt-20 pb-20">
       <div className="flex flex-wrap justify-center gap-2 mb-6">
-        {!isAuthenticated ? (
-          <Button onClick={() => navigate('/login')} variant="outline" className="flex items-center gap-1">
+        {!isAuthenticated ? <Button onClick={() => navigate('/login')} variant="outline" className="flex items-center gap-1">
             <LogIn className="h-4 w-4" /> লগইন
-          </Button>
-        ) : (
-          <>
-            <Button onClick={() => navigate('/my-services')} variant="outline" className="flex items-center gap-1">
-              <User className="h-4 w-4" /> আমার সার্ভিস
-            </Button>
-            {isSeller && (
-              <Button 
-                onClick={() => navigate(user?.sellerType ? `/dashboard/${user.sellerType}` : '/seller-dashboard')} 
-                variant="outline" 
-                className="flex items-center gap-1"
-              >
+          </Button> : <>
+            
+            {isSeller && <Button onClick={() => navigate(user?.sellerType ? `/dashboard/${user.sellerType}` : '/seller-dashboard')} variant="outline" className="flex items-center gap-1">
                 <Store className="h-4 w-4" /> বিক্রেতা কেন্দ্র
-              </Button>
-            )}
-            {isAdmin && (
-              <Button onClick={() => navigate('/admin-dashboard')} variant="outline" className="flex items-center gap-1">
+              </Button>}
+            {isAdmin && <Button onClick={() => navigate('/admin-dashboard')} variant="outline" className="flex items-center gap-1">
                 <Briefcase className="h-4 w-4" /> অ্যাডমিন প্যানেল
-              </Button>
-            )}
-          </>
-        )}
+              </Button>}
+          </>}
       </div>
 
       <div className="overflow-hidden px-4 py-3 mb-6">
         <Carousel className="w-full">
           <CarouselContent>
-            {bannerImages.map((image, index) => (
-              <CarouselItem key={index}>
+            {bannerImages.map((image, index) => <CarouselItem key={index}>
                 <div className="p-1">
                   <div className="overflow-hidden rounded-lg aspect-[16/6] w-full">
-                    <img 
-                      src={image} 
-                      alt={`Banner ${index + 1}`} 
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={image} alt={`Banner ${index + 1}`} className="w-full h-full object-cover" />
                   </div>
                 </div>
-              </CarouselItem>
-            ))}
+              </CarouselItem>)}
           </CarouselContent>
           <CarouselPrevious className="left-2" />
           <CarouselNext className="right-2" />
@@ -237,18 +180,9 @@ const Index = () => {
 
           <TabsContent value="all">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {getListings('all').map((listing) => (
-                <Card 
-                  key={`all-${listing.id}-${listing.category}`}
-                  className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
-                  onClick={() => handleListingClick(listing.path)}
-                >
+              {getListings('all').map(listing => <Card key={`all-${listing.id}-${listing.category}`} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => handleListingClick(listing.path)}>
                   <div className="relative aspect-square">
-                    <img 
-                      src={listing.image} 
-                      alt={listing.title} 
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={listing.image} alt={listing.title} className="w-full h-full object-cover" />
                     <Badge className="absolute top-2 right-2">{listing.category}</Badge>
                   </div>
                   <CardContent className="p-3">
@@ -265,8 +199,7 @@ const Index = () => {
                       </div>
                     </div>
                   </CardContent>
-                </Card>
-              ))}
+                </Card>)}
             </div>
             <div className="flex justify-center mt-4">
               <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/shopping')}>
@@ -277,18 +210,9 @@ const Index = () => {
 
           <TabsContent value="rent">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {getListings('rent').map((listing) => (
-                <Card 
-                  key={`rent-${listing.id}`}
-                  className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
-                  onClick={() => handleListingClick(listing.path)}
-                >
+              {getListings('rent').map(listing => <Card key={`rent-${listing.id}`} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => handleListingClick(listing.path)}>
                   <div className="relative aspect-square">
-                    <img 
-                      src={listing.image} 
-                      alt={listing.title} 
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={listing.image} alt={listing.title} className="w-full h-full object-cover" />
                     <Badge className="absolute top-2 right-2">{listing.category}</Badge>
                   </div>
                   <CardContent className="p-3">
@@ -305,8 +229,7 @@ const Index = () => {
                       </div>
                     </div>
                   </CardContent>
-                </Card>
-              ))}
+                </Card>)}
             </div>
             <div className="flex justify-center mt-4">
               <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/rentals')}>
@@ -317,18 +240,9 @@ const Index = () => {
 
           <TabsContent value="services">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {getListings('services').map((listing) => (
-                <Card 
-                  key={`service-${listing.id}`}
-                  className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
-                  onClick={() => handleListingClick(listing.path)}
-                >
+              {getListings('services').map(listing => <Card key={`service-${listing.id}`} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => handleListingClick(listing.path)}>
                   <div className="relative aspect-square">
-                    <img 
-                      src={listing.image} 
-                      alt={listing.title} 
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={listing.image} alt={listing.title} className="w-full h-full object-cover" />
                     <Badge className="absolute top-2 right-2">{listing.category}</Badge>
                   </div>
                   <CardContent className="p-3">
@@ -345,8 +259,7 @@ const Index = () => {
                       </div>
                     </div>
                   </CardContent>
-                </Card>
-              ))}
+                </Card>)}
             </div>
             <div className="flex justify-center mt-4">
               <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/services')}>
@@ -357,18 +270,9 @@ const Index = () => {
 
           <TabsContent value="marketplace">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {getListings('marketplace').map((listing) => (
-                <Card 
-                  key={`marketplace-${listing.id}`}
-                  className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
-                  onClick={() => handleListingClick(listing.path)}
-                >
+              {getListings('marketplace').map(listing => <Card key={`marketplace-${listing.id}`} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => handleListingClick(listing.path)}>
                   <div className="relative aspect-square">
-                    <img 
-                      src={listing.image} 
-                      alt={listing.title} 
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={listing.image} alt={listing.title} className="w-full h-full object-cover" />
                     <Badge className="absolute top-2 right-2">{listing.category}</Badge>
                   </div>
                   <CardContent className="p-3">
@@ -385,8 +289,7 @@ const Index = () => {
                       </div>
                     </div>
                   </CardContent>
-                </Card>
-              ))}
+                </Card>)}
             </div>
             <div className="flex justify-center mt-4">
               <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/marketplace')}>
@@ -396,8 +299,6 @@ const Index = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
