@@ -44,6 +44,23 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuGroup,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuCheckboxItem,
+} from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import SearchBar from '@/components/ui/search-bar';
@@ -115,7 +132,7 @@ const Navbar = () => {
       icon: <UsersRound className="h-4 w-4 text-orange-500" />, 
       name: "গ্রুপ বুকিং", 
       path: "/group-booking",
-      description: "একসাথে সার্ভিস/প্রোডাক্ট নিন" 
+      description: "এক��াথে সার্ভিস/প্রোডাক্ট নিন" 
     },
   ];
 
