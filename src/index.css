@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -33,7 +32,7 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
  
-    --radius: 1rem;
+    --radius: 0.5rem;
     
     /* অ্যাডমিন থিম ভেরিয়েবলস */
     --admin-primary: 214 77% 46%; /* #2262C6 */
@@ -92,18 +91,21 @@
  
 @layer base {
   * {
-    @apply border-border selection:bg-primary/10 selection:text-primary;
+    @apply border-border;
   }
   body {
-    @apply bg-background text-foreground antialiased scroll-smooth;
-    font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
+    @apply bg-background text-foreground;
   }
 }
 
 /* Animation for QR code scanning */
 @keyframes scan {
-  0% { left: 0; }
-  100% { left: 100%; }
+  0% {
+    left: 0;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
 .animate-scan {
@@ -197,9 +199,36 @@
     background: linear-gradient(to right, #00A389, #00C9A7);
   }
   
-  /* Glass Effect */
+  /* শ্যাডো ক্লাস */
+  .shadow-card {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
+  }
+  
+  .shadow-hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12), 0 3px 6px rgba(0, 0, 0, 0.08);
+  }
+  
+  .shadow-button {
+    box-shadow: 0 2px 4px rgba(34, 98, 198, 0.15), 0 1px 2px rgba(34, 98, 198, 0.1);
+  }
+  
+  /* ট্রানজিশন ক্লাস */
+  .transition-smooth {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  /* হোভার ইফেক্ট ক্লাস */
+  .hover-lift {
+    @apply transition-all duration-300;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-3px);
+  }
+  
+  /* গ্লাস ইফেক্ট এবং মর্ফিজম */
   .glass-effect {
-    @apply bg-background/70 backdrop-blur-md border border-border/20 shadow-md;
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-md;
   }
   
   .glass-effect-dark {
@@ -229,40 +258,124 @@
   .text-accessible-muted {
     @apply text-gray-700 dark:text-gray-300;
   }
-  
-  /* Glassmorphism utilities */
-  .glassmorphic {
-    @apply bg-background/80 backdrop-blur-lg border border-border/50 shadow-soft-md;
-  }
-  
-  .glassmorphic-dark {
-    @apply dark:bg-background/50 dark:backdrop-blur-xl dark:border-border/30;
-  }
-  
-  /* Neumorphic effect */
-  .neumorphic-light {
-    @apply bg-gray-100 shadow-[5px_5px_10px_#d1d1d1,-5px_-5px_10px_#ffffff];
-  }
-  
-  .neumorphic-dark {
-    @apply dark:bg-gray-800 dark:shadow-[5px_5px_10px_#1a1a1a,-5px_-5px_10px_#262626];
-  }
-  
-  /* Card shimmer effect for loading */
-  .shimmer {
-    @apply relative overflow-hidden before:absolute before:inset-0 before:translate-x-[-100%] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:animate-shimmer;
+}
+
+/* ডার্ক মোড ইউটিলিটি ক্লাস */
+.dark .card-dark {
+  @apply bg-gray-800 border-gray-700;
+}
+
+.dark .btn-dark {
+  @apply bg-gray-700 hover:bg-gray-600 text-white;
+}
+
+/* নতুন অ্যানিমেশন ইফেক্ট */
+.card-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
   }
 }
 
-/* 3D hover effect */
+/* 3D হোভার ইফেক্ট */
 .hover-3d {
-  @apply transition-transform duration-300;
+  transition: transform 0.3s ease;
   transform: perspective(1000px) rotateX(0) rotateY(0);
 }
 
 .hover-3d:hover {
   transform: perspective(1000px) rotateX(2deg) rotateY(2deg);
 }
+
+/* Animation Keyframes */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes pulseSoft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Animation Classes */
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.2s ease-out forwards;
+}
+
+.animate-pulse-soft {
+  animation: pulseSoft 2s ease-in-out infinite;
+}
+
+/* Staggered Animation Classes */
+.stagger-item:nth-child(1) { animation-delay: 0.1s; }
+.stagger-item:nth-child(2) { animation-delay: 0.2s; }
+.stagger-item:nth-child(3) { animation-delay: 0.3s; }
+.stagger-item:nth-child(4) { animation-delay: 0.4s; }
+.stagger-item:nth-child(5) { animation-delay: 0.5s; }
+.stagger-item:nth-child(6) { animation-delay: 0.6s; }
 
 /* Interactive Animations */
 .hover-scale {
@@ -271,9 +384,4 @@
 
 .button-pop {
   @apply transition-transform active:scale-95;
-}
-
-/* New Heading Styles */
-.heading-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-500;
 }

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
@@ -32,43 +33,30 @@ import {
   MessageCircle,
   UsersRound,
   LogIn,
-  Bell,
-  Filter,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { SidebarDrawer } from '@/components/SidebarDrawer';
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuGroup,
-  DropdownMenuPortal,
+  DropdownMenuTrigger,
   DropdownMenuSub,
-  DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuCheckboxItem,
+  DropdownMenuSubContent,
+  DropdownMenuPortal,
 } from '@/components/ui/dropdown-menu';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import SearchBar from '@/components/ui/search-bar';
-import NavbarMenu from '@/components/ui/navbar-menu';
 
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
   const isHomePage = location.pathname === "/";
   const isAdminPage = location.pathname.includes("/admin-dashboard");
   const { user, isAuthenticated, logout, isAdmin } = useAuth();
@@ -112,21 +100,9 @@ const Navbar = () => {
   const communityFeatures = [
     { 
       icon: <FileIcon className="h-4 w-4 text-blue-500" />, 
-      name: "বিজ্ঞাপন পোস্ট করুন", 
-      path: "/create-post",
-      description: "আপনার পণ্য, সেবা, বা প্রপার্টি বিজ্ঞাপন দিতে এখনই পোস্ট করুন" 
-    },
-    { 
-      icon: <Users className="h-4 w-4 text-purple-500" />, 
-      name: "রেফারেল সিস্টেম", 
-      path: "/referral",
-      description: "বন্ধুদের আমন্ত্রণ জানিয়ে উপার্জন করুন" 
-    },
-    { 
-      icon: <Video className="h-4 w-4 text-green-500" />, 
-      name: "নতুন ভিডিও", 
-      path: "/videos",
-      description: "আমাদের নতুন সার্ভিস দেখুন এবং বুক করুন" 
+      name: "স্টোরি শেয়ারিং", 
+      path: "/stories",
+      description: "অভিজ্ঞতা শেয়ার করুন" 
     },
     { 
       icon: <CalendarIcon className="h-4 w-4 text-green-500" />, 
@@ -148,7 +124,7 @@ const Navbar = () => {
     },
   ];
 
-  // Digital creator solutions
+  // Digital creator solutions - Enhanced with descriptions
   const creatorSolutions = [
     { 
       icon: <Store className="h-4 w-4 text-primary" />, 
@@ -226,7 +202,7 @@ const Navbar = () => {
       icon: <Shield className="h-4 w-4 text-emerald-500" />, 
       name: "কপি প্রোটেকশন", 
       path: "/drm",
-      description: "কনটেন্ট চুরি ও কপি হওয়া ঠেকান"
+      description: "কন্টেন্ট চুরি ও কপি হওয়া ঠেকান"
     },
     { 
       icon: <Video className="h-4 w-4 text-rose-500" />, 
@@ -242,7 +218,7 @@ const Navbar = () => {
     }
   ];
 
-  // Service categories
+  // Service categories expanded with salon and parlour
   const serviceCategories = [
     { name: "ডাক্তার", path: "/services/category/medical" },
     { name: "ডেন্টাল", path: "/services/category/dental" },
@@ -256,41 +232,26 @@ const Navbar = () => {
     { name: "কনসালটেন্সি", path: "/services/category/consultancy" },
   ];
 
-  const navbarVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        duration: 0.3
-      }
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      // Improved search functionality - navigate to search results page with query parameter
+      navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
+      
+      // Display mock search results for demonstration purposes
+      console.log(`Searching for: ${searchTerm}`);
+      // This would normally connect to a backend API to fetch actual search results
     }
   };
 
-  const bottomNavVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        duration: 0.3,
-        delay: 0.2
-      }
-    }
-  };
-
+  // Skip rendering Nav for admin pages
   if (isAdminPage) {
     return null;
   }
 
   return (
     <>
-      <motion.div 
-        className="bg-background/80 backdrop-blur-md border-b border-border/50 fixed top-0 left-0 right-0 z-50"
-        initial="hidden"
-        animate="visible"
-        variants={navbarVariants}
-      >
+      <div className="bg-white border-b fixed top-0 left-0 right-0 z-50">
         <header className="container flex items-center justify-between h-16 px-4 md:px-6">
           <div className="flex items-center gap-2">
             <SidebarDrawer />
@@ -300,28 +261,55 @@ const Navbar = () => {
           </div>
           
           <div className="w-full max-w-md mx-4 relative">
-            <SearchBar />
+            <form onSubmit={handleSearch} className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input 
+                type="text" 
+                placeholder="খুঁজুন" 
+                className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <Button 
+                type="submit" 
+                variant="ghost" 
+                size="icon" 
+                className="absolute right-1 top-1/2 transform -translate-y-1/2"
+              >
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </form>
           </div>
           
           <div className="flex items-center gap-2">
-            <NavbarMenu 
-              trigger={
-                <Button variant="outline" size="sm" className="bg-background/80 backdrop-blur-sm hover:bg-background border border-border/50 rounded-xl">
+            {/* Community Features dropdown added to the top navigation */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
                   <Users className="h-4 w-4 mr-2" />
                   <span className="hidden sm:inline">কমিউনিটি</span>
                 </Button>
-              }
-              items={communityFeatures}
-              title="কমিউনিটি ফিচার"
-            />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>কমিউনিটি ফিচার</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {communityFeatures.map((item, index) => (
+                  <DropdownMenuItem key={index} asChild>
+                    <Link to={item.path} className="flex flex-col gap-1 py-2">
+                      <div className="flex items-center gap-2">
+                        {item.icon}
+                        <span>{item.name}</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground pl-6">{item.description}</p>
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             
-            <NavbarMenu 
-              trigger={
-                <Button 
-                  variant="outline" 
-                  size="icon" 
-                  className="rounded-full overflow-hidden bg-background/80 backdrop-blur-sm hover:bg-background border border-border/50"
-                >
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon" className="rounded-full overflow-hidden">
                   {user ? (
                     <img 
                       src={user.avatar || "https://i.pravatar.cc/150?img=1"} 
@@ -332,40 +320,57 @@ const Navbar = () => {
                     <User className="h-5 w-5" />
                   )}
                 </Button>
-              }
-              items={profileMenuItems}
-              title={user ? user.name : "অ্যাকাউন্ট"}
-            />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>
+                  {user ? user.name : "অ্যাকাউন্ট"}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {profileMenuItems
+                  .filter(item => !item.hasOwnProperty('show') || item.show)
+                  .map((item, index) => (
+                    <DropdownMenuItem key={index} asChild>
+                      {item.onClick ? (
+                        <button 
+                          onClick={item.onClick} 
+                          className="flex items-center gap-2 w-full"
+                        >
+                          {item.icon}
+                          <span>{item.name}</span>
+                        </button>
+                      ) : (
+                        <Link to={item.path} className="flex items-center gap-2">
+                          {item.icon}
+                          <span>{item.name}</span>
+                        </Link>
+                      )}
+                    </DropdownMenuItem>
+                  ))
+                }
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </header>
-      </motion.div>
+      </div>
       
-      <motion.nav 
-        className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-md border-t border-border/50 h-16 z-40"
-        initial="hidden"
-        animate="visible"
-        variants={bottomNavVariants}
-      >
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t h-16 z-40">
         <div className="grid grid-cols-5 h-full">
           {navLinks.map((link) => {
             const isActive = location.pathname === link.path;
             
+            // Special handling for create post button with popover
             if (link.title === 'পোস্ট করুন') {
               return (
                 <Popover key={link.path}>
                   <PopoverTrigger asChild>
                     <div className="flex flex-col items-center justify-center relative cursor-pointer">
-                      <motion.div 
-                        className="bg-primary rounded-full h-10 w-10 flex items-center justify-center mb-1"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <Plus className="h-6 w-6 text-primary-foreground" />
-                      </motion.div>
+                      <div className="bg-primary rounded-full h-10 w-10 flex items-center justify-center mb-1">
+                        <Plus className="h-6 w-6 text-white" />
+                      </div>
                       <span className="text-xs mt-1 text-primary font-medium">{link.title}</span>
                     </div>
                   </PopoverTrigger>
-                  <PopoverContent className="w-80 p-0 bg-background/95 backdrop-blur-md border border-border/50 rounded-xl" align="center">
+                  <PopoverContent className="w-80 p-0" align="center">
                     <div className="grid grid-cols-2 gap-2 p-4">
                       <div className="col-span-2">
                         <h3 className="font-semibold text-center mb-2">পোস্ট করুন</h3>
@@ -395,6 +400,7 @@ const Navbar = () => {
                         <span className="text-sm">প্রোডাক্ট পোস্ট</span>
                       </Button>
                       
+                      {/* Add Community Features section */}
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button 
@@ -459,28 +465,19 @@ const Navbar = () => {
                 key={link.path}
                 to={link.path}
                 className={`flex flex-col items-center justify-center ${
-                  isActive ? 'text-primary' : 'text-muted-foreground'
+                  isActive ? 'text-primary' : 'text-gray-500'
                 }`}
               >
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {link.icon}
-                </motion.div>
+                {link.icon}
                 <span className="text-xs mt-1">{link.title}</span>
                 {isActive && (
-                  <motion.div 
-                    className="absolute top-0 h-1 w-10 rounded-full bg-primary"
-                    layoutId="activeTab"
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
+                  <div className="absolute top-0 h-1 w-10 rounded-full bg-primary" />
                 )}
               </Link>
             );
           })}
         </div>
-      </motion.nav>
+      </nav>
     </>
   );
 };
