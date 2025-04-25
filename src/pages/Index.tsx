@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Star, MapPin, ArrowRight, LogIn, Store, User, Briefcase } from 'lucide-react';
+import { LogIn, Store, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import FeaturedDigitalProducts from '@/components/FeaturedDigitalProducts';
+import { motion } from 'framer-motion';
 import { usePostStore, Post, PostType } from '@/store/usePostStore';
 import { useAuth } from '@/hooks/useAuth';
+import BannerCarousel from '@/components/BannerCarousel';
+import FeaturedListingsGrid from '@/components/FeaturedListingsGrid';
+import FeaturedDigitalProducts from '@/components/FeaturedDigitalProducts';
+import SearchBar from '@/components/ui/search-bar';
+
 const Index = () => {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState('');
   const {
     posts,
     getPostsByType
@@ -22,7 +22,9 @@ const Index = () => {
     isSeller,
     isAdmin
   } = useAuth();
+  
   const bannerImages = ["https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1511385348-a52b4a160dc2?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1618359057154-e21ae64350b6?q=80&w=1000&auto=format&fit=crop"];
+  
   const defaultFeaturedListings = [{
     id: "1",
     title: "৩ বেডরুম অ্যাপার্টমেন্ট",
@@ -72,6 +74,7 @@ const Index = () => {
     category: "মার্কেটপ্লেস",
     path: "/product/2"
   }];
+
   const postToFeaturedListing = (post: Post) => {
     const defaultImage = post.type === 'rent' ? "https://placehold.co/400x400?text=Rent" : post.type === 'service' ? "https://placehold.co/400x400?text=Service" : "https://placehold.co/400x400?text=Product";
     const displayImage = post.images && post.images.length > 0 && post.images[0] !== "" ? post.images[0] : defaultImage;
@@ -110,195 +113,105 @@ const Index = () => {
     }
     return null;
   };
+
   const userPosts = posts.map(postToFeaturedListing).filter(Boolean);
   const allListings = [...userPosts, ...defaultFeaturedListings];
-  const getListings = (cat: string) => {
-    return allListings.filter(item => {
-      if (cat === "all") return true;
-      if (cat === "rent") return item.category === "রেন্ট";
-      if (cat === "services") return item.category === "সার্ভিস";
-      if (cat === "marketplace") return item.category === "মার্কেটপ্লেস";
-      return false;
-    });
-  };
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { 
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
     }
   };
-  const handleListingClick = (path: string) => {
-    navigate(path);
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { 
+      y: 0, 
+      opacity: 1,
+      transition: { 
+        type: "spring", 
+        stiffness: 100 
+      }
+    }
   };
-  return <div className="container px-4 pt-20 pb-20">
-      <div className="flex flex-wrap justify-center gap-2 mb-6">
-        {!isAuthenticated ? <Button onClick={() => navigate('/login')} variant="outline" className="flex items-center gap-1">
+
+  return (
+    <motion.div 
+      className="container px-4 pt-20 pb-20"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
+      <motion.div 
+        className="flex flex-wrap justify-center gap-2 mb-6"
+        variants={itemVariants}
+      >
+        {!isAuthenticated ? (
+          <Button 
+            onClick={() => navigate('/login')} 
+            variant="outline" 
+            className="flex items-center gap-1 bg-background/80 backdrop-blur-sm hover:bg-background border border-border/50 rounded-xl"
+          >
             <LogIn className="h-4 w-4" /> লগইন
-          </Button> : <>
-            
-            {isSeller && <Button onClick={() => navigate(user?.sellerType ? `/dashboard/${user.sellerType}` : '/seller-dashboard')} variant="outline" className="flex items-center gap-1">
+          </Button>
+        ) : (
+          <>
+            {isSeller && (
+              <Button 
+                onClick={() => navigate(user?.sellerType ? `/dashboard/${user.sellerType}` : '/seller-dashboard')} 
+                variant="outline" 
+                className="flex items-center gap-1 bg-background/80 backdrop-blur-sm hover:bg-background border border-border/50 rounded-xl"
+              >
                 <Store className="h-4 w-4" /> বিক্রেতা কেন্দ্র
-              </Button>}
-            {isAdmin && <Button onClick={() => navigate('/admin-dashboard')} variant="outline" className="flex items-center gap-1">
+              </Button>
+            )}
+            {isAdmin && (
+              <Button 
+                onClick={() => navigate('/admin-dashboard')} 
+                variant="outline" 
+                className="flex items-center gap-1 bg-background/80 backdrop-blur-sm hover:bg-background border border-border/50 rounded-xl"
+              >
                 <Briefcase className="h-4 w-4" /> অ্যাডমিন প্যানেল
-              </Button>}
-          </>}
-      </div>
+              </Button>
+            )}
+          </>
+        )}
+      </motion.div>
 
-      <div className="overflow-hidden px-4 py-3 mb-6">
-        <Carousel className="w-full">
-          <CarouselContent>
-            {bannerImages.map((image, index) => <CarouselItem key={index}>
-                <div className="p-1">
-                  <div className="overflow-hidden rounded-lg aspect-[16/6] w-full">
-                    <img src={image} alt={`Banner ${index + 1}`} className="w-full h-full object-cover" />
-                  </div>
-                </div>
-              </CarouselItem>)}
-          </CarouselContent>
-          <CarouselPrevious className="left-2" />
-          <CarouselNext className="right-2" />
-        </Carousel>
-      </div>
+      <motion.div 
+        className="my-8 relative z-0" 
+        variants={itemVariants}
+      >
+        <SearchBar variant="expanded" className="max-w-xl mx-auto" />
+      </motion.div>
+
+      <motion.div 
+        className="overflow-hidden px-0 py-3 mb-8" 
+        variants={itemVariants}
+      >
+        <BannerCarousel images={bannerImages} />
+      </motion.div>
       
-      <div className="mb-10">
+      <motion.div 
+        className="mb-10"
+        variants={itemVariants}
+      >
         <FeaturedDigitalProducts />
-      </div>
+      </motion.div>
 
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">ফিচার্ড লিস্টিং</h2>
-        </div>
-
-        <Tabs defaultValue="all">
-          <TabsList className="mb-4 w-full bg-secondary/50">
-            <TabsTrigger value="all" className="flex-1">সব</TabsTrigger>
-            <TabsTrigger value="rent" className="flex-1">রেন্ট</TabsTrigger>
-            <TabsTrigger value="services" className="flex-1">সার্ভিস</TabsTrigger>
-            <TabsTrigger value="marketplace" className="flex-1">মার্কেটপ্লেস</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="all">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {getListings('all').map(listing => <Card key={`all-${listing.id}-${listing.category}`} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => handleListingClick(listing.path)}>
-                  <div className="relative aspect-square">
-                    <img src={listing.image} alt={listing.title} className="w-full h-full object-cover" />
-                    <Badge className="absolute top-2 right-2">{listing.category}</Badge>
-                  </div>
-                  <CardContent className="p-3">
-                    <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
-                    <div className="flex items-center text-xs text-muted-foreground mt-1">
-                      <MapPin className="h-3 w-3 mr-1" />
-                      <span>{listing.location}</span>
-                    </div>
-                    <div className="flex items-center justify-between mt-2">
-                      <p className="text-sm font-bold text-primary">{listing.price}</p>
-                      <div className="flex items-center text-xs">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
-                        <span>4.8</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>)}
-            </div>
-            <div className="flex justify-center mt-4">
-              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/shopping')}>
-                সব দেখুন <ArrowRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="rent">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {getListings('rent').map(listing => <Card key={`rent-${listing.id}`} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => handleListingClick(listing.path)}>
-                  <div className="relative aspect-square">
-                    <img src={listing.image} alt={listing.title} className="w-full h-full object-cover" />
-                    <Badge className="absolute top-2 right-2">{listing.category}</Badge>
-                  </div>
-                  <CardContent className="p-3">
-                    <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
-                    <div className="flex items-center text-xs text-muted-foreground mt-1">
-                      <MapPin className="h-3 w-3 mr-1" />
-                      <span>{listing.location}</span>
-                    </div>
-                    <div className="flex items-center justify-between mt-2">
-                      <p className="text-sm font-bold text-primary">{listing.price}</p>
-                      <div className="flex items-center text-xs">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
-                        <span>4.8</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>)}
-            </div>
-            <div className="flex justify-center mt-4">
-              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/rentals')}>
-                আরও দেখুন <ArrowRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="services">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {getListings('services').map(listing => <Card key={`service-${listing.id}`} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => handleListingClick(listing.path)}>
-                  <div className="relative aspect-square">
-                    <img src={listing.image} alt={listing.title} className="w-full h-full object-cover" />
-                    <Badge className="absolute top-2 right-2">{listing.category}</Badge>
-                  </div>
-                  <CardContent className="p-3">
-                    <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
-                    <div className="flex items-center text-xs text-muted-foreground mt-1">
-                      <MapPin className="h-3 w-3 mr-1" />
-                      <span>{listing.location}</span>
-                    </div>
-                    <div className="flex items-center justify-between mt-2">
-                      <p className="text-sm font-bold text-primary">{listing.price}</p>
-                      <div className="flex items-center text-xs">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
-                        <span>4.8</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>)}
-            </div>
-            <div className="flex justify-center mt-4">
-              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/services')}>
-                আরও দেখুন <ArrowRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="marketplace">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {getListings('marketplace').map(listing => <Card key={`marketplace-${listing.id}`} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => handleListingClick(listing.path)}>
-                  <div className="relative aspect-square">
-                    <img src={listing.image} alt={listing.title} className="w-full h-full object-cover" />
-                    <Badge className="absolute top-2 right-2">{listing.category}</Badge>
-                  </div>
-                  <CardContent className="p-3">
-                    <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
-                    <div className="flex items-center text-xs text-muted-foreground mt-1">
-                      <MapPin className="h-3 w-3 mr-1" />
-                      <span>{listing.location}</span>
-                    </div>
-                    <div className="flex items-center justify-between mt-2">
-                      <p className="text-sm font-bold text-primary">{listing.price}</p>
-                      <div className="flex items-center text-xs">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
-                        <span>4.8</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>)}
-            </div>
-            <div className="flex justify-center mt-4">
-              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/marketplace')}>
-                আরও দেখুন <ArrowRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
-    </div>;
+      <motion.div 
+        className="mb-6"
+        variants={itemVariants}
+      >
+        <FeaturedListingsGrid listings={allListings} />
+      </motion.div>
+    </motion.div>
+  );
 };
+
 export default Index;
