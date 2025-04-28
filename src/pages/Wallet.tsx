@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   ArrowLeft,
@@ -8,7 +9,7 @@ import {
   History,
   Copy,
   Settings,
-  Wallet,
+  Wallet as WalletIcon,
   Download,
   SendHorizontal,
   Smartphone,
@@ -77,7 +78,7 @@ const Wallet = () => {
             { icon: <SendHorizontal className="h-6 w-6" />, label: "Send" },
             { icon: <Download className="h-6 w-6" />, label: "Receive" },
             { icon: <Gift className="h-6 w-6" />, label: "Red\nPacket" },
-            { icon: <Wallet className="h-6 w-6" />, label: "Send\nCash" },
+            { icon: <WalletIcon className="h-6 w-6" />, label: "Send\nCash" },
             { icon: <Smartphone className="h-6 w-6" />, label: "Mobile\nTop Up" },
             { icon: <DollarSign className="h-6 w-6" />, label: "$1 Game" },
             { icon: <RefreshCcw className="h-6 w-6" />, label: "Convert" },
