@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -57,6 +58,9 @@ import GroupBooking from "./pages/GroupBooking";
 import AdminDashboard from "./pages/AdminDashboard";
 import ProductDetail from "./pages/ProductDetail";
 import RentDetail from "./pages/RentDetail";
+import RentalBooking from "./pages/RentalBooking";
+import ContactOwner from "./pages/ContactOwner";
+import RentalConfirmation from "./pages/RentalConfirmation";
 import ProductOrder from "./pages/ProductOrder";
 import RentalCategoryPage from "./pages/RentalCategoryPage";
 import StoreDetails from "./pages/StoreDetails";
@@ -104,6 +108,10 @@ const App = () => (
                   <Route path="/kyc-verification/:step" element={<KycVerification />} />
                   <Route path="/rentals" element={<Rentals />} />
                   <Route path="/rental-category/:categoryId" element={<RentalCategoryPage />} />
+                  <Route path="/rent-details/:id" element={<RentDetail />} />
+                  <Route path="/rental-booking/:id" element={<RentalBooking />} />
+                  <Route path="/contact-owner/:id" element={<ContactOwner />} />
+                  <Route path="/rental-confirmation" element={<RentalConfirmation />} />
                   <Route path="/shopping" element={<Shopping />} />
                   <Route path="/shopping/category/:id" element={<ShoppingCategory />} />
                   <Route path="/marketplace" element={<Shopping />} />

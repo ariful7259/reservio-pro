@@ -203,6 +203,34 @@ const RentDetail = () => {
     setShowShareModal(true);
   };
 
+  // "ভাড়া দিন" বাটনের ক্লিক হ্যান্ডলার
+  const handleRentNow = () => {
+    console.log("Booking now for item ID:", id);
+    if (id && rental) {
+      navigate(`/rental-booking/${id}`, { 
+        state: { 
+          rental: rental 
+        } 
+      });
+    }
+  };
+
+  // "যোগাযোগ করুন" বাটনের ক্লিক হ্যান্ডলার
+  const handleContact = () => {
+    if (id && rental && rental.owner) {
+      navigate(`/contact-owner/${id}`, { 
+        state: { 
+          ownerInfo: rental.owner,
+          rentalInfo: {
+            id: rental.id,
+            title: rental.title,
+            image: rental.images[0]
+          }
+        } 
+      });
+    }
+  };
+
   if (loading) {
     return (
       <div className="container pt-20 pb-10">
@@ -442,10 +470,10 @@ const RentDetail = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Button className="w-full">
+                  <Button className="w-full" onClick={handleRentNow}>
                     ভাড়া দিন
                   </Button>
-                  <Button variant="outline" className="w-full">
+                  <Button variant="outline" className="w-full" onClick={handleContact}>
                     যোগাযোগ করুন
                   </Button>
                 </div>
