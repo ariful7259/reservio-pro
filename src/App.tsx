@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   BrowserRouter as Router,
@@ -19,7 +20,7 @@ import SearchResults from './pages/SearchResults';
 import ServiceDetails from './pages/ServiceDetails';
 import Rentals from './pages/Rentals';
 import { AuthProvider } from './hooks/useAuth';
-import { ToastProvider } from './hooks/use-toast';
+import { ToastProvider } from './components/ToastProvider';
 import { AdminConfigProvider } from './context/AdminConfigContext';
 import RentalItemDetail from './pages/RentalItemDetail';
 import RentalConfirmation from './pages/RentalConfirmation';
