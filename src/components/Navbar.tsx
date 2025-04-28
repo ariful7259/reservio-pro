@@ -8,6 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ const Navbar = () => {
   const {
     toast
   } = useToast();
+
   const navLinks = [{
     title: 'হোম',
     path: '/',
@@ -44,6 +46,7 @@ const Navbar = () => {
     path: '/shopping',
     icon: <ShoppingBag className="h-5 w-5" />
   }];
+
   const profileMenuItems = isAuthenticated ? [{
     icon: <User className="h-5 w-5" />,
     name: "প্রোফাইল",
@@ -70,6 +73,7 @@ const Navbar = () => {
     name: "লগইন",
     path: "/login"
   }];
+
   const communityFeatures = [{
     icon: <FileIcon className="h-4 w-4 text-blue-500" />,
     name: "স্টোরি শেয়ারিং",
@@ -91,6 +95,7 @@ const Navbar = () => {
     path: "/group-booking",
     description: "একসাথে সার্ভিস/প্রোডাক্ট নিন"
   }];
+
   const creatorSolutions = [{
     icon: <Store className="h-4 w-4 text-primary" />,
     name: "অনলাইন স্টোর",
@@ -167,6 +172,7 @@ const Navbar = () => {
     path: "/affiliate",
     description: "এফিলিয়েট মার্কেটিং ম্যানেজমেন্ট"
   }];
+
   const serviceCategories = [{
     name: "ডাক্তার",
     path: "/services/category/medical"
@@ -198,6 +204,7 @@ const Navbar = () => {
     name: "কনসালটেন্সি",
     path: "/services/category/consultancy"
   }];
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
@@ -205,9 +212,11 @@ const Navbar = () => {
       console.log(`Searching for: ${searchTerm}`);
     }
   };
+
   if (isAdminPage) {
     return null;
   }
+
   return <>
       <div className="bg-white border-b fixed top-0 left-0 right-0 z-50">
         <header className="container flex items-center justify-between h-16 px-4 md:px-6">
@@ -239,7 +248,8 @@ const Navbar = () => {
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel>কমিউনিটি ফিচার</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {communityFeatures.map((item, index) => <DropdownMenuItem key={index} asChild>
+                {communityFeatures.map((item, index) => (
+                  <DropdownMenuItem key={index} asChild>
                     <Link to={item.path} className="flex flex-col gap-1 py-2">
                       <div className="flex items-center gap-2">
                         {item.icon}
@@ -247,15 +257,19 @@ const Navbar = () => {
                       </div>
                       <p className="text-xs text-muted-foreground pl-6">{item.description}</p>
                     </Link>
-                  </DropdownMenuItem>)}
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
             
-            <Button variant="ghost" size="icon" className="rounded-full" onClick={() => navigate('/wallet')}>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="relative" 
+              onClick={() => navigate('/wallet')}
+            >
               <Wallet className="h-5 w-5" />
             </Button>
-
-            
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -268,15 +282,17 @@ const Navbar = () => {
                   {user ? user.name : "অ্যাকাউন্ট"}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {profileMenuItems.filter(item => !item.hasOwnProperty('show') || item.show).map((item, index) => <DropdownMenuItem key={index} asChild>
-                      {item.onClick ? <button onClick={item.onClick} className="flex items-center gap-2 w-full">
-                          {item.icon}
-                          <span>{item.name}</span>
-                        </button> : <Link to={item.path} className="flex items-center gap-2">
-                          {item.icon}
-                          <span>{item.name}</span>
-                        </Link>}
-                    </DropdownMenuItem>)}
+                {profileMenuItems.filter(item => !item.hasOwnProperty('show') || item.show).map((item, index) => (
+                  <DropdownMenuItem key={index} asChild>
+                    {item.onClick ? <button onClick={item.onClick} className="flex items-center gap-2 w-full">
+                        {item.icon}
+                        <span>{item.name}</span>
+                      </button> : <Link to={item.path} className="flex items-center gap-2">
+                        {item.icon}
+                        <span>{item.name}</span>
+                      </Link>}
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -286,90 +302,95 @@ const Navbar = () => {
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t h-16 z-40">
         <div className="grid grid-cols-5 h-full">
           {navLinks.map(link => {
-          const isActive = location.pathname === link.path;
-          if (link.title === 'পোস্ট করুন') {
-            return <Popover key={link.path}>
-                  <PopoverTrigger asChild>
-                    <div className="flex flex-col items-center justify-center relative cursor-pointer">
-                      <div className="bg-primary rounded-full h-10 w-10 flex items-center justify-center mb-1">
-                        <Plus className="h-6 w-6 text-white" />
+            const isActive = location.pathname === link.path;
+            if (link.title === 'পোস্ট করুন') {
+              return <Popover key={link.path}>
+                    <PopoverTrigger asChild>
+                      <div className="flex flex-col items-center justify-center relative cursor-pointer">
+                        <div className="bg-primary rounded-full h-10 w-10 flex items-center justify-center mb-1">
+                          <Plus className="h-6 w-6 text-white" />
+                        </div>
+                        <span className="text-xs mt-1 text-primary font-medium">{link.title}</span>
                       </div>
-                      <span className="text-xs mt-1 text-primary font-medium">{link.title}</span>
-                    </div>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-80 p-0" align="center">
-                    <div className="grid grid-cols-2 gap-2 p-4">
-                      <div className="col-span-2">
-                        <h3 className="font-semibold text-center mb-2">পোস্ট করুন</h3>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80 p-0" align="center">
+                      <div className="grid grid-cols-2 gap-2 p-4">
+                        <div className="col-span-2">
+                          <h3 className="font-semibold text-center mb-2">পোস্ট করুন</h3>
+                        </div>
+                        <Button variant="outline" onClick={() => navigate('/create-post')} className="flex flex-col items-center justify-center h-24 gap-2">
+                          <Building className="h-8 w-8 text-primary" />
+                          <span className="text-sm">রেন্টাল পোস্ট</span>
+                        </Button>
+                        <Button variant="outline" onClick={() => navigate('/create-post?type=service')} className="flex flex-col items-center justify-center h-24 gap-2">
+                          <Search className="h-8 w-8 text-blue-500" />
+                          <span className="text-sm">সার্ভিস পোস্ট</span>
+                        </Button>
+                        <Button variant="outline" onClick={() => navigate('/create-post?type=marketplace')} className="flex flex-col items-center justify-center h-24 gap-2">
+                          <ShoppingBag className="h-8 w-8 text-green-500" />
+                          <span className="text-sm">প্রোডাক্ট পোস্ট</span>
+                        </Button>
+                        
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="flex flex-col items-center justify-center h-24 gap-2">
+                              <Users className="h-8 w-8 text-amber-500" />
+                              <span className="text-sm">কমিউনিটি</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="w-56 max-h-[70vh] overflow-auto">
+                            <div className="grid grid-cols-1 gap-1 p-1">
+                              {communityFeatures.map((feature, index) => (
+                                <DropdownMenuItem key={index} asChild className="p-2">
+                                  <Link to={feature.path} className="flex flex-col gap-1">
+                                    <div className="flex items-center gap-2">
+                                      {feature.icon}
+                                      <span className="font-medium">{feature.name}</span>
+                                    </div>
+                                    <p className="text-xs text-muted-foreground pl-6">{feature.description}</p>
+                                  </Link>
+                                </DropdownMenuItem>
+                              ))}
+                            </div>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                        
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="flex flex-col items-center justify-center h-24 gap-2">
+                              <Rocket className="h-8 w-8 text-purple-500" />
+                              <span className="text-sm">ডিজিটাল ক্রিয়েটর</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="w-56 max-h-[70vh] overflow-auto">
+                            <div className="grid grid-cols-1 gap-1 p-1">
+                              {creatorSolutions.map((solution, index) => (
+                                <DropdownMenuItem key={index} asChild className="p-2">
+                                  <Link to={solution.path} className="flex flex-col gap-1">
+                                    <div className="flex items-center gap-2">
+                                      {solution.icon}
+                                      <span className="font-medium">{solution.name}</span>
+                                    </div>
+                                    <p className="text-xs text-muted-foreground pl-6">{solution.description}</p>
+                                  </Link>
+                                </DropdownMenuItem>
+                              ))}
+                            </div>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
-                      <Button variant="outline" onClick={() => navigate('/create-post')} className="flex flex-col items-center justify-center h-24 gap-2">
-                        <Building className="h-8 w-8 text-primary" />
-                        <span className="text-sm">রেন্টাল পোস্ট</span>
-                      </Button>
-                      <Button variant="outline" onClick={() => navigate('/create-post?type=service')} className="flex flex-col items-center justify-center h-24 gap-2">
-                        <Search className="h-8 w-8 text-blue-500" />
-                        <span className="text-sm">সার্ভিস পোস্ট</span>
-                      </Button>
-                      <Button variant="outline" onClick={() => navigate('/create-post?type=marketplace')} className="flex flex-col items-center justify-center h-24 gap-2">
-                        <ShoppingBag className="h-8 w-8 text-green-500" />
-                        <span className="text-sm">প্রোডাক্ট পোস্ট</span>
-                      </Button>
-                      
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="outline" className="flex flex-col items-center justify-center h-24 gap-2">
-                            <Users className="h-8 w-8 text-amber-500" />
-                            <span className="text-sm">কমিউনিটি</span>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56 max-h-[70vh] overflow-auto">
-                          <div className="grid grid-cols-1 gap-1 p-1">
-                            {communityFeatures.map((feature, index) => <DropdownMenuItem key={index} asChild className="p-2">
-                                <Link to={feature.path} className="flex flex-col gap-1">
-                                  <div className="flex items-center gap-2">
-                                    {feature.icon}
-                                    <span className="font-medium">{feature.name}</span>
-                                  </div>
-                                  <p className="text-xs text-muted-foreground pl-6">{feature.description}</p>
-                                </Link>
-                              </DropdownMenuItem>)}
-                          </div>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                      
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="outline" className="flex flex-col items-center justify-center h-24 gap-2">
-                            <Rocket className="h-8 w-8 text-purple-500" />
-                            <span className="text-sm">ডিজিটাল ক্রিয়েটর</span>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56 max-h-[70vh] overflow-auto">
-                          <div className="grid grid-cols-1 gap-1 p-1">
-                            {creatorSolutions.map((solution, index) => <DropdownMenuItem key={index} asChild className="p-2">
-                                <Link to={solution.path} className="flex flex-col gap-1">
-                                  <div className="flex items-center gap-2">
-                                    {solution.icon}
-                                    <span className="font-medium">{solution.name}</span>
-                                  </div>
-                                  <p className="text-xs text-muted-foreground pl-6">{solution.description}</p>
-                                </Link>
-                              </DropdownMenuItem>)}
-                          </div>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </PopoverContent>
-                </Popover>;
-          }
-          return <Link key={link.path} to={link.path} className={`flex flex-col items-center justify-center ${isActive ? 'text-primary' : 'text-gray-500'}`}>
-                {link.icon}
-                <span className="text-xs mt-1">{link.title}</span>
-                {isActive && <div className="absolute top-0 h-1 w-10 rounded-full bg-primary" />}
-              </Link>;
-        })}
+                    </PopoverContent>
+                  </Popover>;
+            }
+            return <Link key={link.path} to={link.path} className={`flex flex-col items-center justify-center ${isActive ? 'text-primary' : 'text-gray-500'}`}>
+              {link.icon}
+              <span className="text-xs mt-1">{link.title}</span>
+              {isActive && <div className="absolute top-0 h-1 w-10 rounded-full bg-primary" />}
+            </Link>;
+          })}
         </div>
       </nav>
     </>;
 };
+
 export default Navbar;
