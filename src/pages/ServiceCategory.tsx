@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
@@ -27,7 +26,6 @@ const ServiceCategory = () => {
   const [services, setServices] = useState<any[]>([]);
   const [filterVisible, setFilterVisible] = useState(false);
 
-  // Mock categories data
   const categories = [
     { id: 1, name: "মেডিকেল" },
     { id: 2, name: "সেলুন এবং পার্লার" },
@@ -39,7 +37,6 @@ const ServiceCategory = () => {
     { id: 8, name: "ইভেন্ট" },
   ];
 
-  // Mock service data
   const mockServices = [
     {
       id: 101,
@@ -55,7 +52,14 @@ const ServiceCategory = () => {
       image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
       isSponsored: true,
       isVerified: true,
-      isBookable: true
+      isBookable: true,
+      availableTimeSlots: [
+        "সকাল ১০:০০",
+        "সকাল ১১:০০",
+        "দুপুর ০৩:০০",
+        "বিকাল ০৫:০০"
+      ],
+      description: "অভিজ্ঞ জেনারেল ফিজিশিয়ান। সাধারণ রোগের চিকিৎসা, স্বাস্থ্য পরামর্শ এবং প্রতিরোধমূলক স্বাস্থ্যসেবা প্রদান করেন।"
     },
     {
       id: 102,
@@ -70,7 +74,14 @@ const ServiceCategory = () => {
       reviews: 189,
       image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
       isVerified: true,
-      isBookable: true
+      isBookable: true,
+      availableTimeSlots: [
+        "সকাল ০৯:০০",
+        "সকাল ১০:০০",
+        "দুপুর ১২:০০",
+        "বিকাল ০৪:০০"
+      ],
+      description: "দাঁতের সমস্ত রোগের চিকিৎসা, দাঁত পরিষ্কার এবং দাঁতের যত্ন সম্পর্কে পরামর্শ প্রদান করা হয়।"
     },
     {
       id: 201,
@@ -97,7 +108,7 @@ const ServiceCategory = () => {
       price: "৳১,৫০০+",
       rating: 4.6,
       reviews: 154,
-      image: "https://images.unsplash.com/photo-1560750588-73207b1ef5b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
+      image: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80",
       isSponsored: true,
       isBookable: true
     },
@@ -151,13 +162,11 @@ const ServiceCategory = () => {
 
   useEffect(() => {
     if (id) {
-      // Find category name
       const category = categories.find(c => c.id === parseInt(id));
       if (category) {
         setCategoryName(category.name);
       }
 
-      // Filter services by category ID
       const filteredServices = mockServices.filter(service => service.categoryId === parseInt(id));
       setServices(filteredServices);
     }
@@ -185,6 +194,10 @@ const ServiceCategory = () => {
       title: "শেয়ার করুন",
       description: "সার্ভিসটি শেয়ার করার লিংক কপি করা হয়েছে",
     });
+  };
+
+  const handleBookService = (serviceId: number) => {
+    navigate(`/services/${serviceId}/book`);
   };
 
   return (
@@ -304,8 +317,15 @@ const ServiceCategory = () => {
                   </div>
                   <div className="flex items-center justify-between mt-2">
                     <span className="font-bold text-primary">{service.price}</span>
-                    <Button size="sm" className="gap-1">
-                      {service.isBookable ? 'বুক করুন' : 'যোগাযোগ করুন'} <ArrowUpRight className="h-3 w-3" />
+                    <Button 
+                      size="sm" 
+                      className="gap-1"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBookService(service.id);
+                      }}
+                    >
+                      বুক করুন <ArrowUpRight className="h-3 w-3" />
                     </Button>
                   </div>
                 </div>
