@@ -6,7 +6,6 @@ import {
   ArrowDownLeft,
   Gift,
   Zap,
-  History,
   Copy,
   Settings,
   Wallet as WalletIcon,
@@ -14,16 +13,19 @@ import {
   SendHorizontal,
   Smartphone,
   DollarSign,
-  RefreshCcw,
+  RefreshCw,
   TimerReset,
   Users,
-  Flame,
-  ArrowRight
+  History,
+  QrCode
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import WalletCard from '@/components/WalletCard';
+import TransactionItem from '@/components/TransactionItem';
+import WalletNearbyServices from '@/components/WalletNearbyServices';
 
 const Wallet = () => {
   const navigate = useNavigate();
@@ -38,8 +40,27 @@ const Wallet = () => {
     });
   };
 
+  const recentTransactions = [
+    {
+      id: '1',
+      title: 'ফ্ল্যাট ভাড়া',
+      amount: 15000,
+      type: 'debit' as const,
+      category: 'rent' as const,
+      date: '২৮ এপ্রিল, ২০২৫'
+    },
+    {
+      id: '2',
+      title: 'সার্ভিস পেমেন্ট',
+      amount: 2500,
+      type: 'credit' as const,
+      category: 'service' as const,
+      date: '২৭ এপ্রিল, ২০২৫'
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-[#1A1F2C] text-white">
+    <div className="min-h-screen bg-gray-50">
       <div className="container px-4 pt-20 pb-20">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -47,19 +68,18 @@ const Wallet = () => {
             <Button 
               variant="ghost" 
               size="icon"
-              className="text-white"
               onClick={() => navigate(-1)}
             >
               <ArrowLeft className="h-6 w-6" />
             </Button>
             <div>
-              <h1 className="text-2xl font-bold">Pay</h1>
+              <h1 className="text-2xl font-bold">ওয়ালেট</h1>
               <div className="flex items-center gap-2">
-                <span className="text-gray-400">Binance ID: {walletId}</span>
+                <span className="text-gray-500">আইডি: {walletId}</span>
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className="h-4 w-4 text-gray-400"
+                  className="h-4 w-4"
                   onClick={handleCopyId}
                 >
                   <Copy className="h-4 w-4" />
@@ -67,28 +87,44 @@ const Wallet = () => {
               </div>
             </div>
           </div>
-          <Button variant="ghost" size="icon" className="text-white">
-            <Settings className="h-6 w-6" />
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="ghost" size="icon" onClick={() => navigate('/qr-scanner')}>
+              <QrCode className="h-6 w-6" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <Settings className="h-6 w-6" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Wallet Card */}
+        <div className="mb-6">
+          <WalletCard 
+            balance={25000}
+            lastTransaction={{
+              amount: 15000,
+              type: 'debit',
+              date: '২৮ এপ্রিল, ২০২৫'
+            }}
+          />
         </div>
 
         {/* Quick Actions Grid */}
         <div className="grid grid-cols-4 gap-4 mb-8">
           {[
-            { icon: <SendHorizontal className="h-6 w-6" />, label: "Send" },
-            { icon: <Download className="h-6 w-6" />, label: "Receive" },
-            { icon: <Gift className="h-6 w-6" />, label: "Red\nPacket" },
-            { icon: <WalletIcon className="h-6 w-6" />, label: "Send\nCash" },
-            { icon: <Smartphone className="h-6 w-6" />, label: "Mobile\nTop Up" },
-            { icon: <DollarSign className="h-6 w-6" />, label: "$1 Game" },
-            { icon: <RefreshCcw className="h-6 w-6" />, label: "Convert" },
-            { icon: <TimerReset className="h-6 w-6" />, label: "Flexible\nEarn" },
-            { icon: <Users className="h-6 w-6" />, label: "Send\nMultiple" },
+            { icon: <SendHorizontal className="h-6 w-6" />, label: "পাঠান" },
+            { icon: <Download className="h-6 w-6" />, label: "রিসিভ" },
+            { icon: <History className="h-6 w-6" />, label: "হিস্টোরি" },
+            { icon: <Gift className="h-6 w-6" />, label: "গিফট\nকার্ড" },
+            { icon: <Smartphone className="h-6 w-6" />, label: "মোবাইল\nরিচার্জ" },
+            { icon: <DollarSign className="h-6 w-6" />, label: "ক্যাশ\nআউট" },
+            { icon: <RefreshCw className="h-6 w-6" />, label: "কনভার্ট" },
+            { icon: <Users className="h-6 w-6" />, label: "গ্রুপ\nপেমেন্ট" },
           ].map((item, index) => (
             <Button
               key={index}
-              variant="ghost"
-              className="flex flex-col items-center justify-center h-24 rounded-xl hover:bg-white/10 transition-colors"
+              variant="outline"
+              className="flex flex-col items-center justify-center h-24 rounded-xl hover:bg-primary/5 transition-colors"
             >
               <div className="mb-2">{item.icon}</div>
               <span className="text-xs text-center whitespace-pre-line">{item.label}</span>
@@ -96,34 +132,26 @@ const Wallet = () => {
           ))}
         </div>
 
-        {/* Get Rewarded Section */}
-        <div className="mb-8">
-          <h2 className="text-xl font-bold mb-4">Get Rewarded</h2>
-          <div className="grid grid-cols-2 gap-4">
-            {[
-              { title: "Red Packet Giveaway", icon: <Gift className="h-6 w-6 text-primary" /> },
-              { title: "Share Red Packet", icon: <Gift className="h-6 w-6 text-primary" /> },
-              { title: "Hot Deals", icon: <Flame className="h-6 w-6 text-primary" /> },
-              { title: "Send Campaign", icon: <Gift className="h-6 w-6 text-primary" /> },
-            ].map((item, index) => (
-              <Card key={index} className="bg-[#1F2937] border-0">
-                <CardContent className="p-4 flex items-center gap-3">
-                  {item.icon}
-                  <span className="text-sm font-medium">{item.title}</span>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
+        {/* Recent Transactions */}
+        <Card className="mb-6">
+          <CardContent className="p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-lg">সাম্প্রতিক লেনদেন</h3>
+              <Button variant="link" className="p-0 text-sm">সব দেখুন</Button>
+            </div>
+            <div className="space-y-2">
+              {recentTransactions.map(transaction => (
+                <TransactionItem 
+                  key={transaction.id}
+                  {...transaction}
+                />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
-        {/* Transactions Button */}
-        <Button 
-          variant="ghost" 
-          className="w-full justify-between py-6 text-lg font-medium bg-[#1F2937] hover:bg-[#1F2937]/90"
-        >
-          <span>Transactions</span>
-          <ArrowRight className="h-5 w-5" />
-        </Button>
+        {/* Nearby Services */}
+        <WalletNearbyServices />
       </div>
     </div>
   );

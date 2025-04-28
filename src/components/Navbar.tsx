@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Search, Home, Building, ShoppingBag, ChevronDown, Plus, User, LogOut, Rocket, BookOpen, Mail, Calendar, Users, BarChart, DollarSign, MessageSquare, Store, Scissors, Briefcase, FileText, Video, Globe, Zap, Database, Cpu, Shield, FileText as FileIcon, Calendar as CalendarIcon, MessageCircle, UsersRound, LogIn, Bell, Wallet } from 'lucide-react';
+import { Search, Home, Building, ShoppingBag, ChevronDown, Plus, User, LogOut, Rocket, BookOpen, Mail, Calendar, Users, BarChart, DollarSign, MessageSquare, Store, Scissors, Briefcase, FileText, Video, Globe, Zap, Database, Cpu, Shield, FileText as FileIcon, Calendar as CalendarIcon, MessageCircle, UsersRound, LogIn, Bell, Wallet, QrCode } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { SidebarDrawer } from '@/components/SidebarDrawer';
@@ -170,7 +170,7 @@ const Navbar = () => {
     icon: <Zap className="h-4 w-4 text-amber-500" />,
     name: "এফিলিয়েট টুল",
     path: "/affiliate",
-    description: "এফিলিয়েট মার্কেটিং ম্যানেজমেন্ট"
+    description: "এফিলিয়ে�� মার্কেটিং ম্যানেজমেন্ট"
   }];
 
   const serviceCategories = [{
@@ -269,6 +269,15 @@ const Navbar = () => {
               onClick={() => navigate('/wallet')}
             >
               <Wallet className="h-5 w-5" />
+            </Button>
+
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="relative"
+              onClick={() => navigate('/qr-scanner')}
+            >
+              <QrCode className="h-5 w-5" />
             </Button>
 
             <DropdownMenu>
