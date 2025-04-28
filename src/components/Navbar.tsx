@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
@@ -33,6 +32,7 @@ import {
   MessageCircle,
   UsersRound,
   LogIn,
+  Bell
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -70,7 +70,6 @@ const Navbar = () => {
     { title: 'মার্কেটপ্লেস', path: '/shopping', icon: <ShoppingBag className="h-5 w-5" /> },
   ];
 
-  // Profile menu items
   const profileMenuItems = isAuthenticated ? [
     { icon: <User className="h-5 w-5" />, name: "প্রোফাইল", path: "/profile-management" },
     { 
@@ -96,7 +95,6 @@ const Navbar = () => {
     { icon: <LogIn className="h-5 w-5" />, name: "লগইন", path: "/login" },
   ];
 
-  // New community features menu items
   const communityFeatures = [
     { 
       icon: <FileIcon className="h-4 w-4 text-blue-500" />, 
@@ -124,7 +122,6 @@ const Navbar = () => {
     },
   ];
 
-  // Digital creator solutions - Enhanced with descriptions
   const creatorSolutions = [
     { 
       icon: <Store className="h-4 w-4 text-primary" />, 
@@ -218,7 +215,6 @@ const Navbar = () => {
     }
   ];
 
-  // Service categories expanded with salon and parlour
   const serviceCategories = [
     { name: "ডাক্তার", path: "/services/category/medical" },
     { name: "ডেন্টাল", path: "/services/category/dental" },
@@ -235,16 +231,11 @@ const Navbar = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
-      // Improved search functionality - navigate to search results page with query parameter
       navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
-      
-      // Display mock search results for demonstration purposes
       console.log(`Searching for: ${searchTerm}`);
-      // This would normally connect to a backend API to fetch actual search results
     }
   };
 
-  // Skip rendering Nav for admin pages
   if (isAdminPage) {
     return null;
   }
@@ -282,7 +273,6 @@ const Navbar = () => {
           </div>
           
           <div className="flex items-center gap-2">
-            {/* Community Features dropdown added to the top navigation */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm">
@@ -307,6 +297,10 @@ const Navbar = () => {
               </DropdownMenuContent>
             </DropdownMenu>
             
+            <Button variant="ghost" size="icon" className="rounded-full">
+              <Bell className="h-5 w-5" />
+            </Button>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon" className="rounded-full overflow-hidden">
@@ -358,7 +352,6 @@ const Navbar = () => {
           {navLinks.map((link) => {
             const isActive = location.pathname === link.path;
             
-            // Special handling for create post button with popover
             if (link.title === 'পোস্ট করুন') {
               return (
                 <Popover key={link.path}>
@@ -400,7 +393,6 @@ const Navbar = () => {
                         <span className="text-sm">প্রোডাক্ট পোস্ট</span>
                       </Button>
                       
-                      {/* Add Community Features section */}
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button 
