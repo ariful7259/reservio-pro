@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -25,9 +26,9 @@ export default {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         primary: {
-          DEFAULT: '#2e3f6e',
-          hover: '#243253',
-          light: '#eef2ff',
+          DEFAULT: '#E3324A',
+          hover: '#cc2d42',
+          light: '#ffeaec',
           foreground: '#ffffff'
         },
         secondary: {
@@ -111,3 +112,4 @@ export default {
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+
