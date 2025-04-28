@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
@@ -23,12 +24,11 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import SocialShareModal from '@/components/SocialShareModal';
-import { useShoppingState } from '@/hooks/useShoppingState';
-import { ProductReview } from '@/components/ProductReview';
 import { OnboardingTutorial } from '@/components/OnboardingTutorial';
 
+// তথ্য তৈরি করুন
 const products = [
   {
     id: "1",
@@ -106,7 +106,6 @@ const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { addToCart, toggleWishlist, isInWishlist, addLoyaltyPoints } = useShoppingState();
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -118,6 +117,7 @@ const ProductDetail = () => {
     const fetchProduct = () => {
       setLoading(true);
       try {
+        // ID সহ প্রোডাক্ট খুঁজুন
         const foundProduct = products.find(item => item.id === id);
         if (foundProduct) {
           setProduct(foundProduct);
@@ -159,22 +159,12 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (product) {
-      addToCart({
-        id: product.id,
-        title: product.title,
-        price: product.price,
-        quantity: quantity,
-        image: product.images[0]
-      });
-      
-      addLoyaltyPoints(10);
-      
       toast({
         title: "কার্টে যোগ করা হয়েছে",
         description: `${product.title} কার্টে যোগ করা হয়েছে।`,
       });
       
-      navigate('/cart');
+      navigate('/shopping');
     }
   };
 
@@ -224,8 +214,6 @@ const ProductDetail = () => {
       </div>
     );
   }
-
-  const isWishlisted = product ? isInWishlist(product.id) : false;
 
   return (
     <div className="container pt-20 pb-10">
@@ -458,8 +446,12 @@ const ProductDetail = () => {
           <TabsContent value="reviews">
             <Card>
               <CardContent className="p-6">
-                <h3 className="text-lg font-medium mb-4">রিভিউ লিখুন</h3>
-                <ProductReview productId={product?.id || ''} />
+                <h3 className="text-lg font-medium mb-4">রিভিউ</h3>
+                <div className="flex flex-col items-center justify-center py-8">
+                  <Star className="h-8 w-8 text-yellow-400 fill-yellow-400" />
+                  <p className="text-xl font-semibold mt-2">{product.seller.rating}</p>
+                  <p className="text-sm text-muted-foreground">{product.seller.reviews} রিভিউ</p>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -468,14 +460,16 @@ const ProductDetail = () => {
       
       <OnboardingTutorial />
       
-      <SocialShareModal 
-        open={showShareModal}
-        onOpenChange={setShowShareModal}
-        item={{
-          ...product,
-          type: 'product',
-        }}
-      />
+      {showShareModal && (
+        <SocialShareModal 
+          open={showShareModal}
+          onOpenChange={setShowShareModal}
+          item={{
+            ...product,
+            type: 'product',
+          }}
+        />
+      )}
     </div>
   );
 };
