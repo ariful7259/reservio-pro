@@ -92,15 +92,6 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1556122071-de6e3e1cca50?q=80&w=1000&auto=format&fit=crop',
         category: 'পরিবহন',
         rating: 4.5
-      },
-      {
-        id: 24,
-        title: 'ট্র্যাক্টর',
-        location: 'সাভার, ঢাকা',
-        price: '৳৩,৫০০/দিন',
-        image: 'https://images.unsplash.com/photo-1566213580536-76005ca1e093?q=80&w=1000&auto=format&fit=crop',
-        category: 'পরিবহন',
-        rating: 4.6
       }
     ]
   },
@@ -124,15 +115,6 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1478827536114-da961b7f86d2?q=80&w=1000&auto=format&fit=crop',
         category: 'ইভেন্ট সামগ্রী',
         rating: 4.7
-      },
-      {
-        id: 25,
-        title: 'ডেকোরেশন স্টেজ',
-        location: 'বনানী, ঢাকা',
-        price: '৳১৫,০০০/দিন',
-        image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1000&auto=format&fit=crop',
-        category: 'ইভেন্ট সামগ্রী',
-        rating: 4.8
       }
     ]
   },
@@ -156,15 +138,6 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1540574163026-643ea20ade25?q=80&w=1000&auto=format&fit=crop',
         category: 'ঘরোয়া সামগ্রী',
         rating: 4.4
-      },
-      {
-        id: 26,
-        title: 'ডাইনিং টেবিল সেট',
-        location: 'উত্তরা, ঢাকা',
-        price: '৳৮০০/দিন',
-        image: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?q=80&w=1000&auto=format&fit=crop',
-        category: 'ঘরোয়া সামগ্রী',
-        rating: 4.6
       }
     ]
   },
@@ -179,15 +152,6 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?q=80&w=1000&auto=format&fit=crop',
         category: 'শিক্ষা সামগ্রী',
         rating: 4.6
-      },
-      {
-        id: 27,
-        title: 'মেডিক্যাল বই সেট',
-        location: 'শাহবাগ, ঢাকা',
-        price: '৳৫০০/সপ্তাহ',
-        image: 'https://images.unsplash.com/photo-1585828068970-7b75082485cd?q=80&w=1000&auto=format&fit=crop',
-        category: 'শিক্ষা সামগ্রী',
-        rating: 4.7
       }
     ]
   },
@@ -202,15 +166,6 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=1000&auto=format&fit=crop',
         category: 'কৃষি যন্ত্রপাতি',
         rating: 4.5
-      },
-      {
-        id: 28,
-        title: 'স্প্রে মেশিন',
-        location: 'কেরানীগঞ্জ, ঢাকা',
-        price: '৳৫০০/দিন',
-        image: 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?q=80&w=1000&auto=format&fit=crop',
-        category: 'কৃষি যন্ত্রপাতি',
-        rating: 4.4
       }
     ]
   },
@@ -225,15 +180,6 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1525913984309-0d4086099e69?q=80&w=1000&auto=format&fit=crop',
         category: 'ব্যবসায়িক সামগ্রী',
         rating: 4.8
-      },
-      {
-        id: 29,
-        title: 'কনফারেন্স টেবিল',
-        location: 'বনানী, ঢাকা',
-        price: '৳১,৫০০/দিন',
-        image: 'https://images.unsplash.com/photo-1517502666016-48a08940ada7?q=80&w=1000&auto=format&fit=crop',
-        category: 'ব্যবসায়িক সামগ্রী',
-        rating: 4.7
       }
     ]
   },
@@ -248,15 +194,6 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=1000&auto=format&fit=crop',
         category: 'কারিগরি টুলস',
         rating: 4.7
-      },
-      {
-        id: 30,
-        title: 'ওয়েল্ডিং মেশিন',
-        location: 'গাজীপুর, ঢাকা',
-        price: '৳৮০০/দিন',
-        image: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?q=80&w=1000&auto=format&fit=crop',
-        category: 'কারিগরি টুলস',
-        rating: 4.6
       }
     ]
   },
@@ -271,15 +208,6 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1000&auto=format&fit=crop',
         category: 'অ্যাপার্টমেন্ট/ফ্ল্যাট',
         rating: 4.9
-      },
-      {
-        id: 31,
-        title: '২ বেডরুম ফ্ল্যাট',
-        location: 'বনানী, ঢাকা',
-        price: '৳২০,০০০/মাস',
-        image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1000&auto=format&fit=crop',
-        category: 'অ্যাপার্টমেন্ট/ফ্ল্যাট',
-        rating: 4.8
       }
     ]
   },
@@ -294,15 +222,6 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1000&auto=format&fit=crop',
         category: 'বাসা/বাড়ি',
         rating: 4.8
-      },
-      {
-        id: 32,
-        title: 'ডুপ্লেক্স বাড়ি',
-        location: 'ধানমন্ডি, ঢাকা',
-        price: '৳৫০,০০০/মাস',
-        image: 'https://images.unsplash.com/photo-1576941089067-2de3c901e126?q=80&w=1000&auto=format&fit=crop',
-        category: 'বাসা/বাড়ি',
-        rating: 4.9
       }
     ]
   },
@@ -317,15 +236,6 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=1000&auto=format&fit=crop',
         category: 'মেস/হোস্টেল',
         rating: 4.4
-      },
-      {
-        id: 33,
-        title: 'ছাত্রী হোস্টেল',
-        location: 'মোহাম্মদপুর, ঢাকা',
-        price: '৳৬,০০০/মাস',
-        image: 'https://images.unsplash.com/photo-1576645845284-a0dde265a1bb?q=80&w=1000&auto=format&fit=crop',
-        category: 'মেস/হোস্টেল',
-        rating: 4.5
       }
     ]
   },
@@ -340,15 +250,6 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=1000&auto=format&fit=crop',
         category: 'সিঙ্গেল রুম/শেয়ারড',
         rating: 4.5
-      },
-      {
-        id: 34,
-        title: 'শেয়ার্ড রুম (দুই জন)',
-        location: 'শাহবাগ, ঢাকা',
-        price: '৳৪,০০০/মাস',
-        image: 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?q=80&w=1000&auto=format&fit=crop',
-        category: 'সিঙ্গেল রুম/শেয়ারড',
-        rating: 4.3
       }
     ]
   },
@@ -363,15 +264,6 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1000&auto=format&fit=crop',
         category: 'কমার্শিয়াল স্পেস',
         rating: 4.7
-      },
-      {
-        id: 35,
-        title: 'শপিং মল স্পেস',
-        location: 'উত্তরা, ঢাকা',
-        price: '৳৬০,০০০/মাস',
-        image: 'https://images.unsplash.com/photo-1582037928769-351cc7459d4c?q=80&w=1000&auto=format&fit=crop',
-        category: 'কমার্শিয়াল স্পেস',
-        rating: 4.8
       }
     ]
   },
@@ -386,15 +278,6 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1586105251261-72a756497a11?q=80&w=1000&auto=format&fit=crop',
         category: 'গেস্ট হাউস/স্বল্পমেয়াদী',
         rating: 4.6
-      },
-      {
-        id: 36,
-        title: 'স্বল্পমেয়াদী অ্যাপার্টমেন্ট',
-        location: 'গুলশান, ঢাকা',
-        price: '৳৩,০০০/দিন',
-        image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1000&auto=format&fit=crop',
-        category: 'গেস্ট হাউস/স্বল্পমেয়াদী',
-        rating: 4.7
       }
     ]
   },
@@ -409,15 +292,6 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1572547736089-b3dd93c9ac2e?q=80&w=1000&auto=format&fit=crop',
         category: 'গ্রামীণ বাসস্থান',
         rating: 4.5
-      },
-      {
-        id: 37,
-        title: 'পল্লী বাড়ি',
-        location: 'সাভার, ঢাকা',
-        price: '৳১২,০০০/মাস',
-        image: 'https://images.unsplash.com/photo-1531971589569-0d9370cbe1e5?q=80&w=1000&auto=format&fit=crop',
-        category: 'গ্রামীণ বাসস্থান',
-        rating: 4.4
       }
     ]
   },
@@ -432,15 +306,6 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1558449028-b53a39d100fc?q=80&w=1000&auto=format&fit=crop',
         category: 'স্টুডিও/স্পেশাল স্পেস',
         rating: 4.8
-      },
-      {
-        id: 38,
-        title: 'রেকর্ডিং স্টুডিও',
-        location: 'বনানী, ঢাকা',
-        price: '৳১২,০০০/দিন',
-        image: 'https://images.unsplash.com/photo-1598488035139-bdaa7543d6f3?q=80&w=1000&auto=format&fit=crop',
-        category: 'স্টুডিও/স্পেশাল স্পেস',
-        rating: 4.9
       }
     ]
   },
