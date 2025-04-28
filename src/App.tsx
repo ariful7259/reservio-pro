@@ -66,6 +66,7 @@ import RentalCategoryPage from "./pages/RentalCategoryPage";
 import StoreDetails from "./pages/StoreDetails";
 import SellerDashboard from "./pages/SellerDashboard";
 import ServiceDetails from "./pages/ServiceDetail";
+import ServiceBooking from "./pages/ServiceBooking";
 
 // Import dashboard components
 import { DashboardLayout } from "./pages/dashboard/DashboardLayout";
@@ -98,6 +99,7 @@ const App = () => (
                   <Route path="/services" element={<Services />} />
                   <Route path="/services/:id" element={<ServiceDetails />} />
                   <Route path="/services/category/:id" element={<ServiceCategory />} />
+                  <Route path="/services/:id/book" element={<ServiceBooking />} />
                   <Route path="/appointments" element={<Appointments />} />
                   <Route path="/appointment-booking" element={<AppointmentBooking />} />
                   <Route path="/wallet" element={<Wallet />} />
@@ -114,6 +116,7 @@ const App = () => (
                   <Route path="/rental-confirmation" element={<RentalConfirmation />} />
                   <Route path="/shopping" element={<Shopping />} />
                   <Route path="/shopping/category/:id" element={<ShoppingCategory />} />
+                  <Route path="/shopping/product/:id" element={<ProductDetail />} />
                   <Route path="/marketplace" element={<Shopping />} />
                   <Route path="/notifications" element={<Notifications />} />
                   <Route path="/rent-anything" element={<RentAnything />} />
