@@ -32,7 +32,8 @@ import {
   MessageCircle,
   UsersRound,
   LogIn,
-  Bell
+  Bell,
+  Wallet
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -116,7 +117,7 @@ const Navbar = () => {
     },
     { 
       icon: <UsersRound className="h-4 w-4 text-orange-500" />, 
-      name: "গ্রুপ বুকিং", 
+      name: "গ্রুপ বুকি��", 
       path: "/group-booking",
       description: "একসাথে সার্ভিস/প্রোডাক্ট নিন" 
     },
@@ -297,6 +298,15 @@ const Navbar = () => {
               </DropdownMenuContent>
             </DropdownMenu>
             
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="rounded-full"
+              onClick={() => navigate('/wallet')}
+            >
+              <Wallet className="h-5 w-5" />
+            </Button>
+
             <Button variant="ghost" size="icon" className="rounded-full">
               <Bell className="h-5 w-5" />
             </Button>
