@@ -1,121 +1,122 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { 
-  Menu, 
-  Home, 
-  PaintBucket, 
-  Truck, 
-  Briefcase, 
-  Wrench,
-  Wallet,
-  Lightbulb,
-  HelpCircle,
-  Play,
-  User,
-  LogOut,
-  Plus,
-  MessageSquare,
-  ChevronDown,
-  Rocket,
-  ShieldCheck,
-  Fingerprint,
-  Users,
-  Award,
-  LogIn,
-  Book,
-  Calendar,
-  Heart,
-  MapPin,
-  List,
-  ShoppingBag,
-  Star,
-  Store
-} from 'lucide-react';
+import { Menu, Home, PaintBucket, Truck, Briefcase, Wrench, Wallet, Lightbulb, HelpCircle, Play, User, LogOut, Plus, MessageSquare, ChevronDown, Rocket, ShieldCheck, Fingerprint, Users, Award, LogIn, Book, Calendar, Heart, MapPin, List, ShoppingBag, Star, Store } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuGroup,
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuGroup } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-
 export const SidebarDrawer = () => {
   const [activePostType, setActivePostType] = useState('rent');
   const navigate = useNavigate();
-  const { user, isAuthenticated, logout, isAdmin } = useAuth();
-  const { toast } = useToast();
-  
-  const profileMenuItems = [
-    { icon: <User className="h-5 w-5" />, name: "ব্যক্তিগত তথ্য", path: "/profile-management" },
-    { icon: <MessageSquare className="h-5 w-5" />, name: "নোটিফিকেশন", path: "/notifications", badge: 2 },
-    { icon: <Wallet className="h-5 w-5" />, name: "ওয়ালেট", path: "/wallet" },
-    { icon: <ShieldCheck className="h-5 w-5" />, name: "সিকিউরিটি", path: "/security" },
-    { icon: <Fingerprint className="h-5 w-5" />, name: "KYC ভেরিফিকেশন", path: "/kyc-verification" },
-    { icon: <Lightbulb className="h-5 w-5" />, name: "ইউটিলিটিস", path: "/utilities" },
-    { icon: <HelpCircle className="h-5 w-5" />, name: "হেল্প এন্ড সাপোর্ট", path: "/help" },
-    { 
-      icon: <ShieldCheck className="h-5 w-5" />, 
-      name: "অ্যাডমিন ড্যাশবোর্ড", 
-      path: "/admin-dashboard",
-      show: isAdmin 
-    },
-  ];
+  const {
+    user,
+    isAuthenticated,
+    logout,
+    isAdmin
+  } = useAuth();
+  const {
+    toast
+  } = useToast();
+  const profileMenuItems = [{
+    icon: <User className="h-5 w-5" />,
+    name: "ব্যক্তিগত তথ্য",
+    path: "/profile-management"
+  }, {
+    icon: <MessageSquare className="h-5 w-5" />,
+    name: "নোটিফিকেশন",
+    path: "/notifications",
+    badge: 2
+  }, {
+    icon: <Wallet className="h-5 w-5" />,
+    name: "ওয়ালেট",
+    path: "/wallet"
+  }, {
+    icon: <ShieldCheck className="h-5 w-5" />,
+    name: "সিকিউরিটি",
+    path: "/security"
+  }, {
+    icon: <Fingerprint className="h-5 w-5" />,
+    name: "KYC ভেরিফিকেশন",
+    path: "/kyc-verification"
+  }, {
+    icon: <Lightbulb className="h-5 w-5" />,
+    name: "ইউটিলিটিস",
+    path: "/utilities"
+  }, {
+    icon: <HelpCircle className="h-5 w-5" />,
+    name: "হেল্প এন্ড সাপোর্ট",
+    path: "/help"
+  }, {
+    icon: <ShieldCheck className="h-5 w-5" />,
+    name: "অ্যাডমিন ড্যাশবোর্ড",
+    path: "/admin-dashboard",
+    show: isAdmin
+  }];
 
   // আমার সার্ভিসের ড্রপডাউন আইটেম
-  const myServicesMenuItems = [
-    { icon: <Book className="h-5 w-5" />, name: "আমার বুকিংস", path: "/my-services?tab=bookings" },
-    { icon: <Calendar className="h-5 w-5" />, name: "আমার অ্যাপয়েন্টমেন্টস", path: "/my-services?tab=appointments" },
-    { icon: <Heart className="h-5 w-5" />, name: "আমার শর্টলিস্ট", path: "/my-services?tab=shortlists" },
-    { icon: <MapPin className="h-5 w-5" />, name: "যোগাযোগকৃত প্রোপার্টি", path: "/my-services?tab=contactedProperties" },
-    { icon: <List className="h-5 w-5" />, name: "আমার লিস্টিংস", path: "/my-services?tab=listings" },
-    { icon: <ShoppingBag className="h-5 w-5" />, name: "আমার শপ", path: "/my-services?tab=shop" },
-    { icon: <Star className="h-5 w-5" />, name: "স্মার্ট রেকমেন্ডেশন", path: "/my-services?tab=recommendations" },
-    { icon: <Store className="h-5 w-5" />, name: "বিক্রেতা ড্যাশবোর্ড", path: "/my-services?tab=sellerDashboard" },
-  ];
-
-  const videoAds = [
-    {
-      thumbnail: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1000&auto=format&fit=crop",
-      title: "নতুন সার্ভিস উপলব্ধ",
-      description: "আমাদের নতুন সার্ভিস দেখুন এবং বুক করুন",
-      videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
-    },
-    {
-      thumbnail: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=1000&auto=format&fit=crop",
-      title: "সাপ্তাহিক অফার",
-      description: "সাপ্তাহিক অফার শেষ হতে আর ২ দিন বাকি",
-      videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
-    },
-    {
-      thumbnail: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
-      title: "ইলেক্ট্রনিক্স সেল",
-      description: "সকল ইলেক্ট্রনিক্স পণ্যে ২০% ছাড়",
-      videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
-    },
-  ];
-
+  const myServicesMenuItems = [{
+    icon: <Book className="h-5 w-5" />,
+    name: "আমার বুকিংস",
+    path: "/my-services?tab=bookings"
+  }, {
+    icon: <Calendar className="h-5 w-5" />,
+    name: "আমার অ্যাপয়েন্টমেন্টস",
+    path: "/my-services?tab=appointments"
+  }, {
+    icon: <Heart className="h-5 w-5" />,
+    name: "আমার শর্টলিস্ট",
+    path: "/my-services?tab=shortlists"
+  }, {
+    icon: <MapPin className="h-5 w-5" />,
+    name: "যোগাযোগকৃত প্রোপার্টি",
+    path: "/my-services?tab=contactedProperties"
+  }, {
+    icon: <List className="h-5 w-5" />,
+    name: "আমার লিস্টিংস",
+    path: "/my-services?tab=listings"
+  }, {
+    icon: <ShoppingBag className="h-5 w-5" />,
+    name: "আমার শপ",
+    path: "/my-services?tab=shop"
+  }, {
+    icon: <Star className="h-5 w-5" />,
+    name: "স্মার্ট রেকমেন্ডেশন",
+    path: "/my-services?tab=recommendations"
+  }, {
+    icon: <Store className="h-5 w-5" />,
+    name: "বিক্রেতা ড্যাশবোর্ড",
+    path: "/my-services?tab=sellerDashboard"
+  }];
+  const videoAds = [{
+    thumbnail: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1000&auto=format&fit=crop",
+    title: "নতুন সার্ভিস উপলব্ধ",
+    description: "আমাদের নতুন সার্ভিস দেখুন এবং বুক করুন",
+    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
+  }, {
+    thumbnail: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=1000&auto=format&fit=crop",
+    title: "সাপ্তাহিক অফার",
+    description: "সাপ্তাহিক অফার শেষ হতে আর ২ দিন বাকি",
+    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
+  }, {
+    thumbnail: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
+    title: "ইলেক্ট্রনিক্স সেল",
+    description: "সকল ইলেক্ট্রনিক্স পণ্যে ২০% ছাড়",
+    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
+  }];
   const handleLogout = () => {
     logout();
     toast({
       title: "লগআউট সফল",
-      description: "আপনি সফলভাবে লগআউট হয়েছেন",
+      description: "আপনি সফলভাবে লগআউট হয়েছেন"
     });
     navigate("/login");
   };
-
-  return (
-    <Drawer direction="left">
+  return <Drawer direction="left">
       <DrawerTrigger asChild>
         <Button variant="ghost" size="icon">
           <Menu className="h-5 w-5" />
@@ -124,8 +125,7 @@ export const SidebarDrawer = () => {
       </DrawerTrigger>
       <DrawerContent className="w-[85%] max-w-[350px] h-[100vh] overflow-y-auto left-0 right-auto">
         <DrawerHeader className="border-b pb-4">
-          {isAuthenticated && user ? (
-            <div className="flex items-center gap-3">
+          {isAuthenticated && user ? <div className="flex items-center gap-3">
               <Avatar>
                 <AvatarImage src={user.avatar || ""} alt={user.name} />
                 <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
@@ -141,24 +141,16 @@ export const SidebarDrawer = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  {profileMenuItems
-                    .filter(item => !item.hasOwnProperty('show') || item.show)
-                    .map((item, index) => (
-                    <DropdownMenuItem key={index} asChild>
+                  {profileMenuItems.filter(item => !item.hasOwnProperty('show') || item.show).map((item, index) => <DropdownMenuItem key={index} asChild>
                       <Link to={item.path} className="flex items-center gap-2 w-full">
                         {item.icon}
                         <span>{item.name}</span>
-                        {item.badge && (
-                          <Badge variant="destructive" className="ml-auto">{item.badge}</Badge>
-                        )}
+                        {item.badge && <Badge variant="destructive" className="ml-auto">{item.badge}</Badge>}
                       </Link>
-                    </DropdownMenuItem>
-                  ))}
+                    </DropdownMenuItem>)}
                 </DropdownMenuContent>
               </DropdownMenu>
-            </div>
-          ) : (
-            <div className="flex items-center justify-between w-full">
+            </div> : <div className="flex items-center justify-between w-full">
               <DrawerTitle className="text-lg">Reservio</DrawerTitle>
               <div className="flex gap-2">
                 <Button variant="outline" onClick={() => navigate("/login")}>
@@ -169,8 +161,7 @@ export const SidebarDrawer = () => {
                   সাইন আপ
                 </Button>
               </div>
-            </div>
-          )}
+            </div>}
         </DrawerHeader>
         
         <div className="px-4 space-y-6 py-4">
@@ -207,35 +198,25 @@ export const SidebarDrawer = () => {
             <h3 className="font-medium">নতুন ভিডিও</h3>
             <Carousel className="w-full">
               <CarouselContent>
-                {videoAds.map((ad, index) => (
-                  <CarouselItem key={index}>
+                {videoAds.map((ad, index) => <CarouselItem key={index}>
                     <div className="rounded-lg overflow-hidden border">
                       <div className="aspect-video bg-black flex items-center justify-center relative">
-                        <video 
-                          className="w-full h-full object-cover"
-                          poster={ad.thumbnail}
-                          controls
-                        >
+                        <video className="w-full h-full object-cover" poster={ad.thumbnail} controls>
                           <source src={ad.videoUrl} type="video/mp4" />
                           Your browser does not support the video tag.
                         </video>
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <Button 
-                            variant="outline" 
-                            size="icon" 
-                            className="bg-black/30 text-white border-white hover:bg-black/50 hover:text-white"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              const video = e.currentTarget.closest('.aspect-video')?.querySelector('video');
-                              if (video) {
-                                if (video.paused) {
-                                  video.play();
-                                } else {
-                                  video.pause();
-                                }
-                              }
-                            }}
-                          >
+                          <Button variant="outline" size="icon" className="bg-black/30 text-white border-white hover:bg-black/50 hover:text-white" onClick={e => {
+                        e.stopPropagation();
+                        const video = e.currentTarget.closest('.aspect-video')?.querySelector('video');
+                        if (video) {
+                          if (video.paused) {
+                            video.play();
+                          } else {
+                            video.pause();
+                          }
+                        }
+                      }}>
                             <Play className="h-6 w-6" />
                           </Button>
                         </div>
@@ -243,96 +224,63 @@ export const SidebarDrawer = () => {
                       <div className="p-3">
                         <h3 className="font-medium mb-2">{ad.title}</h3>
                         <p className="text-sm text-gray-600 mb-3">{ad.description}</p>
-                        <Button variant="default" size="sm" className="w-full" 
-                          onClick={() => window.location.href = '/services'}>
+                        <Button variant="default" size="sm" className="w-full" onClick={() => window.location.href = '/services'}>
                           বুক করুন
                         </Button>
                       </div>
                     </div>
-                  </CarouselItem>
-                ))}
+                  </CarouselItem>)}
               </CarouselContent>
               <CarouselPrevious className="left-1 h-8 w-8" />
               <CarouselNext className="right-1 h-8 w-8" />
             </Carousel>
 
-            {isAuthenticated && (
-              <div className="space-y-4 mt-4 p-4 border rounded-lg bg-gray-50">
+            {isAuthenticated && <div className="space-y-4 mt-4 p-4 border rounded-lg bg-gray-50">
                 <div className="flex items-center gap-2">
                   <User className="h-5 w-5 text-primary" />
                   <h3 className="font-medium">আমার সার্ভিস</h3>
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="outline" 
-                      className="w-full flex items-center justify-between"
-                    >
+                    <Button variant="outline" className="w-full flex items-center justify-between">
                       <span>আমার সার্ভিস দেখুন</span>
                       <ChevronDown className="h-4 w-4 ml-2" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-64">
                     <DropdownMenuGroup>
-                      {myServicesMenuItems.map((item, index) => (
-                        <DropdownMenuItem key={index} asChild>
-                          <Link 
-                            to={item.path} 
-                            className="flex items-center gap-2 w-full py-2"
-                            onClick={() => {
-                              navigate(item.path);
-                            }}
-                          >
+                      {myServicesMenuItems.map((item, index) => <DropdownMenuItem key={index} asChild>
+                          <Link to={item.path} className="flex items-center gap-2 w-full py-2" onClick={() => {
+                      navigate(item.path);
+                    }}>
                             {item.icon}
                             <span>{item.name}</span>
                           </Link>
-                        </DropdownMenuItem>
-                      ))}
+                        </DropdownMenuItem>)}
                     </DropdownMenuGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>
                 
-                {isAdmin && (
-                  <Button 
-                    onClick={() => navigate(user?.sellerType ? `/dashboard/${user.sellerType}` : '/seller-dashboard')} 
-                    variant="outline" 
-                    className="w-full mt-2"
-                  >
-                    বিক্রেতা কেন্দ্র
-                  </Button>
-                )}
-              </div>
-            )}
+                {isAdmin}
+              </div>}
           </div>
         </div>
         
         <DrawerFooter>
-          {isAuthenticated ? (
-            <>
+          {isAuthenticated ? <>
               <Separator className="mb-4" />
-              <Button 
-                variant="outline" 
-                className="w-full border-red-200 text-red-500 hover:bg-red-50 hover:text-red-600"
-                onClick={handleLogout}
-              >
+              <Button variant="outline" className="w-full border-red-200 text-red-500 hover:bg-red-50 hover:text-red-600" onClick={handleLogout}>
                 <LogOut className="h-4 w-4 mr-2" />
                 লগ আউট
               </Button>
-            </>
-          ) : (
-            <>
+            </> : <>
               <Separator className="mb-4" />
-              <Button 
-                className="w-full"
-                onClick={() => navigate("/login")}
-              >
+              <Button className="w-full" onClick={() => navigate("/login")}>
                 <LogIn className="h-4 w-4 mr-2" />
                 লগইন করুন
               </Button>
-            </>
-          )}
+            </>}
         </DrawerFooter>
       </DrawerContent>
-    </Drawer>
-  );
+    </Drawer>;
 };
