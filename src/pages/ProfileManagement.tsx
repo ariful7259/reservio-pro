@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -29,7 +30,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useToast } from "@/hooks/use-toast";
-import { Camera, Edit, Loader2, LogOut, ShieldCheck, User, Store, Building, Wrench, Video, BarChart3 } from "lucide-react";
+import { Camera, Edit, Loader2, LogOut, ShieldCheck, User, Store, Building, Wrench, Video, BarChart3, Lock, Key, Smartphone, AlertCircle, Badge } from "lucide-react";
+import { Badge as UIBadge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 
 const profileFormSchema = z.object({
   name: z.string().min(2, "নাম কমপক্ষে ২ অক্ষর হতে হবে"),
@@ -174,12 +177,15 @@ const ProfileManagement = () => {
 
           <div className="flex-1">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid grid-cols-2 mb-4">
+              <TabsList className="grid grid-cols-3 mb-4">
                 <TabsTrigger value="general" className="flex gap-2 items-center">
                   <User className="h-4 w-4" /> প্রোফাইল তথ্য
                 </TabsTrigger>
                 <TabsTrigger value="security" className="flex gap-2 items-center">
                   <ShieldCheck className="h-4 w-4" /> সিকিউরিটি
+                </TabsTrigger>
+                <TabsTrigger value="kyc" className="flex gap-2 items-center">
+                  <Badge className="h-4 w-4" /> KYC
                 </TabsTrigger>
               </TabsList>
               
@@ -264,68 +270,198 @@ const ProfileManagement = () => {
               </TabsContent>
               
               <TabsContent value="security">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>পাসওয়ার্ড পরিবর্তন</CardTitle>
-                    <CardDescription>
-                      আপনার অ্যাকাউন্টের সিকিউরিটি আপডেট করুন
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Form {...securityForm}>
-                      <form onSubmit={securityForm.handleSubmit(onSecuritySubmit)} className="space-y-4">
-                        <FormField
-                          control={securityForm.control}
-                          name="currentPassword"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>বর্তমান পাসওয়ার্ড</FormLabel>
-                              <FormControl>
-                                <Input placeholder="বর্তমান পাসওয়ার্ড" type="password" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={securityForm.control}
-                          name="newPassword"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>নতুন পাসওয়ার্ড</FormLabel>
-                              <FormControl>
-                                <Input placeholder="নতুন পাসওয়ার্ড" type="password" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={securityForm.control}
-                          name="confirmNewPassword"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>নতুন পাসওয়ার্ড নিশ্চিত করুন</FormLabel>
-                              <FormControl>
-                                <Input placeholder="নতুন পাসওয়ার্ড আবার লিখুন" type="password" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <Button type="submit" className="w-full" disabled={isSecuritySubmitting}>
-                          {isSecuritySubmitting ? (
-                            <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> আপডেট হচ্ছে
-                            </>
-                          ) : (
-                            "পাসওয়ার্ড আপডেট করুন"
-                          )}
+                <div className="space-y-6">
+                  <Card className="border">
+                    <CardHeader>
+                      <CardTitle className="text-lg">সিকিউরিটি স্কোর</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-5">
+                      <div className="mb-6">
+                        <div className="flex justify-between items-center mb-2">
+                          <h3 className="font-semibold">সিকিউরিটি স্কোর</h3>
+                          <UIBadge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200">যাচাই করুন</UIBadge>
+                        </div>
+                        <Progress value={70} className="h-2 mb-2" />
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">৭০% সুরক্ষিত</span>
+                          <span className="text-amber-600">সুপারিশ</span>
+                        </div>
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-4">উন্নত নিরাপত্তার জন্য ২FA সক্রিয় করুন</p>
+                      <Button variant="default" className="w-full" onClick={() => navigate('/security/2fa')}>
+                        নিরাপত্তা বাড়ান
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border">
+                    <CardHeader>
+                      <CardTitle className="text-lg">টু-ফ্যাক্টর অথেনটিকেশন (2FA)</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4 px-5">
+                      <div className="flex items-center justify-between p-4 rounded-lg border bg-card">
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                            <Smartphone className="h-5 w-5" />
+                          </div>
+                          <div>
+                            <p className="font-medium">মোবাইল OTP</p>
+                            <p className="text-sm text-muted-foreground">লগইন করতে মোবাইলে পাঠানো OTP ব্যবহার করুন</p>
+                          </div>
+                        </div>
+                        <UIBadge className="bg-green-100 text-green-600 border-0">সক্রিয়</UIBadge>
+                      </div>
+
+                      <div className="flex items-center justify-between p-4 rounded-lg border bg-card">
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
+                            <Key className="h-5 w-5" />
+                          </div>
+                          <div>
+                            <p className="font-medium">অথেনটিকেটর অ্যাপ</p>
+                            <p className="text-sm text-muted-foreground">Google Authenticator বা অন্য 2FA অ্যাপ ব্যবহার করুন</p>
+                          </div>
+                        </div>
+                        <Button size="sm" variant="outline">
+                          সক্রিয় করুন
                         </Button>
-                      </form>
-                    </Form>
-                  </CardContent>
-                </Card>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg">পাসওয়ার্ড পরিবর্তন</CardTitle>
+                      <CardDescription>
+                        আপনার অ্যাকাউন্টের সিকিউরিটি আপডেট করুন
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Form {...securityForm}>
+                        <form onSubmit={securityForm.handleSubmit(onSecuritySubmit)} className="space-y-4">
+                          <FormField
+                            control={securityForm.control}
+                            name="currentPassword"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>বর্তমান পাসওয়ার্ড</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="বর্তমান পাসওয়ার্ড" type="password" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={securityForm.control}
+                            name="newPassword"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>নতুন পাসওয়ার্ড</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="নতুন পাসওয়ার্ড" type="password" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={securityForm.control}
+                            name="confirmNewPassword"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>নতুন পাসওয়ার্ড নিশ্চিত করুন</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="নতুন পাসওয়ার্ড আবার লিখুন" type="password" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <Button type="submit" className="w-full" disabled={isSecuritySubmitting}>
+                            {isSecuritySubmitting ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> আপডেট হচ্ছে
+                              </>
+                            ) : (
+                              "পাসওয়ার্ড আপডেট করুন"
+                            )}
+                          </Button>
+                        </form>
+                      </Form>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="kyc">
+                <div className="space-y-6">
+                  <Card className="border">
+                    <CardContent className="p-5">
+                      <div className="mb-6">
+                        <div className="flex justify-between items-center mb-2">
+                          <h3 className="font-semibold">KYC সম্পূর্ণতা</h3>
+                          <span className="text-sm font-medium">৫০%</span>
+                        </div>
+                        <Progress value={50} className="h-2 mb-2" />
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">আরও ২টি ধাপ বাকি আছে</span>
+                          <span className="text-amber-600">পেন্ডিং</span>
+                        </div>
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-4">আপনার KYC প্রক্রিয়া সম্পূর্ণ করতে বাকি স্টেপগুলো শেষ করুন</p>
+                      <Button variant="default" className="w-full" onClick={() => navigate('/kyc-verification')}>
+                        KYC সম্পূর্ণ করুন
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border">
+                    <CardHeader>
+                      <CardTitle className="text-lg">KYC স্ট্যাটাস</CardTitle>
+                    </CardHeader>
+                    <CardContent className="px-5 space-y-4">
+                      <div className="flex items-center justify-between p-4 rounded-lg border">
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                            <User className="h-5 w-5" />
+                          </div>
+                          <div>
+                            <p className="font-medium">ব্যক্তিগত তথ্য</p>
+                            <p className="text-sm text-muted-foreground">নাম, জন্ম তারিখ, এবং যোগাযোগের তথ্য</p>
+                          </div>
+                        </div>
+                        <UIBadge className="bg-green-100 text-green-600 border-0">সম্পূর্ণ</UIBadge>
+                      </div>
+
+                      <div className="flex items-center justify-between p-4 rounded-lg border">
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+                            <AlertCircle className="h-5 w-5" />
+                          </div>
+                          <div>
+                            <p className="font-medium">NID যাচাইকরণ</p>
+                            <p className="text-sm text-muted-foreground">জাতীয় পরিচয়পত্রের তথ্য যাচাইকরণ</p>
+                          </div>
+                        </div>
+                        <UIBadge className="bg-amber-100 text-amber-600 border-0">পেন্ডিং</UIBadge>
+                      </div>
+
+                      <div className="flex items-center justify-between p-4 rounded-lg border">
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center text-red-600">
+                            <Smartphone className="h-5 w-5" />
+                          </div>
+                          <div>
+                            <p className="font-medium">মোবাইল ভেরিফিকেশন</p>
+                            <p className="text-sm text-muted-foreground">মোবাইল নম্বর যাচাইকরণ</p>
+                          </div>
+                        </div>
+                        <UIBadge className="bg-red-100 text-red-600 border-0">অসম্পূর্ণ</UIBadge>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
               </TabsContent>
             </Tabs>
           </div>
