@@ -3,9 +3,11 @@ import {
   PaintBucket, Truck, Home, AirVent, Hammer, 
   Wrench, Pipette, HousePlus, User, MessageSquare, 
   Wallet, ShieldCheck, Fingerprint, Lightbulb, HelpCircle, 
-  Book, Calendar, Heart, MapPin, List, ShoppingBag, Star, 
+  Book, Calendar, Heart, MapPin, List, ShoppingBag, Star,
   Store, File, Gavel, UserCheck, Building, DollarSign, 
-  FileText, Calculator, Share2, MessageCircle, Info, Briefcase
+  FileText, Calculator, Share2, MessageCircle, Info, Briefcase,
+  ChartBar, Badge, ArrowDownToLine, Currency, Award, Link,
+  FileChartBar
 } from 'lucide-react';
 import React from 'react';
 
@@ -102,12 +104,22 @@ export const utilitiesMenuItems = [
   {
     icon: <DollarSign className="h-5 w-5 text-red-500" />,
     name: "ট্রানজেকশন হিস্টরি",
-    path: "/utilities/transaction-history"
+    path: "/payment/transaction-history"
   },
   {
     icon: <Star className="h-5 w-5 text-red-500" />,
-    name: "লয়াল্টি পয়েন্টস",
-    path: "/utilities/loyalty-points"
+    name: "রেটিং এবং রিভিউ",
+    path: "/ratings-reviews"
+  },
+  {
+    icon: <Link className="h-5 w-5 text-red-500" />,
+    name: "পেমেন্ট লিংক জেনারেটর",
+    path: "/payment/payment-links"
+  },
+  {
+    icon: <Award className="h-5 w-5 text-red-500" />,
+    name: "লয়ালটি প্রোগ্রাম",
+    path: "/loyalty-program"
   }
 ];
 
@@ -148,12 +160,12 @@ export const collapsibleMenuIcons = {
   payment: <Wallet className="h-5 w-5 text-red-500 mr-2" />
 };
 
-// Payment Menu Items (New)
+// Payment Menu Items
 export const paymentMenuItems = [
   {
-    icon: <DollarSign className="h-5 w-5 text-red-500" />,
-    name: "একাউন্ট ব্যালেন্স",
-    path: "/payment/account-balance"
+    icon: <ChartBar className="h-5 w-5 text-red-500" />,
+    name: "পেমেন্ট এনালিটিক্স",
+    path: "/payment/analytics"
   },
   {
     icon: <Wallet className="h-5 w-5 text-red-500" />,
@@ -174,15 +186,25 @@ export const paymentMenuItems = [
     icon: <Calculator className="h-5 w-5 text-red-500" />,
     name: "কমিশন ক্যালকুলেটর",
     path: "/payment/commission-calculator"
+  },
+  {
+    icon: <ArrowDownToLine className="h-5 w-5 text-red-500" />,
+    name: "অটোমেটিক রিফান্ড",
+    path: "/payment/auto-refund"
+  },
+  {
+    icon: <Currency className="h-5 w-5 text-red-500" />,
+    name: "মাল্টি-কারেন্সি সাপোর্ট",
+    path: "/payment/multi-currency"
   }
 ];
 
-// Merchant Resources (New)
+// Merchant Resources
 export const merchantResources = [
   {
-    icon: <DollarSign className="h-5 w-5 text-red-500" />,
-    name: "বিক্রেতা প্যানেল",
-    path: "/merchant/dashboard"
+    icon: <FileChartBar className="h-5 w-5 text-red-500" />,
+    name: "সেলস এনালিটিক্স",
+    path: "/merchant/analytics"
   },
   {
     icon: <ShoppingBag className="h-5 w-5 text-red-500" />,
@@ -198,5 +220,10 @@ export const merchantResources = [
     icon: <Star className="h-5 w-5 text-red-500" />,
     name: "রেটিং এবং রিভিউ",
     path: "/merchant/ratings"
+  },
+  {
+    icon: <Badge className="h-5 w-5 text-red-500" />,
+    name: "ভেরিফিকেশন স্ট্যাটাস",
+    path: "/merchant/verification"
   }
 ];
