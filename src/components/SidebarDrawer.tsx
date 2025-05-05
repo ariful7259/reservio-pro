@@ -7,7 +7,7 @@ import {
   ShieldCheck, Fingerprint, Users, Award, LogIn, Book, Calendar, Heart, 
   MapPin, List, ShoppingBag, Star, Store, File, Gavel, UserCheck, Building, 
   Home as HomeIcon, DollarSign, FileText, Calculator, Share2, 
-  HelpCircle as HelpIcon, MessageCircle, Info, BookOpen, FileIcon, CalendarIcon, UsersRound
+  HelpCircle as HelpIcon, MessageCircle, Info 
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
@@ -101,29 +101,6 @@ export const SidebarDrawer = () => {
     icon: <Store className="h-5 w-5" />,
     name: "বিক্রেতা ড্যাশবোর্ড",
     path: "/my-services?tab=sellerDashboard"
-  }];
-
-  // নতুন - কমিউনিটি ফিচার মেনু আইটেম
-  const communityFeatures = [{
-    icon: <FileIcon className="h-5 w-5 text-blue-500" />,
-    name: "স্টোরি শেয়ারিং",
-    path: "/stories",
-    description: "অভিজ্ঞতা শেয়ার করুন"
-  }, {
-    icon: <CalendarIcon className="h-5 w-5 text-green-500" />,
-    name: "ইভেন্ট ক্যালেন্ডার",
-    path: "/events",
-    description: "কমিউনিটি ইভেন্টগুলো দেখুন"
-  }, {
-    icon: <MessageCircle className="h-5 w-5 text-purple-500" />,
-    name: "ফোরাম",
-    path: "/forums",
-    description: "কমিউনিটি আলোচনা"
-  }, {
-    icon: <UsersRound className="h-5 w-5 text-orange-500" />,
-    name: "গ্রুপ বুকিং",
-    path: "/group-booking",
-    description: "একসাথে সার্ভিস/প্রোডাক্ট নিন"
   }];
 
   // লিগ্যাল অ্যাসিস্ট্যান্স এন্ড লোন মেনু আইটেম
@@ -328,29 +305,6 @@ export const SidebarDrawer = () => {
               <CarouselPrevious className="left-1 h-8 w-8" />
               <CarouselNext className="right-1 h-8 w-8" />
             </Carousel>
-
-            {/* নতুন - কমিউনিটি ফিচার সেকশন */}
-            <div className="space-y-4 mt-4 p-4 border rounded-lg bg-gray-50">
-              <div className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-blue-500" />
-                <h3 className="font-medium">কমিউনিটি ফিচার</h3>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                {communityFeatures.map((feature, index) => (
-                  <Link
-                    key={index}
-                    to={feature.path}
-                    className="flex flex-col gap-1 p-3 border rounded-md hover:bg-gray-100"
-                  >
-                    <div className="flex items-center gap-2">
-                      {feature.icon}
-                      <span className="text-sm font-medium">{feature.name}</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground">{feature.description}</p>
-                  </Link>
-                ))}
-              </div>
-            </div>
 
             {isAuthenticated && <div className="space-y-4 mt-4 p-4 border rounded-lg bg-gray-50">
                 <div className="flex items-center gap-2">
