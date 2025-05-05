@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, Home, PaintBucket, Truck, Briefcase, Wrench, Wallet, Lightbulb, HelpCircle, Play, User, LogOut, Plus, MessageSquare, ChevronDown, Rocket, ShieldCheck, Fingerprint, Users, Award, LogIn, Book, Calendar, Heart, MapPin, List, ShoppingBag, Star, Store } from 'lucide-react';
@@ -176,24 +177,6 @@ export const SidebarDrawer = () => {
             </Link>
           </div>
           
-          <div className="space-y-4 p-4 border rounded-lg bg-gradient-to-r from-primary/10 to-purple-100 border-primary/20">
-            <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
-                <Users className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-medium text-lg">রেফারেল সিস্টেম</h3>
-                <p className="text-sm">বন্ধুদের আমন্ত্রণ জানিয়ে উপার্জন করুন</p>
-              </div>
-            </div>
-            <Link to="/referral">
-              <Button className="w-full gap-2" variant="outline">
-                <Award className="h-4 w-4" />
-                রেফারেল পেতে ক্লিক করুন
-              </Button>
-            </Link>
-          </div>
-          
           <div className="space-y-2">
             <h3 className="font-medium">নতুন ভিডিও</h3>
             <Carousel className="w-full">
@@ -263,6 +246,25 @@ export const SidebarDrawer = () => {
                 
                 {isAdmin}
               </div>}
+              
+              {/* রেফারেল সিস্টেম অংশ - আমার সার্ভিসের নিচে স্থানান্তরিত */}
+              <div className="space-y-4 p-4 border rounded-lg bg-gradient-to-r from-primary/10 to-purple-100 border-primary/20">
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
+                    <Users className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-lg">রেফারেল সিস্টেম</h3>
+                    <p className="text-sm">বন্ধুদের আমন্ত্রণ জানিয়ে উপার্জন করুন</p>
+                  </div>
+                </div>
+                <Link to="/referral">
+                  <Button className="w-full gap-2" variant="outline">
+                    <Award className="h-4 w-4" />
+                    রেফারেল পেতে ক্লিক করুন
+                  </Button>
+                </Link>
+              </div>
           </div>
         </div>
         
