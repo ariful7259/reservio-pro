@@ -11,6 +11,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import ContactList from './ContactList';
+import MobileContactAccess from './MobileContactAccess';
+import { AnalyzedContact } from '@/hooks/useContactAnalysis';
 
 const ContactsTab = () => {
   const { contacts, loading, error, addContact, addBulkContacts, uploadCsvContacts, inviteContact, inviteAll, deleteContact } = useContactManagement();
@@ -212,6 +214,11 @@ const ContactsTab = () => {
     }
   };
   
+  const handleContactsAnalyzed = (analyzedContacts: AnalyzedContact[]) => {
+    // এখানে আপনি analyzedContacts দিয়ে অতিরিক্ত কিছু করতে পারেন
+    console.log('Analyzed contacts:', analyzedContacts);
+  };
+  
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -348,10 +355,8 @@ const ContactsTab = () => {
               </DialogContent>
             </Dialog>
             
-            <Button variant="outline" className="w-full gap-2">
-              <Smartphone className="h-4 w-4" />
-              মোবাইল কন্টাক্ট
-            </Button>
+            {/* মোবাইল কন্টাক্ট বাটন যোগ করছি */}
+            <MobileContactAccess onContactsAnalyzed={handleContactsAnalyzed} />
           </CardContent>
         </Card>
       </div>
