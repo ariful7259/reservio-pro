@@ -1,7 +1,14 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, Home, PaintBucket, Truck, Briefcase, Wrench, Wallet, Lightbulb, HelpCircle, Play, User, LogOut, Plus, MessageSquare, ChevronDown, Rocket, ShieldCheck, Fingerprint, Users, Award, LogIn, Book, Calendar, Heart, MapPin, List, ShoppingBag, Star, Store, File, Gavel, UserCheck, Building, Home as HomeIcon, DollarSign, FileText, Calculator, Share2, HelpCircle as HelpIcon, MessageCircle, Info } from 'lucide-react';
+import { 
+  Menu, Home, PaintBucket, Truck, Briefcase, Wrench, Wallet, Lightbulb, 
+  HelpCircle, Play, User, LogOut, Plus, MessageSquare, ChevronDown, Rocket, 
+  ShieldCheck, Fingerprint, Users, Award, LogIn, Book, Calendar, Heart, 
+  MapPin, List, ShoppingBag, Star, Store, File, Gavel, UserCheck, Building, 
+  Home as HomeIcon, DollarSign, FileText, Calculator, Share2, 
+  HelpCircle as HelpIcon, MessageCircle, Info 
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';

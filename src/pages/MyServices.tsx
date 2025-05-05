@@ -24,7 +24,9 @@ import {
   Share2,
   HelpCircle,
   MessageCircle,
-  Info
+  Info,
+  Briefcase,
+  Wrench
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';

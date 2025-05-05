@@ -1,7 +1,14 @@
 
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Search, Home, Building, ShoppingBag, ChevronDown, Plus, User, LogOut, Rocket, BookOpen, Mail, Calendar, Users, BarChart, DollarSign, MessageSquare, Store, Scissors, Briefcase, FileText, Video, Globe, Zap, Database, Cpu, Shield, FileText as FileIcon, Calendar as CalendarIcon, MessageCircle, UsersRound, LogIn, Bell, Wallet, QrCode, File, Gavel, UserCheck, Home as HomeIcon, Calculator, Share2, HelpCircle as HelpIcon, Info } from 'lucide-react';
+import { 
+  Search, Home, Building, ShoppingBag, ChevronDown, Plus, User, LogOut, Rocket, 
+  Mail, Calendar, Users, BarChart, DollarSign, MessageSquare, Store, Briefcase, 
+  FileText, Video, Globe, Zap, Database, Cpu, Shield, FileText as FileIcon, 
+  Calendar as CalendarIcon, MessageCircle, UsersRound, LogIn, Bell, Wallet, QrCode, 
+  File, Gavel, UserCheck, Home as HomeIcon, Calculator, Share2, HelpCircle as HelpIcon, 
+  Info, Book, Wrench
+} from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { SidebarDrawer } from '@/components/SidebarDrawer';
