@@ -7,7 +7,7 @@ import {
   FileText, Video, Globe, Zap, Database, Cpu, Shield, FileText as FileIcon, 
   Calendar as CalendarIcon, MessageCircle, UsersRound, LogIn, Bell, Wallet, QrCode, 
   File, Gavel, UserCheck, Home as HomeIcon, Calculator, Share2, HelpCircle as HelpIcon, 
-  Info, Book, Wrench
+  Info, Book, Wrench, BookOpen
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
