@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, LogOut, LogIn, Plus } from 'lucide-react';
@@ -21,7 +22,9 @@ import {
   legalAssistanceMenuItems, 
   utilitiesMenuItems, 
   helpAndSupportMenuItems, 
-  collapsibleMenuIcons 
+  collapsibleMenuIcons,
+  paymentMenuItems,
+  merchantResources
 } from './sidebar/menuData';
 
 export const SidebarDrawer = () => {
@@ -82,6 +85,24 @@ export const SidebarDrawer = () => {
 
             {/* Collapsible Menu Sections */}
             <div className="space-y-2 mt-4">
+              {/* নতুন পেমেন্ট মেনু সেকশন */}
+              {isAuthenticated && (
+                <CollapsibleMenuSection 
+                  title="পেমেন্ট এবং ট্রানজেকশন" 
+                  icon={collapsibleMenuIcons.payment} 
+                  items={paymentMenuItems} 
+                />
+              )}
+              
+              {/* বিক্রেতাদের জন্য রিসোর্স মেনু (শুধু বিক্রেতাদের জন্য) */}
+              {isAuthenticated && user?.isSeller && (
+                <CollapsibleMenuSection 
+                  title="বিক্রেতা রিসোর্স" 
+                  icon={<Store className="h-5 w-5 text-red-500 mr-2" />} 
+                  items={merchantResources} 
+                />
+              )}
+
               <CollapsibleMenuSection 
                 title="লিগ্যাল অ্যাসিস্ট্যান্স এন্ড লোন" 
                 icon={collapsibleMenuIcons.legal} 

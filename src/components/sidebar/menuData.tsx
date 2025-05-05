@@ -98,6 +98,16 @@ export const utilitiesMenuItems = [
     icon: <Share2 className="h-5 w-5 text-red-500" />,
     name: "ক্লিক এন্ড আর্ন",
     path: "/utilities/click-and-earn"
+  },
+  {
+    icon: <DollarSign className="h-5 w-5 text-red-500" />,
+    name: "ট্রানজেকশন হিস্টরি",
+    path: "/utilities/transaction-history"
+  },
+  {
+    icon: <Star className="h-5 w-5 text-red-500" />,
+    name: "লয়াল্টি পয়েন্টস",
+    path: "/utilities/loyalty-points"
   }
 ];
 
@@ -122,6 +132,11 @@ export const helpAndSupportMenuItems = [
     icon: <Info className="h-5 w-5 text-red-500" />,
     name: "অ্যাবাউট আস",
     path: "/help/about-us"
+  },
+  {
+    icon: <FileText className="h-5 w-5 text-red-500" />,
+    name: "ডিসপিউট সেন্টার",
+    path: "/help/dispute-center"
   }
 ];
 
@@ -129,5 +144,59 @@ export const helpAndSupportMenuItems = [
 export const collapsibleMenuIcons = {
   legal: <Briefcase className="h-5 w-5 text-red-500 mr-2" />,
   utilities: <Wrench className="h-5 w-5 text-red-500 mr-2" />,
-  help: <HelpCircle className="h-5 w-5 text-red-500 mr-2" />
+  help: <HelpCircle className="h-5 w-5 text-red-500 mr-2" />,
+  payment: <Wallet className="h-5 w-5 text-red-500 mr-2" />
 };
+
+// Payment Menu Items (New)
+export const paymentMenuItems = [
+  {
+    icon: <DollarSign className="h-5 w-5 text-red-500" />,
+    name: "একাউন্ট ব্যালেন্স",
+    path: "/payment/account-balance"
+  },
+  {
+    icon: <Wallet className="h-5 w-5 text-red-500" />,
+    name: "পেমেন্ট মেথড",
+    path: "/payment/payment-methods"
+  },
+  {
+    icon: <ShieldCheck className="h-5 w-5 text-red-500" />,
+    name: "এসক্রো স্ট্যাটাস",
+    path: "/payment/escrow-status"
+  },
+  {
+    icon: <FileText className="h-5 w-5 text-red-500" />,
+    name: "ইনভয়েস জেনারেট",
+    path: "/payment/generate-invoice"
+  },
+  {
+    icon: <Calculator className="h-5 w-5 text-red-500" />,
+    name: "কমিশন ক্যালকুলেটর",
+    path: "/payment/commission-calculator"
+  }
+];
+
+// Merchant Resources (New)
+export const merchantResources = [
+  {
+    icon: <DollarSign className="h-5 w-5 text-red-500" />,
+    name: "বিক্রেতা প্যানেল",
+    path: "/merchant/dashboard"
+  },
+  {
+    icon: <ShoppingBag className="h-5 w-5 text-red-500" />,
+    name: "অর্ডার ম্যানেজমেন্ট",
+    path: "/merchant/orders"
+  },
+  {
+    icon: <FileText className="h-5 w-5 text-red-500" />,
+    name: "সেলস রিপোর্ট",
+    path: "/merchant/sales-report"
+  },
+  {
+    icon: <Star className="h-5 w-5 text-red-500" />,
+    name: "রেটিং এবং রিভিউ",
+    path: "/merchant/ratings"
+  }
+];
