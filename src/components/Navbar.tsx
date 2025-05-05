@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Search, Home, Building, ShoppingBag, ChevronDown, Plus, User, LogOut, Rocket, BookOpen, Mail, Calendar, Users, BarChart, DollarSign, MessageSquare, Store, Scissors, Briefcase, FileText, Video, Globe, Zap, Database, Cpu, Shield, FileText as FileIcon, Calendar as CalendarIcon, MessageCircle, UsersRound, LogIn, Bell, Wallet, QrCode } from 'lucide-react';
+import { Search, Home, Building, ShoppingBag, ChevronDown, Plus, User, LogOut, Rocket, BookOpen, Mail, Calendar, Users, BarChart, DollarSign, MessageSquare, Store, Scissors, Briefcase, FileText, Video, Globe, Zap, Database, Cpu, Shield, FileText as FileIcon, Calendar as CalendarIcon, MessageCircle, UsersRound, LogIn, Bell, Wallet, QrCode, File, Gavel, UserCheck, Home as HomeIcon, Calculator, Share2, HelpCircle as HelpIcon, Info } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { SidebarDrawer } from '@/components/SidebarDrawer';
@@ -91,10 +92,100 @@ const Navbar = () => {
     description: "কমিউনিটি আলোচনা"
   }, {
     icon: <UsersRound className="h-4 w-4 text-orange-500" />,
-    name: "গ্রুপ বুকি��",
+    name: "গ্রুপ বুকিং",
     path: "/group-booking",
     description: "একসাথে সার্ভিস/প্রোডাক্ট নিন"
   }];
+
+  // লিগ্যাল অ্যাসিস্ট্যান্স এন্ড লোন মেনু আইটেম
+  const legalAssistanceMenuItems = [
+    {
+      icon: <File className="h-4 w-4 text-red-500" />,
+      name: "রেন্টাল এগ্রিমেন্ট",
+      path: "/services/rental-agreement",
+      description: "রেন্টাল চুক্তি তৈরি করুন"
+    },
+    {
+      icon: <Gavel className="h-4 w-4 text-red-500" />,
+      name: "পুলিশ ইনটিমেশন",
+      path: "/services/police-intimation",
+      description: "পুলিশ স্টেশনে নোটিফিকেশন দিন"
+    },
+    {
+      icon: <UserCheck className="h-4 w-4 text-red-500" />,
+      name: "টেনান্ট ভেরিফিকেশন",
+      path: "/services/tenant-verification",
+      description: "ভাড়াটিয়া যাচাই করুন"
+    },
+    {
+      icon: <Building className="h-4 w-4 text-red-500" />,
+      name: "প্রপার্টি লিগাল অ্যাসিস্ট্যান্স",
+      path: "/services/property-legal-assistance",
+      description: "আইনি সহায়তা পেতে"
+    },
+    {
+      icon: <HomeIcon className="h-4 w-4 text-red-500" />,
+      name: "হোম লোন",
+      path: "/services/home-loan",
+      description: "সহজ শর্তে ঋণ নিন"
+    },
+    {
+      icon: <DollarSign className="h-4 w-4 text-red-500" />,
+      name: "হোম ডিপোজিট লোন",
+      path: "/services/home-deposit-loan",
+      description: "জামানত জমার জন্য ঋণ নিন"
+    }
+  ];
+
+  // ইউটিলিটিস মেনু আইটেম
+  const utilitiesMenuItems = [
+    {
+      icon: <Calculator className="h-4 w-4 text-red-500" />,
+      name: "নো ইয়োর রেন্ট",
+      path: "/utilities/know-your-rent",
+      description: "উচিত ভাড়া নির্ধারণ করুন"
+    },
+    {
+      icon: <FileText className="h-4 w-4 text-red-500" />,
+      name: "ক্রিয়েট রেন্ট রিসিপ্টস",
+      path: "/utilities/create-rent-receipts",
+      description: "ভাড়ার রশিদ তৈরি করুন"
+    },
+    {
+      icon: <Share2 className="h-4 w-4 text-red-500" />,
+      name: "ক্লিক এন্ড আর্ন",
+      path: "/utilities/click-and-earn",
+      description: "শেয়ার করে আয় করুন"
+    }
+  ];
+
+  // হেল্প এন্ড সাপোর্ট মেনু আইটেম
+  const helpAndSupportMenuItems = [
+    {
+      icon: <HelpIcon className="h-4 w-4 text-red-500" />,
+      name: "সাপোর্ট টপিকস",
+      path: "/help/support-topics",
+      description: "সাধারণ সমস্যার সমাধান"
+    },
+    {
+      icon: <Book className="h-4 w-4 text-red-500" />,
+      name: "ব্লগ",
+      path: "/help/blog",
+      description: "নিয়মিত আপডেট পান"
+    },
+    {
+      icon: <MessageCircle className="h-4 w-4 text-red-500" />,
+      name: "ফিডব্যাক",
+      path: "/help/feedback",
+      description: "আপনার মতামত জানান"
+    },
+    {
+      icon: <Info className="h-4 w-4 text-red-500" />,
+      name: "অ্যাবাউট আস",
+      path: "/help/about-us",
+      description: "আমাদের সম্পর্কে জানুন"
+    }
+  ];
 
   const creatorSolutions = [{
     icon: <Store className="h-4 w-4 text-primary" />,
@@ -170,7 +261,7 @@ const Navbar = () => {
     icon: <Zap className="h-4 w-4 text-amber-500" />,
     name: "এফিলিয়েট টুল",
     path: "/affiliate",
-    description: "এফিলিয়ে�� মার্কেটিং ম্যানেজমেন্ট"
+    description: "এফিলিয়েট মার্কেটিং ম্যানেজমেন্ট"
   }];
 
   const serviceCategories = [{
@@ -387,6 +478,56 @@ const Navbar = () => {
                             </div>
                           </DropdownMenuContent>
                         </DropdownMenu>
+                        
+                        {/* নতুন ক্যাটাগরি মেনু বাটন */}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="flex flex-col items-center justify-center h-24 gap-2">
+                              <Briefcase className="h-8 w-8 text-red-500" />
+                              <span className="text-sm">লিগ্যাল অ্যাসিস্ট্যান্স</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="w-56 max-h-[70vh] overflow-auto">
+                            <div className="grid grid-cols-1 gap-1 p-1">
+                              {legalAssistanceMenuItems.map((item, index) => (
+                                <DropdownMenuItem key={index} asChild className="p-2">
+                                  <Link to={item.path} className="flex flex-col gap-1">
+                                    <div className="flex items-center gap-2">
+                                      {item.icon}
+                                      <span className="font-medium">{item.name}</span>
+                                    </div>
+                                    <p className="text-xs text-muted-foreground pl-6">{item.description}</p>
+                                  </Link>
+                                </DropdownMenuItem>
+                              ))}
+                            </div>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                        
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="flex flex-col items-center justify-center h-24 gap-2">
+                              <Wrench className="h-8 w-8 text-orange-500" />
+                              <span className="text-sm">ইউটিলিটিস</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="w-56 max-h-[70vh] overflow-auto">
+                            <div className="grid grid-cols-1 gap-1 p-1">
+                              {utilitiesMenuItems.map((item, index) => (
+                                <DropdownMenuItem key={index} asChild className="p-2">
+                                  <Link to={item.path} className="flex flex-col gap-1">
+                                    <div className="flex items-center gap-2">
+                                      {item.icon}
+                                      <span className="font-medium">{item.name}</span>
+                                    </div>
+                                    <p className="text-xs text-muted-foreground pl-6">{item.description}</p>
+                                  </Link>
+                                </DropdownMenuItem>
+                              ))}
+                            </div>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                        
                       </div>
                     </PopoverContent>
                   </Popover>;

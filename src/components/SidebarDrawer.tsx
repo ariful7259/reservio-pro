@@ -1,16 +1,18 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, Home, PaintBucket, Truck, Briefcase, Wrench, Wallet, Lightbulb, HelpCircle, Play, User, LogOut, Plus, MessageSquare, ChevronDown, Rocket, ShieldCheck, Fingerprint, Users, Award, LogIn, Book, Calendar, Heart, MapPin, List, ShoppingBag, Star, Store } from 'lucide-react';
+import { Menu, Home, PaintBucket, Truck, Briefcase, Wrench, Wallet, Lightbulb, HelpCircle, Play, User, LogOut, Plus, MessageSquare, ChevronDown, Rocket, ShieldCheck, Fingerprint, Users, Award, LogIn, Book, Calendar, Heart, MapPin, List, ShoppingBag, Star, Store, File, Gavel, UserCheck, Building, Home as HomeIcon, DollarSign, FileText, Calculator, Share2, HelpCircle as HelpIcon, MessageCircle, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuGroup } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuGroup, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+
 export const SidebarDrawer = () => {
   const [activePostType, setActivePostType] = useState('rent');
   const navigate = useNavigate();
@@ -93,6 +95,84 @@ export const SidebarDrawer = () => {
     name: "বিক্রেতা ড্যাশবোর্ড",
     path: "/my-services?tab=sellerDashboard"
   }];
+
+  // লিগ্যাল অ্যাসিস্ট্যান্স এন্ড লোন মেনু আইটেম
+  const legalAssistanceMenuItems = [
+    {
+      icon: <File className="h-5 w-5 text-red-500" />,
+      name: "রেন্টাল এগ্রিমেন্ট",
+      path: "/services/rental-agreement"
+    },
+    {
+      icon: <Gavel className="h-5 w-5 text-red-500" />,
+      name: "পুলিশ ইনটিমেশন",
+      path: "/services/police-intimation"
+    },
+    {
+      icon: <UserCheck className="h-5 w-5 text-red-500" />,
+      name: "টেনান্ট ভেরিফিকেশন",
+      path: "/services/tenant-verification"
+    },
+    {
+      icon: <Building className="h-5 w-5 text-red-500" />,
+      name: "প্রপার্টি লিগাল অ্যাসিস্ট্যান্স",
+      path: "/services/property-legal-assistance"
+    },
+    {
+      icon: <HomeIcon className="h-5 w-5 text-red-500" />,
+      name: "হোম লোন",
+      path: "/services/home-loan"
+    },
+    {
+      icon: <DollarSign className="h-5 w-5 text-red-500" />,
+      name: "হোম ডিপোজিট লোন",
+      path: "/services/home-deposit-loan"
+    }
+  ];
+
+  // ইউটিলিটিস মেনু আইটেম
+  const utilitiesMenuItems = [
+    {
+      icon: <Calculator className="h-5 w-5 text-red-500" />,
+      name: "নো ইয়োর রেন্ট",
+      path: "/utilities/know-your-rent"
+    },
+    {
+      icon: <FileText className="h-5 w-5 text-red-500" />,
+      name: "ক্রিয়েট রেন্ট রিসিপ্টস",
+      path: "/utilities/create-rent-receipts"
+    },
+    {
+      icon: <Share2 className="h-5 w-5 text-red-500" />,
+      name: "ক্লিক এন্ড আর্ন",
+      path: "/utilities/click-and-earn"
+    }
+  ];
+
+  // হেল্প এন্ড সাপোর্ট মেনু আইটেম
+  const helpAndSupportMenuItems = [
+    {
+      icon: <HelpIcon className="h-5 w-5 text-red-500" />,
+      name: "সাপোর্ট টপিকস",
+      path: "/help/support-topics"
+    },
+    {
+      icon: <Book className="h-5 w-5 text-red-500" />,
+      name: "ব্লগ",
+      path: "/help/blog"
+    },
+    {
+      icon: <MessageCircle className="h-5 w-5 text-red-500" />,
+      name: "ফিডব্যাক",
+      path: "/help/feedback"
+    },
+    {
+      icon: <Info className="h-5 w-5 text-red-500" />,
+      name: "অ্যাবাউট আস",
+      path: "/help/about-us"
+    }
+  ];
+
   const videoAds = [{
     thumbnail: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1000&auto=format&fit=crop",
     title: "নতুন সার্ভিস উপলব্ধ",
@@ -117,6 +197,7 @@ export const SidebarDrawer = () => {
     });
     navigate("/login");
   };
+
   return <Drawer direction="left">
       <DrawerTrigger asChild>
         <Button variant="ghost" size="icon">
@@ -246,6 +327,81 @@ export const SidebarDrawer = () => {
                 
                 {isAdmin}
               </div>}
+
+              {/* নতুন কোলাপ্সিবল মেনু সেকশন */}
+              <div className="space-y-2 mt-4">
+                <Collapsible className="border rounded-md">
+                  <CollapsibleTrigger className="flex items-center justify-between w-full p-4 hover:bg-gray-50">
+                    <div className="flex items-center">
+                      <Briefcase className="h-5 w-5 text-red-500 mr-2" />
+                      <span className="font-medium">লিগ্যাল অ্যাসিস্ট্যান্স এন্ড লোন</span>
+                    </div>
+                    <ChevronDown className="h-4 w-4" />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <div className="p-2">
+                      {legalAssistanceMenuItems.map((item, index) => (
+                        <Link
+                          key={index}
+                          to={item.path}
+                          className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-md"
+                        >
+                          {item.icon}
+                          <span>{item.name}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+
+                <Collapsible className="border rounded-md">
+                  <CollapsibleTrigger className="flex items-center justify-between w-full p-4 hover:bg-gray-50">
+                    <div className="flex items-center">
+                      <Wrench className="h-5 w-5 text-red-500 mr-2" />
+                      <span className="font-medium">ইউটিলিটিস</span>
+                    </div>
+                    <ChevronDown className="h-4 w-4" />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <div className="p-2">
+                      {utilitiesMenuItems.map((item, index) => (
+                        <Link
+                          key={index}
+                          to={item.path}
+                          className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-md"
+                        >
+                          {item.icon}
+                          <span>{item.name}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+
+                <Collapsible className="border rounded-md">
+                  <CollapsibleTrigger className="flex items-center justify-between w-full p-4 hover:bg-gray-50">
+                    <div className="flex items-center">
+                      <HelpCircle className="h-5 w-5 text-red-500 mr-2" />
+                      <span className="font-medium">হেল্প এন্ড সাপোর্ট</span>
+                    </div>
+                    <ChevronDown className="h-4 w-4" />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <div className="p-2">
+                      {helpAndSupportMenuItems.map((item, index) => (
+                        <Link
+                          key={index}
+                          to={item.path}
+                          className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-md"
+                        >
+                          {item.icon}
+                          <span>{item.name}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+              </div>
               
               {/* রেফারেল সিস্টেম অংশ - আমার সার্ভিসের নিচে স্থানান্তরিত */}
               <div className="space-y-4 p-4 border rounded-lg bg-gradient-to-r from-primary/10 to-purple-100 border-primary/20">

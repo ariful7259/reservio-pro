@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,10 +12,23 @@ import {
   ListCheck, 
   Store, 
   BookmarkCheck,
-  UserPlus
+  UserPlus,
+  File,
+  Gavel,
+  UserCheck,
+  Building,
+  Home,
+  DollarSign,
+  Calculator,
+  FileText,
+  Share2,
+  HelpCircle,
+  MessageCircle,
+  Info
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
+import MyServicesDropdown from '@/components/MyServicesDropdown';
 
 const MyServices = () => {
   const [searchParams] = useSearchParams();
@@ -61,6 +75,96 @@ const MyServices = () => {
       }, 1500);
     }
   }, [searchParams, isAuthenticated, navigate, isSeller, user]);
+
+  // লিগ্যাল অ্যাসিস্ট্যান্স এন্ড লোন সার্ভিস আইটেম
+  const legalAssistanceMenuItems = [
+    {
+      icon: <File className="h-10 w-10 text-red-500" />,
+      name: "রেন্টাল এগ্রিমেন্ট",
+      path: "/services/rental-agreement",
+      description: "রেন্টাল চুক্তি তৈরি করুন"
+    },
+    {
+      icon: <Gavel className="h-10 w-10 text-red-500" />,
+      name: "পুলিশ ইনটিমেশন",
+      path: "/services/police-intimation",
+      description: "পুলিশ স্টেশনে নোটিফিকেশন দিন"
+    },
+    {
+      icon: <UserCheck className="h-10 w-10 text-red-500" />,
+      name: "টেনান্ট ভেরিফিকেশন",
+      path: "/services/tenant-verification",
+      description: "ভাড়াটিয়া যাচাই করুন"
+    },
+    {
+      icon: <Building className="h-10 w-10 text-red-500" />,
+      name: "প্রপার্টি লিগাল অ্যাসিস্ট্যান্স",
+      path: "/services/property-legal-assistance",
+      description: "আইনি সহায়তা পেতে"
+    },
+    {
+      icon: <Home className="h-10 w-10 text-red-500" />,
+      name: "হোম লোন",
+      path: "/services/home-loan",
+      description: "সহজ শর্তে ঋণ নিন"
+    },
+    {
+      icon: <DollarSign className="h-10 w-10 text-red-500" />,
+      name: "হোম ডিপোজিট লোন",
+      path: "/services/home-deposit-loan",
+      description: "জামানত জমার জন্য ঋণ নিন"
+    }
+  ];
+
+  // ইউটিলিটিস সার্ভিস আইটেম
+  const utilitiesMenuItems = [
+    {
+      icon: <Calculator className="h-10 w-10 text-red-500" />,
+      name: "নো ইয়োর রেন্ট",
+      path: "/utilities/know-your-rent",
+      description: "উচিত ভাড়া নির্ধারণ করুন"
+    },
+    {
+      icon: <FileText className="h-10 w-10 text-red-500" />,
+      name: "ক্রিয়েট রেন্ট রিসিপ্টস",
+      path: "/utilities/create-rent-receipts",
+      description: "ভাড়ার রশিদ তৈরি করুন"
+    },
+    {
+      icon: <Share2 className="h-10 w-10 text-red-500" />,
+      name: "ক্লিক এন্ড আর্ন",
+      path: "/utilities/click-and-earn",
+      description: "শেয়ার করে আয় করুন"
+    }
+  ];
+
+  // হেল্প এন্ড সাপোর্ট সার্ভিস আইটেম
+  const helpAndSupportMenuItems = [
+    {
+      icon: <HelpCircle className="h-10 w-10 text-red-500" />,
+      name: "সাপোর্ট টপিকস",
+      path: "/help/support-topics",
+      description: "সাধারণ সমস্যার সমাধান"
+    },
+    {
+      icon: <FileText className="h-10 w-10 text-red-500" />,
+      name: "ব্লগ",
+      path: "/help/blog",
+      description: "নিয়মিত আপডেট পান"
+    },
+    {
+      icon: <MessageCircle className="h-10 w-10 text-red-500" />,
+      name: "ফিডব্যাক",
+      path: "/help/feedback",
+      description: "আপনার মতামত জানান"
+    },
+    {
+      icon: <Info className="h-10 w-10 text-red-500" />,
+      name: "অ্যাবাউট আস",
+      path: "/help/about-us",
+      description: "আমাদের সম্পর্কে জানুন"
+    }
+  ];
 
   if (!isAuthenticated) {
     return (
@@ -135,7 +239,10 @@ const MyServices = () => {
 
   return (
     <div className="container px-4 pt-20 pb-20">
-      <h1 className="text-2xl font-bold mb-6">আমার সার্ভিস</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold">আমার সার্ভিস</h1>
+        <MyServicesDropdown />
+      </div>
       
       <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="overflow-x-auto pb-2">
@@ -163,6 +270,74 @@ const MyServices = () => {
           </TabsContent>
         ))}
       </Tabs>
+
+      <div className="mt-12 space-y-8">
+        {/* লিগ্যাল অ্যাসিস্ট্যান্স এন্ড লোন সেকশন */}
+        <div>
+          <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <Briefcase className="h-5 w-5 mr-2 text-red-500" />
+            লিগ্যাল অ্যাসিস্ট্যান্স ও লোন
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {legalAssistanceMenuItems.map((item, index) => (
+              <Card key={`legal-${index}`} className="hover:shadow-md transition-shadow cursor-pointer" 
+                    onClick={() => navigate(item.path)}>
+                <CardContent className="p-6 flex flex-col items-center text-center">
+                  <div className="mb-4 text-red-500">
+                    {item.icon}
+                  </div>
+                  <h3 className="font-medium text-lg mb-2">{item.name}</h3>
+                  <p className="text-sm text-muted-foreground">{item.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* ইউটিলিটিস সেকশন */}
+        <div>
+          <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <Wrench className="h-5 w-5 mr-2 text-red-500" />
+            ইউটিলিটিস
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {utilitiesMenuItems.map((item, index) => (
+              <Card key={`utility-${index}`} className="hover:shadow-md transition-shadow cursor-pointer" 
+                   onClick={() => navigate(item.path)}>
+                <CardContent className="p-6 flex flex-col items-center text-center">
+                  <div className="mb-4 text-red-500">
+                    {item.icon}
+                  </div>
+                  <h3 className="font-medium text-lg mb-2">{item.name}</h3>
+                  <p className="text-sm text-muted-foreground">{item.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* হেল্প এন্ড সাপোর্ট সেকশন */}
+        <div>
+          <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <HelpCircle className="h-5 w-5 mr-2 text-red-500" />
+            হেল্প এন্ড সাপোর্ট
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            {helpAndSupportMenuItems.map((item, index) => (
+              <Card key={`help-${index}`} className="hover:shadow-md transition-shadow cursor-pointer" 
+                   onClick={() => navigate(item.path)}>
+                <CardContent className="p-6 flex flex-col items-center text-center">
+                  <div className="mb-4 text-red-500">
+                    {item.icon}
+                  </div>
+                  <h3 className="font-medium text-lg mb-2">{item.name}</h3>
+                  <p className="text-sm text-muted-foreground">{item.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
