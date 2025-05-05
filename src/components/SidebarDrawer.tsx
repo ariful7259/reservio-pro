@@ -80,76 +80,80 @@ export const SidebarDrawer = () => {
   // সার্ভিস ক্যাটাগরি প্রদর্শন - বাটন ক্লিক অনুযায়ী
   const displayedCategories = showAllCategories ? serviceCategories : serviceCategories.slice(0, 4);
   
-  const profileMenuItems = [{
-    icon: <User className="h-5 w-5" />,
-    name: "ব্যক্তিগত তথ্য",
-    path: "/profile-management"
-  }, {
-    icon: <MessageSquare className="h-5 w-5" />,
-    name: "নোটিফিকেশন",
-    path: "/notifications",
-    badge: 2
-  }, {
-    icon: <Wallet className="h-5 w-5" />,
-    name: "ওয়ালেট",
-    path: "/wallet"
-  }, {
-    icon: <ShieldCheck className="h-5 w-5" />,
-    name: "সিকিউরিটি",
-    path: "/security"
-  }, {
-    icon: <Fingerprint className="h-5 w-5" />,
-    name: "KYC ভেরিফিকেশন",
-    path: "/kyc-verification"
-  }, {
-    icon: <Lightbulb className="h-5 w-5" />,
-    name: "ইউটিলিটিস",
-    path: "/utilities"
-  }, {
-    icon: <HelpCircle className="h-5 w-5" />,
-    name: "হেল্প এন্ড সাপোর্ট",
-    path: "/help"
-  }, {
-    icon: <ShieldCheck className="h-5 w-5" />,
-    name: "অ্যাডমিন ড্যাশবোর্ড",
-    path: "/admin-dashboard",
-    show: isAdmin
-  }];
+  const profileMenuItems = [
+    {
+      icon: <User className="h-5 w-5" />,
+      name: "ব্যক্তিগত তথ্য",
+      path: "/profile-management"
+    }, {
+      icon: <MessageSquare className="h-5 w-5" />,
+      name: "নোটিফিকেশন",
+      path: "/notifications",
+      badge: 2
+    }, {
+      icon: <Wallet className="h-5 w-5" />,
+      name: "ওয়ালেট",
+      path: "/wallet"
+    }, {
+      icon: <ShieldCheck className="h-5 w-5" />,
+      name: "সিকিউরিটি",
+      path: "/security"
+    }, {
+      icon: <Fingerprint className="h-5 w-5" />,
+      name: "KYC ভেরিফিকেশন",
+      path: "/kyc-verification"
+    }, {
+      icon: <Lightbulb className="h-5 w-5" />,
+      name: "ইউটিলিটিস",
+      path: "/utilities"
+    }, {
+      icon: <HelpCircle className="h-5 w-5" />,
+      name: "হেল্প এন্ড সাপোর্ট",
+      path: "/help"
+    }, {
+      icon: <ShieldCheck className="h-5 w-5" />,
+      name: "অ্যাডমিন ড্যাশবোর্ড",
+      path: "/admin-dashboard",
+      show: isAdmin
+    }
+  ];
 
   // আমার সার্ভিসের ড্রপডাউন আইটেম
-  const myServicesMenuItems = [{
-    icon: <Book className="h-5 w-5" />,
-    name: "আমার বুকিংস",
-    path: "/my-services?tab=bookings"
-  }, {
-    icon: <Calendar className="h-5 w-5" />,
-    name: "আমার অ্যাপয়েন্টমেন্টস",
-    path: "/my-services?tab=appointments"
-  }, {
-    icon: <Heart className="h-5 w-5" />,
-    name: "আমার শর্টলিস্ট",
-    path: "/my-services?tab=shortlists"
-  }, {
-    icon: <MapPin className="h-5 w-5" />,
-    name: "যোগাযোগকৃত প্রোপার্টি",
-    path: "/my-services?tab=contactedProperties"
-  }, {
-    icon: <List className="h-5 w-5" />,
-    name: "আমার লিস্টিংস",
-    path: "/my-services?tab=listings"
-  }, {
-    icon: <ShoppingBag className="h-5 w-5" />,
-    name: "আমার শপ",
-    path: "/my-services?tab=shop"
-  }, {
-    icon: <Star className="h-5 w-5" />,
-    name: "স্মার্ট রেকমেন্ডেশন",
-    path: "/my-services?tab=recommendations"
-  }, {
-    icon: <Store className="h-5 w-5" />,
-    name: "বিক্রেতা ড্যাশবোর্ড",
-    path: "/my-services?tab=sellerDashboard"
-  }];
+  const myServicesMenuItems = [
+    {
+      icon: <Book className="h-5 w-5" />,
+      name: "আমার বুকিংস",
+      path: "/my-services?tab=bookings"
+    }, {
+      icon: <Calendar className="h-5 w-5" />,
+      name: "আমার অ্যাপয়েন্টমেন্টস",
+      path: "/my-services?tab=appointments"
+    }, {
+      icon: <Heart className="h-5 w-5" />,
+      name: "আমার শর্টলিস্ট",
+      path: "/my-services?tab=shortlists"
+    }, {
+      icon: <MapPin className="h-5 w-5" />,
+      name: "যোগাযোগকৃত প্রোপার্টি",
+      path: "/my-services?tab=contactedProperties"
+    }, {
+      icon: <List className="h-5 w-5" />,
+      name: "আমার লিস্টিংস",
+      path: "/my-services?tab=listings"
+    }, {
+      icon: <ShoppingBag className="h-5 w-5" />,
+      name: "আমার শপ",
+      path: "/my-services?tab=shop"
+    }, {
+      icon: <Star className="h-5 w-5" />,
+      name: "স্মার্ট রেকমেন্ডেশন",
+      path: "/my-services?tab=recommendations"
+    }, {
+      icon: <Store className="h-5 w-5" />,
+      name: "বিক্রেতা ড্যাশবোর্ড",
+      path: "/my-services?tab=sellerDashboard"
+    }
+  ];
 
   // লিগ্যাল অ্যাসিস্ট্যান্স এন্ড লোন মেনু আইটেম
   const legalAssistanceMenuItems = [
@@ -189,7 +193,7 @@ export const SidebarDrawer = () => {
   const utilitiesMenuItems = [
     {
       icon: <Calculator className="h-5 w-5 text-red-500" />,
-      name: "নো ইয়োর রেন্ট",
+      name: "নো ইয়ো��� রেন্ট",
       path: "/utilities/know-your-rent"
     },
     {
@@ -228,22 +232,25 @@ export const SidebarDrawer = () => {
     }
   ];
 
-  const videoAds = [{
-    thumbnail: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1000&auto=format&fit=crop",
-    title: "নতুন সার্ভিস উপলব্ধ",
-    description: "আমাদের নতুন সার্ভিস দেখুন এবং বুক করুন",
-    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
-  }, {
-    thumbnail: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=1000&auto=format&fit=crop",
-    title: "সাপ্তাহিক অফার",
-    description: "সাপ্তাহিক অফার শেষ হতে আর ২ দিন বাকি",
-    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
-  }, {
-    thumbnail: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
-    title: "ইলেক্ট্রনিক্স সেল",
-    description: "সকল ইলেক্ট্রনিক্স পণ্যে ২০% ছাড়",
-    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
-  }];
+  const videoAds = [
+    {
+      thumbnail: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1000&auto=format&fit=crop",
+      title: "নতুন সার্ভিস উপলব্ধ",
+      description: "আমাদের নতুন সার্ভিস দেখুন এবং বুক করুন",
+      videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
+    }, {
+      thumbnail: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=1000&auto=format&fit=crop",
+      title: "সাপ্তাহিক অফার",
+      description: "সাপ্তাহিক অফার শেষ হতে আর ২ দিন বাকি",
+      videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
+    }, {
+      thumbnail: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
+      title: "ইলেক্ট্রনিক্স সেল",
+      description: "সকল ইলেক্ট্রনিক্স পণ্যে ২০% ছাড়",
+      videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
+    }
+  ];
+
   const handleLogout = () => {
     logout();
     toast({
@@ -316,17 +323,17 @@ export const SidebarDrawer = () => {
           {/* সার্ভিস ক্যাটাগরি গ্রিড লেআউট */}
           <div className="space-y-4">
             <h3 className="font-medium text-lg">সার্ভিস ক্যাটাগরি</h3>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-4 gap-3">
               {displayedCategories.map((category, index) => (
                 <Link 
                   key={index} 
                   to={category.path}
-                  className="flex flex-col items-center justify-center p-3 border rounded-lg hover:bg-blue-50 hover:border-blue-200 transition-colors"
+                  className="flex flex-col items-center justify-center p-2 border rounded-lg hover:bg-blue-50 hover:border-blue-200 transition-colors"
                 >
-                  <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center mb-2">
+                  <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mb-1">
                     {category.icon}
                   </div>
-                  <span className="text-sm text-center">{category.name}</span>
+                  <span className="text-xs text-center">{category.name}</span>
                 </Link>
               ))}
             </div>
