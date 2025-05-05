@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, LogOut, LogIn, Plus } from 'lucide-react';
+import { Menu, LogOut, LogIn, Plus, Store } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerFooter } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
@@ -35,7 +35,8 @@ export const SidebarDrawer = () => {
     user,
     isAuthenticated,
     logout,
-    isAdmin
+    isAdmin,
+    isSeller
   } = useAuth();
   
   const { toast } = useToast();
@@ -95,7 +96,7 @@ export const SidebarDrawer = () => {
               )}
               
               {/* বিক্রেতাদের জন্য রিসোর্স মেনু (শুধু বিক্রেতাদের জন্য) */}
-              {isAuthenticated && user?.isSeller && (
+              {isAuthenticated && isSeller && (
                 <CollapsibleMenuSection 
                   title="বিক্রেতা রিসোর্স" 
                   icon={<Store className="h-5 w-5 text-red-500 mr-2" />} 
