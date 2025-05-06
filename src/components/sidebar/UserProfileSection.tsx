@@ -8,14 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DrawerTitle } from '@/components/ui/drawer';
 import { useAuth } from '@/hooks/useAuth';
-
-interface ProfileMenuItem {
-  icon: React.ReactNode;
-  name: string;
-  path: string;
-  badge?: number;
-  show?: boolean;
-}
+import { ProfileMenuItem } from './types';
 
 interface UserProfileSectionProps {
   profileMenuItems: ProfileMenuItem[];
@@ -43,7 +36,7 @@ export const UserProfileSection = ({ profileMenuItems }: UserProfileSectionProps
         <DropdownMenuContent align="end">
           {profileMenuItems.filter(item => !item.hasOwnProperty('show') || item.show).map((item, index) => (
             <DropdownMenuItem key={index} asChild>
-              <Link to={item.path} className="flex items-center gap-2 w-full">
+              <Link to={item.path || "#"} className="flex items-center gap-2 w-full">
                 {item.icon}
                 <span>{item.name}</span>
                 {item.badge && <Badge variant="destructive" className="ml-auto">{item.badge}</Badge>}
