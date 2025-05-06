@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, LogOut, LogIn, Plus, Store, RefreshCcw } from 'lucide-react';
@@ -50,6 +51,7 @@ export const SidebarDrawer = () => {
     }
   ];
 
+  // Use the imported getProfileMenuItems function to get the menu items
   const profileMenuItems = getProfileMenuItems(isAdmin);
 
   const handleLogout = () => {

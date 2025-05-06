@@ -3,13 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-
-interface MenuItem {
-  icon: React.ReactNode;
-  name: string;
-  path?: string; // Make path optional
-  url?: string;  // Add url as an optional alternative
-}
+import { MenuItem } from './types';
 
 interface CollapsibleMenuSectionProps {
   title: string;
