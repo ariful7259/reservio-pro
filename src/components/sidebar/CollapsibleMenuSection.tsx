@@ -7,7 +7,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 interface MenuItem {
   icon: React.ReactNode;
   name: string;
-  path: string;
+  path?: string; // Make path optional
+  url?: string;  // Add url as an optional alternative
 }
 
 interface CollapsibleMenuSectionProps {
@@ -31,7 +32,7 @@ export const CollapsibleMenuSection = ({ title, icon, items }: CollapsibleMenuSe
           {items.map((item, index) => (
             <Link
               key={index}
-              to={item.path}
+              to={item.path || item.url || "#"} // Use path or url, fallback to "#"
               className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-md"
             >
               {item.icon}

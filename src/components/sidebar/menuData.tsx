@@ -1,3 +1,4 @@
+
 import { 
   PaintBucket, Truck, Home, AirVent, Hammer, 
   Wrench, Pipette, HousePlus, User, MessageSquare, 
@@ -158,7 +159,7 @@ export const collapsibleMenuIcons = {
   payment: <Wallet className="h-5 w-5 text-red-500 mr-2" />
 };
 
-// Payment Menu Items
+// Payment Menu Items - Updated to use path instead of url
 export const paymentMenuItems = [
   {
     icon: <ChartBar className="h-5 w-5 text-red-500" />,
@@ -197,7 +198,7 @@ export const paymentMenuItems = [
   }
 ];
 
-// Merchant Resources
+// Merchant Resources - Updated to use path instead of url
 export const merchantResources = [
   {
     icon: <ChartBar className="h-5 w-5 text-red-500" />,

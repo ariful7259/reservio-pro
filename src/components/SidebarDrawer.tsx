@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, LogOut, LogIn, Plus, Store } from 'lucide-react';
+import { Menu, LogOut, LogIn, Plus, Store, RefreshCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerFooter } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
@@ -41,14 +41,13 @@ export const SidebarDrawer = () => {
   
   const { toast } = useToast();
 
-  // Update payment menu items to include refund management
+  // Update payment menu items to include refund management with consistent structure
   const updatedPaymentMenuItems = [
     ...paymentMenuItems,
     {
-      id: 'refund-management',
+      icon: <RefreshCcw className="h-5 w-5 text-red-500" />,
       name: 'রিফান্ড ম্যানেজমেন্ট',
-      url: '/payment/refund-management',
-      icon: 'RefreshCcw'
+      path: '/payment/refund-management'
     }
   ];
 
