@@ -41,6 +41,17 @@ export const SidebarDrawer = () => {
   
   const { toast } = useToast();
 
+  // Update payment menu items to include refund management
+  const updatedPaymentMenuItems = [
+    ...paymentMenuItems,
+    {
+      id: 'refund-management',
+      name: 'রিফান্ড ম্যানেজমেন্ট',
+      url: '/payment/refund-management',
+      icon: 'RefreshCcw'
+    }
+  ];
+
   const profileMenuItems = getProfileMenuItems(isAdmin);
 
   const handleLogout = () => {
@@ -91,7 +102,7 @@ export const SidebarDrawer = () => {
                 <CollapsibleMenuSection 
                   title="পেমেন্ট এবং ট্রানজেকশন" 
                   icon={collapsibleMenuIcons.payment} 
-                  items={paymentMenuItems} 
+                  items={updatedPaymentMenuItems} 
                 />
               )}
               
