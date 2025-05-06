@@ -72,12 +72,12 @@ export const SidebarDrawer = () => {
         <div className="px-4 space-y-6 py-4">
           <PostAdSection />
           
-          {/* Service Categories Grid */}
-          <ServiceCategoriesGrid />
-          
           <div className="space-y-2">
             {/* Video Carousel */}
             <VideoCarousel />
+            
+            {/* Service Categories Grid - পুনরায় স্থাপিত, এখন ভিডিও ক্যারোসেলের নিচে */}
+            <ServiceCategoriesGrid />
 
             {/* My Services Dropdown - only shown to authenticated users */}
             {isAuthenticated && (
