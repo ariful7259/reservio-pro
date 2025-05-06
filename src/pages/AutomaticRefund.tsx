@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -13,7 +14,7 @@ import {
   Cog
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -818,4 +819,333 @@ const AutomaticRefund = () => {
             <div>
               <Card>
                 <CardHeader>
-                  <
+                  <CardTitle>অটোমেটিক রিফান্ড ইনফো</CardTitle>
+                  <CardDescription>অটোমেটিক রিফান্ড সম্পর্কে গাইডলাইন</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Alert className="bg-gray-50 border-gray-200">
+                    <Shield className="h-4 w-4" />
+                    <AlertDescription>
+                      অটোমেটিক রিফান্ড সিস্টেম সেটআপ করার আগে সতর্কতা অবলম্বন করুন
+                    </AlertDescription>
+                  </Alert>
+                  
+                  <div>
+                    <h3 className="font-medium mb-2">কেন অটোমেটিক রিফান্ড?</h3>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex gap-2">
+                        <Check className="h-5 w-5 text-green-500 shrink-0" />
+                        <span>কাস্টমার সন্তুষ্টি বাড়ায়</span>
+                      </li>
+                      <li className="flex gap-2">
+                        <Check className="h-5 w-5 text-green-500 shrink-0" />
+                        <span>ম্যানুয়াল প্রসেসিং সময় কমায়</span>
+                      </li>
+                      <li className="flex gap-2">
+                        <Check className="h-5 w-5 text-green-500 shrink-0" />
+                        <span>সেলারদের জন্য প্রক্রিয়া সরলীকরণ করে</span>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h3 className="font-medium mb-2">রুলস সেটিং টিপস</h3>
+                    <ul className="space-y-1 text-sm text-muted-foreground pl-5 list-disc">
+                      <li>সবচেয়ে কমন রিফান্ড কারণ আগে অটোমেট করুন</li>
+                      <li>প্রতিটি রুলের শর্তাবলী স্পষ্টভাবে উল্লেখ করুন</li>
+                      <li>নির্দিষ্ট পরিমাণের বেশি রিফান্ডের জন্য ম্যানুয়াল রিভিউ রাখুন</li>
+                      <li>রুলস পর্যায়ক্রমে পরীক্ষা করে সেট করুন</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="pt-4 border-t">
+                    <h3 className="font-medium mb-2">সর্বোচ্চ অটোরিফান্ড সেটিংস</h3>
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <Label htmlFor="maxAmount">সর্বোচ্চ অটো রিফান্ড পরিমাণ</Label>
+                        <span className="font-medium">৳{refundSettings.maxAutoRefundAmount}</span>
+                      </div>
+                      <Input 
+                        id="maxAmount"
+                        type="range" 
+                        min="1000" 
+                        max="50000" 
+                        value={refundSettings.maxAutoRefundAmount}
+                        onChange={(e) => setRefundSettings({...refundSettings, maxAutoRefundAmount: parseInt(e.target.value)})}
+                        className="w-full"
+                      />
+                    </div>
+                    
+                    <div className="mt-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <Label htmlFor="approvalAmount">অনুমোদন প্রয়োজন (পরিমাণ)</Label>
+                        <span className="font-medium">৳{refundSettings.requireApprovalAbove}</span>
+                      </div>
+                      <Input 
+                        id="approvalAmount"
+                        type="range" 
+                        min="1000" 
+                        max="25000"
+                        value={refundSettings.requireApprovalAbove}
+                        onChange={(e) => setRefundSettings({...refundSettings, requireApprovalAbove: parseInt(e.target.value)})}
+                        className="w-full"
+                      />
+                    </div>
+                    
+                    <div className="mt-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <Label htmlFor="threshold">অটোরিফান্ড থ্রেশহোল্ড</Label>
+                        <span className="font-medium">৳{refundSettings.autoRefundThreshold}</span>
+                      </div>
+                      <Input 
+                        id="threshold"
+                        type="range" 
+                        min="500" 
+                        max="10000" 
+                        value={refundSettings.autoRefundThreshold}
+                        onChange={(e) => setRefundSettings({...refundSettings, autoRefundThreshold: parseInt(e.target.value)})}
+                        className="w-full"
+                      />
+                    </div>
+                    
+                    <div className="mt-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <Label htmlFor="holdPeriod">হোল্ডিং পিরিয়ড (ঘন্টা)</Label>
+                        <span className="font-medium">{refundSettings.holdPeriod} ঘন্টা</span>
+                      </div>
+                      <Input 
+                        id="holdPeriod"
+                        type="range" 
+                        min="0" 
+                        max="72" 
+                        value={refundSettings.holdPeriod}
+                        onChange={(e) => setRefundSettings({...refundSettings, holdPeriod: parseInt(e.target.value)})}
+                        className="w-full"
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
+      
+      {/* সেটিংস ডায়ালগ */}
+      <Dialog open={settingsDialog} onOpenChange={setSettingsDialog}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>রিফান্ড সেটিংস</DialogTitle>
+            <DialogDescription>
+              অটোমেটিক রিফান্ড সিস্টেম কনফিগার করুন
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-6 py-4">
+            <div className="grid grid-cols-2 items-center gap-4">
+              <Label htmlFor="autoRefund">অটোমেটিক রিফান্ড</Label>
+              <Switch
+                id="autoRefund"
+                checked={refundSettings.enableAutoRefund}
+                onCheckedChange={(checked) => {
+                  setRefundSettings({...refundSettings, enableAutoRefund: checked});
+                }}
+              />
+            </div>
+            
+            <div className="grid grid-cols-2 items-center gap-4">
+              <Label htmlFor="notifyRefund">রিফান্ড নোটিফিকেশন</Label>
+              <Switch
+                id="notifyRefund"
+                checked={refundSettings.notifyOnRefund}
+                onCheckedChange={(checked) => {
+                  setRefundSettings({...refundSettings, notifyOnRefund: checked});
+                }}
+              />
+            </div>
+            
+            <div className="grid grid-cols-2 items-center gap-4">
+              <Label htmlFor="originalMethod">আসল পেমেন্ট মেথডে রিফান্ড</Label>
+              <Switch
+                id="originalMethod"
+                checked={refundSettings.refundToOriginalMethod}
+                onCheckedChange={(checked) => {
+                  setRefundSettings({...refundSettings, refundToOriginalMethod: checked});
+                }}
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="autoRejectKeywords" className="mb-2 block">অটো-রিজেকশন কিওয়ার্ডস</Label>
+              <Textarea 
+                id="autoRejectKeywords"
+                placeholder="কমা দিয়ে আলাদা করে কিওয়ার্ড লিখুন"
+                value={refundSettings.autoRejectKeywords.join(', ')}
+                onChange={(e) => {
+                  setRefundSettings({
+                    ...refundSettings, 
+                    autoRejectKeywords: e.target.value.split(', ').map(keyword => keyword.trim())
+                  });
+                }}
+              />
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button 
+              variant="outline" 
+              onClick={() => setSettingsDialog(false)}
+            >
+              বাতিল
+            </Button>
+            <Button 
+              onClick={() => {
+                toast({
+                  title: "সেটিংস আপডেট হয়েছে",
+                  description: "রিফান্ড সেটিংস সফলভাবে আপডেট করা হয়েছে"
+                });
+                setSettingsDialog(false);
+              }}
+            >
+              সেভ করুন
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* রিফান্ড বিস্তারিত ডায়ালগ */}
+      {openRefundDetails && (
+        <Dialog open={!!openRefundDetails} onOpenChange={() => setOpenRefundDetails(null)}>
+          <DialogContent className="sm:max-w-[600px]">
+            {(() => {
+              const refund = getRefundDetails(openRefundDetails);
+              if (!refund) return null;
+              
+              return (
+                <>
+                  <DialogHeader>
+                    <DialogTitle>রিফান্ড বিস্তারিত</DialogTitle>
+                    <DialogDescription>
+                      রিফান্ড রেফারেন্স: {refund.id}
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  <div className="grid gap-6 py-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-medium">{refund.reason}</h3>
+                      {renderStatusBadge(refund.status)}
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-muted-foreground mb-1">কাস্টমার</p>
+                        <p className="font-medium">{refund.customerName}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground mb-1">সেলার</p>
+                        <p className="font-medium">{refund.sellerName}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground mb-1">অর্ডার আইডি</p>
+                        <p className="font-medium">{refund.transactionId}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground mb-1">রিফান্ড অ্যামাউন্ট</p>
+                        <p className="font-medium">৳{refund.amount.toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground mb-1">ক্যাটাগরি</p>
+                        <p className="font-medium">
+                          {refund.category === 'marketplace' ? 'মার্কেটপ্লেস' :
+                           refund.category === 'service' ? 'সার্ভিস' :
+                           refund.category === 'rental' ? 'রেন্টাল' : ''}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground mb-1">রিকোয়েস্ট তারিখ</p>
+                        <p className="font-medium">{refund.requestDate}</p>
+                      </div>
+                      {refund.responseDate && (
+                        <div>
+                          <p className="text-muted-foreground mb-1">প্রসেস তারিখ</p>
+                          <p className="font-medium">{refund.responseDate}</p>
+                        </div>
+                      )}
+                      <div>
+                        <p className="text-muted-foreground mb-1">প্রসেস টাইপ</p>
+                        <p className="font-medium">
+                          {refund.automatic ? 'অটোমেটিক প্রসেস' : 'ম্যানুয়াল প্রসেস'}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    {refund.status === 'pending' && (
+                      <div className="flex justify-end gap-3 pt-3 border-t">
+                        <Button 
+                          variant="outline"
+                          className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+                          onClick={() => {
+                            updateRefundStatus(refund.id, 'rejected');
+                            setOpenRefundDetails(null);
+                          }}
+                        >
+                          বাতিল করুন
+                        </Button>
+                        <Button 
+                          onClick={() => {
+                            updateRefundStatus(refund.id, 'approved');
+                            setOpenRefundDetails(null);
+                          }}
+                        >
+                          অনুমোদন করুন
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </>
+              );
+            })()}
+          </DialogContent>
+        </Dialog>
+      )}
+      
+      {/* কনফার্মেশন ডায়ালগ */}
+      {confirmationDialog && (
+        <Dialog open={!!confirmationDialog} onOpenChange={() => setConfirmationDialog(null)}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>
+                {confirmationDialog.startsWith('approve') ? 'রিফান্ড অনুমোদন নিশ্চিতকরণ' : 'রিফান্ড বাতিল নিশ্চিতকরণ'}
+              </DialogTitle>
+              <DialogDescription>
+                {confirmationDialog.startsWith('approve') 
+                  ? 'আপনি কি এই রিফান্ড রিকোয়েস্টটি অনুমোদন করতে চান?' 
+                  : 'আপনি কি এই রিফান্ড রিকোয়েস্টটি বাতিল করতে চান?'}
+              </DialogDescription>
+            </DialogHeader>
+            
+            <DialogFooter className="gap-2 sm:gap-0">
+              <Button 
+                variant="outline" 
+                onClick={() => setConfirmationDialog(null)}
+              >
+                ক্যানসেল
+              </Button>
+              <Button 
+                variant={confirmationDialog.startsWith('approve') ? 'default' : 'destructive'}
+                onClick={() => {
+                  const id = confirmationDialog.split('-')[1];
+                  updateRefundStatus(id, confirmationDialog.startsWith('approve') ? 'approved' : 'rejected');
+                }}
+              >
+                নিশ্চিত করুন
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+    </div>
+  );
+};
+
+export default AutomaticRefund;
