@@ -12,6 +12,7 @@ import DisputeCenter from './components/dispute/DisputeCenter';
 import InvoiceGenerator from './components/invoice/InvoiceGenerator';
 import PaymentLinkGenerator from './components/payment/PaymentLinkGenerator';
 import LoyaltySystem from './components/loyalty/LoyaltySystem';
+import MultiCurrencySupport from './pages/MultiCurrencySupport';
 
 const RoutesConfig = () => {
   return (
@@ -21,6 +22,7 @@ const RoutesConfig = () => {
       <Route path="/payment/transaction-history" element={<TransactionHistory />} />
       <Route path="/payment/generate-invoice" element={<InvoiceGenerator />} />
       <Route path="/payment/payment-links" element={<PaymentLinkGenerator />} />
+      <Route path="/payment/multi-currency" element={<MultiCurrencySupport />} />
       
       {/* Service Related */}
       <Route path="/service/:id" element={<ServiceDetails />} />

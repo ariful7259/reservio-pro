@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -10,7 +9,8 @@ import {
   Filter, 
   Search, 
   ShieldCheck, 
-  User
+  User,
+  CreditCard
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,6 +19,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/hooks/useAuth';
+import { Currency, currencies, formatCurrency, convertCurrency } from '@/utils/currencyUtils';
+import CurrencySelector from '@/components/CurrencySelector';
 
 interface Transaction {
   id: string;
@@ -38,6 +40,7 @@ const TransactionHistory = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [dateFilter, setDateFilter] = useState<string>('');
+  const [selectedCurrency, setSelectedCurrency] = useState<Currency>('BDT');
 
   // মক ডাটা - প্রোডাকশন সিস্টেমে এটি ডাটাবেস থেকে আসবে
   const transactions: Transaction[] = [
@@ -144,6 +147,11 @@ const TransactionHistory = () => {
     }
   };
 
+  // কারেন্সি করভার্ট করার ফাংশন
+  const convertAmount = (amount: number) => {
+    return selectedCurrency === 'BDT' ? amount : convertCurrency(amount, selectedCurrency);
+  };
+
   return (
     <div className="container py-20 px-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
@@ -160,6 +168,10 @@ const TransactionHistory = () => {
           <Button variant="outline" onClick={() => navigate('/payment/download-report')}>
             <Download className="h-4 w-4 mr-2" />
             রিপোর্ট
+          </Button>
+          <Button variant="outline" onClick={() => navigate('/payment/multi-currency')}>
+            <CreditCard className="h-4 w-4 mr-2" />
+            কারেন্সি
           </Button>
         </div>
       </div>
@@ -200,6 +212,17 @@ const TransactionHistory = () => {
               onChange={(e) => setDateFilter(e.target.value)}
             />
           </div>
+          
+          <div className="flex justify-end">
+            <div className="flex items-center gap-2">
+              <span className="text-sm">কারেন্সি:</span>
+              <CurrencySelector 
+                selectedCurrency={selectedCurrency}
+                onCurrencyChange={(value) => setSelectedCurrency(value)}
+                className="w-24"
+              />
+            </div>
+          </div>
         </CardContent>
       </Card>
       
@@ -235,7 +258,7 @@ const TransactionHistory = () => {
                         <div className="flex justify-between">
                           <h3 className="font-medium truncate">{tx.description}</h3>
                           <span className={`font-semibold ${tx.type === 'refund' || tx.type === 'withdraw' ? 'text-red-500' : 'text-green-600'}`}>
-                            {tx.type === 'refund' || tx.type === 'withdraw' ? '-' : '+'} ৳{tx.amount}
+                            {tx.type === 'refund' || tx.type === 'withdraw' ? '-' : '+'} {formatCurrency(convertAmount(tx.amount), selectedCurrency)}
                           </span>
                         </div>
                         

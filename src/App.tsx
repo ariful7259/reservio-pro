@@ -67,6 +67,9 @@ import StoreDetails from "./pages/StoreDetails";
 import SellerDashboard from "./pages/SellerDashboard";
 import ServiceDetails from "./pages/ServiceDetail";
 import ServiceBooking from "./pages/ServiceBooking";
+import TransactionHistory from "./pages/TransactionHistory";
+import PaymentAnalytics from "./pages/PaymentAnalytics";
+import MultiCurrencySupport from "./pages/MultiCurrencySupport";
 
 // Import dashboard components
 import { DashboardLayout } from "./pages/dashboard/DashboardLayout";
@@ -164,6 +167,9 @@ const App = () => (
                   <Route path="/search" element={<SearchPage />} />
                   
                   <Route path="/payment" element={<PaymentDemo />} />
+                  <Route path="/payment/transaction-history" element={<TransactionHistory />} />
+                  <Route path="/payment/analytics" element={<PaymentAnalytics />} />
+                  <Route path="/payment/multi-currency" element={<MultiCurrencySupport />} />
                   
                   <Route path="/referral" element={<ReferralSystem />} />
                   
