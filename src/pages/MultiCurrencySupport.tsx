@@ -137,7 +137,7 @@ const MultiCurrencySupport = () => {
         <div className="lg:col-span-2 space-y-6">
           <Card>
             <CardHeader>
-              <Tabs value={tab} onValueChange={setTab}>
+              <Tabs value={tab} onValueChange={setTab} className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="convert">কারেন্সি কনভার্টার</TabsTrigger>
                   <TabsTrigger value="guide">ব্যবহার গাইড</TabsTrigger>
@@ -145,98 +145,100 @@ const MultiCurrencySupport = () => {
               </Tabs>
             </CardHeader>
             <CardContent>
-              <TabsContent value="convert" className="space-y-4">
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium">মূল পরিমাণ (বাংলাদেশী টাকা)</label>
-                    <div className="flex items-center mt-1.5">
-                      <span className="bg-muted px-3 py-2 rounded-l-md border border-r-0">৳</span>
-                      <Input 
-                        type="number" 
-                        value={amount}
-                        onChange={e => setAmount(e.target.value)}
-                        className="rounded-l-none"
-                      />
-                    </div>
-                  </div>
-                  
-                  <Button 
-                    className="w-full flex items-center justify-center gap-2"
-                    variant="outline"
-                    type="button"
-                  >
-                    <RefreshCw className="h-4 w-4" />
-                    রিফ্রেশ রেট
-                  </Button>
-
-                  <Card className="border-2 border-primary/20">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg">{formatCurrencyBN(amountValue, 'BDT')} (BDT) রূপান্তরিত হয়েছে:</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
-                        {Object.entries(currencies).filter(([code]) => code !== 'BDT').map(([code, info]) => {
-                          const convertedAmount = convertCurrency(amountValue, code as Currency);
-                          return (
-                            <div key={code} className="flex justify-between items-center p-2 hover:bg-muted rounded-md">
-                              <div className="flex items-center gap-2">
-                                <Badge variant="outline" className="p-1">{info.symbol}</Badge>
-                                <span>{info.name}</span>
-                              </div>
-                              <div className="font-semibold">{formatCurrencyBN(convertedAmount, code as Currency)}</div>
-                            </div>
-                          );
-                        })}
+              <Tabs value={tab} className="w-full">
+                <TabsContent value="convert" className="space-y-4">
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium">মূল পরিমাণ (বাংলাদেশী টাকা)</label>
+                      <div className="flex items-center mt-1.5">
+                        <span className="bg-muted px-3 py-2 rounded-l-md border border-r-0">৳</span>
+                        <Input 
+                          type="number" 
+                          value={amount}
+                          onChange={e => setAmount(e.target.value)}
+                          className="rounded-l-none"
+                        />
                       </div>
-                    </CardContent>
-                  </Card>
-
-                  <Alert className="bg-muted">
-                    <Globe className="h-4 w-4" />
-                    <AlertTitle>রিয়েল টাইম রেট</AlertTitle>
-                    <AlertDescription>
-                      এক্সচেঞ্জ রেট গ্লোবাল মার্কেট অনুযায়ী পরিবর্তিত হতে পারে। সর্বশেষ হালনাগাদ: আজ, {new Date().toLocaleDateString('bn-BD')}
-                    </AlertDescription>
-                  </Alert>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="guide" className="space-y-4">
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="font-medium text-lg mb-2">কিভাবে মাল্টি-কারেন্সি ব্যবহার করবেন</h3>
-                    <ul className="space-y-2 list-disc list-inside text-muted-foreground">
-                      <li>প্রথমে আপনার পছন্দের কারেন্সি নির্বাচন করুন</li>
-                      <li>ডিফল্ট কারেন্সি সেট করতে "ডিফল্ট কারেন্সি সেট করুন" বাটনে ক্লিক করুন</li>
-                      <li>এটি আপনার সমস্ত পেমেন্ট এবং ট্রানজেকশন সেই কারেন্সিতে দেখাবে</li>
-                      <li>ট্রানজেকশন হিস্টোরি, পেমেন্ট অপশন ইত্যাদিতে কারেন্সি সেলেক্টর আইকন দেখতে পারবেন</li>
-                      <li>যেকোনো লেনদেনের সময় আপনি কারেন্সি পরিবর্তন করতে পারবেন</li>
-                    </ul>
-                  </div>
-                  
-                  <div>
-                    <h3 className="font-medium text-lg mb-2">কারেন্সি এক্সচেঞ্জ রেট সম্পর্কে জানুন</h3>
-                    <p className="text-muted-foreground mb-4">
-                      আমাদের এক্সচেঞ্জ রেট গ্লোবাল স্ট্যান্ডার্ড অনুসারে আপডেট করা হয়। আপনি যে কোন লেনদেনের সময় 
-                      রিয়েল-টাইম রেট দেখতে পাবেন। 
-                    </p>
+                    </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                      {Object.entries(currencies).map(([code, info]) => (
-                        <Button 
-                          key={code} 
-                          variant="outline"
-                          className="justify-between"
-                          onClick={() => handleCopy(`1 BDT = ${info.exchangeRate} ${code}`)}
-                        >
-                          <span>১ BDT = {info.exchangeRate} {code}</span>
-                          <Badge variant="outline">{info.symbol}</Badge>
-                        </Button>
-                      ))}
+                    <Button 
+                      className="w-full flex items-center justify-center gap-2"
+                      variant="outline"
+                      type="button"
+                    >
+                      <RefreshCw className="h-4 w-4" />
+                      রিফ্রেশ রেট
+                    </Button>
+
+                    <Card className="border-2 border-primary/20">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-lg">{formatCurrencyBN(amountValue, 'BDT')} (BDT) রূপান্তরিত হয়েছে:</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2">
+                          {Object.entries(currencies).filter(([code]) => code !== 'BDT').map(([code, info]) => {
+                            const convertedAmount = convertCurrency(amountValue, code as Currency);
+                            return (
+                              <div key={code} className="flex justify-between items-center p-2 hover:bg-muted rounded-md">
+                                <div className="flex items-center gap-2">
+                                  <Badge variant="outline" className="p-1">{info.symbol}</Badge>
+                                  <span>{info.name}</span>
+                                </div>
+                                <div className="font-semibold">{formatCurrencyBN(convertedAmount, code as Currency)}</div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Alert className="bg-muted">
+                      <Globe className="h-4 w-4" />
+                      <AlertTitle>রিয়েল টাইম রেট</AlertTitle>
+                      <AlertDescription>
+                        এক্সচেঞ্জ রেট গ্লোবাল মার্কেট অনুযায়ী পরিবর্তিত হতে পারে। সর্বশেষ হালনাগাদ: আজ, {new Date().toLocaleDateString('bn-BD')}
+                      </AlertDescription>
+                    </Alert>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="guide" className="space-y-4">
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="font-medium text-lg mb-2">কিভাবে মাল্টি-কারেন্সি ব্যবহার করবেন</h3>
+                      <ul className="space-y-2 list-disc list-inside text-muted-foreground">
+                        <li>প্রথমে আপনার পছন্দের কারেন্সি নির্বাচন করুন</li>
+                        <li>ডিফল্ট কারেন্সি সেট করতে "ডিফল্ট কারেন্সি সেট করুন" বাটনে ক্লিক করুন</li>
+                        <li>এটি আপনার সমস্ত পেমেন্ট এবং ট্রানজেকশন সেই কারেন্সিতে দেখাবে</li>
+                        <li>ট্রানজেকশন হিস্টোরি, পেমেন্ট অপশন ইত্যাদিতে কারেন্সি সেলেক্টর আইকন দেখতে পারবেন</li>
+                        <li>যেকোনো লেনদেনের সময় আপনি কারেন্সি পরিবর্তন করতে পারবেন</li>
+                      </ul>
+                    </div>
+                    
+                    <div>
+                      <h3 className="font-medium text-lg mb-2">কারেন্সি এক্সচেঞ্জ রেট সম্পর্কে জানুন</h3>
+                      <p className="text-muted-foreground mb-4">
+                        আমাদের এক্সচেঞ্জ রেট গ্লোবাল স্ট্যান্ডার্ড অনুসারে আপডেট করা হয়। আপনি যে কোন লেনদেনের সময় 
+                        রিয়েল-টাইম রেট দেখতে পাবেন। 
+                      </p>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        {Object.entries(currencies).map(([code, info]) => (
+                          <Button 
+                            key={code} 
+                            variant="outline"
+                            className="justify-between"
+                            onClick={() => handleCopy(`1 BDT = ${info.exchangeRate} ${code}`)}
+                          >
+                            <span>১ BDT = {info.exchangeRate} {code}</span>
+                            <Badge variant="outline">{info.symbol}</Badge>
+                          </Button>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </TabsContent>
+                </TabsContent>
+              </Tabs>
             </CardContent>
           </Card>
 
