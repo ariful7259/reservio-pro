@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { 
   AlertTriangle, MessageSquare, ShieldCheck, Clock, FileText, 
-  Search, Filter, CheckCircle, XCircle, HelpCircle, ArrowLeft
+  Search, Filter, CheckCircle, XCircle, HelpCircle, ArrowLeft, ChevronRight
 } from 'lucide-react';
 import { 
   Select,
@@ -133,7 +132,7 @@ const SAMPLE_DISPUTES: Dispute[] = [
       {
         id: 'm2',
         sender: 'রহিম ট্রেডার্স',
-        content: 'আমরা চেক করে দেখেছি যে এটি একটি সিস্টেম ত্রুটি ছিল। আমরা অতিরিক্ত টাকা ফেরত দিচ্ছি।',
+        content: 'আমরা চেক করে দেখেছি যে এটি একটি সিস্টেম ত্রুটি ছিল। আমরা অতিরিক্ত টাকা ফেরত দিতে সম্মত হয়েছেন। আমরা আপনার ওয়ালেটে ৫০০ টাকা ফেরত দিয়েছি।',
         timestamp: '2025-05-02T10:40:00'
       },
       {

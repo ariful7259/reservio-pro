@@ -1,4 +1,3 @@
-
 import { 
   PaintBucket, Truck, Home, AirVent, Hammer, 
   Wrench, Pipette, HousePlus, User, MessageSquare, 
@@ -6,8 +5,7 @@ import {
   Book, Calendar, Heart, MapPin, List, ShoppingBag, Star,
   Store, File, Gavel, UserCheck, Building, DollarSign, 
   FileText, Calculator, Share2, MessageCircle, Info, Briefcase,
-  ChartBar, Badge, ArrowDownToLine, Currency, Award, Link,
-  FileChartBar
+  ChartBar, Badge, ArrowDownToLine, Currency, Award, Link
 } from 'lucide-react';
 import React from 'react';
 
@@ -202,7 +200,7 @@ export const paymentMenuItems = [
 // Merchant Resources
 export const merchantResources = [
   {
-    icon: <FileChartBar className="h-5 w-5 text-red-500" />,
+    icon: <ChartBar className="h-5 w-5 text-red-500" />,
     name: "সেলস এনালিটিক্স",
     path: "/merchant/analytics"
   },

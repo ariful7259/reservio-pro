@@ -9,6 +9,9 @@ interface User {
   role: 'user' | 'admin' | 'seller';
   verified: boolean;
   sellerVerified?: boolean;
+  sellerType?: 'marketplace' | 'rental' | 'service' | 'content'; // Added sellerType property
+  phone?: string; // Added phone property
+  address?: string; // Added address property
 }
 
 interface AuthContextType {
@@ -19,6 +22,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   signup: (name: string, email: string, password: string) => Promise<void>;
+  updateUserProfile: (data: Partial<User>) => void; // Added updateUserProfile method
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -40,7 +44,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
       role: email.includes('admin') ? 'admin' : email.includes('seller') ? 'seller' : 'user',
       verified: true,
-      sellerVerified: email.includes('seller') ? true : false
+      sellerVerified: email.includes('seller') ? true : false,
+      sellerType: email.includes('seller') ? 'marketplace' : undefined,
+      phone: '+8801712345678', // Mock phone
+      address: 'ঢাকা, বাংলাদেশ' // Mock address
     };
     
     setUser(userData);
@@ -75,6 +82,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsAuthenticated(false);
     localStorage.removeItem('user');
   };
+
+  // Add updateUserProfile function
+  const updateUserProfile = (data: Partial<User>) => {
+    if (user) {
+      const updatedUser = { ...user, ...data };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    }
+  };
   
   // Check for saved user on mount
   useEffect(() => {
@@ -99,7 +115,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       isSeller,
       login, 
       logout, 
-      signup 
+      signup,
+      updateUserProfile 
     }}>
       {children}
     </AuthContext.Provider>
