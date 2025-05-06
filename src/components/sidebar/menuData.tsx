@@ -17,7 +17,7 @@ import {
   MessageSquare,
   Mail,
   Phone,
-  Stairs,
+  Home,  // Using Home instead of Stairs as it's a valid icon
   Scale,
   Banknote,
   Landmark,
@@ -94,7 +94,7 @@ export const legalAssistanceMenuItems: MenuItem[] = [
     path: "/land-documents"
   },
   {
-    icon: <Stairs className="h-5 w-5 text-red-500" />,
+    icon: <Home className="h-5 w-5 text-red-500" />,  // Changed from Stairs to Home
     name: " বিল্ডিং প্ল্যান",
     path: "/building-plan"
   },
