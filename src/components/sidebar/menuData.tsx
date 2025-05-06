@@ -1,3 +1,4 @@
+
 // If this file exists, import the MenuItem type from types.ts
 import { MenuItem, ProfileMenuItem } from './types';
 import React from 'react';
@@ -16,7 +17,7 @@ import {
   MessageSquare,
   Mail,
   Phone,
-   সিঁড়ি,
+  Stairs,
   Scale,
   Banknote,
   Landmark,
@@ -93,7 +94,7 @@ export const legalAssistanceMenuItems: MenuItem[] = [
     path: "/land-documents"
   },
   {
-    icon: < সিঁড়ি className="h-5 w-5 text-red-500" />,
+    icon: <Stairs className="h-5 w-5 text-red-500" />,
     name: " বিল্ডিং প্ল্যান",
     path: "/building-plan"
   },
