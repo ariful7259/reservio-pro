@@ -9,10 +9,14 @@ import Reviews from './pages/Reviews';
 import ServiceDetails from './pages/ServiceDetails';
 import NotFound from './pages/NotFound';
 import DisputeCenter from './components/dispute/DisputeCenter';
-import InvoiceGenerator from './components/invoice/InvoiceGenerator';
+import InvoiceGenerator from './pages/InvoiceGenerator';
 import PaymentLinkGenerator from './components/payment/PaymentLinkGenerator';
 import LoyaltySystem from './components/loyalty/LoyaltySystem';
 import MultiCurrencySupport from './pages/MultiCurrencySupport';
+import PaymentMethods from './pages/PaymentMethods';
+import EscrowStatus from './pages/EscrowStatus';
+import CommissionCalculator from './pages/CommissionCalculator';
+import AutomaticRefund from './pages/AutomaticRefund';
 
 const RoutesConfig = () => {
   return (
@@ -23,6 +27,10 @@ const RoutesConfig = () => {
       <Route path="/payment/generate-invoice" element={<InvoiceGenerator />} />
       <Route path="/payment/payment-links" element={<PaymentLinkGenerator />} />
       <Route path="/payment/multi-currency" element={<MultiCurrencySupport />} />
+      <Route path="/payment/payment-methods" element={<PaymentMethods />} />
+      <Route path="/payment/escrow-status" element={<EscrowStatus />} />
+      <Route path="/payment/commission-calculator" element={<CommissionCalculator />} />
+      <Route path="/payment/auto-refund" element={<AutomaticRefund />} />
       
       {/* Service Related */}
       <Route path="/service/:id" element={<ServiceDetails />} />
