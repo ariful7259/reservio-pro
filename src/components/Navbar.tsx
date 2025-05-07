@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Search, Home, Building, ShoppingBag, ChevronDown, Plus, User, LogOut, Rocket, Mail, Calendar, Users, BarChart, DollarSign, MessageSquare, Store, Briefcase, FileText, Video, Globe, Zap, Database, Cpu, Shield, FileText as FileIcon, Calendar as CalendarIcon, MessageCircle, UsersRound, LogIn, Bell, Wallet, QrCode, File, Gavel, UserCheck, Home as HomeIcon, Calculator, Share2, HelpCircle as HelpIcon, Info, Book, Wrench, BookOpen } from 'lucide-react';
+import { Search, Home, Building, ShoppingBag, ChevronDown, Plus, User, LogOut, Rocket, Mail, Calendar, Users, BarChart, DollarSign, MessageSquare, Store, Briefcase, FileText, Video, Globe, Zap, Database, Cpu, Shield, FileText as FileIcon, Calendar as CalendarIcon, MessageCircle, UsersRound, LogIn, Bell, Wallet, Store as StoreIcon, File, Gavel, UserCheck, Home as HomeIcon, Calculator, Share2, HelpCircle as HelpIcon, Info, Book, Wrench, BookOpen } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { SidebarDrawer } from '@/components/SidebarDrawer';
@@ -169,7 +169,7 @@ const Navbar = () => {
     icon: <Store className="h-4 w-4 text-primary" />,
     name: "অনলাইন স্টোর",
     path: "/create-store",
-    description: "নিজের ব্র্যান্ডের ওয়েবসাইট তৈরি করুন"
+    description: "নিজের ব্র্যান্ডের ওয়েবসাইট ��ৈরি করুন"
   }, {
     icon: <Mail className="h-4 w-4 text-blue-500" />,
     name: "ইমেইল অটোমেশন",
@@ -329,8 +329,8 @@ const Navbar = () => {
               <Wallet className="h-5 w-5" />
             </Button>
 
-            <Button variant="ghost" size="icon" className="relative" onClick={() => navigate('/qr-scanner')}>
-              <QrCode className="h-5 w-5" />
+            <Button variant="ghost" size="icon" className="relative" onClick={() => navigate('/digital-products')}>
+              <StoreIcon className="h-5 w-5" />
             </Button>
 
             <DropdownMenu>

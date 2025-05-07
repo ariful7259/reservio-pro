@@ -1,417 +1,296 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { useSellerProfile } from '@/hooks/useSellerProfile';
-import { useAuth } from '@/hooks/useAuth';
-import { toast } from '@/hooks/use-toast';
+
+import React, { useState } from 'react';
 import { 
-  Store, 
-  Package, 
-  BarChart3, 
-  Users, 
-  Calendar, 
-  Clock, 
-  Home, 
-  Settings, 
-  ChevronRight, 
-  MessageSquare, 
-  Percent, 
-  Boxes, 
-  ShoppingCart, 
+  BarChart, 
+  Download,
+  ShoppingBag,
   TrendingUp,
-  Star, 
-  Building, 
-  Wrench, 
-  Video,
-  Upload,
-  Folder,
-  Share2,
-  Key,
-  DollarSign,
-  Receipt,
-  LogIn
+  Users,
+  CircleDollarSign,
+  Plus,
+  FileText,
+  ArrowUpRight
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  Tabs, 
-  TabsContent, 
-  TabsList, 
-  TabsTrigger 
-} from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
-import { 
-  SidebarProvider, 
-  Sidebar, 
-  SidebarContent, 
-  SidebarHeader, 
-  SidebarMenu, 
-  SidebarMenuButton, 
-  SidebarMenuItem, 
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent
-} from '@/components/ui/sidebar';
-
-import IntegratedDashboard from '@/components/dashboard/IntegratedDashboard';
-import MarketplaceDashboard from '@/components/dashboard/MarketplaceDashboard';
-import RentalDashboard from '@/components/dashboard/RentalDashboard';
-import ServicesDashboard from '@/components/dashboard/ServicesDashboard';
-import ContentDashboard from '@/components/dashboard/ContentDashboard';
-import StoreDashboardPreview from '@/components/store/StoreDashboardPreview';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { useNavigate } from 'react-router-dom';
 
 const SellerDashboard = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [active, setActive] = useState('overview');
-  const { isAuthenticated, user } = useAuth();
-  const { profile, isLoading, error } = useSellerProfile();
+  const [dateRange, setDateRange] = useState('this-month');
   
-  console.log("Auth State:", { isAuthenticated, user });
-  console.log("Seller Profile:", { profile, isLoading, error });
-  console.log("Current Path:", location.pathname);
-  
-  useEffect(() => {
-    if (!isAuthenticated) {
-      toast({
-        title: "অননুমোদিত অ্যাক্সেস",
-        description: "ড্যাশবোর্ড ব্যবহারের জন্য অনুগ্রহ করে লগইন করুন",
-        variant: "destructive"
-      });
-      navigate('/login', { state: { from: location.pathname } });
-      return;
-    }
-    
-    if (!isLoading && profile) {
-      // Redirect to type-specific dashboard if on general seller dashboard
-      const currentPath = location.pathname;
-      const sellerType = profile.seller_type;
-      
-      if (currentPath === '/seller-dashboard') {
-        switch(sellerType) {
-          case 'marketplace':
-            navigate('/dashboard/marketplace', { replace: true });
-            break;
-          case 'rental':
-            navigate('/dashboard/rental', { replace: true });
-            break;
-          case 'service':
-            navigate('/dashboard/service', { replace: true });
-            break;
-          case 'content':
-            navigate('/dashboard/content', { replace: true });
-            break;
-          default:
-            // Keep them on the general dashboard if no specific type
-            break;
-        }
-      }
-    }
-  }, [isLoading, profile, location.pathname, navigate, isAuthenticated]);
-
-  const getAllowedPaths = (sellerType: string) => {
-    const basePaths = ['/seller-dashboard'];
-    switch(sellerType) {
-      case 'marketplace':
-        return [...basePaths, '/seller-dashboard/marketplace'];
-      case 'rental':
-        return [...basePaths, '/seller-dashboard/rental'];
-      case 'service':
-        return [...basePaths, '/seller-dashboard/services'];
-      case 'content':
-        return [...basePaths, '/seller-dashboard/content'];
-      default:
-        return basePaths;
+  const stats = {
+    'this-month': {
+      sales: '৳১৫,৯৫০',
+      orders: 42,
+      customers: 36,
+      growth: 12.5,
+      products: 8
+    },
+    'last-month': {
+      sales: '৳১২,৭৫০',
+      orders: 35,
+      customers: 30,
+      growth: 8.3,
+      products: 6
+    },
+    'this-year': {
+      sales: '৳৮৫,৮০০',
+      orders: 230,
+      customers: 145,
+      growth: 32.7,
+      products: 8
     }
   };
   
-  if (!isAuthenticated) {
-    return (
-      <div className="flex items-center justify-center min-h-screen flex-col gap-4">
-        <h2 className="text-xl">সেলার ড্যাশবোর্ড ব্যবহারের জন্য লগইন করুন</h2>
-        <Button onClick={() => navigate('/login', { state: { from: location.pathname } })}>
-          <LogIn className="h-4 w-4 mr-2" />
-          লগইন করুন
-        </Button>
-      </div>
-    );
-  }
-
-  if (isLoading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
-  }
-
-  if (error) {
-    return <div className="flex items-center justify-center min-h-screen flex-col gap-4">
-      <div>Error: {error}</div>
-      <Button onClick={() => navigate('/create-store')}>
-        ব্যবসা তৈরি করুন
-      </Button>
-    </div>;
-  }
-
-  if (!profile) {
-    return (
-      <div className="flex items-center justify-center min-h-screen flex-col gap-4">
-        <div>আপনার কোন বিক্রেতা প্রোফাইল নেই। প্রথমে একটি বিক্রেতা প্রোফাইল তৈরি করুন।</div>
-        <Button onClick={() => navigate('/create-store')}>
-          ব্যবসা তৈরি করুন
-        </Button>
-      </div>
-    );
-  }
-
-  return (
-    <SidebarProvider>
-      <div className="flex w-full min-h-screen pt-16">
-        <DashboardSidebar 
-          active={active} 
-          setActive={setActive} 
-          sellerType={profile.seller_type}
-        />
-        
-        <div className="flex-1 p-4 md:p-6">
-          <Routes>
-            <Route path="/" element={<IntegratedDashboard />} />
-            {profile.seller_type === 'marketplace' && (
-              <Route path="/marketplace" element={<MarketplaceDashboard />} />
-            )}
-            {profile.seller_type === 'rental' && (
-              <Route path="/rental" element={<RentalDashboard />} />
-            )}
-            {profile.seller_type === 'service' && (
-              <Route path="/services" element={<ServicesDashboard />} />
-            )}
-            {profile.seller_type === 'content' && (
-              <Route path="/content" element={<ContentDashboard />} />
-            )}
-            <Route path="/analytics" element={<DashboardAnalytics />} />
-            <Route path="/customers" element={<CustomerManagement />} />
-            <Route path="/orders" element={<OrderManagement />} />
-            <Route path="/inventory" element={<InventoryManagement />} />
-            <Route path="/promotions" element={<PromotionManagement />} />
-            <Route path="/reviews" element={<ReviewManagement />} />
-            <Route path="/settings" element={<DashboardSettings />} />
-          </Routes>
-        </div>
-      </div>
-    </SidebarProvider>
-  );
-};
-
-const DashboardSidebar = ({ 
-  active, 
-  setActive, 
-  sellerType 
-}: { 
-  active: string;
-  setActive: (tab: string) => void;
-  sellerType: string;
-}) => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const currentStats = stats[dateRange as keyof typeof stats];
   
-  const menuItems = [
+  const latestOrders = [
     {
-      title: 'সমন্বিত ড্যাশবোর্ড',
-      icon: Home,
-      path: '/seller-dashboard',
-      exact: true,
-      show: true
+      id: 'ORD-12345',
+      customer: 'রাহিম আহমেদ',
+      product: 'বিজনেস স্টার্টাপ গাইড',
+      date: '২৭ এপ্রিল, ২০২৫',
+      amount: '৳৯৯৯',
+      status: 'delivered'
     },
     {
-      title: 'বিক্রেতা ড্যাশবোর্ড',
-      icon: Store,
-      path: '/seller-dashboard/marketplace',
-      show: sellerType === 'marketplace'
+      id: 'ORD-12344',
+      customer: 'সাবিনা খাতুন',
+      product: 'প্রিমিয়াম ওয়েবসাইট টেমপ্লেট',
+      date: '২৫ এপ্রিল, ২০২৫',
+      amount: '৳২,৫০০',
+      status: 'delivered'
     },
     {
-      title: 'রেন্টাল ড্যাশবোর্ড',
-      icon: Building,
-      path: '/seller-dashboard/rental',
-      show: sellerType === 'rental'
+      id: 'ORD-12343',
+      customer: 'তানভীর হোসেন',
+      product: 'ডিজিটাল মার্কেটিং মাস্টার কোর্স',
+      date: '২৩ এপ্রিল, ২০২৫',
+      amount: '৳৫,৯৯৯',
+      status: 'processing'
     },
     {
-      title: 'সার্ভিস ড্যাশবোর্ড',
-      icon: Wrench,
-      path: '/seller-dashboard/services',
-      show: sellerType === 'service'
-    },
-    {
-      title: 'কন্টেন্ট ড্যাশবোর্ড',
-      icon: Video,
-      path: '/seller-dashboard/content',
-      show: sellerType === 'content'
-    },
-    {
-      title: 'অ্যানালিটিক্স',
-      icon: BarChart3,
-      path: '/seller-dashboard/analytics'
-    },
-    {
-      title: 'গ্রাহক ব্যবস্থাপনা',
-      icon: Users,
-      path: '/seller-dashboard/customers'
-    },
-    {
-      title: 'অর্ডার ও বুকিং',
-      icon: ShoppingCart,
-      path: '/seller-dashboard/orders'
-    },
-    {
-      title: 'ইনভেন্টরি',
-      icon: Boxes,
-      path: '/seller-dashboard/inventory'
-    },
-    {
-      title: 'প্রমোশন',
-      icon: Percent,
-      path: '/seller-dashboard/promotions'
-    },
-    {
-      title: 'রিভিউ',
-      icon: Star,
-      path: '/seller-dashboard/reviews'
-    },
-    {
-      title: 'সেটিংস',
-      icon: Settings,
-      path: '/seller-dashboard/settings'
+      id: 'ORD-12342',
+      customer: 'ফারিয়া ইসলাম',
+      product: 'মেডিটেশন অডিও সিরিজ',
+      date: '২১ এপ্রিল, ২০২৫',
+      amount: '৳৮৯৯',
+      status: 'delivered'
     }
   ];
   
-  const filteredMenuItems = menuItems.filter(item => item.show !== false);
-  
+  const topProducts = [
+    {
+      id: 1,
+      name: 'ডিজিটাল মার্কেটিং মাস্টার কোর্স',
+      sales: 45,
+      revenue: '৳২,৬৯,৯৫৫',
+      type: 'course'
+    },
+    {
+      id: 2,
+      name: 'বিজনেস স্টার্টাপ গাইড',
+      sales: 38,
+      revenue: '৳৩৭,৯৬২',
+      type: 'ebook'
+    },
+    {
+      id: 3,
+      name: 'প্রিমিয়াম ওয়েবসাইট টেমপ্লেট',
+      sales: 27,
+      revenue: '৳৬৭,৫০০',
+      type: 'template'
+    }
+  ];
+
   return (
-    <Sidebar className="bg-white shadow-sm">
-      <SidebarHeader className="border-b border-slate-200 p-4">
-        <div className="flex items-center gap-2">
-          <Store className="h-6 w-6 text-primary" />
-          <h2 className="text-lg font-medium">বিক্রেতা কেন্দ্র</h2>
+    <div className="container pt-20 pb-16">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+        <div>
+          <h1 className="text-2xl font-bold">বিক্রেতা ড্যাশবোর্ড</h1>
+          <p className="text-muted-foreground">আপনার ডিজিটাল প্রোডাক্ট সেলস ও পারফরম্যান্স পর্যবেক্ষণ করুন</p>
         </div>
-      </SidebarHeader>
-      
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>ড্যাশবোর্ড</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {filteredMenuItems.map((item) => (
-                <SidebarMenuItem key={item.path}>
-                  <SidebarMenuButton 
-                    isActive={
-                      item.exact 
-                        ? location.pathname === item.path
-                        : location.pathname === item.path
-                    }
-                    onClick={() => navigate(item.path)}
-                    tooltip={item.title}
-                  >
-                    <item.icon className="h-5 w-5" />
-                    <span>{item.title}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-      
-      <SidebarFooter className="border-t border-slate-200 p-4">
-        <div className="flex flex-col gap-2">
-          <Button variant="outline" size="sm" className="w-full justify-start gap-2">
-            <MessageSquare className="h-4 w-4" />
-            সাপোর্ট
+        
+        <div className="flex gap-2">
+          <Button 
+            variant="outline"
+            onClick={() => navigate('/create-digital-product')}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            নতুন প্রোডাক্ট
+          </Button>
+          <Button>
+            <Download className="h-4 w-4 mr-2" />
+            রিপোর্ট ডাউনলোড
           </Button>
         </div>
-      </SidebarFooter>
-    </Sidebar>
+      </div>
+      
+      {/* Date Range Selector */}
+      <Tabs defaultValue="this-month" className="mb-6" onValueChange={value => setDateRange(value)}>
+        <TabsList>
+          <TabsTrigger value="this-month">এই মাস</TabsTrigger>
+          <TabsTrigger value="last-month">গত মাস</TabsTrigger>
+          <TabsTrigger value="this-year">এই বছর</TabsTrigger>
+        </TabsList>
+      </Tabs>
+      
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">মোট বিক্রয়</p>
+                <h3 className="text-2xl font-bold mt-1">{currentStats.sales}</h3>
+                <div className="flex items-center mt-1 text-sm text-emerald-600">
+                  <TrendingUp className="h-4 w-4 mr-1" />
+                  <span>+{currentStats.growth}% গত মাস থেকে</span>
+                </div>
+              </div>
+              <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center">
+                <CircleDollarSign className="h-6 w-6 text-primary" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">মোট অর্ডার</p>
+                <h3 className="text-2xl font-bold mt-1">{currentStats.orders}</h3>
+                <div className="flex items-center mt-1 text-sm text-emerald-600">
+                  <TrendingUp className="h-4 w-4 mr-1" />
+                  <span>+{Math.round(currentStats.growth * 0.8)}% গত মাস থেকে</span>
+                </div>
+              </div>
+              <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center">
+                <ShoppingBag className="h-6 w-6 text-primary" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">মোট গ্রাহক</p>
+                <h3 className="text-2xl font-bold mt-1">{currentStats.customers}</h3>
+                <div className="flex items-center mt-1 text-sm text-emerald-600">
+                  <TrendingUp className="h-4 w-4 mr-1" />
+                  <span>+{Math.round(currentStats.growth * 0.9)}% গত মাস থেকে</span>
+                </div>
+              </div>
+              <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center">
+                <Users className="h-6 w-6 text-primary" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">মোট প্রোডাক্ট</p>
+                <h3 className="text-2xl font-bold mt-1">{currentStats.products}</h3>
+                <div className="flex items-center mt-1 text-sm text-gray-500">
+                  <span>২ এক্টিভ, {currentStats.products - 2} ড্রাফট</span>
+                </div>
+              </div>
+              <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center">
+                <FileText className="h-6 w-6 text-primary" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      
+      {/* Sales Chart */}
+      <Card className="mb-6">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>বিক্রয় পরিসংখ্যান</CardTitle>
+          <Button variant="outline" size="sm">
+            <Download className="h-4 w-4 mr-2" />
+            ডাউনলোড
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <div className="h-80 flex items-center justify-center border rounded">
+            <BarChart className="h-10 w-10 text-muted-foreground opacity-50" />
+            <p className="ml-2 text-muted-foreground">সেলস ডাটা চার্ট এখানে দেখানো হবে</p>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Latest Orders and Top Products */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Latest Orders */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>সাম্প্রতিক অর্ডার</CardTitle>
+            <Button variant="ghost" size="sm" className="gap-1" onClick={() => navigate('/orders')}>
+              সব দেখুন <ArrowUpRight className="h-4 w-4" />
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {latestOrders.map((order) => (
+                <div key={order.id} className="flex items-center justify-between p-2 border-b last:border-0">
+                  <div>
+                    <p className="font-medium">{order.customer}</p>
+                    <p className="text-sm text-muted-foreground">{order.product}</p>
+                    <p className="text-xs text-muted-foreground">{order.date}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold text-primary">{order.amount}</p>
+                    <Badge variant={order.status === 'delivered' ? 'outline' : 'secondary'} className="mt-1">
+                      {order.status === 'delivered' ? 'ডেলিভারড' : 'প্রসেসিং'}
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+        
+        {/* Top Products */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>সেরা বিক্রিত প্রোডাক্ট</CardTitle>
+            <Button variant="ghost" size="sm" className="gap-1" onClick={() => navigate('/products')}>
+              সব দেখুন <ArrowUpRight className="h-4 w-4" />
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {topProducts.map((product) => (
+                <div key={product.id} className="flex items-center justify-between p-2 border-b last:border-0">
+                  <div>
+                    <p className="font-medium">{product.name}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Badge variant="outline" className="text-xs">
+                        {product.type === 'course' ? 'কোর্স' : 
+                         product.type === 'ebook' ? 'ইবুক' : 'টেমপ্লেট'}
+                      </Badge>
+                      <span className="text-xs text-muted-foreground">{product.sales} বিক্রি</span>
+                    </div>
+                  </div>
+                  <p className="font-bold text-primary">{product.revenue}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 };
-
-const DashboardAnalytics = () => (
-  <div className="space-y-4">
-    <h1 className="text-2xl font-bold mb-6">অ্যানালিটিক্স</h1>
-    <Card>
-      <CardContent className="p-6">
-        <h2 className="text-xl font-medium mb-4">বিক্রয় পরিসংখ্যান</h2>
-        <p>এখানে বিস্তারিত বিক্রয় পরিসংখ্যান, রাজস্ব বিশ্লেষণ এবং বিভিন্ন সার্ভিসের তুলনামূলক তথ্য থাকবে।</p>
-      </CardContent>
-    </Card>
-  </div>
-);
-
-const CustomerManagement = () => (
-  <div className="space-y-4">
-    <h1 className="text-2xl font-bold mb-6">গ্রাহক ব্যবস্থাপনা</h1>
-    <Card>
-      <CardContent className="p-6">
-        <h2 className="text-xl font-medium mb-4">গ্রাহক তালিকা</h2>
-        <p>এখানে গ্রাহকদের তালিকা, তাদের ক্রয় ইতিহাস, যোগাযোগ তথ্য এবং ব্যবহার পরিসংখ্যান থাকবে।</p>
-      </CardContent>
-    </Card>
-  </div>
-);
-
-const OrderManagement = () => (
-  <div className="space-y-4">
-    <h1 className="text-2xl font-bold mb-6">অর্ডার ও বুকিং ব্যবস্থাপনা</h1>
-    <Card>
-      <CardContent className="p-6">
-        <h2 className="text-xl font-medium mb-4">সমন্বিত অর্ডার তালিকা</h2>
-        <p>এখানে মার্কেটপ্লেস অর্ডার, রেন্টাল বুকিং এবং সার্ভিস অ্যাপয়েন্টমেন্টের সমন্বিত ভিউ থাকবে।</p>
-      </CardContent>
-    </Card>
-  </div>
-);
-
-const InventoryManagement = () => (
-  <div className="space-y-4">
-    <h1 className="text-2xl font-bold mb-6">ইনভেন্টরি ব্যবস্থাপনা</h1>
-    <Card>
-      <CardContent className="p-6">
-        <h2 className="text-xl font-medium mb-4">পণ্য ও সেবা ইনভেন্টরি</h2>
-        <p>এখানে বিভিন্ন সার্ভিসের পণ্য, সম্পত্তি এবং সেবার সমন্বিত ইনভেন্টরি ব্যবস্থাপনা থাকবে।</p>
-      </CardContent>
-    </Card>
-  </div>
-);
-
-const PromotionManagement = () => (
-  <div className="space-y-4">
-    <h1 className="text-2xl font-bold mb-6">প্রমোশন ব্যবস্থাপনা</h1>
-    <Card>
-      <CardContent className="p-6">
-        <h2 className="text-xl font-medium mb-4">ডিসকাউন্ট এবং অফার</h2>
-        <p>এখানে ডিসকাউন্ট, কুপন, স্পেশাল অফার এবং রেফারেল প্রোগ্রাম ব্যবস্থাপনা থাকবে।</p>
-      </CardContent>
-    </Card>
-  </div>
-);
-
-const ReviewManagement = () => (
-  <div className="space-y-4">
-    <h1 className="text-2xl font-bold mb-6">রিভিউ ব্যবস্থাপনা</h1>
-    <Card>
-      <CardContent className="p-6">
-        <h2 className="text-xl font-medium mb-4">গ্রাহক প্রতিক্রিয়া</h2>
-        <p>এখানে বিভিন্ন সার্ভিসের রিভিউ, রেটিং এবং গ্রাহক প্রতিক্রিয়া ব্যবস্থাপনা থাকবে।</p>
-      </CardContent>
-    </Card>
-  </div>
-);
-
-const DashboardSettings = () => (
-  <div className="space-y-4">
-    <h1 className="text-2xl font-bold mb-6">ড্যাশবোর্ড সেটিংস</h1>
-    <Card>
-      <CardContent className="p-6">
-        <h2 className="text-xl font-medium mb-4">ড্যাশবোর্ড কাস্টমাইজেশন</h2>
-        <p>এখানে ড্যাশবোর্ডের বিভিন্ন সেটিংস, কাস্টমাইজেশন এবং পারসোনালাইজেশন অপশন থাকবে।</p>
-      </CardContent>
-    </Card>
-  </div>
-);
 
 export default SellerDashboard;

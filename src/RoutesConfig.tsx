@@ -19,6 +19,9 @@ import CommissionCalculator from './pages/CommissionCalculator';
 import AutomaticRefund from './pages/AutomaticRefund';
 import IndustryTemplates from './components/store/IndustryTemplates';
 import DigitalProductsMarketplace from './pages/DigitalProductsMarketplace';
+import DigitalProductDetail from './pages/DigitalProductDetail';
+import CreateDigitalProduct from './pages/CreateDigitalProduct';
+import SellerDashboard from './pages/SellerDashboard';
 
 const RoutesConfig = () => {
   return (
@@ -44,10 +47,12 @@ const RoutesConfig = () => {
       
       {/* Digital Creator */}
       <Route path="/digital-creator/store-templates" element={<IndustryTemplates />} />
-      <Route path="/digital-products" element={<DigitalProductsMarketplace />} />
       
-      {/* Root path for Digital Products */}
+      {/* Digital Products Marketplace */}
       <Route path="/digital-products" element={<DigitalProductsMarketplace />} />
+      <Route path="/digital-products/:productId" element={<DigitalProductDetail />} />
+      <Route path="/create-digital-product" element={<CreateDigitalProduct />} />
+      <Route path="/seller-dashboard" element={<SellerDashboard />} />
       
       {/* Catch-all route */}
       <Route path="*" element={<NotFound />} />
