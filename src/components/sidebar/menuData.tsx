@@ -6,7 +6,8 @@ import {
   Store, File, Gavel, UserCheck, Building, DollarSign, 
   FileText, Calculator, Share2, MessageCircle, Info, Briefcase,
   ChartBar, Badge, ArrowDownToLine, Currency, Award, Link,
-  BarChart3, ShoppingCart, Package, Grid, Settings, TrendingUp, Layout
+  BarChart3, ShoppingCart, Package, Grid, Settings, TrendingUp, Layout,
+  Video, Users
 } from 'lucide-react';
 import React from 'react';
 
