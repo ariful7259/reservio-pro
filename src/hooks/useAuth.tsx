@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface User {
@@ -36,7 +35,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // Mock user data
+    // Mock user data with fixed seller type if seller
     const userData: User = {
       id: '1',
       name: 'আহমেদ হাসান',
