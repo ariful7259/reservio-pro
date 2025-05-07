@@ -85,6 +85,11 @@ export const SidebarDrawer = () => {
               <MyServicesDropdown />
             )}
 
+            {/* Seller Dashboard Section - For sellers, placed before the collapsible menu sections */}
+            {isAuthenticated && isSeller && (
+              <SellerDashboardSection />
+            )}
+
             {/* Collapsible Menu Sections */}
             <div className="space-y-2 mt-4">
               {/* নতুন পেমেন্ট মেনু সেকশন */}
@@ -126,11 +131,6 @@ export const SidebarDrawer = () => {
             
             {/* Referral System */}
             <ReferralSystem />
-            
-            {/* Seller Dashboard Section - Added AFTER referral system */}
-            {isAuthenticated && isSeller && (
-              <SellerDashboardSection />
-            )}
           </div>
         </div>
         
