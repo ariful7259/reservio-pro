@@ -170,7 +170,7 @@ const RefundManagementPage = () => {
     if (action.startsWith('approve-')) {
       const id = action.replace('approve-', '');
       const updatedRequests = refundRequests.map(req => 
-        req.id === id ? { ...req, status: 'approved', responseDate: new Date().toLocaleDateString('bn-BD') } : req
+        req.id === id ? { ...req, status: 'approved' as const, responseDate: new Date().toLocaleDateString('bn-BD') } : req
       );
       setRefundRequests(updatedRequests);
       toast({
@@ -180,7 +180,7 @@ const RefundManagementPage = () => {
     } else if (action.startsWith('reject-')) {
       const id = action.replace('reject-', '');
       const updatedRequests = refundRequests.map(req => 
-        req.id === id ? { ...req, status: 'rejected', responseDate: new Date().toLocaleDateString('bn-BD') } : req
+        req.id === id ? { ...req, status: 'rejected' as const, responseDate: new Date().toLocaleDateString('bn-BD') } : req
       );
       setRefundRequests(updatedRequests);
       toast({
@@ -223,6 +223,15 @@ const RefundManagementPage = () => {
 
   const getRefundDetails = (id: string) => {
     return refundRequests.find(request => request.id === id);
+  };
+  
+  // Add toggleRuleStatus function for use in RefundRules component
+  const toggleRuleStatus = (id: string) => {
+    setRefundRules(prevRules => 
+      prevRules.map(rule => 
+        rule.id === id ? { ...rule, active: !rule.active } : rule
+      )
+    );
   };
 
   const currentRefundDetails = openRefundDetails ? getRefundDetails(openRefundDetails) : null;
@@ -274,6 +283,9 @@ const RefundManagementPage = () => {
           <RefundRules 
             refundRules={refundRules}
             setRefundRules={setRefundRules}
+            refundSettings={refundSettings}
+            setRefundSettings={setRefundSettings}
+            toggleRuleStatus={toggleRuleStatus}
           />
         </TabsContent>
 
