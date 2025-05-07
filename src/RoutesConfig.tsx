@@ -17,6 +17,7 @@ import PaymentMethods from './pages/PaymentMethods';
 import EscrowStatus from './pages/EscrowStatus';
 import CommissionCalculator from './pages/CommissionCalculator';
 import AutomaticRefund from './pages/AutomaticRefund';
+import IndustryTemplates from './components/store/IndustryTemplates';
 
 const RoutesConfig = () => {
   return (
@@ -39,6 +40,9 @@ const RoutesConfig = () => {
       {/* Support and Dispute */}
       <Route path="/help/dispute-center" element={<DisputeCenter />} />
       <Route path="/loyalty-program" element={<LoyaltySystem />} />
+      
+      {/* Digital Creator */}
+      <Route path="/digital-creator/store-templates" element={<IndustryTemplates />} />
       
       {/* Catch-all route */}
       <Route path="*" element={<NotFound />} />
