@@ -40,11 +40,20 @@ import RevenueChart from '@/components/dashboard/RevenueChart';
 import OrderBookingManagement from '@/components/dashboard/OrderBookingManagement';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
+// নতুন যোগ করা কম্পোনেন্টস
+import IntegratedBookingCalendar from '@/components/dashboard/IntegratedBookingCalendar';
+import OrderTrackingSystem from '@/components/dashboard/OrderTrackingSystem';
+import ProductServiceManagement from '@/components/dashboard/ProductServiceManagement';
+import CustomerRelationshipManagement from '@/components/dashboard/CustomerRelationshipManagement';
+import MarketingToolsSystem from '@/components/dashboard/MarketingToolsSystem';
+import ReportGenerator from '@/components/dashboard/ReportGenerator';
+
 const SellerDashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [dateRange, setDateRange] = useState('this-month');
   const [activeBusinessType, setActiveBusinessType] = useState<string | null>(null);
+  const [activeModule, setActiveModule] = useState<string | null>(null);
   const [alertsCount, setAlertsCount] = useState({ 
     lowStock: 5, 
     pendingOrders: 12, 
@@ -52,13 +61,17 @@ const SellerDashboard = () => {
     newMessages: 7 
   });
   
-  // 선택된 비즈니스 유형에 따라 대시보드 콘텐츠를 표시
+  // ব্যবসা টাইপ পরিবর্তন হ্যান্ডেলার
   const handleBusinessTypeChange = (type: string | null) => {
     setActiveBusinessType(type);
-    // type에 따라 로직을 추가할 수 있습니다
   };
 
-  // 모든 비즈니스 유형을 가져옴 (여기서는 mockup 데이터를 사용)
+  // মডিউল পরিবর্তন হ্যান্ডেলার
+  const handleModuleChange = (module: string | null) => {
+    setActiveModule(module);
+  };
+
+  // মক ব্যবসা টাইপ ডাটা
   const businessTypes = [
     { id: 'marketplace', name: 'মার্কেটপ্লেস', icon: <ShoppingBag className="h-5 w-5" /> },
     { id: 'rental', name: 'রেন্টাল', icon: <Building className="h-5 w-5" /> },
@@ -66,6 +79,7 @@ const SellerDashboard = () => {
     { id: 'content', name: 'ডিজিটাল কন্টেন্ট', icon: <Pencil className="h-5 w-5" /> }
   ];
   
+  // মক স্ট্যাটস ডাটা
   const stats = {
     'this-month': {
       sales: '৳১৫,৯৫০',
@@ -101,6 +115,11 @@ const SellerDashboard = () => {
   
   const currentStats = stats[dateRange as keyof typeof stats];
 
+  // রিপোর্ট ডাউনলোড হ্যান্ডেলার
+  const handleDownloadReport = () => {
+    alert('রিপোর্ট ডাউনলোড প্রসেসিং শুরু হয়েছে');
+  };
+
   return (
     <div className="container pt-20 pb-16">
       {/* হেডার সেকশন */}
@@ -129,7 +148,7 @@ const SellerDashboard = () => {
             <Calendar className="h-4 w-4 mr-2" />
             ক্যালেন্ডার
           </Button>
-          <Button>
+          <Button onClick={handleDownloadReport}>
             <Download className="h-4 w-4 mr-2" />
             রিপোর্ট ডাউনলোড
           </Button>
@@ -298,112 +317,15 @@ const SellerDashboard = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <OrderBookingManagement />
             
-            {/* টপ প্রোডাক্টস */}
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>সেরা বিক্রিত আইটেম</CardTitle>
-                <Button variant="ghost" size="sm" className="gap-1" onClick={() => navigate('/products')}>
-                  সব দেখুন <ArrowUpRight className="h-4 w-4" />
-                </Button>
-              </CardHeader>
-              <CardContent className="px-2">
-                <ScrollArea className="h-[350px] pr-4">
-                  <div className="space-y-4 pr-3">
-                    <div className="flex items-center justify-between p-2 border rounded-md">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 bg-gray-100 rounded flex items-center justify-center">
-                          <Pencil className="h-5 w-5 text-gray-500" />
-                        </div>
-                        <div>
-                          <p className="font-medium">ডিজিটাল মার্কেটিং কোর্স</p>
-                          <Badge variant="outline" className="text-xs">কন্টেন্ট</Badge>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium text-primary">৳৫,৯৯৯</p>
-                        <p className="text-xs text-muted-foreground">৪২ বিক্রি</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between p-2 border rounded-md">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 bg-gray-100 rounded flex items-center justify-center">
-                          <ShoppingBag className="h-5 w-5 text-gray-500" />
-                        </div>
-                        <div>
-                          <p className="font-medium">স্মার্টফোন কভার</p>
-                          <Badge variant="outline" className="text-xs">মার্কেটপ্লেস</Badge>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium text-primary">৳৪৯৯</p>
-                        <p className="text-xs text-muted-foreground">৩৮ বিক্রি</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between p-2 border rounded-md">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 bg-gray-100 rounded flex items-center justify-center">
-                          <Building className="h-5 w-5 text-gray-500" />
-                        </div>
-                        <div>
-                          <p className="font-medium">গুলশান অ্যাপার্টমেন্ট</p>
-                          <Badge variant="outline" className="text-xs">রেন্টাল</Badge>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium text-primary">৳১৫,০০০/মাস</p>
-                        <p className="text-xs text-muted-foreground">৯৫% অকুপেন্সি</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between p-2 border rounded-md">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 bg-gray-100 rounded flex items-center justify-center">
-                          <Wrench className="h-5 w-5 text-gray-500" />
-                        </div>
-                        <div>
-                          <p className="font-medium">হোম ক্লিনিং সার্ভিস</p>
-                          <Badge variant="outline" className="text-xs">সার্ভিস</Badge>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium text-primary">৳১,২০০</p>
-                        <p className="text-xs text-muted-foreground">২৮ বুকিং</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between p-2 border rounded-md">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 bg-gray-100 rounded flex items-center justify-center">
-                          <FileText className="h-5 w-5 text-gray-500" />
-                        </div>
-                        <div>
-                          <p className="font-medium">বিজনেস প্ল্যান টেমপ্লেট</p>
-                          <Badge variant="outline" className="text-xs">কন্টেন্ট</Badge>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium text-primary">৳৯৯৯</p>
-                        <p className="text-xs text-muted-foreground">২৫ বিক্রি</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between p-2 border rounded-md">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 bg-gray-100 rounded flex items-center justify-center">
-                          <ShoppingBag className="h-5 w-5 text-gray-500" />
-                        </div>
-                        <div>
-                          <p className="font-medium">ব্লুটুথ হেডফোন</p>
-                          <Badge variant="outline" className="text-xs">মার্কেটপ্লেস</Badge>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium text-primary">৳১,৯৯৯</p>
-                        <p className="text-xs text-muted-foreground">২২ বিক্রি</p>
-                      </div>
-                    </div>
-                  </div>
-                </ScrollArea>
-              </CardContent>
-            </Card>
+            {/* ইন্টিগ্রেটেড বুকিং ক্যালেন্ডার */}
+            <IntegratedBookingCalendar />
           </div>
+
+          {/* মার্কেটিং টুলস এবং ক্রস-প্রমোশন */}
+          <MarketingToolsSystem />
+          
+          {/* কাস্টমার রিলেশনশিপ ম্যানেজমেন্ট */}
+          <CustomerRelationshipManagement />
         </TabsContent>
         
         {/* এনালিটিক্স ট্যাব */}
@@ -539,53 +461,61 @@ const SellerDashboard = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* রিপোর্ট জেনারেটর কম্পোনেন্ট */}
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <CardTitle>কাস্টমাইজড রিপোর্ট</CardTitle>
+                <CardDescription>বিস্তারিত অ্যানালিটিক্স এবং রিপোর্ট ডাউনলোড</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex justify-between items-center mb-4">
+                  <p className="text-sm">জেনারেট করুন এবং ডাউনলোড করুন কাস্টম রিপোর্ট</p>
+                  <Button onClick={() => setActiveModule('reports')}>
+                    <FileText className="h-4 w-4 mr-2" />
+                    রিপোর্ট জেনারেটর
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
+
+          {/* রিপোর্ট জেনারেটর পুরো সেকশন - যখন বাটন ক্লিক হবে */}
+          {activeModule === 'reports' && (
+            <div className="mt-4">
+              <ReportGenerator />
+            </div>
+          )}
         </TabsContent>
         
-        {/* আরও ট্যাব কন্টেন্ট - শুধু প্লেসহোল্ডার */}
+        {/* অর্ডার ও বুকিং ট্যাব - অর্ডার ট্র্যাকিং সিস্টেম ইন্টিগ্রেশন */}
         <TabsContent value="orders" className="space-y-6">
+          <OrderTrackingSystem />
+          
           <Card>
             <CardHeader>
-              <CardTitle>অর্ডার ও বুকিং ম্যানেজমেন্ট</CardTitle>
-              <CardDescription>সকল ব্যবসার অর্ডার এবং বুকিং দেখুন ও পরিচালনা করুন</CardDescription>
+              <div className="flex justify-between">
+                <div>
+                  <CardTitle>ইন্টিগ্রেটেড বুকিং ক্যালেন্ডার</CardTitle>
+                  <CardDescription>সকল বুকিং এবং অ্যাপয়েন্টমেন্ট একসাথে দেখুন</CardDescription>
+                </div>
+                <Button>বুকিং সিনক্রোনাইজ করুন</Button>
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="h-[500px] flex items-center justify-center">
-                <ShoppingBag className="h-10 w-10 text-muted-foreground opacity-50" />
-                <p className="ml-2 text-muted-foreground">অর্ডার ও বুকিং ম্যানেজমেন্ট সিস্টেম এখানে দেখানো হবে</p>
-              </div>
+              <IntegratedBookingCalendar />
             </CardContent>
           </Card>
         </TabsContent>
         
+        {/* গ্রাহক ট্যাব - CRM সিস্টেম ইন্টিগ্রেশন */}
         <TabsContent value="customers" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>গ্রাহক ব্যবস্থাপনা</CardTitle>
-              <CardDescription>সকল গ্রাহক তথ্য এবং CRM টুলস</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[500px] flex items-center justify-center">
-                <Users className="h-10 w-10 text-muted-foreground opacity-50" />
-                <p className="ml-2 text-muted-foreground">কাস্টমার রিলেশনশিপ ম্যানেজমেন্ট সিস্টেম এখানে দেখানো হবে</p>
-              </div>
-            </CardContent>
-          </Card>
+          <CustomerRelationshipManagement />
         </TabsContent>
         
+        {/* প্রোডাক্ট/সার্ভিস ট্যাব - প্রোডাক্ট-সার্ভিস ম্যানেজমেন্ট ইন্টিগ্রেশন */}
         <TabsContent value="products" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>প্রোডাক্ট এবং সার্ভিস ম্যানেজমেন্ট</CardTitle>
-              <CardDescription>প্রোডাক্ট, সার্ভিস, প্রপার্টি এবং কন্টেন্ট পরিচালনা করুন</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[500px] flex items-center justify-center">
-                <FileText className="h-10 w-10 text-muted-foreground opacity-50" />
-                <p className="ml-2 text-muted-foreground">প্রোডাক্ট ম্যানেজমেন্ট সিস্টেম এখানে দেখানো হবে</p>
-              </div>
-            </CardContent>
-          </Card>
+          <ProductServiceManagement />
         </TabsContent>
       </Tabs>
     </div>
