@@ -1,215 +1,227 @@
-
-// If this file exists, import the MenuItem type from types.ts
-import { MenuItem, ProfileMenuItem } from './types';
-import React from 'react';
 import { 
-  LayoutDashboard, 
-  User, 
-  Settings, 
-  HelpCircle, 
-  ShieldAlert, 
-  FileText,
-  Building,
-  LucideIcon,
-  Wallet,
-  Percent,
-  Headphones,
-  MessageSquare,
-  Mail,
-  Phone,
-  Home,  // Using Home instead of Stairs as it's a valid icon
-  Scale,
-  Banknote,
-  Landmark,
-  Lightbulb,
-  BookOpenCheck,
-  CreditCard,
-  RefreshCcw
+  PaintBucket, Truck, Home, AirVent, Hammer, 
+  Wrench, Pipette, HousePlus, User, MessageSquare, 
+  Wallet, ShieldCheck, Fingerprint, Lightbulb, HelpCircle, 
+  Book, Calendar, Heart, MapPin, List, ShoppingBag, Star,
+  Store, File, Gavel, UserCheck, Building, DollarSign, 
+  FileText, Calculator, Share2, MessageCircle, Info, Briefcase,
+  ChartBar, Badge, ArrowDownToLine, Currency, Award, Link
 } from 'lucide-react';
-
-// Define a type for the icon prop
-interface IconProps {
-  icon: LucideIcon;
-  size?: number;
-  color?: string;
-}
-
-// Utility function to create menu items
-const createMenuItem = (
-  icon: React.ReactNode, 
-  name: string, 
-  path?: string, 
-  badge?: number, 
-  show?: boolean
-): MenuItem => ({
-  icon,
-  name,
-  path,
-  badge,
-  show
-});
+import React from 'react';
 
 // Profile Menu Items
-export const getProfileMenuItems = (isAdmin: boolean): ProfileMenuItem[] => {
-  const items: ProfileMenuItem[] = [
-    {
-      icon: <User className="h-5 w-5" />,
-      name: "প্রোফাইল",
-      path: "/profile"
-    },
-    {
-      icon: <Settings className="h-5 w-5" />,
-      name: "সেটিংস",
-      path: "/settings"
-    },
-    {
-      icon: <HelpCircle className="h-5 w-5" />,
-      name: "সাহায্য",
-      path: "/help"
-    }
-  ];
-
-  if (isAdmin) {
-    items.push({
-      icon: <ShieldAlert className="h-5 w-5" />,
-      name: "এডমিন প্যানেল",
-      path: "/admin",
-      badge: 5
-    });
+export const getProfileMenuItems = (isAdmin: boolean) => [
+  {
+    icon: <User className="h-5 w-5" />,
+    name: "ব্যক্তিগত তথ্য",
+    path: "/profile-management"
+  }, {
+    icon: <MessageSquare className="h-5 w-5" />,
+    name: "নোটিফিকেশন",
+    path: "/notifications",
+    badge: 2
+  }, {
+    icon: <Wallet className="h-5 w-5" />,
+    name: "ওয়ালেট",
+    path: "/wallet"
+  }, {
+    icon: <ShieldCheck className="h-5 w-5" />,
+    name: "সিকিউরিটি",
+    path: "/security"
+  }, {
+    icon: <Fingerprint className="h-5 w-5" />,
+    name: "KYC ভেরিফিকেশন",
+    path: "/kyc-verification"
+  }, {
+    icon: <Lightbulb className="h-5 w-5" />,
+    name: "ইউটিলিটিস",
+    path: "/utilities"
+  }, {
+    icon: <HelpCircle className="h-5 w-5" />,
+    name: "হেল্প এন্ড সাপোর্ট",
+    path: "/help"
+  }, {
+    icon: <ShieldCheck className="h-5 w-5" />,
+    name: "অ্যাডমিন ড্যাশবোর্ড",
+    path: "/admin-dashboard",
+    show: isAdmin
   }
-
-  return items;
-};
+];
 
 // Legal Assistance Menu Items
-export const legalAssistanceMenuItems: MenuItem[] = [
+export const legalAssistanceMenuItems = [
   {
-    icon: <FileText className="h-5 w-5 text-red-500" />,
-    name: "আইনগত পরামর্শ",
-    path: "/legal-advice"
+    icon: <File className="h-5 w-5 text-red-500" />,
+    name: "রেন্টাল এগ্রিমেন্ট",
+    path: "/services/rental-agreement"
+  },
+  {
+    icon: <Gavel className="h-5 w-5 text-red-500" />,
+    name: "পুলিশ ইনটিমেশন",
+    path: "/services/police-intimation"
+  },
+  {
+    icon: <UserCheck className="h-5 w-5 text-red-500" />,
+    name: "টেনান্ট ভেরিফিকেশন",
+    path: "/services/tenant-verification"
   },
   {
     icon: <Building className="h-5 w-5 text-red-500" />,
-    name: "জমির দলিল",
-    path: "/land-documents"
+    name: "প্রপার্টি লিগাল অ্যাসিস্ট্যান্স",
+    path: "/services/property-legal-assistance"
   },
   {
-    icon: <Home className="h-5 w-5 text-red-500" />,  // Changed from Stairs to Home
-    name: " বিল্ডিং প্ল্যান",
-    path: "/building-plan"
+    icon: <Home className="h-5 w-5 text-red-500" />,
+    name: "হোম লোন",
+    path: "/services/home-loan"
   },
   {
-    icon: <Scale className="h-5 w-5 text-red-500" />,
-    name: "ভ্যাট ও ট্যাক্স",
-    path: "/vat-tax"
-  },
-  {
-   icon: <Banknote className="h-5 w-5 text-red-500" />,
-    name: "লোন",
-    path: "/loan"
+    icon: <DollarSign className="h-5 w-5 text-red-500" />,
+    name: "হোম ডিপোজিট লোন",
+    path: "/services/home-deposit-loan"
   }
 ];
 
 // Utilities Menu Items
-export const utilitiesMenuItems: MenuItem[] = [
+export const utilitiesMenuItems = [
   {
-    icon: <Landmark className="h-5 w-5 text-red-500" />,
-    name: "বিদ্যুৎ বিল",
-    path: "/electricity-bill"
+    icon: <Calculator className="h-5 w-5 text-red-500" />,
+    name: "নো ইয়োর রেন্ট",
+    path: "/utilities/know-your-rent"
   },
   {
-    icon: <Lightbulb className="h-5 w-5 text-red-500" />,
-    name: "গ্যাস বিল",
-    path: "/gas-bill"
+    icon: <FileText className="h-5 w-5 text-red-500" />,
+    name: "ক্রিয়েট রেন্ট রিসিপ্টস",
+    path: "/utilities/create-rent-receipts"
   },
   {
-    icon: <BookOpenCheck className="h-5 w-5 text-red-500" />,
-    name: "পানির বিল",
-    path: "/water-bill"
+    icon: <Share2 className="h-5 w-5 text-red-500" />,
+    name: "ক্লিক এন্ড আর্ন",
+    path: "/utilities/click-and-earn"
   },
   {
-    icon: <CreditCard className="h-5 w-5 text-red-500" />,
-    name: "ক্রেডিট কার্ড বিল",
-    path: "/credit-card-bill"
+    icon: <DollarSign className="h-5 w-5 text-red-500" />,
+    name: "ট্রানজেকশন হিস্টরি",
+    path: "/payment/transaction-history"
+  },
+  {
+    icon: <Star className="h-5 w-5 text-red-500" />,
+    name: "রেটিং এবং রিভিউ",
+    path: "/ratings-reviews"
+  },
+  {
+    icon: <Link className="h-5 w-5 text-red-500" />,
+    name: "পেমেন্ট লিংক জেনারেটর",
+    path: "/payment/payment-links"
+  },
+  {
+    icon: <Award className="h-5 w-5 text-red-500" />,
+    name: "লয়ালটি প্রোগ্রাম",
+    path: "/loyalty-program"
   }
 ];
 
-// Help and Support Menu Items
-export const helpAndSupportMenuItems: MenuItem[] = [
+// Help And Support Menu Items
+export const helpAndSupportMenuItems = [
   {
-    icon: <MessageSquare className="h-5 w-5 text-red-500" />,
-    name: "যোগাযোগ করুন",
-    path: "/contact"
+    icon: <HelpCircle className="h-5 w-5 text-red-500" />,
+    name: "সাপোর্ট টপিকস",
+    path: "/help/support-topics"
   },
   {
-    icon: <Mail className="h-5 w-5 text-red-500" />,
-    name: "আমাদের ইমেইল করুন",
-    path: "/email-us"
+    icon: <Book className="h-5 w-5 text-red-500" />,
+    name: "ব্লগ",
+    path: "/help/blog"
   },
   {
-    icon: <Phone className="h-5 w-5 text-red-500" />,
-    name: "ফোন করুন",
-    path: "/call-us"
+    icon: <MessageCircle className="h-5 w-5 text-red-500" />,
+    name: "ফিডব্যাক",
+    path: "/help/feedback"
   },
   {
-    icon: <Headphones className="h-5 w-5 text-red-500" />,
-    name: "হেল্পলাইন",
-    path: "/helpline"
+    icon: <Info className="h-5 w-5 text-red-500" />,
+    name: "অ্যাবাউট আস",
+    path: "/help/about-us"
+  },
+  {
+    icon: <FileText className="h-5 w-5 text-red-500" />,
+    name: "ডিসপিউট সেন্টার",
+    path: "/help/dispute-center"
   }
 ];
 
 // Collapsible Menu Icons
 export const collapsibleMenuIcons = {
-  legal: <FileText className="h-5 w-5 text-red-500 mr-2" />,
-  utilities: <Lightbulb className="h-5 w-5 text-red-500 mr-2" />,
+  legal: <Briefcase className="h-5 w-5 text-red-500 mr-2" />,
+  utilities: <Wrench className="h-5 w-5 text-red-500 mr-2" />,
   help: <HelpCircle className="h-5 w-5 text-red-500 mr-2" />,
-  payment: <CreditCard className="h-5 w-5 text-red-500 mr-2" />
+  payment: <Wallet className="h-5 w-5 text-red-500 mr-2" />
 };
 
 // Payment Menu Items
-export const paymentMenuItems: MenuItem[] = [
+export const paymentMenuItems = [
+  {
+    icon: <ChartBar className="h-5 w-5 text-red-500" />,
+    name: "পেমেন্ট এনালিটিক্স",
+    path: "/payment/analytics"
+  },
   {
     icon: <Wallet className="h-5 w-5 text-red-500" />,
-    name: 'পেমেন্ট এনালিটিক্স',
-    path: '/payment/analytics'
+    name: "পেমেন্ট মেথড",
+    path: "/payment/payment-methods"
   },
   {
-    icon: <Percent className="h-5 w-5 text-red-500" />,
-    name: 'ট্রানজেকশন হিস্টরি',
-    path: '/payment/transaction-history'
+    icon: <ShieldCheck className="h-5 w-5 text-red-500" />,
+    name: "এসক্রো স্ট্যাটাস",
+    path: "/payment/escrow-status"
   },
   {
-    icon: <CreditCard className="h-5 w-5 text-red-500" />,
-    name: 'ইনভয়েস তৈরি করুন',
-    path: '/payment/generate-invoice'
+    icon: <FileText className="h-5 w-5 text-red-500" />,
+    name: "ইনভয়েস জেনারেট",
+    path: "/payment/generate-invoice"
+  },
+  {
+    icon: <Calculator className="h-5 w-5 text-red-500" />,
+    name: "কমিশন ক্যালকুলেটর",
+    path: "/payment/commission-calculator"
+  },
+  {
+    icon: <ArrowDownToLine className="h-5 w-5 text-red-500" />,
+    name: "অটোমেটিক রিফান্ড",
+    path: "/payment/auto-refund"
+  },
+  {
+    icon: <Currency className="h-5 w-5 text-red-500" />,
+    name: "মাল্টি-কারেন্সি সাপোর্ট",
+    path: "/payment/multi-currency"
   }
 ];
 
 // Merchant Resources
-export const merchantResources: MenuItem[] = [
+export const merchantResources = [
   {
-    icon: <LayoutDashboard className="h-5 w-5 text-red-500" />,
-    name: "ড্যাশবোর্ড",
-    path: "/merchant/dashboard"
+    icon: <ChartBar className="h-5 w-5 text-red-500" />,
+    name: "সেলস এনালিটিক্স",
+    path: "/merchant/analytics"
   },
   {
-    icon: <LayoutDashboard className="h-5 w-5 text-red-500" />,
-    name: "ড্যাশবোর্ড",
-    path: "/merchant/dashboard"
+    icon: <ShoppingBag className="h-5 w-5 text-red-500" />,
+    name: "অর্ডার ম্যানেজমেন্ট",
+    path: "/merchant/orders"
   },
   {
-    icon: <LayoutDashboard className="h-5 w-5 text-red-500" />,
-    name: "ড্যাশবোর্ড",
-    path: "/merchant/dashboard"
+    icon: <FileText className="h-5 w-5 text-red-500" />,
+    name: "সেলস রিপোর্ট",
+    path: "/merchant/sales-report"
   },
   {
-    icon: <LayoutDashboard className="h-5 w-5 text-red-500" />,
-    name: "ড্যাশবোর্ড",
-    path: "/merchant/dashboard"
+    icon: <Star className="h-5 w-5 text-red-500" />,
+    name: "রেটিং এবং রিভিউ",
+    path: "/merchant/ratings"
   },
   {
-    icon: <LayoutDashboard className="h-5 w-5 text-red-500" />,
-    name: "ড্যাশবোর্ড",
-    path: "/merchant/dashboard"
+    icon: <Badge className="h-5 w-5 text-red-500" />,
+    name: "ভেরিফিকেশন স্ট্যাটাস",
+    path: "/merchant/verification"
   }
 ];

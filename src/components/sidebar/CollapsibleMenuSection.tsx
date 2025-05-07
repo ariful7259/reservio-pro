@@ -3,7 +3,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { MenuItem } from './types';
+
+interface MenuItem {
+  icon: React.ReactNode;
+  name: string;
+  path: string;
+}
 
 interface CollapsibleMenuSectionProps {
   title: string;
@@ -26,7 +31,7 @@ export const CollapsibleMenuSection = ({ title, icon, items }: CollapsibleMenuSe
           {items.map((item, index) => (
             <Link
               key={index}
-              to={item.path || item.url || "#"} // Use path or url, fallback to "#"
+              to={item.path}
               className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-md"
             >
               {item.icon}

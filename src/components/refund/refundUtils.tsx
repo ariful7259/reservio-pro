@@ -1,38 +1,41 @@
 
 import React from 'react';
-import { CheckCircle, XCircle, Clock, RefreshCw, AlertCircle } from 'lucide-react';
+import { Clock, Check, RefreshCw, AlertTriangle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { RefundRequest } from './types';
 
-export const renderStatusIcon = (status: "pending" | "approved" | "rejected" | "processing" | "completed") => {
+// স্ট্যাটাস ব্যাজ রেন্ডার করা
+export const renderStatusBadge = (status: RefundRequest['status']) => {
   switch (status) {
     case 'pending':
-      return <Clock className="h-10 w-10 rounded-full p-2 bg-yellow-50 text-yellow-500" />;
+      return <Badge className="bg-yellow-500">অপেক্ষমান</Badge>;
     case 'approved':
-      return <CheckCircle className="h-10 w-10 rounded-full p-2 bg-green-50 text-green-500" />;
-    case 'rejected':
-      return <XCircle className="h-10 w-10 rounded-full p-2 bg-red-50 text-red-500" />;
+      return <Badge className="bg-blue-500">অনুমোদিত</Badge>;
     case 'processing':
-      return <RefreshCw className="h-10 w-10 rounded-full p-2 bg-blue-50 text-blue-500" />;
+      return <Badge className="bg-purple-500">প্রসেসিং</Badge>;
     case 'completed':
-      return <CheckCircle className="h-10 w-10 rounded-full p-2 bg-green-50 text-green-500" />;
+      return <Badge className="bg-green-500">সম্পন্ন</Badge>;
+    case 'rejected':
+      return <Badge className="bg-red-500">বাতিল</Badge>;
     default:
-      return <AlertCircle className="h-10 w-10 rounded-full p-2 bg-gray-50 text-gray-500" />;
+      return <Badge>{status}</Badge>;
   }
 };
 
-export const renderStatusBadge = (status: "pending" | "approved" | "rejected" | "processing" | "completed") => {
+// স্ট্যাটাস আইকন রেন্ডার করা
+export const renderStatusIcon = (status: RefundRequest['status']) => {
   switch (status) {
     case 'pending':
-      return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">অপেক্ষমান</Badge>;
+      return <Clock className="h-8 w-8 text-yellow-500 bg-yellow-50 p-1.5 rounded-full" />;
     case 'approved':
-      return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">অনুমোদিত</Badge>;
-    case 'rejected':
-      return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">বাতিল</Badge>;
+      return <Check className="h-8 w-8 text-blue-500 bg-blue-50 p-1.5 rounded-full" />;
     case 'processing':
-      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">প্রসেসিং</Badge>;
+      return <RefreshCw className="h-8 w-8 text-purple-500 bg-purple-50 p-1.5 rounded-full" />;
     case 'completed':
-      return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">সম্পন্ন</Badge>;
+      return <Check className="h-8 w-8 text-green-500 bg-green-50 p-1.5 rounded-full" />;
+    case 'rejected':
+      return <AlertTriangle className="h-8 w-8 text-red-500 bg-red-50 p-1.5 rounded-full" />;
     default:
-      return <Badge variant="outline">আনোন</Badge>;
+      return null;
   }
 };
