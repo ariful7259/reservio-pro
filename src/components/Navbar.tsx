@@ -444,11 +444,7 @@ const Navbar = () => {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent className="w-56 max-h-[70vh] overflow-auto">
-                            <div className="grid grid-cols-1 gap-1 p-1">
-                              {legalAssistanceMenuItems.map((item, index) => <DropdownMenuItem key={index} asChild className="p-2">
-                                  
-                                </DropdownMenuItem>)}
-                            </div>
+                            
                           </DropdownMenuContent>
                         </DropdownMenu>
                         
