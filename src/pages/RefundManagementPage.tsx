@@ -8,7 +8,7 @@ import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, A
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 import RefundDashboard from '@/components/refund/RefundDashboard';
 import RefundRequests from '@/components/refund/RefundRequests';
@@ -165,6 +165,7 @@ const RefundManagementPage = () => {
     customerName: '',
     transactionId: ''
   });
+  const { toast } = useToast();
 
   const handleConfirmationAction = (action: string) => {
     if (action.startsWith('approve-')) {

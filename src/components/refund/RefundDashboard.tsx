@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BarChart, CheckCircle, AlertCircle, Clock, RefreshCw, XCircle } from 'lucide-react';
 import { RefundRequest, RefundRule, RefundSettings } from './types';
-import { ToastActionElement } from '@/components/ui/toast';
+import { Toast } from '@/hooks/use-toast';
 
 interface RefundDashboardProps {
   refundRequests: RefundRequest[];
@@ -13,29 +12,7 @@ interface RefundDashboardProps {
   setRefundSettings: (settings: RefundSettings) => void;
   setActiveTab: (tab: string) => void;
   setOpenRefundDetails: (id: string | null) => void;
-  toast: {
-    (props: any): {
-      id: string;
-      dismiss: () => void;
-      update: (props: any) => void;
-    };
-    dismiss: (toastId?: string) => void;
-    error: (props: any) => {
-      id: string;
-      dismiss: () => void;
-      update: (props: any) => void;
-    };
-    success: (props: any) => {
-      id: string;
-      dismiss: () => void;
-      update: (props: any) => void;
-    };
-    action: (props: any & { action: ToastActionElement }) => {
-      id: string;
-      dismiss: () => void;
-      update: (props: any) => void;
-    };
-  };
+  toast: typeof Toast;
 }
 
 const RefundDashboard: React.FC<RefundDashboardProps> = ({
