@@ -9,15 +9,15 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 
 // Import refactored components
-import { ServiceCategoriesGrid } from './sidebar/ServiceCategoriesGrid';
-import { VideoCarousel } from './sidebar/VideoCarousel';
-import { UserProfileSection } from './sidebar/UserProfileSection';
-import { GuestSection } from './sidebar/GuestSection';
-import { PostAdSection } from './sidebar/PostAdSection';
-import { MyServicesDropdown } from './sidebar/MyServicesDropdown';
-import { CollapsibleMenuSection } from './sidebar/CollapsibleMenuSection';
-import { ReferralSystem } from './sidebar/ReferralSystem';
-import { SellerDashboardSection } from './sidebar/SellerDashboardSection';
+import { ServiceCategoriesGrid } from './ServiceCategoriesGrid';
+import { VideoCarousel } from './VideoCarousel';
+import { UserProfileSection } from './UserProfileSection';
+import { GuestSection } from './GuestSection';
+import { PostAdSection } from './PostAdSection';
+import { MyServicesDropdown } from './MyServicesDropdown';
+import { CollapsibleMenuSection } from './CollapsibleMenuSection';
+import { ReferralSystem } from './ReferralSystem';
+import { SellerDashboardSection } from './SellerDashboardSection';
 import { 
   getProfileMenuItems, 
   legalAssistanceMenuItems, 
@@ -26,7 +26,7 @@ import {
   collapsibleMenuIcons,
   paymentMenuItems,
   merchantResources
-} from './sidebar/menuData';
+} from './menuData';
 
 export const SidebarDrawer = () => {
   const [activePostType, setActivePostType] = useState('rent');
