@@ -22,7 +22,7 @@ interface UserProfileSectionProps {
 }
 
 export const UserProfileSection = ({ profileMenuItems }: UserProfileSectionProps) => {
-  const { user } = useAuth();
+  const { user, isSeller } = useAuth();
 
   return (
     <div className="flex items-center gap-3">
@@ -41,6 +41,15 @@ export const UserProfileSection = ({ profileMenuItems }: UserProfileSectionProps
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          {/* Add Seller Dashboard menu item if the user is a seller */}
+          {isSeller && (
+            <DropdownMenuItem asChild className="font-medium text-primary">
+              <Link to="/seller-dashboard" className="flex items-center gap-2 w-full">
+                <span>সেলার ড্যাশবোর্ড</span>
+              </Link>
+            </DropdownMenuItem>
+          )}
+          
           {profileMenuItems.filter(item => !item.hasOwnProperty('show') || item.show).map((item, index) => (
             <DropdownMenuItem key={index} asChild>
               <Link to={item.path} className="flex items-center gap-2 w-full">

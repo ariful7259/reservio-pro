@@ -22,6 +22,7 @@ import DigitalProductsMarketplace from './pages/DigitalProductsMarketplace';
 import DigitalProductDetail from './pages/DigitalProductDetail';
 import CreateDigitalProduct from './pages/CreateDigitalProduct';
 import SellerDashboard from './pages/SellerDashboard';
+import DashboardLayout from './pages/dashboard/DashboardLayout';
 
 const RoutesConfig = () => {
   return (
@@ -53,6 +54,12 @@ const RoutesConfig = () => {
       <Route path="/digital-products/:productId" element={<DigitalProductDetail />} />
       <Route path="/create-digital-product" element={<CreateDigitalProduct />} />
       <Route path="/seller-dashboard" element={<SellerDashboard />} />
+      
+      {/* Seller Dashboard Sections */}
+      <Route path="/dashboard/marketplace/*" element={<DashboardLayout type="marketplace" />} />
+      <Route path="/dashboard/rental/*" element={<DashboardLayout type="rental" />} />
+      <Route path="/dashboard/service/*" element={<DashboardLayout type="service" />} />
+      <Route path="/dashboard/content/*" element={<DashboardLayout type="content" />} />
       
       {/* Catch-all route */}
       <Route path="*" element={<NotFound />} />
