@@ -46,6 +46,9 @@ const RoutesConfig = () => {
       <Route path="/digital-creator/store-templates" element={<IndustryTemplates />} />
       <Route path="/digital-products" element={<DigitalProductsMarketplace />} />
       
+      {/* Root path for Digital Products */}
+      <Route path="/digital-products" element={<DigitalProductsMarketplace />} />
+      
       {/* Catch-all route */}
       <Route path="*" element={<NotFound />} />
     </Routes>
