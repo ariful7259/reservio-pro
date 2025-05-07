@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -32,7 +31,7 @@ import CreatePost from "./pages/CreatePost";
 import PaidCommunity from "./pages/PaidCommunity";
 import CreateStore from "./pages/CreateStore";
 import CourseBuilder from "./pages/CourseBuilder";
-import DigitalProduct from "./pages/DigitalProduct";
+import DigitalProductsMarketplace from './pages/DigitalProductsMarketplace';
 import ServiceCategory from "./pages/ServiceCategory";
 import ShoppingCategory from "./pages/ShoppingCategory";
 import Favorites from "./pages/Favorites";
@@ -189,7 +188,7 @@ const App = () => (
                   <Route path="/email-automation" element={<NotFound />} />
                   <Route path="/event-hosting" element={<NotFound />} />
                   <Route path="/one-on-one" element={<NotFound />} />
-                  <Route path="/digital-products" element={<NotFound />} />
+                  <Route path="/digital-products" element={<DigitalProductsMarketplace />} />
                   <Route path="/paid-community" element={<PaidCommunity />} />
                   <Route path="/audience-analytics" element={<NotFound />} />
                   <Route path="/multi-channel" element={<NotFound />} />
