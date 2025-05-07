@@ -32,6 +32,7 @@ import Settings from '@/components/admin/Settings';
 import MonetizationTab from '@/components/admin/MonetizationTab';
 import DashboardCharts from '@/components/admin/DashboardCharts';
 import { adminTheme } from '@/themes/adminTheme';
+import RefundSettings from '@/components/admin/RefundSettings';
 import { 
   BarChart3, 
   Users, 
@@ -63,7 +64,8 @@ import {
   Layout,
   Activity,
   LineChart,
-  QrCode
+  QrCode,
+  RefreshCw
 } from 'lucide-react';
 import ServiceCardCustomization from '@/components/admin/ServiceCardCustomization';
 import OfflineConfiguration from '@/components/admin/OfflineConfiguration';
@@ -149,6 +151,11 @@ const AdminDashboard = () => {
       id: 'qrcodes', 
       name: 'QR কোড', 
       icon: <QrCode size={18} /> 
+    },
+    { 
+      id: 'refund-settings', 
+      name: 'রিফান্ড সেটিংস', 
+      icon: <RefreshCw size={18} /> 
     },
   ];
   
@@ -532,6 +539,15 @@ const AdminDashboard = () => {
               {activeModule === 'referrals' && <ReferralManagement />}
               
               {activeModule === 'qrcodes' && <QRCodeManagement />}
+              
+              {activeModule === 'refund-settings' && <RefundSettings initialSettings={{
+                enableAutoRefund: true,
+                autoRefundThreshold: 1000,
+                notifyAdminThreshold: 5000,
+                defaultRefundTime: 7,
+                requireEvidence: true,
+                reviewsBeforeEligible: 3
+              }} />}
               
               {!['dashboard', 'users', 'marketplace', 'rentals', 'services', 'digital', 'categories', 
                  'payments', 'reports', 'analytics', 'support', 'settings', 'advanced', 'monetization',

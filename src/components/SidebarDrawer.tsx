@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, LogOut, LogIn, Plus, Store, RefreshCcw } from 'lucide-react';
+import { Menu, LogOut, LogIn, Plus, Store, RefreshCcw, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerFooter } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
@@ -45,11 +45,18 @@ export const SidebarDrawer = () => {
   const updatedPaymentMenuItems = [
     ...paymentMenuItems,
     {
-      icon: <RefreshCcw className="h-5 w-5 text-red-500" />,
+      icon: <RefreshCw className="h-5 w-5 text-red-500" />,
       name: 'রিফান্ড ম্যানেজমেন্ট',
       path: '/payment/refund-management'
     }
   ];
+
+  // Add admin panel item for admin users
+  const adminPanelItem = {
+    icon: <ShieldCheck className="h-5 w-5 text-purple-500" />,
+    name: 'অ্যাডমিন প্যানেল',
+    path: '/admin'
+  };
 
   // Use the imported getProfileMenuItems function to get the menu items
   const profileMenuItems = getProfileMenuItems(isAdmin);
@@ -93,6 +100,19 @@ export const SidebarDrawer = () => {
             {/* My Services Dropdown - only shown to authenticated users */}
             {isAuthenticated && (
               <MyServicesDropdown />
+            )}
+
+            {/* Admin Panel Button - only shown to admin users */}
+            {isAuthenticated && isAdmin && (
+              <div className="mb-4">
+                <Button 
+                  onClick={() => navigate('/admin')}
+                  className="w-full bg-purple-600 hover:bg-purple-700"
+                >
+                  <ShieldCheck className="h-5 w-5 mr-2" />
+                  অ্যাডমিন প্যানেল
+                </Button>
+              </div>
             )}
 
             {/* Collapsible Menu Sections */}
