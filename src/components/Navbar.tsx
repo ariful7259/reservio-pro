@@ -443,9 +443,7 @@ const Navbar = () => {
                               <span className="text-sm">লিগ্যাল অ্যাসিস্ট্যান্স</span>
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent className="w-56 max-h-[70vh] overflow-auto">
-                            
-                          </DropdownMenuContent>
+                          
                         </DropdownMenu>
                         
                         <DropdownMenu>
