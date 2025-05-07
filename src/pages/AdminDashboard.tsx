@@ -107,7 +107,7 @@ const AdminDashboard = () => {
   };
   
   const recentTransactions = [
-    { id: 'TX-5872', amount: '৳ 2,450', type: 'বিক্রয়', user: 'রহিম আহমেদ', status: 'সম্পন্ন', time: '15 মিনিট আগে' },
+    { id: 'TX-5872', amount: '৳ 2,450', type: 'বিক্রয়', user: 'রহিম আহমেদ', status: 'সম্পন্ন', time: '15 মিন��ট আগে' },
     {id: 'TX-5871', amount: '৳ 1,200', type: 'রেন্টাল', user: 'করিম খান', status: '���্রক্রিয়াধীন', time: '32 মিনিট আগে' },
     { id: 'TX-5870', amount: '৳ 3,500', type: 'সার্ভিস', user: 'নাদিয়া ইসলাম', status: 'সম্পন্ন', time: '1 ঘন্টা আগে' },
     { id: 'TX-5869', amount: '৳ 850', type: 'ডিজিটাল', user: 'সাকিব হাসান', status: 'সম্পন্ন', time: '2 ঘন্টা আগে' },
@@ -190,6 +190,61 @@ const AdminDashboard = () => {
       description: "আপনি এখন মডিউলে কাজ করতে পারেন।",
     });
   };
+
+  // Define default rules and conditions for RefundSettings
+  const defaultRefundRules = [
+    {
+      id: '1',
+      title: 'প্রোডাক্ট ক্ষতিগ্রস্ত',
+      description: 'প্রোডাক্ট ক্ষতিগ্রস্ত হলে অটোমেটিক রিফান্ড',
+      category: 'marketplace',
+      timeLimit: 48,
+      percent: 100,
+      conditions: ['ছবি সহ প্রমাণ দাখিল করতে হবে', '৪৮ ঘন্টার মধ্যে রিপোর্ট করতে হবে'],
+      active: true
+    },
+    {
+      id: '2',
+      title: 'ভুল প্রোডাক্ট',
+      description: 'ভুল প্রোডাক্ট পাঠানো হলে অটোমেটিক রিফান্ড',
+      category: 'marketplace',
+      timeLimit: 72,
+      percent: 100,
+      conditions: ['প্রোডাক্টের ছবি তুলতে হবে', 'প্যাকেজিং অক্ষত থাকতে হবে'],
+      active: true
+    },
+    {
+      id: '3',
+      title: 'সার্ভিস সম্পন্ন না হওয়া',
+      description: 'সার্ভিস সম্পন্ন না হলে অটোমেটিক রিফান্ড',
+      category: 'service',
+      timeLimit: 24,
+      percent: 100,
+      conditions: ['সার্ভিস প্রোভাইডারের কনফার্মেশন', 'কাস্টমার রিপোর্ট'],
+      active: false
+    }
+  ];
+
+  const defaultRefundConditions = [
+    {
+      id: '1',
+      name: 'ছবি প্রমাণ',
+      description: 'ক্ষতিগ্রস্ত প্রোডাক্টের ছবি আপলোড করতে হবে',
+      active: true
+    },
+    {
+      id: '2',
+      name: 'সময়সীমা',
+      description: 'নির্দিষ্ট সময়সীমার মধ্যে রিপোর্ট করতে হবে',
+      active: true
+    },
+    {
+      id: '3',
+4 name: 'মূল্য সীমা',
+      description: 'নির্দিষ্ট মূল্যের নিচে অটোমেটিক রিফান্ড হবে',
+      active: true
+    }
+  ];
 
   return (
     <ThemeProvider>
@@ -546,7 +601,9 @@ const AdminDashboard = () => {
                 notifyAdminThreshold: 5000,
                 defaultRefundTime: 7,
                 requireEvidence: true,
-                reviewsBeforeEligible: 3
+                reviewsBeforeEligible: 3,
+                automaticRules: defaultRefundRules,
+                automaticConditions: defaultRefundConditions
               }} />}
               
               {!['dashboard', 'users', 'marketplace', 'rentals', 'services', 'digital', 'categories', 

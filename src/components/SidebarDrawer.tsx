@@ -45,7 +45,7 @@ export const SidebarDrawer = () => {
   const updatedPaymentMenuItems = [
     ...paymentMenuItems,
     {
-      icon: <RefreshCw className="h-5 w-5 text-red-500" />,
+      icon: <RefreshCcw className="h-5 w-5 text-red-500" />,
       name: 'রিফান্ড ম্যানেজমেন্ট',
       path: '/payment/refund-management'
     }
