@@ -1,4 +1,3 @@
-
 import { 
   PaintBucket, Truck, Home, AirVent, Hammer, 
   Wrench, Pipette, HousePlus, User, MessageSquare, 
@@ -6,7 +5,8 @@ import {
   Book, Calendar, Heart, MapPin, List, ShoppingBag, Star,
   Store, File, Gavel, UserCheck, Building, DollarSign, 
   FileText, Calculator, Share2, MessageCircle, Info, Briefcase,
-  ChartBar, Badge, ArrowDownToLine, Currency, Award, Link
+  ChartBar, Badge, ArrowDownToLine, Currency, Award, Link,
+  BarChart3, ShoppingCart, Package, Grid, Settings, TrendingUp, Layout
 } from 'lucide-react';
 import React from 'react';
 
@@ -224,5 +224,54 @@ export const merchantResources = [
     icon: <Badge className="h-5 w-5 text-red-500" />,
     name: "ভেরিফিকেশন স্ট্যাটাস",
     path: "/merchant/verification"
+  }
+];
+
+// Seller Dashboard Menu Items
+export const sellerDashboardMenuItems = [
+  {
+    icon: <Layout className="h-5 w-5 text-purple-500" />,
+    name: "সমন্বিত ড্যাশবোর্ড",
+    path: "/seller-dashboard"
+  },
+  {
+    icon: <Store className="h-5 w-5 text-blue-500" />,
+    name: "মার্কেটপ্লেস ম্যানেজমেন্ট",
+    path: "/seller-dashboard/marketplace"
+  },
+  {
+    icon: <Building className="h-5 w-5 text-green-500" />,
+    name: "রেন্টাল ম্যানেজমেন্ট",
+    path: "/seller-dashboard/rental"
+  },
+  {
+    icon: <Wrench className="h-5 w-5 text-amber-500" />,
+    name: "সার্ভিস ম্যানেজমেন্ট",
+    path: "/seller-dashboard/services"
+  },
+  {
+    icon: <Video className="h-5 w-5 text-indigo-500" />,
+    name: "কন্টেন্ট ম্যানেজমেন্ট",
+    path: "/seller-dashboard/content"
+  },
+  {
+    icon: <ShoppingCart className="h-5 w-5 text-red-500" />,
+    name: "অর্ডার ট্র্যাকিং",
+    path: "/seller-dashboard/orders"
+  },
+  {
+    icon: <BarChart3 className="h-5 w-5 text-emerald-500" />,
+    name: "রেভিনিউ রিপোর্টস",
+    path: "/seller-dashboard/reports"
+  },
+  {
+    icon: <Users className="h-5 w-5 text-fuchsia-500" />,
+    name: "গ্রাহক ম্যানেজমেন্ট",
+    path: "/seller-dashboard/customers"
+  },
+  {
+    icon: <TrendingUp className="h-5 w-5 text-sky-500" />,
+    name: "বিজনেস এনালিটিক্স",
+    path: "/seller-dashboard/analytics"
   }
 ];
