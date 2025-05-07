@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BarChart, CheckCircle, AlertCircle, Clock, RefreshCw, XCircle } from 'lucide-react';
 import { RefundRequest, RefundRule, RefundSettings } from './types';
-import { type Toast } from '@/hooks/use-toast';
+import { type Toast } from '@/components/ui/use-toast';
 
 interface RefundDashboardProps {
   refundRequests: RefundRequest[];
