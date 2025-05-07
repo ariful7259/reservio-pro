@@ -17,6 +17,7 @@ import PaymentMethods from './pages/PaymentMethods';
 import EscrowStatus from './pages/EscrowStatus';
 import CommissionCalculator from './pages/CommissionCalculator';
 import AutomaticRefund from './pages/AutomaticRefund';
+import RefundManagementPage from './pages/RefundManagementPage';
 import RefundManagement from './pages/RefundManagement';
 
 const RoutesConfig = () => {
@@ -32,7 +33,8 @@ const RoutesConfig = () => {
       <Route path="/payment/escrow-status" element={<EscrowStatus />} />
       <Route path="/payment/commission-calculator" element={<CommissionCalculator />} />
       <Route path="/payment/auto-refund" element={<AutomaticRefund />} />
-      <Route path="/payment/refund-management" element={<RefundManagement />} />
+      <Route path="/payment/refund-management" element={<RefundManagementPage />} />
+      <Route path="/refund-management" element={<RefundManagementPage />} />
       
       {/* Service Related */}
       <Route path="/service/:id" element={<ServiceDetails />} />

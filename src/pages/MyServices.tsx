@@ -1,12 +1,19 @@
+
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ShoppingBag, Calendar, Bookmark, MessageSquare, ListCheck, Store, BookmarkCheck, UserPlus, File, Gavel, UserCheck, Building, Home, DollarSign, Calculator, FileText, Share2, HelpCircle, MessageCircle, Info, Briefcase, Wrench } from 'lucide-react';
+import { 
+  ShoppingBag, Calendar, Bookmark, MessageSquare, ListCheck, Store, 
+  BookmarkCheck, UserPlus, File, Gavel, UserCheck, Building, Home, 
+  DollarSign, Calculator, FileText, Share2, HelpCircle, MessageCircle, 
+  Info, Briefcase, Wrench, RefreshCw 
+} from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
 import MyServicesDropdown from '@/components/MyServicesDropdown';
+
 const MyServices = () => {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('bookings');
@@ -16,11 +23,13 @@ const MyServices = () => {
     user,
     isSeller
   } = useAuth();
+
   useEffect(() => {
     const tab = searchParams.get('tab');
     if (tab) {
       setActiveTab(tab);
     }
+
     if (!isAuthenticated) {
       navigate('/login', {
         state: {
@@ -132,6 +141,20 @@ const MyServices = () => {
     path: "/help/about-us",
     description: "আমাদের সম্পর্কে জানুন"
   }];
+
+  // পেমেন্ট এবং রিফান্ড সার্ভিস আইটেম
+  const paymentAndRefundItems = [{
+    icon: <RefreshCw className="h-10 w-10 text-red-500" />,
+    name: "রিফান্ড ম্যানেজমেন্ট",
+    path: "/refund-management",
+    description: "রিফান্ড অনুরোধ এবং ট্র্যাকিং"
+  }, {
+    icon: <DollarSign className="h-10 w-10 text-red-500" />,
+    name: "পেমেন্ট সেটিংস",
+    path: "/payment/payment-methods",
+    description: "পেমেন্ট পদ্ধতি ম্যানেজ করুন"
+  }];
+
   if (!isAuthenticated) {
     return <div className="container px-4 pt-20 pb-20 flex flex-col items-center justify-center min-h-[60vh]">
         <h2 className="text-xl mb-4">আপনার সার্ভিস দেখতে লগইন করুন</h2>
@@ -145,6 +168,7 @@ const MyServices = () => {
         </Button>
       </div>;
   }
+
   const emptyStates = {
     bookings: {
       icon: <Calendar className="h-10 w-10 text-muted-foreground" />,
@@ -195,6 +219,7 @@ const MyServices = () => {
       path: isSeller ? user?.sellerType ? `/dashboard/${user.sellerType}` : "/seller-dashboard" : "/create-store"
     }
   };
+
   return <div className="container px-4 pt-20 pb-20">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">আমার সার্ভিস</h1>
@@ -227,15 +252,103 @@ const MyServices = () => {
       </Tabs>
 
       <div className="mt-12 space-y-8">
+        {/* পেমেন্ট এবং রিফান্ড সেকশন */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle>পেমেন্ট এবং রিফান্ড</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {paymentAndRefundItems.map((item, index) => (
+                <Card key={index} className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate(item.path)}>
+                  <CardContent className="p-4">
+                    <div className="flex gap-4 items-center">
+                      {item.icon}
+                      <div>
+                        <h3 className="font-medium">{item.name}</h3>
+                        <p className="text-sm text-muted-foreground">{item.description}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
         {/* লিগ্যাল অ্যাসিস্ট্যান্স এন্ড লোন সেকশন */}
-        
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle>লিগ্যাল অ্যাসিস্ট্যান্স এন্ড লোন</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {legalAssistanceMenuItems.map((item, index) => (
+                <Card key={index} className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate(item.path)}>
+                  <CardContent className="p-4">
+                    <div className="flex gap-4 items-center">
+                      {item.icon}
+                      <div>
+                        <h3 className="font-medium">{item.name}</h3>
+                        <p className="text-sm text-muted-foreground">{item.description}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* ইউটিলিটিস সেকশন */}
-        
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle>ইউটিলিটিস</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {utilitiesMenuItems.map((item, index) => (
+                <Card key={index} className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate(item.path)}>
+                  <CardContent className="p-4">
+                    <div className="flex gap-4 items-center">
+                      {item.icon}
+                      <div>
+                        <h3 className="font-medium">{item.name}</h3>
+                        <p className="text-sm text-muted-foreground">{item.description}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* হেল্প এন্ড সাপোর্ট সেকশন */}
-        
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle>হেল্প এন্ড সাপোর্ট</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {helpAndSupportMenuItems.map((item, index) => (
+                <Card key={index} className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate(item.path)}>
+                  <CardContent className="p-4">
+                    <div className="flex gap-4 items-center">
+                      {item.icon}
+                      <div>
+                        <h3 className="font-medium">{item.name}</h3>
+                        <p className="text-sm text-muted-foreground">{item.description}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>;
 };
+
 export default MyServices;
