@@ -135,7 +135,13 @@ const DigitalProductsShowcase = () => {
     <div className="py-4">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold">ডিজিটাল ক্রিয়েটর সলিউশন</h2>
-        <Button variant="ghost" size="sm" className="flex items-center gap-1" onClick={() => navigate('/create-store')}>
+        {/* আপডেট করা লিংক যা ডিজিটাল প্রোডাক্টস মার্কেটপ্লেসে নিয়ে যাবে */}
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="flex items-center gap-1" 
+          onClick={() => navigate('/digital-products')}
+        >
           সব দেখুন <ArrowRight className="h-4 w-4" />
         </Button>
       </div>

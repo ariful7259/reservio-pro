@@ -18,6 +18,7 @@ import EscrowStatus from './pages/EscrowStatus';
 import CommissionCalculator from './pages/CommissionCalculator';
 import AutomaticRefund from './pages/AutomaticRefund';
 import IndustryTemplates from './components/store/IndustryTemplates';
+import DigitalProductsMarketplace from './pages/DigitalProductsMarketplace';
 
 const RoutesConfig = () => {
   return (
@@ -43,6 +44,7 @@ const RoutesConfig = () => {
       
       {/* Digital Creator */}
       <Route path="/digital-creator/store-templates" element={<IndustryTemplates />} />
+      <Route path="/digital-products" element={<DigitalProductsMarketplace />} />
       
       {/* Catch-all route */}
       <Route path="*" element={<NotFound />} />
