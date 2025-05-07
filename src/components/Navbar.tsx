@@ -454,17 +454,7 @@ const Navbar = () => {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent className="w-56 max-h-[70vh] overflow-auto">
-                            <div className="grid grid-cols-1 gap-1 p-1">
-                              {utilitiesMenuItems.map((item, index) => <DropdownMenuItem key={index} asChild className="p-2">
-                                  <Link to={item.path} className="flex flex-col gap-1">
-                                    <div className="flex items-center gap-2">
-                                      {item.icon}
-                                      <span className="font-medium">{item.name}</span>
-                                    </div>
-                                    <p className="text-xs text-muted-foreground pl-6">{item.description}</p>
-                                  </Link>
-                                </DropdownMenuItem>)}
-                            </div>
+                            
                           </DropdownMenuContent>
                         </DropdownMenu>
                         
