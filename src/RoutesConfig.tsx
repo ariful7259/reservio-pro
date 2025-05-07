@@ -23,6 +23,7 @@ import DigitalProductDetail from './pages/DigitalProductDetail';
 import CreateDigitalProduct from './pages/CreateDigitalProduct';
 import SellerDashboard from './pages/SellerDashboard';
 import DashboardLayout from './pages/dashboard/DashboardLayout';
+import ReferralSystem from './pages/ReferralSystem';
 
 const RoutesConfig = () => {
   return (
@@ -45,6 +46,7 @@ const RoutesConfig = () => {
       {/* Support and Dispute */}
       <Route path="/help/dispute-center" element={<DisputeCenter />} />
       <Route path="/loyalty-program" element={<LoyaltySystem />} />
+      <Route path="/referral" element={<ReferralSystem />} />
       
       {/* Digital Creator */}
       <Route path="/digital-creator/store-templates" element={<IndustryTemplates />} />
@@ -53,9 +55,15 @@ const RoutesConfig = () => {
       <Route path="/digital-products" element={<DigitalProductsMarketplace />} />
       <Route path="/digital-products/:productId" element={<DigitalProductDetail />} />
       <Route path="/create-digital-product" element={<CreateDigitalProduct />} />
+      
+      {/* Seller Dashboard */}
       <Route path="/seller-dashboard" element={<SellerDashboard />} />
       
       {/* Seller Dashboard Sections */}
+      <Route path="/seller-dashboard/marketplace/*" element={<DashboardLayout type="marketplace" />} />
+      <Route path="/seller-dashboard/rental/*" element={<DashboardLayout type="rental" />} />
+      <Route path="/seller-dashboard/services/*" element={<DashboardLayout type="service" />} />
+      <Route path="/seller-dashboard/content/*" element={<DashboardLayout type="content" />} />
       <Route path="/dashboard/marketplace/*" element={<DashboardLayout type="marketplace" />} />
       <Route path="/dashboard/rental/*" element={<DashboardLayout type="rental" />} />
       <Route path="/dashboard/service/*" element={<DashboardLayout type="service" />} />
