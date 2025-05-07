@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { 
   Search, 
   Filter, 
@@ -9,14 +9,19 @@ import {
   Code, 
   Headphones, 
   Video,
-  Tag,
+  Layout,
   SlidersHorizontal,
   ChevronDown,
+  ChevronUp,
   LayoutGrid,
   LayoutList,
   Star,
   Heart,
-  ShoppingCart
+  ShoppingCart,
+  X,
+  CircleDollarSign,
+  History,
+  Trash
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -24,6 +29,13 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Slider } from '@/components/ui/slider';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Separator } from '@/components/ui/separator';
+import { useToast } from '@/components/ui/use-toast';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useShoppingState, useShoppingStateWithToast } from '@/hooks/useShoppingState';
 
 interface Product {
   id: string;
@@ -39,13 +51,66 @@ interface Product {
 
 const DigitalProductsMarketplace = () => {
   const navigate = useNavigate();
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { toast } = useToast();
+  const { isInWishlist } = useShoppingState();
+  const { addToCartWithToast, toggleWishlistWithToast } = useShoppingStateWithToast();
+  
+  // UI state
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>(
+    searchParams.get('view') === 'list' ? 'list' : 'grid'
+  );
+  const [filterVisible, setFilterVisible] = useState(false);
+  
+  // Filter state
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
+  const [currentCategory, setCurrentCategory] = useState(searchParams.get('category') || 'all');
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
+  const [minRating, setMinRating] = useState<number>(parseFloat(searchParams.get('rating') || '0'));
+  const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'recommended');
+  const [searchHistory, setSearchHistory] = useState<string[]>([]);
+  
+  // Load search history from localStorage
+  useEffect(() => {
+    const savedSearches = localStorage.getItem('digital-marketplace-searches');
+    if (savedSearches) {
+      setSearchHistory(JSON.parse(savedSearches).slice(0, 5));
+    }
+  }, []);
+  
+  const clearSearchHistory = () => {
+    setSearchHistory([]);
+    localStorage.removeItem('digital-marketplace-searches');
+    toast({
+      title: "সার্চ হিস্টোরি মুছে ফেলা হয়েছে",
+      description: "আপনার সমস্ত সার্চ হিস্টোরি মুছে ফেলা হয়েছে।",
+      variant: "default",
+    });
+  };
+  
+  const updateSearchParams = (params: Record<string, string | null>) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    
+    Object.entries(params).forEach(([key, value]) => {
+      if (value === null) {
+        newSearchParams.delete(key);
+      } else {
+        newSearchParams.set(key, value);
+      }
+    });
+    
+    setSearchParams(newSearchParams);
+  };
+  
+  // Update view mode in URL
+  useEffect(() => {
+    updateSearchParams({ view: viewMode });
+  }, [viewMode]);
   
   const productTypes = [
     { name: 'কোর্স', icon: <BookOpen className="h-4 w-4" />, value: 'course' },
     { name: 'ইবুক', icon: <FileText className="h-4 w-4" />, value: 'ebook' },
-    { name: 'টেমপ্লেট', icon: <FileText className="h-4 w-4" />, value: 'template' },
+    { name: 'টেমপ্লেট', icon: <Layout className="h-4 w-4" />, value: 'template' },
     { name: 'সফটওয়্যার', icon: <Code className="h-4 w-4" />, value: 'software' },
     { name: 'অডিও', icon: <Headphones className="h-4 w-4" />, value: 'audio' },
     { name: 'ভিডিও', icon: <Video className="h-4 w-4" />, value: 'video' },
@@ -144,258 +209,679 @@ const DigitalProductsMarketplace = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // Implement search functionality
-    console.log('Searching for:', searchTerm);
+    
+    // Add to search history
+    if (searchTerm.trim() && !searchHistory.includes(searchTerm)) {
+      const updatedHistory = [searchTerm, ...searchHistory].slice(0, 5);
+      setSearchHistory(updatedHistory);
+      localStorage.setItem('digital-marketplace-searches', JSON.stringify(updatedHistory));
+    }
+    
+    updateSearchParams({ search: searchTerm || null });
+    
+    toast({
+      title: "অনুসন্ধান করা হচ্ছে",
+      description: searchTerm ? `"${searchTerm}" এর জন্য ফলাফল দেখানো হচ্ছে` : "সব প্রোডাক্ট দেখানো হচ্ছে",
+    });
+  };
+  
+  const handleClearSearch = () => {
+    setSearchTerm('');
+    updateSearchParams({ search: null });
+  };
+  
+  const handleCategoryChange = (category: string) => {
+    setCurrentCategory(category);
+    updateSearchParams({ category: category === 'all' ? null : category });
+  };
+  
+  const handleSortChange = (value: string) => {
+    setSortBy(value);
+    updateSearchParams({ sort: value });
+  };
+  
+  const handlePriceRangeChange = (value: [number, number]) => {
+    setPriceRange(value);
+  };
+  
+  const handleRatingChange = (value: number[]) => {
+    setMinRating(value[0]);
+    updateSearchParams({ rating: value[0].toString() });
   };
 
-  return (
-    <div className="container pt-20 pb-16">
-      <div className="space-y-6">
-        <div className="flex flex-col space-y-2">
-          <h1 className="text-2xl font-bold">ডিজিটাল প্রোডাক্ট মার্কেটপ্লেস</h1>
-          <p className="text-muted-foreground">
-            কোর্স, ইবুক, টেমপ্লেট, সফটওয়্যার, অডিও এবং আরও অনেক কিছু খুঁজুন এবং ডাউনলোড করুন
-          </p>
-        </div>
-
-        {/* Search and Filter */}
-        <div className="flex flex-col md:flex-row gap-4">
-          <form onSubmit={handleSearch} className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input 
-              placeholder="প্রোডাক্ট খুঁজুন..." 
-              className="pl-9 pr-4"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+  const handleViewModeChange = (mode: 'grid' | 'list') => {
+    setViewMode(mode);
+  };
+  
+  const handleAddToCart = (product: Product) => {
+    addToCartWithToast({
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      image: product.image
+    });
+  };
+  
+  const handleAddToWishlist = (product: Product) => {
+    toggleWishlistWithToast({
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      image: product.image
+    });
+  };
+  
+  const handleProductClick = (productId: string) => {
+    navigate(`/digital-products/${productId}`);
+  };
+  
+  // Apply filters to products
+  const filterProducts = (products: Product[]) => {
+    return products.filter(product => {
+      // Filter by search term
+      if (searchTerm && !product.title.toLowerCase().includes(searchTerm.toLowerCase()) && 
+          !product.description.toLowerCase().includes(searchTerm.toLowerCase())) {
+        return false;
+      }
+      
+      // Filter by category
+      if (currentCategory !== 'all' && product.type !== currentCategory) {
+        return false;
+      }
+      
+      // Filter by rating
+      if (product.rating < minRating) {
+        return false;
+      }
+      
+      // Filter by price range
+      const numericPrice = parseFloat(product.price.replace(/[^\d.]/g, ''));
+      if (numericPrice < priceRange[0] || numericPrice > priceRange[1]) {
+        return false;
+      }
+      
+      return true;
+    });
+  };
+  
+  // Sort products
+  const sortProducts = (products: Product[]) => {
+    const productsCopy = [...products];
+    
+    switch (sortBy) {
+      case 'price_low':
+        return productsCopy.sort((a, b) => {
+          const priceA = parseFloat(a.price.replace(/[^\d.]/g, ''));
+          const priceB = parseFloat(b.price.replace(/[^\d.]/g, ''));
+          return priceA - priceB;
+        });
+      case 'price_high':
+        return productsCopy.sort((a, b) => {
+          const priceA = parseFloat(a.price.replace(/[^\d.]/g, ''));
+          const priceB = parseFloat(b.price.replace(/[^\d.]/g, ''));
+          return priceB - priceA;
+        });
+      case 'rating':
+        return productsCopy.sort((a, b) => b.rating - a.rating);
+      case 'popular':
+        return productsCopy.sort((a, b) => b.sales - a.sales);
+      case 'newest':
+        // For demo purposes, we'll just reverse the array
+        return productsCopy.reverse();
+      default:
+        // 'recommended' - leave as is for demo
+        return productsCopy;
+    }
+  };
+  
+  const filteredProducts = sortProducts(filterProducts(demoProducts));
+  
+  const ProductGrid = ({ products }: { products: Product[] }) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {products.map((product) => (
+        <Card 
+          key={product.id} 
+          className="overflow-hidden hover:shadow-md transition-all cursor-pointer"
+          onClick={() => handleProductClick(product.id)}
+        >
+          <div className="relative aspect-[4/3]">
+            <img 
+              src={product.image} 
+              alt={product.title}
+              className="w-full h-full object-cover"
             />
-          </form>
-          <div className="flex gap-2">
-            <Select defaultValue="latest">
-              <SelectTrigger className="w-[160px]">
-                <SelectValue placeholder="সর্টিং" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="latest">সর্বশেষ</SelectItem>
-                <SelectItem value="popular">জনপ্রিয়</SelectItem>
-                <SelectItem value="price-high">দাম (সর্বোচ্চ থেকে)</SelectItem>
-                <SelectItem value="price-low">দাম (সর্বনিম্ন থেকে)</SelectItem>
-                <SelectItem value="rating">রেটিং</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button variant="outline" size="icon" onClick={() => setViewMode('grid')} className={viewMode === 'grid' ? 'bg-primary/10' : ''}>
-              <LayoutGrid className="h-4 w-4" />
+            <Badge 
+              className="absolute top-2 right-2"
+              variant="secondary"
+            >
+              {productTypes.find(t => t.value === product.type)?.name}
+            </Badge>
+          </div>
+          <CardContent className="p-4">
+            <h3 className="font-medium line-clamp-1">{product.title}</h3>
+            <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{product.description}</p>
+            <div className="flex items-center justify-between mt-2">
+              <span className="text-sm text-muted-foreground">{product.author}</span>
+              <div className="flex items-center">
+                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                <span className="text-xs ml-1">{product.rating}</span>
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="p-4 pt-0 flex justify-between items-center">
+            <span className="font-bold text-primary">{product.price}</span>
+            <div className="flex gap-2">
+              <Button 
+                size="icon" 
+                variant="ghost"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddToWishlist(product);
+                }}
+              >
+                <Heart 
+                  className={`h-4 w-4 ${isInWishlist(product.id) ? 'fill-red-500 text-red-500' : ''}`} 
+                />
+              </Button>
+              <Button 
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddToCart(product);
+                }}
+              >
+                <ShoppingCart className="h-4 w-4 mr-2" />
+                কিনুন
+              </Button>
+            </div>
+          </CardFooter>
+        </Card>
+      ))}
+    </div>
+  );
+  
+  const ProductList = ({ products }: { products: Product[] }) => (
+    <div className="space-y-4">
+      {products.map((product) => (
+        <Card 
+          key={product.id} 
+          className="overflow-hidden hover:shadow-md transition-all cursor-pointer"
+          onClick={() => handleProductClick(product.id)}
+        >
+          <div className="flex flex-col sm:flex-row">
+            <div className="relative w-full sm:w-48 h-48">
+              <img 
+                src={product.image} 
+                alt={product.title}
+                className="w-full h-full object-cover"
+              />
+              <Badge 
+                className="absolute top-2 right-2"
+                variant="secondary"
+              >
+                {productTypes.find(t => t.value === product.type)?.name}
+              </Badge>
+            </div>
+            <div className="flex-1 p-4">
+              <div className="flex flex-col h-full justify-between">
+                <div>
+                  <h3 className="font-medium">{product.title}</h3>
+                  <p className="text-sm text-muted-foreground mt-1">{product.description}</p>
+                  <div className="flex items-center justify-between mt-2">
+                    <span className="text-sm text-muted-foreground">{product.author}</span>
+                    <div className="flex items-center">
+                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                      <span className="text-xs ml-1">{product.rating}</span>
+                      <span className="text-xs text-muted-foreground ml-2">({product.sales} বিক্রি)</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center mt-4">
+                  <span className="font-bold text-primary">{product.price}</span>
+                  <div className="flex gap-2">
+                    <Button 
+                      size="icon" 
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToWishlist(product);
+                      }}
+                    >
+                      <Heart 
+                        className={`h-4 w-4 ${isInWishlist(product.id) ? 'fill-red-500 text-red-500' : ''}`} 
+                      />
+                    </Button>
+                    <Button 
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(product);
+                      }}
+                    >
+                      <ShoppingCart className="h-4 w-4 mr-2" />
+                      কিনুন
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+      ))}
+    </div>
+  );
+
+  const NoProductsFound = () => (
+    <div className="text-center py-16">
+      <p className="text-muted-foreground mb-4">কোন প্রোডাক্ট পাওয়া যায়নি</p>
+      <Button 
+        variant="outline" 
+        onClick={() => {
+          setSearchTerm('');
+          setCurrentCategory('all');
+          setPriceRange([0, 10000]);
+          setMinRating(0);
+          setSortBy('recommended');
+          updateSearchParams({
+            search: null,
+            category: null,
+            rating: null,
+            sort: 'recommended'
+          });
+        }}
+      >
+        ফিল্টার রিসেট করুন
+      </Button>
+    </div>
+  );
+
+  return (
+    <div className="space-y-6">
+      {/* Search and Filter */}
+      <div className="flex flex-col md:flex-row gap-4">
+        <form onSubmit={handleSearch} className="flex-1 relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input 
+            placeholder="প্রোডাক্ট খুঁজুন..." 
+            className="pl-9 pr-12"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          {searchTerm && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="absolute right-12 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0"
+              onClick={handleClearSearch}
+            >
+              <X className="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="icon" onClick={() => setViewMode('list')} className={viewMode === 'list' ? 'bg-primary/10' : ''}>
-              <LayoutList className="h-4 w-4" />
+          )}
+          <Button 
+            type="submit"
+            variant="ghost" 
+            size="sm" 
+            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7"
+          >
+            অনুসন্ধান
+          </Button>
+          
+          {/* Search History Popover */}
+          {searchHistory.length > 0 && (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-16 top-1/2 transform -translate-y-1/2 h-7 w-7"
+                >
+                  <History className="h-4 w-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-72 p-2">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="text-sm font-medium">সাম্প্রতিক অনুসন্ধান</h4>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-6 w-6"
+                    onClick={clearSearchHistory}
+                  >
+                    <Trash className="h-3 w-3 text-red-500" />
+                  </Button>
+                </div>
+                <Separator className="mb-2" />
+                <ScrollArea className="max-h-60">
+                  <div className="space-y-1">
+                    {searchHistory.map((term, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center justify-between p-2 rounded-md hover:bg-muted cursor-pointer"
+                        onClick={() => {
+                          setSearchTerm(term);
+                          updateSearchParams({ search: term });
+                        }}
+                      >
+                        <div className="flex items-center gap-2">
+                          <History className="h-3 w-3 text-muted-foreground" />
+                          <span className="text-sm">{term}</span>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-5 w-5"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const newHistory = searchHistory.filter(t => t !== term);
+                            setSearchHistory(newHistory);
+                            localStorage.setItem('digital-marketplace-searches', JSON.stringify(newHistory));
+                          }}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </PopoverContent>
+            </Popover>
+          )}
+        </form>
+        <div className="flex gap-2">
+          <Select value={sortBy} onValueChange={handleSortChange}>
+            <SelectTrigger className="w-[160px]">
+              <SelectValue placeholder="সর্টিং" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="recommended">রেকমেন্ডেড</SelectItem>
+              <SelectItem value="popular">জনপ্রিয়</SelectItem>
+              <SelectItem value="price_high">দাম (সর্বোচ্চ থেকে)</SelectItem>
+              <SelectItem value="price_low">দাম (সর্বনিম্ন থেকে)</SelectItem>
+              <SelectItem value="rating">রেটিং</SelectItem>
+              <SelectItem value="newest">সর্বশেষ</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={() => handleViewModeChange('grid')} 
+            className={viewMode === 'grid' ? 'bg-primary/10' : ''}
+          >
+            <LayoutGrid className="h-4 w-4" />
+          </Button>
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={() => handleViewModeChange('list')} 
+            className={viewMode === 'list' ? 'bg-primary/10' : ''}
+          >
+            <LayoutList className="h-4 w-4" />
+          </Button>
+          <Button 
+            variant="outline" 
+            className="flex items-center gap-2"
+            onClick={() => setFilterVisible(!filterVisible)}
+          >
+            <Filter className="h-4 w-4" />
+            <span className="hidden sm:inline">ফিল্টার</span>
+            {filterVisible ? (
+              <ChevronUp className="h-4 w-4" />
+            ) : (
+              <ChevronDown className="h-4 w-4" />
+            )}
+          </Button>
+        </div>
+      </div>
+
+      {/* Advanced Filter Panel */}
+      {filterVisible && (
+        <Card className="p-4 animate-fade-in">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div>
+              <h4 className="text-sm font-medium mb-2">মূল্য সীমা</h4>
+              <div className="px-3">
+                <Slider
+                  value={priceRange}
+                  max={10000}
+                  step={100}
+                  minStepsBetweenThumbs={1}
+                  onValueChange={handlePriceRangeChange}
+                  className="my-6"
+                />
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">৳{priceRange[0]}</span>
+                  <span className="text-sm text-muted-foreground">৳{priceRange[1]}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="text-sm font-medium mb-2">ন্যূনতম রেটিং</h4>
+              <div className="px-3">
+                <Slider
+                  value={[minRating]}
+                  max={5}
+                  step={0.5}
+                  onValueChange={handleRatingChange}
+                  className="my-6"
+                />
+                <div className="flex justify-between">
+                  <div className="flex items-center">
+                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
+                    <span className="text-sm">{minRating}</span>
+                  </div>
+                  <span className="text-sm text-muted-foreground">এবং উপরে</span>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="text-sm font-medium mb-3">প্রোডাক্ট টাইপ</h4>
+              <div className="grid grid-cols-2 gap-2">
+                {productTypes.map((type, idx) => (
+                  <div key={idx} className="flex items-center space-x-2">
+                    <Checkbox 
+                      id={`type-${type.value}`} 
+                      checked={currentCategory === 'all' || currentCategory === type.value}
+                      onCheckedChange={() => {
+                        if (currentCategory === type.value) {
+                          handleCategoryChange('all');
+                        } else {
+                          handleCategoryChange(type.value);
+                        }
+                      }}
+                    />
+                    <label 
+                      htmlFor={`type-${type.value}`}
+                      className="text-sm flex items-center cursor-pointer"
+                    >
+                      {type.icon}
+                      <span className="ml-1">{type.name}</span>
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex justify-end gap-2 mt-4">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSearchTerm('');
+                setCurrentCategory('all');
+                setPriceRange([0, 10000]);
+                setMinRating(0);
+                setSortBy('recommended');
+                updateSearchParams({
+                  search: null,
+                  category: null,
+                  rating: null,
+                  sort: 'recommended'
+                });
+              }}
+            >
+              রিসেট
             </Button>
-            <Button variant="outline" className="flex items-center gap-2">
-              <Filter className="h-4 w-4" />
-              <span className="hidden sm:inline">ফিল্টার</span>
+            <Button
+              onClick={() => {
+                updateSearchParams({
+                  category: currentCategory === 'all' ? null : currentCategory,
+                  rating: minRating > 0 ? minRating.toString() : null,
+                  // We don't save price range in URL for simplicity
+                });
+                setFilterVisible(false);
+              }}
+            >
+              প্রয়োগ করুন
             </Button>
           </div>
+        </Card>
+      )}
+
+      {/* Active Filter Tags */}
+      {(searchTerm || currentCategory !== 'all' || minRating > 0 || sortBy !== 'recommended') && (
+        <div className="flex flex-wrap gap-2">
+          {searchTerm && (
+            <Badge variant="outline" className="flex items-center gap-1">
+              সার্চ: {searchTerm}
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-4 w-4 ml-1" 
+                onClick={() => {
+                  setSearchTerm('');
+                  updateSearchParams({ search: null });
+                }}
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </Badge>
+          )}
+          
+          {currentCategory !== 'all' && (
+            <Badge variant="outline" className="flex items-center gap-1">
+              ক্যাটাগরি: {productTypes.find(t => t.value === currentCategory)?.name}
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-4 w-4 ml-1" 
+                onClick={() => {
+                  setCurrentCategory('all');
+                  updateSearchParams({ category: null });
+                }}
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </Badge>
+          )}
+          
+          {minRating > 0 && (
+            <Badge variant="outline" className="flex items-center gap-1">
+              রেটিং: <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" /> {minRating}+
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-4 w-4 ml-1" 
+                onClick={() => {
+                  setMinRating(0);
+                  updateSearchParams({ rating: null });
+                }}
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </Badge>
+          )}
+          
+          {sortBy !== 'recommended' && (
+            <Badge variant="outline" className="flex items-center gap-1">
+              সর্ট: {
+                sortBy === 'popular' ? 'জনপ্রিয়' : 
+                sortBy === 'price_high' ? 'দাম (সর্বোচ্চ থেকে)' :
+                sortBy === 'price_low' ? 'দাম (সর্বনিম্ন থেকে)' :
+                sortBy === 'rating' ? 'রেটিং' :
+                sortBy === 'newest' ? 'সর্বশেষ' : ''
+              }
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-4 w-4 ml-1" 
+                onClick={() => {
+                  setSortBy('recommended');
+                  updateSearchParams({ sort: 'recommended' });
+                }}
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </Badge>
+          )}
+          
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="text-xs h-7"
+            onClick={() => {
+              setSearchTerm('');
+              setCurrentCategory('all');
+              setPriceRange([0, 10000]);
+              setMinRating(0);
+              setSortBy('recommended');
+              updateSearchParams({
+                search: null,
+                category: null,
+                rating: null,
+                sort: 'recommended'
+              });
+            }}
+          >
+            সব ফিল্টার মুছুন
+          </Button>
         </div>
+      )}
 
-        {/* Categories */}
-        <Tabs defaultValue="all" className="w-full">
-          <TabsList className="w-full overflow-x-auto flex flex-nowrap justify-start whitespace-nowrap">
-            <TabsTrigger value="all">সব</TabsTrigger>
-            {productTypes.map((type) => (
-              <TabsTrigger key={type.value} value={type.value} className="flex items-center gap-1">
-                {type.icon} {type.name}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-
-          <TabsContent value="all" className="mt-4">
-            {viewMode === 'grid' ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {demoProducts.map((product) => (
-                  <Card key={product.id} className="overflow-hidden hover:shadow-md transition-all cursor-pointer">
-                    <div className="relative aspect-[4/3]">
-                      <img 
-                        src={product.image} 
-                        alt={product.title}
-                        className="w-full h-full object-cover"
-                      />
-                      <Badge 
-                        className="absolute top-2 right-2"
-                        variant="secondary"
-                      >
-                        {productTypes.find(t => t.value === product.type)?.name}
-                      </Badge>
-                    </div>
-                    <CardContent className="p-4">
-                      <h3 className="font-medium line-clamp-1">{product.title}</h3>
-                      <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{product.description}</p>
-                      <div className="flex items-center justify-between mt-2">
-                        <span className="text-sm text-muted-foreground">{product.author}</span>
-                        <div className="flex items-center">
-                          <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                          <span className="text-xs ml-1">{product.rating}</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="p-4 pt-0 flex justify-between items-center">
-                      <span className="font-bold text-primary">{product.price}</span>
-                      <div className="flex gap-2">
-                        <Button size="icon" variant="ghost">
-                          <Heart className="h-4 w-4" />
-                        </Button>
-                        <Button size="sm">
-                          <ShoppingCart className="h-4 w-4 mr-2" />
-                          কিনুন
-                        </Button>
-                      </div>
-                    </CardFooter>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {demoProducts.map((product) => (
-                  <Card key={product.id} className="overflow-hidden hover:shadow-md transition-all cursor-pointer">
-                    <div className="flex flex-col sm:flex-row">
-                      <div className="relative w-full sm:w-48 h-48">
-                        <img 
-                          src={product.image} 
-                          alt={product.title}
-                          className="w-full h-full object-cover"
-                        />
-                        <Badge 
-                          className="absolute top-2 right-2"
-                          variant="secondary"
-                        >
-                          {productTypes.find(t => t.value === product.type)?.name}
-                        </Badge>
-                      </div>
-                      <div className="flex-1 p-4">
-                        <div className="flex flex-col h-full justify-between">
-                          <div>
-                            <h3 className="font-medium">{product.title}</h3>
-                            <p className="text-sm text-muted-foreground mt-1">{product.description}</p>
-                            <div className="flex items-center justify-between mt-2">
-                              <span className="text-sm text-muted-foreground">{product.author}</span>
-                              <div className="flex items-center">
-                                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                                <span className="text-xs ml-1">{product.rating}</span>
-                                <span className="text-xs text-muted-foreground ml-2">({product.sales} বিক্রি)</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex justify-between items-center mt-4">
-                            <span className="font-bold text-primary">{product.price}</span>
-                            <div className="flex gap-2">
-                              <Button size="icon" variant="ghost">
-                                <Heart className="h-4 w-4" />
-                              </Button>
-                              <Button size="sm">
-                                <ShoppingCart className="h-4 w-4 mr-2" />
-                                কিনুন
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </TabsContent>
-
+      {/* Categories */}
+      <Tabs 
+        defaultValue="all" 
+        value={currentCategory}
+        onValueChange={handleCategoryChange}
+        className="w-full"
+      >
+        <TabsList className="w-full overflow-x-auto flex flex-nowrap justify-start whitespace-nowrap">
+          <TabsTrigger value="all">সব</TabsTrigger>
           {productTypes.map((type) => (
-            <TabsContent key={type.value} value={type.value} className="mt-4">
-              {viewMode === 'grid' ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {demoProducts.filter(product => product.type === type.value).map((product) => (
-                    <Card key={product.id} className="overflow-hidden hover:shadow-md transition-all cursor-pointer">
-                      <div className="relative aspect-[4/3]">
-                        <img 
-                          src={product.image} 
-                          alt={product.title}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <CardContent className="p-4">
-                        <h3 className="font-medium line-clamp-1">{product.title}</h3>
-                        <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{product.description}</p>
-                        <div className="flex items-center justify-between mt-2">
-                          <span className="text-sm text-muted-foreground">{product.author}</span>
-                          <div className="flex items-center">
-                            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                            <span className="text-xs ml-1">{product.rating}</span>
-                          </div>
-                        </div>
-                      </CardContent>
-                      <CardFooter className="p-4 pt-0 flex justify-between items-center">
-                        <span className="font-bold text-primary">{product.price}</span>
-                        <div className="flex gap-2">
-                          <Button size="icon" variant="ghost">
-                            <Heart className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm">
-                            <ShoppingCart className="h-4 w-4 mr-2" />
-                            কিনুন
-                          </Button>
-                        </div>
-                      </CardFooter>
-                    </Card>
-                  ))}
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {demoProducts.filter(product => product.type === type.value).map((product) => (
-                    <Card key={product.id} className="overflow-hidden hover:shadow-md transition-all cursor-pointer">
-                      <div className="flex flex-col sm:flex-row">
-                        <div className="relative w-full sm:w-48 h-48">
-                          <img 
-                            src={product.image} 
-                            alt={product.title}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div className="flex-1 p-4">
-                          <div className="flex flex-col h-full justify-between">
-                            <div>
-                              <h3 className="font-medium">{product.title}</h3>
-                              <p className="text-sm text-muted-foreground mt-1">{product.description}</p>
-                              <div className="flex items-center justify-between mt-2">
-                                <span className="text-sm text-muted-foreground">{product.author}</span>
-                                <div className="flex items-center">
-                                  <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                                  <span className="text-xs ml-1">{product.rating}</span>
-                                  <span className="text-xs text-muted-foreground ml-2">({product.sales} বিক্রি)</span>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex justify-between items-center mt-4">
-                              <span className="font-bold text-primary">{product.price}</span>
-                              <div className="flex gap-2">
-                                <Button size="icon" variant="ghost">
-                                  <Heart className="h-4 w-4" />
-                                </Button>
-                                <Button size="sm">
-                                  <ShoppingCart className="h-4 w-4 mr-2" />
-                                  কিনুন
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              )}
-              {demoProducts.filter(product => product.type === type.value).length === 0 && (
-                <div className="text-center py-16">
-                  <p className="text-muted-foreground">এই ক্যাটেগরিতে কোন প্রোডাক্ট নেই</p>
-                </div>
-              )}
-            </TabsContent>
+            <TabsTrigger key={type.value} value={type.value} className="flex items-center gap-1">
+              {type.icon} {type.name}
+            </TabsTrigger>
           ))}
-        </Tabs>
+        </TabsList>
+      </Tabs>
+
+      {/* Product Display */}
+      <div className="min-h-[400px]">
+        {filteredProducts.length > 0 ? (
+          viewMode === 'grid' ? (
+            <ProductGrid products={filteredProducts} />
+          ) : (
+            <ProductList products={filteredProducts} />
+          )
+        ) : (
+          <NoProductsFound />
+        )}
       </div>
+      
+      {/* Pagination - For future implementation */}
+      {filteredProducts.length > 0 && (
+        <div className="flex justify-center mt-8">
+          <div className="join">
+            <Button variant="outline" className="join-item">«</Button>
+            <Button variant="outline" className="join-item">১</Button>
+            <Button variant="default" className="join-item">২</Button>
+            <Button variant="outline" className="join-item">৩</Button>
+            <Button variant="outline" className="join-item">»</Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

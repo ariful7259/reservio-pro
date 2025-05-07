@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -32,6 +33,8 @@ import PaidCommunity from "./pages/PaidCommunity";
 import CreateStore from "./pages/CreateStore";
 import CourseBuilder from "./pages/CourseBuilder";
 import DigitalProductsMarketplace from './pages/DigitalProductsMarketplace';
+import DigitalProductDetail from './pages/DigitalProductDetail';
+import MarketplaceHub from './pages/MarketplaceHub';
 import ServiceCategory from "./pages/ServiceCategory";
 import ShoppingCategory from "./pages/ShoppingCategory";
 import Favorites from "./pages/Favorites";
@@ -69,6 +72,7 @@ import ServiceBooking from "./pages/ServiceBooking";
 import TransactionHistory from "./pages/TransactionHistory";
 import PaymentAnalytics from "./pages/PaymentAnalytics";
 import MultiCurrencySupport from "./pages/MultiCurrencySupport";
+import CreateDigitalProduct from "./pages/CreateDigitalProduct";
 
 // Import dashboard components
 import { DashboardLayout } from "./pages/dashboard/DashboardLayout";
@@ -188,7 +192,10 @@ const App = () => (
                   <Route path="/email-automation" element={<NotFound />} />
                   <Route path="/event-hosting" element={<NotFound />} />
                   <Route path="/one-on-one" element={<NotFound />} />
-                  <Route path="/digital-products" element={<DigitalProductsMarketplace />} />
+                  <Route path="/digital-products" element={<MarketplaceHub />} />
+                  <Route path="/digital-products/:productId" element={<DigitalProductDetail />} />
+                  <Route path="/create-digital-product" element={<CreateDigitalProduct />} />
+                  <Route path="/digital-marketplace" element={<MarketplaceHub />} />
                   <Route path="/paid-community" element={<PaidCommunity />} />
                   <Route path="/audience-analytics" element={<NotFound />} />
                   <Route path="/multi-channel" element={<NotFound />} />
