@@ -1,75 +1,123 @@
 
 import React from 'react';
+import { Edit, Trash2, Plus, Image, Search, Filter, ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
 
 const ProductCatalogTemplate = () => {
+  const demoProducts = [
+    {
+      id: 1,
+      name: 'স্মার্ট ওয়াচ',
+      category: 'ইলেকট্রনিক্স',
+      price: '৳২,৪৯৯',
+      stock: 15,
+      image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3'
+    },
+    {
+      id: 2,
+      name: 'সানগ্লাস',
+      category: 'ফ্যাশন',
+      price: '৳৭৯৯',
+      stock: 28,
+      image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3'
+    },
+    {
+      id: 3,
+      name: 'ব্লুটুথ হেডফোন',
+      category: 'ইলেকট্রনিক্স',
+      price: '৳১,৮৯৯',
+      stock: 10,
+      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3'
+    },
+    {
+      id: 4,
+      name: 'লেদার ব্যাগ',
+      category: 'ফ্যাশন',
+      price: '৳৩,২৯৯',
+      stock: 8,
+      image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3'
+    },
+    {
+      id: 5,
+      name: 'স্মার্টফোন',
+      category: 'ইলেকট্রনিক্স',
+      price: '৳১৮,৯৯৯',
+      stock: 5,
+      image: 'https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3'
+    }
+  ];
+
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-medium">প্রোডাক্ট ক্যাটালগ</h3>
-        <Button size="sm">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-1">
-            <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-          </svg>
-          নতুন প্রোডাক্ট
+    <div className="space-y-6">
+      <div className="flex justify-between items-center flex-wrap gap-4">
+        <div className="flex items-center flex-wrap gap-2">
+          <div className="relative w-[250px]">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input 
+              placeholder="প্রোডাক্ট সার্চ করুন..."
+              className="pl-9 w-full"
+            />
+          </div>
+          <Button variant="outline" size="icon">
+            <Filter className="h-4 w-4" />
+          </Button>
+          <Button variant="outline" size="icon">
+            <ArrowUpDown className="h-4 w-4" />
+          </Button>
+        </div>
+        <Button>
+          <Plus className="h-4 w-4 mr-1" /> নতুন প্রোডাক্ট
         </Button>
       </div>
 
-      <div className="border rounded-lg p-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="productName">প্রোডাক্টের নাম</Label>
-            <Input id="productName" placeholder="প্রোডাক্টের নাম লিখুন" />
-          </div>
-
-          <div>
-            <Label htmlFor="productPrice">মূল্য (৳)</Label>
-            <Input id="productPrice" type="number" placeholder="0.00" />
-          </div>
-
-          <div className="md:col-span-2">
-            <Label htmlFor="productDescription">প্রোডাক্টের বিবরণ</Label>
-            <Textarea id="productDescription" placeholder="প্রোডাক্টের বিবরণ লিখুন" rows={3} />
-          </div>
-
-          <div>
-            <Label htmlFor="productQuantity">স্টক পরিমাণ</Label>
-            <Input id="productQuantity" type="number" placeholder="0" />
-          </div>
-
-          <div>
-            <Label htmlFor="productCategory">প্রোডাক্টের ক্যাটাগরি</Label>
-            <Input id="productCategory" placeholder="ক্যাটাগরি নির্বাচন করুন" />
-          </div>
-
-          <div className="md:col-span-2">
-            <Label className="block mb-2">প্রোডাক্টের ছবি</Label>
-            <div className="border-2 border-dashed p-8 text-center rounded-lg hover:bg-gray-50 cursor-pointer">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-gray-300 mx-auto mb-2" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-              </svg>
-              <p className="text-sm text-muted-foreground">ছবি আপলোড করতে ক্লিক করুন</p>
-              <p className="text-xs text-gray-400">সুপারিশকৃত আকার: 800x800px</p>
+      <div className="grid grid-cols-1 gap-4">
+        {demoProducts.map(product => (
+          <div key={product.id} className="border rounded-lg shadow-sm flex flex-col sm:flex-row overflow-hidden">
+            <div className="w-full sm:w-32 h-32">
+              <img 
+                src={product.image} 
+                alt={product.name} 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="flex-1 p-4">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="font-medium">{product.name}</h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                      {product.category}
+                    </Badge>
+                    <span className="text-sm text-muted-foreground">আইডি: #{product.id}</span>
+                  </div>
+                </div>
+                <div className="font-semibold">{product.price}</div>
+              </div>
+              <div className="flex justify-between items-end mt-4">
+                <div>
+                  <div className="text-sm text-muted-foreground">স্টক: <span className={product.stock > 10 ? "text-green-600" : "text-amber-600"}>{product.stock}</span></div>
+                </div>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm">
+                    <Edit className="h-4 w-4 mr-1" /> এডিট
+                  </Button>
+                  <Button variant="outline" size="sm" className="text-red-500 border-red-200 hover:bg-red-50">
+                    <Trash2 className="h-4 w-4 mr-1" /> ডিলিট
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div className="border-t mt-4 pt-4 flex justify-end gap-2">
-          <Button variant="outline">বাতিল করুন</Button>
-          <Button>সংরক্ষণ করুন</Button>
-        </div>
+        ))}
       </div>
 
-      <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg">
-        <p className="text-sm text-amber-800 flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-          </svg>
-          আপনার স্টোর লাইভ করার আগেই অন্তত ৫টি প্রোডাক্ট যোগ করার পরামর্শ দেওয়া হচ্ছে
-        </p>
+      <div className="border-t pt-4 text-center">
+        <Button variant="outline" className="mb-2">
+          <Plus className="h-4 w-4 mr-1" /> CSV আপলোড করুন
+        </Button>
+        <p className="text-xs text-muted-foreground">CSV ফাইল ব্যবহার করে একসাথে অনেক প্রোডাক্ট আপলোড করুন</p>
       </div>
     </div>
   );

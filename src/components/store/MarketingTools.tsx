@@ -1,67 +1,262 @@
 
-import React from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import React, { useState } from 'react';
+import { Mail, Facebook, Instagram, Twitter, RefreshCcw, CheckCircle2, Copy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { useToast } from '@/components/ui/use-toast';
 
 const MarketingTools = () => {
+  const { toast } = useToast();
+  const [generatingEmail, setGeneratingEmail] = useState(false);
+  const [generatingSocial, setGeneratingSocial] = useState(false);
+  const [emailContent, setEmailContent] = useState('');
+  const [socialPost, setSocialPost] = useState('');
+
+  const handleGenerateEmail = () => {
+    setGeneratingEmail(true);
+    setTimeout(() => {
+      setEmailContent(`
+প্রিয় গ্রাহক,
+
+আমাদের অনলাইন স্টোরে আপনাকে স্বাগতম। আমরা আনন্দের সাথে আপনাকে জানাচ্ছি যে আমাদের নতুন কালেকশন এসেছে!
+
+এই সপ্তাহে সকল প্রোডাক্টের উপর ১৫% ডিসকাউন্ট পাবেন। কুপন কোড "WELCOME15" ব্যবহার করুন।
+
+আমাদের প্রোডাক্টস দেখতে এখানে ক্লিক করুন।
+
+ধন্যবাদ,
+আমার স্টোর টিম
+      `);
+      setGeneratingEmail(false);
+      toast({
+        title: "ইমেইল টেম্পলেট তৈরি হয়েছে",
+        description: "আপনার ইমেইল টেম্পলেট সফলভাবে তৈরি হয়েছে।",
+      });
+    }, 1500);
+  };
+
+  const handleGenerateSocialPost = () => {
+    setGeneratingSocial(true);
+    setTimeout(() => {
+      setSocialPost(`
+🎉 নতুন কালেকশন এসেছে! 🎉
+
+আমাদের নতুন কালেকশন দেখতে আমাদের অনলাইন স্টোরে ভিজিট করুন। এই সপ্তাহে সকল আইটেমের উপর ১৫% ডিসকাউন্ট!
+
+🛍️ www.mystore.com
+📱 ফোন: +৮৮০১৭১২৩৪৫৬৭৮
+📍 ঢাকা, বাংলাদেশ
+
+#নতুনকালেকশন #অনলাইনশপিং #ডিসকাউন্ট
+      `);
+      setGeneratingSocial(false);
+      toast({
+        title: "সোশ্যাল মিডিয়া পোস্ট তৈরি হয়েছে",
+        description: "আপনার সোশ্যাল মিডিয়া পোস্ট সফলভাবে তৈরি হয়েছে।",
+      });
+    }, 1500);
+  };
+
+  const copyToClipboard = (text: string, type: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "কপি হয়েছে",
+      description: `আপনার ${type} কপি করা হয়েছে।`,
+    });
+  };
+
   return (
-    <Card className="mb-6">
-      <CardHeader className="pb-3">
-        <h3 className="font-semibold">মার্কেটিং টুলস</h3>
-        <p className="text-sm text-muted-foreground">
-          আপনার স্টোর প্রচার করতে মার্কেটিং টুলস ব্যবহার করুন
-        </p>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex items-center gap-3 border p-3 rounded-lg">
-          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
-            </svg>
+    <div className="space-y-6">
+      <Tabs defaultValue="email">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="email" className="flex items-center gap-2">
+            <Mail className="h-4 w-4" /> ইমেইল মার্কেটিং
+          </TabsTrigger>
+          <TabsTrigger value="social" className="flex items-center gap-2">
+            <Facebook className="h-4 w-4" /> সোশ্যাল মিডিয়া
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="email" className="space-y-4 mt-4">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>ইমেইল টাইপ</Label>
+              <select className="w-full p-2 border rounded-md">
+                <option>ওয়েলকাম ইমেইল</option>
+                <option>প্রোডাক্ট প্রমোশন</option>
+                <option>ডিসকাউন্ট অফার</option>
+                <option>অর্ডার কনফার্মেশন</option>
+              </select>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <Label>ইমেইল সাবজেক্ট</Label>
+              </div>
+              <Input value="আমাদের নতুন কালেকশন দেখুন + ১৫% ছাড়!" />
+            </div>
+            
+            <div className="space-y-2">
+              <Label>কাস্টম প্যারামিটার</Label>
+              <Input placeholder="প্রোডাক্ট নাম, ডিসকাউন্ট % ইত্যাদি..." />
+            </div>
+            
+            <Button 
+              onClick={handleGenerateEmail} 
+              disabled={generatingEmail} 
+              className="w-full"
+            >
+              {generatingEmail ? (
+                <>
+                  <RefreshCcw className="h-4 w-4 mr-2 animate-spin" />
+                  জেনারেট হচ্ছে...
+                </>
+              ) : (
+                <>
+                  <Mail className="h-4 w-4 mr-2" />
+                  ইমেইল টেম্পলেট জেনারেট করুন
+                </>
+              )}
+            </Button>
           </div>
-          <div className="flex-1">
-            <h4 className="text-sm font-medium">ফ্রি SMS মার্কেটিং</h4>
-            <p className="text-xs text-muted-foreground">৫০টি ফ্রি SMS সহ শুরু করুন</p>
+          
+          {emailContent && (
+            <div className="border rounded-md p-4 relative">
+              <div className="absolute top-2 right-2">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => copyToClipboard(emailContent, 'ইমেইল কন্টেন্ট')}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="whitespace-pre-wrap">{emailContent}</div>
+            </div>
+          )}
+          
+          <div className="bg-slate-50 p-4 rounded-lg">
+            <h3 className="font-medium flex items-center gap-2 mb-2">
+              <CheckCircle2 className="h-4 w-4 text-green-600" />
+              ইমেইল মার্কেটিং টিপস
+            </h3>
+            <ul className="text-sm space-y-2">
+              <li className="flex gap-2">
+                <span>•</span>
+                <span>সহজ এবং আকর্ষণীয় সাবজেক্ট লাইন ব্যবহার করুন</span>
+              </li>
+              <li className="flex gap-2">
+                <span>•</span>
+                <span>গ্রাহকদের নাম দিয়ে পার্সোনালাইজড ইমেইল পাঠান</span>
+              </li>
+              <li className="flex gap-2">
+                <span>•</span>
+                <span>মোবাইল-অপটিমাইজড টেম্পলেট ব্যবহার করুন</span>
+              </li>
+              <li className="flex gap-2">
+                <span>•</span>
+                <span>স্পষ্ট কল-টু-অ্যাকশন বাটন যোগ করুন</span>
+              </li>
+            </ul>
           </div>
-          <Button size="sm" variant="outline">সেটআপ</Button>
-        </div>
-
-        <div className="flex items-center gap-3 border p-3 rounded-lg">
-          <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-600" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-              <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-            </svg>
+        </TabsContent>
+        
+        <TabsContent value="social" className="space-y-4 mt-4">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>প্ল্যাটফর্ম</Label>
+              <select className="w-full p-2 border rounded-md">
+                <option>ফেসবুক</option>
+                <option>ইনস্টাগ্রাম</option>
+                <option>টুইটার</option>
+                <option>লিংকডইন</option>
+              </select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label>কন্টেন্ট টাইপ</Label>
+              <select className="w-full p-2 border rounded-md">
+                <option>প্রোডাক্ট প্রমোশন</option>
+                <option>ডিসকাউন্ট অফার</option>
+                <option>কন্টেন্ট মার্কেটিং</option>
+                <option>ইভেন্ট প্রমোশন</option>
+              </select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label>কীওয়ার্ড</Label>
+              <Input placeholder="প্রোডাক্ট নাম, ডিসকাউন্ট %, ইভেন্ট নাম ইত্যাদি..." />
+            </div>
+            
+            <Button 
+              onClick={handleGenerateSocialPost} 
+              disabled={generatingSocial} 
+              className="w-full"
+            >
+              {generatingSocial ? (
+                <>
+                  <RefreshCcw className="h-4 w-4 mr-2 animate-spin" />
+                  জেনারেট হচ্ছে...
+                </>
+              ) : (
+                <>
+                  <Facebook className="h-4 w-4 mr-2" />
+                  সোশ্যাল মিডিয়া পোস্ট জেনারেট করুন
+                </>
+              )}
+            </Button>
           </div>
-          <div className="flex-1">
-            <h4 className="text-sm font-medium">ইমেইল মার্কেটিং</h4>
-            <p className="text-xs text-muted-foreground">প্রো প্ল্যান সাবস্ক্রাইব করে এক্টিভেট করুন</p>
+          
+          {socialPost && (
+            <div className="border rounded-md p-4 relative">
+              <div className="absolute top-2 right-2">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => copyToClipboard(socialPost, 'সোশ্যাল পোস্ট')}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="whitespace-pre-wrap">{socialPost}</div>
+            </div>
+          )}
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card>
+              <CardContent className="p-4 flex items-center gap-3">
+                <Facebook className="h-6 w-6 text-blue-600" />
+                <div>
+                  <h4 className="font-medium">ফেসবুক</h4>
+                  <p className="text-xs text-muted-foreground">পোস্ট, স্টোরি, গ্রুপ</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4 flex items-center gap-3">
+                <Instagram className="h-6 w-6 text-pink-600" />
+                <div>
+                  <h4 className="font-medium">ইনস্টাগ্রাম</h4>
+                  <p className="text-xs text-muted-foreground">ফিড, স্টোরি, রিলস</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4 flex items-center gap-3">
+                <Twitter className="h-6 w-6 text-blue-400" />
+                <div>
+                  <h4 className="font-medium">টুইটার</h4>
+                  <p className="text-xs text-muted-foreground">টুইট, রিট্যুইট</p>
+                </div>
+              </CardContent>
+            </Card>
           </div>
-          <Button size="sm" variant="outline">আনলক</Button>
-        </div>
-
-        <div className="flex items-center gap-3 border p-3 rounded-lg">
-          <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" />
-              <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" />
-            </svg>
-          </div>
-          <div className="flex-1">
-            <h4 className="text-sm font-medium">সোশ্যাল মিডিয়া ইন্টিগ্রেশন</h4>
-            <p className="text-xs text-muted-foreground">ফেসবুক, ইন্সটাগ্রাম এবং আরও অনেক কিছু</p>
-          </div>
-          <Button size="sm" variant="outline">কানেক্ট</Button>
-        </div>
-
-        <div className="p-3 border rounded-md bg-gray-50 text-center">
-          <p className="text-xs text-gray-500">
-            এই টুলগুলি দিয়ে আপনি আপনার ব্যবসা বাড়ানোর জন্য মার্কেটিং ক্যাম্পেইন চালাতে পারবেন।
-            আরও জানতে <span className="text-primary cursor-pointer">হেল্প সেন্টার</span> দেখুন।
-          </p>
-        </div>
-      </CardContent>
-    </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 };
 
