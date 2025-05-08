@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Pencil,
@@ -27,7 +28,7 @@ import {
   Play,
   Download,
   Clock,
-  Bell as BellIcon,
+  Bell,
   Smartphone,
   Monitor,
   MessageSquare,
@@ -702,4 +703,237 @@ const ContentDashboard = () => {
                     <div>
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-sm">ইমেইল</span>
-                        <span className="text
+                        <span className="text-sm font-medium">15%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-1.5">
+                        <div className="bg-amber-600 h-1.5 rounded-full" style={{ width: '15%' }}></div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm">অন্যান্য</span>
+                        <span className="text-sm font-medium">10%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-1.5">
+                        <div className="bg-purple-600 h-1.5 rounded-full" style={{ width: '10%' }}></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+        
+        {/* Monetization Tab */}
+        <TabsContent value="monetization">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <CardTitle>মাসিক আয়</CardTitle>
+                <CardDescription>কন্টেন্ট থেকে মাসিক আয়ের পরিসংখ্যান</CardDescription>
+              </CardHeader>
+              <CardContent className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={revenueData}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip formatter={(value) => [`৳${value}`, 'আয়']} />
+                    <Bar dataKey="revenue" name="আয়" fill="#8b5cf6" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>আয় বিভাজন</CardTitle>
+                <CardDescription>কন্টেন্ট ক্যাটাগরি অনুযায়ী আয়</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-80">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChartComponent>
+                      <Pie
+                        data={[
+                          { name: 'কোর্স', value: 55 },
+                          { name: 'ইবুক', value: 25 },
+                          { name: 'সাবস্ক্রিপশন', value: 15 },
+                          { name: 'অন্যান্য', value: 5 }
+                        ]}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {contentTypeData.map((_, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip formatter={(value) => [`${value}%`, 'শতাংশ']} />
+                    </PieChartComponent>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle>সেরা বিক্রয়কারী কন্টেন্ট</CardTitle>
+              <CardDescription>সবচেয়ে বেশি বিক্রয় হওয়া টপ কন্টেন্ট</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left font-medium p-2">কন্টেন্ট নাম</th>
+                      <th className="text-left font-medium p-2">ধরণ</th>
+                      <th className="text-left font-medium p-2">বিক্রয় সংখ্যা</th>
+                      <th className="text-left font-medium p-2">রেভিনিউ</th>
+                      <th className="text-left font-medium p-2">রেটিং</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {topContent.map((content, idx) => (
+                      <tr key={idx} className="border-b last:border-0">
+                        <td className="p-2">{content.name}</td>
+                        <td className="p-2">
+                          <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+                            {content.type}
+                          </Badge>
+                        </td>
+                        <td className="p-2">{Math.round(content.views / 10)}</td>
+                        <td className="p-2 font-medium">৳{content.revenue.toLocaleString()}</td>
+                        <td className="p-2">
+                          <span className="flex items-center">
+                            <Star className="h-3 w-3 fill-amber-400 text-amber-400 mr-1" />
+                            {content.rating}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>মানিটাইজেশন টিপস</CardTitle>
+                <CardDescription>আপনার কন্টেন্ট থেকে আয় বাড়ানোর উপায়</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center shrink-0">
+                      <Bell className="h-4 w-4 text-purple-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-sm">ফ্রী টিজার কন্টেন্ট</h4>
+                      <p className="text-sm text-muted-foreground mt-1">আপনার প্রিমিয়াম কোর্সের কিছু অংশ ফ্রি দিয়ে আরও খরিদদার আকৃষ্ট করুন।</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center shrink-0">
+                      <CircleDollarSign className="h-4 w-4 text-purple-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-sm">বান্ডেল অফার</h4>
+                      <p className="text-sm text-muted-foreground mt-1">একাধিক কন্টেন্ট একসাথে প্যাকেজে বিক্রয় করে আয় বাড়ান।</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center shrink-0">
+                      <Users className="h-4 w-4 text-purple-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-sm">মাসিক সাবস্ক্রিপশন</h4>
+                      <p className="text-sm text-muted-foreground mt-1">সাবস্ক্রিপশন মডেল সেট করে নিয়মিত আয়ের ব্যবস্থা করুন।</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <CardTitle>আয় বৃদ্ধির লক্ষ্যমাত্রা</CardTitle>
+                <CardDescription>আগামী মাসের জন্য লক্ষ্যমাত্রা পরিকল্পনা</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <div>
+                        <h4 className="font-medium">নতুন সাবস্ক্রাইবার</h4>
+                        <p className="text-sm text-muted-foreground">চলতি: {currentStats.subscribers}</p>
+                      </div>
+                      <span className="text-sm font-medium">লক্ষ্য: 500</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-purple-600 h-2 rounded-full" 
+                        style={{ width: `${(currentStats.subscribers / 500) * 100}%` }}
+                      ></div>
+                    </div>
+                    <p className="text-xs text-right mt-1">{Math.round((currentStats.subscribers / 500) * 100)}% সম্পন্ন</p>
+                  </div>
+                  
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <div>
+                        <h4 className="font-medium">মাসিক আয়</h4>
+                        <p className="text-sm text-muted-foreground">চলতি: {currentStats.totalRevenue}</p>
+                      </div>
+                      <span className="text-sm font-medium">লক্ষ্য: ৳৫০,০০০</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-purple-600 h-2 rounded-full" 
+                        style={{ width: `${(parseInt(currentStats.totalRevenue.replace(/[^\d]/g, '')) / 50000) * 100}%` }}
+                      ></div>
+                    </div>
+                    <p className="text-xs text-right mt-1">{Math.round((parseInt(currentStats.totalRevenue.replace(/[^\d]/g, '')) / 50000) * 100)}% সম্পন্ন</p>
+                  </div>
+                  
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <div>
+                        <h4 className="font-medium">নতুন কন্টেন্ট</h4>
+                        <p className="text-sm text-muted-foreground">চলতি: 2</p>
+                      </div>
+                      <span className="text-sm font-medium">লক্ষ্য: 5</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-purple-600 h-2 rounded-full" 
+                        style={{ width: `${(2 / 5) * 100}%` }}
+                      ></div>
+                    </div>
+                    <p className="text-xs text-right mt-1">{Math.round((2 / 5) * 100)}% সম্পন্ন</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};
+
+export default ContentDashboard;
