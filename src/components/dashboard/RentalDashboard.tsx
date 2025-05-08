@@ -1,684 +1,491 @@
 
-import React from 'react';
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  LineChart,
-  Line,
-  Legend
-} from 'recharts';
+import React, { useState } from 'react';
 import { 
   Building, 
-  Plus, 
-  Edit, 
   Calendar, 
-  Check, 
-  Key, 
-  Wrench, 
-  AlarmClock, 
-  AlertTriangle,
-  Home,
-  Users,
-  MessageSquare,
-  Star,
-  ChevronRight,
-  ArrowUp,
+  CircleDollarSign, 
+  Clock, 
+  Home, 
+  Percent, 
+  TrendingUp, 
+  Users, 
+  CheckCircle, 
+  ArrowUp, 
   ArrowDown,
-  Clock,
-  DollarSign,
-  Receipt,
-  Circle
+  Filter,
+  Map,
+  Settings,
+  HelpCircle,
+  Eye
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  Tabs, 
-  TabsContent, 
-  TabsList, 
-  TabsTrigger 
-} from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Progress } from '@/components/ui/progress';
-
-// আয় ডেটা
-const incomeData = [
-  { name: 'জানু', income: 12000 },
-  { name: 'ফেব্রু', income: 15000 },
-  { name: 'মার্চ', income: 18000 },
-  { name: 'এপ্রিল', income: 16000 },
-  { name: 'মে', income: 21000 },
-  { name: 'জুন', income: 19000 },
-  { name: 'জুলাই', income: 22000 },
-];
-
-// অকুপেন্সি রেট ডেটা
-const occupancyData = [
-  { name: 'জানু', rate: 75 },
-  { name: 'ফেব্রু', rate: 82 },
-  { name: 'মার্চ', rate: 90 },
-  { name: 'এপ্রিল', rate: 85 },
-  { name: 'মে', rate: 88 },
-  { name: 'জুন', rate: 92 },
-  { name: 'জুলাই', rate: 80 },
-];
-
-// সম্পত্তি বিভাজন
-const propertyTypeData = [
-  { name: 'অ্যাপার্টমেন্ট', value: 45 },
-  { name: 'হাউস', value: 25 },
-  { name: 'কমার্শিয়াল', value: 15 },
-  { name: 'অন্যান্য', value: 15 },
-];
-
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-
-// রেন্টাল লিস্টিং
-const rentalListings = [
-  { 
-    id: 1, 
-    name: 'মডার্ন ২ বেড অ্যাপার্টমেন্ট', 
-    type: 'অ্যাপার্টমেন্ট', 
-    location: 'গুলশান, ঢাকা', 
-    price: '৳ ৩৫,০০০/মাস', 
-    status: 'অকুপাইড', 
-    occupiedTill: '৩১ আগস্ট, ২০২৫', 
-    rating: 4.8 
-  },
-  { 
-    id: 2, 
-    name: 'ফার্নিশড ১ বেড অ্যাপার্টমেন্ট', 
-    type: 'অ্যাপার্টমেন্ট', 
-    location: 'ধানমন্ডি, ঢাকা', 
-    price: '৳ ২২,০০০/মাস', 
-    status: 'অকুপাইড', 
-    occupiedTill: '১৫ জুলাই, ২০২৫', 
-    rating: 4.5 
-  },
-  { 
-    id: 3, 
-    name: '৩ বেড ফ্যামিলি হাউস', 
-    type: 'হাউস', 
-    location: 'উত্তরা, ঢাকা', 
-    price: '৳ ৪৫,০০০/মাস', 
-    status: 'এভেইলেবল', 
-    occupiedTill: null, 
-    rating: 4.9 
-  },
-  { 
-    id: 4, 
-    name: 'অফিস স্পেস', 
-    type: 'কমার্শিয়াল', 
-    location: 'বনানী, ঢাকা', 
-    price: '৳ ৮০,০০০/মাস', 
-    status: 'অকুপাইড', 
-    occupiedTill: '৩১ ডিসেম্বর, ২০২৫', 
-    rating: 4.7 
-  },
-  { 
-    id: 5, 
-    name: 'ইভেন্ট স্পেস', 
-    type: 'অন্যান্য', 
-    location: 'বসুন্ধরা, ঢাকা', 
-    price: '৳ ১৫,০০০/দিন', 
-    status: 'এভেইলেবল', 
-    occupiedTill: null, 
-    rating: 4.6 
-  },
-];
-
-// সাম্প্রতিক বুকিং
-const recentBookings = [
-  { 
-    id: 'BK-001', 
-    property: 'মডার্ন ২ বেড অ্যাপার্টমেন্ট', 
-    tenant: 'আবদুল করিম', 
-    startDate: '০১ মে, ২০২৫', 
-    endDate: '৩০ এপ্রিল, ২০২৬', 
-    status: 'কনফার্মড', 
-    amount: '৳ ৪,২০,০০০', 
-    time: '১ দিন আগে' 
-  },
-  { 
-    id: 'BK-002', 
-    property: 'অফিস স্পেস', 
-    tenant: 'টেক সলিউশনস লিমিটেড', 
-    startDate: '০১ জুন, ২০২৫', 
-    endDate: '৩১ মে, ২০২৬', 
-    status: 'পেন্ডিং', 
-    amount: '৳ ৯,৬০,০০০', 
-    time: '৫ ঘন্টা আগে' 
-  },
-  { 
-    id: 'BK-003', 
-    property: 'ইভেন্ট স্পেস', 
-    tenant: 'ইভেন্ট প্লানার্স', 
-    startDate: '২৫ এপ্রিল, ২০২৫', 
-    endDate: '২৬ এপ্রিল, ২০২৫', 
-    status: 'কনফার্মড', 
-    amount: '৳ ৩০,০০০', 
-    time: '১২ ঘন্টা আগে' 
-  },
-  { 
-    id: 'BK-004', 
-    property: 'ফার্নিশড ১ বেড অ্যাপার্টমেন্ট', 
-    tenant: 'ফারহানা রহমান', 
-    startDate: '১৫ মে, ২০২৫', 
-    endDate: '১৪ নভেম্বর, ২০২৫', 
-    status: 'পেন্ডিং', 
-    amount: '৳ ১,৩২,০০০', 
-    time: '২ দিন আগে' 
-  },
-];
-
-// মেইনটেনেন্স রিকোয়েস্ট
-const maintenanceRequests = [
-  { 
-    id: 'MR-001', 
-    property: 'মডার্ন ২ বেড অ্যাপার্টমেন্ট', 
-    issue: 'এয়ার কন্ডিশনার সমস্যা', 
-    priority: 'হাই', 
-    requestedBy: 'আবদুল করিম', 
-    status: 'পেন্ডিং', 
-    requestedDate: '১৫ এপ্রিল, ২০২৫' 
-  },
-  { 
-    id: 'MR-002', 
-    property: 'ফার্নিশড ১ বেড অ্যাপার্টমেন্ট', 
-    issue: 'পানির পাইপ লিক', 
-    priority: 'মিডিয়াম', 
-    requestedBy: 'মাহমুদা বেগম', 
-    status: 'প্রসেসিং', 
-    requestedDate: '১২ এপ্রিল, ২০২৫' 
-  },
-  { 
-    id: 'MR-003', 
-    property: 'অফিস স্পেস', 
-    issue: 'ইন্টারনেট সংযোগ সমস্যা', 
-    priority: 'হাই', 
-    requestedBy: 'টেক সলিউশনস লিমিটেড', 
-    status: 'কমপ্লিটেড', 
-    requestedDate: '১০ এপ্রিল, ২০২৫' 
-  },
-];
-
-// বুকিং স্ট্যাটাস বেজ
-const bookingStatusBadge = (status: string) => {
-  switch (status) {
-    case 'কনফার্মড':
-      return <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">কনফার্মড</Badge>;
-    case 'পেন্ডিং':
-      return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-200">পেন্ডিং</Badge>;
-    case 'ক্যানসেলড':
-      return <Badge variant="outline" className="bg-red-100 text-red-800 border-red-200">ক্যানসেলড</Badge>;
-    default:
-      return <Badge variant="outline">{status}</Badge>;
-  }
-};
-
-// মেইনটেনেন্স প্রায়োরিটি বেজ
-const priorityBadge = (priority: string) => {
-  switch (priority) {
-    case 'হাই':
-      return <Badge variant="outline" className="bg-red-100 text-red-800 border-red-200">হাই</Badge>;
-    case 'মিডিয়াম':
-      return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-200">মিডিয়াম</Badge>;
-    case 'লো':
-      return <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">লো</Badge>;
-    default:
-      return <Badge variant="outline">{priority}</Badge>;
-  }
-};
-
-// মেইনটেনেন্স স্ট্যাটাস বেজ
-const maintenanceStatusBadge = (status: string) => {
-  switch (status) {
-    case 'পেন্ডিং':
-      return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-200">পেন্ডিং</Badge>;
-    case 'প্রসেসিং':
-      return <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">প্রসেসিং</Badge>;
-    case 'কমপ্লিটেড':
-      return <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">কমপ্লিটেড</Badge>;
-    default:
-      return <Badge variant="outline">{status}</Badge>;
-  }
-};
+import { Badge } from '@/components/ui/badge';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const RentalDashboard = () => {
+  const [dateRange, setDateRange] = useState('this-month');
+  
+  // Mock rental data
+  const rentalStats = {
+    'this-month': {
+      totalRevenue: '৳৪৫,৮০০',
+      totalBookings: 32,
+      properties: 15,
+      occupancyRate: 75,
+      growth: 15.3,
+      activeRentals: 24
+    },
+    'last-month': {
+      totalRevenue: '৳৩৯,৬৫০',
+      totalBookings: 28,
+      properties: 15,
+      occupancyRate: 68,
+      growth: 12.1,
+      activeRentals: 22
+    },
+    'this-year': {
+      totalRevenue: '৳২৩৫,৭৮০',
+      totalBookings: 185,
+      properties: 15,
+      occupancyRate: 72,
+      growth: 24.7,
+      activeRentals: 24
+    }
+  };
+  
+  const currentStats = rentalStats[dateRange as keyof typeof rentalStats];
+  
+  // Mock revenue data for charts
+  const revenueData = [
+    { name: 'জানু', revenue: 3000 },
+    { name: 'ফেব্রু', revenue: 3500 },
+    { name: 'মার্চ', revenue: 4200 },
+    { name: 'এপ্রিল', revenue: 4800 },
+    { name: 'মে', revenue: 5200 },
+    { name: 'জুন', revenue: 4500 },
+    { name: 'জুলাই', revenue: 4000 },
+  ];
+  
+  // Property type distribution data
+  const propertyTypeData = [
+    { name: 'আবাসিক', value: 40 },
+    { name: 'বাণিজ্যিক', value: 25 },
+    { name: 'অফিস', value: 20 },
+    { name: 'ওয়্যারহাউস', value: 15 },
+  ];
+  
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+  
+  // Mock property list
+  const topProperties = [
+    { name: 'গুলশান লেক ভিউ অ্যাপার্টমেন্ট', revenue: 12800, occupancy: 92, change: 8 },
+    { name: 'বনানী এক্সিকিউটিভ সুইট', revenue: 10500, occupancy: 85, change: 5 },
+    { name: 'উত্তরা রেসিডেন্স', revenue: 8900, occupancy: 78, change: -3 },
+    { name: 'বসুন্ধরা বিজনেস সেন্টার', revenue: 7800, occupancy: 81, change: 12 },
+    { name: 'মিরপুর ফ্যামিলি এপার্টমেন্ট', revenue: 6500, occupancy: 74, change: -2 },
+  ];
+  
+  // Mock recent bookings
+  const recentBookings = [
+    { id: "BK-001", customer: "রহিম হোসেন", property: "গুলশান লেক ভিউ", amount: "৳15,000", checkIn: "৫ জুন", checkOut: "১০ জুন", status: "কনফার্মড" },
+    { id: "BK-002", customer: "ফাতেমা বেগম", property: "বনানী এক্সিকিউটিভ", amount: "৳8,500", checkIn: "৭ জুন", checkOut: "১২ জুন", status: "পেন্ডিং" },
+    { id: "BK-003", customer: "করিম আলী", property: "উত্তরা রেসিডেন্স", amount: "৳12,000", checkIn: "৮ জুন", checkOut: "১৫ জুন", status: "কনফার্মড" },
+    { id: "BK-004", customer: "আমিনা খাতুন", property: "মিরপুর অ্যাপার্টমেন্ট", amount: "৳6,500", checkIn: "১০ জুন", checkOut: "১৫ জুন", status: "ক্যানসেলড" },
+  ];
+  
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between mb-2">
-        <h1 className="text-2xl font-bold">রেন্টাল ড্যাশবোর্ড</h1>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <Calendar className="mr-2 h-4 w-4" />
-            ক্যালেন্ডার ভিউ
-          </Button>
-          <Button size="sm">
-            <Plus className="mr-2 h-4 w-4" />
-            নতুন প্রপার্টি
-          </Button>
+      {/* Dashboard header with title and date range selector */}
+      <div className="flex flex-col sm:flex-row items-center justify-between mb-4">
+        <div className="mb-4 sm:mb-0">
+          <h2 className="text-2xl font-bold flex items-center">
+            <Building className="h-6 w-6 text-emerald-600 mr-2" />
+            রেন্টাল ড্যাশবোর্ড
+          </h2>
+          <p className="text-muted-foreground">আপনার প্রপার্টি ব্যবসার বিস্তারিত রিপোর্ট</p>
         </div>
+        <Select defaultValue={dateRange} onValueChange={setDateRange}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="সময়কাল নির্বাচন করুন" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="this-month">এই মাস</SelectItem>
+            <SelectItem value="last-month">গত মাস</SelectItem>
+            <SelectItem value="this-year">এই বছর</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       
-      {/* স্ট্যাটিসটিক কার্ড */}
+      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard 
-          title="মোট আয়"
-          value="৳ ১,২৫,০০০"
-          change={{ value: 12, positive: true }}
-          period="গত মাস থেকে"
-          icon={<DollarSign className="h-5 w-5" />}
-          color="emerald"
-        />
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">মোট আয়</p>
+                <h3 className="text-2xl font-bold mt-1">{currentStats.totalRevenue}</h3>
+                <div className="flex items-center mt-1 text-sm text-emerald-600">
+                  <TrendingUp className="h-4 w-4 mr-1" />
+                  <span>+{currentStats.growth}% গত মাস থেকে</span>
+                </div>
+              </div>
+              <div className="h-12 w-12 bg-emerald-100 rounded-full flex items-center justify-center">
+                <CircleDollarSign className="h-6 w-6 text-emerald-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
         
-        <StatCard 
-          title="অকুপেন্সি রেট"
-          value="৮৫%"
-          change={{ value: 5, positive: true }}
-          period="গত ত্রৈমাসিক থেকে"
-          icon={<Home className="h-5 w-5" />}
-          color="blue"
-        />
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">মোট বুকিং</p>
+                <h3 className="text-2xl font-bold mt-1">{currentStats.totalBookings}</h3>
+                <div className="flex items-center mt-1 text-sm text-emerald-600">
+                  <TrendingUp className="h-4 w-4 mr-1" />
+                  <span>+{Math.round(currentStats.growth * 0.8)}% গত মাস থেকে</span>
+                </div>
+              </div>
+              <div className="h-12 w-12 bg-emerald-100 rounded-full flex items-center justify-center">
+                <Calendar className="h-6 w-6 text-emerald-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
         
-        <StatCard 
-          title="সক্রিয় লিজ"
-          value="১২"
-          change={{ value: 2, positive: true }}
-          period="গত মাস থেকে"
-          icon={<Key className="h-5 w-5" />}
-          color="amber"
-        />
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">অকুপেন্সি রেট</p>
+                <h3 className="text-2xl font-bold mt-1">{currentStats.occupancyRate}%</h3>
+                <div className="flex items-center mt-1 text-sm text-emerald-600">
+                  <TrendingUp className="h-4 w-4 mr-1" />
+                  <span>+{Math.round(currentStats.growth * 0.5)}% গত মাস থেকে</span>
+                </div>
+              </div>
+              <div className="h-12 w-12 bg-emerald-100 rounded-full flex items-center justify-center">
+                <Percent className="h-6 w-6 text-emerald-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
         
-        <StatCard 
-          title="মেইনটেনেন্স রিকোয়েস্ট"
-          value="৫"
-          change={{ value: 1, positive: false }}
-          period="গত সপ্তাহ থেকে"
-          icon={<Wrench className="h-5 w-5" />}
-          color="red"
-        />
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">প্রপার্টি সংখ্যা</p>
+                <h3 className="text-2xl font-bold mt-1">{currentStats.properties}</h3>
+                <div className="flex items-center mt-1 text-sm text-gray-500">
+                  <span>{currentStats.activeRentals} একটিভ রেন্টাল</span>
+                </div>
+              </div>
+              <div className="h-12 w-12 bg-emerald-100 rounded-full flex items-center justify-center">
+                <Home className="h-6 w-6 text-emerald-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
       
-      {/* আয় ও অকুপেন্সি চার্ট */}
-      <Card>
-        <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
-            <CardTitle>আয় এবং অকুপেন্সি ট্রেন্ড</CardTitle>
-            <Tabs defaultValue="sixMonths">
-              <TabsList className="grid grid-cols-3 w-[250px]">
-                <TabsTrigger value="threeMonths">৩ মাস</TabsTrigger>
-                <TabsTrigger value="sixMonths">৬ মাস</TabsTrigger>
-                <TabsTrigger value="yearly">১ বছর</TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={incomeData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis yAxisId="left" />
-                <YAxis yAxisId="right" orientation="right" domain={[0, 100]} />
-                <Tooltip />
-                <Legend />
-                <Line 
-                  yAxisId="left" 
-                  type="monotone" 
-                  dataKey="income" 
-                  name="আয় (৳)" 
-                  stroke="#8884d8" 
-                  activeDot={{ r: 8 }} 
-                />
-                <Line 
-                  yAxisId="right" 
-                  type="monotone" 
-                  dataKey="rate" 
-                  name="অকুপেন্সি রেট (%)" 
-                  stroke="#82ca9d" 
-                  data={occupancyData} 
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
-      
-      {/* প্রপার্টি লিস্টিং এবং বুকিং */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2">
-          <CardHeader className="pb-2 flex flex-row items-center justify-between">
-            <CardTitle>প্রপার্টি লিস্টিং</CardTitle>
-            <div className="flex gap-2">
-              <Select defaultValue="all">
-                <SelectTrigger className="w-36 h-8 text-xs">
-                  <SelectValue placeholder="ফিল্টার" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">সব প্রপার্টি</SelectItem>
-                  <SelectItem value="occupied">অকুপাইড</SelectItem>
-                  <SelectItem value="available">এভেইলেবল</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select defaultValue="all">
-                <SelectTrigger className="w-36 h-8 text-xs">
-                  <SelectValue placeholder="টাইপ" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">সব টাইপ</SelectItem>
-                  <SelectItem value="apartment">অ্যাপার্টমেন্ট</SelectItem>
-                  <SelectItem value="house">হাউস</SelectItem>
-                  <SelectItem value="commercial">কমার্শিয়াল</SelectItem>
-                  <SelectItem value="other">অন্যান্য</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {rentalListings.map((property) => (
-                <div key={property.id} className="border rounded-md p-3 hover:bg-gray-50 transition-colors">
-                  <div className="flex justify-between">
-                    <div>
+      {/* Dashboard Tabs */}
+      <Tabs defaultValue="overview" className="mt-6">
+        <TabsList className="grid w-full grid-cols-3 lg:w-auto">
+          <TabsTrigger value="overview">
+            <Eye className="h-4 w-4 mr-2" />
+            ওভারভিউ
+          </TabsTrigger>
+          <TabsTrigger value="properties">
+            <Home className="h-4 w-4 mr-2" />
+            প্রপার্টি
+          </TabsTrigger>
+          <TabsTrigger value="bookings">
+            <Calendar className="h-4 w-4 mr-2" />
+            বুকিং
+          </TabsTrigger>
+        </TabsList>
+        
+        {/* Overview Tab Content */}
+        <TabsContent value="overview">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <CardTitle>মাসিক রেভেনিউ</CardTitle>
+                <CardDescription>সময় অনুযায়ী আয়ের পরিবর্তন</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-80">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={revenueData}
+                      margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip formatter={(value) => [`৳${value}`, 'রেভেনিউ']} />
+                      <Bar dataKey="revenue" name="রেভেনিউ" fill="#10b981" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>প্রপার্টি টাইপ বিতরণ</CardTitle>
+                <CardDescription>ধরণ অনুসারে প্রপার্টি সংখ্যা</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64 my-4">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={propertyTypeData}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {propertyTypeData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip formatter={(value) => [`${value}%`, 'হার']} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                
+                <div className="space-y-3">
+                  {propertyTypeData.map((property, index) => (
+                    <div key={property.name} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <h3 className="font-medium">{property.name}</h3>
-                        <Badge 
-                          variant="outline" 
-                          className={property.status === 'অকুপাইড' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-green-100 text-green-800 border-green-200'}
-                        >
-                          {property.status}
+                        <div 
+                          className="w-3 h-3 rounded-full" 
+                          style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                        ></div>
+                        <span>{property.name}</span>
+                      </div>
+                      <span className="font-medium">{property.value}%</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>টপ প্রপার্টি</CardTitle>
+                <CardDescription>সর্বোচ্চ আয় সৃষ্টিকারী প্রপার্টি</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {topProperties.map((property, idx) => (
+                    <div key={idx} className="flex justify-between items-center py-3 border-b last:border-0">
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm text-muted-foreground w-5">{idx + 1}.</span>
+                        <span>{property.name}</span>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-medium">৳{property.revenue.toLocaleString()}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-xs text-emerald-600">{property.occupancy}% অকুপেন্সি</span>
+                          <span className={`text-xs flex items-center ${
+                            property.change > 0 ? 'text-green-600' : 'text-red-600'
+                          }`}>
+                            {property.change > 0 ? 
+                              <ArrowUp className="h-3 w-3 mr-1" /> : 
+                              <ArrowDown className="h-3 w-3 mr-1" />
+                            }
+                            {Math.abs(property.change)}%
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>সাম্প্রতিক বুকিং</CardTitle>
+                <CardDescription>সর্বশেষ বুকিংসমূহ</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {recentBookings.map((booking, idx) => (
+                    <div key={idx} className="flex justify-between items-center py-3 border-b last:border-0">
+                      <div>
+                        <p className="font-medium">{booking.property}</p>
+                        <p className="text-xs text-muted-foreground">{booking.customer}</p>
+                        <p className="text-xs text-muted-foreground">{booking.checkIn} - {booking.checkOut}</p>
+                      </div>
+                      <div className="text-right">
+                        <Badge variant="outline" className={
+                          booking.status === "কনফার্মড" ? "bg-green-100 text-green-800 border-green-200" :
+                          booking.status === "পেন্ডিং" ? "bg-amber-100 text-amber-800 border-amber-200" :
+                          "bg-red-100 text-red-800 border-red-200"
+                        }>
+                          {booking.status}
                         </Badge>
+                        <p className="font-medium mt-1">{booking.amount}</p>
                       </div>
-                      <p className="text-sm text-gray-500 flex items-center gap-2 mt-1">
-                        <span className="flex items-center gap-1">
-                          <Building className="h-3 w-3" />
-                          {property.type}
-                        </span>
-                        <span>•</span>
-                        <span className="flex items-center gap-1">
-                          <MapPin className="h-3 w-3" />
-                          {property.location}
-                        </span>
-                        {property.status === 'অকুপাইড' && (
-                          <>
-                            <span>•</span>
-                            <span className="flex items-center gap-1">
-                              <Calendar className="h-3 w-3" />
-                              {property.occupiedTill}
-                            </span>
-                          </>
-                        )}
-                      </p>
                     </div>
-                    <div className="text-right">
-                      <p className="font-medium text-primary">{property.price}</p>
-                      <p className="text-xs text-muted-foreground flex items-center justify-end gap-1 mt-1">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                        {property.rating}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex justify-end gap-2 mt-3">
-                    <Button size="sm" variant="outline">বিস্তারিত দেখুন</Button>
-                    <Button size="sm" variant="outline">এডিট করুন</Button>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            
-            <Button variant="outline" size="sm" className="w-full mt-4">
-              সব প্রপার্টি দেখুন
-              <ChevronRight className="h-4 w-4 ml-2" />
-            </Button>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          </div>
+          
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle>মেইন্টেন্যান্স এবং পরিষেবা</CardTitle>
+              <CardDescription>প্রপার্টির রক্ষণাবেক্ষণ এবং পরিষেবা বিবরণ</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="border rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <h3 className="font-medium">কমপ্লিট সার্ভিস</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground">৮টি প্রপার্টি সম্পূর্ণ মেইন্টেন্যান্স সম্পন্ন</p>
+                </div>
+                
+                <div className="border rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Clock className="h-5 w-5 text-amber-600" />
+                    <h3 className="font-medium">পেন্ডিং সার্ভিস</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground">৫টি প্রপার্টি এখনো সার্ভিসিং এ আছে</p>
+                </div>
+                
+                <div className="border rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Calendar className="h-5 w-5 text-blue-600" />
+                    <h3 className="font-medium">আগামী সার্ভিস</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground">২টি প্রপার্টির সার্ভিস আগামী সপ্তাহে শিডিউলড</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
         
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle>প্রপার্টি টাইপ বিভাজন</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-52 mb-4">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={propertyTypeData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {propertyTypeData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
+        {/* Properties Tab Content */}
+        <TabsContent value="properties">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" className="gap-2">
+                <Filter className="h-4 w-4" />
+                ফিল্টার
+              </Button>
+              <Button variant="outline" size="sm" className="gap-2">
+                <Map className="h-4 w-4" />
+                ম্যাপ ভিউ
+              </Button>
+              <Button variant="outline" size="sm" className="gap-2">
+                <Settings className="h-4 w-4" />
+                সেটিংস
+              </Button>
             </div>
-            
-            <div className="space-y-2">
-              {propertyTypeData.map((entry, index) => (
-                <div key={entry.name} className="flex justify-between items-center">
-                  <div className="flex items-center">
-                    <div 
-                      className="w-3 h-3 rounded-full mr-2" 
-                      style={{ backgroundColor: COLORS[index % COLORS.length] }} 
-                    />
-                    <span>{entry.name}</span>
-                  </div>
-                  <span className="font-medium">{entry.value}%</span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      
-      {/* বুকিং এবং মেইনটেনেন্স */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle>সাম্প্রতিক বুকিং</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentBookings.map((booking) => (
-                <div key={booking.id} className="border-b pb-4 last:border-0 last:pb-0">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium">{booking.id}</p>
-                        {bookingStatusBadge(booking.status)}
-                      </div>
-                      <p className="text-sm font-medium mt-1">{booking.property}</p>
-                      <p className="text-sm text-gray-500">ভাড়াটিয়া: {booking.tenant}</p>
-                      <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
-                        <Calendar className="h-3 w-3" />
-                        {booking.startDate} - {booking.endDate}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium">{booking.amount}</p>
-                      <p className="text-xs text-gray-500 flex items-center justify-end gap-1 mt-1">
-                        <Clock className="h-3 w-3" />
-                        {booking.time}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            <Button variant="outline" size="sm" className="w-full mt-4">
-              সব বুকিং দেখুন
-              <ChevronRight className="h-4 w-4 ml-2" />
-            </Button>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle>মেইনটেনেন্স রিকোয়েস্ট</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {maintenanceRequests.map((request) => (
-                <div key={request.id} className="border-b pb-4 last:border-0 last:pb-0">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium">{request.id}</p>
-                        {priorityBadge(request.priority)}
-                        {maintenanceStatusBadge(request.status)}
-                      </div>
-                      <p className="text-sm font-medium mt-1">{request.property}</p>
-                      <p className="text-sm text-gray-500">সমস্যা: {request.issue}</p>
-                      <p className="text-sm text-gray-500">অনুরোধকারী: {request.requestedBy}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xs text-gray-500 flex items-center justify-end gap-1">
-                        <Calendar className="h-3 w-3" />
-                        {request.requestedDate}
-                      </p>
-                      {request.status !== 'কমপ্লিটেড' && (
-                        <Button size="sm" variant="outline" className="mt-2">অ্যাকশন নিন</Button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            <Button variant="outline" size="sm" className="w-full mt-4">
-              সব রিকোয়েস্ট দেখুন
-              <ChevronRight className="h-4 w-4 ml-2" />
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-      
-      {/* এসেট ম্যানেজমেন্ট */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle>এজেন্সি ড্যাশবোর্ড</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="border rounded-md p-4">
-              <div className="flex items-center gap-3">
-                <div className="bg-blue-100 p-2 rounded-full">
-                  <Receipt className="h-5 w-5 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="font-medium">পেমেন্ট স্ট্যাটাস</h3>
-                  <p className="text-sm text-gray-500 mt-1">৩টি পেমেন্ট ডিউ আগামী সপ্তাহে</p>
-                  <Button variant="link" className="px-0 h-6 text-blue-600 mt-1">পেমেন্ট চেক করুন</Button>
-                </div>
-              </div>
-            </div>
-            
-            <div className="border rounded-md p-4">
-              <div className="flex items-center gap-3">
-                <div className="bg-green-100 p-2 rounded-full">
-                  <Check className="h-5 w-5 text-green-600" />
-                </div>
-                <div>
-                  <h3 className="font-medium">লিজ রিনিউয়াল</h3>
-                  <p className="text-sm text-gray-500 mt-1">২টি লিজ শেষ হচ্ছে ৩০ দিনের মধ্যে</p>
-                  <Button variant="link" className="px-0 h-6 text-green-600 mt-1">রিনিউয়াল শুরু করুন</Button>
-                </div>
-              </div>
-            </div>
-            
-            <div className="border rounded-md p-4">
-              <div className="flex items-center gap-3">
-                <div className="bg-purple-100 p-2 rounded-full">
-                  <Users className="h-5 w-5 text-purple-600" />
-                </div>
-                <div>
-                  <h3 className="font-medium">টেনেন্ট রিকোয়েস্ট</h3>
-                  <p className="text-sm text-gray-500 mt-1">৪টি নতুন ভাড়া অনুরোধ</p>
-                  <Button variant="link" className="px-0 h-6 text-purple-600 mt-1">রিকোয়েস্ট রিভিউ করুন</Button>
-                </div>
-              </div>
+            <div>
+              <Button className="gap-2">
+                <Home className="h-4 w-4" />
+                নতুন প্রপার্টি যোগ করুন
+              </Button>
             </div>
           </div>
-        </CardContent>
-      </Card>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[...Array(6)].map((_, idx) => (
+              <Card key={idx} className="overflow-hidden">
+                <div className="aspect-video bg-muted relative">
+                  <Badge className="absolute top-2 right-2 bg-emerald-100 text-emerald-800 border-0">
+                    ভাড়া দেওয়া হয়নি
+                  </Badge>
+                </div>
+                <CardContent className="p-4">
+                  <h3 className="font-medium mb-1">গুলশান-২ লেক ভিউ অ্যাপার্টমেন্ট #{idx + 1}</h3>
+                  <p className="text-sm text-muted-foreground mb-2">বাসা #৫, রোড #১০৩, গুলশান-২</p>
+                  <div className="flex justify-between items-center">
+                    <p className="font-medium text-emerald-600">৳১৫,০০০/মাস</p>
+                    <Badge variant="outline" className="bg-emerald-100 text-emerald-800 border-emerald-200">
+                      ভাড়া দেওয়া হয়নি
+                    </Badge>
+                  </div>
+                </CardContent>
+                <CardFooter className="p-4 pt-0 flex justify-between gap-2">
+                  <Button variant="outline" size="sm" className="flex-1">দেখুন</Button>
+                  <Button size="sm" className="flex-1">এডিট করুন</Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+          
+          <div className="mt-6 flex justify-center">
+            <Button variant="outline">আরও প্রপার্টি দেখুন</Button>
+          </div>
+        </TabsContent>
+        
+        {/* Bookings Tab Content */}
+        <TabsContent value="bookings">
+          <Card>
+            <CardHeader>
+              <CardTitle>সাম্প্রতিক বুকিং</CardTitle>
+              <CardDescription>সর্বশেষ বুকিং এবং স্ট্যাটাস</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {[...Array(8)].map((_, idx) => (
+                  <div key={idx} className="flex flex-col md:flex-row justify-between items-start md:items-center py-4 border-b last:border-0">
+                    <div className="flex items-start gap-3 mb-2 md:mb-0">
+                      <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                        <Users className="h-5 w-5 text-gray-600" />
+                      </div>
+                      <div>
+                        <p className="font-medium">বুকিং #{1000 + idx}</p>
+                        <p className="text-sm text-muted-foreground">গ্রাহক: আব্দুর রহিম</p>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <Clock className="h-3 w-3" />
+                          <span>চেক-ইন: জুন ১০, চেক-আউট: জুন ১৫</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4">
+                      <Badge variant={idx % 3 === 0 ? "default" : (idx % 3 === 1 ? "outline" : "secondary")}>
+                        {idx % 3 === 0 ? "কনফার্মড" : (idx % 3 === 1 ? "পেন্ডিং" : "কমপ্লিটেড")}
+                      </Badge>
+                      <p className="font-medium">৳{(8000 + idx * 1000).toLocaleString()}</p>
+                      <Button variant="outline" size="sm" className="mt-2 md:mt-0">
+                        <Eye className="h-4 w-4 mr-2" />
+                        বিস্তারিত
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button variant="outline" className="w-full">
+                সব বুকিং দেখুন
+              </Button>
+            </CardFooter>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
-  );
-};
-
-const MapPin = ({ className }: { className?: string }) => (
-  <Circle className={className} />
-);
-
-// স্ট্যাট কার্ড কম্পোনেন্ট
-const StatCard = ({ 
-  title, 
-  value, 
-  change, 
-  period, 
-  icon, 
-  color 
-}: {
-  title: string;
-  value: string;
-  change: { value: number; positive: boolean };
-  period: string;
-  icon: React.ReactNode;
-  color: 'blue' | 'emerald' | 'amber' | 'red';
-}) => {
-  
-  const bgColors = {
-    blue: 'bg-blue-100',
-    emerald: 'bg-emerald-100',
-    amber: 'bg-amber-100',
-    red: 'bg-red-100'
-  };
-  
-  const textColors = {
-    blue: 'text-blue-600',
-    emerald: 'text-emerald-600',
-    amber: 'text-amber-600',
-    red: 'text-red-600'
-  };
-  
-  return (
-    <Card>
-      <CardContent className="p-4 flex justify-between items-center">
-        <div>
-          <p className="text-sm text-muted-foreground">{title}</p>
-          <h3 className="text-2xl font-bold">{value}</h3>
-          <p className={`text-xs flex items-center mt-1 ${change.positive ? 'text-green-600' : 'text-red-600'}`}>
-            {change.positive ? <ArrowUp className="h-3 w-3 mr-1" /> : <ArrowDown className="h-3 w-3 mr-1" />}
-            {change.value}% {period}
-          </p>
-        </div>
-        <div className={`w-10 h-10 ${bgColors[color]} rounded-full flex items-center justify-center`}>
-          <div className={`h-5 w-5 ${textColors[color]}`}>
-            {icon}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
   );
 };
 
