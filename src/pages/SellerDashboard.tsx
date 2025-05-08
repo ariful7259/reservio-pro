@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { 
   BarChart, 
@@ -40,7 +39,7 @@ import RevenueChart from '@/components/dashboard/RevenueChart';
 import OrderBookingManagement from '@/components/dashboard/OrderBookingManagement';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-// নতুন যোগ করা কম্পোনেন্টস
+// Import all the required components that were missing
 import IntegratedBookingCalendar from '@/components/dashboard/IntegratedBookingCalendar';
 import OrderTrackingSystem from '@/components/dashboard/OrderTrackingSystem';
 import ProductServiceManagement from '@/components/dashboard/ProductServiceManagement';
@@ -61,17 +60,17 @@ const SellerDashboard = () => {
     newMessages: 7 
   });
   
-  // ব্যবসা টাইপ পরিবর্তন হ্যান্ডেলার
+  // Handle business type change
   const handleBusinessTypeChange = (type: string | null) => {
     setActiveBusinessType(type);
   };
 
-  // মডিউল পরিবর্তন হ্যান্ডেলার
+  // Handle module change
   const handleModuleChange = (module: string | null) => {
     setActiveModule(module);
   };
 
-  // মক ব্যবসা টাইপ ডাটা
+  // Business type data
   const businessTypes = [
     { id: 'marketplace', name: 'মার্কেটপ্লেস', icon: <ShoppingBag className="h-5 w-5" /> },
     { id: 'rental', name: 'রেন্টাল', icon: <Building className="h-5 w-5" /> },
@@ -79,7 +78,7 @@ const SellerDashboard = () => {
     { id: 'content', name: 'ডিজিটাল কন্টেন্ট', icon: <Pencil className="h-5 w-5" /> }
   ];
   
-  // মক স্ট্যাটস ডাটা
+  // Stats data
   const stats = {
     'this-month': {
       sales: '৳১৫,৯৫০',
@@ -115,14 +114,14 @@ const SellerDashboard = () => {
   
   const currentStats = stats[dateRange as keyof typeof stats];
 
-  // রিপোর্ট ডাউনলোড হ্যান্ডেলার
+  // Report download handler
   const handleDownloadReport = () => {
     alert('রিপোর্ট ডাউনলোড প্রসেসিং শুরু হয়েছে');
   };
 
   return (
     <div className="container pt-20 pb-16">
-      {/* হেডার সেকশন */}
+      {/* Header section */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold">বিক্রেতা ড্যাশবোর্ড</h1>
@@ -155,14 +154,14 @@ const SellerDashboard = () => {
         </div>
       </div>
       
-      {/* ব্যবসা টাইপ সিলেক্টর */}
+      {/* Business type selector */}
       <BusinessTypeSelector 
         businessTypes={businessTypes} 
         activeType={activeBusinessType}
         onChange={handleBusinessTypeChange} 
       />
       
-      {/* ড্যাশবোর্ড ট্যাব */}
+      {/* Dashboard tabs */}
       <Tabs defaultValue="overview" className="mt-6">
         <TabsList className="grid w-full grid-cols-5 md:grid-cols-5 lg:w-auto">
           <TabsTrigger value="overview">
@@ -187,14 +186,14 @@ const SellerDashboard = () => {
           </TabsTrigger>
         </TabsList>
         
-        {/* অভারভিউ ট্যাব */}
+        {/* Overview tab */}
         <TabsContent value="overview" className="space-y-6">
-          {/* অ্যালার্ট নোটিফিকেশন সিস্টেম */}
+          {/* Alert notifications system */}
           <AlertNotifications alertsCount={alertsCount} />
           
-          {/* মূল স্ট্যাটিসটিকস */}
+          {/* Main statistics */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            {/* মোট বিক্রয় */}
+            {/* Total sales */}
             <Card>
               <CardContent className="p-6">
                 <div className="flex justify-between items-start">
@@ -213,7 +212,7 @@ const SellerDashboard = () => {
               </CardContent>
             </Card>
             
-            {/* মোট অর্ডার */}
+            {/* Total orders */}
             <Card>
               <CardContent className="p-6">
                 <div className="flex justify-between items-start">
@@ -232,7 +231,7 @@ const SellerDashboard = () => {
               </CardContent>
             </Card>
             
-            {/* মোট গ্রাহক */}
+            {/* Total customers */}
             <Card>
               <CardContent className="p-6">
                 <div className="flex justify-between items-start">
@@ -251,7 +250,7 @@ const SellerDashboard = () => {
               </CardContent>
             </Card>
             
-            {/* ব্যবসা উপাদান */}
+            {/* Business stock */}
             <Card>
               <CardContent className="p-6">
                 <div className="flex justify-between items-start">
@@ -272,7 +271,7 @@ const SellerDashboard = () => {
             </Card>
           </div>
           
-          {/* রেভিনিউ চার্ট এবং সাম্প্রতিক কার্যকলাপ */}
+          {/* Revenue chart and overall activities */}
           <div className="grid grid-cols-1 lg:grid-cols-7 gap-6">
             <div className="lg:col-span-5">
               <Card>
@@ -313,22 +312,22 @@ const SellerDashboard = () => {
             </div>
           </div>
           
-          {/* অর্ডার এবং প্রোডাক্ট সারসংক্ষেপ */}
+          {/* Orders and products summary */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <OrderBookingManagement />
             
-            {/* ইন্টিগ্রেটেড বুকিং ক্যালেন্ডার */}
+            {/* Integrated booking calendar */}
             <IntegratedBookingCalendar />
           </div>
 
-          {/* মার্কেটিং টুলস এবং ক্রস-প্রমোশন */}
+          {/* Marketing tools and cross-promotion */}
           <MarketingToolsSystem />
           
-          {/* কাস্টমার রিলেশনশিপ ম্যানেজমেন্ট */}
+          {/* Customer relationship management */}
           <CustomerRelationshipManagement />
         </TabsContent>
         
-        {/* এনালিটিক্স ট্যাব */}
+        {/* Analytics tab */}
         <TabsContent value="analytics" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
@@ -347,7 +346,7 @@ const SellerDashboard = () => {
             <Card>
               <CardHeader>
                 <CardTitle>আয় প্রবণতা</CardTitle>
-                <CardDescription>সময় অনুসারে আয়ের পরিবর্তন</CardDescription>
+                <CardDescription>সময় অনুযায়ী আয়ের পরিবর্তন</CardDescription>
               </CardHeader>
               <CardContent className="px-2">
                 <div className="h-[300px] flex items-center justify-center">
@@ -462,7 +461,7 @@ const SellerDashboard = () => {
               </CardContent>
             </Card>
 
-            {/* রিপোর্ট জেনারেটর কম্পোনেন্ট */}
+            {/* Report generator component */}
             <Card className="lg:col-span-2">
               <CardHeader>
                 <CardTitle>কাস্টমাইজড রিপোর্ট</CardTitle>
@@ -480,7 +479,7 @@ const SellerDashboard = () => {
             </Card>
           </div>
 
-          {/* রিপোর্ট জেনারেটর পুরো সেকশন - যখন বাটন ক্লিক হবে */}
+          {/* Report generator section - when button is clicked */}
           {activeModule === 'reports' && (
             <div className="mt-4">
               <ReportGenerator />
@@ -488,7 +487,7 @@ const SellerDashboard = () => {
           )}
         </TabsContent>
         
-        {/* অর্ডার ও বুকিং ট্যাব - অর্ডার ট্র্যাকিং সিস্টেম ইন্টিগ্রেশন */}
+        {/* Orders and booking tab - integrated order tracking system */}
         <TabsContent value="orders" className="space-y-6">
           <OrderTrackingSystem />
           
@@ -508,12 +507,12 @@ const SellerDashboard = () => {
           </Card>
         </TabsContent>
         
-        {/* গ্রাহক ট্যাব - CRM সিস্টেম ইন্টিগ্রেশন */}
+        {/* Customers tab - CRM integration */}
         <TabsContent value="customers" className="space-y-6">
           <CustomerRelationshipManagement />
         </TabsContent>
         
-        {/* প্রোডাক্ট/সার্ভিস ট্যাব - প্রোডাক্ট-সার্ভিস ম্যানেজমেন্ট ইন্টিগ্রেশন */}
+        {/* Products tab - product-service management integration */}
         <TabsContent value="products" className="space-y-6">
           <ProductServiceManagement />
         </TabsContent>

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   FileText, 
@@ -7,14 +6,14 @@ import {
   ChevronDown, 
   PieChart, 
   BarChart, 
-  FileSpreadsheet, 
-  FilePdf,
+  FileSpreadsheet,
   Clock,
   Filter,
   ArrowUpDown,
   Check,
   Loader2,
-  RefreshCw
+  RefreshCw,
+  Plus
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -140,7 +139,7 @@ const mockTemplates: ReportTemplate[] = [
   {
     id: 'TEMP-003',
     name: 'মার্কেটিং ক্যাম্পেইন অ্যানালিসিস',
-    description: 'ক্যাম্পেইন কার্যকারিতা ও ROI বিশ্লেষণ',
+    description: 'ক্যাম্পে���ন কার্যকারিতা ও ROI বিশ্লেষণ',
     type: 'marketing',
     group: 'standard',
     availableFormats: ['pdf', 'excel'],
@@ -210,7 +209,7 @@ const ReportGenerator = () => {
 
   const getReportFormatIcon = (format: string) => {
     switch (format) {
-      case 'pdf': return <FilePdf className="h-4 w-4" />;
+      case 'pdf': return <FileText className="h-4 w-4" />;
       case 'excel': return <FileSpreadsheet className="h-4 w-4" />;
       case 'csv': return <FileText className="h-4 w-4" />;
       default: return <FileText className="h-4 w-4" />;
@@ -241,7 +240,7 @@ const ReportGenerator = () => {
       case 'marketplace': return 'মার্কেটপ্লেস';
       case 'service': return 'সার্ভিস';
       case 'rental': return 'রেন্টাল';
-      case 'content': return 'কন্টেন্ট';
+      case 'content': return 'ক���্টেন্ট';
       default: return type;
     }
   };
