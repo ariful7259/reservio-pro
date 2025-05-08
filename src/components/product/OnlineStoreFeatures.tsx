@@ -163,9 +163,11 @@ const OnlineStoreFeatures = () => {
           কোনো প্রোগ্রামিং জ্ঞান ছাড়াই আপনার ব্যবসার জন্য একটি পেশাদার ওয়েবসাইট তৈরি করুন
         </p>
         <div className="flex flex-wrap justify-center gap-4">
-          <Button size="lg" as={Link} to="/create-store/new">
-            আপনার স্টোর তৈরি করুন
-          </Button>
+          <Link to="/create-store/new">
+            <Button size="lg">
+              আপনার স্টোর তৈরি করুন
+            </Button>
+          </Link>
           <Button variant="outline" size="lg">আরো জানুন</Button>
         </div>
       </div>
