@@ -139,7 +139,7 @@ const mockTemplates: ReportTemplate[] = [
   {
     id: 'TEMP-003',
     name: 'মার্কেটিং ক্যাম্পেইন অ্যানালিসিস',
-    description: 'ক্যাম্পে���ন কার্যকারিতা ও ROI বিশ্লেষণ',
+    description: 'ক্যাম্পে����ন কার্যকারিতা ও ROI বিশ্লেষণ',
     type: 'marketing',
     group: 'standard',
     availableFormats: ['pdf', 'excel'],
@@ -240,7 +240,7 @@ const ReportGenerator = () => {
       case 'marketplace': return 'মার্কেটপ্লেস';
       case 'service': return 'সার্ভিস';
       case 'rental': return 'রেন্টাল';
-      case 'content': return 'ক���্টেন্ট';
+      case 'content': return '������্টেন্ট';
       default: return type;
     }
   };
@@ -696,7 +696,7 @@ const ReportGenerator = () => {
         <div className="flex gap-2">
           <Button variant="outline" size="sm">
             <Download className="h-4 w-4 mr-2" />
-            রিপোর্ট ডাউনলোড করুন
+            রিপোর্ট ডাউনল���ড করুন
           </Button>
           <Button size="sm">
             <Plus className="h-4 w-4 mr-2" />
