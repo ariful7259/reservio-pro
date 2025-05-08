@@ -25,6 +25,7 @@ import SellerDashboard from './pages/SellerDashboard';
 import DashboardLayout from './pages/dashboard/DashboardLayout';
 import ReferralSystem from './pages/ReferralSystem';
 import OnlineStoreFeatures from './components/product/OnlineStoreFeatures';
+import CreateStore from './pages/CreateStore';
 
 const RoutesConfig = () => {
   return (
@@ -52,6 +53,7 @@ const RoutesConfig = () => {
       {/* Digital Creator */}
       <Route path="/digital-creator/store-templates" element={<IndustryTemplates />} />
       <Route path="/create-store" element={<OnlineStoreFeatures />} />
+      <Route path="/create-store/new" element={<CreateStore />} />
       <Route path="/multi-channel" element={<OnlineStoreFeatures />} />
       
       {/* Digital Products Marketplace */}

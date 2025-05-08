@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { 
   Monitor, 
   Smartphone, 
@@ -161,7 +162,12 @@ const OnlineStoreFeatures = () => {
         <p className="text-muted-foreground mb-6 max-w-lg mx-auto">
           কোনো প্রোগ্রামিং জ্ঞান ছাড়াই আপনার ব্যবসার জন্য একটি পেশাদার ওয়েবসাইট তৈরি করুন
         </p>
-        <Button size="lg">শুরু করুন</Button>
+        <div className="flex flex-wrap justify-center gap-4">
+          <Button size="lg" as={Link} to="/create-store/new">
+            আপনার স্টোর তৈরি করুন
+          </Button>
+          <Button variant="outline" size="lg">আরো জানুন</Button>
+        </div>
       </div>
     </div>
   );
