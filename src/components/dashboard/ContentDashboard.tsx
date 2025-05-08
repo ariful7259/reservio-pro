@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Pencil,
@@ -31,7 +30,8 @@ import {
   Bell as BellIcon,
   Smartphone,
   Monitor,
-  MessageSquare
+  MessageSquare,
+  Upload
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -515,7 +515,7 @@ const ContentDashboard = () => {
             </div>
             <div>
               <Button className="gap-2">
-                <FileText className="h-4 w-4" />
+                <Upload className="h-4 w-4" />
                 নতুন কন্টেন্ট যোগ করুন
               </Button>
             </div>
@@ -702,173 +702,4 @@ const ContentDashboard = () => {
                     <div>
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-sm">ইমেইল</span>
-                        <span className="text-sm font-medium">15%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-1.5">
-                        <div className="bg-amber-600 h-1.5 rounded-full" style={{ width: '15%' }}></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-        
-        {/* Monetization Tab */}
-        <TabsContent value="monetization">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="md:col-span-3">
-              <CardHeader>
-                <CardTitle>আয়ের সারাংশ</CardTitle>
-                <CardDescription>আপনার মূল আয়ের উৎস এবং ট্রেন্ড</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="p-4 border rounded-lg">
-                    <div className="flex justify-between items-center mb-2">
-                      <h3 className="font-medium">ডিজিটাল প্রোডাক্ট</h3>
-                      <FileText className="h-5 w-5 text-purple-600" />
-                    </div>
-                    <p className="text-2xl font-bold">৳১৫,৭৫০</p>
-                    <p className="text-sm text-emerald-600">+২৫% গত মাস থেকে</p>
-                  </div>
-                  
-                  <div className="p-4 border rounded-lg">
-                    <div className="flex justify-between items-center mb-2">
-                      <h3 className="font-medium">সাবস্ক্রিপশন</h3>
-                      <Users className="h-5 w-5 text-indigo-600" />
-                    </div>
-                    <p className="text-2xl font-bold">৳৮,২৫০</p>
-                    <p className="text-sm text-emerald-600">+১৫% গত মাস থেকে</p>
-                  </div>
-                  
-                  <div className="p-4 border rounded-lg">
-                    <div className="flex justify-between items-center mb-2">
-                      <h3 className="font-medium">অ্যাফিলিয়েট</h3>
-                      <ExternalLink className="h-5 w-5 text-cyan-600" />
-                    </div>
-                    <p className="text-2xl font-bold">৳৪,৪৫০</p>
-                    <p className="text-sm text-emerald-600">+১০% গত মাস থেকে</p>
-                  </div>
-                </div>
-                
-                <div className="mt-6">
-                  <h3 className="text-sm font-medium mb-3">আয়ের বিভাজন</h3>
-                  <div className="h-64">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart
-                        data={[
-                          {name: 'ডিজিটাল প্রোডাক্ট', value: 55},
-                          {name: 'সাবস্ক্রিপশন', value: 29},
-                          {name: 'অ্যাফিলিয়েট', value: 16},
-                        ]}
-                        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                      >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip formatter={(value) => [`${value}%`, 'হার']} />
-                        <Bar dataKey="value" fill="#8b5cf6" name="হার" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="md:col-span-2">
-              <CardHeader>
-                <CardTitle>ট্র্যানজ্যাকশন হিস্টরি</CardTitle>
-                <CardDescription>সাম্প্রতিক আয়ের লেনদেন</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {[1, 2, 3, 4].map(idx => (
-                    <div key={idx} className="flex justify-between items-center p-3 border-b last:border-0">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                          {idx % 3 === 0 ? (
-                            <Users className="h-5 w-5 text-purple-600" />
-                          ) : idx % 2 === 0 ? (
-                            <FileText className="h-5 w-5 text-purple-600" />
-                          ) : (
-                            <ExternalLink className="h-5 w-5 text-purple-600" />
-                          )}
-                        </div>
-                        <div>
-                          <p className="font-medium">
-                            {idx % 3 === 0 ? 'সাবস্ক্রিপশন আয়' : 
-                             idx % 2 === 0 ? 'ডিজিটাল প্রোডাক্ট বিক্রয়' : 'অ্যাফিলিয়েট কমিশন'}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {new Date(2025, 3, 10 - idx).toLocaleDateString('bn-BD')}
-                          </p>
-                        </div>
-                      </div>
-                      <p className="font-medium text-right">
-                        +৳{(1500 * (5 - idx)).toLocaleString()}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>মানিটাইজেশন সেটিংস</CardTitle>
-                <CardDescription>আয়ের উৎস কনফিগারেশন</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="p-3 border rounded-lg">
-                    <div className="flex justify-between items-center">
-                      <h3 className="font-medium">ডিজিটাল প্রোডাক্ট আপলোড</h3>
-                      <Button variant="outline" size="sm">
-                        <Upload className="h-4 w-4 mr-1" />
-                        আপলোড
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <div className="p-3 border rounded-lg">
-                    <div className="flex justify-between items-center">
-                      <h3 className="font-medium">সাবস্ক্রিপশন প্ল্যান</h3>
-                      <Button variant="outline" size="sm">
-                        <Settings className="h-4 w-4 mr-1" />
-                        সেটআপ
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <div className="p-3 border rounded-lg">
-                    <div className="flex justify-between items-center">
-                      <h3 className="font-medium">অ্যাফিলিয়েট সেটিংস</h3>
-                      <Button variant="outline" size="sm">
-                        <ExternalLink className="h-4 w-4 mr-1" />
-                        কনফিগার
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <div className="p-3 border rounded-lg">
-                    <div className="flex justify-between items-center">
-                      <h3 className="font-medium">পেমেন্ট মেথড</h3>
-                      <Button variant="outline" size="sm">
-                        <CircleDollarSign className="h-4 w-4 mr-1" />
-                        এডিট
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-};
-
-export default ContentDashboard;
+                        <span className="text
