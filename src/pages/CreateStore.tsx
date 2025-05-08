@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,11 +6,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { StorePreview } from '@/components/store/StorePreview';
-import { ProductCatalogTemplate } from '@/components/store/ProductCatalogTemplate';
-import { PaymentDemo } from '@/components/store/PaymentDemo';
-import { MarketingTools } from '@/components/store/MarketingTools';
-import { CommunitySupport } from '@/components/store/CommunitySupport';
+import StorePreview from '@/components/store/StorePreview';
+import ProductCatalogTemplate from '@/components/store/ProductCatalogTemplate';
+import PaymentDemo from '@/components/store/PaymentDemo';
+import MarketingTools from '@/components/store/MarketingTools';
+import CommunitySupport from '@/components/store/CommunitySupport';
 
 const CreateStore = () => {
   const [currentStep, setCurrentStep] = useState(1);
