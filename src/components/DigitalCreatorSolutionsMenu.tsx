@@ -21,7 +21,18 @@ import {
   Share,
   Settings,
   Code,
-  Award
+  Award,
+  Monitor,
+  Smartphone,
+  ShoppingCart,
+  Tag,
+  CreditCard as CardIcon,
+  Search,
+  Percent,
+  BarChart2,
+  Package,
+  Truck,
+  MessageCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -48,29 +59,24 @@ const DigitalCreatorSolutionsMenu: React.FC<DigitalCreatorSolutionsMenuProps> = 
       description: "নিজের ব্র্যান্ড তৈরি করুন এবং নিজস্ব ডোমেইনে আপনার পণ্য বিক্রি করুন",
       path: "/create-store",
       features: [
-        "কাস্টমাইজেবল ওয়েবসাইট টেমপ্লেট",
-        "SEO অপটিমাইজেশন টুলস",
-        "পেমেন্ট ইন্টিগ্রেশন",
-        "এনালিটিক্স ড্যাশবোর্ড",
-        "মোবাইল অপটিমাইজড থিম"
+        "সহজ টেমপ্লেট সিলেকশন",
+        "ড্র্যাগ-এন্ড-ড্রপ বিল্ডার",
+        "মোবাইল-অপটিমাইজড ডিজাইন",
+        "সহজ প্রোডাক্ট ম্যানেজমেন্ট",
+        "একাধিক পেমেন্ট অপশন",
+        "বেসিক SEO টুলস",
+        "ডিস্কাউন্ট এবং প্রোমোশন টুলস",
+        "বেসিক অ্যানালিটিক্স ড্যাশবোর্ড",
+        "স্টক ম্যানেজমেন্ট",
+        "অর্ডার ম্যানেজমেন্ট সিস্টেম",
+        "সহজ শিপিং সেটিংস",
+        "সোশ্যাল মিডিয়া ইন্টিগ্রেশন",
+        "মোবাইল অ্যাপ ভিউ",
+        "কাস্টমার রিভিউ সিস্টেম",
+        "লাইভ চ্যাট সাপোর্ট"
       ],
       badge: "বেস্টসেলার",
       pricing: "৳১০,০০০/বছর",
-      resellable: true
-    },
-    { 
-      icon: <Mail className="h-8 w-8 text-blue-500" />, 
-      title: "ইমেইল অটোমেশন",
-      description: "স্বযংক্রিয় ইমেইল মার্কেটিং ক্যাম্পেইন তৈরি করুন",
-      path: "/email-automation",
-      features: [
-        "ড্র্যাগ-এন্ড-ড্রপ ইমেইল বিল্ডার",
-        "সাবস্ক্রাইবার সেগমেন্টেশন",
-        "ইমেইল টেমপ্লেট লাইব্রেরি",
-        "অটোমেটেড সিকোয়েন্স",
-        "A/B টেস্টিং ফিচার"
-      ],
-      pricing: "৳৫,০০০/বছর",
       resellable: true
     },
     { 
@@ -126,7 +132,6 @@ const DigitalCreatorSolutionsMenu: React.FC<DigitalCreatorSolutionsMenuProps> = 
       path: "/digital-products",
       features: [
         "ডিজিটাল ডেলিভারি সিস্টেম",
-        "কপি প্রটেকশন",
         "আপসেল/ক্রস-সেল ফিচার",
         "প্রোডাক্ট বান্ডলিং",
         "কুপন এবং ডিসকাউন্ট"
@@ -148,21 +153,6 @@ const DigitalCreatorSolutionsMenu: React.FC<DigitalCreatorSolutionsMenuProps> = 
         "মেম্বার-অনলি লাইভ সেশন"
       ],
       pricing: "৳৭,৫০০/বছর",
-      resellable: true
-    },
-    { 
-      icon: <BarChart className="h-8 w-8 text-purple-500" />, 
-      title: "অডিয়েন্স অ্যানালিটিক্স",
-      description: "আপনার দর্শকদের আচরণ বিশ্লেষণ করুন এবং মার্কেটিং কৌশল উন্নত করুন",
-      path: "/audience-analytics",
-      features: [
-        "ডেমোগ্রাফিক অ্যানালাইসিস",
-        "কনটেন্ট পারফরম্যান্স ট্র্যাকিং",
-        "কাস্টম রিপোর্টিং",
-        "ট্রেন্ড অ্যানালাইসিস",
-        "রিয়েল-টাইম মনিটরিং"
-      ],
-      pricing: "৳৬,৫০০/বছর",
       resellable: true
     },
     { 
@@ -228,21 +218,6 @@ const DigitalCreatorSolutionsMenu: React.FC<DigitalCreatorSolutionsMenuProps> = 
       resellable: false
     },
     { 
-      icon: <Shield className="h-8 w-8 text-gray-500" />, 
-      title: "ডিজিটাল রাইটস ম্যানেজমেন্ট",
-      description: "আপনার ডিজিটাল কনটেন্ট সুরক্ষিত করুন এবং অবৈধ কপি বাধা দিন",
-      path: "/drm",
-      features: [
-        "কপি প্রটেকশন",
-        "ওয়াটারমার্কিং",
-        "অ্যাকসেস কন্ট্রোল",
-        "ডিজিটাল সার্টিফিকেট",
-        "পাইরেসি মনিটরিং"
-      ],
-      pricing: "৳৮,০০০/বছর",
-      resellable: true
-    },
-    { 
       icon: <Video className="h-8 w-8 text-red-600" />, 
       title: "ভিডিও হোস্টিং প্ল্যাটফর্ম",
       description: "আপনার ভিডিও কনটেন্ট হোস্ট করুন এবং মনেটাইজ করুন",
@@ -256,36 +231,6 @@ const DigitalCreatorSolutionsMenu: React.FC<DigitalCreatorSolutionsMenuProps> = 
       ],
       badge: "হট",
       pricing: "৳৯,৫০০/বছর",
-      resellable: true
-    },
-    { 
-      icon: <ShoppingBag className="h-8 w-8 text-lime-500" />, 
-      title: "অ্যাফিলিয়েট মার্কেটিং",
-      description: "অ্যাফিলিয়েট মার্কেটিং প্রোগ্রাম তৈরি করুন এবং ম্যানেজ করুন",
-      path: "/affiliate",
-      features: [
-        "অ্যাফিলিয়েট ট্র্যাকিং",
-        "কমিশন ম্যানেজমেন্ট",
-        "মার্কেটিং ম্যাটেরিয়াল",
-        "পারফরম্যান্স রিপোর্টিং",
-        "অটোমেটিক পেমেন্ট"
-      ],
-      pricing: "৳৭,৫০০/বছর",
-      resellable: true
-    },
-    { 
-      icon: <Share className="h-8 w-8 text-blue-600" />, 
-      title: "সোশ্যাল মিডিয়া ম্যানেজমেন্ট",
-      description: "একাধিক সোশ্যাল মিডিয়া প্ল্যাটফর্ম ম্যানেজ করুন এবং অডিয়েন্স গ্রো করুন",
-      path: "/social-media",
-      features: [
-        "পোস্ট শিডিউলিং",
-        "একাধিক একাউন্ট ম্যানেজমেন্ট",
-        "কনটেন্ট কিউ",
-        "হ্যাশট্যাগ ম্যানেজার",
-        "পারফরম্যান্স অ্যানালিটিক্স"
-      ],
-      pricing: "৳৬,০০০/বছর",
       resellable: true
     },
   ];
