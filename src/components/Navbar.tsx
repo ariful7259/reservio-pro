@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Search, Home, Building, ShoppingBag, ChevronDown, Plus, User, LogOut, Rocket, Mail, Calendar, Users, BarChart, DollarSign, MessageSquare, Store, Briefcase, FileText, Video, Globe, Zap, Database, Cpu, Shield, FileText as FileIcon, Calendar as CalendarIcon, MessageCircle, UsersRound, LogIn, Bell, Wallet, Store as StoreIcon, File, Gavel, UserCheck, Home as HomeIcon, Calculator, Share2, HelpCircle as HelpIcon, Info, Book, Wrench, BookOpen } from 'lucide-react';
@@ -165,16 +166,13 @@ const Navbar = () => {
     path: "/help/about-us",
     description: "আমাদের সম্পর্কে জানুন"
   }];
+  
+  // ডিজিটাল ক্রিয়েটর সল্যুশন (এফিলিয়েট টুল, কপি প্রোটেকশন, ইমেইল অটোমেশন এবং অডিয়েন্স অ্যানালিটিক্স বাদ দিয়ে)
   const creatorSolutions = [{
     icon: <Store className="h-4 w-4 text-primary" />,
     name: "অনলাইন স্টোর",
     path: "/create-store",
     description: "নিজের ব্র্যান্ডের ওয়েবসাইট ��ৈরি করুন"
-  }, {
-    icon: <Mail className="h-4 w-4 text-blue-500" />,
-    name: "ইমেইল অটোমেশন",
-    path: "/email-automation",
-    description: "গ্রাহকদের সাথে অটোমেটিক যোগাযোগ"
   }, {
     icon: <BookOpen className="h-4 w-4 text-amber-500" />,
     name: "কোর্স বিল্ডার",
@@ -201,11 +199,6 @@ const Navbar = () => {
     path: "/paid-community",
     description: "মেম্বারশিপ কমিউনিটি তৈরি করুন"
   }, {
-    icon: <BarChart className="h-4 w-4 text-purple-500" />,
-    name: "অডিয়েন্স অ্যানালিটিক্স",
-    path: "/audience-analytics",
-    description: "গ্রাহক আচরণ ও বিক্রয় বিশ্লেষণ"
-  }, {
     icon: <Globe className="h-4 w-4 text-cyan-500" />,
     name: "মাল্টি-চ্যানেল",
     path: "/multi-channel",
@@ -226,21 +219,12 @@ const Navbar = () => {
     path: "/payment-gateway",
     description: "সহজে পেমেন্ট কালেকশন করুন"
   }, {
-    icon: <Shield className="h-4 w-4 text-emerald-500" />,
-    name: "কপি প্রোটেকশন",
-    path: "/drm",
-    description: "কন্টেন্ট চুরি ও কপি হওয়া ঠেকান"
-  }, {
     icon: <Video className="h-4 w-4 text-rose-500" />,
     name: "ভিডিও হোস্টিং",
     path: "/video-hosting",
     description: "প্রোফেশনাল ভিডিও সার্ভিস"
-  }, {
-    icon: <Zap className="h-4 w-4 text-amber-500" />,
-    name: "এফিলিয়েট টুল",
-    path: "/affiliate",
-    description: "এফিলিয়েট মার্কেটিং ম্যানেজমেন্ট"
   }];
+  
   const serviceCategories = [{
     name: "ডাক্তার",
     path: "/services/category/medical"
@@ -394,28 +378,6 @@ const Navbar = () => {
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="outline" className="flex flex-col items-center justify-center h-24 gap-2">
-                              <Users className="h-8 w-8 text-amber-500" />
-                              <span className="text-sm">কমিউনিটি</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent className="w-56 max-h-[70vh] overflow-auto">
-                            <div className="grid grid-cols-1 gap-1 p-1">
-                              {communityFeatures.map((feature, index) => <DropdownMenuItem key={index} asChild className="p-2">
-                                  <Link to={feature.path} className="flex flex-col gap-1">
-                                    <div className="flex items-center gap-2">
-                                      {feature.icon}
-                                      <span className="font-medium">{feature.name}</span>
-                                    </div>
-                                    <p className="text-xs text-muted-foreground pl-6">{feature.description}</p>
-                                  </Link>
-                                </DropdownMenuItem>)}
-                            </div>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                        
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="flex flex-col items-center justify-center h-24 gap-2">
                               <Rocket className="h-8 w-8 text-purple-500" />
                               <span className="text-sm">ডিজিটাল ক্রিয়েটর</span>
                             </Button>
@@ -434,30 +396,6 @@ const Navbar = () => {
                             </div>
                           </DropdownMenuContent>
                         </DropdownMenu>
-                        
-                        {/* নতুন ক্যাটাগরি মেনু বাটন */}
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="flex flex-col items-center justify-center h-24 gap-2">
-                              <Briefcase className="h-8 w-8 text-red-500" />
-                              <span className="text-sm">লিগ্যাল অ্যাসিস্ট্যান্স</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          
-                        </DropdownMenu>
-                        
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="flex flex-col items-center justify-center h-24 gap-2">
-                              <Wrench className="h-8 w-8 text-orange-500" />
-                              <span className="text-sm">ইউটিলিটিস</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent className="w-56 max-h-[70vh] overflow-auto">
-                            
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                        
                       </div>
                     </PopoverContent>
                   </Popover>;
@@ -473,3 +411,4 @@ const Navbar = () => {
     </>;
 };
 export default Navbar;
+
