@@ -29,6 +29,7 @@ import CreateStore from './pages/CreateStore';
 import Housing from './pages/Housing';
 import Rentals from './pages/Rentals';
 import RentAnything from './pages/RentAnything';
+import BasaBari from './pages/BasaBari';
 
 const RoutesConfig = () => {
   return (
@@ -53,6 +54,7 @@ const RoutesConfig = () => {
       <Route path="/rentals" element={<Rentals />} />
       <Route path="/rent-anything" element={<RentAnything />} />
       <Route path="/rental-category/:category" element={<Rentals />} />
+      <Route path="/basa-bari" element={<BasaBari />} />
       
       {/* Support and Dispute */}
       <Route path="/help/dispute-center" element={<DisputeCenter />} />
