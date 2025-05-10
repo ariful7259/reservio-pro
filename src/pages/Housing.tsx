@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
@@ -100,6 +99,18 @@ const Housing = () => {
       image: 'https://images.unsplash.com/photo-1534595038511-9f219fe0c979?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
       type: 'flat',
       isAvailable: true,
+    },
+    {
+      id: '8',
+      title: 'আধুনিক বাড়ি ঢাকা শহরে',
+      location: 'বনানী, ঢাকা',
+      price: 45000,
+      bedrooms: 5,
+      bathrooms: 3,
+      area: 2500,
+      image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+      type: 'house',
+      isAvailable: true,
     }
   ];
 
@@ -150,6 +161,15 @@ const Housing = () => {
           />
         </TabsContent>
         
+        <TabsContent value="house">
+          <HousingList 
+            listings={housingListings.filter(listing => listing.type === 'house')} 
+            handleToggleFavorite={handleToggleFavorite}
+            isFavorite={isFavorite}
+            language={language}
+          />
+        </TabsContent>
+        
         <TabsContent value="flat">
           <HousingList 
             listings={housingListings.filter(listing => listing.type === 'flat')} 
@@ -168,15 +188,6 @@ const Housing = () => {
           />
         </TabsContent>
 
-        <TabsContent value="house">
-          <HousingList 
-            listings={housingListings.filter(listing => listing.type === 'house')} 
-            handleToggleFavorite={handleToggleFavorite}
-            isFavorite={isFavorite}
-            language={language}
-          />
-        </TabsContent>
-        
         <TabsContent value="mess">
           <HousingList 
             listings={housingListings.filter(listing => listing.type === 'mess')} 

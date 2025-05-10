@@ -24,6 +24,9 @@ const HousingTabs: React.FC<HousingTabsProps> = ({
         <TabsTrigger value="all" className={`flex-1 ${isMobile ? 'text-xs py-1' : ''}`}>
           {language === 'bn' ? 'সব' : 'All'}
         </TabsTrigger>
+        <TabsTrigger value="house" className={`flex-1 ${isMobile ? 'text-xs py-1' : ''}`}>
+          {language === 'bn' ? 'বাসা/বাড়ি' : 'House'}
+        </TabsTrigger>
         <TabsTrigger value="flat" className={`flex-1 ${isMobile ? 'text-xs py-1' : ''}`}>
           {language === 'bn' ? 'ফ্ল্যাট' : 'Flat'}
         </TabsTrigger>
