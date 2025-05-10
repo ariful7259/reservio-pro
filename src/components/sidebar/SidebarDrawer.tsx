@@ -54,17 +54,18 @@ export const SidebarDrawer = () => {
   };
 
   // Add BasaBari link to the housing/property section
+  // Changed to match the MenuItem type expected by CollapsibleMenuSection
   const housingMenuItems = [
     {
-      title: "বাসা বাড়ি",
+      name: "বাসা বাড়ি",
       icon: <Building className="h-4 w-4 mr-2" />,
-      href: "/basa-bari",
+      path: "/basa-bari",
       description: "বাসা, রুমমেট, মেস সীট খুঁজুন এবং লিস্ট করুন"
     },
     {
-      title: "রেন্টালস",
+      name: "রেন্টালস",
       icon: <Building className="h-4 w-4 mr-2" />,
-      href: "/rentals",
+      path: "/rentals",
       description: "বাসা, ফ্ল্যাট, অন্যান্য রেন্টাল সম্পত্তি"
     }
   ];
