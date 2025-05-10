@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { TabsContent } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
 import OfflineIndicator from '@/components/housing/OfflineIndicator';
 import HousingHeader from '@/components/housing/HousingHeader';
 import HousingTabs from '@/components/housing/HousingTabs';
@@ -138,6 +140,18 @@ const Housing = () => {
 
   return (
     <div className="container px-4 pt-20 pb-20">
+      <div className="mb-6 flex justify-between items-center">
+        <h1 className="text-2xl md:text-3xl font-bold">
+          {language === 'bn' ? 'হাউজিং' : 'Housing'}
+        </h1>
+        <Link to="/basa-bari">
+          <Button variant="outline" className="flex items-center gap-1">
+            {language === 'bn' ? 'বাসা বাড়ি এপ্লিকেশন' : 'BasaBari App'}
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </Link>
+      </div>
+      
       <OfflineIndicator isOnline={isOnline} language={language} />
       
       <HousingHeader 

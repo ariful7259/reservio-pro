@@ -1,8 +1,9 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useApp } from '@/context/AppContext';
+import { useParams } from 'react-router-dom';
 import HouseSearchTab from '@/components/housing/HouseSearchTab';
 import RoommateTab from '@/components/housing/RoommateTab';
 import MessSeatTab from '@/components/housing/MessSeatTab';
@@ -11,7 +12,30 @@ import PropertyListingTab from '@/components/housing/PropertyListingTab';
 const BasaBari = () => {
   const { language } = useApp();
   const isMobile = useIsMobile();
+  const { category } = useParams();
   const [activeTab, setActiveTab] = useState('house-search');
+  
+  // Set active tab based on URL parameter
+  useEffect(() => {
+    if (category) {
+      switch (category) {
+        case 'house':
+          setActiveTab('house-search');
+          break;
+        case 'roommate':
+          setActiveTab('roommate');
+          break;
+        case 'mess':
+          setActiveTab('mess-seat');
+          break;
+        case 'property':
+          setActiveTab('property-listing');
+          break;
+        default:
+          setActiveTab('house-search');
+      }
+    }
+  }, [category]);
 
   return (
     <div className="container px-4 pt-20 pb-20">

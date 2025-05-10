@@ -53,7 +53,7 @@ const RoutesConfig = () => {
       <Route path="/housing" element={<Housing />} />
       <Route path="/rentals" element={<Rentals />} />
       <Route path="/rent-anything" element={<RentAnything />} />
-      <Route path="/rental-category/:category" element={<Rentals />} />
+      <Route path="/rental-category/:category" element={<BasaBari />} />
       <Route path="/basa-bari" element={<BasaBari />} />
       
       {/* Support and Dispute */}

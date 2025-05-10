@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, LogOut, LogIn, Plus, Store } from 'lucide-react';
+import { Menu, LogOut, LogIn, Plus, Store, Building } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerFooter } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
@@ -53,6 +53,22 @@ export const SidebarDrawer = () => {
     navigate("/login");
   };
 
+  // Add BasaBari link to the housing/property section
+  const housingMenuItems = [
+    {
+      title: "বাসা বাড়ি",
+      icon: <Building className="h-4 w-4 mr-2" />,
+      href: "/basa-bari",
+      description: "বাসা, রুমমেট, মেস সীট খুঁজুন এবং লিস্ট করুন"
+    },
+    {
+      title: "রেন্টালস",
+      icon: <Building className="h-4 w-4 mr-2" />,
+      href: "/rentals",
+      description: "বাসা, ফ্ল্যাট, অন্যান্য রেন্টাল সম্পত্তি"
+    }
+  ];
+
   return (
     <Drawer direction="left">
       <DrawerTrigger asChild>
@@ -79,6 +95,13 @@ export const SidebarDrawer = () => {
             
             {/* Service Categories Grid - পুনরায় স্থাপিত, এখন ভিডিও ক্যারোসেলের নিচে */}
             <ServiceCategoriesGrid />
+
+            {/* Housing Menu Section */}
+            <CollapsibleMenuSection 
+              title="হাউজিং এবং সম্পত্তি" 
+              icon={<Building className="h-5 w-5 text-blue-500 mr-2" />} 
+              items={housingMenuItems} 
+            />
 
             {/* My Services Dropdown - only shown to authenticated users */}
             {isAuthenticated && (
