@@ -20,18 +20,27 @@ const HousingTabs: React.FC<HousingTabsProps> = ({
   
   return (
     <Tabs defaultValue="all" value={activeTab} onValueChange={onTabChange} className="mb-6">
-      <TabsList className={`w-full bg-secondary/50 mb-4 ${isMobile ? 'grid grid-cols-4' : ''}`}>
+      <TabsList className={`w-full bg-secondary/50 mb-4 flex-wrap ${isMobile ? 'grid grid-cols-2 gap-1' : ''}`}>
         <TabsTrigger value="all" className={`flex-1 ${isMobile ? 'text-xs py-1' : ''}`}>
           {language === 'bn' ? 'সব' : 'All'}
         </TabsTrigger>
         <TabsTrigger value="flat" className={`flex-1 ${isMobile ? 'text-xs py-1' : ''}`}>
           {language === 'bn' ? 'ফ্ল্যাট' : 'Flat'}
         </TabsTrigger>
-        <TabsTrigger value="house" className={`flex-1 ${isMobile ? 'text-xs py-1' : ''}`}>
-          {language === 'bn' ? 'বাড়ি' : 'House'}
+        <TabsTrigger value="apartment" className={`flex-1 ${isMobile ? 'text-xs py-1' : ''}`}>
+          {language === 'bn' ? 'অ্যাপার্টমেন্ট' : 'Apartment'}
         </TabsTrigger>
-        <TabsTrigger value="room" className={`flex-1 ${isMobile ? 'text-xs py-1' : ''}`}>
-          {language === 'bn' ? 'রুম' : 'Room'}
+        <TabsTrigger value="mess" className={`flex-1 ${isMobile ? 'text-xs py-1' : ''}`}>
+          {language === 'bn' ? 'মেস' : 'Mess'}
+        </TabsTrigger>
+        <TabsTrigger value="hostel" className={`flex-1 ${isMobile ? 'text-xs py-1' : ''}`}>
+          {language === 'bn' ? 'হোস্টেল' : 'Hostel'}
+        </TabsTrigger>
+        <TabsTrigger value="single" className={`flex-1 ${isMobile ? 'text-xs py-1' : ''}`}>
+          {language === 'bn' ? 'সিঙ্গেল রুম' : 'Single Room'}
+        </TabsTrigger>
+        <TabsTrigger value="shared" className={`flex-1 ${isMobile ? 'text-xs py-1' : ''}`}>
+          {language === 'bn' ? 'শেয়ার্ড রুম' : 'Shared Room'}
         </TabsTrigger>
       </TabsList>
 

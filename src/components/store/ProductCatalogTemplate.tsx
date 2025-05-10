@@ -1,9 +1,11 @@
 
-import React from 'react';
-import { Edit, Trash2, Plus, Image, Search, Filter, ArrowUpDown } from 'lucide-react';
+import React, { useState } from 'react';
+import { Edit, Trash2, Plus, Image, Search, Filter, ArrowUpDown, ChevronDown, ChevronUp, Building, Home, User, DoorOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Card, CardContent } from '@/components/ui/card';
 
 const ProductCatalogTemplate = () => {
   const demoProducts = [

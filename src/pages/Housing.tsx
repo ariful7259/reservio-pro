@@ -26,7 +26,7 @@ const Housing = () => {
       bathrooms: 2,
       area: 1450,
       image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-      type: 'flat',
+      type: 'apartment',
       isAvailable: true,
     },
     {
@@ -43,16 +43,64 @@ const Housing = () => {
     },
     {
       id: '3',
-      title: 'বাণিজ্যিক স্পেস ক্যান্টনমেন্ট',
+      title: 'সুন্দর সিঙ্গেল রুম ভাড়া হবে',
       location: 'মিরপুর, ঢাকা',
-      price: 15000,
-      bedrooms: 2,
+      price: 8000,
+      bedrooms: 1,
       bathrooms: 1,
-      area: 1000,
+      area: 250,
       image: 'https://images.unsplash.com/photo-1628744448840-55bdb2497bd4?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-      type: 'flat',
+      type: 'single',
       isAvailable: true,
     },
+    {
+      id: '4',
+      title: 'নিউ মার্কেট এলাকায় শেয়ার্ড রুম',
+      location: 'নিউ মার্কেট, ঢাকা',
+      price: 6000,
+      bedrooms: 1,
+      bathrooms: 1,
+      area: 200,
+      image: 'https://images.unsplash.com/photo-1523688471150-efdd09f0f312?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+      type: 'shared',
+      isAvailable: true,
+    },
+    {
+      id: '5',
+      title: 'ছাত্রদের জন্য আদর্শ মেস',
+      location: 'শাহবাগ, ঢাকা',
+      price: 7500,
+      bedrooms: 1,
+      bathrooms: 1,
+      area: 180,
+      image: 'https://images.unsplash.com/photo-1595846519845-68e298c2edd8?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+      type: 'mess',
+      isAvailable: true,
+    },
+    {
+      id: '6',
+      title: 'ছাত্রী হোস্টেল - সকল সুবিধা সম্পন্ন',
+      location: 'ধানমন্ডি, ঢাকা',
+      price: 9000,
+      bedrooms: 1,
+      bathrooms: 1,
+      area: 200,
+      image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+      type: 'hostel',
+      isAvailable: true,
+    },
+    {
+      id: '7',
+      title: 'মডার্ন ফ্ল্যাট - আরামদায়ক জীবনযাপন',
+      location: 'মোহাম্মদপুর, ঢাকা',
+      price: 18000,
+      bedrooms: 2,
+      bathrooms: 2,
+      area: 1100,
+      image: 'https://images.unsplash.com/photo-1534595038511-9f219fe0c979?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+      type: 'flat',
+      isAvailable: true,
+    }
   ];
 
   const handleToggleFavorite = (e: React.MouseEvent, listing: any) => {
@@ -111,6 +159,15 @@ const Housing = () => {
           />
         </TabsContent>
         
+        <TabsContent value="apartment">
+          <HousingList 
+            listings={housingListings.filter(listing => listing.type === 'apartment')} 
+            handleToggleFavorite={handleToggleFavorite}
+            isFavorite={isFavorite}
+            language={language}
+          />
+        </TabsContent>
+
         <TabsContent value="house">
           <HousingList 
             listings={housingListings.filter(listing => listing.type === 'house')} 
@@ -120,10 +177,40 @@ const Housing = () => {
           />
         </TabsContent>
         
-        <TabsContent value="room">
-          <div className="text-center py-10 text-muted-foreground">
-            {language === 'bn' ? 'কোনো রুম এখনো উপলব্ধ নেই' : 'No rooms available yet'}
-          </div>
+        <TabsContent value="mess">
+          <HousingList 
+            listings={housingListings.filter(listing => listing.type === 'mess')} 
+            handleToggleFavorite={handleToggleFavorite}
+            isFavorite={isFavorite}
+            language={language}
+          />
+        </TabsContent>
+        
+        <TabsContent value="hostel">
+          <HousingList 
+            listings={housingListings.filter(listing => listing.type === 'hostel')} 
+            handleToggleFavorite={handleToggleFavorite}
+            isFavorite={isFavorite}
+            language={language}
+          />
+        </TabsContent>
+        
+        <TabsContent value="single">
+          <HousingList 
+            listings={housingListings.filter(listing => listing.type === 'single')} 
+            handleToggleFavorite={handleToggleFavorite}
+            isFavorite={isFavorite}
+            language={language}
+          />
+        </TabsContent>
+        
+        <TabsContent value="shared">
+          <HousingList 
+            listings={housingListings.filter(listing => listing.type === 'shared')} 
+            handleToggleFavorite={handleToggleFavorite}
+            isFavorite={isFavorite}
+            language={language}
+          />
         </TabsContent>
       </HousingTabs>
     </div>

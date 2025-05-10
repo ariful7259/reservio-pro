@@ -3,11 +3,20 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   PaintBucket, Truck, Home, AirVent, Hammer, 
-  Wrench, Pipette, HousePlus, ChevronRight
+  Wrench, Pipette, HousePlus, ChevronRight, ChevronDown,
+  Building, User, DoorOpen, Hotel
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface ServiceCategory {
+  name: string;
+  icon: React.ReactNode;
+  path: string;
+  subCategories?: ServiceSubCategory[];
+}
+
+interface ServiceSubCategory {
   name: string;
   icon: React.ReactNode;
   path: string;
@@ -15,9 +24,47 @@ interface ServiceCategory {
 
 export const ServiceCategoriesGrid = () => {
   const [showAllCategories, setShowAllCategories] = useState(false);
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   
   // সার্ভিস ক্যাটাগরি ডেটা
   const serviceCategories: ServiceCategory[] = [
+    { 
+      name: "বাসা/বাড়ি", 
+      icon: <Home className="h-6 w-6 text-primary" />,
+      path: "/rental-category/house",
+      subCategories: [
+        { 
+          name: "ফ্ল্যাট", 
+          icon: <Building className="h-5 w-5 text-primary" />,
+          path: "/rental-category/flat" 
+        },
+        { 
+          name: "অ্যাপার্টমেন্ট", 
+          icon: <Building className="h-5 w-5 text-blue-500" />,
+          path: "/rental-category/apartment" 
+        },
+        { 
+          name: "মেস", 
+          icon: <User className="h-5 w-5 text-amber-500" />,
+          path: "/rental-category/mess" 
+        },
+        { 
+          name: "হোস্টেল", 
+          icon: <Hotel className="h-5 w-5 text-green-500" />,
+          path: "/rental-category/hostel" 
+        },
+        { 
+          name: "সিঙ্গেল রুম", 
+          icon: <DoorOpen className="h-5 w-5 text-purple-500" />,
+          path: "/rental-category/single-room" 
+        },
+        { 
+          name: "শেয়ার্ড রুম", 
+          icon: <User className="h-5 w-5 text-red-500" />,
+          path: "/rental-category/shared-room" 
+        }
+      ] 
+    },
     { 
       name: "পেইন্টিং", 
       icon: <PaintBucket className="h-6 w-6 text-pink-500" />,
@@ -63,21 +110,65 @@ export const ServiceCategoriesGrid = () => {
   // সার্ভিস ক্যাটাগরি প্রদর্শন - বাটন ক্লিক অনুযায়ী
   const displayedCategories = showAllCategories ? serviceCategories : serviceCategories.slice(0, 4);
   
+  const toggleCategoryExpansion = (categoryName: string) => {
+    if (expandedCategory === categoryName) {
+      setExpandedCategory(null);
+    } else {
+      setExpandedCategory(categoryName);
+    }
+  };
+  
   return (
     <div className="space-y-4">
       <h3 className="font-medium text-lg">সার্ভিস ক্যাটাগরি</h3>
       <div className="grid grid-cols-4 gap-3">
         {displayedCategories.map((category, index) => (
-          <Link 
-            key={index} 
-            to={category.path}
-            className="flex flex-col items-center justify-center p-2 border rounded-lg hover:bg-blue-50 hover:border-blue-200 transition-colors"
-          >
-            <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mb-1">
-              {category.icon}
-            </div>
-            <span className="text-xs text-center">{category.name}</span>
-          </Link>
+          <div key={index} className="flex flex-col">
+            {category.subCategories ? (
+              <Collapsible
+                open={expandedCategory === category.name}
+                onOpenChange={() => toggleCategoryExpansion(category.name)}
+              >
+                <CollapsibleTrigger className="w-full" asChild>
+                  <div className="flex flex-col items-center justify-center p-2 border rounded-lg hover:bg-blue-50 hover:border-blue-200 transition-colors">
+                    <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mb-1">
+                      {category.icon}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs text-center">{category.name}</span>
+                      <ChevronDown className="h-3 w-3" />
+                    </div>
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="mt-2 bg-gray-50 rounded-lg p-2">
+                  <div className="grid grid-cols-2 gap-2">
+                    {category.subCategories.map((subCat, subIdx) => (
+                      <Link
+                        key={`sub-${subIdx}`}
+                        to={subCat.path}
+                        className="flex flex-col items-center text-center p-1 hover:bg-blue-100 rounded-md transition-colors"
+                      >
+                        <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center mb-1">
+                          {subCat.icon}
+                        </div>
+                        <span className="text-xs">{subCat.name}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            ) : (
+              <Link 
+                to={category.path}
+                className="flex flex-col items-center justify-center p-2 border rounded-lg hover:bg-blue-50 hover:border-blue-200 transition-colors"
+              >
+                <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mb-1">
+                  {category.icon}
+                </div>
+                <span className="text-xs text-center">{category.name}</span>
+              </Link>
+            )}
+          </div>
         ))}
       </div>
       

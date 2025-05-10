@@ -26,6 +26,9 @@ import DashboardLayout from './pages/dashboard/DashboardLayout';
 import ReferralSystem from './pages/ReferralSystem';
 import OnlineStoreFeatures from './components/product/OnlineStoreFeatures';
 import CreateStore from './pages/CreateStore';
+import Housing from './pages/Housing';
+import Rentals from './pages/Rentals';
+import RentAnything from './pages/RentAnything';
 
 const RoutesConfig = () => {
   return (
@@ -44,6 +47,12 @@ const RoutesConfig = () => {
       {/* Service Related */}
       <Route path="/service/:id" element={<ServiceDetails />} />
       <Route path="/ratings-reviews" element={<Reviews />} />
+      
+      {/* Housing and Rentals */}
+      <Route path="/housing" element={<Housing />} />
+      <Route path="/rentals" element={<Rentals />} />
+      <Route path="/rent-anything" element={<RentAnything />} />
+      <Route path="/rental-category/:category" element={<Rentals />} />
       
       {/* Support and Dispute */}
       <Route path="/help/dispute-center" element={<DisputeCenter />} />
