@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, LogOut, LogIn, Plus, Store, Building } from 'lucide-react';
@@ -53,8 +52,7 @@ export const SidebarDrawer = () => {
     navigate("/login");
   };
 
-  // Add BasaBari link to the housing/property section
-  // Changed to match the MenuItem type expected by CollapsibleMenuSection
+  // Modified housingMenuItems to match the MenuItem interface
   const housingMenuItems = [
     {
       name: "বাসা বাড়ি",
