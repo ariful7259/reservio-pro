@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Search, Home, Building, ShoppingBag, ChevronDown, Plus, User, LogOut, Rocket, Mail, Calendar, Users, BarChart, DollarSign, MessageSquare, Store, Briefcase, FileText, Video, Globe, Zap, Database, Cpu, Shield, FileText as FileIcon, Calendar as CalendarIcon, MessageCircle, UsersRound, LogIn, Bell, Wallet, Store as StoreIcon, File, Gavel, UserCheck, Home as HomeIcon, Calculator, Share2, HelpCircle as HelpIcon, Info, Book, Wrench, BookOpen } from 'lucide-react';
@@ -167,7 +166,7 @@ const Navbar = () => {
     description: "আমাদের সম্পর্কে জানুন"
   }];
   
-  // ডিজিটাল ক্রিয়েটর সল্যুশন (এফিলিয়েট টুল, কপি প্রোটেকশন, ইমেইল অটোমেশন এবং অডিয়েন্স অ্যানালিটিক্স বাদ দিয়ে)
+  // ডিজিটাল ক্রিয়েটর সল্যুশন (এফিলিয়েট টুল, কপি প্রোটেকশন, ইমেইল অটোমেশন এবং অডিয়েন্স ��্যানালিটিক্স বাদ দিয়ে)
   const creatorSolutions = [{
     icon: <Store className="h-4 w-4 text-primary" />,
     name: "অনলাইন স্টোর",
@@ -269,10 +268,10 @@ const Navbar = () => {
   return <>
       <div className="bg-white border-b fixed top-0 left-0 right-0 z-50">
         <header className="container flex items-center justify-between h-16 px-4 md:px-6">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3 animate-fade-in">
             <SidebarDrawer />
-            <Link to="/" className="flex items-center gap-2">
-              <span className="text-xl font-bold text-primary">Reservio</span>
+            <Link to="/" className="flex items-center">
+              <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary/80 text-transparent bg-clip-text hover:opacity-90 transition-opacity">Reservio</span>
             </Link>
           </div>
           
@@ -286,7 +285,7 @@ const Navbar = () => {
             </form>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm">
@@ -411,4 +410,3 @@ const Navbar = () => {
     </>;
 };
 export default Navbar;
-
