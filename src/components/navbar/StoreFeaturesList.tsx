@@ -24,7 +24,7 @@ export const StoreFeaturesList: React.FC = () => {
     {
       icon: <CreditCard className="h-8 w-8 text-blue-500" />,
       title: 'ইন্টিগ্রেটেড পেমেন্ট গেটওয়ে',
-      description: 'বিকাশ, রকেট, নগদ, ক্রেডিট/ডেবিট কার্ড, পে'মেন্ট ওয়ালেটসহ প্রি‑কনফিগার্ড অপশন।'
+      description: "বিকাশ, রকেট, নগদ, ক্রেডিট/ডেবিট কার্ড, পেমেন্ট ওয়ালেটসহ প্রি‑কনফিগার্ড অপশন।"
     },
     {
       icon: <Truck className="h-8 w-8 text-green-500" />,
