@@ -1,10 +1,8 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Rocket, 
   BookOpen, 
-  Mail, 
   Calendar, 
   Users, 
   BarChart, 
@@ -17,22 +15,7 @@ import {
   CreditCard,
   Shield,
   Video,
-  ShoppingBag,
   Share,
-  Settings,
-  Code,
-  Award,
-  Monitor,
-  Smartphone,
-  ShoppingCart,
-  Tag,
-  CreditCard as CardIcon,
-  Search,
-  Percent,
-  BarChart2,
-  Package,
-  Truck,
-  MessageCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -59,21 +42,21 @@ const DigitalCreatorSolutionsMenu: React.FC<DigitalCreatorSolutionsMenuProps> = 
       description: "নিজের ব্র্যান্ড তৈরি করুন এবং নিজস্ব ডোমেইনে আপনার পণ্য বিক্রি করুন",
       path: "/create-store",
       features: [
-        "সহজ টেমপ্লেট সিলেকশন",
-        "ড্র্যাগ-এন্ড-ড্রপ বিল্ডার",
-        "মোবাইল-অপটিমাইজড ডিজাইন",
-        "সহজ প্রোডাক্ট ম্যানেজমেন্ট",
-        "একাধিক পেমেন্ট অপশন",
-        "বেসিক SEO টুলস",
-        "ডিস্কাউন্ট এবং প্রোমোশন টুলস",
-        "বেসিক অ্যানালিটিক্স ড্যাশবোর্ড",
-        "স্টক ম্যানেজমেন্ট",
-        "অর্ডার ম্যানেজমেন্ট সিস্টেম",
-        "সহজ শিপিং সেটিংস",
-        "সোশ্যাল মিডিয়া ইন্টিগ্রেশন",
-        "মোবাইল অ্যাপ ভিউ",
-        "কাস্টমার রিভিউ সিস্টেম",
-        "লাইভ চ্যাট সাপোর্ট"
+        "ওয়ান‑ক্লিক থিম ইনস্টলেশন",
+        "পণ্য এম্পোর্ট/এক্সপোর্ট (CSV/Excel)",
+        "ইন্টিগ্রেটেড পেমেন্ট গেটওয়ে",
+        "শিপিং জোন ও রেট ম্যানেজার",
+        "ট্যাক্স ও ইনভয়েস অটো‑জেনারেটর",
+        "ওয়ান‑ পেজ চেকআউট",
+        "স্বয়ংক্রিয় ইমেইল ও পুশ নোটিফিকেশন",
+        "প্রোডাক্ট কাস্টমাইজেশন উইজেট",
+        "SEO & মার্কেটিং টুলস",
+        "রিফারেল ও লয়্যালটি সিস্টেম",
+        "রিয়েল‑টাইম অ্যানালিটিক্স ড্যাশবোর্ড",
+        "ইন-অ্যাপ লাইভ চ্যাট সাপোর্ট",
+        "মাল্টি-ভেন্ডর মার্কেটপ্লেস সাপোর্ট",
+        "মাল্টি-ল্যাঙ্গুয়েজ ও কারেন্সি",
+        "ব্যাকআপ & সিকিউরিটি"
       ],
       badge: "বেস্টসেলার",
       pricing: "৳১০,০০০/বছর",
