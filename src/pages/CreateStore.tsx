@@ -485,12 +485,7 @@ const CreateStore = () => {
   }
   return <div className="container mx-auto px-4 py-8">
       <Card>
-        <CardHeader>
-          <CardTitle>আপনার ব্যবসা তৈরি করুন</CardTitle>
-          <CardDescription>
-            আপনার ব্যবসা সম্পর্কিত তথ্য প্রদান করুন এবং সেবা শুরু করুন
-          </CardDescription>
-        </CardHeader>
+        
         
       </Card>
     </div>;
