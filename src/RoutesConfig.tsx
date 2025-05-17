@@ -30,6 +30,7 @@ import Housing from './pages/Housing';
 import Rentals from './pages/Rentals';
 import RentAnything from './pages/RentAnything';
 import BasaBari from './pages/BasaBari';
+import { FeatureSelectionPage } from './pages/FeatureSelectionPage';
 
 const RoutesConfig = () => {
   return (
@@ -48,6 +49,7 @@ const RoutesConfig = () => {
       {/* Service Related */}
       <Route path="/service/:id" element={<ServiceDetails />} />
       <Route path="/ratings-reviews" element={<Reviews />} />
+      <Route path="/feature-selection" element={<FeatureSelectionPage />} />
       
       {/* Housing and Rentals */}
       <Route path="/housing" element={<Housing />} />

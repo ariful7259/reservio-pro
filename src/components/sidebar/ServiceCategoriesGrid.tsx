@@ -1,6 +1,5 @@
-
-import React, { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   PaintBucket, Truck, Home, AirVent, Hammer, 
   Wrench, Pipette, HousePlus, ChevronRight, ChevronDown,
@@ -26,15 +25,26 @@ interface ServiceSubCategory {
 interface CustomService {
   id: string;
   name: string;
-  icon: React.ReactNode;
+  icon: string; // Icon ID stored as string
 }
 
 export const ServiceCategoriesGrid = () => {
+  const navigate = useNavigate();
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [customServices, setCustomServices] = useState<CustomService[]>([]);
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [newServiceName, setNewServiceName] = useState('');
+  
+  // Load custom services from localStorage when component mounts
+  useEffect(() => {
+    const savedServices = localStorage.getItem('customServices');
+    if (savedServices) {
+      try {
+        setCustomServices(JSON.parse(savedServices));
+      } catch (error) {
+        console.error('Error parsing stored services:', error);
+      }
+    }
+  }, []);
   
   // সার্ভিস ক্যাটাগরি ডেটা
   const serviceCategories: ServiceCategory[] = useMemo(() => [
@@ -145,34 +155,49 @@ export const ServiceCategoriesGrid = () => {
     </div>
   );
   
-  // Add a new custom service
-  const handleAddCustomService = () => {
-    if (customServices.length >= 10) {
-      toast.warning("সর্বাধিক ১০টি সার্ভিস যোগ করা যাবে");
-      return;
-    }
-    
-    if (!newServiceName.trim()) {
-      toast.error("সার্ভিসের নাম দিন");
-      return;
-    }
-    
-    const newService: CustomService = {
-      id: `custom-${Date.now()}`,
-      name: newServiceName.trim(),
-      icon: <Wrench className="h-6 w-6 text-primary" />
-    };
-    
-    setCustomServices(prev => [...prev, newService]);
-    setNewServiceName('');
-    setShowAddForm(false);
-    toast.success("নতুন সার্ভিস যোগ করা হয়েছে");
+  // Handle navigation to feature selection page
+  const goToFeatureSelection = () => {
+    navigate('/feature-selection');
   };
   
   // Remove a custom service
   const handleRemoveCustomService = (id: string) => {
-    setCustomServices(prev => prev.filter(service => service.id !== id));
+    const updatedServices = customServices.filter(service => service.id !== id);
+    setCustomServices(updatedServices);
+    localStorage.setItem('customServices', JSON.stringify(updatedServices));
     toast.info("সার্ভিস মুছে ফেলা হয়েছে");
+  };
+  
+  // Helper function to render the proper icon based on stored icon ID
+  const renderServiceIcon = (iconId: string) => {
+    switch (iconId) {
+      case 'feature-1':
+        return <PaintBucket className="h-6 w-6 text-pink-500" />;
+      case 'feature-2':
+        return <Truck className="h-6 w-6 text-blue-500" />;
+      case 'feature-3':
+        return <Home className="h-6 w-6 text-green-500" />;
+      case 'feature-4':
+        return <AirVent className="h-6 w-6 text-purple-500" />;
+      case 'feature-5':
+        return <Wrench className="h-6 w-6 text-amber-500" />;
+      case 'feature-6':
+        return <Hammer className="h-6 w-6 text-yellow-500" />;
+      case 'feature-7':
+        return <Pipette className="h-6 w-6 text-teal-500" />;
+      case 'feature-8':
+        return <HousePlus className="h-6 w-6 text-indigo-500" />;
+      case 'feature-9':
+        return <Building className="h-6 w-6 text-primary" />;
+      case 'feature-10':
+        return <Hotel className="h-6 w-6 text-green-500" />;
+      case 'feature-11':
+        return <DoorOpen className="h-6 w-6 text-purple-500" />;
+      case 'feature-12':
+        return <User className="h-6 w-6 text-red-500" />;
+      default:
+        return <Wrench className="h-6 w-6 text-primary" />;
+    }
   };
   
   return (
@@ -230,7 +255,7 @@ export const ServiceCategoriesGrid = () => {
                 <X className="h-3 w-3 text-red-600" />
               </button>
               <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mb-2 shadow-inner">
-                {service.icon}
+                {renderServiceIcon(service.id)}
               </div>
               <span className="text-xs font-medium text-center line-clamp-2">{service.name}</span>
             </div>
@@ -238,48 +263,17 @@ export const ServiceCategoriesGrid = () => {
         ))}
 
         {/* Add button */}
-        {customServices.length < 10 && (
-          <div className="flex flex-col">
-            {showAddForm ? (
-              <div className="flex flex-col items-center justify-center p-2 border rounded-lg shadow-sm">
-                <input
-                  type="text"
-                  value={newServiceName}
-                  onChange={(e) => setNewServiceName(e.target.value)}
-                  placeholder="সার্ভিসের নাম"
-                  className="w-full p-1 mb-2 border rounded text-xs"
-                />
-                <div className="flex gap-2 w-full">
-                  <button 
-                    onClick={handleAddCustomService}
-                    className="flex-1 text-xs bg-primary text-white rounded py-1 hover:bg-primary/90"
-                  >
-                    যোগ করুন
-                  </button>
-                  <button 
-                    onClick={() => {
-                      setShowAddForm(false);
-                      setNewServiceName('');
-                    }}
-                    className="flex-1 text-xs bg-gray-200 rounded py-1 hover:bg-gray-300"
-                  >
-                    বাতিল
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <button 
-                onClick={() => setShowAddForm(true)}
-                className="flex flex-col items-center justify-center p-2 border border-dashed rounded-lg hover:bg-blue-50 hover:border-blue-200 transition-colors h-full min-h-[90px]"
-              >
-                <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mb-2">
-                  <Plus className="h-6 w-6 text-primary" />
-                </div>
-                <span className="text-xs font-medium text-center text-primary">নতুন সার্ভিস</span>
-              </button>
-            )}
-          </div>
-        )}
+        <div className="flex flex-col">
+          <button 
+            onClick={goToFeatureSelection}
+            className="flex flex-col items-center justify-center p-2 border border-dashed rounded-lg hover:bg-blue-50 hover:border-blue-200 transition-colors h-full min-h-[90px]"
+          >
+            <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mb-2">
+              <Plus className="h-6 w-6 text-primary" />
+            </div>
+            <span className="text-xs font-medium text-center text-primary">সার্ভিস যোগ করুন</span>
+          </button>
+        </div>
       </div>
       
       {/* আরও দেখুন বাটন */}
