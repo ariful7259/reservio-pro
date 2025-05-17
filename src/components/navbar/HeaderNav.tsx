@@ -3,7 +3,6 @@ import React from 'react';
 import { NavbarLogo } from './NavbarLogo';
 import { NavbarSearch } from './NavbarSearch';
 import { ActionButtons } from './ActionButtons';
-import { StoreFeaturesList } from './StoreFeaturesList';
 
 export const HeaderNav: React.FC = () => {
   return (
@@ -13,7 +12,6 @@ export const HeaderNav: React.FC = () => {
         <NavbarSearch />
         <ActionButtons />
       </header>
-      <StoreFeaturesList />
     </div>
   );
 };
