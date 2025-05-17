@@ -32,13 +32,13 @@ export const FeatureSelectionPage = () => {
   };
 
   return (
-    <div className="container mx-auto py-6 px-4">
+    <div className="container mx-auto py-20 px-4 max-w-4xl">
       <FeatureSelectionHeader 
         selectedCount={selectedFeatures.length} 
         maxLimit={FEATURE_LIMIT} 
       />
       
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-20">
         {allFeatures.map((feature) => (
           <FeatureCard 
             key={feature.id}
