@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { 
   Store, BookOpen, Calendar, MessageSquare, Users, Globe, Briefcase, 
   FileText, Video, Cpu, DollarSign, Shield, LogOut, User, LogIn,
   FileIcon, CalendarIcon, MessageCircle, UsersRound, File, Gavel, 
   UserCheck, Home as HomeIcon, Calculator, Share2, HelpCircle as HelpIcon,
-  Info, Book, Wrench
+  Info, Book, Wrench, Building
 } from 'lucide-react';
 
 // Digital Creator Solutions
