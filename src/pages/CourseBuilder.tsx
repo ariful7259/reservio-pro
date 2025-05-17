@@ -220,12 +220,12 @@ const CourseBuilder: React.FC = () => {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-10">
-        <TabsList className="grid grid-cols-5 mb-8">
-          <TabsTrigger value="content">কোর্স কনটেন্ট</TabsTrigger>
-          <TabsTrigger value="appearance">অ্যাপিয়ারেন্স</TabsTrigger>
-          <TabsTrigger value="pricing">প্রাইসিং</TabsTrigger>
-          <TabsTrigger value="students">শিক্ষার্থী ম্যানেজমেন্ট</TabsTrigger>
-          <TabsTrigger value="settings">সেটিংস</TabsTrigger>
+        <TabsList className="w-full overflow-x-auto flex flex-nowrap sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 mb-8">
+          <TabsTrigger value="content" className="whitespace-nowrap">কোর্স কনটেন্ট</TabsTrigger>
+          <TabsTrigger value="appearance" className="whitespace-nowrap">অ্যাপিয়ারেন্স</TabsTrigger>
+          <TabsTrigger value="pricing" className="whitespace-nowrap">প্রাইসিং</TabsTrigger>
+          <TabsTrigger value="students" className="whitespace-nowrap">শিক্ষার্থী ম্যানেজমেন্ট</TabsTrigger>
+          <TabsTrigger value="settings" className="whitespace-nowrap">সেটিংস</TabsTrigger>
         </TabsList>
 
         <TabsContent value="content" className="space-y-6">
