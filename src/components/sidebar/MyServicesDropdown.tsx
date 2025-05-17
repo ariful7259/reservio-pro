@@ -46,7 +46,7 @@ export const MyServicesDropdown = () => {
   ];
 
   return (
-    <div className="space-y-4 mt-4 p-4 border rounded-lg bg-gray-50">
+    <div className="space-y-4">
       <div className="flex items-center gap-2">
         <User className="h-5 w-5 text-primary" />
         <h3 className="font-medium">আমার সার্ভিস</h3>
