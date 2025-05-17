@@ -9,17 +9,21 @@ export const CUSTOM_SERVICES_STORAGE_KEY = 'customServices';
 export const toggleFeatureSelection = (
   featureId: string,
   selectedFeatures: string[],
-  setSelectedFeatures: (features: string[]) => void
+  setSelectedFeatures: React.Dispatch<React.SetStateAction<string[]>>
 ): void => {
   if (selectedFeatures.includes(featureId)) {
-    setSelectedFeatures(prev => prev.filter(id => id !== featureId));
+    // Create a new array without the feature ID
+    const updatedFeatures = selectedFeatures.filter(id => id !== featureId);
+    setSelectedFeatures(updatedFeatures);
   } else {
     // Check if max limit is reached
     if (selectedFeatures.length >= FEATURE_LIMIT) {
       toast.error(`সর্বাধিক ${FEATURE_LIMIT}টি সার্ভিস যোগ করা যাবে`);
       return;
     }
-    setSelectedFeatures(prev => [...prev, featureId]);
+    // Create a new array with the feature ID added
+    const updatedFeatures = [...selectedFeatures, featureId];
+    setSelectedFeatures(updatedFeatures);
   }
 };
 
