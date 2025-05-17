@@ -4,10 +4,11 @@ import { Link } from 'react-router-dom';
 import { 
   PaintBucket, Truck, Home, AirVent, Hammer, 
   Wrench, Pipette, HousePlus, ChevronRight, ChevronDown,
-  Building, User, DoorOpen, Hotel
+  Building, User, DoorOpen, Hotel, Plus, X
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { toast } from 'sonner';
 
 interface ServiceCategory {
   name: string;
@@ -22,9 +23,18 @@ interface ServiceSubCategory {
   path: string;
 }
 
+interface CustomService {
+  id: string;
+  name: string;
+  icon: React.ReactNode;
+}
+
 export const ServiceCategoriesGrid = () => {
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [customServices, setCustomServices] = useState<CustomService[]>([]);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newServiceName, setNewServiceName] = useState('');
   
   // সার্ভিস ক্যাটাগরি ডেটা
   const serviceCategories: ServiceCategory[] = useMemo(() => [
@@ -135,6 +145,36 @@ export const ServiceCategoriesGrid = () => {
     </div>
   );
   
+  // Add a new custom service
+  const handleAddCustomService = () => {
+    if (customServices.length >= 10) {
+      toast.warning("সর্বাধিক ১০টি সার্ভিস যোগ করা যাবে");
+      return;
+    }
+    
+    if (!newServiceName.trim()) {
+      toast.error("সার্ভিসের নাম দিন");
+      return;
+    }
+    
+    const newService: CustomService = {
+      id: `custom-${Date.now()}`,
+      name: newServiceName.trim(),
+      icon: <Wrench className="h-6 w-6 text-primary" />
+    };
+    
+    setCustomServices(prev => [...prev, newService]);
+    setNewServiceName('');
+    setShowAddForm(false);
+    toast.success("নতুন সার্ভিস যোগ করা হয়েছে");
+  };
+  
+  // Remove a custom service
+  const handleRemoveCustomService = (id: string) => {
+    setCustomServices(prev => prev.filter(service => service.id !== id));
+    toast.info("সার্ভিস মুছে ফেলা হয়েছে");
+  };
+  
   return (
     <div className="space-y-4">
       <h3 className="font-medium text-lg">সার্ভিস ক্যাটাগরি</h3>
@@ -177,6 +217,69 @@ export const ServiceCategoriesGrid = () => {
             )}
           </div>
         ))}
+
+        {/* Custom services */}
+        {customServices.map((service) => (
+          <div key={service.id} className="flex flex-col">
+            <div className="flex flex-col items-center justify-center p-2 border rounded-lg hover:bg-blue-50 hover:border-blue-200 transition-colors shadow-sm relative">
+              <button 
+                onClick={() => handleRemoveCustomService(service.id)}
+                className="absolute top-1 right-1 h-5 w-5 rounded-full bg-red-100 hover:bg-red-200 flex items-center justify-center"
+                aria-label="Remove service"
+              >
+                <X className="h-3 w-3 text-red-600" />
+              </button>
+              <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mb-2 shadow-inner">
+                {service.icon}
+              </div>
+              <span className="text-xs font-medium text-center line-clamp-2">{service.name}</span>
+            </div>
+          </div>
+        ))}
+
+        {/* Add button */}
+        {customServices.length < 10 && (
+          <div className="flex flex-col">
+            {showAddForm ? (
+              <div className="flex flex-col items-center justify-center p-2 border rounded-lg shadow-sm">
+                <input
+                  type="text"
+                  value={newServiceName}
+                  onChange={(e) => setNewServiceName(e.target.value)}
+                  placeholder="সার্ভিসের নাম"
+                  className="w-full p-1 mb-2 border rounded text-xs"
+                />
+                <div className="flex gap-2 w-full">
+                  <button 
+                    onClick={handleAddCustomService}
+                    className="flex-1 text-xs bg-primary text-white rounded py-1 hover:bg-primary/90"
+                  >
+                    যোগ করুন
+                  </button>
+                  <button 
+                    onClick={() => {
+                      setShowAddForm(false);
+                      setNewServiceName('');
+                    }}
+                    className="flex-1 text-xs bg-gray-200 rounded py-1 hover:bg-gray-300"
+                  >
+                    বাতিল
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button 
+                onClick={() => setShowAddForm(true)}
+                className="flex flex-col items-center justify-center p-2 border border-dashed rounded-lg hover:bg-blue-50 hover:border-blue-200 transition-colors h-full min-h-[90px]"
+              >
+                <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mb-2">
+                  <Plus className="h-6 w-6 text-primary" />
+                </div>
+                <span className="text-xs font-medium text-center text-primary">নতুন সার্ভিস</span>
+              </button>
+            )}
+          </div>
+        )}
       </div>
       
       {/* আরও দেখুন বাটন */}
