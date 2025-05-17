@@ -2,6 +2,7 @@
 import React from 'react';
 import { Check } from 'lucide-react';
 import { Feature } from './types';
+import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
 
 interface FeatureCardProps {
   feature: Feature;
@@ -16,7 +17,7 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
 }) => {
   return (
     <div 
-      className={`relative border rounded-lg transition-all cursor-pointer hover:shadow-md ${
+      className={`relative border rounded-lg transition-all cursor-pointer hover:shadow-md animate-fade-in hover-scale ${
         isSelected 
           ? 'border-primary bg-primary/5' 
           : 'hover:border-gray-300'
@@ -34,7 +35,7 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
       </div>
       
       {isSelected && (
-        <div className="absolute top-3 right-3 h-6 w-6 bg-primary rounded-full flex items-center justify-center">
+        <div className="absolute top-3 right-3 h-6 w-6 bg-primary rounded-full flex items-center justify-center animate-scale-in">
           <Check className="h-3 w-3 text-white" />
         </div>
       )}

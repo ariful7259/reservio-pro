@@ -11,6 +11,7 @@ import {
   saveSelectedFeatures, 
   loadSelectedFeatures 
 } from '@/features/service-selection/featureSelectionUtils';
+import { toast } from "sonner";
 
 export const FeatureSelectionPage = () => {
   const navigate = useNavigate();
@@ -28,11 +29,12 @@ export const FeatureSelectionPage = () => {
   
   const handleSaveSelection = () => {
     saveSelectedFeatures(selectedFeatures, allFeatures);
+    toast.success("সার্ভিস সিলেকশন সফলভাবে সেভ করা হয়েছে");
     navigate(-1);
   };
 
   return (
-    <div className="container mx-auto py-20 px-4 max-w-4xl">
+    <div className="container mx-auto py-16 px-4 max-w-4xl pb-32">
       <FeatureSelectionHeader 
         selectedCount={selectedFeatures.length} 
         maxLimit={FEATURE_LIMIT} 

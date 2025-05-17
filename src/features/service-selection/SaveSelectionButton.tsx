@@ -9,10 +9,10 @@ interface SaveSelectionButtonProps {
 
 export const SaveSelectionButton: React.FC<SaveSelectionButtonProps> = ({ onSave }) => {
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white p-4 border-t shadow-md">
+    <div className="fixed bottom-0 left-0 right-0 bg-white p-4 border-t shadow-md z-10">
       <div className="container mx-auto max-w-4xl">
         <Button 
-          className="w-full py-6"
+          className="w-full py-6 button-pop"
           onClick={onSave}
         >
           <Check className="h-5 w-5 mr-2" />

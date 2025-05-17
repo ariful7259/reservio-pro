@@ -16,13 +16,13 @@ export const FeatureSelectionHeader: React.FC<FeatureSelectionHeaderProps> = ({
   const navigate = useNavigate();
 
   return (
-    <div className="mb-8">
+    <div className="mb-8 animate-fade-in">
       <div className="flex items-center gap-4 mb-6">
         <Button 
           variant="outline" 
           size="icon" 
           onClick={() => navigate(-1)}
-          className="h-9 w-9 rounded-full"
+          className="h-9 w-9 rounded-full button-pop"
         >
           <ArrowLeft className="h-4 w-4" />
         </Button>
