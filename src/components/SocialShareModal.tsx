@@ -81,6 +81,18 @@ const SocialShareModal = ({ open, onOpenChange, item }: SocialShareModalProps) =
     });
   };
   
+  const handleInstagramShare = () => {
+    // ইনস্টাগ্রামে ডাইরেক্ট শেয়ার করার API সাপোর্ট নেই
+    // তাই আমরা স্টোরি বা পোস্টের জন্য টেক্সট কপি করে দেব
+    navigator.clipboard.writeText(getFullDescription());
+    toast({
+      title: "ইনস্টাগ্রামে শেয়ার করুন",
+      description: "সম্পূর্ণ বিবরণ কপি করা হয়েছে। ইনস্টাগ্রাম অ্যাপ খুলে পেস্ট করুন।",
+    });
+    // ইনস্টাগ্রাম অ্যাপ খোলার চেষ্টা করি
+    window.location.href = 'instagram://';
+  };
+  
   const handleFacebookMarketplaceShare = () => {
     // Since direct Marketplace API isn't publicly available, we'll open Facebook and suggest copy-paste
     toast({
@@ -165,6 +177,13 @@ const SocialShareModal = ({ open, onOpenChange, item }: SocialShareModalProps) =
             <Button 
               variant="outline" 
               className="flex items-center gap-2" 
+              onClick={handleInstagramShare}
+            >
+              <Instagram className="h-4 w-4" /> ইনস্টাগ্রাম
+            </Button>
+            <Button 
+              variant="outline" 
+              className="flex items-center gap-2" 
               onClick={handleFacebookMarketplaceShare}
             >
               <Facebook className="h-4 w-4" /> মার্কেটপ্লেস
@@ -176,6 +195,9 @@ const SocialShareModal = ({ open, onOpenChange, item }: SocialShareModalProps) =
             >
               <MessageCircle className="h-4 w-4" /> হোয়াটসঅ্যাপ
             </Button>
+          </div>
+          
+          <div className="flex flex-col space-y-2">
             <Button 
               variant="outline" 
               className="flex items-center gap-2" 
@@ -183,15 +205,15 @@ const SocialShareModal = ({ open, onOpenChange, item }: SocialShareModalProps) =
             >
               <LinkIcon className="h-4 w-4" /> লিংক কপি
             </Button>
+            
+            <Button 
+              variant="secondary" 
+              className="flex items-center gap-2" 
+              onClick={handleCopyFullDescription}
+            >
+              <Copy className="h-4 w-4" /> সম্পূর্ণ বিবরণ কপি করুন
+            </Button>
           </div>
-          
-          <Button 
-            variant="secondary" 
-            className="flex items-center gap-2" 
-            onClick={handleCopyFullDescription}
-          >
-            <Copy className="h-4 w-4" /> সম্পূর্ণ বিবরণ কপি করুন
-          </Button>
         </div>
         
         <DialogFooter>
