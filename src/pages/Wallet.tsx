@@ -26,11 +26,15 @@ import { useToast } from '@/hooks/use-toast';
 import WalletCard from '@/components/WalletCard';
 import TransactionItem from '@/components/TransactionItem';
 import WalletNearbyServices from '@/components/WalletNearbyServices';
+import { useIsMobile } from '@/hooks/use-mobile';
+import WalletQRCode from '@/components/WalletQRCode';
 
 const Wallet = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [walletId] = useState('200 008 794');
+  const isMobile = useIsMobile();
+  const [showQRCode, setShowQRCode] = useState(false);
 
   const handleCopyId = () => {
     navigator.clipboard.writeText(walletId);
@@ -58,6 +62,71 @@ const Wallet = () => {
       date: '২৭ এপ্রিল, ২০২৫'
     },
   ];
+
+  // বাটন ফাংশনালিটি
+  const handleSendMoney = () => {
+    navigate('/payment', { state: { action: 'send' } });
+    toast({
+      title: "টাকা পাঠানোর পেইজে নিয়ে যাচ্ছি",
+      description: "আপনি কাকে টাকা পাঠাতে চান সিলেক্ট করুন",
+    });
+  };
+
+  const handleReceiveMoney = () => {
+    setShowQRCode(true);
+    toast({
+      title: "টাকা গ্রহণ করুন",
+      description: "আপনার QR কোড শেয়ার করে টাকা গ্রহণ করুন",
+    });
+  };
+
+  const handleViewHistory = () => {
+    navigate('/payment/transaction-history');
+    toast({
+      title: "লেনদেনের তালিকা",
+      description: "আপনার সমস্ত লেনদেন দেখুন",
+    });
+  };
+
+  const handleGiftCard = () => {
+    navigate('/payment/gift-card');
+    toast({
+      title: "গিফট কার্ড",
+      description: "গিফট কার্ড কিনুন অথবা রিডিম করুন",
+    });
+  };
+
+  const handleMobileRecharge = () => {
+    navigate('/utilities', { state: { tab: 'mobile' } });
+    toast({
+      title: "মোবাইল রিচার্জ",
+      description: "আপনার মোবাইল রিচার্জ করুন",
+    });
+  };
+
+  const handleCashOut = () => {
+    navigate('/payment', { state: { action: 'cashout' } });
+    toast({
+      title: "ক্যাশ আউট",
+      description: "নিকটস্থ এজেন্ট থেকে ক্যাশ আউট করুন",
+    });
+  };
+
+  const handleCurrencyConvert = () => {
+    navigate('/payment/multi-currency');
+    toast({
+      title: "কারেন্সি কনভার্ট",
+      description: "বিভিন্ন কারেন্সিতে রূপান্তর করুন",
+    });
+  };
+
+  const handleGroupPayment = () => {
+    navigate('/group-booking');
+    toast({
+      title: "গ্রুপ পেমেন্ট",
+      description: "বন্ধুদের সাথে মিলে পেমেন্ট করুন",
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -109,22 +178,65 @@ const Wallet = () => {
           />
         </div>
 
-        {/* Quick Actions Grid */}
-        <div className="grid grid-cols-4 gap-4 mb-8">
+        {showQRCode && (
+          <div className="mb-6">
+            <WalletQRCode 
+              walletId={walletId} 
+              phoneNumber="01712345678" 
+              userName="আপনার নাম"
+            />
+          </div>
+        )}
+
+        {/* Quick Actions Grid - রেসপনসিভ করা হয়েছে */}
+        <div className={`grid ${isMobile ? 'grid-cols-3' : 'grid-cols-4'} gap-4 mb-8`}>
           {[
-            { icon: <SendHorizontal className="h-6 w-6" />, label: "পাঠান" },
-            { icon: <Download className="h-6 w-6" />, label: "রিসিভ" },
-            { icon: <History className="h-6 w-6" />, label: "হিস্টোরি" },
-            { icon: <Gift className="h-6 w-6" />, label: "গিফট\nকার্ড" },
-            { icon: <Smartphone className="h-6 w-6" />, label: "মোবাইল\nরিচার্জ" },
-            { icon: <DollarSign className="h-6 w-6" />, label: "ক্যাশ\nআউট" },
-            { icon: <RefreshCw className="h-6 w-6" />, label: "কনভার্ট" },
-            { icon: <Users className="h-6 w-6" />, label: "গ্রুপ\nপেমেন্ট" },
+            { 
+              icon: <SendHorizontal className="h-6 w-6" />, 
+              label: "পাঠান",
+              onClick: handleSendMoney 
+            },
+            { 
+              icon: <Download className="h-6 w-6" />, 
+              label: "রিসিভ",
+              onClick: handleReceiveMoney
+            },
+            { 
+              icon: <History className="h-6 w-6" />, 
+              label: "হিস্টোরি",
+              onClick: handleViewHistory
+            },
+            { 
+              icon: <Gift className="h-6 w-6" />, 
+              label: isMobile ? "গিফট" : "গিফট\nকার্ড",
+              onClick: handleGiftCard  
+            },
+            { 
+              icon: <Smartphone className="h-6 w-6" />, 
+              label: isMobile ? "রিচার্জ" : "মোবাইল\nরিচার্জ",
+              onClick: handleMobileRecharge
+            },
+            { 
+              icon: <DollarSign className="h-6 w-6" />, 
+              label: isMobile ? "ক্যাশ" : "ক্যাশ\nআউট",
+              onClick: handleCashOut
+            },
+            { 
+              icon: <RefreshCw className="h-6 w-6" />, 
+              label: "কনভার্ট",
+              onClick: handleCurrencyConvert
+            },
+            { 
+              icon: <Users className="h-6 w-6" />, 
+              label: isMobile ? "গ্রুপ" : "গ্রুপ\nপেমেন্ট",
+              onClick: handleGroupPayment
+            },
           ].map((item, index) => (
             <Button
               key={index}
               variant="outline"
-              className="flex flex-col items-center justify-center h-24 rounded-xl hover:bg-primary/5 transition-colors"
+              className="flex flex-col items-center justify-center h-20 sm:h-24 rounded-xl hover:bg-primary/5 transition-colors"
+              onClick={item.onClick}
             >
               <div className="mb-2">{item.icon}</div>
               <span className="text-xs text-center whitespace-pre-line">{item.label}</span>
@@ -137,7 +249,13 @@ const Wallet = () => {
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-lg">সাম্প্রতিক লেনদেন</h3>
-              <Button variant="link" className="p-0 text-sm">সব দেখুন</Button>
+              <Button 
+                variant="link" 
+                className="p-0 text-sm"
+                onClick={() => navigate('/payment/transaction-history')}
+              >
+                সব দেখুন
+              </Button>
             </div>
             <div className="space-y-2">
               {recentTransactions.map(transaction => (
