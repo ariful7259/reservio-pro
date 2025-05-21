@@ -11,11 +11,13 @@ import WishlistComponent from '@/components/product/WishlistComponent';
 import PostDigitalProduct from '@/components/product/PostDigitalProduct';
 import { useShoppingState } from '@/hooks/useShoppingState';
 import { Badge } from '@/components/ui/badge';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const MarketplaceHub = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('browse');
   const { cart, wishlist, getCartItemsCount } = useShoppingState();
+  const isMobile = useIsMobile();
   
   // Update the page title based on the active tab
   useEffect(() => {
@@ -31,8 +33,8 @@ const MarketplaceHub = () => {
   
   return (
     <div className="container min-h-screen pt-20 pb-16">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">ডিজিটাল প্রোডাক্টস মার্কেটপ্লেস</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
+        <h1 className="text-xl sm:text-2xl font-bold">ডিজিটাল প্রোডাক্টস মার্কেটপ্লেস</h1>
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
@@ -73,13 +75,13 @@ const MarketplaceHub = () => {
             onClick={() => setActiveTab('sell')}
           >
             <Plus className="h-4 w-4" />
-            প্রোডাক্ট বিক্রি করুন
+            {isMobile ? 'বিক্রি করুন' : 'প্রোডাক্ট বিক্রি করুন'}
           </Button>
         </div>
       </div>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="w-full overflow-auto grid grid-cols-4">
           <TabsTrigger value="browse" className="flex items-center gap-1">
             <Grid className="h-4 w-4" />
             <span className="hidden sm:inline">ব্রাউজ করুন</span>

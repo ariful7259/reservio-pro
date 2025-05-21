@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { 
@@ -36,6 +35,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/components/ui/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useShoppingState, useShoppingStateWithToast } from '@/hooks/useShoppingState';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Product {
   id: string;
@@ -55,6 +55,7 @@ const DigitalProductsMarketplace = () => {
   const { toast } = useToast();
   const { isInWishlist } = useShoppingState();
   const { addToCartWithToast, toggleWishlistWithToast } = useShoppingStateWithToast();
+  const isMobile = useIsMobile();
   
   // UI state
   const [viewMode, setViewMode] = useState<'grid' | 'list'>(
@@ -337,7 +338,7 @@ const DigitalProductsMarketplace = () => {
   const filteredProducts = sortProducts(filterProducts(demoProducts));
   
   const ProductGrid = ({ products }: { products: Product[] }) => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
       {products.map((product) => (
         <Card 
           key={product.id} 
@@ -357,23 +358,24 @@ const DigitalProductsMarketplace = () => {
               {productTypes.find(t => t.value === product.type)?.name}
             </Badge>
           </div>
-          <CardContent className="p-4">
-            <h3 className="font-medium line-clamp-1">{product.title}</h3>
-            <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{product.description}</p>
+          <CardContent className={`p-3 ${isMobile ? 'px-2' : 'p-4'}`}>
+            <h3 className={`font-medium line-clamp-1 ${isMobile ? 'text-sm' : ''}`}>{product.title}</h3>
+            <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{product.description}</p>
             <div className="flex items-center justify-between mt-2">
-              <span className="text-sm text-muted-foreground">{product.author}</span>
+              <span className="text-xs text-muted-foreground">{product.author}</span>
               <div className="flex items-center">
                 <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
                 <span className="text-xs ml-1">{product.rating}</span>
               </div>
             </div>
           </CardContent>
-          <CardFooter className="p-4 pt-0 flex justify-between items-center">
-            <span className="font-bold text-primary">{product.price}</span>
-            <div className="flex gap-2">
+          <CardFooter className={`p-3 ${isMobile ? 'px-2 pt-0' : 'p-4 pt-0'} flex justify-between items-center`}>
+            <span className={`font-bold text-primary ${isMobile ? 'text-sm' : ''}`}>{product.price}</span>
+            <div className="flex gap-1 md:gap-2">
               <Button 
-                size="icon" 
+                size={isMobile ? "sm" : "icon"} 
                 variant="ghost"
+                className={isMobile ? "h-8 w-8 p-0" : ""}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleAddToWishlist(product);
@@ -385,13 +387,14 @@ const DigitalProductsMarketplace = () => {
               </Button>
               <Button 
                 size="sm"
+                className={isMobile ? "h-8 px-2 text-xs" : ""}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleAddToCart(product);
                 }}
               >
-                <ShoppingCart className="h-4 w-4 mr-2" />
-                কিনুন
+                <ShoppingCart className="h-4 w-4 mr-1 md:mr-2" />
+                {isMobile ? "কিনুন" : "কিনুন"}
               </Button>
             </div>
           </CardFooter>
@@ -496,9 +499,9 @@ const DigitalProductsMarketplace = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Search and Filter */}
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex flex-col md:flex-row gap-3 md:gap-4">
         <form onSubmit={handleSearch} className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input 
@@ -590,7 +593,7 @@ const DigitalProductsMarketplace = () => {
         </form>
         <div className="flex gap-2">
           <Select value={sortBy} onValueChange={handleSortChange}>
-            <SelectTrigger className="w-[160px]">
+            <SelectTrigger className={`${isMobile ? 'w-[120px]' : 'w-[160px]'} `}>
               <SelectValue placeholder="সর্টিং" />
             </SelectTrigger>
             <SelectContent>
@@ -620,7 +623,7 @@ const DigitalProductsMarketplace = () => {
           </Button>
           <Button 
             variant="outline" 
-            className="flex items-center gap-2"
+            className="flex items-center gap-1"
             onClick={() => setFilterVisible(!filterVisible)}
           >
             <Filter className="h-4 w-4" />
