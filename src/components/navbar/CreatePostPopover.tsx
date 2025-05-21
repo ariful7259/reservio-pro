@@ -1,216 +1,91 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  PlusCircle,
-  ShoppingBag,
-  FileText,
-  Newspaper,
-  MessageCircle,
-  Store,
-  BookOpen,
-  Home,
-  Clock,
-  Building,
-  Utensils,
-  PenTool,
-  Video,
-  Headphones,
-  Users,
-  Calendar,
-  Tag,
-  Briefcase
-} from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Link } from 'react-router-dom';
+import { Plus, Building, Search, ShoppingBag, Rocket } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { useAdminConfig } from '@/context/AdminConfigContext';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { 
+  DropdownMenu, 
+  DropdownMenuTrigger, 
+  DropdownMenuContent, 
+  DropdownMenuItem 
+} from '@/components/ui/dropdown-menu';
+import { creatorSolutionsData } from './navbarData';
 
-const CreatePostPopover = () => {
+export const CreatePostPopover: React.FC = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const { monetizationSettings } = useAdminConfig();
-
-  const notifyComingSoon = (feature: string) => {
-    toast({
-      title: "শীঘ্রই আসছে",
-      description: `${feature} ফিচারটি শীঘ্রই চালু করা হবে।`,
-    });
-  };
-
-  // একটি পোস্ট বা লিস্টিং তৈরি করার জন্য পৃষ্ঠায় নেভিগেট করে
-  const navigateToCreatePage = (path: string, featureName: string, premiumFeature = false) => {
-    if (premiumFeature) {
-      toast({
-        title: "প্রিমিয়াম ফিচার",
-        description: `${featureName} একটি প্রিমিয়াম ফিচার। আপগ্রেড করতে প্রিমিয়াম প্ল্যান কিনুন।`,
-      });
-      return;
-    }
-    navigate(path);
-  };
-
-  // চেক করে যে একটি ফিচার প্রিমিয়াম কিনা
-  const isPremiumFeature = (featureKey: string, category: keyof typeof monetizationSettings): boolean => {
-    const categorySettings = monetizationSettings[category];
-    if (!categorySettings) return false;
-    return Boolean(categorySettings[featureKey as keyof typeof categorySettings]);
-  };
-
+  
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="rounded-full h-8 w-8 bg-primary text-primary-foreground hover:bg-primary/90"
-        >
-          <PlusCircle className="h-4 w-4" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[220px] p-3" align="end">
-        <div className="space-y-2">
-          <h3 className="font-medium text-sm">নতুন পোস্ট করুন</h3>
-          
-          <div className="flex flex-col gap-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="justify-start"
-              onClick={() => navigateToCreatePage('/create-post', 'পোস্ট')}
-            >
-              <FileText className="mr-2 h-4 w-4" />
-              পোস্ট
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              className="justify-start"
-              onClick={() => navigateToCreatePage('/marketplace/create', 'প্রোডাক্ট', isPremiumFeature('premiumListing', 'marketplace'))}
-            >
-              <ShoppingBag className="mr-2 h-4 w-4" />
-              প্রোডাক্ট{isPremiumFeature('premiumListing', 'marketplace') && <span className="ml-1 text-xs text-primary">★</span>}
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              className="justify-start"
-              onClick={() => navigateToCreatePage('/service/create', 'সার্ভিস', isPremiumFeature('premiumListing', 'service'))}
-            >
-              <Briefcase className="mr-2 h-4 w-4" />
-              সার্ভিস{isPremiumFeature('premiumListing', 'service') && <span className="ml-1 text-xs text-primary">★</span>}
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              className="justify-start"
-              onClick={() => navigateToCreatePage('/rent/create', 'রেন্টাল', isPremiumFeature('premiumListing', 'rental'))}
-            >
-              <Home className="mr-2 h-4 w-4" />
-              রেন্টাল{isPremiumFeature('premiumListing', 'rental') && <span className="ml-1 text-xs text-primary">★</span>}
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              className="justify-start"
-              onClick={() => navigateToCreatePage('/create-store/new', 'অনলাইন স্টোর')}
-            >
-              <Store className="mr-2 h-4 w-4" />
-              অনলাইন স্টোর
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              className="justify-start"
-              onClick={() => navigateToCreatePage('/housing/create', 'বাসা/রুম', isPremiumFeature('premiumListing', 'rental'))}
-            >
-              <Building className="mr-2 h-4 w-4" />
-              বাসা/রুম{isPremiumFeature('premiumListing', 'rental') && <span className="ml-1 text-xs text-primary">★</span>}
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="sm"
-              className="justify-start"
-              onClick={() => navigateToCreatePage('/create-digital-product', 'ডিজিটাল প্রোডাক্ট', isPremiumFeature('digitalProductSale', 'digitalCreator'))}
-            >
-              <BookOpen className="mr-2 h-4 w-4" />
-              ডিজিটাল প্রোডাক্ট{isPremiumFeature('digitalProductSale', 'digitalCreator') && <span className="ml-1 text-xs text-primary">★</span>}
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              className="justify-start"
-              onClick={() => navigateToCreatePage('/course-builder', 'অনলাইন কোর্স', isPremiumFeature('courseSaleCommission', 'digitalCreator'))}
-            >
-              <Video className="mr-2 h-4 w-4" />
-              অনলাইন কোর্স{isPremiumFeature('courseSaleCommission', 'digitalCreator') && <span className="ml-1 text-xs text-primary">★</span>}
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              className="justify-start"
-              onClick={() => navigateToCreatePage('/event-calendar/create', 'ইভেন্ট')}
-            >
-              <Calendar className="mr-2 h-4 w-4" />
-              ইভেন্ট
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              className="justify-start"
-              onClick={() => navigateToCreatePage('/paid-community/create', 'পেইড কমিউনিটি', isPremiumFeature('premiumMembership', 'digitalCreator'))}
-            >
-              <Users className="mr-2 h-4 w-4" />
-              পেইড কমিউনিটি{isPremiumFeature('premiumMembership', 'digitalCreator') && <span className="ml-1 text-xs text-primary">★</span>}
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              className="justify-start"
-              onClick={() => navigateToCreatePage('/appointment/create', 'অ্যাপয়েন্টমেন্ট', isPremiumFeature('oneOnOneSession', 'digitalCreator'))}
-            >
-              <Clock className="mr-2 h-4 w-4" />
-              অ্যাপয়েন্টমেন্ট{isPremiumFeature('oneOnOneSession', 'digitalCreator') && <span className="ml-1 text-xs text-primary">★</span>}
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              className="justify-start"
-              onClick={() => navigateToCreatePage('/food-menu/create', 'ফুড মেনু')}
-            >
-              <Utensils className="mr-2 h-4 w-4" />
-              ফুড মেনু
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              className="justify-start"
-              onClick={() => notifyComingSoon('পডকাস্ট')}
-            >
-              <Headphones className="mr-2 h-4 w-4" />
-              পডকাস্ট<span className="ml-1 text-xs bg-yellow-500/20 text-yellow-600 rounded-full px-1.5">শীঘ্রই</span>
-            </Button>
+        <div className="flex flex-col items-center justify-center relative cursor-pointer">
+          <div className="bg-primary rounded-full h-10 w-10 flex items-center justify-center mb-1">
+            <Plus className="h-6 w-6 text-white" />
           </div>
+          <span className="text-xs mt-1 text-primary font-medium">পোস্ট করুন</span>
+        </div>
+      </PopoverTrigger>
+      <PopoverContent className="w-80 p-0" align="center">
+        <div className="grid grid-cols-2 gap-2 p-4">
+          <div className="col-span-2">
+            <h3 className="font-semibold text-center mb-2">পোস্ট করুন</h3>
+          </div>
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/create-post')} 
+            className="flex flex-col items-center justify-center h-24 gap-2"
+          >
+            <Building className="h-8 w-8 text-primary" />
+            <span className="text-sm">রেন্টাল পোস্ট</span>
+          </Button>
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/create-post?type=service')} 
+            className="flex flex-col items-center justify-center h-24 gap-2"
+          >
+            <Search className="h-8 w-8 text-blue-500" />
+            <span className="text-sm">সার্ভিস পোস্ট</span>
+          </Button>
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/create-post?type=marketplace')} 
+            className="flex flex-col items-center justify-center h-24 gap-2"
+          >
+            <ShoppingBag className="h-8 w-8 text-green-500" />
+            <span className="text-sm">প্রোডাক্ট পোস্ট</span>
+          </Button>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="outline" 
+                className="flex flex-col items-center justify-center h-24 gap-2"
+              >
+                <Rocket className="h-8 w-8 text-purple-500" />
+                <span className="text-sm">ডিজিটাল ক্রিয়েটর</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56 max-h-[70vh] overflow-auto">
+              <div className="grid grid-cols-1 gap-1 p-1">
+                {creatorSolutionsData.map((solution, index) => (
+                  <DropdownMenuItem key={index} asChild className="p-2">
+                    <Link to={solution.path} className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2">
+                        {solution.icon}
+                        <span className="font-medium">{solution.name}</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground pl-6">
+                        {solution.description}
+                      </p>
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </PopoverContent>
     </Popover>
   );
 };
-
-export default CreatePostPopover;

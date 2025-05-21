@@ -3,7 +3,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { Home, Building, Search, ShoppingBag, Plus } from 'lucide-react';
 import { BottomNavItem } from './BottomNavItem';
-import CreatePostPopover from './CreatePostPopover';
+import { CreatePostPopover } from './CreatePostPopover';
 
 export const BottomNav: React.FC = () => {
   const location = useLocation();
