@@ -55,8 +55,10 @@ const CreatePostPopover = () => {
   };
 
   // চেক করে যে একটি ফিচার প্রিমিয়াম কিনা
-  const isPremiumFeature = (featureKey: string, category: keyof typeof monetizationSettings) => {
-    return monetizationSettings[category] && monetizationSettings[category][featureKey as keyof typeof monetizationSettings[typeof category]];
+  const isPremiumFeature = (featureKey: string, category: keyof typeof monetizationSettings): boolean => {
+    const categorySettings = monetizationSettings[category];
+    if (!categorySettings) return false;
+    return Boolean(categorySettings[featureKey as keyof typeof categorySettings]);
   };
 
   return (
