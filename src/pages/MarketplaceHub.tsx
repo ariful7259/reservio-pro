@@ -32,8 +32,8 @@ const MarketplaceHub = () => {
   }, [activeTab]);
   
   return (
-    <div className="container min-h-screen pt-20 pb-16">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
+    <div className="container min-h-screen pt-16 pb-16">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-2 sm:gap-3">
         <h1 className="text-xl sm:text-2xl font-bold">ডিজিটাল প্রোডাক্টস মার্কেটপ্লেস</h1>
         <div className="flex items-center gap-2">
           <Button
@@ -113,12 +113,12 @@ const MarketplaceHub = () => {
         </TabsContent>
         
         <TabsContent value="cart" className="min-h-[70vh]">
-          <div className="grid grid-cols-1 lg:grid-cols-7 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-7 gap-4 sm:gap-6">
             <div className="lg:col-span-5">
               <CartComponent />
             </div>
             <div className="lg:col-span-2">
-              <Card className="p-4">
+              <Card className="p-3 sm:p-4">
                 <h3 className="font-medium mb-3">রিকমেন্ডেড প্রোডাক্টস</h3>
                 {/* Recommended products would go here */}
                 <div className="text-sm text-muted-foreground text-center py-4">
@@ -137,12 +137,12 @@ const MarketplaceHub = () => {
         </TabsContent>
         
         <TabsContent value="wishlist" className="min-h-[70vh]">
-          <div className="grid grid-cols-1 lg:grid-cols-7 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-7 gap-4 sm:gap-6">
             <div className="lg:col-span-5">
               <WishlistComponent />
             </div>
             <div className="lg:col-span-2">
-              <Card className="p-4">
+              <Card className="p-3 sm:p-4">
                 <h3 className="font-medium mb-3">সিমিলার প্রোডাক্টস</h3>
                 {/* Similar products would go here */}
                 <div className="text-sm text-muted-foreground text-center py-4">
@@ -161,12 +161,12 @@ const MarketplaceHub = () => {
         </TabsContent>
         
         <TabsContent value="sell">
-          <div className="grid grid-cols-1 lg:grid-cols-7 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-7 gap-4 sm:gap-6">
             <div className="lg:col-span-5">
               <PostDigitalProduct />
             </div>
             <div className="lg:col-span-2">
-              <Card className="p-4">
+              <Card className="p-3 sm:p-4">
                 <h3 className="font-medium mb-3">সেলার টিপস</h3>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-center gap-2">

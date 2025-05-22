@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -16,6 +17,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSellerProfile } from '@/hooks/useSellerProfile';
+import { StoreFeaturesList } from '@/components/store/StoreFeaturesList';
+
 export type SellerType = 'marketplace' | 'rental' | 'service' | 'content';
 
 // ফর্ম ভ্যালিডেশন স্কিমা
@@ -55,20 +58,14 @@ const formSchema = z.object({
   }).optional()
 });
 type FormValues = z.infer<typeof formSchema>;
+
 const CreateStore = () => {
-  const {
-    user,
-    isAuthenticated
-  } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [activeTab, setActiveTab] = useState("basic");
-  const {
-    profile
-  } = useSellerProfile();
+  const [activeTab, setActiveTab] = useState("features");
+  const { profile } = useSellerProfile();
 
   // যদি ব্যবহারকারীর একটি প্রোফাইল থাকে তবে ড্যাশবোর্ডে পরিচালিত করে
   useEffect(() => {
@@ -111,7 +108,9 @@ const CreateStore = () => {
 
   // পরবর্তী ট্যাবে যাওয়ার জন্য হ্যান্ডলার
   const handleNextTab = () => {
-    if (activeTab === "basic") {
+    if (activeTab === "features") {
+      setActiveTab("basic");
+    } else if (activeTab === "basic") {
       // বেসিক ট্যাব থেকে ব্যবসার ধরন অনুযায়ী সেটিংস ট্যাবে যান
       setActiveTab("settings");
     } else if (activeTab === "settings") {
@@ -126,6 +125,8 @@ const CreateStore = () => {
       setActiveTab("settings");
     } else if (activeTab === "settings") {
       setActiveTab("basic");
+    } else if (activeTab === "basic") {
+      setActiveTab("features");
     }
   };
 
@@ -168,10 +169,7 @@ const CreateStore = () => {
       });
 
       // সুপাবেস-এ ডাটা জমা দেওয়া
-      const {
-        data: insertedData,
-        error
-      } = await supabase.from('seller_profiles').insert({
+      const { data: insertedData, error } = await supabase.from('seller_profiles').insert({
         id: user.id,
         seller_type: data.sellerType,
         business_name: data.businessName,
@@ -185,10 +183,12 @@ const CreateStore = () => {
         service_settings: serviceSettings,
         content_settings: contentSettings
       }).select();
+      
       if (error) {
         console.error('ব্যবসা তৈরি ব্যর্থ:', error);
         throw error;
       }
+      
       toast({
         title: "সফল",
         description: "আপনার ব্যবসা সফলভাবে তৈরি হয়েছে",
@@ -463,7 +463,8 @@ const CreateStore = () => {
 
   // লগইন না করা ব্যবহারকারীদের জন্য প্রম্পট
   if (!isAuthenticated) {
-    return <div className="container mx-auto px-4 py-16 flex items-center justify-center">
+    return (
+      <div className="container mx-auto px-4 py-16 flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle>লগইন করুন</CardTitle>
@@ -472,22 +473,233 @@ const CreateStore = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => navigate('/login', {
-            state: {
-              from: '/create-store'
-            }
-          })} className="w-full">
+            <Button onClick={() => navigate('/login', { state: { from: '/create-store' } })} className="w-full">
               লগইন পৃষ্ঠায় যান
             </Button>
           </CardContent>
         </Card>
-      </div>;
+      </div>
+    );
   }
-  return <div className="container mx-auto px-4 py-8">
+
+  return (
+    <div className="container mx-auto px-4 py-8">
       <Card>
-        
-        
+        <CardHeader>
+          <CardTitle className="text-2xl">আপনার অনলাইন স্টোর তৈরি করুন</CardTitle>
+          <CardDescription>
+            সহজেই আপনার অনলাইন ব্যবসা শুরু করুন। কোন কোডিং জ্ঞান ছাড়াই আপনার ওয়েবসাইট বানান।
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid grid-cols-4 mb-8">
+              <TabsTrigger value="features">ফিচারস</TabsTrigger>
+              <TabsTrigger value="basic">বেসিক তথ্য</TabsTrigger>
+              <TabsTrigger value="settings">সেটিংস</TabsTrigger>
+              <TabsTrigger value="additional">অতিরিক্ত</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="features">
+              <StoreFeaturesList />
+              <div className="flex justify-end mt-6">
+                <Button onClick={handleNextTab}>পরবর্তী ধাপ</Button>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="basic">
+              <Form {...form}>
+                <form className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="businessName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>ব্যবসার নাম *</FormLabel>
+                          <FormControl>
+                            <Input placeholder="আপনার ব্যবসার নাম লিখুন" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="sellerType"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>ব্যবসার ধরন *</FormLabel>
+                          <Select 
+                            onValueChange={field.onChange} 
+                            defaultValue={field.value}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="ব্যবসার ধরন নির্বাচন করুন" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="marketplace">মার্কেটপ্লেস</SelectItem>
+                              <SelectItem value="rental">রেন্টাল</SelectItem>
+                              <SelectItem value="service">সার্ভিস</SelectItem>
+                              <SelectItem value="content">ডিজিটাল কন্টেন্ট</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>ব্যবসার ইমেইল</FormLabel>
+                          <FormControl>
+                            <Input type="email" placeholder="example@mail.com" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>যোগাযোগের নম্বর</FormLabel>
+                          <FormControl>
+                            <Input placeholder="+880 1XXXXXXXXX" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  
+                  <FormField
+                    control={form.control}
+                    name="address"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>ব্যবসার ঠিকানা</FormLabel>
+                        <FormControl>
+                          <Input placeholder="আপনার ব্যবসার ঠিকানা লিখুন" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="bio"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>ব্যবসার বিবরণ</FormLabel>
+                        <FormControl>
+                          <Textarea 
+                            placeholder="আপনার ব্যবসা সম্পর্কে সংক্ষেপে লিখুন" 
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </form>
+              </Form>
+              
+              <div className="flex justify-between mt-6">
+                <Button variant="outline" onClick={handlePreviousTab}>
+                  আগের ধাপ
+                </Button>
+                <Button onClick={handleNextTab}>
+                  পরবর্তী ধাপ
+                </Button>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="settings">
+              <div className="space-y-6">
+                {renderBusinessTypeSettings()}
+                
+                <div className="flex justify-between mt-6">
+                  <Button variant="outline" onClick={handlePreviousTab}>
+                    আগের ধাপ
+                  </Button>
+                  <Button onClick={handleNextTab}>
+                    পরবর্তী ধাপ
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="additional">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <FormField
+                    control={form.control}
+                    name="termsConditions"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>শর্তাবলী ও নীতিমালা</FormLabel>
+                        <FormControl>
+                          <Textarea 
+                            placeholder="আপনার ব্যবসার নীতিমালা এবং শর্তাবলী লিখুন" 
+                            {...field} 
+                            rows={6}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          এটি আপনার স্টোরের ফুটারে দেখানো হবে
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <div className="bg-amber-50 border border-amber-200 rounded-md p-4 flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="font-medium text-amber-800">আপনার স্টোর প্রায় তৈরি</h3>
+                      <p className="text-sm text-amber-700 mt-1">
+                        স্টোর তৈরি হওয়ার পর আপনি পণ্য যোগ করতে পারবেন, আপনার স্টোরের জন্য কাস্টম ডোমেইন সেট করতে পারবেন,
+                        এবং পেমেন্ট গেটওয়ে সেটআপ করতে পারবেন।
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between mt-6">
+                    <Button variant="outline" onClick={handlePreviousTab}>
+                      আগের ধাপ
+                    </Button>
+                    <Button 
+                      type="submit"
+                      onClick={form.handleSubmit(onSubmit)} 
+                      disabled={isSubmitting}
+                      className="flex items-center gap-2"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" /> 
+                          ব্যবসা তৈরি হচ্ছে...
+                        </>
+                      ) : (
+                        <>আপনার স্টোর তৈরি করুন</>
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
       </Card>
-    </div>;
+    </div>
+  );
 };
+
 export default CreateStore;
