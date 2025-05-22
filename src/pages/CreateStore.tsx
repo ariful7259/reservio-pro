@@ -231,230 +231,240 @@ const CreateStore = () => {
       case 'marketplace':
         return <div className="space-y-4">
             <h3 className="text-lg font-medium">মার্কেটপ্লেস সেটিংস</h3>
-            <FormField control={form.control} name="marketplaceSettings.categories" render={({
-            field
-          }) => <FormItem>
-                  <FormLabel>পণ্য বিভাগ</FormLabel>
-                  <Select onValueChange={value => {
-              const currentCategories = form.getValues("marketplaceSettings.categories") || [];
-              if (!currentCategories.includes(value)) {
-                form.setValue("marketplaceSettings.categories", [...currentCategories, value]);
-              }
-            }}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="পণ্য বিভাগ নির্বাচন করুন" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="electronics">ইলেকট্রনিক্স</SelectItem>
-                      <SelectItem value="clothing">পোশাক</SelectItem>
-                      <SelectItem value="food">খাদ্য সামগ্রী</SelectItem>
-                      <SelectItem value="home">গৃহসজ্জা</SelectItem>
-                      <SelectItem value="beauty">সৌন্দর্য সামগ্রী</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {form.getValues("marketplaceSettings.categories")?.map((category, index) => <div key={index} className="bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1">
-                        <span>{category}</span>
-                        <button type="button" onClick={() => {
-                  const currentCategories = form.getValues("marketplaceSettings.categories") || [];
-                  form.setValue("marketplaceSettings.categories", currentCategories.filter(c => c !== category));
-                }} className="text-xs text-red-500">
-                          ✕
-                        </button>
-                      </div>)}
-                  </div>
-                  <FormMessage />
-                </FormItem>} />
-            <FormField control={form.control} name="marketplaceSettings.deliveryOptions" render={({
-            field
-          }) => <FormItem>
-                  <FormLabel>ডেলিভারি অপশন</FormLabel>
-                  <Select onValueChange={value => {
-              const currentOptions = form.getValues("marketplaceSettings.deliveryOptions") || [];
-              if (!currentOptions.includes(value)) {
-                form.setValue("marketplaceSettings.deliveryOptions", [...currentOptions, value]);
-              }
-            }}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="ডেলিভারি অপশন নির্বাচন করুন" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="home_delivery">হোম ডেলিভারি</SelectItem>
-                      <SelectItem value="pickup">পিকআপ পয়েন্ট</SelectItem>
-                      <SelectItem value="courier">কুরিয়ার সার্ভিস</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {form.getValues("marketplaceSettings.deliveryOptions")?.map((option, index) => <div key={index} className="bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1">
-                        <span>{option}</span>
-                        <button type="button" onClick={() => {
-                  const currentOptions = form.getValues("marketplaceSettings.deliveryOptions") || [];
-                  form.setValue("marketplaceSettings.deliveryOptions", currentOptions.filter(o => o !== option));
-                }} className="text-xs text-red-500">
-                          ✕
-                        </button>
-                      </div>)}
-                  </div>
-                  <FormMessage />
-                </FormItem>} />
+            <Form {...form}>
+              <FormField control={form.control} name="marketplaceSettings.categories" render={({
+              field
+            }) => <FormItem>
+                    <FormLabel>পণ্য বিভাগ</FormLabel>
+                    <Select onValueChange={value => {
+                const currentCategories = form.getValues("marketplaceSettings.categories") || [];
+                if (!currentCategories.includes(value)) {
+                  form.setValue("marketplaceSettings.categories", [...currentCategories, value]);
+                }
+              }}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="পণ্য বিভাগ নির্বাচন করুন" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="electronics">ইলেকট্রনিক্স</SelectItem>
+                        <SelectItem value="clothing">পোশাক</SelectItem>
+                        <SelectItem value="food">খাদ্য সামগ্রী</SelectItem>
+                        <SelectItem value="home">গৃহসজ্জা</SelectItem>
+                        <SelectItem value="beauty">সৌন্দর্য সামগ্রী</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {form.getValues("marketplaceSettings.categories")?.map((category, index) => <div key={index} className="bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1">
+                          <span>{category}</span>
+                          <button type="button" onClick={() => {
+                    const currentCategories = form.getValues("marketplaceSettings.categories") || [];
+                    form.setValue("marketplaceSettings.categories", currentCategories.filter(c => c !== category));
+                  }} className="text-xs text-red-500">
+                            ✕
+                          </button>
+                        </div>)}
+                    </div>
+                    <FormMessage />
+                  </FormItem>} />
+              <FormField control={form.control} name="marketplaceSettings.deliveryOptions" render={({
+              field
+            }) => <FormItem>
+                    <FormLabel>ডেলিভারি অপশন</FormLabel>
+                    <Select onValueChange={value => {
+                const currentOptions = form.getValues("marketplaceSettings.deliveryOptions") || [];
+                if (!currentOptions.includes(value)) {
+                  form.setValue("marketplaceSettings.deliveryOptions", [...currentOptions, value]);
+                }
+              }}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="ডেলিভারি অপশন নির্বাচন করুন" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="home_delivery">হোম ডেলিভারি</SelectItem>
+                        <SelectItem value="pickup">পিকআপ পয়েন্ট</SelectItem>
+                        <SelectItem value="courier">কুরিয়ার সার্ভিস</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {form.getValues("marketplaceSettings.deliveryOptions")?.map((option, index) => <div key={index} className="bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1">
+                          <span>{option}</span>
+                          <button type="button" onClick={() => {
+                    const currentOptions = form.getValues("marketplaceSettings.deliveryOptions") || [];
+                    form.setValue("marketplaceSettings.deliveryOptions", currentOptions.filter(o => o !== option));
+                  }} className="text-xs text-red-500">
+                            ✕
+                          </button>
+                        </div>)}
+                    </div>
+                    <FormMessage />
+                  </FormItem>} />
+            </Form>
           </div>;
       case 'rental':
         return <div className="space-y-4">
             <h3 className="text-lg font-medium">রেন্টাল সেটিংস</h3>
-            <FormField control={form.control} name="rentalSettings.propertyTypes" render={({
-            field
-          }) => <FormItem>
-                  <FormLabel>সম্পত্তির ধরন</FormLabel>
-                  <Select onValueChange={value => {
-              const currentTypes = form.getValues("rentalSettings.propertyTypes") || [];
-              if (!currentTypes.includes(value)) {
-                form.setValue("rentalSettings.propertyTypes", [...currentTypes, value]);
-              }
-            }}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="সম্পত্তির ধরন নির্বাচন করুন" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="apartment">অ্যাপার্টমেন্ট</SelectItem>
-                      <SelectItem value="house">বাড়ি</SelectItem>
-                      <SelectItem value="room">রুম</SelectItem>
-                      <SelectItem value="office">অফিস</SelectItem>
-                      <SelectItem value="car">গাড়ি</SelectItem>
-                      <SelectItem value="equipment">উপকরণ</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {form.getValues("rentalSettings.propertyTypes")?.map((type, index) => <div key={index} className="bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1">
-                        <span>{type}</span>
-                        <button type="button" onClick={() => {
-                  const currentTypes = form.getValues("rentalSettings.propertyTypes") || [];
-                  form.setValue("rentalSettings.propertyTypes", currentTypes.filter(t => t !== type));
-                }} className="text-xs text-red-500">
-                          ✕
-                        </button>
-                      </div>)}
-                  </div>
-                  <FormMessage />
-                </FormItem>} />
-            <FormField control={form.control} name="rentalSettings.amenities" render={({
-            field
-          }) => <FormItem>
-                  <FormLabel>সুবিধাদি</FormLabel>
-                  <Select onValueChange={value => {
-              const currentAmenities = form.getValues("rentalSettings.amenities") || [];
-              if (!currentAmenities.includes(value)) {
-                form.setValue("rentalSettings.amenities", [...currentAmenities, value]);
-              }
-            }}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="সুবিধাদি নির্বাচন করুন" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="wifi">ওয়াইফাই</SelectItem>
-                      <SelectItem value="ac">এসি</SelectItem>
-                      <SelectItem value="parking">পার্কিং</SelectItem>
-                      <SelectItem value="kitchen">কিচেন</SelectItem>
-                      <SelectItem value="tv">টিভি</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {form.getValues("rentalSettings.amenities")?.map((amenity, index) => <div key={index} className="bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1">
-                        <span>{amenity}</span>
-                        <button type="button" onClick={() => {
-                  const currentAmenities = form.getValues("rentalSettings.amenities") || [];
-                  form.setValue("rentalSettings.amenities", currentAmenities.filter(a => a !== amenity));
-                }} className="text-xs text-red-500">
-                          ✕
-                        </button>
-                      </div>)}
-                  </div>
-                  <FormMessage />
-                </FormItem>} />
-            <FormField control={form.control} name="rentalSettings.reservationPolicy" render={({
-            field
-          }) => <FormItem>
-                  <FormLabel>রিজার্ভেশন পলিসি</FormLabel>
-                  <Textarea placeholder="রিজার্ভেশন সম্পর্কিত নীতিমালা লিখুন" {...field} />
-                  <FormMessage />
-                </FormItem>} />
+            <Form {...form}>
+              <FormField control={form.control} name="rentalSettings.propertyTypes" render={({
+              field
+            }) => <FormItem>
+                    <FormLabel>সম্পত্তির ধরন</FormLabel>
+                    <Select onValueChange={value => {
+                const currentTypes = form.getValues("rentalSettings.propertyTypes") || [];
+                if (!currentTypes.includes(value)) {
+                  form.setValue("rentalSettings.propertyTypes", [...currentTypes, value]);
+                }
+              }}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="সম্পত্তির ধরন নির্বাচন করুন" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="apartment">অ্যাপার্টমেন্ট</SelectItem>
+                        <SelectItem value="house">বাড়ি</SelectItem>
+                        <SelectItem value="room">রুম</SelectItem>
+                        <SelectItem value="office">অফিস</SelectItem>
+                        <SelectItem value="car">গাড়ি</SelectItem>
+                        <SelectItem value="equipment">উপকরণ</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {form.getValues("rentalSettings.propertyTypes")?.map((type, index) => <div key={index} className="bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1">
+                          <span>{type}</span>
+                          <button type="button" onClick={() => {
+                    const currentTypes = form.getValues("rentalSettings.propertyTypes") || [];
+                    form.setValue("rentalSettings.propertyTypes", currentTypes.filter(t => t !== type));
+                  }} className="text-xs text-red-500">
+                            ✕
+                          </button>
+                        </div>)}
+                    </div>
+                    <FormMessage />
+                  </FormItem>} />
+              <FormField control={form.control} name="rentalSettings.amenities" render={({
+              field
+            }) => <FormItem>
+                    <FormLabel>সুবিধাদি</FormLabel>
+                    <Select onValueChange={value => {
+                const currentAmenities = form.getValues("rentalSettings.amenities") || [];
+                if (!currentAmenities.includes(value)) {
+                  form.setValue("rentalSettings.amenities", [...currentAmenities, value]);
+                }
+              }}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="সুবিধাদি নির্বাচন করুন" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="wifi">ওয়াইফাই</SelectItem>
+                        <SelectItem value="ac">এসি</SelectItem>
+                        <SelectItem value="parking">পার্কিং</SelectItem>
+                        <SelectItem value="kitchen">কিচেন</SelectItem>
+                        <SelectItem value="tv">টিভি</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {form.getValues("rentalSettings.amenities")?.map((amenity, index) => <div key={index} className="bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1">
+                          <span>{amenity}</span>
+                          <button type="button" onClick={() => {
+                    const currentAmenities = form.getValues("rentalSettings.amenities") || [];
+                    form.setValue("rentalSettings.amenities", currentAmenities.filter(a => a !== amenity));
+                  }} className="text-xs text-red-500">
+                            ✕
+                          </button>
+                        </div>)}
+                    </div>
+                    <FormMessage />
+                  </FormItem>} />
+              <FormField control={form.control} name="rentalSettings.reservationPolicy" render={({
+              field
+            }) => <FormItem>
+                    <FormLabel>রিজার্ভেশন পলিসি</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="রিজার্ভেশন সম্পর্কিত নীতিমালা লিখুন" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>} />
+            </Form>
           </div>;
       case 'service':
         return <div className="space-y-4">
             <h3 className="text-lg font-medium">সার্ভিস সেটিংস</h3>
-            <FormField control={form.control} name="serviceSettings.serviceTypes" render={({
-            field
-          }) => <FormItem>
-                  <FormLabel>সেবার ধরন</FormLabel>
-                  <Select onValueChange={value => {
-              const currentTypes = form.getValues("serviceSettings.serviceTypes") || [];
-              if (!currentTypes.includes(value)) {
-                form.setValue("serviceSettings.serviceTypes", [...currentTypes, value]);
-              }
-            }}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="সেবার ধরন নির্বাচন করুন" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="cleaning">পরিষ্কার</SelectItem>
-                      <SelectItem value="plumbing">প্লাম্বিং</SelectItem>
-                      <SelectItem value="electrician">ইলেকট্রিশিয়ান</SelectItem>
-                      <SelectItem value="food_delivery">ফুড ডেলিভারি</SelectItem>
-                      <SelectItem value="beauty">বিউটি ট্রিটমেন্ট</SelectItem>
-                      <SelectItem value="consultant">পরামর্শক</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {form.getValues("serviceSettings.serviceTypes")?.map((type, index) => <div key={index} className="bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1">
-                        <span>{type}</span>
-                        <button type="button" onClick={() => {
-                  const currentTypes = form.getValues("serviceSettings.serviceTypes") || [];
-                  form.setValue("serviceSettings.serviceTypes", currentTypes.filter(t => t !== type));
-                }} className="text-xs text-red-500">
-                          ✕
-                        </button>
-                      </div>)}
-                  </div>
-                  <FormMessage />
-                </FormItem>} />
+            <Form {...form}>
+              <FormField control={form.control} name="serviceSettings.serviceTypes" render={({
+              field
+            }) => <FormItem>
+                    <FormLabel>সেবার ধরন</FormLabel>
+                    <Select onValueChange={value => {
+                const currentTypes = form.getValues("serviceSettings.serviceTypes") || [];
+                if (!currentTypes.includes(value)) {
+                  form.setValue("serviceSettings.serviceTypes", [...currentTypes, value]);
+                }
+              }}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="সেবার ধরন নির্বাচন করুন" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="cleaning">পরিষ্কার</SelectItem>
+                        <SelectItem value="plumbing">প্লাম্বিং</SelectItem>
+                        <SelectItem value="electrician">ইলেকট্রিশিয়ান</SelectItem>
+                        <SelectItem value="food_delivery">ফুড ডেলিভারি</SelectItem>
+                        <SelectItem value="beauty">বিউটি ট্রিটমেন্ট</SelectItem>
+                        <SelectItem value="consultant">পরামর্শক</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {form.getValues("serviceSettings.serviceTypes")?.map((type, index) => <div key={index} className="bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1">
+                          <span>{type}</span>
+                          <button type="button" onClick={() => {
+                    const currentTypes = form.getValues("serviceSettings.serviceTypes") || [];
+                    form.setValue("serviceSettings.serviceTypes", currentTypes.filter(t => t !== type));
+                  }} className="text-xs text-red-500">
+                            ✕
+                          </button>
+                        </div>)}
+                    </div>
+                    <FormMessage />
+                  </FormItem>} />
+            </Form>
           </div>;
       case 'content':
         return <div className="space-y-4">
             <h3 className="text-lg font-medium">কনটেন্ট সেটিংস</h3>
-            <FormField control={form.control} name="contentSettings.contentTypes" render={({
-            field
-          }) => <FormItem>
-                  <FormLabel>কনটেন্টের ধরন</FormLabel>
-                  <Select onValueChange={value => {
-              const currentTypes = form.getValues("contentSettings.contentTypes") || [];
-              if (!currentTypes.includes(value)) {
-                form.setValue("contentSettings.contentTypes", [...currentTypes, value]);
-              }
-            }}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="কনটেন্টের ধরন নির্বাচন করুন" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="course">কোর্স</SelectItem>
-                      <SelectItem value="ebook">ই-বুক</SelectItem>
-                      <SelectItem value="video">ভিডিও</SelectItem>
-                      <SelectItem value="podcast">পডকাস্ট</SelectItem>
-                      <SelectItem value="article">আর্টিকেল</SelectItem>
-                      <SelectItem value="membership">মেম্বারশিপ</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {form.getValues("contentSettings.contentTypes")?.map((type, index) => <div key={index} className="bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1">
-                        <span>{type}</span>
-                        <button type="button" onClick={() => {
-                  const currentTypes = form.getValues("contentSettings.contentTypes") || [];
-                  form.setValue("contentSettings.contentTypes", currentTypes.filter(t => t !== type));
-                }} className="text-xs text-red-500">
-                          ✕
-                        </button>
-                      </div>)}
-                  </div>
-                  <FormMessage />
-                </FormItem>} />
+            <Form {...form}>
+              <FormField control={form.control} name="contentSettings.contentTypes" render={({
+              field
+            }) => <FormItem>
+                    <FormLabel>কনটেন্টের ধরন</FormLabel>
+                    <Select onValueChange={value => {
+                const currentTypes = form.getValues("contentSettings.contentTypes") || [];
+                if (!currentTypes.includes(value)) {
+                  form.setValue("contentSettings.contentTypes", [...currentTypes, value]);
+                }
+              }}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="কনটেন্টের ধরন নির্বাচন করুন" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="course">কোর্স</SelectItem>
+                        <SelectItem value="ebook">ই-বুক</SelectItem>
+                        <SelectItem value="video">ভিডিও</SelectItem>
+                        <SelectItem value="podcast">পডকাস্ট</SelectItem>
+                        <SelectItem value="article">আর্টিকেল</SelectItem>
+                        <SelectItem value="membership">মেম্বারশিপ</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {form.getValues("contentSettings.contentTypes")?.map((type, index) => <div key={index} className="bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1">
+                          <span>{type}</span>
+                          <button type="button" onClick={() => {
+                    const currentTypes = form.getValues("contentSettings.contentTypes") || [];
+                    form.setValue("contentSettings.contentTypes", currentTypes.filter(t => t !== type));
+                  }} className="text-xs text-red-500">
+                            ✕
+                          </button>
+                        </div>)}
+                    </div>
+                    <FormMessage />
+                  </FormItem>} />
+            </Form>
           </div>;
       default:
         return null;
