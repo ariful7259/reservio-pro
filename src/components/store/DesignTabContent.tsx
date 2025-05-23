@@ -43,7 +43,7 @@ const DesignTabContent: React.FC<DesignTabContentProps> = ({
         
         <TabsContent value="store" className="mt-0">
           <div className="min-h-[600px] border rounded-md p-0.5">
-            <DragDropEditor />
+            <DragDropEditor storeName={businessName || "আমার দোকান"} />
           </div>
         </TabsContent>
         

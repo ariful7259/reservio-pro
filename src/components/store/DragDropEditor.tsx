@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -21,6 +20,10 @@ interface ElementProps {
   type: string;
   content: string;
   position: { x: number; y: number };
+}
+
+interface DragDropEditorProps {
+  storeName: string;
 }
 
 const TEMPLATES = [
@@ -55,7 +58,7 @@ const ELEMENTS = [
   { id: 'footer', name: 'ফুটার', icon: <Layout className="h-4 w-4" /> }
 ];
 
-const DragDropEditor: React.FC<{ storeName: string }> = ({ storeName = "আমার দোকান" }) => {
+const DragDropEditor: React.FC<DragDropEditorProps> = ({ storeName }) => {
   const [activeTab, setActiveTab] = useState('templates');
   const [selectedTemplate, setSelectedTemplate] = useState('minimal');
   const [previewDevice, setPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
