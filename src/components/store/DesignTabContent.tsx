@@ -5,7 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import DragDropEditor from '@/components/store/DragDropEditor';
 import LinkInBioBuilder from '@/components/store/LinkInBio/LinkInBioBuilder';
-import { Paintbrush, Sparkles } from 'lucide-react';
+import { Paintbrush, Sparkles, MessageSquareText } from 'lucide-react';
+import TrackingIntegrations from '@/components/store/TrackingIntegrations';
 
 interface DesignTabContentProps {
   onNextTab: () => void;
@@ -36,9 +37,10 @@ const DesignTabContent: React.FC<DesignTabContentProps> = ({
       </div>
       
       <Tabs value={designTab} onValueChange={setDesignTab} className="w-full">
-        <TabsList className="w-full mb-4">
+        <TabsList className="w-full mb-4 grid grid-cols-3">
           <TabsTrigger value="store" className="flex-1">অনলাইন স্টোর</TabsTrigger>
           <TabsTrigger value="linkinbio" className="flex-1">লিংক ইন বায়ো</TabsTrigger>
+          <TabsTrigger value="tracking" className="flex-1">ট্র্যাকিং & ইন্টিগ্রেশন</TabsTrigger>
         </TabsList>
         
         <TabsContent value="store" className="mt-0">
@@ -50,15 +52,25 @@ const DesignTabContent: React.FC<DesignTabContentProps> = ({
         <TabsContent value="linkinbio" className="mt-0">
           <LinkInBioBuilder />
         </TabsContent>
+
+        <TabsContent value="tracking" className="mt-0">
+          <TrackingIntegrations />
+        </TabsContent>
       </Tabs>
       
-      <div className="flex justify-between mt-6">
-        <Button variant="outline" onClick={onPreviousTab}>
+      <div className="flex flex-col sm:flex-row justify-between gap-4 mt-6">
+        <Button variant="outline" onClick={onPreviousTab} className="w-full sm:w-auto order-2 sm:order-1">
           আগের ধাপ
         </Button>
-        <Button onClick={onNextTab}>
-          পরবর্তী ধাপ
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-2 order-1 sm:order-2">
+          <Button variant="outline" className="flex items-center gap-2">
+            <MessageSquareText className="h-4 w-4" />
+            <span>সাহায্য চাই</span>
+          </Button>
+          <Button onClick={onNextTab} className="w-full sm:w-auto">
+            পরবর্তী ধাপ
+          </Button>
+        </div>
       </div>
     </div>
   );
