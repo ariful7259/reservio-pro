@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Paintbrush, PanelTop, Wand2, Gift, MoveRight } from 'lucide-react';
+import { Sparkles, Paintbrush, PanelTop, Wand2, Gift, MoveRight, CreditCard, Tag, BellRing, Palette, Search } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useSellerProfile } from '@/hooks/useSellerProfile';
 
@@ -19,6 +19,14 @@ import { StoreFeaturesList } from '@/components/store/StoreFeaturesList';
 import SettingsTabContent from '@/components/store/SettingsTabContent';
 import DesignTabContent from '@/components/store/DesignTabContent';
 import AdditionalSettings from '@/components/store/AdditionalSettings';
+import ThemeLibrary from '@/components/store/ThemeLibrary';
+import ProductImportExport from '@/components/store/ProductImportExport';
+import ShippingManager from '@/components/store/ShippingManager';
+import OnePageCheckout from '@/components/store/OnePageCheckout';
+import NotificationSettings from '@/components/store/NotificationSettings';
+import ProductCustomizationWidget from '@/components/store/ProductCustomizationWidget';
+import SeoMarketingTools from '@/components/store/SeoMarketingTools';
+import { ReferralSystem } from '@/components/sidebar/ReferralSystem';
 
 const CreateStore = () => {
   const { user, isAuthenticated } = useAuth();
@@ -97,6 +105,37 @@ const CreateStore = () => {
     }
   };
 
+  // অ্যাডভান্সড ফিচার ট্যাবগুলি
+  const [activeAdvancedTab, setActiveAdvancedTab] = useState('theme');
+
+  // রেন্ডার অ্যাডভান্সড ট্যাব কন্টেন্ট
+  const renderAdvancedTabContent = () => {
+    switch (activeAdvancedTab) {
+      case 'theme':
+        return <ThemeLibrary />;
+      case 'import':
+        return <ProductImportExport />;
+      case 'shipping':
+        return <ShippingManager />;
+      case 'checkout':
+        return <OnePageCheckout />;
+      case 'notification':
+        return <NotificationSettings />;
+      case 'customization':
+        return <ProductCustomizationWidget />;
+      case 'seo':
+        return <SeoMarketingTools />;
+      case 'referral':
+        return (
+          <div className="p-4">
+            <ReferralSystem />
+          </div>
+        );
+      default:
+        return <ThemeLibrary />;
+    }
+  };
+
   // প্রধান ট্যাব লিস্ট - রেসপন্সিভ
   const renderTabsList = () => {
     if (isMobile) {
@@ -125,7 +164,7 @@ const CreateStore = () => {
     }
 
     return (
-      <TabsList className="grid w-full grid-cols-5 mb-6">
+      <TabsList className="w-full mb-6 grid grid-cols-5">
         <TabsTrigger value="features">
           <span className="flex items-center gap-2">
             <Sparkles className="h-4 w-4" />
@@ -157,6 +196,78 @@ const CreateStore = () => {
           </span>
         </TabsTrigger>
       </TabsList>
+    );
+  };
+
+  // অ্যাডভান্সড ফিচার ট্যাব লিস্ট
+  const renderAdvancedTabsList = () => {
+    return (
+      <div className="flex overflow-x-auto pb-2 mb-4 gap-2 scrollbar-hide">
+        <Button 
+          variant={activeAdvancedTab === 'theme' ? 'default' : 'outline'} 
+          size="sm"
+          onClick={() => setActiveAdvancedTab('theme')}
+          className="flex items-center gap-2 whitespace-nowrap"
+        >
+          <Sparkles className="h-4 w-4" /> ওয়ান-ক্লিক থিম
+        </Button>
+        <Button 
+          variant={activeAdvancedTab === 'import' ? 'default' : 'outline'} 
+          size="sm"
+          onClick={() => setActiveAdvancedTab('import')}
+          className="flex items-center gap-2 whitespace-nowrap"
+        >
+          <PanelTop className="h-4 w-4" /> পণ্য এম্পোর্ট/এক্সপোর্ট
+        </Button>
+        <Button 
+          variant={activeAdvancedTab === 'checkout' ? 'default' : 'outline'} 
+          size="sm"
+          onClick={() => setActiveAdvancedTab('checkout')}
+          className="flex items-center gap-2 whitespace-nowrap"
+        >
+          <CreditCard className="h-4 w-4" /> ওয়ান-পেজ চেকআউট
+        </Button>
+        <Button 
+          variant={activeAdvancedTab === 'shipping' ? 'default' : 'outline'} 
+          size="sm"
+          onClick={() => setActiveAdvancedTab('shipping')}
+          className="flex items-center gap-2 whitespace-nowrap"
+        >
+          <MoveRight className="h-4 w-4" /> শিপিং ম্যানেজার
+        </Button>
+        <Button 
+          variant={activeAdvancedTab === 'notification' ? 'default' : 'outline'} 
+          size="sm"
+          onClick={() => setActiveAdvancedTab('notification')}
+          className="flex items-center gap-2 whitespace-nowrap"
+        >
+          <BellRing className="h-4 w-4" /> নোটিফিকেশন
+        </Button>
+        <Button 
+          variant={activeAdvancedTab === 'customization' ? 'default' : 'outline'} 
+          size="sm"
+          onClick={() => setActiveAdvancedTab('customization')}
+          className="flex items-center gap-2 whitespace-nowrap"
+        >
+          <Palette className="h-4 w-4" /> কাস্টমাইজেশন উইজেট
+        </Button>
+        <Button 
+          variant={activeAdvancedTab === 'seo' ? 'default' : 'outline'} 
+          size="sm"
+          onClick={() => setActiveAdvancedTab('seo')}
+          className="flex items-center gap-2 whitespace-nowrap"
+        >
+          <Search className="h-4 w-4" /> SEO টুলস
+        </Button>
+        <Button 
+          variant={activeAdvancedTab === 'referral' ? 'default' : 'outline'} 
+          size="sm"
+          onClick={() => setActiveAdvancedTab('referral')}
+          className="flex items-center gap-2 whitespace-nowrap"
+        >
+          <Tag className="h-4 w-4" /> রেফারেল সিস্টেম
+        </Button>
+      </div>
     );
   };
 
@@ -236,7 +347,19 @@ const CreateStore = () => {
 
             <TabsContent value="additional" className="animate-in fade-in-50">
               <div className="space-y-6">
-                <AdditionalSettings form={form} />
+                <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-md p-4">
+                  <h3 className="font-medium">এডভান্সড ফিচারস</h3>
+                  <p className="text-sm text-muted-foreground">
+                    আপনার স্টোরকে আরো শক্তিশালী করতে নিম্নলিখিত এডভান্সড ফিচারগুলো ব্যবহার করুন
+                  </p>
+                </div>
+                
+                {renderAdvancedTabsList()}
+                {renderAdvancedTabContent()}
+                
+                <div className="border-t pt-6">
+                  <AdditionalSettings form={form} />
+                </div>
                 
                 <div className="flex justify-between mt-6">
                   <Button variant="outline" onClick={handlePreviousTab}>
