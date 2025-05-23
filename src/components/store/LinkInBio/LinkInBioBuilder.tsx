@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -236,7 +235,7 @@ const LinkInBioBuilder: React.FC = () => {
       case 'youtube':
         return <Youtube className="h-4 w-4" />;
       case 'linkedin':
-        return <Linkedin className="h-4 w-4" />; // Fixed: LinkedIn -> Linkedin
+        return <Linkedin className="h-4 w-4" />;
       case 'tiktok':
         return <TiktokIcon className="h-4 w-4" />;
       case 'website':
@@ -312,7 +311,7 @@ const LinkInBioBuilder: React.FC = () => {
               className="flex items-center gap-2"
               onClick={() => handleAddSocialLink('linkedin')}
             >
-              <LinkedIn className="h-4 w-4" /> লিংকডইন
+              <Linkedin className="h-4 w-4" /> লিংকডইন
             </Button>
             <Button 
               variant="outline" 
