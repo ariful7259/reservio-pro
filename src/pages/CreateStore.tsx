@@ -9,15 +9,23 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, SelectLabel } from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
-import { Loader2, Store, Building, Wrench, Video, Upload, CheckCircle2, AlertCircle } from 'lucide-react';
+import { 
+  Loader2, Store, Building, Wrench, Video, Upload, 
+  CheckCircle2, AlertCircle, Sparkles, Paintbrush,
+  PanelTop, Wand2, Gift, Shield, CreditCard, MoveRight,
+  BadgeCheck, Truck, BarChart3
+} from 'lucide-react';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 import { useSellerProfile } from '@/hooks/useSellerProfile';
 import { StoreFeaturesList } from '@/components/store/StoreFeaturesList';
+import DragDropEditor from '@/components/store/DragDropEditor';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export type SellerType = 'marketplace' | 'rental' | 'service' | 'content';
 
@@ -66,6 +74,7 @@ const CreateStore = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState("features");
   const { profile } = useSellerProfile();
+  const isMobile = useIsMobile();
 
   // যদি ব্যবহারকারীর একটি প্রোফাইল থাকে তবে ড্যাশবোর্ডে পরিচালিত করে
   useEffect(() => {
@@ -105,10 +114,13 @@ const CreateStore = () => {
     }
   });
   const selectedSellerType = form.watch("sellerType");
+  const businessName = form.watch("businessName");
 
   // পরবর্তী ট্যাবে যাওয়ার জন্য হ্যান্ডলার
   const handleNextTab = () => {
     if (activeTab === "features") {
+      setActiveTab("design");
+    } else if (activeTab === "design") {
       setActiveTab("basic");
     } else if (activeTab === "basic") {
       // বেসিক ট্যাব থেকে ব্যবসার ধরন অনুযায়ী সেটিংস ট্যাবে যান
@@ -126,6 +138,8 @@ const CreateStore = () => {
     } else if (activeTab === "settings") {
       setActiveTab("basic");
     } else if (activeTab === "basic") {
+      setActiveTab("design");
+    } else if (activeTab === "design") {
       setActiveTab("features");
     }
   };
@@ -230,7 +244,12 @@ const CreateStore = () => {
     switch (selectedSellerType) {
       case 'marketplace':
         return <div className="space-y-4">
-            <h3 className="text-lg font-medium">মার্কেটপ্লেস সেটিংস</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg font-medium">মার্কেটপ্লেস সেটিংস</h3>
+              <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                <Store className="h-3 w-3 mr-1" /> মার্কেটপ্লেস
+              </Badge>
+            </div>
             <Form {...form}>
               <FormField control={form.control} name="marketplaceSettings.categories" render={({
               field
@@ -266,43 +285,76 @@ const CreateStore = () => {
                     </div>
                     <FormMessage />
                   </FormItem>} />
-              <FormField control={form.control} name="marketplaceSettings.deliveryOptions" render={({
-              field
-            }) => <FormItem>
-                    <FormLabel>ডেলিভারি অপশন</FormLabel>
-                    <Select onValueChange={value => {
-                const currentOptions = form.getValues("marketplaceSettings.deliveryOptions") || [];
-                if (!currentOptions.includes(value)) {
-                  form.setValue("marketplaceSettings.deliveryOptions", [...currentOptions, value]);
-                }
-              }}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="ডেলিভারি অপশন নির্বাচন করুন" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="home_delivery">হোম ডেলিভারি</SelectItem>
-                        <SelectItem value="pickup">পিকআপ পয়েন্ট</SelectItem>
-                        <SelectItem value="courier">কুরিয়ার সার্ভিস</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {form.getValues("marketplaceSettings.deliveryOptions")?.map((option, index) => <div key={index} className="bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1">
-                          <span>{option}</span>
-                          <button type="button" onClick={() => {
-                    const currentOptions = form.getValues("marketplaceSettings.deliveryOptions") || [];
-                    form.setValue("marketplaceSettings.deliveryOptions", currentOptions.filter(o => o !== option));
-                  }} className="text-xs text-red-500">
-                            ✕
-                          </button>
-                        </div>)}
-                    </div>
-                    <FormMessage />
-                  </FormItem>} />
+
+              <div className="mt-4">
+                <FormField control={form.control} name="marketplaceSettings.deliveryOptions" render={({
+                field
+              }) => <FormItem>
+                      <FormLabel>ডেলিভারি অপশন</FormLabel>
+                      <Select onValueChange={value => {
+                  const currentOptions = form.getValues("marketplaceSettings.deliveryOptions") || [];
+                  if (!currentOptions.includes(value)) {
+                    form.setValue("marketplaceSettings.deliveryOptions", [...currentOptions, value]);
+                  }
+                }}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="ডেলিভারি অপশন নির্বাচন করুন" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="home_delivery">হোম ডেলিভারি</SelectItem>
+                          <SelectItem value="pickup">পিকআপ পয়েন্ট</SelectItem>
+                          <SelectItem value="courier">কুরিয়ার সার্ভিস</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {form.getValues("marketplaceSettings.deliveryOptions")?.map((option, index) => <div key={index} className="bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1">
+                            <span>{option}</span>
+                            <button type="button" onClick={() => {
+                      const currentOptions = form.getValues("marketplaceSettings.deliveryOptions") || [];
+                      form.setValue("marketplaceSettings.deliveryOptions", currentOptions.filter(o => o !== option));
+                    }} className="text-xs text-red-500">
+                              ✕
+                            </button>
+                          </div>)}
+                      </div>
+                      <FormMessage />
+                    </FormItem>} />
+              </div>
             </Form>
+            
+            <div className="mt-6 bg-blue-50 rounded-md p-4 border border-blue-100">
+              <p className="text-sm font-medium flex items-center">
+                <Sparkles className="h-4 w-4 text-blue-600 mr-2" />
+                প্রিমিয়াম মার্কেটপ্লেস ফিচার
+              </p>
+              <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="flex items-center gap-2 text-sm">
+                  <BadgeCheck className="h-4 w-4 text-blue-600" />
+                  <span>ফেসবুক শপ সিঙ্ক</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <BadgeCheck className="h-4 w-4 text-blue-600" />
+                  <span>অটো SMS নোটিফিকেশন</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <BadgeCheck className="h-4 w-4 text-blue-600" />
+                  <span>ইনভেন্টরি ম্যানেজমেন্ট</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <BadgeCheck className="h-4 w-4 text-blue-600" />
+                  <span>কুরিয়ার API ইন্টিগ্রেশন</span>
+                </div>
+              </div>
+            </div>
           </div>;
       case 'rental':
         return <div className="space-y-4">
-            <h3 className="text-lg font-medium">রেন্টাল সেটিংস</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg font-medium">রেন্টাল সেটিংস</h3>
+              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                <Building className="h-3 w-3 mr-1" /> রেন্টাল
+              </Badge>
+            </div>
             <Form {...form}>
               <FormField control={form.control} name="rentalSettings.propertyTypes" render={({
               field
@@ -383,10 +435,40 @@ const CreateStore = () => {
                     <FormMessage />
                   </FormItem>} />
             </Form>
+
+            <div className="mt-6 bg-green-50 rounded-md p-4 border border-green-100">
+              <p className="text-sm font-medium flex items-center">
+                <Sparkles className="h-4 w-4 text-green-600 mr-2" />
+                প্রিমিয়াম রেন্টাল ফিচার
+              </p>
+              <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="flex items-center gap-2 text-sm">
+                  <BadgeCheck className="h-4 w-4 text-green-600" />
+                  <span>বুকিং ক্যালেন্ডার</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <BadgeCheck className="h-4 w-4 text-green-600" />
+                  <span>অনলাইন পেমেন্ট</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <BadgeCheck className="h-4 w-4 text-green-600" />
+                  <span>রিভিউ সিস্টেম</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <BadgeCheck className="h-4 w-4 text-green-600" />
+                  <span>অটো ইনভয়েস</span>
+                </div>
+              </div>
+            </div>
           </div>;
       case 'service':
         return <div className="space-y-4">
-            <h3 className="text-lg font-medium">সার্ভিস সেটিংস</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg font-medium">সার্ভিস সেটিংস</h3>
+              <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                <Wrench className="h-3 w-3 mr-1" /> সার্ভিস
+              </Badge>
+            </div>
             <Form {...form}>
               <FormField control={form.control} name="serviceSettings.serviceTypes" render={({
               field
@@ -424,10 +506,40 @@ const CreateStore = () => {
                     <FormMessage />
                   </FormItem>} />
             </Form>
+
+            <div className="mt-6 bg-amber-50 rounded-md p-4 border border-amber-100">
+              <p className="text-sm font-medium flex items-center">
+                <Sparkles className="h-4 w-4 text-amber-600 mr-2" />
+                প্রিমিয়াম সার্ভিস ফিচার
+              </p>
+              <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="flex items-center gap-2 text-sm">
+                  <BadgeCheck className="h-4 w-4 text-amber-600" />
+                  <span>অ্যাপয়েন্টমেন্ট বুকিং</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <BadgeCheck className="h-4 w-4 text-amber-600" />
+                  <span>সময় ও তারিখ সিলেক্টর</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <BadgeCheck className="h-4 w-4 text-amber-600" />
+                  <span>সেবা প্রদানকারী প্রোফাইল</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <BadgeCheck className="h-4 w-4 text-amber-600" />
+                  <span>কাস্টমার রেটিং</span>
+                </div>
+              </div>
+            </div>
           </div>;
       case 'content':
         return <div className="space-y-4">
-            <h3 className="text-lg font-medium">কনটেন্ট সেটিংস</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg font-medium">কনটেন্ট সেটিংস</h3>
+              <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+                <Video className="h-3 w-3 mr-1" /> ডিজিটাল কনটেন্ট
+              </Badge>
+            </div>
             <Form {...form}>
               <FormField control={form.control} name="contentSettings.contentTypes" render={({
               field
@@ -465,6 +577,31 @@ const CreateStore = () => {
                     <FormMessage />
                   </FormItem>} />
             </Form>
+
+            <div className="mt-6 bg-purple-50 rounded-md p-4 border border-purple-100">
+              <p className="text-sm font-medium flex items-center">
+                <Sparkles className="h-4 w-4 text-purple-600 mr-2" />
+                প্রিমিয়াম কনটেন্ট ফিচার
+              </p>
+              <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="flex items-center gap-2 text-sm">
+                  <BadgeCheck className="h-4 w-4 text-purple-600" />
+                  <span>কনটেন্ট প্রোটেকশন</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <BadgeCheck className="h-4 w-4 text-purple-600" />
+                  <span>সাবস্ক্রিপশন মডেল</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <BadgeCheck className="h-4 w-4 text-purple-600" />
+                  <span>ক্লাউড স্টোরেজ</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <BadgeCheck className="h-4 w-4 text-purple-600" />
+                  <span>অ্যানালিটিক্স</span>
+                </div>
+              </div>
+            </div>
           </div>;
       default:
         return null;
@@ -492,32 +629,129 @@ const CreateStore = () => {
     );
   }
 
+  // প্রধান ট্যাব লিস্ট - রেসপন্সিভ
+  const renderTabsList = () => {
+    if (isMobile) {
+      return (
+        <TabsList className="grid grid-cols-3 mb-8">
+          <TabsTrigger value="features">
+            <span className="flex flex-col items-center sm:flex-row sm:gap-2">
+              <Sparkles className="h-4 w-4" />
+              <span>ফিচারস</span>
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="design">
+            <span className="flex flex-col items-center sm:flex-row sm:gap-2">
+              <Paintbrush className="h-4 w-4" />
+              <span>ডিজাইন</span>
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="basic">
+            <span className="flex flex-col items-center sm:flex-row sm:gap-2">
+              <PanelTop className="h-4 w-4" />
+              <span>বেসিক</span>
+            </span>
+          </TabsTrigger>
+        </TabsList>
+      );
+    }
+
+    return (
+      <TabsList className="grid grid-cols-5 mb-8">
+        <TabsTrigger value="features">
+          <span className="flex items-center gap-2">
+            <Sparkles className="h-4 w-4" />
+            <span>ফিচারস</span>
+          </span>
+        </TabsTrigger>
+        <TabsTrigger value="design">
+          <span className="flex items-center gap-2">
+            <Paintbrush className="h-4 w-4" />
+            <span>ডিজাইন</span>
+          </span>
+        </TabsTrigger>
+        <TabsTrigger value="basic">
+          <span className="flex items-center gap-2">
+            <PanelTop className="h-4 w-4" />
+            <span>বেসিক তথ্য</span>
+          </span>
+        </TabsTrigger>
+        <TabsTrigger value="settings">
+          <span className="flex items-center gap-2">
+            <Wand2 className="h-4 w-4" />
+            <span>সেটিংস</span>
+          </span>
+        </TabsTrigger>
+        <TabsTrigger value="additional">
+          <span className="flex items-center gap-2">
+            <Gift className="h-4 w-4" />
+            <span>অতিরিক্ত</span>
+          </span>
+        </TabsTrigger>
+      </TabsList>
+    );
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">আপনার অনলাইন স্টোর তৈরি করুন</CardTitle>
-          <CardDescription>
-            সহজেই আপনার অনলাইন ব্যবসা শুরু করুন। কোন কোডিং জ্ঞান ছাড়াই আপনার ওয়েবসাইট বানান।
-          </CardDescription>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+            <div>
+              <CardTitle className="text-2xl">আপনার অনলাইন স্টোর তৈরি করুন</CardTitle>
+              <CardDescription className="max-w-2xl">
+                সহজেই আপনার অনলাইন ব্যবসা শুরু করুন। কোন কোডিং জ্ঞান ছাড়াই আপনার ওয়েবসাইট বানান।
+              </CardDescription>
+            </div>
+            <Badge className="self-start sm:self-auto bg-gradient-to-r from-primary to-accent text-white px-3 py-1 rounded-full">
+              <Sparkles className="h-3 w-3 mr-1 animate-pulse" /> নতুন
+            </Badge>
+          </div>
         </CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid grid-cols-4 mb-8">
-              <TabsTrigger value="features">ফিচারস</TabsTrigger>
-              <TabsTrigger value="basic">বেসিক তথ্য</TabsTrigger>
-              <TabsTrigger value="settings">সেটিংস</TabsTrigger>
-              <TabsTrigger value="additional">অতিরিক্ত</TabsTrigger>
-            </TabsList>
+            {renderTabsList()}
 
-            <TabsContent value="features">
+            <TabsContent value="features" className="space-y-6 animate-in fade-in-50">
               <StoreFeaturesList />
               <div className="flex justify-end mt-6">
-                <Button onClick={handleNextTab}>পরবর্তী ধাপ</Button>
+                <Button onClick={handleNextTab} className="flex items-center gap-2">
+                  পরবর্তী ধাপ <MoveRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="design" className="animate-in fade-in-50">
+              <div className="space-y-6">
+                <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-md p-4 flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                  <Paintbrush className="h-6 w-6 text-primary shrink-0" />
+                  <div className="flex-grow">
+                    <h3 className="font-medium">স্টোর ডিজাইন</h3>
+                    <p className="text-sm text-muted-foreground">
+                      নিচের এডিটর ব্যবহার করে আপনার পছন্দ মত স্টোরের ডিজাইন তৈরি করুন। টেমপ্লেট থেকে শুরু করে ধাপে ধাপে কাস্টমাইজ করুন।
+                    </p>
+                  </div>
+                  <Badge variant="outline" className="bg-primary/5 border-primary/20 text-sm">
+                    <Sparkles className="h-3.5 w-3.5 mr-1 text-primary" /> নতুন ফিচার
+                  </Badge>
+                </div>
+                
+                <div className="min-h-[600px] border rounded-md p-0.5">
+                  <DragDropEditor storeName={businessName || "আমার দোকান"} />
+                </div>
+                
+                <div className="flex justify-between mt-6">
+                  <Button variant="outline" onClick={handlePreviousTab}>
+                    আগের ধাপ
+                  </Button>
+                  <Button onClick={handleNextTab}>
+                    পরবর্তী ধাপ <MoveRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </div>
               </div>
             </TabsContent>
 
-            <TabsContent value="basic">
+            <TabsContent value="basic" className="animate-in fade-in-50">
               <Form {...form}>
                 <form className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -526,7 +760,12 @@ const CreateStore = () => {
                       name="businessName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>ব্যবসার নাম *</FormLabel>
+                          <FormLabel>
+                            <span className="flex items-center gap-1.5">
+                              ব্যবসার নাম
+                              <span className="text-red-500">*</span>
+                            </span>
+                          </FormLabel>
                           <FormControl>
                             <Input placeholder="আপনার ব্যবসার নাম লিখুন" {...field} />
                           </FormControl>
@@ -540,7 +779,12 @@ const CreateStore = () => {
                       name="sellerType"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>ব্যবসার ধরন *</FormLabel>
+                          <FormLabel>
+                            <span className="flex items-center gap-1.5">
+                              ব্যবসার ধরন
+                              <span className="text-red-500">*</span>
+                            </span>
+                          </FormLabel>
                           <Select 
                             onValueChange={field.onChange} 
                             defaultValue={field.value}
@@ -549,10 +793,30 @@ const CreateStore = () => {
                               <SelectValue placeholder="ব্যবসার ধরন নির্বাচন করুন" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="marketplace">মার্কেটপ্লেস</SelectItem>
-                              <SelectItem value="rental">রেন্টাল</SelectItem>
-                              <SelectItem value="service">সার্ভিস</SelectItem>
-                              <SelectItem value="content">ডিজিটাল কন্টেন্ট</SelectItem>
+                              <SelectItem value="marketplace">
+                                <div className="flex items-center gap-2">
+                                  <Store className="h-4 w-4" />
+                                  <span>মার্কেটপ্লেস</span>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="rental">
+                                <div className="flex items-center gap-2">
+                                  <Building className="h-4 w-4" />
+                                  <span>রেন্টাল</span>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="service">
+                                <div className="flex items-center gap-2">
+                                  <Wrench className="h-4 w-4" />
+                                  <span>সার্ভিস</span>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="content">
+                                <div className="flex items-center gap-2">
+                                  <Video className="h-4 w-4" />
+                                  <span>ডিজিটাল কন্টেন্ট</span>
+                                </div>
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -626,13 +890,13 @@ const CreateStore = () => {
                 <Button variant="outline" onClick={handlePreviousTab}>
                   আগের ধাপ
                 </Button>
-                <Button onClick={handleNextTab}>
-                  পরবর্তী ধাপ
+                <Button onClick={handleNextTab} className="flex items-center gap-2">
+                  পরবর্তী ধাপ <MoveRight className="h-4 w-4" />
                 </Button>
               </div>
             </TabsContent>
 
-            <TabsContent value="settings">
+            <TabsContent value="settings" className="animate-in fade-in-50">
               <div className="space-y-6">
                 {renderBusinessTypeSettings()}
                 
@@ -640,14 +904,14 @@ const CreateStore = () => {
                   <Button variant="outline" onClick={handlePreviousTab}>
                     আগের ধাপ
                   </Button>
-                  <Button onClick={handleNextTab}>
-                    পরবর্তী ধাপ
+                  <Button onClick={handleNextTab} className="flex items-center gap-2">
+                    পরবর্তী ধাপ <MoveRight className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
             </TabsContent>
 
-            <TabsContent value="additional">
+            <TabsContent value="additional" className="animate-in fade-in-50">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <FormField
@@ -671,14 +935,46 @@ const CreateStore = () => {
                     )}
                   />
                   
-                  <div className="bg-amber-50 border border-amber-200 rounded-md p-4 flex items-start gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex flex-col sm:flex-row items-start gap-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-full shrink-0">
+                      <Shield className="h-6 w-6 text-green-600" />
+                    </div>
                     <div>
-                      <h3 className="font-medium text-amber-800">আপনার স্টোর প্রায় তৈরি</h3>
-                      <p className="text-sm text-amber-700 mt-1">
-                        স্টোর তৈরি হওয়ার পর আপনি পণ্য যোগ করতে পারবেন, আপনার স্টোরের জন্য কাস্টম ডোমেইন সেট করতে পারবেন,
-                        এবং পেমেন্ট গেটওয়ে সেটআপ করতে পারবেন।
+                      <h3 className="font-medium text-green-800">আপনার অনলাইন ব্যবসার সম্পূর্ণ সুরক্ষা</h3>
+                      <p className="text-sm text-green-700 mt-1">
+                        আমাদের সিস্টেমে আপনার ব্যবসার সমস্ত তথ্য সম্পূর্ণ সুরক্ষিত থাকবে। আপনি যেকোনো সময় আপনার পেমেন্ট গেটওয়ে সেটাপ করতে পারবেন, 
+                        এবং কাস্টমার ইনফরমেশন আমাদের সার্ভারে এনক্রিপ্টেড অবস্থায় সংরক্ষিত থাকবে।
                       </p>
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+                        <div className="flex items-center gap-1.5">
+                          <CheckCircle2 className="h-4 w-4 text-green-600" />
+                          <span className="text-sm text-green-800">SSL সার্টিফিকেট</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <CheckCircle2 className="h-4 w-4 text-green-600" />
+                          <span className="text-sm text-green-800">ডাটা এনক্রিপশন</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <CheckCircle2 className="h-4 w-4 text-green-600" />
+                          <span className="text-sm text-green-800">পেমেন্ট সিকিউরিটি</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <CheckCircle2 className="h-4 w-4 text-green-600" />
+                          <span className="text-sm text-green-800">24/7 মনিটরিং</span>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-3 flex gap-2">
+                        <Badge className="px-3 py-1 flex items-center gap-1.5">
+                          <CreditCard className="h-3.5 w-3.5" />
+                          <span>SSL সিকিউর</span>
+                        </Badge>
+                        <Badge className="px-3 py-1 flex items-center gap-1.5">
+                          <Shield className="h-3.5 w-3.5" />
+                          <span>PCI Compliant</span>
+                        </Badge>
+                      </div>
                     </div>
                   </div>
                   
