@@ -16,7 +16,8 @@ import {
   Loader2,
   AlertTriangle,
   Settings,
-  MailCheck
+  MailCheck,
+  Info
 } from 'lucide-react';
 
 interface NotificationType {
