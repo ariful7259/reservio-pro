@@ -8,7 +8,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { 
   QrCode, Instagram, Smartphone, Monitor, ArrowDown, Facebook, 
   Layers, Plus, Trash2, Paintbrush, BarChart3, Copy, Link, Sparkles,
-  Twitter, Youtube, LinkedIn, TiktokIcon, DragDropIcon, Move, GripVertical,
+  Twitter, Youtube, Linkedin, Move, GripVertical,
   AlertCircle, Menu, Globe
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -236,7 +236,7 @@ const LinkInBioBuilder: React.FC = () => {
       case 'youtube':
         return <Youtube className="h-4 w-4" />;
       case 'linkedin':
-        return <LinkedIn className="h-4 w-4" />;
+        return <Linkedin className="h-4 w-4" />; // Fixed: LinkedIn -> Linkedin
       case 'tiktok':
         return <TiktokIcon className="h-4 w-4" />;
       case 'website':
