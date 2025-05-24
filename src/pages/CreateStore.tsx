@@ -19,8 +19,6 @@ import { StoreFeaturesList } from '@/components/store/StoreFeaturesList';
 import SettingsTabContent from '@/components/store/SettingsTabContent';
 import DesignTabContent from '@/components/store/DesignTabContent';
 import AdditionalSettings from '@/components/store/AdditionalSettings';
-import ThemeLibrary from '@/components/store/ThemeLibrary';
-import ProductImportExport from '@/components/store/ProductImportExport';
 import ShippingManager from '@/components/store/ShippingManager';
 import OnePageCheckout from '@/components/store/OnePageCheckout';
 import NotificationSettings from '@/components/store/NotificationSettings';
@@ -106,19 +104,15 @@ const CreateStore = () => {
   };
 
   // অ্যাডভান্সড ফিচার ট্যাবগুলি
-  const [activeAdvancedTab, setActiveAdvancedTab] = useState('theme');
+  const [activeAdvancedTab, setActiveAdvancedTab] = useState('checkout');
 
   // রেন্ডার অ্যাডভান্সড ট্যাব কন্টেন্ট
   const renderAdvancedTabContent = () => {
     switch (activeAdvancedTab) {
-      case 'theme':
-        return <ThemeLibrary />;
-      case 'import':
-        return <ProductImportExport />;
-      case 'shipping':
-        return <ShippingManager />;
       case 'checkout':
         return <OnePageCheckout />;
+      case 'shipping':
+        return <ShippingManager />;
       case 'notification':
         return <NotificationSettings />;
       case 'customization':
@@ -132,7 +126,7 @@ const CreateStore = () => {
           </div>
         );
       default:
-        return <ThemeLibrary />;
+        return <OnePageCheckout />;
     }
   };
 
@@ -203,22 +197,6 @@ const CreateStore = () => {
   const renderAdvancedTabsList = () => {
     return (
       <div className="flex overflow-x-auto pb-2 mb-4 gap-2 scrollbar-hide">
-        <Button 
-          variant={activeAdvancedTab === 'theme' ? 'default' : 'outline'} 
-          size="sm"
-          onClick={() => setActiveAdvancedTab('theme')}
-          className="flex items-center gap-2 whitespace-nowrap"
-        >
-          <Sparkles className="h-4 w-4" /> ওয়ান-ক্লিক থিম
-        </Button>
-        <Button 
-          variant={activeAdvancedTab === 'import' ? 'default' : 'outline'} 
-          size="sm"
-          onClick={() => setActiveAdvancedTab('import')}
-          className="flex items-center gap-2 whitespace-nowrap"
-        >
-          <PanelTop className="h-4 w-4" /> পণ্য এম্পোর্ট/এক্সপোর্ট
-        </Button>
         <Button 
           variant={activeAdvancedTab === 'checkout' ? 'default' : 'outline'} 
           size="sm"
