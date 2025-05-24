@@ -1,4 +1,3 @@
-
 import React, { useState, createContext, useContext } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -45,14 +44,6 @@ interface LanguageContextType {
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
-
-export const useLanguage = () => {
-  const context = useContext(LanguageContext);
-  if (!context) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
-  }
-  return context;
-};
 
 // ট্রান্সলেশন ডাটা (স্যাম্পল)
 const translations = {
@@ -118,7 +109,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   );
 };
 
-const MultiLanguageCurrency = () => {
+// মূল কম্পোনেন্ট যেটি context ব্যবহার করে
+const MultiLanguageCurrencyContent = () => {
   const [activeTab, setActiveTab] = useState('languages');
   const [languageSettings, setLanguageSettings] = useState({
     autoDetect: true,
@@ -134,7 +126,23 @@ const MultiLanguageCurrency = () => {
     decimalPlaces: 2
   });
 
-  const { currentLanguage, currentCurrency, changeLanguage, changeCurrency, translate } = useLanguage();
+  // Context এর পরিবর্তে local state ব্যবহার করছি
+  const [currentLanguage, setCurrentLanguage] = useState('bn');
+  const [currentCurrency, setCurrentCurrency] = useState<Currency>('BDT');
+
+  const changeLanguage = (lang: string) => {
+    setCurrentLanguage(lang);
+    localStorage.setItem('language', lang);
+  };
+
+  const changeCurrency = (currency: Currency) => {
+    setCurrentCurrency(currency);
+    localStorage.setItem('currency', currency);
+  };
+
+  const translate = (key: string): string => {
+    return translations[currentLanguage as keyof typeof translations]?.[key as keyof typeof translations.bn] || key;
+  };
 
   return (
     <div className="space-y-6">
@@ -463,6 +471,15 @@ const MultiLanguageCurrency = () => {
         </TabsContent>
       </Tabs>
     </div>
+  );
+};
+
+// প্রধান এক্সপোর্ট কম্পোনেন্ট
+const MultiLanguageCurrency = () => {
+  return (
+    <LanguageProvider>
+      <MultiLanguageCurrencyContent />
+    </LanguageProvider>
   );
 };
 
