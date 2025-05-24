@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -9,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Paintbrush, PanelTop, Wand2, Gift, MoveRight, CreditCard, Tag, BellRing, Palette, Search } from 'lucide-react';
+import { Sparkles, Paintbrush, PanelTop, Wand2, Gift, MoveRight, CreditCard, Tag, BellRing, Palette, Search, BarChart3, MessageSquare, Globe, Shield } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useSellerProfile } from '@/hooks/useSellerProfile';
 
@@ -25,6 +24,13 @@ import NotificationSettings from '@/components/store/NotificationSettings';
 import ProductCustomizationWidget from '@/components/store/ProductCustomizationWidget';
 import SeoMarketingTools from '@/components/store/SeoMarketingTools';
 import { ReferralSystem } from '@/components/sidebar/ReferralSystem';
+
+// নতুন কম্পোনেন্টস
+import RealTimeAnalytics from '@/components/analytics/RealTimeAnalytics';
+import LiveChatSupport from '@/components/chat/LiveChatSupport';
+import MultiVendorSupport from '@/components/marketplace/MultiVendorSupport';
+import MultiLanguageCurrency from '@/components/language/MultiLanguageCurrency';
+import BackupSecurity from '@/components/security/BackupSecurity';
 
 const CreateStore = () => {
   const { user, isAuthenticated } = useAuth();
@@ -82,10 +88,8 @@ const CreateStore = () => {
     } else if (activeTab === "design") {
       setActiveTab("basic");
     } else if (activeTab === "basic") {
-      // বেসিক ট্যাব থেকে ব্যবসার ধরন অনুযায়ী সেটিংস ট্যাবে যান
       setActiveTab("settings");
     } else if (activeTab === "settings") {
-      // সেটিংস ট্যাব থেকে অতিরিক্ত ট্যাবে যান
       setActiveTab("additional");
     }
   };
@@ -104,11 +108,21 @@ const CreateStore = () => {
   };
 
   // অ্যাডভান্সড ফিচার ট্যাবগুলি
-  const [activeAdvancedTab, setActiveAdvancedTab] = useState('checkout');
+  const [activeAdvancedTab, setActiveAdvancedTab] = useState('analytics');
 
   // রেন্ডার অ্যাডভান্সড ট্যাব কন্টেন্ট
   const renderAdvancedTabContent = () => {
     switch (activeAdvancedTab) {
+      case 'analytics':
+        return <RealTimeAnalytics />;
+      case 'chat':
+        return <LiveChatSupport />;
+      case 'multivendor':
+        return <MultiVendorSupport />;
+      case 'language':
+        return <MultiLanguageCurrency />;
+      case 'backup':
+        return <BackupSecurity />;
       case 'checkout':
         return <OnePageCheckout />;
       case 'shipping':
@@ -126,7 +140,7 @@ const CreateStore = () => {
           </div>
         );
       default:
-        return <OnePageCheckout />;
+        return <RealTimeAnalytics />;
     }
   };
 
@@ -197,6 +211,46 @@ const CreateStore = () => {
   const renderAdvancedTabsList = () => {
     return (
       <div className="flex overflow-x-auto pb-2 mb-4 gap-2 scrollbar-hide">
+        <Button 
+          variant={activeAdvancedTab === 'analytics' ? 'default' : 'outline'} 
+          size="sm"
+          onClick={() => setActiveAdvancedTab('analytics')}
+          className="flex items-center gap-2 whitespace-nowrap"
+        >
+          <BarChart3 className="h-4 w-4" /> রিয়েল-টাইম অ্যানালিটিক্স
+        </Button>
+        <Button 
+          variant={activeAdvancedTab === 'chat' ? 'default' : 'outline'} 
+          size="sm"
+          onClick={() => setActiveAdvancedTab('chat')}
+          className="flex items-center gap-2 whitespace-nowrap"
+        >
+          <MessageSquare className="h-4 w-4" /> লাইভ চ্যাট সাপোর্ট
+        </Button>
+        <Button 
+          variant={activeAdvancedTab === 'multivendor' ? 'default' : 'outline'} 
+          size="sm"
+          onClick={() => setActiveAdvancedTab('multivendor')}
+          className="flex items-center gap-2 whitespace-nowrap"
+        >
+          <Sparkles className="h-4 w-4" /> মাল্টি-ভেন্ডর সাপোর্ট
+        </Button>
+        <Button 
+          variant={activeAdvancedTab === 'language' ? 'default' : 'outline'} 
+          size="sm"
+          onClick={() => setActiveAdvancedTab('language')}
+          className="flex items-center gap-2 whitespace-nowrap"
+        >
+          <Globe className="h-4 w-4" /> মাল্টি-ল্যাঙ্গুয়েজ ও কারেন্সি
+        </Button>
+        <Button 
+          variant={activeAdvancedTab === 'backup' ? 'default' : 'outline'} 
+          size="sm"
+          onClick={() => setActiveAdvancedTab('backup')}
+          className="flex items-center gap-2 whitespace-nowrap"
+        >
+          <Shield className="h-4 w-4" /> ব্যাকআপ ও সিকিউরিটি
+        </Button>
         <Button 
           variant={activeAdvancedTab === 'checkout' ? 'default' : 'outline'} 
           size="sm"
@@ -355,6 +409,9 @@ const CreateStore = () => {
           </Tabs>
         </CardContent>
       </Card>
+      
+      {/* লাইভ চ্যাট সাপোর্ট */}
+      <LiveChatSupport />
     </div>
   );
 };
