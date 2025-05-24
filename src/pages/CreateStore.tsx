@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -8,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Paintbrush, PanelTop, Wand2, Gift, MoveRight, CreditCard, Tag, BellRing, Palette, Search, BarChart3, MessageSquare, Globe, Shield } from 'lucide-react';
+import { Sparkles, Paintbrush, PanelTop, Wand2, Gift, MoveRight, CreditCard, Tag, BellRing, Palette, Search, BarChart3, MessageSquare, Globe, Shield, Package, Calculator, Upload } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useSellerProfile } from '@/hooks/useSellerProfile';
 
@@ -31,6 +32,10 @@ import LiveChatSupport from '@/components/chat/LiveChatSupport';
 import MultiVendorSupport from '@/components/marketplace/MultiVendorSupport';
 import MultiLanguageCurrency from '@/components/language/MultiLanguageCurrency';
 import BackupSecurity from '@/components/security/BackupSecurity';
+import ThemeLibrary from '@/components/store/ThemeLibrary';
+import ProductImportExport from '@/components/store/ProductImportExport';
+import IntegratedPaymentGateway from '@/components/store/IntegratedPaymentGateway';
+import TaxInvoiceGenerator from '@/components/store/TaxInvoiceGenerator';
 
 const CreateStore = () => {
   const { user, isAuthenticated } = useAuth();
@@ -139,6 +144,14 @@ const CreateStore = () => {
             <ReferralSystem />
           </div>
         );
+      case 'themes':
+        return <ThemeLibrary />;
+      case 'import-export':
+        return <ProductImportExport />;
+      case 'payment':
+        return <IntegratedPaymentGateway />;
+      case 'tax-invoice':
+        return <TaxInvoiceGenerator />;
       default:
         return <RealTimeAnalytics />;
     }
@@ -252,6 +265,38 @@ const CreateStore = () => {
           <Shield className="h-4 w-4" /> ব্যাকআপ ও সিকিউরিটি
         </Button>
         <Button 
+          variant={activeAdvancedTab === 'themes' ? 'default' : 'outline'} 
+          size="sm"
+          onClick={() => setActiveAdvancedTab('themes')}
+          className="flex items-center gap-2 whitespace-nowrap"
+        >
+          <Palette className="h-4 w-4" /> ওয়ান-ক্লিক থিম
+        </Button>
+        <Button 
+          variant={activeAdvancedTab === 'import-export' ? 'default' : 'outline'} 
+          size="sm"
+          onClick={() => setActiveAdvancedTab('import-export')}
+          className="flex items-center gap-2 whitespace-nowrap"
+        >
+          <Upload className="h-4 w-4" /> পণ্য ইমপোর্ট/এক্সপোর্ট
+        </Button>
+        <Button 
+          variant={activeAdvancedTab === 'payment' ? 'default' : 'outline'} 
+          size="sm"
+          onClick={() => setActiveAdvancedTab('payment')}
+          className="flex items-center gap-2 whitespace-nowrap"
+        >
+          <CreditCard className="h-4 w-4" /> ইন্টিগ্রেটেড পেমেন্ট
+        </Button>
+        <Button 
+          variant={activeAdvancedTab === 'tax-invoice' ? 'default' : 'outline'} 
+          size="sm"
+          onClick={() => setActiveAdvancedTab('tax-invoice')}
+          className="flex items-center gap-2 whitespace-nowrap"
+        >
+          <Calculator className="h-4 w-4" /> ট্যাক্স ও ইনভয়েস
+        </Button>
+        <Button 
           variant={activeAdvancedTab === 'checkout' ? 'default' : 'outline'} 
           size="sm"
           onClick={() => setActiveAdvancedTab('checkout')}
@@ -265,7 +310,7 @@ const CreateStore = () => {
           onClick={() => setActiveAdvancedTab('shipping')}
           className="flex items-center gap-2 whitespace-nowrap"
         >
-          <MoveRight className="h-4 w-4" /> শিপিং ম্যানেজার
+          <Package className="h-4 w-4" /> শিপিং ম্যানেজার
         </Button>
         <Button 
           variant={activeAdvancedTab === 'notification' ? 'default' : 'outline'} 

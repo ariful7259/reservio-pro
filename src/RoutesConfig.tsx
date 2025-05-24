@@ -65,7 +65,7 @@ const RoutesConfig = () => {
       
       {/* Digital Creator */}
       <Route path="/digital-creator/store-templates" element={<IndustryTemplates />} />
-      <Route path="/create-store" element={<OnlineStoreFeatures />} />
+      <Route path="/create-store" element={<CreateStore />} />
       <Route path="/create-store/new" element={<CreateStore />} />
       <Route path="/multi-channel" element={<OnlineStoreFeatures />} />
       
