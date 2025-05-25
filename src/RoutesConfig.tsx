@@ -31,6 +31,7 @@ import Rentals from './pages/Rentals';
 import RentAnything from './pages/RentAnything';
 import BasaBari from './pages/BasaBari';
 import { FeatureSelectionPage } from './pages/FeatureSelectionPage';
+import CreateLinkInBio from './pages/CreateLinkInBio';
 
 const RoutesConfig = () => {
   return (
@@ -67,6 +68,7 @@ const RoutesConfig = () => {
       <Route path="/digital-creator/store-templates" element={<IndustryTemplates />} />
       <Route path="/create-store" element={<CreateStore />} />
       <Route path="/create-store/new" element={<CreateStore />} />
+      <Route path="/create-linkinbio" element={<CreateLinkInBio />} />
       <Route path="/multi-channel" element={<OnlineStoreFeatures />} />
       
       {/* Digital Products Marketplace */}
