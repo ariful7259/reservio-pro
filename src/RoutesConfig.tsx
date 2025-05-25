@@ -34,6 +34,8 @@ import { FeatureSelectionPage } from './pages/FeatureSelectionPage';
 import CreateLinkInBio from './pages/CreateLinkInBio';
 
 const RoutesConfig = () => {
+  console.log('RoutesConfig is rendering');
+  
   return (
     <Routes>
       {/* Payment and Money Management */}
