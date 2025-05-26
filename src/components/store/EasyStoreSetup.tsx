@@ -1,0 +1,487 @@
+
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/components/ui/use-toast';
+import { 
+  Store, 
+  Smartphone, 
+  MapPin, 
+  Phone, 
+  Mail, 
+  Sparkles,
+  CheckCircle,
+  ArrowRight,
+  Upload,
+  Zap,
+  Globe,
+  CreditCard,
+  Truck
+} from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+interface StoreTemplate {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  category: string;
+  features: string[];
+}
+
+const storeTemplates: StoreTemplate[] = [
+  {
+    id: 'fashion',
+    name: 'ফ্যাশন স্টোর',
+    description: 'কাপড়, জুতা, ব্যাগ ও ফ্যাশন আইটেম',
+    image: 'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=300&auto=format&fit=crop&q=60',
+    category: 'fashion',
+    features: ['সাইজ গাইড', 'কালার ভেরিয়েন্ট', 'ফ্যাশন ক্যাটালগ']
+  },
+  {
+    id: 'electronics',
+    name: 'ইলেকট্রনিক্স শপ',
+    description: 'মোবাইল, ল্যাপটপ, গ্যাজেট ও ইলেকট্রনিক্স',
+    image: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=300&auto=format&fit=crop&q=60',
+    category: 'electronics',
+    features: ['প্রোডাক্ট স্পেসিফিকেশন', 'ওয়ারেন্টি ইনফো', 'কম্পেয়ার ফিচার']
+  },
+  {
+    id: 'food',
+    name: 'খাবারের দোকান',
+    description: 'রেস্টুরেন্ট, ক্যাফে ও খাবার ডেলিভারি',
+    image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300&auto=format&fit=crop&q=60',
+    category: 'food',
+    features: ['মেনু ক্যাটাগরি', 'অর্ডার ট্র্যাকিং', 'হট ডিল']
+  },
+  {
+    id: 'services',
+    name: 'সার্ভিস বিজনেস',
+    description: 'পার্লার, রিপেয়ার, কনসালটেন্সি সার্ভিস',
+    image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=300&auto=format&fit=crop&q=60',
+    category: 'services',
+    features: ['অ্যাপয়েন্টমেন্ট বুকিং', 'সার্ভিস প্যাকেজ', 'রিভিউ সিস্টেম']
+  },
+  {
+    id: 'books',
+    name: 'বুক স্টোর',
+    description: 'বই, নোটবুক, স্টেশনারি আইটেম',
+    image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&auto=format&fit=crop&q=60',
+    category: 'books',
+    features: ['বুক ক্যাটালগ', 'অথর সার্চ', 'প্রি-অর্ডার']
+  },
+  {
+    id: 'pharmacy',
+    name: 'ফার্মেসি',
+    description: 'ওষুধ, হেলথ প্রোডাক্ট ও মেডিকেল সাপ্লাই',
+    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=300&auto=format&fit=crop&q=60',
+    category: 'pharmacy',
+    features: ['প্রেসক্রিপশন আপলোড', 'মেডিসিন সার্চ', 'ডোজ ইনফো']
+  }
+];
+
+const EasyStoreSetup = () => {
+  const { toast } = useToast();
+  const [currentStep, setCurrentStep] = useState(1);
+  const [selectedTemplate, setSelectedTemplate] = useState<string>('');
+  const [storeData, setStoreData] = useState({
+    businessName: '',
+    ownerName: '',
+    phone: '',
+    email: '',
+    address: '',
+    description: '',
+    category: ''
+  });
+  const [isCreating, setIsCreating] = useState(false);
+
+  const handleTemplateSelect = (templateId: string) => {
+    setSelectedTemplate(templateId);
+    const template = storeTemplates.find(t => t.id === templateId);
+    if (template) {
+      setStoreData(prev => ({ ...prev, category: template.category }));
+    }
+  };
+
+  const handleNext = () => {
+    if (currentStep < 3) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleCreateStore = async () => {
+    setIsCreating(true);
+    
+    // সিমুলেট স্টোর তৈরির প্রসেস
+    setTimeout(() => {
+      setIsCreating(false);
+      toast({
+        title: "🎉 স্টোর সফলভাবে তৈরি!",
+        description: `${storeData.businessName} স্টোর লাইভ হয়েছে। আপনার স্টোর লিংক: ${storeData.businessName.toLowerCase().replace(/\s+/g, '')}.basabari.com`,
+      });
+    }, 3000);
+  };
+
+  const renderStepContent = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold mb-2">আপনার ব্যবসার ধরন নির্বাচন করুন</h2>
+              <p className="text-muted-foreground">নিচে থেকে আপনার ব্যবসার সাথে মিলে এমন টেমপ্লেট বেছে নিন</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {storeTemplates.map((template) => (
+                <Card 
+                  key={template.id}
+                  className={`cursor-pointer transition-all hover:shadow-lg ${
+                    selectedTemplate === template.id ? 'ring-2 ring-primary border-primary' : ''
+                  }`}
+                  onClick={() => handleTemplateSelect(template.id)}
+                >
+                  <div className="relative">
+                    <img 
+                      src={template.image} 
+                      alt={template.name}
+                      className="w-full h-32 object-cover rounded-t-md"
+                    />
+                    {selectedTemplate === template.id && (
+                      <div className="absolute top-2 right-2">
+                        <CheckCircle className="h-6 w-6 text-primary bg-white rounded-full" />
+                      </div>
+                    )}
+                  </div>
+                  
+                  <CardContent className="p-4">
+                    <h3 className="font-semibold text-lg mb-1">{template.name}</h3>
+                    <p className="text-sm text-muted-foreground mb-3">{template.description}</p>
+                    
+                    <div className="flex flex-wrap gap-1">
+                      {template.features.map((feature, idx) => (
+                        <Badge key={idx} variant="secondary" className="text-xs">
+                          {feature}
+                        </Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 2:
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold mb-2">ব্যবসার তথ্য দিন</h2>
+              <p className="text-muted-foreground">আপনার দোকানের বেসিক তথ্যগুলো পূরণ করুন</p>
+            </div>
+
+            <div className="max-w-2xl mx-auto space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="businessName">দোকানের নাম *</Label>
+                  <Input
+                    id="businessName"
+                    placeholder="যেমন: রহিম ফ্যাশন হাউস"
+                    value={storeData.businessName}
+                    onChange={(e) => setStoreData(prev => ({ ...prev, businessName: e.target.value }))}
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="ownerName">মালিকের নাম *</Label>
+                  <Input
+                    id="ownerName"
+                    placeholder="আপনার নাম"
+                    value={storeData.ownerName}
+                    onChange={(e) => setStoreData(prev => ({ ...prev, ownerName: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="phone">মোবাইল নাম্বর *</Label>
+                  <Input
+                    id="phone"
+                    placeholder="01XXXXXXXXX"
+                    value={storeData.phone}
+                    onChange={(e) => setStoreData(prev => ({ ...prev, phone: e.target.value }))}
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="email">ইমেইল (ঐচ্ছিক)</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="example@email.com"
+                    value={storeData.email}
+                    onChange={(e) => setStoreData(prev => ({ ...prev, email: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="address">দোকানের ঠিকানা *</Label>
+                <div className="relative">
+                  <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="address"
+                    placeholder="সম্পূর্ণ ঠিকানা লিখুন"
+                    className="pl-10"
+                    value={storeData.address}
+                    onChange={(e) => setStoreData(prev => ({ ...prev, address: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="description">ব্যবসার বিবরণ (ঐচ্ছিক)</Label>
+                <Textarea
+                  id="description"
+                  placeholder="আপনার ব্যবসা সম্পর্কে কিছু লিখুন..."
+                  value={storeData.description}
+                  onChange={(e) => setStoreData(prev => ({ ...prev, description: e.target.value }))}
+                />
+              </div>
+            </div>
+          </div>
+        );
+
+      case 3:
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold mb-2">সেটআপ সম্পন্ন করুন</h2>
+              <p className="text-muted-foreground">আপনার স্টোর প্রায় তৈরি! চূড়ান্ত সেটিংস দেখুন</p>
+            </div>
+
+            <div className="max-w-4xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* অটো সেটআপ ফিচার */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <CreditCard className="h-5 w-5 text-green-600" />
+                      পেমেন্ট রেডি
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      <span className="text-sm">বিকাশ পেমেন্ট</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      <span className="text-sm">নগদ পেমেন্ট</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      <span className="text-sm">ক্যাশ অন ডেলিভারি</span>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <Truck className="h-5 w-5 text-blue-600" />
+                      ডেলিভারি সেটআপ
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      <span className="text-sm">ঢাকার মধ্যে: ৬০ টাকা</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      <span className="text-sm">ঢাকার বাইরে: ১২০ টাকা</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      <span className="text-sm">৫০০+ টাকায় ফ্রি</span>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <Globe className="h-5 w-5 text-purple-600" />
+                      অনলাইন উপস্থিতি
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      <span className="text-sm">কাস্টম URL</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      <span className="text-sm">QR কোড</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      <span className="text-sm">সোশ্যাল শেয়ার</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* স্টোর প্রিভিউ */}
+              <Card className="mt-8">
+                <CardHeader>
+                  <CardTitle>আপনার স্টোর প্রিভিউ</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="border rounded-lg p-4 bg-gradient-to-r from-blue-50 to-purple-50">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-16 h-16 bg-primary rounded-lg flex items-center justify-center">
+                        <Store className="h-8 w-8 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold">{storeData.businessName || 'আপনার স্টোর'}</h3>
+                        <p className="text-muted-foreground">{storeData.description || 'স্টোর বিবরণ'}</p>
+                        <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+                          <span className="flex items-center gap-1">
+                            <Phone className="h-3 w-3" />
+                            {storeData.phone || '01XXXXXXXXX'}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            {storeData.address || 'ঠিকানা'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="text-center">
+                      <Badge className="bg-green-100 text-green-800">
+                        স্টোর URL: {storeData.businessName ? `${storeData.businessName.toLowerCase().replace(/\s+/g, '')}.basabari.com` : 'yourstore.basabari.com'}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <div className="container mx-auto px-4 py-8">
+        {/* হেডার */}
+        <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+            <div className="bg-primary/10 p-3 rounded-full">
+              <Zap className="h-8 w-8 text-primary" />
+            </div>
+          </div>
+          <h1 className="text-3xl font-bold mb-2">৩ মিনিটে স্টোর তৈরি করুন</h1>
+          <p className="text-lg text-muted-foreground">সহজ ৩টি ধাপে আপনার অনলাইন ব্যবসা শুরু করুন</p>
+        </div>
+
+        {/* প্রগ্রেস স্টেপ */}
+        <div className="max-w-3xl mx-auto mb-8">
+          <div className="flex items-center justify-between">
+            {[1, 2, 3].map((step) => (
+              <div key={step} className="flex items-center">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                  currentStep >= step ? 'bg-primary text-white' : 'bg-gray-200 text-gray-600'
+                }`}>
+                  {currentStep > step ? <CheckCircle className="h-5 w-5" /> : step}
+                </div>
+                <div className="ml-3 text-left">
+                  <div className="text-sm font-medium">
+                    {step === 1 && 'টেমপ্লেট নির্বাচন'}
+                    {step === 2 && 'ব্যবসার তথ্য'}
+                    {step === 3 && 'সেটআপ সম্পন্ন'}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {step === 1 && 'ব্যবসার ধরন বেছে নিন'}
+                    {step === 2 && 'প্রয়োজনীয় তথ্য দিন'}
+                    {step === 3 && 'স্টোর লাইভ করুন'}
+                  </div>
+                </div>
+                {step < 3 && (
+                  <ArrowRight className="h-4 w-4 text-gray-400 mx-4" />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* মূল কন্টেন্ট */}
+        <Card className="max-w-6xl mx-auto">
+          <CardContent className="p-8">
+            {renderStepContent()}
+          </CardContent>
+          
+          {/* নেভিগেশন বাটন */}
+          <div className="flex justify-between items-center p-6 border-t">
+            <Button 
+              variant="outline" 
+              onClick={handlePrevious}
+              disabled={currentStep === 1}
+            >
+              আগের ধাপ
+            </Button>
+            
+            <div className="flex gap-2">
+              {currentStep < 3 ? (
+                <Button 
+                  onClick={handleNext}
+                  disabled={currentStep === 1 && !selectedTemplate}
+                  className="flex items-center gap-2"
+                >
+                  পরবর্তী ধাপ <ArrowRight className="h-4 w-4" />
+                </Button>
+              ) : (
+                <Button 
+                  onClick={handleCreateStore}
+                  disabled={isCreating || !storeData.businessName || !storeData.phone}
+                  className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
+                >
+                  {isCreating ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      স্টোর তৈরি হচ্ছে...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-4 w-4" />
+                      স্টোর লাইভ করুন
+                    </>
+                  )}
+                </Button>
+              )}
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default EasyStoreSetup;

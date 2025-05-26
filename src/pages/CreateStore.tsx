@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Paintbrush, PanelTop, Wand2, Gift, MoveRight, CreditCard, Tag, BellRing, Palette, Search, BarChart3, MessageSquare, Globe, Shield, Package, Calculator, Upload } from 'lucide-react';
+import { Sparkles, Paintbrush, PanelTop, Wand2, Gift, MoveRight, CreditCard, Tag, BellRing, Palette, Search, BarChart3, MessageSquare, Globe, Shield, Package, Calculator, Upload, Zap } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useSellerProfile } from '@/hooks/useSellerProfile';
 
@@ -26,6 +26,9 @@ import ProductCustomizationWidget from '@/components/store/ProductCustomizationW
 import SeoMarketingTools from '@/components/store/SeoMarketingTools';
 import { ReferralSystem } from '@/components/sidebar/ReferralSystem';
 
+// নতুন সহজ স্টোর সেটআপ কম্পোনেন্ট
+import EasyStoreSetup from '@/components/store/EasyStoreSetup';
+
 // নতুন কম্পোনেন্টস
 import RealTimeAnalytics from '@/components/analytics/RealTimeAnalytics';
 import LiveChatSupport from '@/components/chat/LiveChatSupport';
@@ -41,7 +44,7 @@ const CreateStore = () => {
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("features");
+  const [activeTab, setActiveTab] = useState("easy-setup");
   const { profile } = useSellerProfile();
   const isMobile = useIsMobile();
 
@@ -161,23 +164,17 @@ const CreateStore = () => {
   const renderTabsList = () => {
     if (isMobile) {
       return (
-        <TabsList className="grid grid-cols-3 mb-6">
-          <TabsTrigger value="features">
+        <TabsList className="grid grid-cols-2 mb-6">
+          <TabsTrigger value="easy-setup">
             <span className="flex flex-col items-center sm:flex-row sm:gap-2">
-              <Sparkles className="h-4 w-4" />
-              <span className="text-xs">ফিচারস</span>
+              <Zap className="h-4 w-4" />
+              <span className="text-xs">সহজ সেটআপ</span>
             </span>
           </TabsTrigger>
-          <TabsTrigger value="design">
+          <TabsTrigger value="advanced">
             <span className="flex flex-col items-center sm:flex-row sm:gap-2">
-              <Paintbrush className="h-4 w-4" />
-              <span className="text-xs">ডিজাইন</span>
-            </span>
-          </TabsTrigger>
-          <TabsTrigger value="basic">
-            <span className="flex flex-col items-center sm:flex-row sm:gap-2">
-              <PanelTop className="h-4 w-4" />
-              <span className="text-xs">বেসিক</span>
+              <Wand2 className="h-4 w-4" />
+              <span className="text-xs">অ্যাডভান্সড</span>
             </span>
           </TabsTrigger>
         </TabsList>
@@ -185,7 +182,13 @@ const CreateStore = () => {
     }
 
     return (
-      <TabsList className="w-full mb-6 grid grid-cols-5">
+      <TabsList className="w-full mb-6 grid grid-cols-6">
+        <TabsTrigger value="easy-setup">
+          <span className="flex items-center gap-2">
+            <Zap className="h-4 w-4" />
+            <span>সহজ সেটআপ</span>
+          </span>
+        </TabsTrigger>
         <TabsTrigger value="features">
           <span className="flex items-center gap-2">
             <Sparkles className="h-4 w-4" />
@@ -388,6 +391,11 @@ const CreateStore = () => {
         <CardContent>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             {renderTabsList()}
+
+            {/* সহজ সেটআপ ট্যাব - নতুন প্রাথমিক ট্যাব */}
+            <TabsContent value="easy-setup" className="space-y-6 animate-in fade-in-50">
+              <EasyStoreSetup />
+            </TabsContent>
 
             <TabsContent value="features" className="space-y-6 animate-in fade-in-50">
               <StoreFeaturesList />
