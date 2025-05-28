@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,11 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Sparkles,
   ArrowRight,
-  Zap
+  Zap,
+  ExternalLink,
+  Share2,
+  Copy,
+  Eye
 } from 'lucide-react';
 
 // Refactored components
@@ -45,6 +48,8 @@ const EasyStoreSetup = () => {
   });
   
   const [isCreating, setIsCreating] = useState(false);
+  const [isStoreCreated, setIsStoreCreated] = useState(false);
+  const [createdStoreUrl, setCreatedStoreUrl] = useState('');
 
   const selectedTemplateData = storeTemplates.find(t => t.id === selectedTemplate);
   const isLinkInBio = selectedTemplateData?.type === 'linkinbio';
@@ -102,21 +107,43 @@ const EasyStoreSetup = () => {
     // সিমুলেট স্টোর তৈরির প্রসেস
     setTimeout(() => {
       setIsCreating(false);
+      setIsStoreCreated(true);
       
       if (isLinkInBio) {
+        const url = `${linkInBioData.displayName.toLowerCase().replace(/\s+/g, '')}.basabari.com`;
+        setCreatedStoreUrl(url);
         toast({
           title: "🎉 লিংক ইন বায়ো সফলভাবে তৈরি!",
           description: `${linkInBioData.displayName} এর লিংক ইন বায়ো পেজ লাইভ হয়েছে।`,
         });
-        // Navigate to Link in Bio builder page
-        navigate('/create-linkinbio');
       } else {
+        const url = `${storeData.businessName.toLowerCase().replace(/\s+/g, '')}.basabari.com`;
+        setCreatedStoreUrl(url);
         toast({
           title: "🎉 স্টোর সফলভাবে তৈরি!",
           description: `${storeData.businessName} স্টোর লাইভ হয়েছে।`,
         });
       }
     }, 3000);
+  };
+
+  const copyStoreUrl = () => {
+    navigator.clipboard.writeText(`https://${createdStoreUrl}`);
+    toast({
+      title: "লিংক কপি হয়েছে!",
+      description: "আপনার স্টোর লিংক ক্লিপবোর্ডে কপি হয়েছে।",
+    });
+  };
+
+  const shareStoreUrl = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: isLinkInBio ? linkInBioData.displayName : storeData.businessName,
+        url: `https://${createdStoreUrl}`
+      });
+    } else {
+      copyStoreUrl();
+    }
   };
 
   const renderStepContent = () => {
@@ -181,6 +208,155 @@ const EasyStoreSetup = () => {
       return storeData.businessName && storeData.phone;
     }
   };
+
+  // স্টোর তৈরি হওয়ার পর লাইভ প্রিভিউ দেখানো
+  if (isStoreCreated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center mb-8">
+            <div className="flex justify-center mb-4">
+              <div className="bg-green-100 p-3 rounded-full">
+                <Sparkles className="h-8 w-8 text-green-600" />
+              </div>
+            </div>
+            <h1 className="text-3xl font-bold mb-2 text-green-700">
+              🎉 {isLinkInBio ? 'লিংক ইন বায়ো' : 'আপনার স্টোর'} সফলভাবে লাইভ!
+            </h1>
+            <p className="text-lg text-muted-foreground mb-4">
+              আপনার {isLinkInBio ? 'লিংক ইন বায়ো পেজ' : 'অনলাইন স্টোর'} এখন লাইভ এবং সবার জন্য অ্যাক্সেসযোগ্য
+            </p>
+            <div className="flex justify-center gap-4 mb-8">
+              <Button 
+                onClick={() => window.open(`https://${createdStoreUrl}`, '_blank')}
+                className="flex items-center gap-2"
+              >
+                <Eye className="h-4 w-4" />
+                লাইভ প্রিভিউ দেখুন
+              </Button>
+              <Button variant="outline" onClick={copyStoreUrl}>
+                <Copy className="h-4 w-4 mr-2" />
+                লিংক কপি করুন
+              </Button>
+              <Button variant="outline" onClick={shareStoreUrl}>
+                <Share2 className="h-4 w-4 mr-2" />
+                শেয়ার করুন
+              </Button>
+            </div>
+          </div>
+
+          {/* লাইভ প্রিভিউ সেকশন */}
+          <Card className="max-w-4xl mx-auto mb-8">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-semibold">
+                  {isLinkInBio ? 'আপনার লিংক ইন বায়ো প্রিভিউ' : 'আপনার স্টোর প্রিভিউ'}
+                </h3>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  লাইভ
+                </div>
+              </div>
+              
+              {/* মোবাইল প্রিভিউ ফ্রেম */}
+              <div className="max-w-sm mx-auto">
+                <div className="bg-gray-800 rounded-[2.5rem] p-2">
+                  <div className="bg-white rounded-[2rem] overflow-hidden">
+                    <div className="bg-gray-50 px-4 py-2 flex items-center justify-center text-xs text-gray-600">
+                      {createdStoreUrl}
+                    </div>
+                    <div className="p-6 min-h-[500px]">
+                      {isLinkInBio ? (
+                        <div className="text-center space-y-4">
+                          <div className="w-20 h-20 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center mx-auto">
+                            {linkInBioData.profileImage ? (
+                              <img src={linkInBioData.profileImage} alt="Profile" className="w-full h-full rounded-full object-cover" />
+                            ) : (
+                              <span className="text-white text-xl font-bold">
+                                {linkInBioData.displayName.charAt(0)}
+                              </span>
+                            )}
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-bold">{linkInBioData.displayName}</h3>
+                            <p className="text-sm text-gray-600">{linkInBioData.bio}</p>
+                          </div>
+                          <div className="space-y-3">
+                            {linkInBioData.links.map((link, index) => (
+                              <div key={index} className="bg-purple-100 hover:bg-purple-200 rounded-lg p-3 flex items-center gap-3 cursor-pointer transition-colors">
+                                <ExternalLink className="h-4 w-4 text-purple-600" />
+                                <span className="font-medium">{link.title}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <div className="text-center">
+                            <h3 className="text-xl font-bold">{storeData.businessName}</h3>
+                            <p className="text-sm text-gray-600">{storeData.description}</p>
+                          </div>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div className="bg-blue-100 rounded-lg p-3 text-center">
+                              <div className="w-12 h-12 bg-blue-200 rounded-lg mx-auto mb-2"></div>
+                              <p className="text-xs font-medium">পণ্য ১</p>
+                            </div>
+                            <div className="bg-green-100 rounded-lg p-3 text-center">
+                              <div className="w-12 h-12 bg-green-200 rounded-lg mx-auto mb-2"></div>
+                              <p className="text-xs font-medium">পণ্য ২</p>
+                            </div>
+                            <div className="bg-yellow-100 rounded-lg p-3 text-center">
+                              <div className="w-12 h-12 bg-yellow-200 rounded-lg mx-auto mb-2"></div>
+                              <p className="text-xs font-medium">পণ্য ৩</p>
+                            </div>
+                            <div className="bg-purple-100 rounded-lg p-3 text-center">
+                              <div className="w-12 h-12 bg-purple-200 rounded-lg mx-auto mb-2"></div>
+                              <p className="text-xs font-medium">পণ্য ৪</p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Next Steps */}
+          <Card className="max-w-4xl mx-auto">
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold mb-4">পরবর্তী ধাপসমূহ:</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Button 
+                  variant="outline" 
+                  className="h-auto p-4 justify-start"
+                  onClick={() => navigate(isLinkInBio ? '/create-linkinbio' : '/create-store')}
+                >
+                  <div className="text-left">
+                    <div className="font-medium">কাস্টমাইজ করুন</div>
+                    <div className="text-sm text-muted-foreground">
+                      {isLinkInBio ? 'আরো লিংক যোগ করুন ও ডিজাইন পরিবর্তন করুন' : 'পণ্য যোগ করুন ও ডিজাইন পরিবর্তন করুন'}
+                    </div>
+                  </div>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="h-auto p-4 justify-start"
+                  onClick={() => window.open(`https://${createdStoreUrl}`, '_blank')}
+                >
+                  <div className="text-left">
+                    <div className="font-medium">শেয়ার করুন</div>
+                    <div className="text-sm text-muted-foreground">সবার সাথে আপনার নতুন সাইট শেয়ার করুন</div>
+                  </div>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
