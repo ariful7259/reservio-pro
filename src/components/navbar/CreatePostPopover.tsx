@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { Plus, Building, Search, ShoppingBag, Rocket } from 'lucide-react';
+import { Plus, Building, Search, ShoppingBag, Rocket, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { 
@@ -54,6 +54,15 @@ export const CreatePostPopover: React.FC = () => {
           >
             <ShoppingBag className="h-8 w-8 text-green-500" />
             <span className="text-sm">প্রোডাক্ট পোস্ট</span>
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/creator-payment-gateway')} 
+            className="flex flex-col items-center justify-center h-24 gap-2 bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200"
+          >
+            <CreditCard className="h-8 w-8 text-purple-600" />
+            <span className="text-sm">পেমেন্ট গেটওয়ে</span>
           </Button>
           
           <DropdownMenu>

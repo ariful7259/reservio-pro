@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
@@ -32,10 +31,9 @@ import RentAnything from './pages/RentAnything';
 import BasaBari from './pages/BasaBari';
 import { FeatureSelectionPage } from './pages/FeatureSelectionPage';
 import CreateLinkInBio from './pages/CreateLinkInBio';
+import CreatorPaymentGateway from '@/pages/CreatorPaymentGateway';
 
 const RoutesConfig = () => {
-  console.log('RoutesConfig is rendering');
-  
   return (
     <Routes>
       {/* Payment and Money Management */}
@@ -93,6 +91,9 @@ const RoutesConfig = () => {
       
       {/* Catch-all route */}
       <Route path="*" element={<NotFound />} />
+      
+      {/* Creator Payment Gateway */}
+      <Route path="/creator-payment-gateway" element={<CreatorPaymentGateway />} />
     </Routes>
   );
 };
