@@ -113,11 +113,13 @@ const QuickActionPanel = ({ selectedBusinessType }: QuickActionPanelProps) => {
       }
     };
 
-    const businessActions = selectedBusinessType 
-      ? [businessSpecificActions[selectedBusinessType]] || []
-      : [];
+    const result: ActionGroup[] = [commonActions];
+    
+    if (selectedBusinessType && businessSpecificActions[selectedBusinessType]) {
+      result.push(businessSpecificActions[selectedBusinessType]);
+    }
 
-    return [commonActions, ...businessActions].filter(Boolean);
+    return result;
   };
 
   const actionGroups = getQuickActions();
