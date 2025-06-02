@@ -17,8 +17,27 @@ import {
   TrendingUp,
   CheckCircle2,
   AlertCircle,
-  Clock
+  Clock,
+  Shield,
+  Code,
+  Bell,
+  UserCheck,
+  Eye
 } from 'lucide-react';
+
+// Import all creator payment components
+import PaymentPageGenerator from '@/components/creator-payment/PaymentPageGenerator';
+import EscrowManagement from '@/components/creator-payment/EscrowManagement';
+import DisputeManagement from '@/components/creator-payment/DisputeManagement';
+import FraudDetection from '@/components/creator-payment/FraudDetection';
+import KycVerification from '@/components/creator-payment/KycVerification';
+import NotificationCenter from '@/components/creator-payment/NotificationCenter';
+import AdminDashboard from '@/components/creator-payment/AdminDashboard';
+import ApiIntegration from '@/components/creator-payment/ApiIntegration';
+import CreatorDashboard from '@/components/creator-payment/CreatorDashboard';
+import BuyerDashboard from '@/components/creator-payment/BuyerDashboard';
+
+// Import existing payment components
 import IntegratedPaymentGateway from '@/components/store/IntegratedPaymentGateway';
 import PaymentLinkCreator from '@/components/payment/PaymentLinkCreator';
 import QRCodePaymentSystem from '@/components/payment/QRCodePaymentSystem';
@@ -27,7 +46,7 @@ import TransactionHistory from '@/components/payment/TransactionHistory';
 import RefundManagement from '@/components/payment/RefundManagement';
 
 const PaymentGateway = () => {
-  const [activeTab, setActiveTab] = useState('gateway');
+  const [activeTab, setActiveTab] = useState('creator-system');
 
   // Payment gateway stats
   const stats = [
@@ -46,18 +65,18 @@ const PaymentGateway = () => {
       color: 'bg-blue-50 border-blue-200'
     },
     {
-      title: 'ব্যর্থ ট্রানজেকশন',
-      value: '৭',
-      change: '-৩%',
-      icon: <AlertCircle className="h-5 w-5 text-red-600" />,
-      color: 'bg-red-50 border-red-200'
+      title: 'Escrow এ সংরক্ষিত',
+      value: '৳২৫,০০০',
+      change: '+১৫%',
+      icon: <Shield className="h-5 w-5 text-yellow-600" />,
+      color: 'bg-yellow-50 border-yellow-200'
     },
     {
-      title: 'অপেক্ষমাণ',
-      value: '১২',
-      change: '+২%',
-      icon: <Clock className="h-5 w-5 text-yellow-600" />,
-      color: 'bg-yellow-50 border-yellow-200'
+      title: 'সক্রিয় বিরোধ',
+      value: '৩',
+      change: '-২%',
+      icon: <AlertCircle className="h-5 w-5 text-red-600" />,
+      color: 'bg-red-50 border-red-200'
     }
   ];
 
@@ -68,10 +87,10 @@ const PaymentGateway = () => {
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-3">
             <CreditCard className="h-8 w-8 text-primary" />
-            পেমেন্ট গেটওয়ে
+            Creator Payment System
           </h1>
           <p className="text-muted-foreground mt-2">
-            সম্পূর্ণ পেমেন্ট সিস্টেম পরিচালনা করুন - গ্রহণ থেকে বিশ্লেষণ পর্যন্ত
+            সম্পূর্ণ Creator Payment সিস্টেম - Escrow, Dispute Management এবং আরও অনেক কিছু
           </p>
         </div>
         
@@ -82,7 +101,7 @@ const PaymentGateway = () => {
           </Button>
           <Button size="sm">
             <Link className="h-4 w-4 mr-2" />
-            নতুন পেমেন্ট লিংক
+            নতুন পেমেন্ট পেজ
           </Button>
         </div>
       </div>
@@ -111,65 +130,135 @@ const PaymentGateway = () => {
 
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        {/* Tab Navigation - Responsive */}
+        {/* Tab Navigation - Enhanced for many tabs */}
         <div className="overflow-x-auto">
-          <TabsList className="grid w-full min-w-[600px] grid-cols-6 gap-1 h-auto p-1 lg:w-auto lg:inline-flex">
+          <TabsList className="grid w-full min-w-[1200px] grid-cols-12 gap-1 h-auto p-1">
             <TabsTrigger 
-              value="gateway" 
-              className="flex items-center justify-center gap-1 px-2 py-2 text-xs sm:text-sm lg:gap-2"
+              value="creator-system" 
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
             >
-              <CreditCard className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">গেটওয়ে</span>
+              <Link className="h-3 w-3" />
+              <span className="hidden lg:inline">Creator System</span>
             </TabsTrigger>
             <TabsTrigger 
-              value="links" 
-              className="flex items-center justify-center gap-1 px-2 py-2 text-xs sm:text-sm lg:gap-2"
+              value="escrow" 
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
             >
-              <Link className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">লিংক</span>
+              <Shield className="h-3 w-3" />
+              <span className="hidden lg:inline">Escrow</span>
             </TabsTrigger>
             <TabsTrigger 
-              value="qr-code" 
-              className="flex items-center justify-center gap-1 px-2 py-2 text-xs sm:text-sm lg:gap-2"
+              value="disputes" 
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
             >
-              <QrCode className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">QR কোড</span>
+              <AlertCircle className="h-3 w-3" />
+              <span className="hidden lg:inline">Disputes</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="fraud" 
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
+            >
+              <Shield className="h-3 w-3" />
+              <span className="hidden lg:inline">Fraud</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="creator-dashboard" 
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
+            >
+              <Users className="h-3 w-3" />
+              <span className="hidden lg:inline">Creator</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="buyer-dashboard" 
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
+            >
+              <UserCheck className="h-3 w-3" />
+              <span className="hidden lg:inline">Buyer</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="admin" 
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
+            >
+              <Settings className="h-3 w-3" />
+              <span className="hidden lg:inline">Admin</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="kyc" 
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
+            >
+              <UserCheck className="h-3 w-3" />
+              <span className="hidden lg:inline">KYC</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="notifications" 
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
+            >
+              <Bell className="h-3 w-3" />
+              <span className="hidden lg:inline">Notifications</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="api" 
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
+            >
+              <Code className="h-3 w-3" />
+              <span className="hidden lg:inline">API</span>
             </TabsTrigger>
             <TabsTrigger 
               value="analytics" 
-              className="flex items-center justify-center gap-1 px-2 py-2 text-xs sm:text-sm lg:gap-2"
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
             >
-              <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">এনালিটিক্স</span>
+              <BarChart3 className="h-3 w-3" />
+              <span className="hidden lg:inline">Analytics</span>
             </TabsTrigger>
             <TabsTrigger 
               value="history" 
-              className="flex items-center justify-center gap-1 px-2 py-2 text-xs sm:text-sm lg:gap-2"
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
             >
-              <History className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">ইতিহাস</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="refunds" 
-              className="flex items-center justify-center gap-1 px-2 py-2 text-xs sm:text-sm lg:gap-2"
-            >
-              <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">রিফান্ড</span>
+              <History className="h-3 w-3" />
+              <span className="hidden lg:inline">History</span>
             </TabsTrigger>
           </TabsList>
         </div>
 
         {/* Tab Content */}
-        <TabsContent value="gateway" className="space-y-6">
-          <IntegratedPaymentGateway />
+        <TabsContent value="creator-system" className="space-y-6">
+          <PaymentPageGenerator />
         </TabsContent>
 
-        <TabsContent value="links" className="space-y-6">
-          <PaymentLinkCreator />
+        <TabsContent value="escrow" className="space-y-6">
+          <EscrowManagement />
         </TabsContent>
 
-        <TabsContent value="qr-code" className="space-y-6">
-          <QRCodePaymentSystem />
+        <TabsContent value="disputes" className="space-y-6">
+          <DisputeManagement />
+        </TabsContent>
+
+        <TabsContent value="fraud" className="space-y-6">
+          <FraudDetection />
+        </TabsContent>
+
+        <TabsContent value="creator-dashboard" className="space-y-6">
+          <CreatorDashboard />
+        </TabsContent>
+
+        <TabsContent value="buyer-dashboard" className="space-y-6">
+          <BuyerDashboard />
+        </TabsContent>
+
+        <TabsContent value="admin" className="space-y-6">
+          <AdminDashboard />
+        </TabsContent>
+
+        <TabsContent value="kyc" className="space-y-6">
+          <KycVerification />
+        </TabsContent>
+
+        <TabsContent value="notifications" className="space-y-6">
+          <NotificationCenter />
+        </TabsContent>
+
+        <TabsContent value="api" className="space-y-6">
+          <ApiIntegration />
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
@@ -178,10 +267,6 @@ const PaymentGateway = () => {
 
         <TabsContent value="history" className="space-y-6">
           <TransactionHistory />
-        </TabsContent>
-
-        <TabsContent value="refunds" className="space-y-6">
-          <RefundManagement />
         </TabsContent>
       </Tabs>
     </div>

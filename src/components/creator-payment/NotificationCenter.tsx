@@ -5,427 +5,405 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
 import { 
   Bell, 
   Mail, 
   MessageSquare, 
-  Settings, 
-  Check, 
-  Trash2,
-  AlertTriangle,
-  CreditCard,
-  Shield,
+  CreditCard, 
+  AlertTriangle, 
+  CheckCircle2,
   Clock,
-  CheckCircle,
-  X
+  Settings,
+  Smartphone,
+  Volume2,
+  Eye
 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
 
 const NotificationCenter = () => {
   const { toast } = useToast();
-  
   const [notifications] = useState([
     {
       id: 'NOT001',
       type: 'payment_received',
       title: 'নতুন পেমেন্ট পেয়েছেন',
-      message: 'রহিম আহমেদ আপনার "লোগো ডিজাইন" সার্ভিসের জন্য ৫,০০০ টাকা পেমেন্ট করেছেন',
+      message: 'আহমেদ হাসান আপনার "ওয়েব ডিজাইন" সার্ভিসের জন্য ৳১৫,০০০ পেমেন্ট করেছেন',
       timestamp: '৫ মিনিট আগে',
       isRead: false,
-      icon: <CreditCard className="h-5 w-5 text-green-600" />,
-      action: 'payment_details'
+      priority: 'high'
     },
     {
       id: 'NOT002',
-      type: 'dispute_raised',
-      title: 'বিরোধ উত্থাপিত হয়েছে',
-      message: 'অর্ডার #ORD123 এর জন্য ক্রেতা বিরোধ উত্থাপন করেছেন। আপনার জবাব প্রয়োজন।',
+      type: 'payment_released',
+      title: 'পেমেন্ট রিলিজ হয়েছে',
+      message: 'ফাতেমা খানের অর্ডারের ৳৫,০০০ আপনার ওয়ালেটে যোগ হয়েছে',
       timestamp: '২ ঘন্টা আগে',
-      isRead: false,
-      icon: <AlertTriangle className="h-5 w-5 text-red-600" />,
-      action: 'dispute_details'
+      isRead: true,
+      priority: 'medium'
     },
     {
       id: 'NOT003',
-      type: 'kyc_approved',
-      title: 'KYC ভেরিফিকেশন সম্পন্ন',
-      message: 'আপনার পরিচয় যাচাইকরণ সফলভাবে সম্পন্ন হয়েছে। এখন আপনি অসীমিত উত্তোলন করতে পারবেন।',
+      type: 'dispute_raised',
+      title: 'নতুন বিরোধ উত্থাপিত',
+      message: 'করিম উদ্দিন আপনার "লোগো ডিজাইন" অর্ডারে বিরোধ তুলেছেন',
       timestamp: '১ দিন আগে',
-      isRead: true,
-      icon: <Shield className="h-5 w-5 text-blue-600" />,
-      action: 'kyc_details'
+      isRead: false,
+      priority: 'high'
     },
     {
       id: 'NOT004',
-      type: 'escrow_released',
-      title: 'Escrow পেমেন্ট মুক্ত',
-      message: 'অর্ডার #ORD098 এর ৮,০০০ টাকা আপনার ওয়ালেটে যোগ হয়েছে',
+      type: 'kyc_approved',
+      title: 'KYC ভেরিফিকেশন অনুমোদিত',
+      message: 'আপনার KYC ভেরিফিকেশন সফলভাবে সম্পন্ন হয়েছে',
       timestamp: '২ দিন আগে',
       isRead: true,
-      icon: <CheckCircle className="h-5 w-5 text-green-600" />,
-      action: 'transaction_details'
+      priority: 'medium'
     },
     {
       id: 'NOT005',
-      type: 'auto_release_pending',
-      title: 'অটো রিলিজ পেন্ডিং',
-      message: 'অর্ডার #ORD145 এর পেমেন্ট ২৪ ঘন্টার মধ্যে অটো রিলিজ হবে',
+      type: 'withdraw_processed',
+      title: 'উত্তোলন প্রক্রিয়া সম্পন্ন',
+      message: '৳২৫,০০০ আপনার ব্যাংক একাউন্টে পাঠানো হয়েছে',
       timestamp: '৩ দিন আগে',
       isRead: true,
-      icon: <Clock className="h-5 w-5 text-yellow-600" />,
-      action: 'order_details'
+      priority: 'low'
     }
   ]);
 
-  const [settings, setSettings] = useState({
-    emailNotifications: true,
-    smsNotifications: false,
-    pushNotifications: true,
-    marketingEmails: false,
-    paymentReceived: true,
-    disputeRaised: true,
-    escrowReleased: true,
-    kycUpdates: true,
-    systemMaintenance: true,
-    emailAddress: 'user@example.com',
-    phoneNumber: '+8801712345678',
-    notificationTime: '09:00'
+  const [notificationSettings, setNotificationSettings] = useState({
+    inApp: true,
+    email: true,
+    sms: false,
+    push: true,
+    types: {
+      paymentReceived: true,
+      paymentReleased: true,
+      disputeRaised: true,
+      kycUpdates: true,
+      withdrawalUpdates: true,
+      securityAlerts: true,
+      marketing: false
+    }
   });
 
-  const [unreadCount, setUnreadCount] = useState(notifications.filter(n => !n.isRead).length);
+  const getNotificationIcon = (type: string) => {
+    switch (type) {
+      case 'payment_received':
+        return <CreditCard className="h-5 w-5 text-green-600" />;
+      case 'payment_released':
+        return <CheckCircle2 className="h-5 w-5 text-blue-600" />;
+      case 'dispute_raised':
+        return <AlertTriangle className="h-5 w-5 text-red-600" />;
+      case 'kyc_approved':
+        return <CheckCircle2 className="h-5 w-5 text-green-600" />;
+      case 'withdraw_processed':
+        return <CreditCard className="h-5 w-5 text-purple-600" />;
+      default:
+        return <Bell className="h-5 w-5 text-gray-600" />;
+    }
+  };
+
+  const getPriorityBadge = (priority: string) => {
+    switch (priority) {
+      case 'high':
+        return <Badge className="bg-red-100 text-red-800">জরুরি</Badge>;
+      case 'medium':
+        return <Badge className="bg-yellow-100 text-yellow-800">গুরুত্বপূর্ণ</Badge>;
+      case 'low':
+        return <Badge className="bg-green-100 text-green-800">সাধারণ</Badge>;
+      default:
+        return null;
+    }
+  };
 
   const handleMarkAsRead = (notificationId: string) => {
     toast({
-      title: "চিহ্নিত করা হয়েছে",
+      title: "পড়া হয়েছে",
       description: "নোটিফিকেশন পড়া হিসেবে চিহ্নিত করা হয়েছে",
     });
   };
 
-  const handleDeleteNotification = (notificationId: string) => {
-    toast({
-      title: "মুছে ফেলা হয়েছে",
-      description: "নোটিফিকেশন মুছে ফেলা হয়েছে",
-    });
-  };
-
-  const handleMarkAllAsRead = () => {
-    setUnreadCount(0);
+  const handleMarkAllRead = () => {
     toast({
       title: "সব পড়া হয়েছে",
       description: "সকল নোটিফিকেশন পড়া হিসেবে চিহ্নিত করা হয়েছে",
     });
   };
 
-  const handleSettingChange = (key: string, value: boolean | string) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
+  const handleSettingsUpdate = (setting: string, value: boolean) => {
+    setNotificationSettings(prev => ({
+      ...prev,
+      [setting]: value
+    }));
+    
     toast({
       title: "সেটিংস আপডেট",
-      description: "নোটিফিকেশন সেটিংস সংরক্ষণ করা হয়েছে",
+      description: "নোটিফিকেশন সেটিংস সফলভাবে আপডেট হয়েছে",
     });
   };
 
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'payment_received':
-        return 'border-l-green-500';
-      case 'dispute_raised':
-        return 'border-l-red-500';
-      case 'kyc_approved':
-        return 'border-l-blue-500';
-      case 'escrow_released':
-        return 'border-l-green-500';
-      case 'auto_release_pending':
-        return 'border-l-yellow-500';
-      default:
-        return 'border-l-gray-500';
-    }
-  };
+  const unreadCount = notifications.filter(n => !n.isRead).length;
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Notification Overview */}
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+        <div>
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <Bell className="h-6 w-6" />
+            নোটিফিকেশন সেন্টার
+            {unreadCount > 0 && (
+              <Badge className="bg-red-500 text-white">{unreadCount}</Badge>
+            )}
+          </h2>
+          <p className="text-muted-foreground">সকল নোটিফিকেশন এবং আপডেট দেখুন</p>
+        </div>
+        
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleMarkAllRead}>
+            সব পড়া হয়েছে
+          </Button>
+          <Button variant="outline">
+            <Settings className="h-4 w-4 mr-2" />
+            সেটিংস
+          </Button>
+        </div>
+      </div>
+
+      {/* Notifications List */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <Bell className="h-5 w-5 text-blue-600" />
-              নোটিফিকেশন সেন্টার
-              {unreadCount > 0 && (
-                <Badge className="bg-red-100 text-red-800 ml-2">
-                  {unreadCount} নতুন
-                </Badge>
-              )}
-            </CardTitle>
-            <Button variant="outline" size="sm" onClick={handleMarkAllAsRead}>
-              <Check className="h-4 w-4 mr-2" />
-              সব পড়া হয়েছে
-            </Button>
-          </div>
+          <CardTitle>সাম্প্রতিক নোটিফিকেশন</CardTitle>
         </CardHeader>
-      </Card>
-
-      <Tabs defaultValue="notifications" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="notifications">নোটিফিকেশন</TabsTrigger>
-          <TabsTrigger value="settings">সেটিংস</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="notifications">
-          <Card>
-            <CardContent className="p-0">
-              <div className="divide-y">
-                {notifications.map((notification) => (
-                  <div
-                    key={notification.id}
-                    className={`p-4 border-l-4 ${getTypeColor(notification.type)} ${
-                      !notification.isRead ? 'bg-blue-50' : 'bg-white'
-                    } hover:bg-gray-50 transition-colors`}
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0">
-                        {notification.icon}
-                      </div>
-                      
-                      <div className="flex-1 space-y-2">
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <h4 className={`font-medium ${!notification.isRead ? 'text-blue-900' : 'text-gray-900'}`}>
-                              {notification.title}
-                            </h4>
-                            <p className="text-sm text-gray-600 mt-1">
-                              {notification.message}
-                            </p>
-                            <p className="text-xs text-gray-400 mt-2">
-                              {notification.timestamp}
-                            </p>
-                          </div>
-                          
-                          <div className="flex items-center gap-2">
-                            {!notification.isRead && (
-                              <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                            )}
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => handleMarkAsRead(notification.id)}
-                            >
-                              <Check className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => handleDeleteNotification(notification.id)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                        
-                        {notification.action && (
-                          <Button size="sm" variant="outline" className="mt-2">
-                            বিস্তারিত দেখুন
-                          </Button>
+        <CardContent>
+          <div className="space-y-4">
+            {notifications.map((notification) => (
+              <div 
+                key={notification.id} 
+                className={`border rounded-lg p-4 transition-colors ${
+                  !notification.isRead ? 'bg-blue-50 border-blue-200' : 'bg-white'
+                }`}
+              >
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    {getNotificationIcon(notification.type)}
+                  </div>
+                  
+                  <div className="flex-1 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium">{notification.title}</h4>
+                      <div className="flex items-center gap-2">
+                        {getPriorityBadge(notification.priority)}
+                        {!notification.isRead && (
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                         )}
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="settings">
-          <div className="space-y-6">
-            {/* Communication Preferences */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Mail className="h-5 w-5 text-purple-600" />
-                  যোগাযোগের পছন্দ
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
+                    
+                    <p className="text-sm text-muted-foreground">
+                      {notification.message}
+                    </p>
+                    
                     <div className="flex items-center justify-between">
-                      <div>
-                        <Label htmlFor="emailNotifications">ইমেইল নোটিফিকেশন</Label>
-                        <p className="text-sm text-muted-foreground">গুরুত্বপূর্ণ আপডেট ইমেইলে পান</p>
+                      <span className="text-xs text-muted-foreground">
+                        <Clock className="h-3 w-3 inline mr-1" />
+                        {notification.timestamp}
+                      </span>
+                      
+                      <div className="flex gap-2">
+                        {!notification.isRead && (
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleMarkAsRead(notification.id)}
+                          >
+                            <Eye className="h-4 w-4 mr-1" />
+                            পড়া হয়েছে
+                          </Button>
+                        )}
+                        <Button size="sm" variant="ghost">
+                          বিস্তারিত
+                        </Button>
                       </div>
-                      <Switch
-                        id="emailNotifications"
-                        checked={settings.emailNotifications}
-                        onCheckedChange={(checked) => handleSettingChange('emailNotifications', checked)}
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label htmlFor="smsNotifications">SMS নোটিফিকেশন</Label>
-                        <p className="text-sm text-muted-foreground">জরুরি বিষয় SMS এ পান</p>
-                      </div>
-                      <Switch
-                        id="smsNotifications"
-                        checked={settings.smsNotifications}
-                        onCheckedChange={(checked) => handleSettingChange('smsNotifications', checked)}
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label htmlFor="pushNotifications">Push নোটিফিকেশন</Label>
-                        <p className="text-sm text-muted-foreground">ব্রাউজার নোটিফিকেশন</p>
-                      </div>
-                      <Switch
-                        id="pushNotifications"
-                        checked={settings.pushNotifications}
-                        onCheckedChange={(checked) => handleSettingChange('pushNotifications', checked)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="emailAddress">ইমেইল ঠিকানা</Label>
-                      <Input
-                        id="emailAddress"
-                        type="email"
-                        value={settings.emailAddress}
-                        onChange={(e) => handleSettingChange('emailAddress', e.target.value)}
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="phoneNumber">ফোন নম্বর</Label>
-                      <Input
-                        id="phoneNumber"
-                        type="tel"
-                        value={settings.phoneNumber}
-                        onChange={(e) => handleSettingChange('phoneNumber', e.target.value)}
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="notificationTime">নোটিফিকেশন সময়</Label>
-                      <Input
-                        id="notificationTime"
-                        type="time"
-                        value={settings.notificationTime}
-                        onChange={(e) => handleSettingChange('notificationTime', e.target.value)}
-                      />
                     </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Notification Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Settings className="h-5 w-5" />
+            নোটিফিকেশন সেটিংস
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-6">
+            {/* Delivery Methods */}
+            <div>
+              <h4 className="font-semibold mb-4">ডেলিভারি মেথড:</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Bell className="h-5 w-5 text-blue-600" />
+                    <Label htmlFor="inApp">ইন-অ্যাপ নোটিফিকেশন</Label>
+                  </div>
+                  <Switch
+                    id="inApp"
+                    checked={notificationSettings.inApp}
+                    onCheckedChange={(checked) => handleSettingsUpdate('inApp', checked)}
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-5 w-5 text-green-600" />
+                    <Label htmlFor="email">ইমেইল নোটিফিকেশন</Label>
+                  </div>
+                  <Switch
+                    id="email"
+                    checked={notificationSettings.email}
+                    onCheckedChange={(checked) => handleSettingsUpdate('email', checked)}
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="h-5 w-5 text-orange-600" />
+                    <Label htmlFor="sms">SMS নোটিফিকেশন</Label>
+                  </div>
+                  <Switch
+                    id="sms"
+                    checked={notificationSettings.sms}
+                    onCheckedChange={(checked) => handleSettingsUpdate('sms', checked)}
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Smartphone className="h-5 w-5 text-purple-600" />
+                    <Label htmlFor="push">পুশ নোটিফিকেশন</Label>
+                  </div>
+                  <Switch
+                    id="push"
+                    checked={notificationSettings.push}
+                    onCheckedChange={(checked) => handleSettingsUpdate('push', checked)}
+                  />
+                </div>
+              </div>
+            </div>
 
             {/* Notification Types */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5 text-orange-600" />
-                  নোটিফিকেশনের ধরন
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <h4 className="font-medium">পেমেন্ট সংক্রান্ত</h4>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="paymentReceived">পেমেন্ট প্রাপ্তি</Label>
-                        <Switch
-                          id="paymentReceived"
-                          checked={settings.paymentReceived}
-                          onCheckedChange={(checked) => handleSettingChange('paymentReceived', checked)}
-                        />
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="escrowReleased">Escrow মুক্তি</Label>
-                        <Switch
-                          id="escrowReleased"
-                          checked={settings.escrowReleased}
-                          onCheckedChange={(checked) => handleSettingChange('escrowReleased', checked)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <h4 className="font-medium">নিরাপত্তা ও সাপোর্ট</h4>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="disputeRaised">বিরোধ উত্থাপন</Label>
-                        <Switch
-                          id="disputeRaised"
-                          checked={settings.disputeRaised}
-                          onCheckedChange={(checked) => handleSettingChange('disputeRaised', checked)}
-                        />
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="kycUpdates">KYC আপডেট</Label>
-                        <Switch
-                          id="kycUpdates"
-                          checked={settings.kycUpdates}
-                          onCheckedChange={(checked) => handleSettingChange('kycUpdates', checked)}
-                        />
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="systemMaintenance">সিস্টেম রক্ষণাবেক্ষণ</Label>
-                        <Switch
-                          id="systemMaintenance"
-                          checked={settings.systemMaintenance}
-                          onCheckedChange={(checked) => handleSettingChange('systemMaintenance', checked)}
-                        />
-                      </div>
-                    </div>
-                  </div>
+            <div>
+              <h4 className="font-semibold mb-4">নোটিফিকেশনের ধরন:</h4>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="paymentReceived">পেমেন্ট রিসিভ</Label>
+                  <Switch
+                    id="paymentReceived"
+                    checked={notificationSettings.types.paymentReceived}
+                    onCheckedChange={(checked) => 
+                      setNotificationSettings(prev => ({
+                        ...prev, 
+                        types: {...prev.types, paymentReceived: checked}
+                      }))
+                    }
+                  />
                 </div>
-
-                <div className="mt-6 pt-4 border-t">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label htmlFor="marketingEmails">মার্কেটিং ইমেইল</Label>
-                      <p className="text-sm text-muted-foreground">নতুন ফিচার ও অফার সম্পর্কে জানুন</p>
-                    </div>
-                    <Switch
-                      id="marketingEmails"
-                      checked={settings.marketingEmails}
-                      onCheckedChange={(checked) => handleSettingChange('marketingEmails', checked)}
-                    />
-                  </div>
+                
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="paymentReleased">পেমেন্ট রিলিজ</Label>
+                  <Switch
+                    id="paymentReleased"
+                    checked={notificationSettings.types.paymentReleased}
+                    onCheckedChange={(checked) => 
+                      setNotificationSettings(prev => ({
+                        ...prev, 
+                        types: {...prev.types, paymentReleased: checked}
+                      }))
+                    }
+                  />
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Quick Actions */}
-            <Card>
-              <CardHeader>
-                <CardTitle>দ্রুত অ্যাকশন</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-4">
-                  <Button variant="outline">
-                    <Bell className="h-4 w-4 mr-2" />
-                    টেস্ট নোটিফিকেশন পাঠান
-                  </Button>
-                  <Button variant="outline">
-                    <MessageSquare className="h-4 w-4 mr-2" />
-                    হোয়াটসঅ্যাপ সংযোগ
-                  </Button>
-                  <Button variant="outline">
-                    <X className="h-4 w-4 mr-2" />
-                    সব নোটিফিকেশন মুছুন
-                  </Button>
+                
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="disputeRaised">বিরোধ উত্থাপন</Label>
+                  <Switch
+                    id="disputeRaised"
+                    checked={notificationSettings.types.disputeRaised}
+                    onCheckedChange={(checked) => 
+                      setNotificationSettings(prev => ({
+                        ...prev, 
+                        types: {...prev.types, disputeRaised: checked}
+                      }))
+                    }
+                  />
                 </div>
-              </CardContent>
-            </Card>
+                
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="kycUpdates">KYC আপডেট</Label>
+                  <Switch
+                    id="kycUpdates"
+                    checked={notificationSettings.types.kycUpdates}
+                    onCheckedChange={(checked) => 
+                      setNotificationSettings(prev => ({
+                        ...prev, 
+                        types: {...prev.types, kycUpdates: checked}
+                      }))
+                    }
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="withdrawalUpdates">উত্তোলন আপডেট</Label>
+                  <Switch
+                    id="withdrawalUpdates"
+                    checked={notificationSettings.types.withdrawalUpdates}
+                    onCheckedChange={(checked) => 
+                      setNotificationSettings(prev => ({
+                        ...prev, 
+                        types: {...prev.types, withdrawalUpdates: checked}
+                      }))
+                    }
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="securityAlerts">নিরাপত্তা সতর্কতা</Label>
+                  <Switch
+                    id="securityAlerts"
+                    checked={notificationSettings.types.securityAlerts}
+                    onCheckedChange={(checked) => 
+                      setNotificationSettings(prev => ({
+                        ...prev, 
+                        types: {...prev.types, securityAlerts: checked}
+                      }))
+                    }
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="marketing">মার্কেটিং নোটিফিকেশন</Label>
+                  <Switch
+                    id="marketing"
+                    checked={notificationSettings.types.marketing}
+                    onCheckedChange={(checked) => 
+                      setNotificationSettings(prev => ({
+                        ...prev, 
+                        types: {...prev.types, marketing: checked}
+                      }))
+                    }
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-        </TabsContent>
-      </Tabs>
+        </CardContent>
+      </Card>
     </div>
   );
 };
