@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { 
   BarChart, 
@@ -33,7 +32,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Separator } from '@/components/ui/separator';
 import DashboardOverview from '@/components/dashboard/DashboardOverview';
-import BusinessTypeSelector from '@/components/dashboard/BusinessTypeSelector';
+import BusinessTypeFilter from '@/components/dashboard/BusinessTypeFilter';
+import BusinessInsights from '@/components/dashboard/BusinessInsights';
+import QuickActionPanel from '@/components/dashboard/QuickActionPanel';
 import ActivityFeed from '@/components/dashboard/ActivityFeed';
 import AlertNotifications from '@/components/dashboard/AlertNotifications';
 import RevenueChart from '@/components/dashboard/RevenueChart';
@@ -245,8 +246,8 @@ const SellerDashboard = () => {
         </div>
       </div>
       
-      {/* Business type selector */}
-      <BusinessTypeSelector 
+      {/* Enhanced Business type filter */}
+      <BusinessTypeFilter 
         businessTypes={businessTypes} 
         activeType={activeBusinessType}
         onChange={handleBusinessTypeChange} 
@@ -259,13 +260,13 @@ const SellerDashboard = () => {
             <LayoutDashboard className="h-4 w-4 mr-2" />
             অভারভিউ
           </TabsTrigger>
-          <TabsTrigger value="analytics">
+          <TabsTrigger value="insights">
             <PieChart className="h-4 w-4 mr-2" />
-            এনালিটিক্স
+            ইনসাইটস
           </TabsTrigger>
-          <TabsTrigger value="orders">
+          <TabsTrigger value="actions">
             <ShoppingBag className="h-4 w-4 mr-2" />
-            অর্ডার/বুকিং
+            কুইক অ্যাকশন
           </TabsTrigger>
           <TabsTrigger value="customers">
             <Users className="h-4 w-4 mr-2" />
@@ -418,184 +419,14 @@ const SellerDashboard = () => {
           <CustomerRelationshipManagement />
         </TabsContent>
         
-        {/* Analytics tab */}
-        <TabsContent value="analytics" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>ব্যবসা অনুযায়ী আয়</CardTitle>
-                <CardDescription>বিভিন্ন ব্যবসা থেকে আয়ের তুলনামূলক বিশ্লেষণ</CardDescription>
-              </CardHeader>
-              <CardContent className="px-2">
-                <div className="h-[300px] flex items-center justify-center">
-                  <PieChart className="h-10 w-10 text-muted-foreground opacity-50" />
-                  <p className="ml-2 text-muted-foreground">বিজনেস ক্যাটাগরি অনুযায়ী আয়ের পাই চার্ট এখানে দেখানো হবে</p>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>আয় প্রবণতা</CardTitle>
-                <CardDescription>সময় অনুযায়ী আয়ের পরিবর্তন</CardDescription>
-              </CardHeader>
-              <CardContent className="px-2">
-                <div className="h-[300px] flex items-center justify-center">
-                  <LineChart className="h-10 w-10 text-muted-foreground opacity-50" />
-                  <p className="ml-2 text-muted-foreground">সময় অনুযায়ী আয়ের লাইন চার্ট এখানে দেখানো হবে</p>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="lg:col-span-2">
-              <CardHeader>
-                <CardTitle>চ্যানেল অ্যানালিটিক্স</CardTitle>
-                <CardDescription>কোন চ্যানেল থেকে বেশি আয় আসছে তার বিশ্লেষণ</CardDescription>
-              </CardHeader>
-              <CardContent className="px-2">
-                <div className="h-[300px] flex items-center justify-center">
-                  <BarChart className="h-10 w-10 text-muted-foreground opacity-50" />
-                  <p className="ml-2 text-muted-foreground">চ্যানেল অনুযায়ী আয়ের বার চার্ট এখানে দেখানো হবে</p>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>ট্র্যাফিক সোর্স</CardTitle>
-                <CardDescription>আপনার ওয়েবসাইটে ভিজিটরদের উৎস</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span>সোশ্যাল মিডিয়া</span>
-                    <span>৪২%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-1.5">
-                    <div className="bg-blue-600 h-1.5 rounded-full" style={{ width: '42%' }}></div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <span>সার্চ ইঞ্জিন</span>
-                    <span>৩৮%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-1.5">
-                    <div className="bg-green-600 h-1.5 rounded-full" style={{ width: '38%' }}></div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <span>ডিরেক্ট</span>
-                    <span>১৫%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-1.5">
-                    <div className="bg-amber-600 h-1.5 rounded-full" style={{ width: '15%' }}></div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <span>রেফারেল</span>
-                    <span>৫%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-1.5">
-                    <div className="bg-purple-600 h-1.5 rounded-full" style={{ width: '5%' }}></div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>টপ লোকেশন</CardTitle>
-                <CardDescription>আপনার গ্রাহকদের অবস্থান</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span>ঢাকা</span>
-                    <span>৫৫%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-1.5">
-                    <div className="bg-blue-600 h-1.5 rounded-full" style={{ width: '55%' }}></div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <span>চট্টগ্রাম</span>
-                    <span>২০%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-1.5">
-                    <div className="bg-green-600 h-1.5 rounded-full" style={{ width: '20%' }}></div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <span>সিলেট</span>
-                    <span>১০%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-1.5">
-                    <div className="bg-amber-600 h-1.5 rounded-full" style={{ width: '10%' }}></div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <span>রাজশাহী</span>
-                    <span>৮%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-1.5">
-                    <div className="bg-purple-600 h-1.5 rounded-full" style={{ width: '8%' }}></div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <span>অন্যান্য</span>
-                    <span>৭%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-1.5">
-                    <div className="bg-gray-600 h-1.5 rounded-full" style={{ width: '7%' }}></div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Report generator component */}
-            <Card className="lg:col-span-2">
-              <CardHeader>
-                <CardTitle>কাস্টমাইজড রিপোর্ট</CardTitle>
-                <CardDescription>বিস্তারিত অ্যানালিটিক্স এবং রিপোর্ট ডাউনলোড</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex justify-between items-center mb-4">
-                  <p className="text-sm">জেনারেট করুন এবং ডাউনলোড করুন কাস্টম রিপোর্ট</p>
-                  <Button onClick={() => setActiveModule('reports')}>
-                    <FileText className="h-4 w-4 mr-2" />
-                    রিপোর্ট জেনারেটর
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Report generator section - when button is clicked */}
-          {activeModule === 'reports' && (
-            <div className="mt-4">
-              <ReportGenerator />
-            </div>
-          )}
+        {/* Business Insights tab */}
+        <TabsContent value="insights" className="space-y-6">
+          <BusinessInsights selectedBusinessType={activeBusinessType} />
         </TabsContent>
         
-        {/* Orders and booking tab - integrated order tracking system */}
-        <TabsContent value="orders" className="space-y-6">
-          <OrderTrackingSystem />
-          
-          <Card>
-            <CardHeader>
-              <div className="flex justify-between">
-                <div>
-                  <CardTitle>ইন্টিগ্রেটেড বুকিং ক্যালেন্ডার</CardTitle>
-                  <CardDescription>সকল বুকিং এবং অ্যাপয়েন্টমেন্ট একসাথে দেখুন</CardDescription>
-                </div>
-                <Button>বুকিং সিনক্রোনাইজ করুন</Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <IntegratedBookingCalendar />
-            </CardContent>
-          </Card>
+        {/* Quick Actions tab */}
+        <TabsContent value="actions" className="space-y-6">
+          <QuickActionPanel selectedBusinessType={activeBusinessType} />
         </TabsContent>
         
         {/* Customers tab - CRM integration */}
