@@ -26,6 +26,20 @@ interface QuickActionPanelProps {
   selectedBusinessType: string | null;
 }
 
+interface ActionItem {
+  id: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  variant: 'default' | 'outline';
+  route?: string;
+  badge?: string;
+}
+
+interface ActionGroup {
+  group: string;
+  actions: ActionItem[];
+}
+
 const QuickActionPanel = ({ selectedBusinessType }: QuickActionPanelProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -49,71 +63,61 @@ const QuickActionPanel = ({ selectedBusinessType }: QuickActionPanelProps) => {
     setIsLoading(null);
   };
 
-  const getQuickActions = () => {
-    const commonActions = [
-      {
-        group: 'সাধারণ কার্যক্রম',
-        actions: [
-          { id: 'view-analytics', label: 'অ্যানালিটিক্স দেখুন', icon: BarChart3, variant: 'default' as const, route: '/seller-dashboard' },
-          { id: 'download-report', label: 'রিপোর্ট ডাউনলোড', icon: Download, variant: 'outline' as const },
-          { id: 'customer-messages', label: 'গ্রাহক বার্তা', icon: MessageSquare, variant: 'outline' as const, badge: '৫ নতুন' },
-          { id: 'schedule-calendar', label: 'ক্যালেন্ডার দেখুন', icon: Calendar, variant: 'outline' as const }
-        ]
-      }
-    ];
-
-    const businessSpecificActions = {
-      marketplace: [
-        {
-          group: 'মার্কেটপ্লেস অ্যাকশন',
-          actions: [
-            { id: 'add-product', label: 'নতুন প্রোডাক্ট', icon: Plus, variant: 'default' as const, route: '/create-digital-product' },
-            { id: 'bulk-upload', label: 'বাল্ক আপলোড', icon: Upload, variant: 'outline' as const },
-            { id: 'inventory-manage', label: 'ইনভেন্টরি ম্যানেজ', icon: Settings, variant: 'outline' as const },
-            { id: 'price-update', label: 'দাম আপডেট', icon: Edit, variant: 'outline' as const }
-          ]
-        }
-      ],
-      rental: [
-        {
-          group: 'রেন্টাল অ্যাকশন',
-          actions: [
-            { id: 'add-property', label: 'নতুন প্রপার্টি', icon: Plus, variant: 'default' as const, route: '/basa-bari' },
-            { id: 'booking-calendar', label: 'বুকিং ক্যালেন্ডার', icon: Calendar, variant: 'outline' as const },
-            { id: 'maintenance-schedule', label: 'মেইনটেনেন্স', icon: Settings, variant: 'outline' as const },
-            { id: 'availability-update', label: 'এভেইলেবিলিটি আপডেট', icon: Edit, variant: 'outline' as const }
-          ]
-        }
-      ],
-      service: [
-        {
-          group: 'সার্ভিস অ্যাকশন',
-          actions: [
-            { id: 'add-service', label: 'নতুন সার্ভিস', icon: Plus, variant: 'default' as const },
-            { id: 'appointment-book', label: 'অ্যাপয়েন্টমেন্ট বুক', icon: Calendar, variant: 'outline' as const },
-            { id: 'service-portfolio', label: 'পোর্টফোলিও আপডেট', icon: Upload, variant: 'outline' as const },
-            { id: 'pricing-update', label: 'প্রাইসিং আপডেট', icon: Edit, variant: 'outline' as const }
-          ]
-        }
-      ],
-      content: [
-        {
-          group: 'কন্টেন্ট অ্যাকশন',
-          actions: [
-            { id: 'upload-content', label: 'নতুন কন্টেন্ট', icon: Plus, variant: 'default' as const, route: '/create-digital-product' },
-            { id: 'batch-upload', label: 'ব্যাচ আপলোড', icon: Upload, variant: 'outline' as const },
-            { id: 'content-schedule', label: 'পাবলিশ শিডিউল', icon: Calendar, variant: 'outline' as const },
-            { id: 'engagement-boost', label: 'এনগেজমেন্ট বুস্ট', icon: Rocket, variant: 'outline' as const }
-          ]
-        }
+  const getQuickActions = (): ActionGroup[] => {
+    const commonActions: ActionGroup = {
+      group: 'সাধারণ কার্যক্রম',
+      actions: [
+        { id: 'view-analytics', label: 'অ্যানালিটিক্স দেখুন', icon: BarChart3, variant: 'default', route: '/seller-dashboard' },
+        { id: 'download-report', label: 'রিপোর্ট ডাউনলোড', icon: Download, variant: 'outline' },
+        { id: 'customer-messages', label: 'গ্রাহক বার্তা', icon: MessageSquare, variant: 'outline', badge: '৫ নতুন' },
+        { id: 'schedule-calendar', label: 'ক্যালেন্ডার দেখুন', icon: Calendar, variant: 'outline' }
       ]
     };
 
+    const businessSpecificActions: Record<string, ActionGroup> = {
+      marketplace: {
+        group: 'মার্কেটপ্লেস অ্যাকশন',
+        actions: [
+          { id: 'add-product', label: 'নতুন প্রোডাক্ট', icon: Plus, variant: 'default', route: '/create-digital-product' },
+          { id: 'bulk-upload', label: 'বাল্ক আপলোড', icon: Upload, variant: 'outline' },
+          { id: 'inventory-manage', label: 'ইনভেন্টরি ম্যানেজ', icon: Settings, variant: 'outline' },
+          { id: 'price-update', label: 'দাম আপডেট', icon: Edit, variant: 'outline' }
+        ]
+      },
+      rental: {
+        group: 'রেন্টাল অ্যাকশন',
+        actions: [
+          { id: 'add-property', label: 'নতুন প্রপার্টি', icon: Plus, variant: 'default', route: '/basa-bari' },
+          { id: 'booking-calendar', label: 'বুকিং ক্যালেন্ডার', icon: Calendar, variant: 'outline' },
+          { id: 'maintenance-schedule', label: 'মেইনটেনেন্স', icon: Settings, variant: 'outline' },
+          { id: 'availability-update', label: 'এভেইলেবিলিটি আপডেট', icon: Edit, variant: 'outline' }
+        ]
+      },
+      service: {
+        group: 'সার্ভিস অ্যাকশন',
+        actions: [
+          { id: 'add-service', label: 'নতুন সার্ভিস', icon: Plus, variant: 'default' },
+          { id: 'appointment-book', label: 'অ্যাপয়েন্টমেন্ট বুক', icon: Calendar, variant: 'outline' },
+          { id: 'service-portfolio', label: 'পোর্টফোলিও আপডেট', icon: Upload, variant: 'outline' },
+          { id: 'pricing-update', label: 'প্রাইসিং আপডেট', icon: Edit, variant: 'outline' }
+        ]
+      },
+      content: {
+        group: 'কন্টেন্ট অ্যাকশন',
+        actions: [
+          { id: 'upload-content', label: 'নতুন কন্টেন্ট', icon: Plus, variant: 'default', route: '/create-digital-product' },
+          { id: 'batch-upload', label: 'ব্যাচ আপলোড', icon: Upload, variant: 'outline' },
+          { id: 'content-schedule', label: 'পাবলিশ শিডিউল', icon: Calendar, variant: 'outline' },
+          { id: 'engagement-boost', label: 'এনগেজমেন্ট বুস্ট', icon: Rocket, variant: 'outline' }
+        ]
+      }
+    };
+
     const businessActions = selectedBusinessType 
-      ? businessSpecificActions[selectedBusinessType as keyof typeof businessSpecificActions] || []
+      ? [businessSpecificActions[selectedBusinessType]] || []
       : [];
 
-    return [...commonActions, ...businessActions];
+    return [commonActions, ...businessActions].filter(Boolean);
   };
 
   const actionGroups = getQuickActions();

@@ -162,12 +162,44 @@ const SellerDashboard = () => {
     setActiveModule(module);
   };
 
-  // Business type data
+  // Business type data with complete BusinessType interface
   const businessTypes = [
-    { id: 'marketplace', name: 'মার্কেটপ্লেস', icon: <ShoppingBag className="h-5 w-5" /> },
-    { id: 'rental', name: 'রেন্টাল', icon: <Building className="h-5 w-5" /> },
-    { id: 'service', name: 'সার্ভিস', icon: <Wrench className="h-5 w-5" /> },
-    { id: 'content', name: 'ডিজিটাল কন্টেন্ট', icon: <Pencil className="h-5 w-5" /> }
+    { 
+      id: 'marketplace', 
+      name: 'মার্কেটপ্লেস', 
+      icon: <ShoppingBag className="h-5 w-5" />,
+      count: 15,
+      revenue: '৳৮,৫০০',
+      growth: 12.5,
+      status: 'active' as const
+    },
+    { 
+      id: 'rental', 
+      name: 'রেন্টাল', 
+      icon: <Building className="h-5 w-5" />,
+      count: 8,
+      revenue: '৳৪,২০০',
+      growth: 8.3,
+      status: 'active' as const
+    },
+    { 
+      id: 'service', 
+      name: 'সার্ভিস', 
+      icon: <Wrench className="h-5 w-5" />,
+      count: 22,
+      revenue: '৳৬,৮০০',
+      growth: -2.1,
+      status: 'paused' as const
+    },
+    { 
+      id: 'content', 
+      name: 'ডিজিটাল কন্টেন্ট', 
+      icon: <Pencil className="h-5 w-5" />,
+      count: 12,
+      revenue: '৳৩,৯০০',
+      growth: 18.7,
+      status: 'active' as const
+    }
   ];
   
   // Stats data
