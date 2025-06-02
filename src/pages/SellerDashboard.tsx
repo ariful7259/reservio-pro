@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { 
   BarChart, 
@@ -467,4 +466,8 @@ const SellerDashboard = () => {
   );
 };
 
+import OrderBookingManagement from '@/components/dashboard/OrderBookingManagement';
+import IntegratedBookingCalendar from '@/components/dashboard/IntegratedBookingCalendar';
+import MarketingToolsSystem from '@/components/dashboard/MarketingToolsSystem';
+import CustomerRelationshipManagement from '@/components/dashboard/CustomerRelationshipManagement';
 export default SellerDashboard;
