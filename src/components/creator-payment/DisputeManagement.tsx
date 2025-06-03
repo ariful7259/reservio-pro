@@ -7,174 +7,165 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { 
   AlertTriangle, 
+  MessageCircle, 
   FileText, 
-  Upload, 
-  Eye, 
-  MessageSquare,
-  Clock,
+  Clock, 
   CheckCircle2,
   XCircle,
   User,
-  Calendar
+  Calendar,
+  Upload,
+  Eye
 } from 'lucide-react';
 
 const DisputeManagement = () => {
   const { toast } = useToast();
   const [selectedDispute, setSelectedDispute] = useState<string | null>(null);
-  const [response, setResponse] = useState('');
-  
-  const [disputes] = useState([
+  const [adminResponse, setAdminResponse] = useState('');
+
+  const disputes = [
     {
       id: 'DIS001',
-      transactionId: 'ESC004',
-      serviceName: 'গ্রাফিক ডিজাইন',
-      buyer: 'রাশিদা বেগম',
-      creator: 'ডিজাইন স্টুডিও',
-      amount: 5000,
-      status: 'open',
-      reason: 'সার্ভিস পাইনি',
-      description: 'অর্ডার দেওয়ার ৫ দিন পর এখনো কোনো ডিজাইন পাইনি। বার বার মেসেজ দিলেও কোনো সাড়া নেই।',
-      evidence: ['screenshot1.jpg', 'conversation.png'],
-      createdAt: '২৮ নভেম্বর, ২০২৪',
-      adminNotes: null
+      orderId: 'ORD001234',
+      serviceName: 'ওয়েবসাইট ডিজাইন',
+      buyer: 'আহমেদ হাসান',
+      seller: 'ফারহান আহমেদ',
+      amount: 15000,
+      status: 'investigating',
+      priority: 'high',
+      createdAt: '২৫ নভেম্বর, ২০২৪',
+      reason: 'সার্ভিস ডেলিভার হয়নি',
+      description: 'আমি ৫ দিন আগে ওয়েবসাইট ডিজাইনের জন্য পেমেন্ট করেছি কিন্তু এখনো কোনো কাজ পাইনি। বিক্রেতার সাথে যোগাযোগ করার চেষ্টা করেছি কিন্তু কোনো সাড়া পাচ্ছি না।',
+      evidence: ['screenshot1.jpg', 'chat_log.txt'],
+      timeline: [
+        { date: '২৫ নভেম্বর', action: 'বিরোধ উত্থাপিত', by: 'ক্রেতা' },
+        { date: '২৫ নভেম্বর', action: 'তদন্ত শুরু', by: 'অ্যাডমিন' },
+        { date: '২৬ নভেম্বর', action: 'বিক্রেতার কাছ থেকে জবাব চাওয়া', by: 'অ্যাডমিন' }
+      ]
     },
     {
       id: 'DIS002',
-      transactionId: 'ESC005',
-      serviceName: 'ওয়েবসাইট ডেভেলপমেন্ট',
-      buyer: 'আলী হোসেন',
-      creator: 'ওয়েব সলিউশন',
-      amount: 12000,
-      status: 'investigating',
-      reason: 'কাজ অসম্পূর্ণ',
-      description: 'ওয়েবসাইটে অনেক বাগ আছে এবং রেসপন্সিভ ডিজাইন কাজ করছে না। প্রতিশ্রুতি অনুযায়ী কাজ হয়নি।',
-      evidence: ['website_issues.mp4', 'requirements.pdf'],
-      createdAt: '২৬ নভেম্বর, ২০২৪',
-      adminNotes: 'তদন্ত চলছে। উভয় পক্ষের সাথে যোগাযোগ করা হচ্ছে।'
+      orderId: 'ORD001235',
+      serviceName: 'লোগো ডিজাইন',
+      buyer: 'ফাতেমা খান',
+      seller: 'রিফাত হোসেন',
+      amount: 3000,
+      status: 'resolved',
+      priority: 'medium',
+      createdAt: '২০ নভেম্বর, ২০২৪',
+      reason: 'কাজের মান সন্তোষজনক নয়',
+      description: 'লোগো ডিজাইন আমার প্রত্যাশা অনুযায়ী হয়নি। বেশ কয়েকবার রিভিশন চেয়েছি কিন্তু উন্নতি হয়নি।',
+      evidence: ['original_design.png', 'requirements.pdf'],
+      resolution: 'আংশিক রিফান্ড - ৳১৫০০',
+      timeline: [
+        { date: '২০ নভেম্বর', action: 'বিরোধ উত্থাপিত', by: 'ক্রেতা' },
+        { date: '২১ নভেম্বর', action: 'প্রমাণ পর্যালোচনা', by: 'অ্যাডমিন' },
+        { date: '২৩ নভেম্বর', action: 'আংশিক রিফান্ড অনুমোদন', by: 'অ্যাডমিন' }
+      ]
     },
     {
       id: 'DIS003',
-      transactionId: 'ESC006',
-      serviceName: 'ভিডিও এডিটিং',
-      buyer: 'সারা খান',
-      creator: 'ক্রিয়েটিভ এডিটর',
-      amount: 3500,
-      status: 'resolved',
-      reason: 'মানের সমস্যা',
-      description: 'ভিডিওর কোয়ালিটি প্রত্যাশা অনুযায়ী হয়নি।',
-      evidence: ['original_video.mp4', 'edited_video.mp4'],
-      createdAt: '২৪ নভেম্বর, ২০২৪',
-      adminNotes: 'ক্রিয়েটর পুনরায় কাজ করে দিয়েছে। বায়ার সন্তুষ্ট।',
-      resolution: 'টাকা ক্রিয়েটরের কাছে রিলিজ করা হয়েছে'
+      orderId: 'ORD001236',
+      serviceName: 'কন্টেন্ট রাইটিং',
+      buyer: 'করিম উদ্দিন',
+      seller: 'সাবিনা আক্তার',
+      amount: 2500,
+      status: 'pending',
+      priority: 'low',
+      createdAt: '২৮ নভেম্বর, ২০২৪',
+      reason: 'পেমেন্ট করার পর যোগাযোগ বন্ধ',
+      description: 'কন্টেন্ট রাইটিংয়ের জন্য পেমেন্ট করেছি কিন্তু বিক্রেতার সাথে যোগাযোগ করতে পারছি না।',
+      evidence: ['payment_receipt.pdf'],
+      timeline: [
+        { date: '২৮ নভেম্বর', action: 'বিরোধ উত্থাপিত', by: 'ক্রেতা' }
+      ]
     }
-  ]);
+  ];
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'open':
-        return <Badge className="bg-red-100 text-red-800">খোলা</Badge>;
+      case 'pending':
+        return <Badge className="bg-yellow-100 text-yellow-800">অপেক্ষমাণ</Badge>;
       case 'investigating':
-        return <Badge className="bg-yellow-100 text-yellow-800">তদন্ত চলছে</Badge>;
+        return <Badge className="bg-blue-100 text-blue-800">তদন্তাধীন</Badge>;
       case 'resolved':
-        return <Badge className="bg-green-100 text-green-800">সমাধান হয়েছে</Badge>;
+        return <Badge className="bg-green-100 text-green-800">সমাধান</Badge>;
+      case 'escalated':
+        return <Badge className="bg-red-100 text-red-800">জটিল</Badge>;
       default:
         return <Badge variant="secondary">অজানা</Badge>;
     }
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'open':
-        return <AlertTriangle className="h-5 w-5 text-red-600" />;
-      case 'investigating':
-        return <Clock className="h-5 w-5 text-yellow-600" />;
-      case 'resolved':
-        return <CheckCircle2 className="h-5 w-5 text-green-600" />;
+  const getPriorityBadge = (priority: string) => {
+    switch (priority) {
+      case 'high':
+        return <Badge variant="destructive">উচ্চ</Badge>;
+      case 'medium':
+        return <Badge className="bg-orange-100 text-orange-800">মধ্যম</Badge>;
+      case 'low':
+        return <Badge className="bg-gray-100 text-gray-800">নিম্ন</Badge>;
       default:
-        return <XCircle className="h-5 w-5 text-gray-600" />;
+        return <Badge variant="secondary">সাধারণ</Badge>;
     }
   };
 
-  const handleResponse = (disputeId: string) => {
-    if (!response.trim()) {
-      toast({
-        title: "উত্তর লিখুন",
-        description: "বিরোধের উত্তর অবশ্যই লিখতে হবে",
-        variant: "destructive"
-      });
-      return;
-    }
-
+  const handleAdminAction = (action: string, disputeId: string) => {
     toast({
-      title: "উত্তর পাঠানো হয়েছে",
-      description: "আপনার উত্তর সফলভাবে জমা দেওয়া হয়েছে",
-    });
-    
-    setResponse('');
-    setSelectedDispute(null);
-  };
-
-  const handleEvidenceUpload = () => {
-    toast({
-      title: "প্রমাণ আপলোড",
-      description: "প্রমাণের ফাইল আপলোড করার ব্যবস্থা শীঘ্রই যোগ করা হবে",
+      title: "অ্যাকশন সফল",
+      description: `বিরোধ ${disputeId} এর জন্য ${action} সম্পন্ন হয়েছে`,
     });
   };
+
+  const totalDisputes = disputes.length;
+  const pendingDisputes = disputes.filter(d => d.status === 'pending').length;
+  const investigatingDisputes = disputes.filter(d => d.status === 'investigating').length;
+  const resolvedDisputes = disputes.filter(d => d.status === 'resolved').length;
 
   return (
     <div className="space-y-6">
-      {/* Dispute Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div>
+        <h2 className="text-2xl font-bold flex items-center gap-2 mb-2">
+          <AlertTriangle className="h-6 w-6" />
+          বিরোধ ব্যবস্থাপনা
+        </h2>
+        <p className="text-muted-foreground">
+          ক্রেতা ও বিক্রেতার মধ্যে বিরোধ সমাধান এবং ন্যায়বিচার নিশ্চিতকরণ
+        </p>
+      </div>
+
+      {/* Dispute Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="bg-red-100 p-2 rounded-lg">
-                <AlertTriangle className="h-5 w-5 text-red-600" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">খোলা বিরোধ</p>
-                <p className="text-xl font-bold">{disputes.filter(d => d.status === 'open').length}</p>
-              </div>
-            </div>
+          <CardContent className="p-4 text-center">
+            <p className="text-2xl font-bold text-blue-600">{totalDisputes}</p>
+            <p className="text-sm text-muted-foreground">মোট বিরোধ</p>
           </CardContent>
         </Card>
-
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="bg-yellow-100 p-2 rounded-lg">
-                <Clock className="h-5 w-5 text-yellow-600" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">তদন্ত চলছে</p>
-                <p className="text-xl font-bold">{disputes.filter(d => d.status === 'investigating').length}</p>
-              </div>
-            </div>
+          <CardContent className="p-4 text-center">
+            <p className="text-2xl font-bold text-yellow-600">{pendingDisputes}</p>
+            <p className="text-sm text-muted-foreground">অপেক্ষমাণ</p>
           </CardContent>
         </Card>
-
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="bg-green-100 p-2 rounded-lg">
-                <CheckCircle2 className="h-5 w-5 text-green-600" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">সমাধান হয়েছে</p>
-                <p className="text-xl font-bold">{disputes.filter(d => d.status === 'resolved').length}</p>
-              </div>
-            </div>
+          <CardContent className="p-4 text-center">
+            <p className="text-2xl font-bold text-orange-600">{investigatingDisputes}</p>
+            <p className="text-sm text-muted-foreground">তদন্তাধীন</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <p className="text-2xl font-bold text-green-600">{resolvedDisputes}</p>
+            <p className="text-sm text-muted-foreground">সমাধান</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Disputes List */}
+      {/* Dispute List */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5" />
-            বিরোধ ব্যবস্থাপনা
-          </CardTitle>
+          <CardTitle>বিরোধের তালিকা</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -183,116 +174,133 @@ const DisputeManagement = () => {
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      {getStatusIcon(dispute.status)}
                       <h4 className="font-medium">{dispute.serviceName}</h4>
                       {getStatusBadge(dispute.status)}
+                      {getPriorityBadge(dispute.priority)}
+                    </div>
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 text-sm text-muted-foreground">
+                      <span>বিরোধ ID: {dispute.id}</span>
+                      <span>অর্ডার ID: {dispute.orderId}</span>
+                      <span>ক্রেতা: {dispute.buyer}</span>
+                      <span>বিক্রেতা: {dispute.seller}</span>
                     </div>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <User className="h-4 w-4" />
-                        ক্রেতা: {dispute.buyer}
-                      </span>
                       <span className="flex items-center gap-1">
                         <Calendar className="h-4 w-4" />
                         {dispute.createdAt}
                       </span>
-                      <span className="flex items-center gap-1">
-                        <FileText className="h-4 w-4" />
-                        {dispute.id}
-                      </span>
+                      <span>কারণ: {dispute.reason}</span>
                     </div>
                   </div>
                   
                   <div className="flex flex-col lg:items-end gap-2">
                     <p className="text-lg font-bold">৳{dispute.amount.toLocaleString()}</p>
-                    <p className="text-sm text-muted-foreground">কারণ: {dispute.reason}</p>
+                    <div className="flex gap-2">
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => setSelectedDispute(selectedDispute === dispute.id ? null : dispute.id)}
+                      >
+                        <Eye className="h-4 w-4 mr-1" />
+                        বিস্তারিত
+                      </Button>
+                    </div>
                   </div>
                 </div>
 
                 {/* Dispute Details */}
-                <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-                  <div>
-                    <h5 className="font-medium mb-2">বিবরণ:</h5>
-                    <p className="text-sm text-gray-700">{dispute.description}</p>
-                  </div>
-
-                  {dispute.evidence && dispute.evidence.length > 0 && (
+                {selectedDispute === dispute.id && (
+                  <div className="border-t pt-4 space-y-4">
                     <div>
-                      <h5 className="font-medium mb-2">প্রমাণপত্র:</h5>
-                      <div className="flex flex-wrap gap-2">
-                        {dispute.evidence.map((file, index) => (
-                          <div key={index} className="flex items-center gap-1 bg-white border rounded px-2 py-1">
-                            <FileText className="h-4 w-4" />
-                            <span className="text-sm">{file}</span>
-                            <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
-                              <Eye className="h-3 w-3" />
-                            </Button>
+                      <h5 className="font-medium mb-2">বিবরণ:</h5>
+                      <p className="text-sm text-muted-foreground bg-gray-50 p-3 rounded">
+                        {dispute.description}
+                      </p>
+                    </div>
+
+                    {/* Evidence */}
+                    {dispute.evidence.length > 0 && (
+                      <div>
+                        <h5 className="font-medium mb-2">প্রমাণ:</h5>
+                        <div className="flex gap-2">
+                          {dispute.evidence.map((file, index) => (
+                            <Badge key={index} variant="outline" className="flex items-center gap-1">
+                              <FileText className="h-3 w-3" />
+                              {file}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Timeline */}
+                    <div>
+                      <h5 className="font-medium mb-2">সময়রেখা:</h5>
+                      <div className="space-y-2">
+                        {dispute.timeline.map((event, index) => (
+                          <div key={index} className="flex items-center gap-2 text-sm">
+                            <Clock className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-muted-foreground">{event.date}:</span>
+                            <span>{event.action}</span>
+                            <Badge variant="outline" className="text-xs">{event.by}</Badge>
                           </div>
                         ))}
                       </div>
                     </div>
-                  )}
 
-                  {dispute.adminNotes && (
-                    <div>
-                      <h5 className="font-medium mb-2">অ্যাডমিন নোট:</h5>
-                      <p className="text-sm text-blue-700 bg-blue-50 p-2 rounded">{dispute.adminNotes}</p>
-                    </div>
-                  )}
+                    {/* Resolution (if resolved) */}
+                    {dispute.resolution && (
+                      <div>
+                        <h5 className="font-medium mb-2">সমাধান:</h5>
+                        <p className="text-sm bg-green-50 text-green-800 p-3 rounded">
+                          {dispute.resolution}
+                        </p>
+                      </div>
+                    )}
 
-                  {dispute.resolution && (
-                    <div>
-                      <h5 className="font-medium mb-2">সমাধান:</h5>
-                      <p className="text-sm text-green-700 bg-green-50 p-2 rounded">{dispute.resolution}</p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex flex-wrap gap-2">
-                  <Button size="sm" variant="outline">
-                    <MessageSquare className="h-4 w-4 mr-2" />
-                    আলোচনা করুন
-                  </Button>
-                  <Button size="sm" variant="outline" onClick={handleEvidenceUpload}>
-                    <Upload className="h-4 w-4 mr-2" />
-                    প্রমাণ আপলোড
-                  </Button>
-                  {dispute.status !== 'resolved' && (
-                    <Button 
-                      size="sm" 
-                      onClick={() => setSelectedDispute(dispute.id)}
-                    >
-                      উত্তর দিন
-                    </Button>
-                  )}
-                </div>
-
-                {/* Response Form */}
-                {selectedDispute === dispute.id && (
-                  <div className="border-t pt-4 space-y-3">
-                    <h5 className="font-medium">আপনার উত্তর:</h5>
-                    <Textarea
-                      placeholder="বিরোধের উত্তর লিখুন..."
-                      value={response}
-                      onChange={(e) => setResponse(e.target.value)}
-                      rows={3}
-                    />
-                    <div className="flex gap-2">
-                      <Button 
-                        size="sm" 
-                        onClick={() => handleResponse(dispute.id)}
-                      >
-                        উত্তর পাঠান
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => setSelectedDispute(null)}
-                      >
-                        বাতিল
-                      </Button>
-                    </div>
+                    {/* Admin Actions */}
+                    {dispute.status !== 'resolved' && (
+                      <div>
+                        <h5 className="font-medium mb-2">অ্যাডমিন অ্যাকশন:</h5>
+                        <div className="space-y-3">
+                          <Textarea
+                            placeholder="আপনার মন্তব্য বা সিদ্ধান্ত লিখুন..."
+                            value={adminResponse}
+                            onChange={(e) => setAdminResponse(e.target.value)}
+                          />
+                          <div className="flex gap-2 flex-wrap">
+                            <Button 
+                              size="sm" 
+                              onClick={() => handleAdminAction('সম্পূর্ণ রিফান্ড', dispute.id)}
+                              className="bg-red-600 hover:bg-red-700"
+                            >
+                              সম্পূর্ণ রিফান্ড
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              onClick={() => handleAdminAction('আংশিক রিফান্ড', dispute.id)}
+                              className="bg-orange-600 hover:bg-orange-700"
+                            >
+                              আংশিক রিফান্ড
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              onClick={() => handleAdminAction('বিক্রেতার পক্ষে', dispute.id)}
+                              className="bg-green-600 hover:bg-green-700"
+                            >
+                              বিক্রেতার পক্ষে
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleAdminAction('আরও তথ্য চাওয়া', dispute.id)}
+                            >
+                              আরও তথ্য চান
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -301,45 +309,45 @@ const DisputeManagement = () => {
         </CardContent>
       </Card>
 
-      {/* Dispute Guidelines */}
+      {/* Dispute Resolution Guidelines */}
       <Card>
         <CardHeader>
-          <CardTitle>বিরোধ সমাধানের নির্দেশনা</CardTitle>
+          <CardTitle>বিরোধ সমাধানের নীতিমালা</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="font-semibold mb-3">ক্রিয়েটরদের জন্য:</h4>
+              <h4 className="font-semibold mb-3">ক্রেতার অধিকার:</h4>
               <ul className="space-y-2 text-sm">
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5" />
-                  <span>দ্রুত প্রতিক্রিয়া দিন</span>
+                  <span>প্রতিশ্রুতি অনুযায়ী সার্ভিস পাওয়ার অধিকার</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5" />
-                  <span>প্রমাণসহ উত্তর দিন</span>
+                  <span>সার্ভিস না পেলে সম্পূর্ণ রিফান্ডের অধিকার</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5" />
-                  <span>সমস্যা সমাধানের চেষ্টা করুন</span>
+                  <span>মানসম্পন্ন কাজ না পেলে আংশিক রিফান্ড</span>
                 </li>
               </ul>
             </div>
             
             <div>
-              <h4 className="font-semibold mb-3">ক্রেতাদের জন্য:</h4>
+              <h4 className="font-semibold mb-3">বিক্রেতার দায়িত্ব:</h4>
               <ul className="space-y-2 text-sm">
                 <li className="flex items-start gap-2">
                   <AlertTriangle className="h-4 w-4 text-orange-600 mt-0.5" />
-                  <span>স্পষ্ট কারণ উল্লেখ করুন</span>
+                  <span>প্রতিশ্রুতি অনুযায়ী সার্ভিস ডেলিভার করা</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <AlertTriangle className="h-4 w-4 text-orange-600 mt-0.5" />
-                  <span>প্রমাণপত্র সংযুক্ত করুন</span>
+                  <span>নির্ধারিত সময়ে কাজ সম্পন্ন করা</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <AlertTriangle className="h-4 w-4 text-orange-600 mt-0.5" />
-                  <span>ধৈর্য ধরে সমাধানের অপেক্ষা করুন</span>
+                  <span>ক্রেতার সাথে নিয়মিত যোগাযোগ রাখা</span>
                 </li>
               </ul>
             </div>
