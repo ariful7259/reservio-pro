@@ -331,7 +331,7 @@ response = requests.post(url, json=data, headers=headers)`
             <div className="border rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Badge className="bg-blue-100 text-blue-800">GET</Badge>
-                <code className="text-sm">/v1/transactions/{id}</code>
+                <code className="text-sm">/v1/transactions/:id</code>
               </div>
               <p className="text-sm text-muted-foreground">লেনদেনের বিস্তারিত দেখুন</p>
             </div>
@@ -339,7 +339,7 @@ response = requests.post(url, json=data, headers=headers)`
             <div className="border rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Badge className="bg-orange-100 text-orange-800">PUT</Badge>
-                <code className="text-sm">/v1/payment-links/{id}</code>
+                <code className="text-sm">/v1/payment-links/:id</code>
               </div>
               <p className="text-sm text-muted-foreground">পেমেন্ট লিংক আপডেট করুন</p>
             </div>
@@ -347,7 +347,7 @@ response = requests.post(url, json=data, headers=headers)`
             <div className="border rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Badge className="bg-red-100 text-red-800">DELETE</Badge>
-                <code className="text-sm">/v1/payment-links/{id}</code>
+                <code className="text-sm">/v1/payment-links/:id</code>
               </div>
               <p className="text-sm text-muted-foreground">পেমেন্ট লিংক ডিলিট করুন</p>
             </div>
