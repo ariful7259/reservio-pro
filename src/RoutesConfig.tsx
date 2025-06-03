@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
@@ -32,10 +33,15 @@ import BasaBari from './pages/BasaBari';
 import { FeatureSelectionPage } from './pages/FeatureSelectionPage';
 import CreateLinkInBio from './pages/CreateLinkInBio';
 import CreatorPaymentGateway from '@/pages/CreatorPaymentGateway';
+import PaymentGateway from '@/pages/PaymentGateway';
 
 const RoutesConfig = () => {
   return (
     <Routes>
+      {/* Payment Gateway Routes */}
+      <Route path="/payment-gateway" element={<PaymentGateway />} />
+      <Route path="/creator-payment-gateway" element={<CreatorPaymentGateway />} />
+      
       {/* Payment and Money Management */}
       <Route path="/payment/analytics" element={<PaymentAnalytics />} />
       <Route path="/payment/transaction-history" element={<TransactionHistory />} />
@@ -80,20 +86,10 @@ const RoutesConfig = () => {
       <Route path="/seller-dashboard" element={<SellerDashboard />} />
       
       {/* Seller Dashboard Sections */}
-      <Route path="/seller-dashboard/marketplace/*" element={<DashboardLayout type="marketplace" />} />
-      <Route path="/seller-dashboard/rental/*" element={<DashboardLayout type="rental" />} />
-      <Route path="/seller-dashboard/services/*" element={<DashboardLayout type="service" />} />
-      <Route path="/seller-dashboard/content/*" element={<DashboardLayout type="content" />} />
-      <Route path="/dashboard/marketplace/*" element={<DashboardLayout type="marketplace" />} />
-      <Route path="/dashboard/rental/*" element={<DashboardLayout type="rental" />} />
-      <Route path="/dashboard/service/*" element={<DashboardLayout type="service" />} />
-      <Route path="/dashboard/content/*" element={<DashboardLayout type="content" />} />
-      
-      {/* Catch-all route */}
+      <Route path="/dashboard/*" element={<DashboardLayout />} />
+
+      {/* 404 Page */}
       <Route path="*" element={<NotFound />} />
-      
-      {/* Creator Payment Gateway */}
-      <Route path="/creator-payment-gateway" element={<CreatorPaymentGateway />} />
     </Routes>
   );
 };

@@ -5,256 +5,302 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { 
   Link, 
-  Copy, 
-  Share2, 
   Eye, 
-  Smartphone,
-  CreditCard,
   Settings,
+  Copy,
+  Palette,
+  CreditCard,
+  Smartphone,
   QrCode
 } from 'lucide-react';
 
 const PaymentPageGenerator = () => {
   const { toast } = useToast();
   const [pageData, setPageData] = useState({
-    serviceName: '',
+    title: '',
     description: '',
     price: '',
-    advanceAmount: '',
-    isAdvancePayment: false,
-    customUrl: '',
-    acceptedMethods: {
-      bkash: true,
-      nagad: true,
-      rocket: true,
-      visa: true,
-      mastercard: true,
-      stripe: true
-    }
+    serviceName: '',
+    creatorName: '',
+    backgroundColor: '#ffffff',
+    textColor: '#000000',
+    buttonColor: '#3b82f6'
   });
-  const [generatedUrl, setGeneratedUrl] = useState('');
 
-  const generatePaymentPage = () => {
-    if (!pageData.serviceName || !pageData.price) {
+  const [generatedLink, setGeneratedLink] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleGenerate = () => {
+    if (!pageData.title || !pageData.price || !pageData.serviceName) {
       toast({
-        title: "অসম্পূর্ণ তথ্য",
-        description: "সার্ভিসের নাম এবং মূল্য অবশ্যই দিতে হবে",
+        title: "সব ফিল্ড পূরণ করুন",
+        description: "পেমেন্ট পেজ তৈরি করতে সব তথ্য দিন",
         variant: "destructive"
       });
       return;
     }
 
-    const pageId = Math.random().toString(36).substring(2, 8);
-    const url = `https://pay.basabari.com/${pageData.customUrl || pageData.serviceName.toLowerCase().replace(/\s+/g, '-')}-${pageId}`;
-    setGeneratedUrl(url);
+    setIsGenerating(true);
     
-    toast({
-      title: "পেমেন্ট পেজ তৈরি হয়েছে",
-      description: "আপনার কাস্টম পেমেন্ট পেজ সফলভাবে তৈরি হয়েছে",
-    });
+    // Simulate page generation
+    setTimeout(() => {
+      const linkId = Math.random().toString(36).substring(2, 8);
+      const link = `https://yourapp.com/pay/${linkId}`;
+      setGeneratedLink(link);
+      setIsGenerating(false);
+      
+      toast({
+        title: "পেমেন্ট পেজ তৈরি হয়েছে!",
+        description: "আপনার পেমেন্ট লিংক সফলভাবে তৈরি হয়েছে"
+      });
+    }, 2000);
   };
 
-  const copyUrl = () => {
-    navigator.clipboard.writeText(generatedUrl);
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(generatedLink);
     toast({
-      title: "URL কপি হয়েছে",
-      description: "পেমেন্ট পেজ URL ক্লিপবোর্ডে কপি করা হয়েছে",
+      title: "লিংক কপি হয়েছে",
+      description: "পেমেন্ট লিংক ক্লিপবোর্ডে কপি হয়েছে"
     });
   };
-
-  const paymentMethods = [
-    { id: 'bkash', name: 'বিকাশ', color: 'bg-pink-100 text-pink-800' },
-    { id: 'nagad', name: 'নগদ', color: 'bg-orange-100 text-orange-800' },
-    { id: 'rocket', name: 'রকেট', color: 'bg-purple-100 text-purple-800' },
-    { id: 'visa', name: 'Visa', color: 'bg-blue-100 text-blue-800' },
-    { id: 'mastercard', name: 'Mastercard', color: 'bg-red-100 text-red-800' },
-    { id: 'stripe', name: 'Stripe', color: 'bg-green-100 text-green-800' }
-  ];
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {/* Form Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Link className="h-5 w-5" />
-            ওয়ান-পেজ পেমেন্ট ল্যান্ডিং তৈরি করুন
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label htmlFor="serviceName">সার্ভিসের নাম *</Label>
-            <Input
-              id="serviceName"
-              placeholder="যেমন: ওয়েব ডিজাইন সার্ভিস"
-              value={pageData.serviceName}
-              onChange={(e) => setPageData({...pageData, serviceName: e.target.value})}
-            />
-          </div>
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold flex items-center gap-2 mb-2">
+          <Link className="h-6 w-6" />
+          Payment Page Generator
+        </h2>
+        <p className="text-muted-foreground">
+          আপনার সার্ভিসের জন্য কাস্টম পেমেন্ট পেজ তৈরি করুন
+        </p>
+      </div>
 
-          <div>
-            <Label htmlFor="description">সার্ভিসের বিবরণ</Label>
-            <Textarea
-              id="description"
-              placeholder="আপনার সার্ভিস সম্পর্কে বিস্তারিত..."
-              value={pageData.description}
-              onChange={(e) => setPageData({...pageData, description: e.target.value})}
-              rows={3}
-            />
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Form Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle>পেজ তথ্য</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="title">পেজ টাইটেল</Label>
+              <Input
+                id="title"
+                placeholder="যেমন: ওয়েবসাইট ডিজাইন সার্ভিস"
+                value={pageData.title}
+                onChange={(e) => setPageData(prev => ({...prev, title: e.target.value}))}
+              />
+            </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="price">মূল্য (৳) *</Label>
+            <div className="space-y-2">
+              <Label htmlFor="serviceName">সার্ভিসের নাম</Label>
+              <Input
+                id="serviceName"
+                placeholder="যেমন: প্রিমিয়াম ওয়েবসাইট ডিজাইন"
+                value={pageData.serviceName}
+                onChange={(e) => setPageData(prev => ({...prev, serviceName: e.target.value}))}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="creatorName">আপনার নাম</Label>
+              <Input
+                id="creatorName"
+                placeholder="যেমন: জন ডো"
+                value={pageData.creatorName}
+                onChange={(e) => setPageData(prev => ({...prev, creatorName: e.target.value}))}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="price">মূল্য (৳)</Label>
               <Input
                 id="price"
                 type="number"
-                placeholder="৫০০০"
+                placeholder="5000"
                 value={pageData.price}
-                onChange={(e) => setPageData({...pageData, price: e.target.value})}
+                onChange={(e) => setPageData(prev => ({...prev, price: e.target.value}))}
               />
             </div>
-            <div>
-              <Label htmlFor="advance">অ্যাডভান্স (৳)</Label>
-              <Input
-                id="advance"
-                type="number"
-                placeholder="২০০০"
-                value={pageData.advanceAmount}
-                onChange={(e) => setPageData({...pageData, advanceAmount: e.target.value})}
-                disabled={!pageData.isAdvancePayment}
+
+            <div className="space-y-2">
+              <Label htmlFor="description">বিবরণ</Label>
+              <Textarea
+                id="description"
+                placeholder="আপনার সার্ভিস সম্পর্কে বিস্তারিত লিখুন..."
+                value={pageData.description}
+                onChange={(e) => setPageData(prev => ({...prev, description: e.target.value}))}
               />
             </div>
-          </div>
 
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="advance-payment"
-              checked={pageData.isAdvancePayment}
-              onCheckedChange={(checked) => setPageData({...pageData, isAdvancePayment: checked})}
-            />
-            <Label htmlFor="advance-payment">অ্যাডভান্স পেমেন্ট সিস্টেম</Label>
-          </div>
-
-          <div>
-            <Label htmlFor="customUrl">কাস্টম URL (ঐচ্ছিক)</Label>
-            <Input
-              id="customUrl"
-              placeholder="my-service"
-              value={pageData.customUrl}
-              onChange={(e) => setPageData({...pageData, customUrl: e.target.value})}
-            />
-          </div>
-
-          <div>
-            <Label>পেমেন্ট মেথড নির্বাচন করুন:</Label>
-            <div className="grid grid-cols-2 gap-2 mt-2">
-              {paymentMethods.map((method) => (
-                <div key={method.id} className="flex items-center space-x-2">
-                  <Switch
-                    id={method.id}
-                    checked={pageData.acceptedMethods[method.id as keyof typeof pageData.acceptedMethods]}
-                    onCheckedChange={(checked) => 
-                      setPageData({
-                        ...pageData, 
-                        acceptedMethods: {...pageData.acceptedMethods, [method.id]: checked}
-                      })
-                    }
-                  />
-                  <Label htmlFor={method.id} className="text-sm">{method.name}</Label>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <Button onClick={generatePaymentPage} className="w-full">
-            পেমেন্ট পেজ তৈরি করুন
-          </Button>
-        </CardContent>
-      </Card>
-
-      {/* Preview Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Eye className="h-5 w-5" />
-            মোবাইল প্রিভিউ
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {generatedUrl ? (
+            {/* Color Customization */}
             <div className="space-y-4">
-              {/* Generated URL */}
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <h4 className="font-semibold text-green-800 mb-2">পেমেন্ট পেজ তৈরি হয়েছে! 🎉</h4>
-                <div className="bg-white border rounded p-3 flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground truncate">{generatedUrl}</span>
-                  <div className="flex gap-2">
-                    <Button size="sm" variant="outline" onClick={copyUrl}>
-                      <Copy className="h-4 w-4" />
-                    </Button>
-                    <Button size="sm" variant="outline">
-                      <Share2 className="h-4 w-4" />
-                    </Button>
-                  </div>
+              <h4 className="font-medium flex items-center gap-2">
+                <Palette className="h-4 w-4" />
+                কাস্টমাইজেশন
+              </h4>
+              
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="bgColor">ব্যাকগ্রাউন্ড</Label>
+                  <Input
+                    id="bgColor"
+                    type="color"
+                    value={pageData.backgroundColor}
+                    onChange={(e) => setPageData(prev => ({...prev, backgroundColor: e.target.value}))}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="textColor">টেক্সট রঙ</Label>
+                  <Input
+                    id="textColor"
+                    type="color"
+                    value={pageData.textColor}
+                    onChange={(e) => setPageData(prev => ({...prev, textColor: e.target.value}))}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="buttonColor">বাটন রঙ</Label>
+                  <Input
+                    id="buttonColor"
+                    type="color"
+                    value={pageData.buttonColor}
+                    onChange={(e) => setPageData(prev => ({...prev, buttonColor: e.target.value}))}
+                  />
                 </div>
               </div>
+            </div>
 
-              {/* Mobile Preview */}
-              <div className="mx-auto max-w-sm">
-                <div className="bg-gray-800 rounded-[2rem] p-2">
-                  <div className="bg-white rounded-[1.5rem] overflow-hidden">
-                    {/* Header */}
-                    <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-4 text-white">
-                      <h3 className="font-bold text-lg">{pageData.serviceName || 'সার্ভিসের নাম'}</h3>
-                      <p className="text-sm opacity-90">{pageData.description || 'সার্ভিসের বিবরণ'}</p>
-                    </div>
+            <Button 
+              onClick={handleGenerate} 
+              className="w-full" 
+              disabled={isGenerating}
+            >
+              {isGenerating ? 'তৈরি করা হচ্ছে...' : 'পেমেন্ট পেজ তৈরি করুন'}
+            </Button>
+          </CardContent>
+        </Card>
 
-                    {/* Content */}
-                    <div className="p-4 space-y-4">
-                      <div className="text-center">
-                        <div className="text-sm text-gray-600">মূল্য</div>
-                        <div className="text-2xl font-bold text-blue-600">৳{pageData.price || '0'}</div>
-                        {pageData.isAdvancePayment && pageData.advanceAmount && (
-                          <div className="text-sm text-orange-600">অ্যাডভান্স: ৳{pageData.advanceAmount}</div>
-                        )}
-                      </div>
+        {/* Preview Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle>প্রিভিউ</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div 
+              className="border rounded-lg p-6 min-h-[400px]"
+              style={{ 
+                backgroundColor: pageData.backgroundColor,
+                color: pageData.textColor 
+              }}
+            >
+              <div className="text-center space-y-4">
+                <h3 className="text-2xl font-bold">
+                  {pageData.title || 'আপনার সার্ভিসের টাইটেল'}
+                </h3>
+                
+                <div className="bg-white/10 rounded-lg p-4">
+                  <h4 className="text-lg font-medium mb-2">
+                    {pageData.serviceName || 'সার্ভিসের নাম'}
+                  </h4>
+                  <p className="text-sm opacity-80">
+                    {pageData.description || 'আপনার সার্ভিসের বিবরণ এখানে থাকবে...'}
+                  </p>
+                </div>
 
-                      {/* Payment Methods */}
-                      <div>
-                        <div className="text-sm font-medium mb-2">পেমেন্ট মেথড:</div>
-                        <div className="flex flex-wrap gap-1">
-                          {paymentMethods.filter(method => 
-                            pageData.acceptedMethods[method.id as keyof typeof pageData.acceptedMethods]
-                          ).map(method => (
-                            <Badge key={method.id} className={`text-xs ${method.color}`}>
-                              {method.name}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
+                <div className="text-center">
+                  <p className="text-sm opacity-80">প্রদানকারী:</p>
+                  <p className="font-medium">
+                    {pageData.creatorName || 'আপনার নাম'}
+                  </p>
+                </div>
 
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                        এখনই পেমেন্ট করুন
-                      </Button>
-                    </div>
+                <div className="text-3xl font-bold">
+                  ৳{pageData.price || '0'}
+                </div>
+
+                <Button 
+                  style={{ backgroundColor: pageData.buttonColor }}
+                  className="w-full text-white"
+                  disabled
+                >
+                  এখনই পেমেন্ট করুন
+                </Button>
+
+                <div className="flex justify-center gap-4 text-xs opacity-60">
+                  <div className="flex items-center gap-1">
+                    <CreditCard className="h-3 w-3" />
+                    <span>কার্ড</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Smartphone className="h-3 w-3" />
+                    <span>মোবাইল ব্যাংকিং</span>
                   </div>
                 </div>
               </div>
             </div>
-          ) : (
-            <div className="text-center py-8 text-muted-foreground">
-              <Smartphone className="h-12 w-12 mx-auto mb-3 opacity-50" />
-              <p>পেমেন্ট পেজ তৈরি করুন প্রিভিউ দেখার জন্য</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Generated Link Section */}
+      {generatedLink && (
+        <Card>
+          <CardHeader>
+            <CardTitle>আপনার পেমেন্ট লিংক</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex gap-2">
+              <Input value={generatedLink} readOnly className="flex-1" />
+              <Button onClick={handleCopyLink} variant="outline">
+                <Copy className="h-4 w-4" />
+              </Button>
+              <Button variant="outline">
+                <Eye className="h-4 w-4" />
+              </Button>
             </div>
-          )}
-        </CardContent>
-      </Card>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Card className="p-4">
+                <div className="text-center">
+                  <QrCode className="h-8 w-8 mx-auto mb-2 text-blue-600" />
+                  <h4 className="font-medium">QR Code</h4>
+                  <p className="text-sm text-muted-foreground">
+                    QR কোড জেনারেট করুন
+                  </p>
+                </div>
+              </Card>
+              
+              <Card className="p-4">
+                <div className="text-center">
+                  <Settings className="h-8 w-8 mx-auto mb-2 text-green-600" />
+                  <h4 className="font-medium">সেটিংস</h4>
+                  <p className="text-sm text-muted-foreground">
+                    পেজ কাস্টমাইজ করুন
+                  </p>
+                </div>
+              </Card>
+              
+              <Card className="p-4">
+                <div className="text-center">
+                  <CreditCard className="h-8 w-8 mx-auto mb-2 text-purple-600" />
+                  <h4 className="font-medium">পেমেন্ট মেথড</h4>
+                  <p className="text-sm text-muted-foreground">
+                    সব ধরনের পেমেন্ট
+                  </p>
+                </div>
+              </Card>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
