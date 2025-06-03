@@ -1,182 +1,116 @@
-import React from 'react';
+
 import { 
-  Store, BookOpen, Calendar, MessageSquare, Users, Globe, Briefcase, 
-  FileText, Video, Cpu, DollarSign, Shield, LogOut, User, LogIn,
-  FileIcon, CalendarIcon, MessageCircle, UsersRound, File, Gavel, 
-  UserCheck, Home as HomeIcon, Calculator, Share2, HelpCircle as HelpIcon,
-  Info, Book, Wrench, Building
+  Store, 
+  Palette, 
+  Code, 
+  BookOpen, 
+  Video, 
+  Calendar,
+  CreditCard,
+  Link,
+  Shield,
+  Users,
+  Bell,
+  Settings,
+  BarChart3,
+  Wallet
 } from 'lucide-react';
 
-// Digital Creator Solutions
 export const creatorSolutionsData = [
   {
-    icon: <Store className="h-4 w-4 text-primary" />,
-    name: "অনলাইন স্টোর",
-    path: "/create-store",
-    description: "নিজের ব্র্যান্ডের ওয়েবসাইট তৈরি করুন"
+    name: 'অনলাইন স্টোর তৈরি',
+    description: 'আপনার পণ্য বিক্রির জন্য সুন্দর অনলাইন স্টোর',
+    icon: <Store className="h-4 w-4" />,
+    path: '/create-store'
   },
   {
-    icon: <BookOpen className="h-4 w-4 text-amber-500" />,
-    name: "কোর্স বিল্ডার",
-    path: "/course-builder",
-    description: "আয় করুন অনলাইন শিক্ষা দিয়ে"
+    name: 'ডিজিটাল পেমেন্ট গেটওয়ে',
+    description: 'নিরাপদ পেমেন্ট সিস্টেম ও Escrow protection',
+    icon: <CreditCard className="h-4 w-4" />,
+    path: '/payment-gateway'
   },
   {
-    icon: <Calendar className="h-4 w-4 text-red-500" />,
-    name: "ইভেন্ট হোস্টিং",
-    path: "/event-hosting",
-    description: "অনলাইন ও অফলাইন ইভেন্ট ম্যানেজমেন্ট"
+    name: 'Creator Payment Gateway',
+    description: 'ক্রিয়েটরদের জন্য বিশেষ পেমেন্ট সিস্টেম',
+    icon: <Wallet className="h-4 w-4" />,
+    path: '/creator-payment-gateway'
   },
   {
-    icon: <MessageSquare className="h-4 w-4 text-orange-500" />,
-    name: "১:১ সেশন",
-    path: "/one-on-one",
-    description: "পারসোনাল কনসালটেশন সেবা"
+    name: 'পেমেন্ট লিংক জেনারেটর',
+    description: 'দ্রুত পেমেন্ট লিংক তৈরি করুন',
+    icon: <Link className="h-4 w-4" />,
+    path: '/payment-gateway?tab=creator-system'
   },
   {
-    icon: <DollarSign className="h-4 w-4 text-green-500" />,
-    name: "ডিজিটাল প্রোডাক্ট",
-    path: "/digital-products",
-    description: "ইবুক, টেমপ্লেট, সফটওয়্যার বিক্রয়"
+    name: 'Escrow ম্যানেজমেন্ট',
+    description: 'নিরাপদ payment escrow সিস্টেম',
+    icon: <Shield className="h-4 w-4" />,
+    path: '/payment-gateway?tab=escrow'
   },
   {
-    icon: <Users className="h-4 w-4 text-yellow-500" />,
-    name: "পেইড কমিউনিটি",
-    path: "/paid-community",
-    description: "মেম্বারশিপ কমিউনিটি তৈরি করুন"
+    name: 'Creator ড্যাশবোর্ড',
+    description: 'আপনার আয় ও অর্ডার ট্র্যাক করুন',
+    icon: <BarChart3 className="h-4 w-4" />,
+    path: '/payment-gateway?tab=creator-dashboard'
   },
   {
-    icon: <Globe className="h-4 w-4 text-cyan-500" />,
-    name: "মাল্টি-চ্যানেল",
-    path: "/multi-channel",
-    description: "সব প্ল্যাটফর্ম থেকে বিক্রয় করুন"
+    name: 'পেমেন্ট এনালিটিক্স',
+    description: 'বিস্তারিত পেমেন্ট রিপোর্ট ও পরিসংখ্যান',
+    icon: <BarChart3 className="h-4 w-4" />,
+    path: '/payment-gateway?tab=analytics'
   },
   {
-    icon: <Briefcase className="h-4 w-4 text-indigo-500" />,
-    name: "রিসেলার প্রোগ্রাম",
-    path: "/reseller-program",
-    description: "এফিলিয়েট নেটওয়ার্ক তৈরি করুন"
+    name: 'KYC ভেরিফিকেশন',
+    description: 'পরিচয় যাচাইকরণ ও নিরাপত্তা',
+    icon: <Users className="h-4 w-4" />,
+    path: '/payment-gateway?tab=kyc'
   },
   {
-    icon: <FileText className="h-4 w-4 text-teal-500" />,
-    name: "কন্টেন্ট প্ল্যানার",
-    path: "/content-planner",
-    description: "সোশ্যাল মিডিয়া ও কন্টেন্ট ম্যানেজমেন্ট"
+    name: 'ডিজাইন টেমপ্লেট',
+    description: 'প্রো ডিজাইন টেমপ্লেট ও কাস্টমাইজেশন',
+    icon: <Palette className="h-4 w-4" />,
+    path: '/digital-creator/store-templates'
   },
   {
-    icon: <Cpu className="h-4 w-4 text-gray-500" />,
-    name: "পেমেন্ট গেটওয়ে",
-    path: "/payment-gateway",
-    description: "সহজে পেমেন্ট কালেকশন করুন"
+    name: 'API ইন্টিগ্রেশন',
+    description: 'পেমেন্ট API ও ওয়েবহুক সেটআপ',
+    icon: <Code className="h-4 w-4" />,
+    path: '/payment-gateway?tab=api'
   },
   {
-    icon: <Video className="h-4 w-4 text-rose-500" />,
-    name: "ভিডিও হোস্টিং",
-    path: "/video-hosting",
-    description: "প্রোফেশনাল ভিডিও সার্ভিস"
+    name: 'লিংক ইন বায়ো',
+    description: 'সোশ্যাল মিডিয়ার জন্য লিংক পেজ',
+    icon: <Link className="h-4 w-4" />,
+    path: '/create-linkinbio'
+  },
+  {
+    name: 'অনলাইন কোর্স তৈরি',
+    description: 'ইন্টারেক্টিভ অনলাইন কোর্স প্ল্যাটফর্ম',
+    icon: <BookOpen className="h-4 w-4" />,
+    path: '/digital-products'
+  },
+  {
+    name: 'ভিডিও কন্টেন্ট স্টুডিও',
+    description: 'ভিডিও আপলোড ও মনিটাইজেশন',
+    icon: <Video className="h-4 w-4" />,
+    path: '/digital-products'
+  },
+  {
+    name: 'বুকিং ক্যালেন্ডার',
+    description: 'অ্যাপয়েন্টমেন্ট ও কনসালটেশন বুকিং',
+    icon: <Calendar className="h-4 w-4" />,
+    path: '/payment-gateway?tab=creator-dashboard'
+  },
+  {
+    name: 'নোটিফিকেশন সেন্টার',
+    description: 'পেমেন্ট ও অর্ডার নোটিফিকেশন',
+    icon: <Bell className="h-4 w-4" />,
+    path: '/payment-gateway?tab=notifications'
+  },
+  {
+    name: 'অ্যাডমিন ড্যাশবোর্ড',
+    description: 'সম্পূর্ণ সিস্টেম ম্যানেজমেন্ট',
+    icon: <Settings className="h-4 w-4" />,
+    path: '/payment-gateway?tab=admin'
   }
-];
-
-// Legal Assistance and Loan Menu
-export const legalAssistanceMenuItems = [
-  {
-    icon: <File className="h-4 w-4 text-red-500" />,
-    name: "রেন্টাল এগ্রিমেন্ট",
-    path: "/services/rental-agreement",
-    description: "রেন্টাল চুক্তি তৈরি করুন"
-  },
-  {
-    icon: <Gavel className="h-4 w-4 text-red-500" />,
-    name: "পুলিশ ইনটিমেশন",
-    path: "/services/police-intimation",
-    description: "পুলিশ স্টেশনে নোটিফিকেশন দিন"
-  },
-  {
-    icon: <UserCheck className="h-4 w-4 text-red-500" />,
-    name: "টেনান্ট ভেরিফিকেশন",
-    path: "/services/tenant-verification",
-    description: "ভাড়াটিয়া যাচাই করুন"
-  },
-  {
-    icon: <Building className="h-4 w-4 text-red-500" />,
-    name: "প্রপার্টি লিগাল অ্যাসিস্ট্যান্স",
-    path: "/services/property-legal-assistance",
-    description: "আইনি সহায়তা পেতে"
-  },
-  {
-    icon: <HomeIcon className="h-4 w-4 text-red-500" />,
-    name: "হোম লোন",
-    path: "/services/home-loan",
-    description: "সহজ শর্তে ঋণ নিন"
-  },
-  {
-    icon: <DollarSign className="h-4 w-4 text-red-500" />,
-    name: "হোম ডিপোজিট লোন",
-    path: "/services/home-deposit-loan",
-    description: "জামানত জমার জন্য ঋণ নিন"
-  }
-];
-
-// Utilities Menu
-export const utilitiesMenuItems = [
-  {
-    icon: <Calculator className="h-4 w-4 text-red-500" />,
-    name: "নো ইয়োর রেন্ট",
-    path: "/utilities/know-your-rent",
-    description: "উচিত ভাড়া নির্ধারণ করুন"
-  },
-  {
-    icon: <FileText className="h-4 w-4 text-red-500" />,
-    name: "ক্রিয়েট রেন্ট রিসিপ্টস",
-    path: "/utilities/create-rent-receipts",
-    description: "ভাড়ার রশিদ তৈরি করুন"
-  },
-  {
-    icon: <Share2 className="h-4 w-4 text-red-500" />,
-    name: "ক্লিক এন্ড আর্ন",
-    path: "/utilities/click-and-earn",
-    description: "শেয়ার করে আয় করুন"
-  }
-];
-
-// Help and Support Menu
-export const helpAndSupportMenuItems = [
-  {
-    icon: <HelpIcon className="h-4 w-4 text-red-500" />,
-    name: "সাপোর্ট টপিকস",
-    path: "/help/support-topics",
-    description: "সাধারণ সমস্যার সমাধান"
-  },
-  {
-    icon: <Book className="h-4 w-4 text-red-500" />,
-    name: "ব্লগ",
-    path: "/help/blog",
-    description: "নিয়মিত আপডেট পান"
-  },
-  {
-    icon: <MessageCircle className="h-4 w-4 text-red-500" />,
-    name: "ফিডব্যাক",
-    path: "/help/feedback",
-    description: "আপনার মতামত জানান"
-  },
-  {
-    icon: <Info className="h-4 w-4 text-red-500" />,
-    name: "অ্যাবাউট আস",
-    path: "/help/about-us",
-    description: "আমাদের সম্পর্কে জানুন"
-  }
-];
-
-// Service Categories
-export const serviceCategories = [
-  { name: "ডাক্তার", path: "/services/category/medical" },
-  { name: "ডেন্টাল", path: "/services/category/dental" },
-  { name: "মেন্টাল হেলথ", path: "/services/category/mental-health" },
-  { name: "সেলুন", path: "/services/category/salon" },
-  { name: "পার্লার", path: "/services/category/parlour" },
-  { name: "ল", path: "/services/category/legal" },
-  { name: "রিপেয়ার", path: "/services/category/repair" },
-  { name: "হোম সার্ভিস", path: "/services/category/home-service" },
-  { name: "বিউটি", path: "/services/category/beauty" },
-  { name: "কনসালটেন্সি", path: "/services/category/consultancy" }
 ];
