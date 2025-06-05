@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Shield, Users, CreditCard, CheckCircle, Star, ArrowRight, 
   Lock, Zap, Globe, Phone, Mail, MessageSquare, AlertTriangle,
-  TrendingUp, Award, Clock, UserCheck
+  TrendingUp, Award, Clock, UserCheck, Upload, FileText,
+  Palette, Smartphone, Video, Image, Code, Bell
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -22,23 +22,60 @@ const SecurePay = () => {
       color: "bg-blue-50 border-blue-200"
     },
     {
-      icon: <Users className="h-8 w-8 text-purple-600" />,
-      title: "মাল্টি-রোল ড্যাশবোর্ড",
-      description: "ক্রিয়েটর, বায়ার এবং অ্যাডমিনের জন্য আলাদা ড্যাশবোর্ড",
-      color: "bg-purple-50 border-purple-200"
-    },
-    {
       icon: <CreditCard className="h-8 w-8 text-green-600" />,
-      title: "সকল পেমেন্ট মেথড সাপোর্ট",
-      description: "bKash, Nagad, Rocket, VISA - সব ধরনের পেমেন্ট সুবিধা",
+      title: "পেমেন্ট গেটওয়ে ইন্টিগ্রেশন",
+      description: "bKash, Nagad, Rocket, VISA - সব ধরনের পেমেন্ট গেটওয়ে সাপোর্ট",
       color: "bg-green-50 border-green-200"
     },
     {
-      icon: <MessageSquare className="h-8 w-8 text-orange-600" />,
-      title: "ডিসপিউট রেজোলিউশন",
-      description: "যেকোনো সমস্যায় দ্রুত সমাধানের জন্য বিশেষজ্ঞ টিম",
+      icon: <MessageSquare className="h-8 w-8 text-purple-600" />,
+      title: "রিয়েল-টাইম মেসেজিং",
+      description: "ক্রিয়েটর ও বায়ারের মধ্যে তাৎক্ষণিক যোগাযোগ ব্যবস্থা",
+      color: "bg-purple-50 border-purple-200"
+    },
+    {
+      icon: <Palette className="h-8 w-8 text-pink-600" />,
+      title: "বিস্তারিত টেমপ্লেট",
+      description: "৫০+ প্রো টেমপ্লেট - Facebook, Google, YouTube, Instagram Ads",
+      color: "bg-pink-50 border-pink-200"
+    },
+    {
+      icon: <Upload className="h-8 w-8 text-orange-600" />,
+      title: "ফাইল আপলোড সিস্টেম",
+      description: "নিরাপদে ফাইল শেয়ার করুন - ইমেজ, ভিডিও, ডকুমেন্ট",
       color: "bg-orange-50 border-orange-200"
+    },
+    {
+      icon: <Users className="h-8 w-8 text-indigo-600" />,
+      title: "মাল্টি-রোল ড্যাশবোর্ড",
+      description: "ক্রিয়েটর, বায়ার এবং অ্যাডমিনের জন্য আলাদা ড্যাশবোর্ড",
+      color: "bg-indigo-50 border-indigo-200"
     }
+  ];
+
+  const paymentGateways = [
+    { name: "bKash", icon: "💳", color: "bg-pink-100" },
+    { name: "Nagad", icon: "🏦", color: "bg-orange-100" },
+    { name: "Rocket", icon: "🚀", color: "bg-purple-100" },
+    { name: "VISA", icon: "💎", color: "bg-blue-100" },
+    { name: "Mastercard", icon: "🏧", color: "bg-red-100" },
+    { name: "PayPal", icon: "🌐", color: "bg-yellow-100" }
+  ];
+
+  const templates = [
+    { name: "Facebook Ads", icon: <Video className="h-5 w-5" />, count: "12+" },
+    { name: "Google Ads", icon: <Globe className="h-5 w-5" />, count: "8+" },
+    { name: "YouTube Ads", icon: <Video className="h-5 w-5" />, count: "10+" },
+    { name: "Instagram Ads", icon: <Image className="h-5 w-5" />, count: "15+" },
+    { name: "LinkedIn Ads", icon: <Users className="h-5 w-5" />, count: "6+" },
+    { name: "TikTok Ads", icon: <Smartphone className="h-5 w-5" />, count: "9+" }
+  ];
+
+  const fileTypes = [
+    { type: "ইমেজ", formats: "JPG, PNG, GIF, WebP", icon: <Image className="h-5 w-5" /> },
+    { type: "ভিডিও", formats: "MP4, AVI, MOV, WebM", icon: <Video className="h-5 w-5" /> },
+    { type: "ডকুমেন্ট", formats: "PDF, DOC, PPT, XLS", icon: <FileText className="h-5 w-5" /> },
+    { type: "কোড", formats: "HTML, CSS, JS, PSD", icon: <Code className="h-5 w-5" /> }
   ];
 
   const howItWorks = [
@@ -123,6 +160,10 @@ const SecurePay = () => {
               <Zap className="h-4 w-4 mr-1" />
               তাৎক্ষণিক পেমেন্ট
             </Badge>
+            <Badge className="bg-orange-100 text-orange-800 px-3 py-1">
+              <MessageSquare className="h-4 w-4 mr-1" />
+              রিয়েল-টাইম চ্যাট
+            </Badge>
           </div>
         </div>
 
@@ -143,9 +184,9 @@ const SecurePay = () => {
         {/* Features Section */}
         <div className="mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            কেন <span className="text-blue-600">SecurePay</span> বেছে নেবেন?
+            নতুন <span className="text-blue-600">ফিচার সমূহ</span>
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <Card key={index} className={`${feature.color} hover:shadow-lg transition-all duration-300`}>
                 <CardContent className="p-6">
@@ -163,6 +204,109 @@ const SecurePay = () => {
             ))}
           </div>
         </div>
+
+        {/* Payment Gateway Section */}
+        <Card className="mb-16 bg-gradient-to-r from-green-50 to-blue-50 border-0 shadow-xl">
+          <CardHeader>
+            <CardTitle className="text-center text-2xl">
+              <CreditCard className="h-8 w-8 mx-auto mb-4 text-green-600" />
+              সাপোর্টেড পেমেন্ট গেটওয়ে
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              {paymentGateways.map((gateway, index) => (
+                <div key={index} className={`${gateway.color} p-4 rounded-lg text-center hover:shadow-md transition-all`}>
+                  <div className="text-2xl mb-2">{gateway.icon}</div>
+                  <div className="font-medium">{gateway.name}</div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Templates Section */}
+        <Card className="mb-16 bg-gradient-to-r from-pink-50 to-purple-50 border-0 shadow-xl">
+          <CardHeader>
+            <CardTitle className="text-center text-2xl">
+              <Palette className="h-8 w-8 mx-auto mb-4 text-pink-600" />
+              প্রিমিয়াম টেমপ্লেট কালেকশন
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              {templates.map((template, index) => (
+                <div key={index} className="bg-white p-4 rounded-lg text-center hover:shadow-md transition-all border">
+                  <div className="text-pink-600 mb-2 flex justify-center">{template.icon}</div>
+                  <div className="font-medium text-sm">{template.name}</div>
+                  <div className="text-xs text-gray-500">{template.count} টেমপ্লেট</div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* File Upload Section */}
+        <Card className="mb-16 bg-gradient-to-r from-orange-50 to-yellow-50 border-0 shadow-xl">
+          <CardHeader>
+            <CardTitle className="text-center text-2xl">
+              <Upload className="h-8 w-8 mx-auto mb-4 text-orange-600" />
+              ফাইল আপলোড সিস্টেম
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {fileTypes.map((file, index) => (
+                <div key={index} className="bg-white p-4 rounded-lg text-center hover:shadow-md transition-all border">
+                  <div className="text-orange-600 mb-3 flex justify-center">{file.icon}</div>
+                  <div className="font-medium text-lg mb-2">{file.type}</div>
+                  <div className="text-sm text-gray-500">{file.formats}</div>
+                </div>
+              ))}
+            </div>
+            <div className="text-center mt-6">
+              <Badge className="bg-orange-100 text-orange-800 px-4 py-2">
+                <Shield className="h-4 w-4 mr-2" />
+                সর্বোচ্চ ১০০ MB পর্যন্ত নিরাপদ আপলোড
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Messaging Section */}
+        <Card className="mb-16 bg-gradient-to-r from-purple-50 to-indigo-50 border-0 shadow-xl">
+          <CardHeader>
+            <CardTitle className="text-center text-2xl">
+              <MessageSquare className="h-8 w-8 mx-auto mb-4 text-purple-600" />
+              রিয়েল-টাইম মেসেজিং সিস্টেম
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="bg-purple-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                  <MessageSquare className="h-8 w-8 text-purple-600" />
+                </div>
+                <h3 className="font-semibold mb-2">তাৎক্ষণিক চ্যাট</h3>
+                <p className="text-sm text-gray-600">ক্রিয়েটর ও বায়ারের মধ্যে সরাসরি যোগাযোগ</p>
+              </div>
+              <div className="text-center">
+                <div className="bg-blue-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                  <Upload className="h-8 w-8 text-blue-600" />
+                </div>
+                <h3 className="font-semibold mb-2">ফাইল শেয়ারিং</h3>
+                <p className="text-sm text-gray-600">চ্যাটের মাধ্যমে ফাইল পাঠান ও গ্রহণ করুন</p>
+              </div>
+              <div className="text-center">
+                <div className="bg-green-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                  <Bell className="h-8 w-8 text-green-600" />
+                </div>
+                <h3 className="font-semibold mb-2">নোটিফিকেশন</h3>
+                <p className="text-sm text-gray-600">প্রতিটি মেসেজের জন্য তাৎক্ষণিক নোটিফিকেশন</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* How It Works */}
         <div className="mb-16">

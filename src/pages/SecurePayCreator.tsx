@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,7 +7,8 @@ import {
   Users, DollarSign, TrendingUp, Eye, Settings, Plus, 
   Star, Calendar, Download, CreditCard, Shield, AlertTriangle,
   CheckCircle, Clock, FileText, Palette, Smartphone, Monitor,
-  Tablet, Globe, Facebook, Youtube, Instagram, Linkedin
+  Tablet, Globe, Facebook, Youtube, Instagram, Linkedin,
+  MessageSquare, Upload, Bell, Send, Image, Video
 } from 'lucide-react';
 
 const SecurePayCreator = () => {
@@ -46,6 +46,88 @@ const SecurePayCreator = () => {
     }
   ];
 
+  const recentMessages = [
+    {
+      id: 1,
+      buyer: 'আহমেদ হাসান',
+      message: 'লোগো ডিজাইনের কাজ কেমন চলছে?',
+      time: '৫ মিনিট আগে',
+      unread: true
+    },
+    {
+      id: 2,
+      buyer: 'ফাতেমা খান',
+      message: 'ওয়েবসাইটের ফাইল পাঠিয়েছি',
+      time: '১০ মিনিট আগে',
+      unread: false
+    }
+  ];
+
+  const templates = [
+    {
+      id: 1,
+      name: 'Facebook Ads Landing',
+      category: 'Social Media',
+      preview: 'https://via.placeholder.com/300x200',
+      platform: 'Facebook',
+      icon: <Facebook className="h-5 w-5 text-blue-600" />,
+      downloads: 156
+    },
+    {
+      id: 2,
+      name: 'YouTube Creator Page',
+      category: 'Video Marketing',
+      preview: 'https://via.placeholder.com/300x200',
+      platform: 'YouTube',
+      icon: <Youtube className="h-5 w-5 text-red-600" />,
+      downloads: 89
+    },
+    {
+      id: 3,
+      name: 'Instagram Business',
+      category: 'Social Commerce',
+      preview: 'https://via.placeholder.com/300x200',
+      platform: 'Instagram',
+      icon: <Instagram className="h-5 w-5 text-pink-600" />,
+      downloads: 234
+    },
+    {
+      id: 4,
+      name: 'Google Ads Campaign',
+      category: 'Search Marketing',
+      preview: 'https://via.placeholder.com/300x200',
+      platform: 'Google',
+      icon: <Globe className="h-5 w-5 text-green-600" />,
+      downloads: 198
+    }
+  ];
+
+  const paymentGateways = [
+    { name: 'bKash', status: 'connected', balance: '৳১২,৫০০' },
+    { name: 'Nagad', status: 'connected', balance: '৳৮,৭০০' },
+    { name: 'Rocket', status: 'pending', balance: '৳০' },
+    { name: 'VISA', status: 'not_connected', balance: '৳০' }
+  ];
+
+  const fileUploads = [
+    {
+      id: 1,
+      name: 'client_logo_design.psd',
+      type: 'image',
+      size: '45.2 MB',
+      uploadedAt: '২ ঘন্টা আগে',
+      status: 'completed'
+    },
+    {
+      id: 2,
+      name: 'promotional_video.mp4',
+      type: 'video',
+      size: '89.5 MB',
+      uploadedAt: '১ দিন আগে',
+      status: 'processing'
+    }
+  ];
+
   const recentOrders = [
     {
       id: 'ORD001',
@@ -73,33 +155,6 @@ const SecurePayCreator = () => {
     }
   ];
 
-  const templates = [
-    {
-      id: 1,
-      name: 'Facebook Ads Landing',
-      category: 'Social Media',
-      preview: 'https://via.placeholder.com/300x200',
-      platform: 'Facebook',
-      icon: <Facebook className="h-5 w-5 text-blue-600" />
-    },
-    {
-      id: 2,
-      name: 'YouTube Creator Page',
-      category: 'Video Marketing',
-      preview: 'https://via.placeholder.com/300x200',
-      platform: 'YouTube',
-      icon: <Youtube className="h-5 w-5 text-red-600" />
-    },
-    {
-      id: 3,
-      name: 'Instagram Business',
-      category: 'Social Commerce',
-      preview: 'https://via.placeholder.com/300x200',
-      platform: 'Instagram',
-      icon: <Instagram className="h-5 w-5 text-pink-600" />
-    }
-  ];
-
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'completed':
@@ -108,6 +163,19 @@ const SecurePayCreator = () => {
         return <Badge className="bg-blue-100 text-blue-800">চলমান</Badge>;
       case 'escrow':
         return <Badge className="bg-purple-100 text-purple-800">এসক্রোতে</Badge>;
+      default:
+        return <Badge variant="secondary">অজানা</Badge>;
+    }
+  };
+
+  const getPaymentStatus = (status: string) => {
+    switch (status) {
+      case 'connected':
+        return <Badge className="bg-green-100 text-green-800">সংযুক্ত</Badge>;
+      case 'pending':
+        return <Badge className="bg-yellow-100 text-yellow-800">পেন্ডিং</Badge>;
+      case 'not_connected':
+        return <Badge className="bg-red-100 text-red-800">সংযুক্ত নয়</Badge>;
       default:
         return <Badge variant="secondary">অজানা</Badge>;
     }
@@ -129,8 +197,8 @@ const SecurePayCreator = () => {
         
         <div className="flex gap-2 flex-wrap">
           <Button variant="outline" size="sm">
-            <Settings className="h-4 w-4 mr-2" />
-            সেটিংস
+            <Bell className="h-4 w-4 mr-2" />
+            নোটিফিকেশন (৩)
           </Button>
           <Button size="sm">
             <Plus className="h-4 w-4 mr-2" />
@@ -163,22 +231,30 @@ const SecurePayCreator = () => {
 
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 gap-1 h-auto p-1">
+        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-7 gap-1 h-auto p-1">
           <TabsTrigger value="overview" className="flex items-center gap-2 px-4 py-2">
             <TrendingUp className="h-4 w-4" />
             <span className="hidden sm:inline">ওভারভিউ</span>
           </TabsTrigger>
-          <TabsTrigger value="services" className="flex items-center gap-2 px-4 py-2">
-            <FileText className="h-4 w-4" />
-            <span className="hidden sm:inline">সার্ভিস</span>
-          </TabsTrigger>
-          <TabsTrigger value="earnings" className="flex items-center gap-2 px-4 py-2">
-            <DollarSign className="h-4 w-4" />
-            <span className="hidden sm:inline">আয়</span>
+          <TabsTrigger value="messages" className="flex items-center gap-2 px-4 py-2">
+            <MessageSquare className="h-4 w-4" />
+            <span className="hidden sm:inline">মেসেজ</span>
           </TabsTrigger>
           <TabsTrigger value="templates" className="flex items-center gap-2 px-4 py-2">
             <Palette className="h-4 w-4" />
             <span className="hidden sm:inline">টেমপ্লেট</span>
+          </TabsTrigger>
+          <TabsTrigger value="files" className="flex items-center gap-2 px-4 py-2">
+            <Upload className="h-4 w-4" />
+            <span className="hidden sm:inline">ফাইল</span>
+          </TabsTrigger>
+          <TabsTrigger value="payments" className="flex items-center gap-2 px-4 py-2">
+            <CreditCard className="h-4 w-4" />
+            <span className="hidden sm:inline">পেমেন্ট</span>
+          </TabsTrigger>
+          <TabsTrigger value="earnings" className="flex items-center gap-2 px-4 py-2">
+            <DollarSign className="h-4 w-4" />
+            <span className="hidden sm:inline">আয়</span>
           </TabsTrigger>
           <TabsTrigger value="settings" className="flex items-center gap-2 px-4 py-2">
             <Settings className="h-4 w-4" />
@@ -217,54 +293,279 @@ const SecurePayCreator = () => {
               </CardContent>
             </Card>
 
-            {/* Quick Actions */}
+            {/* Recent Messages */}
             <Card>
               <CardHeader>
-                <CardTitle>দ্রুত অ্যাকশন</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageSquare className="h-5 w-5" />
+                  সাম্প্রতিক মেসেজ
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <Button className="w-full justify-start" variant="outline">
-                  <Plus className="h-4 w-4 mr-2" />
-                  নতুন সার্ভিস যোগ করুন
-                </Button>
-                <Button className="w-full justify-start" variant="outline">
-                  <Download className="h-4 w-4 mr-2" />
-                  পেমেন্ট উইথড্র করুন
-                </Button>
-                <Button className="w-full justify-start" variant="outline">
-                  <Eye className="h-4 w-4 mr-2" />
-                  পাবলিক প্রোফাইল দেখুন
-                </Button>
-                <Button className="w-full justify-start" variant="outline">
-                  <FileText className="h-4 w-4 mr-2" />
-                  রিপোর্ট জেনারেট করুন
+              <CardContent>
+                <div className="space-y-4">
+                  {recentMessages.map((msg) => (
+                    <div key={msg.id} className={`p-3 border rounded-lg ${msg.unread ? 'bg-blue-50 border-blue-200' : ''}`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-medium">{msg.buyer}</h4>
+                        <span className="text-xs text-muted-foreground">{msg.time}</span>
+                      </div>
+                      <p className="text-sm">{msg.message}</p>
+                      {msg.unread && (
+                        <Badge className="bg-blue-100 text-blue-800 mt-2">নতুন</Badge>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <Button className="w-full mt-4" variant="outline">
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  সব মেসেজ দেখুন
                 </Button>
               </CardContent>
             </Card>
           </div>
         </TabsContent>
 
-        {/* Services Tab */}
-        <TabsContent value="services" className="space-y-6">
+        {/* Messages Tab */}
+        <TabsContent value="messages" className="space-y-6">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>আমার সার্ভিস সমূহ</CardTitle>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                নতুন সার্ভিস
-              </Button>
+            <CardHeader>
+              <CardTitle>রিয়েল-টাইム মেসেজিং</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-12">
-                <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-medium mb-2">এখনো কোনো সার্ভিস যোগ করা হয়নি</h3>
-                <p className="text-muted-foreground mb-4">
-                  আপনার প্রথম সার্ভিস যোগ করে ক্রিয়েটর যাত্রা শুরু করুন
-                </p>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-1 space-y-4">
+                  <h3 className="font-medium">কনভার্সেশন</h3>
+                  {recentMessages.map((msg) => (
+                    <div key={msg.id} className={`p-3 border rounded-lg cursor-pointer hover:bg-gray-50 ${msg.unread ? 'bg-blue-50' : ''}`}>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                          <Users className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm">{msg.buyer}</h4>
+                          <p className="text-xs text-muted-foreground truncate">{msg.message}</p>
+                        </div>
+                        {msg.unread && (
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="lg:col-span-2">
+                  <div className="border rounded-lg h-96 flex flex-col">
+                    <div className="p-4 border-b flex items-center gap-3">
+                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                        <Users className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <span className="font-medium">আহমেদ হাসান</span>
+                    </div>
+                    <div className="flex-1 p-4 overflow-y-auto">
+                      <div className="space-y-4">
+                        <div className="flex justify-end">
+                          <div className="bg-blue-500 text-white p-3 rounded-lg max-w-xs">
+                            হ্যালো! আপনার লোগো ডিজাইনের কাজ কেমন চলছে?
+                          </div>
+                        </div>
+                        <div className="flex justify-start">
+                          <div className="bg-gray-100 p-3 rounded-lg max-w-xs">
+                            হ্যালো! কাজ প্রায় শেষ। আজ সন্ধ্যার মধ্যে ডেলিভারি দিতে পারব।
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-4 border-t">
+                      <div className="flex gap-2">
+                        <input 
+                          type="text" 
+                          placeholder="মেসেজ লিখুন..." 
+                          className="flex-1 p-2 border rounded-lg"
+                        />
+                        <Button size="sm">
+                          <Upload className="h-4 w-4 mr-1" />
+                          ফাইল
+                        </Button>
+                        <Button size="sm">
+                          <Send className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Templates Tab */}
+        <TabsContent value="templates" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>প্রিমিয়াম ল্যান্ডিং পেজ টেমপ্লেট</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                ৫০+ প্রোফেশনাল টেমপ্লেট - সব প্ল্যাটফর্মের জন্য অপ্টিমাইজড
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {templates.map((template) => (
+                  <Card key={template.id} className="overflow-hidden hover:shadow-lg transition-all">
+                    <div className="aspect-video bg-gray-100 relative">
+                      <img 
+                        src={template.preview} 
+                        alt={template.name}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute top-2 right-2">
+                        {template.icon}
+                      </div>
+                      <div className="absolute bottom-2 left-2">
+                        <Badge className="bg-white text-gray-800">
+                          {template.downloads} ডাউনলোড
+                        </Badge>
+                      </div>
+                    </div>
+                    <CardContent className="p-4">
+                      <h3 className="font-medium mb-1">{template.name}</h3>
+                      <p className="text-sm text-muted-foreground mb-3">{template.category}</p>
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="outline" className="flex-1">
+                          <Eye className="h-4 w-4 mr-1" />
+                          প্রিভিউ
+                        </Button>
+                        <Button size="sm" className="flex-1">
+                          ব্যবহার করুন
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+              <div className="text-center mt-6">
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
-                  সার্ভিস যোগ করুন
+                  আরও টেমপ্লেট দেখুন
                 </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Files Tab */}
+        <TabsContent value="files" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>ফাইল আপলোড</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                  <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium mb-2">ফাইল আপলোড করুন</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    ইমেজ, ভিডিও, ডকুমেন্ট - সর্বোচ্চ ১০০ MB
+                  </p>
+                  <Button>
+                    <Upload className="h-4 w-4 mr-2" />
+                    ফাইল বেছে নিন
+                  </Button>
+                </div>
+                <div className="mt-4 space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Image className="h-4 w-4" />
+                    <span>ইমেজ: JPG, PNG, GIF, WebP</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Video className="h-4 w-4" />
+                    <span>ভিডিও: MP4, AVI, MOV, WebM</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <FileText className="h-4 w-4" />
+                    <span>ডকুমেন্ট: PDF, DOC, PPT, XLS</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>আপলোডেড ফাইল সমূহ</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {fileUploads.map((file) => (
+                    <div key={file.id} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                          {file.type === 'image' && <Image className="h-5 w-5 text-blue-600" />}
+                          {file.type === 'video' && <Video className="h-5 w-5 text-blue-600" />}
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-sm">{file.name}</h4>
+                          <p className="text-xs text-muted-foreground">
+                            {file.size} • {file.uploadedAt}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {file.status === 'completed' && (
+                          <Badge className="bg-green-100 text-green-800">সম্পন্ন</Badge>
+                        )}
+                        {file.status === 'processing' && (
+                          <Badge className="bg-yellow-100 text-yellow-800">প্রসেসিং</Badge>
+                        )}
+                        <Button size="sm" variant="outline">
+                          <Download className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Payments Tab */}
+        <TabsContent value="payments" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>পেমেন্ট গেটওয়ে ইন্টিগ্রেশন</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {paymentGateways.map((gateway, index) => (
+                  <div key={index} className="border rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <CreditCard className="h-6 w-6 text-blue-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-medium">{gateway.name}</h3>
+                          <p className="text-sm text-muted-foreground">{gateway.balance}</p>
+                        </div>
+                      </div>
+                      {getPaymentStatus(gateway.status)}
+                    </div>
+                    <div className="flex gap-2">
+                      {gateway.status === 'connected' ? (
+                        <Button size="sm" variant="outline" className="flex-1">
+                          সেটিংস
+                        </Button>
+                      ) : (
+                        <Button size="sm" className="flex-1">
+                          সংযুক্ত করুন
+                        </Button>
+                      )}
+                      {gateway.status === 'connected' && (
+                        <Button size="sm" variant="outline">
+                          <Download className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
@@ -315,49 +616,6 @@ const SecurePayCreator = () => {
           </div>
         </TabsContent>
 
-        {/* Templates Tab */}
-        <TabsContent value="templates" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>ল্যান্ডিং পেজ টেমপ্লেট</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                আপনার সার্ভিসের জন্য প্রি-মেড টেমপ্লেট ব্যবহার করুন
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {templates.map((template) => (
-                  <Card key={template.id} className="overflow-hidden hover:shadow-lg transition-all">
-                    <div className="aspect-video bg-gray-100 relative">
-                      <img 
-                        src={template.preview} 
-                        alt={template.name}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute top-2 right-2">
-                        {template.icon}
-                      </div>
-                    </div>
-                    <CardContent className="p-4">
-                      <h3 className="font-medium mb-1">{template.name}</h3>
-                      <p className="text-sm text-muted-foreground mb-3">{template.category}</p>
-                      <div className="flex gap-2">
-                        <Button size="sm" variant="outline" className="flex-1">
-                          <Eye className="h-4 w-4 mr-1" />
-                          প্রিভিউ
-                        </Button>
-                        <Button size="sm" className="flex-1">
-                          ব্যবহার করুন
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
         {/* Settings Tab */}
         <TabsContent value="settings" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -375,12 +633,12 @@ const SecurePayCreator = () => {
 
             <Card>
               <CardHeader>
-                <CardTitle>পেমেন্ট সেটিংস</CardTitle>
+                <CardTitle>নোটিফিকেশন সেটিংস</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="text-center py-8">
-                  <CreditCard className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground">পেমেন্ট মেথড সেটিংস এখানে থাকবে</p>
+                  <Bell className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground">নোটিফিকেশন সেটিংস এখানে থাকবে</p>
                 </div>
               </CardContent>
             </Card>
