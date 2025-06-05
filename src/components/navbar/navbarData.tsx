@@ -1,10 +1,11 @@
+
 import React from 'react';
 import { 
   Store, BookOpen, Calendar, MessageSquare, Users, Globe, Briefcase, 
   FileText, Video, Cpu, DollarSign, Shield, LogOut, User, LogIn,
   FileIcon, CalendarIcon, MessageCircle, UsersRound, File, Gavel, 
   UserCheck, Home as HomeIcon, Calculator, Share2, HelpCircle as HelpIcon,
-  Info, Book, Wrench, Building
+  Info, Book, Wrench, Building, CreditCard
 } from 'lucide-react';
 
 // Digital Creator Solutions
@@ -14,6 +15,12 @@ export const creatorSolutionsData = [
     name: "অনলাইন স্টোর",
     path: "/create-store",
     description: "নিজের ব্র্যান্ডের ওয়েবসাইট তৈরি করুন"
+  },
+  {
+    icon: <Shield className="h-4 w-4 text-green-600" />,
+    name: "সিকিউর পেমেন্ট (SecurePay)",
+    path: "/securepay",
+    description: "এসক্রো পেমেন্ট সিস্টেম দিয়ে নিরাপদ লেনদেন"
   },
   {
     icon: <BookOpen className="h-4 w-4 text-amber-500" />,
