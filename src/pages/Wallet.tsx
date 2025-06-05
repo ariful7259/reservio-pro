@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   ArrowLeft,
@@ -61,6 +60,10 @@ import TransactionItem from '@/components/TransactionItem';
 import WalletNearbyServices from '@/components/WalletNearbyServices';
 import { useIsMobile } from '@/hooks/use-mobile';
 import WalletQRCode from '@/components/WalletQRCode';
+import TemplatePreviewModal from '@/components/securepay/TemplatePreviewModal';
+import PaymentLinkGenerator from '@/components/securepay/PaymentLinkGenerator';
+import AdvancedFeatures from '@/components/securepay/AdvancedFeatures';
+import FileUploadSystem from '@/components/securepay/FileUploadSystem';
 
 const Wallet = () => {
   const navigate = useNavigate();
@@ -69,6 +72,8 @@ const Wallet = () => {
   const isMobile = useIsMobile();
   const [showQRCode, setShowQRCode] = useState(false);
   const [activeTab, setActiveTab] = useState('wallet');
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [showTemplateModal, setShowTemplateModal] = useState(false);
 
   const handleCopyId = () => {
     navigator.clipboard.writeText(walletId);
@@ -146,68 +151,84 @@ const Wallet = () => {
   // Landing Page Templates
   const landingPageTemplates = [
     {
+      id: 'facebook-ads',
       name: "Facebook Ads",
       icon: <Video className="h-6 w-6" />,
       category: "সোশ্যাল মিডিয়া",
       count: "১২+ টেমপ্লেট",
       color: "bg-blue-100",
-      description: "Facebook বিজ্ঞাপনের জন্য প্রফেশনাল ল্যান্ডিং পেজ"
+      description: "Facebook বিজ্ঞাপনের জন্য প্রফেশনাল ল্যান্ডিং পেজ",
+      preview: "facebook-preview"
     },
     {
+      id: 'google-ads',
       name: "Google Ads",
       icon: <Globe className="h-6 w-6" />,
       category: "সার্চ ইঞ্জিন",
       count: "৮+ টেমপ্লেট",
       color: "bg-red-100",
-      description: "Google বিজ্ঞাপনের জন্য কনভার্শন অপটিমাইজড পেজ"
+      description: "Google বিজ্ঞাপনের জন্য কনভার্শন অপটিমাইজড পেজ",
+      preview: "google-preview"
     },
     {
+      id: 'youtube-ads',
       name: "YouTube Ads",
       icon: <MonitorPlay className="h-6 w-6" />,
       category: "ভিডিও মার্কেটিং",
       count: "১০+ টেমপ্লেট",
       color: "bg-red-100",
-      description: "YouTube ক্যাম্পেইনের জন্য ভিডিও ফোকাসড ডিজাইন"
+      description: "YouTube ক্যাম্পেইনের জন্য ভিডিও ফোকাসড ডিজাইন",
+      preview: "youtube-preview"
     },
     {
+      id: 'instagram-ads',
       name: "Instagram Ads",
       icon: <Image className="h-6 w-6" />,
       category: "সোশ্যাল মিডিয়া",
       count: "১৫+ টেমপ্লেট",
       color: "bg-purple-100",
-      description: "Instagram বিজ্ঞাপনের জন্য ভিজুয়াল রিচ ডিজাইন"
+      description: "Instagram বিজ্ঞাপনের জন্য ভিজুয়াল রিচ ডিজাইন",
+      preview: "instagram-preview"
     },
     {
+      id: 'linkedin-ads',
       name: "LinkedIn Ads",
       icon: <Briefcase className="h-6 w-6" />,
       category: "বিজনেস",
       count: "৬+ টেমপ্লেট",
       color: "bg-blue-100",
-      description: "বিজনেস টু বিজনেস মার্কেটিংয়ের জন্য প্রো ডিজাইন"
+      description: "বিজনেস টু বিজনেস মার্কেটিংয়ের জন্য প্রো ডিজাইন",
+      preview: "linkedin-preview"
     },
     {
+      id: 'tiktok-ads',
       name: "TikTok Ads",
       icon: <Smartphone className="h-6 w-6" />,
       category: "ভাইরাল মার্কেটিং",
       count: "৯+ টেমপ্লেট",
       color: "bg-pink-100",
-      description: "TikTok ক্যাম্পেইনের জন্য মোবাইল ফার্স্ট ডিজাইন"
+      description: "TikTok ক্যাম্পেইনের জন্য মোবাইল ফার্স্ট ডিজাইন",
+      preview: "tiktok-preview"
     },
     {
+      id: 'ecommerce',
       name: "ই-কমার্স",
       icon: <CreditCard className="h-6 w-6" />,
       category: "অনলাইন শপ",
       count: "২০+ টেমপ্লেট",
       color: "bg-green-100",
-      description: "অনলাইন বিক্রয়ের জন্য কনভার্শন অপটিমাইজড"
+      description: "অনলাইন বিক্রয়ের জন্য কনভার্শন অপটিমাইজড",
+      preview: "ecommerce-preview"
     },
     {
+      id: 'service-business',
       name: "সার্ভিস বিজনেস",
       icon: <Headphones className="h-6 w-6" />,
       category: "সার্ভিস",
       count: "১৪+ টেমপ্লেট",
       color: "bg-yellow-100",
-      description: "সেবা ভিত্তিক ব্যবসার জন্য ট্রাস্ট বিল্ডিং ডিজাইন"
+      description: "সেবা ভিত্তিক ব্যবসার জন্য ট্রাস্ট বিল্ডিং ডিজাইন",
+      preview: "service-preview"
     }
   ];
 
@@ -324,6 +345,28 @@ const Wallet = () => {
       title: "গ্রুপ পেমেন্ট",
       description: "বন্ধুদের সাথে মিলে পেমেন্ট করুন",
     });
+  };
+
+  const handleTemplatePreview = (template: any) => {
+    setSelectedTemplate(template);
+    setShowTemplateModal(true);
+  };
+
+  const handleTemplateUse = (templateId: string) => {
+    toast({
+      title: "টেমপ্লেট সিলেক্ট হয়েছে",
+      description: "পেমেন্ট লিংক জেনারেট করার জন্য টেমপ্লেট প্রস্তুত",
+    });
+    setShowTemplateModal(false);
+    // Navigate to payment link generator with selected template
+  };
+
+  const handleTemplateCustomize = (templateId: string) => {
+    toast({
+      title: "কাস্টমাইজেশন শুরু",
+      description: "টেমপ্লেট কাস্টমাইজেশন পেইজে নিয়ে যাচ্ছি",
+    });
+    setShowTemplateModal(false);
   };
 
   return (
@@ -485,343 +528,269 @@ const Wallet = () => {
             <WalletNearbyServices />
           </TabsContent>
 
-          {/* SecurePay Tab */}
+          {/* SecurePay Tab - Complete Platform */}
           <TabsContent value="securepay" className="space-y-6">
-            {/* SecurePay Hero */}
-            <Card className="bg-gradient-to-r from-blue-50 via-purple-50 to-green-50 border-0 shadow-xl">
-              <CardContent className="p-6 text-center">
-                <div className="flex justify-center mb-4">
-                  <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-full p-4">
-                    <Shield className="h-12 w-12 text-white" />
-                  </div>
-                </div>
-                <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-                  SecurePay
-                </h2>
-                <p className="text-gray-600 mb-6">
-                  বাংলাদেশের প্রথম সম্পূর্ণ নিরাপদ এসক্রো পেমেন্ট প্ল্যাটফর্ম। 
-                  ডিজিটাল সার্ভিসের জন্য ১০০% সুরক্ষিত লেনদেন।
-                </p>
-                
-                <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
-                  <Button 
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                    onClick={() => navigate('/securepay/creator')}
-                  >
-                    <Users className="h-4 w-4 mr-2" />
-                    ক্রিয়েটর হিসেবে শুরু করুন
-                  </Button>
-                  <Button 
-                    variant="outline"
-                    onClick={() => navigate('/securepay/buyer')}
-                  >
-                    <CreditCard className="h-4 w-4 mr-2" />
-                    বায়ার হিসেবে যোগ দিন
-                  </Button>
-                </div>
+            <Tabs defaultValue="overview" className="space-y-6">
+              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6 gap-1 h-auto p-1">
+                <TabsTrigger value="overview" className="flex items-center gap-2 px-3 py-2">
+                  <Shield className="h-4 w-4" />
+                  <span className="hidden sm:inline">ওভারভিউ</span>
+                </TabsTrigger>
+                <TabsTrigger value="creator" className="flex items-center gap-2 px-3 py-2">
+                  <Users className="h-4 w-4" />
+                  <span className="hidden sm:inline">ক্রিয়েটর</span>
+                </TabsTrigger>
+                <TabsTrigger value="buyer" className="flex items-center gap-2 px-3 py-2">
+                  <CreditCard className="h-4 w-4" />
+                  <span className="hidden sm:inline">বায়ার</span>
+                </TabsTrigger>
+                <TabsTrigger value="templates" className="flex items-center gap-2 px-3 py-2">
+                  <Palette className="h-4 w-4" />
+                  <span className="hidden sm:inline">টেমপ্লেট</span>
+                </TabsTrigger>
+                <TabsTrigger value="features" className="flex items-center gap-2 px-3 py-2">
+                  <Settings className="h-4 w-4" />
+                  <span className="hidden sm:inline">ফিচার</span>
+                </TabsTrigger>
+                <TabsTrigger value="upload" className="flex items-center gap-2 px-3 py-2">
+                  <Upload className="h-4 w-4" />
+                  <span className="hidden sm:inline">আপলোড</span>
+                </TabsTrigger>
+              </TabsList>
 
-                <div className="flex justify-center gap-2 flex-wrap">
-                  <Badge className="bg-green-100 text-green-800">
-                    <CheckCircle className="h-3 w-3 mr-1" />
-                    ১০০% নিরাপদ
-                  </Badge>
-                  <Badge className="bg-blue-100 text-blue-800">
-                    <Lock className="h-3 w-3 mr-1" />
-                    এসক্রো সুরক্ষা
-                  </Badge>
-                  <Badge className="bg-purple-100 text-purple-800">
-                    <Zap className="h-3 w-3 mr-1" />
-                    তাৎক্ষণিক পেমেন্ট
-                  </Badge>
-                </div>
-              </CardContent>
-            </Card>
+              {/* Overview Tab */}
+              <TabsContent value="overview" className="space-y-6">
+                {/* SecurePay Hero */}
+                <Card className="bg-gradient-to-r from-blue-50 via-purple-50 to-green-50 border-0 shadow-xl">
+                  <CardContent className="p-6 text-center">
+                    <div className="flex justify-center mb-4">
+                      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-full p-4">
+                        <Shield className="h-12 w-12 text-white" />
+                      </div>
+                    </div>
+                    <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+                      SecurePay
+                    </h2>
+                    <p className="text-gray-600 mb-6">
+                      বাংলাদেশের প্রথম সম্পূর্ণ নিরাপদ এসক্রো পেমেন্ট প্ল্যাটফর্ম। 
+                      ডিজিটাল সার্ভিসের জন্য ১০০% সুরক্ষিত লেনদেন।
+                    </p>
+                    
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
+                      <Button 
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                        onClick={() => navigate('/securepay/creator')}
+                      >
+                        <Users className="h-4 w-4 mr-2" />
+                        ক্রিয়েটর হিসেবে শুরু করুন
+                      </Button>
+                      <Button 
+                        variant="outline"
+                        onClick={() => navigate('/securepay/buyer')}
+                      >
+                        <CreditCard className="h-4 w-4 mr-2" />
+                        বায়ার হিসেবে যোগ দিন
+                      </Button>
+                    </div>
 
-            {/* Stats Section */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {securePayStats.map((stat, index) => (
-                <Card key={index} className="text-center p-4 bg-white/80 backdrop-blur border-0 shadow-lg">
-                  <CardContent className="p-0">
-                    <div className="flex justify-center mb-2 text-blue-600">
-                      {stat.icon}
+                    <div className="flex justify-center gap-2 flex-wrap">
+                      <Badge className="bg-green-100 text-green-800">
+                        <CheckCircle className="h-3 w-3 mr-1" />
+                        ১০০% নিরাপদ
+                      </Badge>
+                      <Badge className="bg-blue-100 text-blue-800">
+                        <Lock className="h-3 w-3 mr-1" />
+                        এসক্রো সুরক্ষা
+                      </Badge>
+                      <Badge className="bg-purple-100 text-purple-800">
+                        <Zap className="h-3 w-3 mr-1" />
+                        তাৎক্ষণিক পেমেন্ট
+                      </Badge>
                     </div>
-                    <div className="text-xl md:text-2xl font-bold text-blue-600 mb-1">
-                      {stat.number}
-                    </div>
-                    <div className="text-gray-600 text-sm">{stat.label}</div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
 
-            {/* Core Features Section */}
-            <div>
-              <h3 className="text-xl font-bold text-center mb-6">
-                মূল <span className="text-blue-600">ফিচার সমূহ</span>
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {coreFeatures.map((feature, index) => (
-                  <Card key={index} className={`${feature.color} hover:shadow-lg transition-all duration-300`}>
-                    <CardContent className="p-4">
-                      <div className="flex items-start gap-3">
-                        <div className="bg-white rounded-lg p-2 shadow-md">
-                          {feature.icon}
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-semibold mb-2">{feature.title}</h4>
-                          <p className="text-gray-600 text-sm mb-3">{feature.description}</p>
-                          <div className="flex flex-wrap gap-1">
-                            {feature.features.map((item, idx) => (
-                              <Badge key={idx} variant="outline" className="text-xs">
-                                {item}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
+                {/* Dashboard Access Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Card className="border-2 border-blue-200 hover:shadow-lg transition-all cursor-pointer" onClick={() => navigate('/securepay/creator')}>
+                    <CardContent className="p-6 text-center">
+                      <Users className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                      <h3 className="font-semibold mb-2">ক্রিয়েটর প্যানেল</h3>
+                      <p className="text-sm text-gray-600 mb-4">
+                        সার্ভিস ম্যানেজমেন্ট, আয়ের হিসাব, টেমপ্লেট কাস্টমাইজেশন
+                      </p>
+                      <Badge className="bg-blue-100 text-blue-800">
+                        ক্লিক করুন
+                      </Badge>
                     </CardContent>
                   </Card>
-                ))}
-              </div>
-            </div>
-
-            {/* Landing Page Templates Section */}
-            <Card className="bg-gradient-to-r from-pink-50 to-purple-50 border-0 shadow-xl">
-              <CardHeader>
-                <CardTitle className="text-center">
-                  <Palette className="h-6 w-6 mx-auto mb-2 text-pink-600" />
-                  ৮+ প্রিমিয়াম ল্যান্ডিং পেজ টেমপ্লেট
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {landingPageTemplates.map((template, index) => (
-                    <Card key={index} className="border-2 hover:shadow-md transition-all">
-                      <CardContent className="p-4">
-                        <div className={`${template.color} p-3 rounded-lg mb-3 flex justify-center`}>
-                          {template.icon}
-                        </div>
-                        <h4 className="font-semibold text-sm mb-1">{template.name}</h4>
-                        <p className="text-xs text-gray-500 mb-2">{template.category}</p>
-                        <Badge variant="outline" className="text-xs mb-2">
-                          {template.count}
-                        </Badge>
-                        <p className="text-xs text-gray-600">{template.description}</p>
-                        <div className="flex gap-1 mt-3">
-                          <Button size="sm" variant="outline" className="flex-1 text-xs">
-                            <Eye className="h-3 w-3 mr-1" />
-                            প্রিভিউ
-                          </Button>
-                          <Button size="sm" className="flex-1 text-xs">
-                            ব্যবহার করুন
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                  
+                  <Card className="border-2 border-green-200 hover:shadow-lg transition-all cursor-pointer" onClick={() => navigate('/securepay/buyer')}>
+                    <CardContent className="p-6 text-center">
+                      <CreditCard className="h-12 w-12 text-green-600 mx-auto mb-4" />
+                      <h3 className="font-semibold mb-2">বায়ার প্যানেল</h3>
+                      <p className="text-sm text-gray-600 mb-4">
+                        অর্ডার ম্যানেজমেন্ট, পেমেন্ট, ডিসপিউট, রেটিং সিস্টেম
+                      </p>
+                      <Badge className="bg-green-100 text-green-800">
+                        ক্লিক করুন
+                      </Badge>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="border-2 border-purple-200 hover:shadow-lg transition-all cursor-pointer" onClick={() => navigate('/securepay/admin')}>
+                    <CardContent className="p-6 text-center">
+                      <Settings className="h-12 w-12 text-purple-600 mx-auto mb-4" />
+                      <h3 className="font-semibold mb-2">অ্যাডমিন প্যানেল</h3>
+                      <p className="text-sm text-gray-600 mb-4">
+                        ইউজার ম্যানেজমেন্ট, KYC, ট্রানজেকশন মনিটরিং, অ্যানালিটিক্স
+                      </p>
+                      <Badge className="bg-purple-100 text-purple-800">
+                        ক্লিক করুন
+                      </Badge>
+                    </CardContent>
+                  </Card>
                 </div>
-              </CardContent>
-            </Card>
+              </TabsContent>
 
-            {/* Authentication & User Management */}
-            <Card className="bg-gradient-to-r from-indigo-50 to-blue-50 border-0 shadow-xl">
-              <CardHeader>
-                <CardTitle className="text-center">
-                  <UserCheck className="h-6 w-6 mx-auto mb-2 text-indigo-600" />
-                  অথেনটিকেশন ও ইউজার ম্যানেজমেন্ট
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {authFeatures.map((section, index) => (
-                    <div key={index} className="bg-white p-4 rounded-lg">
-                      <h4 className="font-semibold mb-3 text-center">{section.title}</h4>
-                      <ul className="space-y-2">
-                        {section.items.map((item, idx) => (
-                          <li key={idx} className="flex items-center gap-2 text-sm">
-                            <CheckCircle className="h-3 w-3 text-green-600" />
-                            {item}
+              {/* Creator Tab */}
+              <TabsContent value="creator" className="space-y-6">
+                <PaymentLinkGenerator />
+              </TabsContent>
+
+              {/* Buyer Tab */}
+              <TabsContent value="buyer" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <CreditCard className="h-5 w-5 text-green-600" />
+                      বায়ার ড্যাশবোর্ড ফিচার
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <h3 className="font-semibold">অর্ডার ম্যানেজমেন্ট:</h3>
+                        <ul className="space-y-2 text-sm">
+                          <li className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4 text-green-600" />
+                            অর্ডার ইতিহাস ও স্ট্যাটাস ট্র্যাকিং
                           </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Payment & Security Features */}
-            <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-0 shadow-xl">
-              <CardHeader>
-                <CardTitle className="text-center">
-                  <Shield className="h-6 w-6 mx-auto mb-2 text-green-600" />
-                  পেমেন্ট ও নিরাপত্তা ফিচার
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {paymentSecurityFeatures.map((section, index) => (
-                    <div key={index} className="bg-white p-4 rounded-lg">
-                      <h4 className="font-semibold mb-3 text-center">{section.title}</h4>
-                      <ul className="space-y-2">
-                        {section.items.map((item, idx) => (
-                          <li key={idx} className="flex items-center gap-2 text-sm">
-                            <CheckCircle className="h-3 w-3 text-green-600" />
-                            {item}
+                          <li className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4 text-green-600" />
+                            সার্ভিস রেটিং ও রিভিউ সিস্টেম
                           </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Payment Gateway Section */}
-            <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-0 shadow-xl">
-              <CardHeader>
-                <CardTitle className="text-center">
-                  <CreditCard className="h-6 w-6 mx-auto mb-2 text-green-600" />
-                  সাপোর্টেড পেমেন্ট গেটওয়ে
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {paymentGateways.map((gateway, index) => (
-                    <div key={index} className={`${gateway.color} p-3 rounded-lg text-center hover:shadow-md transition-all`}>
-                      <div className="text-xl mb-1">{gateway.icon}</div>
-                      <div className="font-medium text-sm">{gateway.name}</div>
-                      <div className="text-xs text-gray-600">সাকসেস: {gateway.success}</div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Dashboard Access */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card className="border-2 border-blue-200 hover:shadow-lg transition-all">
-                <CardContent className="p-6 text-center">
-                  <Users className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                  <h3 className="font-semibold mb-2">ক্রিয়েটর ড্যাশবোর্ড</h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    সার্ভিস ম্যানেজমেন্ট, আয়ের হিসাব, টেমপ্লেট কাস্টমাইজেশন
-                  </p>
-                  <Button 
-                    className="w-full"
-                    onClick={() => navigate('/securepay/creator')}
-                  >
-                    <Users className="h-4 w-4 mr-2" />
-                    ক্রিয়েটর প্যানেল
-                  </Button>
-                </CardContent>
-              </Card>
-              
-              <Card className="border-2 border-green-200 hover:shadow-lg transition-all">
-                <CardContent className="p-6 text-center">
-                  <CreditCard className="h-12 w-12 text-green-600 mx-auto mb-4" />
-                  <h3 className="font-semibold mb-2">বায়ার ড্যাশবোর্ড</h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    অর্ডার ম্যানেজমেন্ট, পেমেন্ট, ডিসপিউট, রেটিং সিস্টেম
-                  </p>
-                  <Button 
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => navigate('/securepay/buyer')}
-                  >
-                    <CreditCard className="h-4 w-4 mr-2" />
-                    বায়ার প্যানেল
-                  </Button>
-                </CardContent>
-              </Card>
-              
-              <Card className="border-2 border-purple-200 hover:shadow-lg transition-all">
-                <CardContent className="p-6 text-center">
-                  <Settings className="h-12 w-12 text-purple-600 mx-auto mb-4" />
-                  <h3 className="font-semibold mb-2">অ্যাডমিন প্যানেল</h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    ইউজার ম্যানেজমেন্ট, KYC, ট্রানজেকশন মনিটরিং, অ্যানালিটিক্স
-                  </p>
-                  <Button 
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => navigate('/securepay/admin')}
-                  >
-                    <Settings className="h-4 w-4 mr-2" />
-                    অ্যাডমিন প্যানেল
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Additional Features */}
-            <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 border-0 shadow-xl">
-              <CardHeader>
-                <CardTitle className="text-center">
-                  <Award className="h-6 w-6 mx-auto mb-2 text-yellow-600" />
-                  অতিরিক্ত ফিচার সমূহ
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {[
-                    { icon: <Bell className="h-5 w-5" />, text: "রিয়েল-টাইম নোটিফিকেশন" },
-                    { icon: <Search className="h-5 w-5" />, text: "অ্যাডভান্সড সার্চ" },
-                    { icon: <Filter className="h-5 w-5" />, text: "ফিল্টার সিস্টেম" },
-                    { icon: <BarChart3 className="h-5 w-5" />, text: "অ্যানালিটিক্স" },
-                    { icon: <Calendar className="h-5 w-5" />, text: "বুকিং ক্যালেন্ডার" },
-                    { icon: <Clock className="h-5 w-5" />, text: "অটো রিমাইন্ডার" },
-                    { icon: <Target className="h-5 w-5" />, text: "পারফরমেন্স ট্র্যাকিং" },
-                    { icon: <Code className="h-5 w-5" />, text: "API ইন্টিগ্রেশন" }
-                  ].map((feature, index) => (
-                    <div key={index} className="bg-white p-3 rounded-lg text-center">
-                      <div className="text-yellow-600 mb-2 flex justify-center">
-                        {feature.icon}
+                          <li className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4 text-green-600" />
+                            ডিসপিউট রেজোলিউশন
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4 text-green-600" />
+                            পেমেন্ট হিস্টোরি
+                          </li>
+                        </ul>
                       </div>
-                      <span className="text-xs font-medium">{feature.text}</span>
+                      <div className="space-y-4">
+                        <h3 className="font-semibold">যোগাযোগ ও সাপোর্ট:</h3>
+                        <ul className="space-y-2 text-sm">
+                          <li className="flex items-center gap-2">
+                            <MessageSquare className="h-4 w-4 text-blue-600" />
+                            ক্রিয়েটরের সাথে মেসেজিং
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <Upload className="h-4 w-4 text-purple-600" />
+                            ফাইল শেয়ারিং সিস্টেম
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <Bell className="h-4 w-4 text-orange-600" />
+                            রিয়েল-টাইম নোটিফিকেশন
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <Shield className="h-4 w-4 text-green-600" />
+                            এসক্রো পেমেন্ট সুরক্ষা
+                          </li>
+                        </ul>
+                      </div>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                    <Button className="w-full mt-6" onClick={() => navigate('/securepay/buyer')}>
+                      বায়ার ড্যাশবোর্ড খুলুন
+                    </Button>
+                  </CardContent>
+                </Card>
+              </TabsContent>
 
-            {/* Quick Access Buttons */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <Button 
-                variant="outline" 
-                className="flex flex-col items-center justify-center h-20 rounded-xl"
-                onClick={() => navigate('/securepay')}
-              >
-                <Globe className="h-6 w-6 mb-2" />
-                <span className="text-xs">বিস্তারিত দেখুন</span>
-              </Button>
-              <Button 
-                variant="outline" 
-                className="flex flex-col items-center justify-center h-20 rounded-xl"
-                onClick={() => navigate('/payment-gateway')}
-              >
-                <CreditCard className="h-6 w-6 mb-2" />
-                <span className="text-xs">পেমেন্ট গেটওয়ে</span>
-              </Button>
-              <Button 
-                variant="outline" 
-                className="flex flex-col items-center justify-center h-20 rounded-xl"
-                onClick={() => navigate('/securepay/creator')}
-              >
-                <Palette className="h-6 w-6 mb-2" />
-                <span className="text-xs">টেমপ্লেট দেখুন</span>
-              </Button>
-              <Button 
-                variant="outline" 
-                className="flex flex-col items-center justify-center h-20 rounded-xl"
-                onClick={() => toast({ title: "আপকামিং ফিচার", description: "শীঘ্রই আসছে!" })}
-              >
-                <Upload className="h-6 w-6 mb-2" />
-                <span className="text-xs">ফাইল আপলোড</span>
-              </Button>
-            </div>
+              {/* Templates Tab */}
+              <TabsContent value="templates" className="space-y-6">
+                <Card className="bg-gradient-to-r from-pink-50 to-purple-50 border-0 shadow-xl">
+                  <CardHeader>
+                    <CardTitle className="text-center">
+                      <Palette className="h-6 w-6 mx-auto mb-2 text-pink-600" />
+                      ৮+ প্রিমিয়াম ল্যান্ডিং পেজ টেমপ্লেট
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                      {landingPageTemplates.map((template, index) => (
+                        <Card key={index} className="border-2 hover:shadow-md transition-all">
+                          <CardContent className="p-4">
+                            <div className={`${template.color} p-3 rounded-lg mb-3 flex justify-center`}>
+                              {template.icon}
+                            </div>
+                            <h4 className="font-semibold text-sm mb-1">{template.name}</h4>
+                            <p className="text-xs text-gray-500 mb-2">{template.category}</p>
+                            <Badge variant="outline" className="text-xs mb-2">
+                              {template.count}
+                            </Badge>
+                            <p className="text-xs text-gray-600 mb-3">{template.description}</p>
+                            <div className="flex gap-1">
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="flex-1 text-xs"
+                                onClick={() => handleTemplatePreview(template)}
+                              >
+                                <Eye className="h-3 w-3 mr-1" />
+                                প্রিভিউ
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                className="flex-1 text-xs"
+                                onClick={() => handleTemplateUse(template.id)}
+                              >
+                                ব্যবহার করুন
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Advanced Features Tab */}
+              <TabsContent value="features" className="space-y-6">
+                <AdvancedFeatures />
+              </TabsContent>
+
+              {/* File Upload Tab */}
+              <TabsContent value="upload" className="space-y-6">
+                <FileUploadSystem />
+              </TabsContent>
+            </Tabs>
           </TabsContent>
         </Tabs>
+
+        {/* Template Preview Modal */}
+        {selectedTemplate && (
+          <TemplatePreviewModal
+            template={selectedTemplate}
+            isOpen={showTemplateModal}
+            onClose={() => setShowTemplateModal(false)}
+            onUse={handleTemplateUse}
+            onCustomize={handleTemplateCustomize}
+          />
+        )}
       </div>
     </div>
   );
