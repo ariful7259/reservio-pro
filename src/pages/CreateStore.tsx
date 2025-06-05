@@ -160,193 +160,151 @@ const CreateStore = () => {
     }
   };
 
-  // প্রধান ট্যাব লিস্ট - রেসপন্সিভ
+  // প্রধান ট্যাব লিস্ট - সম্পূর্ণ মোবাইল অপটিমাইজড
   const renderTabsList = () => {
     if (isMobile) {
       return (
-        <TabsList className="grid grid-cols-2 mb-6">
-          <TabsTrigger value="easy-setup">
-            <span className="flex flex-col items-center sm:flex-row sm:gap-2">
-              <Zap className="h-4 w-4" />
-              <span className="text-xs">সহজ সেটআপ</span>
-            </span>
-          </TabsTrigger>
-          <TabsTrigger value="advanced">
-            <span className="flex flex-col items-center sm:flex-row sm:gap-2">
-              <Wand2 className="h-4 w-4" />
-              <span className="text-xs">অ্যাডভান্সড</span>
-            </span>
-          </TabsTrigger>
-        </TabsList>
+        <div className="w-full mb-4">
+          <TabsList className="grid grid-cols-2 w-full h-auto p-1 bg-muted rounded-lg">
+            <TabsTrigger 
+              value="easy-setup" 
+              className="flex flex-col items-center gap-1 p-3 text-xs font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+            >
+              <Zap className="h-5 w-5" />
+              <span>সহজ সেটআপ</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="additional" 
+              className="flex flex-col items-center gap-1 p-3 text-xs font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+            >
+              <Wand2 className="h-5 w-5" />
+              <span>অ্যাডভান্সড</span>
+            </TabsTrigger>
+          </TabsList>
+          
+          {/* Mobile Step Indicator */}
+          {activeTab !== "easy-setup" && activeTab !== "additional" && (
+            <div className="flex justify-center mt-3 mb-2">
+              <div className="flex items-center space-x-2">
+                {["features", "design", "basic", "settings"].map((step, index) => (
+                  <div
+                    key={step}
+                    className={`w-2 h-2 rounded-full transition-all ${
+                      activeTab === step ? "bg-primary" : "bg-muted-foreground/30"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       );
     }
 
     return (
-      <TabsList className="w-full mb-6 grid grid-cols-6">
-        <TabsTrigger value="easy-setup">
-          <span className="flex items-center gap-2">
-            <Zap className="h-4 w-4" />
-            <span>সহজ সেটআপ</span>
-          </span>
+      <TabsList className="w-full mb-6 grid grid-cols-6 h-auto">
+        <TabsTrigger value="easy-setup" className="flex items-center gap-2 p-3">
+          <Zap className="h-4 w-4" />
+          <span className="hidden sm:inline">সহজ সেটআপ</span>
         </TabsTrigger>
-        <TabsTrigger value="features">
-          <span className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4" />
-            <span>ফিচারস</span>
-          </span>
+        <TabsTrigger value="features" className="flex items-center gap-2 p-3">
+          <Sparkles className="h-4 w-4" />
+          <span className="hidden sm:inline">ফিচারস</span>
         </TabsTrigger>
-        <TabsTrigger value="design">
-          <span className="flex items-center gap-2">
-            <Paintbrush className="h-4 w-4" />
-            <span>ডিজাইন</span>
-          </span>
+        <TabsTrigger value="design" className="flex items-center gap-2 p-3">
+          <Paintbrush className="h-4 w-4" />
+          <span className="hidden sm:inline">ডিজাইন</span>
         </TabsTrigger>
-        <TabsTrigger value="basic">
-          <span className="flex items-center gap-2">
-            <PanelTop className="h-4 w-4" />
-            <span>বেসিক তথ্য</span>
-          </span>
+        <TabsTrigger value="basic" className="flex items-center gap-2 p-3">
+          <PanelTop className="h-4 w-4" />
+          <span className="hidden sm:inline">বেসিক তথ্য</span>
         </TabsTrigger>
-        <TabsTrigger value="settings">
-          <span className="flex items-center gap-2">
-            <Wand2 className="h-4 w-4" />
-            <span>সেটিংস</span>
-          </span>
+        <TabsTrigger value="settings" className="flex items-center gap-2 p-3">
+          <Wand2 className="h-4 w-4" />
+          <span className="hidden sm:inline">সেটিংস</span>
         </TabsTrigger>
-        <TabsTrigger value="additional">
-          <span className="flex items-center gap-2">
-            <Gift className="h-4 w-4" />
-            <span>অতিরিক্ত</span>
-          </span>
+        <TabsTrigger value="additional" className="flex items-center gap-2 p-3">
+          <Gift className="h-4 w-4" />
+          <span className="hidden sm:inline">অতিরিক্ত</span>
         </TabsTrigger>
       </TabsList>
     );
   };
 
-  // অ্যাডভান্সড ফিচার ট্যাব লিস্ট
+  // অ্যাডভান্সড ফিচার ট্যাব লিস্ট - মোবাইল অপটিমাইজড
   const renderAdvancedTabsList = () => {
+    const advancedTabs = [
+      { id: 'analytics', icon: BarChart3, label: 'অ্যানালিটিক্স' },
+      { id: 'chat', icon: MessageSquare, label: 'লাইভ চ্যাট' },
+      { id: 'multivendor', icon: Sparkles, label: 'মাল্টি-ভেন্ডর' },
+      { id: 'language', icon: Globe, label: 'ভাষা ও কারেন্সি' },
+      { id: 'backup', icon: Shield, label: 'নিরাপত্তা' },
+      { id: 'themes', icon: Palette, label: 'থিম' },
+      { id: 'import-export', icon: Upload, label: 'ইমপোর্ট/এক্সপোর্ট' },
+      { id: 'payment', icon: CreditCard, label: 'পেমেন্ট' },
+      { id: 'tax-invoice', icon: Calculator, label: 'ট্যাক্স ও ইনভয়েস' },
+      { id: 'checkout', icon: CreditCard, label: 'চেকআউট' },
+      { id: 'shipping', icon: Package, label: 'শিপিং' },
+      { id: 'notification', icon: BellRing, label: 'নোটিফিকেশন' },
+      { id: 'customization', icon: Palette, label: 'কাস্টমাইজেশন' },
+      { id: 'seo', icon: Search, label: 'SEO টুলস' },
+      { id: 'referral', icon: Tag, label: 'রেফারেল' }
+    ];
+
+    if (isMobile) {
+      return (
+        <div className="mb-4">
+          {/* Mobile Grid Layout */}
+          <div className="grid grid-cols-2 gap-2 mb-4">
+            {advancedTabs.slice(0, 8).map((tab) => (
+              <Button
+                key={tab.id}
+                variant={activeAdvancedTab === tab.id ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setActiveAdvancedTab(tab.id)}
+                className="flex flex-col items-center gap-1 h-auto py-3 px-2 text-xs"
+              >
+                <tab.icon className="h-4 w-4" />
+                <span className="text-center leading-tight">{tab.label}</span>
+              </Button>
+            ))}
+          </div>
+          
+          {/* More Options Dropdown for remaining tabs */}
+          {advancedTabs.length > 8 && (
+            <div className="flex overflow-x-auto gap-2 pb-2 scrollbar-hide">
+              {advancedTabs.slice(8).map((tab) => (
+                <Button
+                  key={tab.id}
+                  variant={activeAdvancedTab === tab.id ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setActiveAdvancedTab(tab.id)}
+                  className="flex items-center gap-1 whitespace-nowrap text-xs px-3 py-2"
+                >
+                  <tab.icon className="h-3 w-3" />
+                  <span>{tab.label}</span>
+                </Button>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
     return (
       <div className="flex overflow-x-auto pb-2 mb-4 gap-2 scrollbar-hide">
-        <Button 
-          variant={activeAdvancedTab === 'analytics' ? 'default' : 'outline'} 
-          size="sm"
-          onClick={() => setActiveAdvancedTab('analytics')}
-          className="flex items-center gap-2 whitespace-nowrap"
-        >
-          <BarChart3 className="h-4 w-4" /> রিয়েল-টাইম অ্যানালিটিক্স
-        </Button>
-        <Button 
-          variant={activeAdvancedTab === 'chat' ? 'default' : 'outline'} 
-          size="sm"
-          onClick={() => setActiveAdvancedTab('chat')}
-          className="flex items-center gap-2 whitespace-nowrap"
-        >
-          <MessageSquare className="h-4 w-4" /> লাইভ চ্যাট সাপোর্ট
-        </Button>
-        <Button 
-          variant={activeAdvancedTab === 'multivendor' ? 'default' : 'outline'} 
-          size="sm"
-          onClick={() => setActiveAdvancedTab('multivendor')}
-          className="flex items-center gap-2 whitespace-nowrap"
-        >
-          <Sparkles className="h-4 w-4" /> মাল্টি-ভেন্ডর সাপোর্ট
-        </Button>
-        <Button 
-          variant={activeAdvancedTab === 'language' ? 'default' : 'outline'} 
-          size="sm"
-          onClick={() => setActiveAdvancedTab('language')}
-          className="flex items-center gap-2 whitespace-nowrap"
-        >
-          <Globe className="h-4 w-4" /> মাল্টি-ল্যাঙ্গুয়েজ ও কারেন্সি
-        </Button>
-        <Button 
-          variant={activeAdvancedTab === 'backup' ? 'default' : 'outline'} 
-          size="sm"
-          onClick={() => setActiveAdvancedTab('backup')}
-          className="flex items-center gap-2 whitespace-nowrap"
-        >
-          <Shield className="h-4 w-4" /> ব্যাকআপ ও সিকিউরিটি
-        </Button>
-        <Button 
-          variant={activeAdvancedTab === 'themes' ? 'default' : 'outline'} 
-          size="sm"
-          onClick={() => setActiveAdvancedTab('themes')}
-          className="flex items-center gap-2 whitespace-nowrap"
-        >
-          <Palette className="h-4 w-4" /> ওয়ান-ক্লিক থিম
-        </Button>
-        <Button 
-          variant={activeAdvancedTab === 'import-export' ? 'default' : 'outline'} 
-          size="sm"
-          onClick={() => setActiveAdvancedTab('import-export')}
-          className="flex items-center gap-2 whitespace-nowrap"
-        >
-          <Upload className="h-4 w-4" /> পণ্য ইমপোর্ট/এক্সপোর্ট
-        </Button>
-        <Button 
-          variant={activeAdvancedTab === 'payment' ? 'default' : 'outline'} 
-          size="sm"
-          onClick={() => setActiveAdvancedTab('payment')}
-          className="flex items-center gap-2 whitespace-nowrap"
-        >
-          <CreditCard className="h-4 w-4" /> ইন্টিগ্রেটেড পেমেন্ট
-        </Button>
-        <Button 
-          variant={activeAdvancedTab === 'tax-invoice' ? 'default' : 'outline'} 
-          size="sm"
-          onClick={() => setActiveAdvancedTab('tax-invoice')}
-          className="flex items-center gap-2 whitespace-nowrap"
-        >
-          <Calculator className="h-4 w-4" /> ট্যাক্স ও ইনভয়েস
-        </Button>
-        <Button 
-          variant={activeAdvancedTab === 'checkout' ? 'default' : 'outline'} 
-          size="sm"
-          onClick={() => setActiveAdvancedTab('checkout')}
-          className="flex items-center gap-2 whitespace-nowrap"
-        >
-          <CreditCard className="h-4 w-4" /> ওয়ান-পেজ চেকআউট
-        </Button>
-        <Button 
-          variant={activeAdvancedTab === 'shipping' ? 'default' : 'outline'} 
-          size="sm"
-          onClick={() => setActiveAdvancedTab('shipping')}
-          className="flex items-center gap-2 whitespace-nowrap"
-        >
-          <Package className="h-4 w-4" /> শিপিং ম্যানেজার
-        </Button>
-        <Button 
-          variant={activeAdvancedTab === 'notification' ? 'default' : 'outline'} 
-          size="sm"
-          onClick={() => setActiveAdvancedTab('notification')}
-          className="flex items-center gap-2 whitespace-nowrap"
-        >
-          <BellRing className="h-4 w-4" /> নোটিফিকেশন
-        </Button>
-        <Button 
-          variant={activeAdvancedTab === 'customization' ? 'default' : 'outline'} 
-          size="sm"
-          onClick={() => setActiveAdvancedTab('customization')}
-          className="flex items-center gap-2 whitespace-nowrap"
-        >
-          <Palette className="h-4 w-4" /> কাস্টমাইজেশন উইজেট
-        </Button>
-        <Button 
-          variant={activeAdvancedTab === 'seo' ? 'default' : 'outline'} 
-          size="sm"
-          onClick={() => setActiveAdvancedTab('seo')}
-          className="flex items-center gap-2 whitespace-nowrap"
-        >
-          <Search className="h-4 w-4" /> SEO টুলস
-        </Button>
-        <Button 
-          variant={activeAdvancedTab === 'referral' ? 'default' : 'outline'} 
-          size="sm"
-          onClick={() => setActiveAdvancedTab('referral')}
-          className="flex items-center gap-2 whitespace-nowrap"
-        >
-          <Tag className="h-4 w-4" /> রেফারেল সিস্টেম
-        </Button>
+        {advancedTabs.map((tab) => (
+          <Button
+            key={tab.id}
+            variant={activeAdvancedTab === tab.id ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setActiveAdvancedTab(tab.id)}
+            className="flex items-center gap-2 whitespace-nowrap"
+          >
+            <tab.icon className="h-4 w-4" />
+            {tab.label}
+          </Button>
+        ))}
       </div>
     );
   };
@@ -354,16 +312,19 @@ const CreateStore = () => {
   // লগইন না করা ব্যবহারকারীদের জন্য প্রম্পট
   if (!isAuthenticated) {
     return (
-      <div className="container mx-auto px-4 py-16 flex items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>লগইন করুন</CardTitle>
+      <div className="container mx-auto px-4 py-8 pt-20 flex items-center justify-center min-h-screen">
+        <Card className="w-full max-w-md mx-4">
+          <CardHeader className="text-center">
+            <CardTitle className="text-xl">লগইন করুন</CardTitle>
             <CardDescription>
               ব্যবসা তৈরি করতে আগে লগইন করুন
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => navigate('/login', { state: { from: '/create-store' } })} className="w-full">
+            <Button 
+              onClick={() => navigate('/login', { state: { from: '/create-store' } })} 
+              className="w-full h-11 text-base"
+            >
               লগইন পৃষ্ঠায় যান
             </Button>
           </CardContent>
@@ -373,98 +334,123 @@ const CreateStore = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-            <div>
-              <CardTitle className="text-2xl">আপনার অনলাইন স্টোর তৈরি করুন</CardTitle>
-              <CardDescription className="max-w-2xl">
-                সহজেই আপনার অনলাইন ব্যবসা শুরু করুন। কোন কোডিং জ্ঞান ছাড়াই আপনার ওয়েবসাইট বানান।
-              </CardDescription>
+    <div className="min-h-screen bg-background">
+      {/* Mobile Header */}
+      <div className="container mx-auto px-4 py-4 pt-20">
+        <Card className="shadow-lg">
+          <CardHeader className="pb-4">
+            <div className="flex flex-col gap-3">
+              <div className="text-center sm:text-left">
+                <CardTitle className="text-xl sm:text-2xl font-bold">
+                  আপনার অনলাইন স্টোর তৈরি করুন
+                </CardTitle>
+                <CardDescription className="text-sm sm:text-base mt-2">
+                  সহজেই আপনার অনলাইন ব্যবসা শুরু করুন। কোন কোডিং জ্ঞান ছাড়াই আপনার ওয়েবসাইট বানান।
+                </CardDescription>
+              </div>
+              <div className="flex justify-center sm:justify-end">
+                <Badge className="bg-gradient-to-r from-primary to-accent text-white px-3 py-1 rounded-full text-xs">
+                  <Sparkles className="h-3 w-3 mr-1 animate-pulse" /> নতুন
+                </Badge>
+              </div>
             </div>
-            <Badge className="self-start sm:self-auto bg-gradient-to-r from-primary to-accent text-white px-3 py-1 rounded-full">
-              <Sparkles className="h-3 w-3 mr-1 animate-pulse" /> নতুন
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            {renderTabsList()}
+          </CardHeader>
+          
+          <CardContent className="px-4 sm:px-6 pb-6">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              {renderTabsList()}
 
-            {/* সহজ সেটআপ ট্যাব - নতুন প্রাথমিক ট্যাব */}
-            <TabsContent value="easy-setup" className="space-y-6 animate-in fade-in-50">
-              <EasyStoreSetup />
-            </TabsContent>
+              {/* সহজ সেটআপ ট্যাব - মোবাইল অপটিমাইজড */}
+              <TabsContent value="easy-setup" className="space-y-4 animate-in fade-in-50 mt-4">
+                <EasyStoreSetup />
+              </TabsContent>
 
-            <TabsContent value="features" className="space-y-6 animate-in fade-in-50">
-              <StoreFeaturesList />
-              <div className="flex justify-end mt-6">
-                <Button onClick={handleNextTab} className="flex items-center gap-2">
-                  পরবর্তী ধাপ <MoveRight className="h-4 w-4" />
-                </Button>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="design" className="animate-in fade-in-50">
-              <DesignTabContent 
-                onNextTab={handleNextTab}
-                onPreviousTab={handlePreviousTab}
-                businessName={businessName}
-              />
-            </TabsContent>
-
-            <TabsContent value="basic" className="animate-in fade-in-50">
-              <StoreCreationForm 
-                onNextTab={handleNextTab}
-                onPreviousTab={handlePreviousTab}
-              />
-            </TabsContent>
-
-            <TabsContent value="settings" className="animate-in fade-in-50">
-              <SettingsTabContent 
-                form={form}
-                onNextTab={handleNextTab}
-                onPreviousTab={handlePreviousTab}
-                selectedSellerType={selectedSellerType}
-              />
-            </TabsContent>
-
-            <TabsContent value="additional" className="animate-in fade-in-50">
-              <div className="space-y-6">
-                <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-md p-4">
-                  <h3 className="font-medium">এডভান্সড ফিচারস</h3>
-                  <p className="text-sm text-muted-foreground">
-                    আপনার স্টোরকে আরো শক্তিশালী করতে নিম্নলিখিত এডভান্সড ফিচারগুলো ব্যবহার করুন
-                  </p>
-                </div>
-                
-                {renderAdvancedTabsList()}
-                {renderAdvancedTabContent()}
-                
-                <div className="border-t pt-6">
-                  <AdditionalSettings form={form} />
-                </div>
-                
-                <div className="flex justify-between mt-6">
-                  <Button variant="outline" onClick={handlePreviousTab}>
-                    আগের ধাপ
-                  </Button>
+              <TabsContent value="features" className="space-y-4 animate-in fade-in-50 mt-4">
+                <StoreFeaturesList />
+                <div className="flex justify-between items-center mt-6 gap-3">
+                  {isMobile && (
+                    <Button variant="outline" onClick={() => setActiveTab("easy-setup")} className="flex-1">
+                      আগের ধাপ
+                    </Button>
+                  )}
                   <Button 
-                    onClick={form.handleSubmit(async () => {})} 
-                    className="flex items-center gap-2"
+                    onClick={handleNextTab} 
+                    className={`flex items-center gap-2 ${isMobile ? 'flex-1' : ''}`}
                   >
-                    আপনার স্টোর তৈরি করুন
+                    পরবর্তী ধাপ <MoveRight className="h-4 w-4" />
                   </Button>
                 </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+              </TabsContent>
+              
+              <TabsContent value="design" className="animate-in fade-in-50 mt-4">
+                <DesignTabContent 
+                  onNextTab={handleNextTab}
+                  onPreviousTab={handlePreviousTab}
+                  businessName={businessName}
+                />
+              </TabsContent>
+
+              <TabsContent value="basic" className="animate-in fade-in-50 mt-4">
+                <StoreCreationForm 
+                  onNextTab={handleNextTab}
+                  onPreviousTab={handlePreviousTab}
+                />
+              </TabsContent>
+
+              <TabsContent value="settings" className="animate-in fade-in-50 mt-4">
+                <SettingsTabContent 
+                  form={form}
+                  onNextTab={handleNextTab}
+                  onPreviousTab={handlePreviousTab}
+                  selectedSellerType={selectedSellerType}
+                />
+              </TabsContent>
+
+              <TabsContent value="additional" className="animate-in fade-in-50 mt-4">
+                <div className="space-y-4">
+                  <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg p-4">
+                    <h3 className="font-semibold text-base">এডভান্সড ফিচারস</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      আপনার স্টোরকে আরো শক্তিশালী করতে নিম্নলিখিত এডভান্সড ফিচারগুলো ব্যবহার করুন
+                    </p>
+                  </div>
+                  
+                  {renderAdvancedTabsList()}
+                  
+                  <div className="min-h-[400px] bg-card rounded-lg border p-4">
+                    {renderAdvancedTabContent()}
+                  </div>
+                  
+                  <div className="border-t pt-4">
+                    <AdditionalSettings form={form} />
+                  </div>
+                  
+                  <div className="flex flex-col sm:flex-row justify-between gap-3 mt-6">
+                    <Button 
+                      variant="outline" 
+                      onClick={handlePreviousTab}
+                      className="w-full sm:w-auto order-2 sm:order-1"
+                    >
+                      আগের ধাপ
+                    </Button>
+                    <Button 
+                      onClick={form.handleSubmit(async () => {})} 
+                      className="w-full sm:w-auto flex items-center justify-center gap-2 order-1 sm:order-2"
+                    >
+                      আপনার স্টোর তৈরি করুন
+                    </Button>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
+      </div>
       
-      {/* লাইভ চ্যাট সাপোর্ট */}
-      <LiveChatSupport />
+      {/* Mobile-Optimized Live Chat Support */}
+      <div className="fixed bottom-4 right-4 z-50">
+        <LiveChatSupport />
+      </div>
     </div>
   );
 };
