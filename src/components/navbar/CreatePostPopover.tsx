@@ -1,18 +1,14 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { Plus, Building, Search, ShoppingBag, Rocket } from 'lucide-react';
+import { Plus, Building, Search, ShoppingBag, Rocket, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { creatorSolutionsData } from './navbarData';
-
 export const CreatePostPopover: React.FC = () => {
   const navigate = useNavigate();
-  
-  return (
-    <Popover>
+  return <Popover>
       <PopoverTrigger asChild>
         <div className="flex flex-col items-center justify-center relative cursor-pointer">
           <div className="bg-primary rounded-full h-10 w-10 flex items-center justify-center mb-1">
@@ -26,30 +22,20 @@ export const CreatePostPopover: React.FC = () => {
           <div className="col-span-2">
             <h3 className="font-semibold text-center mb-2">পোস্ট করুন</h3>
           </div>
-          <Button 
-            variant="outline" 
-            onClick={() => navigate('/create-post')} 
-            className="flex flex-col items-center justify-center h-24 gap-2"
-          >
+          <Button variant="outline" onClick={() => navigate('/create-post')} className="flex flex-col items-center justify-center h-24 gap-2">
             <Building className="h-8 w-8 text-primary" />
             <span className="text-sm">রেন্টাল পোস্ট</span>
           </Button>
-          <Button 
-            variant="outline" 
-            onClick={() => navigate('/create-post?type=service')} 
-            className="flex flex-col items-center justify-center h-24 gap-2"
-          >
+          <Button variant="outline" onClick={() => navigate('/create-post?type=service')} className="flex flex-col items-center justify-center h-24 gap-2">
             <Search className="h-8 w-8 text-blue-500" />
             <span className="text-sm">সার্ভিস পোস্ট</span>
           </Button>
-          <Button 
-            variant="outline" 
-            onClick={() => navigate('/create-post?type=marketplace')} 
-            className="flex flex-col items-center justify-center h-24 gap-2"
-          >
+          <Button variant="outline" onClick={() => navigate('/create-post?type=marketplace')} className="flex flex-col items-center justify-center h-24 gap-2">
             <ShoppingBag className="h-8 w-8 text-green-500" />
             <span className="text-sm">প্রোডাক্ট পোস্ট</span>
           </Button>
+          
+          
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -58,10 +44,9 @@ export const CreatePostPopover: React.FC = () => {
                 <span className="text-sm">ডিজিটাল ক্রিয়েটর</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-72 max-h-[70vh] overflow-auto">
+            <DropdownMenuContent className="w-56 max-h-[70vh] overflow-auto">
               <div className="grid grid-cols-1 gap-1 p-1">
-                {creatorSolutionsData.map((solution, index) => (
-                  <DropdownMenuItem key={index} asChild className="p-2">
+                {creatorSolutionsData.map((solution, index) => <DropdownMenuItem key={index} asChild className="p-2">
                     <Link to={solution.path} className="flex flex-col gap-1">
                       <div className="flex items-center gap-2">
                         {solution.icon}
@@ -71,13 +56,11 @@ export const CreatePostPopover: React.FC = () => {
                         {solution.description}
                       </p>
                     </Link>
-                  </DropdownMenuItem>
-                ))}
+                  </DropdownMenuItem>)}
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </PopoverContent>
-    </Popover>
-  );
+    </Popover>;
 };
