@@ -1,6 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -39,20 +38,15 @@ import CreatorDashboard from '@/components/creator-payment/CreatorDashboard';
 import BuyerDashboard from '@/components/creator-payment/BuyerDashboard';
 
 // Import existing payment components
+import IntegratedPaymentGateway from '@/components/store/IntegratedPaymentGateway';
+import PaymentLinkCreator from '@/components/payment/PaymentLinkCreator';
+import QRCodePaymentSystem from '@/components/payment/QRCodePaymentSystem';
 import PaymentAnalytics from '@/components/payment/PaymentAnalytics';
 import TransactionHistory from '@/components/payment/TransactionHistory';
+import RefundManagement from '@/components/payment/RefundManagement';
 
 const PaymentGateway = () => {
-  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('creator-system');
-
-  // Check URL params for initial tab
-  useEffect(() => {
-    const tab = searchParams.get('tab');
-    if (tab) {
-      setActiveTab(tab);
-    }
-  }, [searchParams]);
 
   // Payment gateway stats
   const stats = [
@@ -79,7 +73,7 @@ const PaymentGateway = () => {
     },
     {
       title: 'সক্রিয় বিরোধ',
-      value: 'ৃ',
+      value: '৩',
       change: '-২%',
       icon: <AlertCircle className="h-5 w-5 text-red-600" />,
       color: 'bg-red-50 border-red-200'
@@ -87,7 +81,7 @@ const PaymentGateway = () => {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8 pt-24 min-h-screen">
+    <div className="container mx-auto px-4 py-8 pt-24">
       {/* Header */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8">
         <div>
@@ -105,7 +99,7 @@ const PaymentGateway = () => {
             <Settings className="h-4 w-4 mr-2" />
             সেটিংস
           </Button>
-          <Button size="sm" onClick={() => setActiveTab('creator-system')}>
+          <Button size="sm">
             <Link className="h-4 w-4 mr-2" />
             নতুন পেমেন্ট পেজ
           </Button>
@@ -136,146 +130,144 @@ const PaymentGateway = () => {
 
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        {/* Tab Navigation */}
+        {/* Tab Navigation - Enhanced for many tabs */}
         <div className="overflow-x-auto">
           <TabsList className="grid w-full min-w-[1200px] grid-cols-12 gap-1 h-auto p-1">
             <TabsTrigger 
               value="creator-system" 
-              className="flex flex-col items-center justify-center gap-1 px-2 py-3 text-xs h-auto"
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
             >
-              <Link className="h-4 w-4" />
-              <span>Payment Pages</span>
+              <Link className="h-3 w-3" />
+              <span className="hidden lg:inline">Creator System</span>
             </TabsTrigger>
             <TabsTrigger 
               value="escrow" 
-              className="flex flex-col items-center justify-center gap-1 px-2 py-3 text-xs h-auto"
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
             >
-              <Shield className="h-4 w-4" />
-              <span>Escrow</span>
+              <Shield className="h-3 w-3" />
+              <span className="hidden lg:inline">Escrow</span>
             </TabsTrigger>
             <TabsTrigger 
               value="disputes" 
-              className="flex flex-col items-center justify-center gap-1 px-2 py-3 text-xs h-auto"
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
             >
-              <AlertCircle className="h-4 w-4" />
-              <span>Disputes</span>
+              <AlertCircle className="h-3 w-3" />
+              <span className="hidden lg:inline">Disputes</span>
             </TabsTrigger>
             <TabsTrigger 
               value="fraud" 
-              className="flex flex-col items-center justify-center gap-1 px-2 py-3 text-xs h-auto"
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
             >
-              <Shield className="h-4 w-4" />
-              <span>Fraud</span>
+              <Shield className="h-3 w-3" />
+              <span className="hidden lg:inline">Fraud</span>
             </TabsTrigger>
             <TabsTrigger 
               value="creator-dashboard" 
-              className="flex flex-col items-center justify-center gap-1 px-2 py-3 text-xs h-auto"
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
             >
-              <Users className="h-4 w-4" />
-              <span>Creator</span>
+              <Users className="h-3 w-3" />
+              <span className="hidden lg:inline">Creator</span>
             </TabsTrigger>
             <TabsTrigger 
               value="buyer-dashboard" 
-              className="flex flex-col items-center justify-center gap-1 px-2 py-3 text-xs h-auto"
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
             >
-              <UserCheck className="h-4 w-4" />
-              <span>Buyer</span>
+              <UserCheck className="h-3 w-3" />
+              <span className="hidden lg:inline">Buyer</span>
             </TabsTrigger>
             <TabsTrigger 
               value="admin" 
-              className="flex flex-col items-center justify-center gap-1 px-2 py-3 text-xs h-auto"
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
             >
-              <Settings className="h-4 w-4" />
-              <span>Admin</span>
+              <Settings className="h-3 w-3" />
+              <span className="hidden lg:inline">Admin</span>
             </TabsTrigger>
             <TabsTrigger 
               value="kyc" 
-              className="flex flex-col items-center justify-center gap-1 px-2 py-3 text-xs h-auto"
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
             >
-              <UserCheck className="h-4 w-4" />
-              <span>KYC</span>
+              <UserCheck className="h-3 w-3" />
+              <span className="hidden lg:inline">KYC</span>
             </TabsTrigger>
             <TabsTrigger 
               value="notifications" 
-              className="flex flex-col items-center justify-center gap-1 px-2 py-3 text-xs h-auto"
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
             >
-              <Bell className="h-4 w-4" />
-              <span>Notifications</span>
+              <Bell className="h-3 w-3" />
+              <span className="hidden lg:inline">Notifications</span>
             </TabsTrigger>
             <TabsTrigger 
               value="api" 
-              className="flex flex-col items-center justify-center gap-1 px-2 py-3 text-xs h-auto"
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
             >
-              <Code className="h-4 w-4" />
-              <span>API</span>
+              <Code className="h-3 w-3" />
+              <span className="hidden lg:inline">API</span>
             </TabsTrigger>
             <TabsTrigger 
               value="analytics" 
-              className="flex flex-col items-center justify-center gap-1 px-2 py-3 text-xs h-auto"
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
             >
-              <BarChart3 className="h-4 w-4" />
-              <span>Analytics</span>
+              <BarChart3 className="h-3 w-3" />
+              <span className="hidden lg:inline">Analytics</span>
             </TabsTrigger>
             <TabsTrigger 
               value="history" 
-              className="flex flex-col items-center justify-center gap-1 px-2 py-3 text-xs h-auto"
+              className="flex items-center justify-center gap-1 px-2 py-2 text-xs"
             >
-              <History className="h-4 w-4" />
-              <span>History</span>
+              <History className="h-3 w-3" />
+              <span className="hidden lg:inline">History</span>
             </TabsTrigger>
           </TabsList>
         </div>
 
         {/* Tab Content */}
-        <div className="min-h-[600px]">
-          <TabsContent value="creator-system" className="space-y-6 mt-6">
-            <PaymentPageGenerator />
-          </TabsContent>
+        <TabsContent value="creator-system" className="space-y-6">
+          <PaymentPageGenerator />
+        </TabsContent>
 
-          <TabsContent value="escrow" className="space-y-6 mt-6">
-            <EscrowManagement />
-          </TabsContent>
+        <TabsContent value="escrow" className="space-y-6">
+          <EscrowManagement />
+        </TabsContent>
 
-          <TabsContent value="disputes" className="space-y-6 mt-6">
-            <DisputeManagement />
-          </TabsContent>
+        <TabsContent value="disputes" className="space-y-6">
+          <DisputeManagement />
+        </TabsContent>
 
-          <TabsContent value="fraud" className="space-y-6 mt-6">
-            <FraudDetection />
-          </TabsContent>
+        <TabsContent value="fraud" className="space-y-6">
+          <FraudDetection />
+        </TabsContent>
 
-          <TabsContent value="creator-dashboard" className="space-y-6 mt-6">
-            <CreatorDashboard />
-          </TabsContent>
+        <TabsContent value="creator-dashboard" className="space-y-6">
+          <CreatorDashboard />
+        </TabsContent>
 
-          <TabsContent value="buyer-dashboard" className="space-y-6 mt-6">
-            <BuyerDashboard />
-          </TabsContent>
+        <TabsContent value="buyer-dashboard" className="space-y-6">
+          <BuyerDashboard />
+        </TabsContent>
 
-          <TabsContent value="admin" className="space-y-6 mt-6">
-            <AdminDashboard />
-          </TabsContent>
+        <TabsContent value="admin" className="space-y-6">
+          <AdminDashboard />
+        </TabsContent>
 
-          <TabsContent value="kyc" className="space-y-6 mt-6">
-            <KycVerification />
-          </TabsContent>
+        <TabsContent value="kyc" className="space-y-6">
+          <KycVerification />
+        </TabsContent>
 
-          <TabsContent value="notifications" className="space-y-6 mt-6">
-            <NotificationCenter />
-          </TabsContent>
+        <TabsContent value="notifications" className="space-y-6">
+          <NotificationCenter />
+        </TabsContent>
 
-          <TabsContent value="api" className="space-y-6 mt-6">
-            <ApiIntegration />
-          </TabsContent>
+        <TabsContent value="api" className="space-y-6">
+          <ApiIntegration />
+        </TabsContent>
 
-          <TabsContent value="analytics" className="space-y-6 mt-6">
-            <PaymentAnalytics />
-          </TabsContent>
+        <TabsContent value="analytics" className="space-y-6">
+          <PaymentAnalytics />
+        </TabsContent>
 
-          <TabsContent value="history" className="space-y-6 mt-6">
-            <TransactionHistory />
-          </TabsContent>
-        </div>
+        <TabsContent value="history" className="space-y-6">
+          <TransactionHistory />
+        </TabsContent>
       </Tabs>
     </div>
   );
