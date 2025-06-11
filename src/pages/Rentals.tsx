@@ -32,9 +32,16 @@ const Rentals = () => {
     "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?q=80&w=1000&auto=format&fit=crop"
   ];
 
-  // Updated rent categories with "বাসা বাড়ি" as the first category and enhanced booking features
+  // Rearranged rent categories with "বাসা বাড়ি" moved to second position
   const rentCategories = [
-    // Main "বাসা বাড়ি" category with colorful digital icon and booking features
+    // First category remains the same
+    {
+      icon: <Laptop className="h-8 w-8 text-blue-500" />,
+      name: "ইলেকট্রনিক্স",
+      path: "/rental-category/electronics",
+      count: 324
+    },
+    // Main "বাসা বাড়ি" category moved to second position (where ইলেকট্রনিক্স was)
     {
       icon: <div className="text-3xl">🏠</div>,
       name: "বাসা বাড়ি",
@@ -220,19 +227,14 @@ const Rentals = () => {
         }
       ]
     },
-    // Other existing categories
-    {
-      icon: <Laptop className="h-8 w-8 text-blue-500" />,
-      name: "ইলেকট্রনিক্স",
-      path: "/rental-category/electronics",
-      count: 324
-    },
+    // পরিবহন moved to third position (where বাসা বাড়ি was)
     {
       icon: <Car className="h-8 w-8 text-red-500" />,
       name: "পরিবহন",
       path: "/rental-category/transport",
       count: 178
     },
+    // Rest of the categories remain in the same order
     {
       icon: <Tent className="h-8 w-8 text-green-500" />,
       name: "ইভেন্ট সামগ্রী",
@@ -764,4 +766,3 @@ const Rentals = () => {
 };
 
 export default Rentals;
-
