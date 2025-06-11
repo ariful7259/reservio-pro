@@ -13,370 +13,297 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import MapView from '@/components/MapView';
 import SocialShareModal from '@/components/SocialShareModal';
 import { useToast } from '@/components/ui/use-toast';
-
 const Services = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const [isExpanded, setIsExpanded] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
   const [shareItem, setShareItem] = useState<any | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
-
-  const bannerImages = [
-    "https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1606836591695-4d58a73fba39?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1508873699372-7aeab60b44ab?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1455849318743-b2233052fcff?q=80&w=1000&auto=format&fit=crop"
-  ];
+  const bannerImages = ["https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1606836591695-4d58a73fba39?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1508873699372-7aeab60b44ab?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1455849318743-b2233052fcff?q=80&w=1000&auto=format&fit=crop"];
 
   // Enhanced service categories with colorful digital icons and booking features
-  const serviceCategories = [
-    {
-      icon: <div className="text-2xl">🩺</div>,
-      name: "ডাক্তার",
-      path: "/services/category/doctor",
-      count: 278,
-      color: "bg-red-100",
-      features: [
-        {
-          name: "অনলাইন অ্যাপয়েন্টমেন্ট",
-          description: "ডাক্তারের সাথে ভিডিও কল করুন",
-          icon: <Calendar className="h-4 w-4" />,
-          bookingType: "video-consultation"
-        },
-        {
-          name: "হোম ভিজিট বুকিং",
-          description: "ডাক্তার বাড়িতে এসে দেখবেন",
-          icon: <Home className="h-4 w-4" />,
-          bookingType: "home-visit"
-        },
-        {
-          name: "ল্যাব টেস্ট বুকিং",
-          description: "ঘরে বসে টেস্ট করান",
-          icon: <Stethoscope className="h-4 w-4" />,
-          bookingType: "lab-test"
-        }
-      ]
-    },
-    {
-      icon: <div className="text-2xl">🦷</div>,
-      name: "ডেন্টাল",
-      path: "/services/category/dental",
-      count: 124,
-      color: "bg-blue-100",
-      features: [
-        {
-          name: "দাঁতের চেকআপ",
-          description: "নিয়মিত দাঁতের পরীক্ষা",
-          icon: <Calendar className="h-4 w-4" />,
-          bookingType: "dental-checkup"
-        },
-        {
-          name: "ইমার্জেন্সি ট্রিটমেন্ট",
-          description: "জরুরি দাঁতের চিকিৎসা",
-          icon: <HeartPulse className="h-4 w-4" />,
-          bookingType: "emergency-dental"
-        }
-      ]
-    },
-    {
-      icon: <div className="text-2xl">🎨</div>,
-      name: "পেইন্টিং",
-      path: "/services/category/painting",
-      count: 98,
-      color: "bg-purple-100",
-      features: [
-        {
-          name: "ঘর পেইন্টিং",
-          description: "বাড়ির দেয়াল রং করা",
-          icon: <PaintBucket className="h-4 w-4" />,
-          bookingType: "house-painting"
-        },
-        {
-          name: "আর্ট পেইন্টিং",
-          description: "ছবি আঁকা ও ডিজাইন",
-          icon: <Palette className="h-4 w-4" />,
-          bookingType: "art-painting"
-        }
-      ]
-    },
-    {
-      icon: <div className="text-2xl">✂️</div>,
-      name: "সেলুন",
-      path: "/services/category/salon",
-      count: 186,
-      color: "bg-pink-100",
-      features: [
-        {
-          name: "হেয়ার কাট বুকিং",
-          description: "চুল কাটা ও স্টাইলিং",
-          icon: <Scissors className="h-4 w-4" />,
-          bookingType: "haircut"
-        },
-        {
-          name: "হোম সার্ভিস",
-          description: "বাড়িতে এসে সেবা",
-          icon: <Home className="h-4 w-4" />,
-          bookingType: "home-salon"
-        }
-      ]
-    },
-    {
-      icon: <div className="text-2xl">🍽️</div>,
-      name: "খাবার",
-      path: "/services/category/food",
-      count: 312,
-      color: "bg-orange-100",
-      features: [
-        {
-          name: "খাবার অর্ডার",
-          description: "রেস্তোরাঁ থেকে খাবার অর্ডার",
-          icon: <Utensils className="h-4 w-4" />,
-          bookingType: "food-order"
-        },
-        {
-          name: "হোম কুকিং",
-          description: "রাঁধুনি বুকিং",
-          icon: <Home className="h-4 w-4" />,
-          bookingType: "home-cooking"
-        }
-      ]
-    },
-    {
-      icon: <div className="text-2xl">🔧</div>,
-      name: "রিপেয়ার",
-      path: "/services/category/repair",
-      count: 165,
-      color: "bg-gray-100",
-      features: [
-        {
-          name: "ইলেকট্রনিক্স রিপেয়ার",
-          description: "টিভি, ফ্রিজ, এসি মেরামত",
-          icon: <Wrench className="h-4 w-4" />,
-          bookingType: "electronics-repair"
-        },
-        {
-          name: "ফার্নিচার রিপেয়ার",
-          description: "আসবাবপত্র মেরামত",
-          icon: <Construction className="h-4 w-4" />,
-          bookingType: "furniture-repair"
-        }
-      ]
-    },
-    {
-      icon: <div className="text-2xl">🚚</div>,
-      name: "ডেলিভারি",
-      path: "/services/category/delivery",
-      count: 143,
-      color: "bg-green-100",
-      features: [
-        {
-          name: "ফাস্ট ডেলিভারি",
-          description: "তাৎক্ষণিক পণ্য পৌঁছানো",
-          icon: <Truck className="h-4 w-4" />,
-          bookingType: "fast-delivery"
-        },
-        {
-          name: "বাল্ক ডেলিভারি",
-          description: "বড় পরিমাণ সামগ্রী পরিবহন",
-          icon: <Building className="h-4 w-4" />,
-          bookingType: "bulk-delivery"
-        }
-      ]
-    },
-    {
-      icon: <div className="text-2xl">⚖️</div>,
-      name: "আইনি সেবা",
-      path: "/services/category/legal",
-      count: 78,
-      color: "bg-indigo-100",
-      features: [
-        {
-          name: "আইনি পরামর্শ",
-          description: "আইনজীবীর সাথে কথা বলুন",
-          icon: <Briefcase className="h-4 w-4" />,
-          bookingType: "legal-consultation"
-        },
-        {
-          name: "ডকুমেন্ট প্রস্তুতি",
-          description: "আইনি কাগজপত্র তৈরি",
-          icon: <Calendar className="h-4 w-4" />,
-          bookingType: "document-prep"
-        }
-      ]
-    },
-    {
-      icon: <div className="text-2xl">🚗</div>,
-      name: "ট্রান্সপোর্ট",
-      path: "/services/category/transport",
-      count: 145,
-      color: "bg-yellow-100",
-      features: [
-        {
-          name: "রাইড বুকিং",
-          description: "গাড়ি ভাড়া করুন",
-          icon: <Car className="h-4 w-4" />,
-          bookingType: "ride-booking"
-        },
-        {
-          name: "ড্রাইভার হায়ার",
-          description: "চালক নিয়োগ করুন",
-          icon: <Briefcase className="h-4 w-4" />,
-          bookingType: "driver-hire"
-        }
-      ]
-    },
-    {
-      icon: <div className="text-2xl">💻</div>,
-      name: "আইটি সেবা",
-      path: "/services/category/it",
-      count: 126,
-      color: "bg-cyan-100",
-      features: [
-        {
-          name: "কম্পিউটার সেটআপ",
-          description: "সফটওয়্যার ইনস্টলেশন",
-          icon: <Laptop className="h-4 w-4" />,
-          bookingType: "computer-setup"
-        },
-        {
-          name: "ডেটা রিকভারি",
-          description: "হারানো ডেটা উদ্ধার",
-          icon: <Smartphone className="h-4 w-4" />,
-          bookingType: "data-recovery"
-        }
-      ]
-    },
-    {
-      icon: <div className="text-2xl">🎓</div>,
-      name: "শিক্ষা",
-      path: "/services/category/education",
-      count: 215,
-      color: "bg-emerald-100",
-      features: [
-        {
-          name: "হোম টিউটর",
-          description: "বাড়িতে এসে পড়ানো",
-          icon: <GraduationCap className="h-4 w-4" />,
-          bookingType: "home-tutor"
-        },
-        {
-          name: "অনলাইন ক্লাস",
-          description: "ভার্চুয়াল শিক্ষা",
-          icon: <Laptop className="h-4 w-4" />,
-          bookingType: "online-class"
-        }
-      ]
-    },
-    {
-      icon: <div className="text-2xl">📱</div>,
-      name: "গ্যাজেট রিপেয়ার",
-      path: "/services/category/gadget-repair",
-      count: 87,
-      color: "bg-violet-100",
-      features: [
-        {
-          name: "মোবাইল রিপেয়ার",
-          description: "ফোন স্ক্রিন ও যন্ত্রাংশ মেরামত",
-          icon: <Smartphone className="h-4 w-4" />,
-          bookingType: "mobile-repair"
-        },
-        {
-          name: "ল্যাপটপ রিপেয়ার",
-          description: "কম্পিউটার মেরামত সেবা",
-          icon: <Laptop className="h-4 w-4" />,
-          bookingType: "laptop-repair"
-        }
-      ]
-    },
-    {
-      icon: <div className="text-2xl">🎨</div>,
-      name: "ডিজাইন",
-      path: "/services/category/design",
-      count: 92,
-      color: "bg-rose-100",
-      features: [
-        {
-          name: "গ্রাফিক ডিজাইন",
-          description: "লোগো ও পোস্টার তৈরি",
-          icon: <Palette className="h-4 w-4" />,
-          bookingType: "graphic-design"
-        },
-        {
-          name: "ইন্টেرিয়র ডিজাইন",
-          description: "ঘর সাজানোর পরামর্শ",
-          icon: <Home className="h-4 w-4" />,
-          bookingType: "interior-design"
-        }
-      ]
-    },
-    {
-      icon: <div className="text-2xl">🎉</div>,
-      name: "ইভেন্ট",
-      path: "/services/category/event",
-      count: 104,
-      color: "bg-amber-100",
-      features: [
-        {
-          name: "ইভেন্ট প্ল্যানিং",
-          description: "অনুষ্ঠান পরিকল্পনা",
-          icon: <Calendar className="h-4 w-4" />,
-          bookingType: "event-planning"
-        },
-        {
-          name: "ফটোগ্রাফি বুকিং",
-          description: "ছবি তোলার সেবা",
-          icon: <Camera className="h-4 w-4" />,
-          bookingType: "photography"
-        }
-      ]
-    },
-    {
-      icon: <div className="text-2xl">📸</div>,
-      name: "ফটোগ্রাফি",
-      path: "/services/category/photography",
-      count: 67,
-      color: "bg-teal-100",
-      features: [
-        {
-          name: "পোর্ট্রেট শুটিং",
-          description: "ব্যক্তিগত ছবি তোলা",
-          icon: <Camera className="h-4 w-4" />,
-          bookingType: "portrait-shoot"
-        },
-        {
-          name: "ইভেন্ট ফটোগ্রাফি",
-          description: "অনুষ্ঠানের ছবি তোলা",
-          icon: <Calendar className="h-4 w-4" />,
-          bookingType: "event-photography"
-        }
-      ]
-    },
-    {
-      icon: <div className="text-2xl">🏗️</div>,
-      name: "কনস্ট্রাকশন",
-      path: "/services/category/construction",
-      count: 58,
-      color: "bg-stone-100",
-      features: [
-        {
-          name: "ঘর নির্মাণ",
-          description: "বাড়ি তৈরির সেবা",
-          icon: <Construction className="h-4 w-4" />,
-          bookingType: "house-construction"
-        },
-        {
-          name: "রেনোভেশন",
-          description: "ঘর সংস্কার কাজ",
-          icon: <Wrench className="h-4 w-4" />,
-          bookingType: "renovation"
-        }
-      ]
-    }
-  ];
-
+  const serviceCategories = [{
+    icon: <div className="text-2xl">🩺</div>,
+    name: "ডাক্তার",
+    path: "/services/category/doctor",
+    count: 278,
+    color: "bg-red-100",
+    features: [{
+      name: "অনলাইন অ্যাপয়েন্টমেন্ট",
+      description: "ডাক্তারের সাথে ভিডিও কল করুন",
+      icon: <Calendar className="h-4 w-4" />,
+      bookingType: "video-consultation"
+    }, {
+      name: "হোম ভিজিট বুকিং",
+      description: "ডাক্তার বাড়িতে এসে দেখবেন",
+      icon: <Home className="h-4 w-4" />,
+      bookingType: "home-visit"
+    }, {
+      name: "ল্যাব টেস্ট বুকিং",
+      description: "ঘরে বসে টেস্ট করান",
+      icon: <Stethoscope className="h-4 w-4" />,
+      bookingType: "lab-test"
+    }]
+  }, {
+    icon: <div className="text-2xl">🦷</div>,
+    name: "ডেন্টাল",
+    path: "/services/category/dental",
+    count: 124,
+    color: "bg-blue-100",
+    features: [{
+      name: "দাঁতের চেকআপ",
+      description: "নিয়মিত দাঁতের পরীক্ষা",
+      icon: <Calendar className="h-4 w-4" />,
+      bookingType: "dental-checkup"
+    }, {
+      name: "ইমার্জেন্সি ট্রিটমেন্ট",
+      description: "জরুরি দাঁতের চিকিৎসা",
+      icon: <HeartPulse className="h-4 w-4" />,
+      bookingType: "emergency-dental"
+    }]
+  }, {
+    icon: <div className="text-2xl">🎨</div>,
+    name: "পেইন্টিং",
+    path: "/services/category/painting",
+    count: 98,
+    color: "bg-purple-100",
+    features: [{
+      name: "ঘর পেইন্টিং",
+      description: "বাড়ির দেয়াল রং করা",
+      icon: <PaintBucket className="h-4 w-4" />,
+      bookingType: "house-painting"
+    }, {
+      name: "আর্ট পেইন্টিং",
+      description: "ছবি আঁকা ও ডিজাইন",
+      icon: <Palette className="h-4 w-4" />,
+      bookingType: "art-painting"
+    }]
+  }, {
+    icon: <div className="text-2xl">✂️</div>,
+    name: "সেলুন",
+    path: "/services/category/salon",
+    count: 186,
+    color: "bg-pink-100",
+    features: [{
+      name: "হেয়ার কাট বুকিং",
+      description: "চুল কাটা ও স্টাইলিং",
+      icon: <Scissors className="h-4 w-4" />,
+      bookingType: "haircut"
+    }, {
+      name: "হোম সার্ভিস",
+      description: "বাড়িতে এসে সেবা",
+      icon: <Home className="h-4 w-4" />,
+      bookingType: "home-salon"
+    }]
+  }, {
+    icon: <div className="text-2xl">🍽️</div>,
+    name: "খাবার",
+    path: "/services/category/food",
+    count: 312,
+    color: "bg-orange-100",
+    features: [{
+      name: "খাবার অর্ডার",
+      description: "রেস্তোরাঁ থেকে খাবার অর্ডার",
+      icon: <Utensils className="h-4 w-4" />,
+      bookingType: "food-order"
+    }, {
+      name: "হোম কুকিং",
+      description: "রাঁধুনি বুকিং",
+      icon: <Home className="h-4 w-4" />,
+      bookingType: "home-cooking"
+    }]
+  }, {
+    icon: <div className="text-2xl">🔧</div>,
+    name: "রিপেয়ার",
+    path: "/services/category/repair",
+    count: 165,
+    color: "bg-gray-100",
+    features: [{
+      name: "ইলেকট্রনিক্স রিপেয়ার",
+      description: "টিভি, ফ্রিজ, এসি মেরামত",
+      icon: <Wrench className="h-4 w-4" />,
+      bookingType: "electronics-repair"
+    }, {
+      name: "ফার্নিচার রিপেয়ার",
+      description: "আসবাবপত্র মেরামত",
+      icon: <Construction className="h-4 w-4" />,
+      bookingType: "furniture-repair"
+    }]
+  }, {
+    icon: <div className="text-2xl">🚚</div>,
+    name: "ডেলিভারি",
+    path: "/services/category/delivery",
+    count: 143,
+    color: "bg-green-100",
+    features: [{
+      name: "ফাস্ট ডেলিভারি",
+      description: "তাৎক্ষণিক পণ্য পৌঁছানো",
+      icon: <Truck className="h-4 w-4" />,
+      bookingType: "fast-delivery"
+    }, {
+      name: "বাল্ক ডেলিভারি",
+      description: "বড় পরিমাণ সামগ্রী পরিবহন",
+      icon: <Building className="h-4 w-4" />,
+      bookingType: "bulk-delivery"
+    }]
+  }, {
+    icon: <div className="text-2xl">⚖️</div>,
+    name: "আইনি সেবা",
+    path: "/services/category/legal",
+    count: 78,
+    color: "bg-indigo-100",
+    features: [{
+      name: "আইনি পরামর্শ",
+      description: "আইনজীবীর সাথে কথা বলুন",
+      icon: <Briefcase className="h-4 w-4" />,
+      bookingType: "legal-consultation"
+    }, {
+      name: "ডকুমেন্ট প্রস্তুতি",
+      description: "আইনি কাগজপত্র তৈরি",
+      icon: <Calendar className="h-4 w-4" />,
+      bookingType: "document-prep"
+    }]
+  }, {
+    icon: <div className="text-2xl">🚗</div>,
+    name: "ট্রান্সপোর্ট",
+    path: "/services/category/transport",
+    count: 145,
+    color: "bg-yellow-100",
+    features: [{
+      name: "রাইড বুকিং",
+      description: "গাড়ি ভাড়া করুন",
+      icon: <Car className="h-4 w-4" />,
+      bookingType: "ride-booking"
+    }, {
+      name: "ড্রাইভার হায়ার",
+      description: "চালক নিয়োগ করুন",
+      icon: <Briefcase className="h-4 w-4" />,
+      bookingType: "driver-hire"
+    }]
+  }, {
+    icon: <div className="text-2xl">💻</div>,
+    name: "আইটি সেবা",
+    path: "/services/category/it",
+    count: 126,
+    color: "bg-cyan-100",
+    features: [{
+      name: "কম্পিউটার সেটআপ",
+      description: "সফটওয়্যার ইনস্টলেশন",
+      icon: <Laptop className="h-4 w-4" />,
+      bookingType: "computer-setup"
+    }, {
+      name: "ডেটা রিকভারি",
+      description: "হারানো ডেটা উদ্ধার",
+      icon: <Smartphone className="h-4 w-4" />,
+      bookingType: "data-recovery"
+    }]
+  }, {
+    icon: <div className="text-2xl">🎓</div>,
+    name: "শিক্ষা",
+    path: "/services/category/education",
+    count: 215,
+    color: "bg-emerald-100",
+    features: [{
+      name: "হোম টিউটর",
+      description: "বাড়িতে এসে পড়ানো",
+      icon: <GraduationCap className="h-4 w-4" />,
+      bookingType: "home-tutor"
+    }, {
+      name: "অনলাইন ক্লাস",
+      description: "ভার্চুয়াল শিক্ষা",
+      icon: <Laptop className="h-4 w-4" />,
+      bookingType: "online-class"
+    }]
+  }, {
+    icon: <div className="text-2xl">📱</div>,
+    name: "গ্যাজেট রিপেয়ার",
+    path: "/services/category/gadget-repair",
+    count: 87,
+    color: "bg-violet-100",
+    features: [{
+      name: "মোবাইল রিপেয়ার",
+      description: "ফোন স্ক্রিন ও যন্ত্রাংশ মেরামত",
+      icon: <Smartphone className="h-4 w-4" />,
+      bookingType: "mobile-repair"
+    }, {
+      name: "ল্যাপটপ রিপেয়ার",
+      description: "কম্পিউটার মেরামত সেবা",
+      icon: <Laptop className="h-4 w-4" />,
+      bookingType: "laptop-repair"
+    }]
+  }, {
+    icon: <div className="text-2xl">🎨</div>,
+    name: "ডিজাইন",
+    path: "/services/category/design",
+    count: 92,
+    color: "bg-rose-100",
+    features: [{
+      name: "গ্রাফিক ডিজাইন",
+      description: "লোগো ও পোস্টার তৈরি",
+      icon: <Palette className="h-4 w-4" />,
+      bookingType: "graphic-design"
+    }, {
+      name: "ইন্টেرিয়র ডিজাইন",
+      description: "ঘর সাজানোর পরামর্শ",
+      icon: <Home className="h-4 w-4" />,
+      bookingType: "interior-design"
+    }]
+  }, {
+    icon: <div className="text-2xl">🎉</div>,
+    name: "ইভেন্ট",
+    path: "/services/category/event",
+    count: 104,
+    color: "bg-amber-100",
+    features: [{
+      name: "ইভেন্ট প্ল্যানিং",
+      description: "অনুষ্ঠান পরিকল্পনা",
+      icon: <Calendar className="h-4 w-4" />,
+      bookingType: "event-planning"
+    }, {
+      name: "ফটোগ্রাফি বুকিং",
+      description: "ছবি তোলার সেবা",
+      icon: <Camera className="h-4 w-4" />,
+      bookingType: "photography"
+    }]
+  }, {
+    icon: <div className="text-2xl">📸</div>,
+    name: "ফটোগ্রাফি",
+    path: "/services/category/photography",
+    count: 67,
+    color: "bg-teal-100",
+    features: [{
+      name: "পোর্ট্রেট শুটিং",
+      description: "ব্যক্তিগত ছবি তোলা",
+      icon: <Camera className="h-4 w-4" />,
+      bookingType: "portrait-shoot"
+    }, {
+      name: "ইভেন্ট ফটোগ্রাফি",
+      description: "অনুষ্ঠানের ছবি তোলা",
+      icon: <Calendar className="h-4 w-4" />,
+      bookingType: "event-photography"
+    }]
+  }, {
+    icon: <div className="text-2xl">🏗️</div>,
+    name: "কনস্ট্রাকশন",
+    path: "/services/category/construction",
+    count: 58,
+    color: "bg-stone-100",
+    features: [{
+      name: "ঘর নির্মাণ",
+      description: "বাড়ি তৈরির সেবা",
+      icon: <Construction className="h-4 w-4" />,
+      bookingType: "house-construction"
+    }, {
+      name: "রেনোভেশন",
+      description: "ঘর সংস্কার কাজ",
+      icon: <Wrench className="h-4 w-4" />,
+      bookingType: "renovation"
+    }]
+  }];
   const featuredServices = [{
     id: 1,
     title: "ইলেকট্রনিক্স মেরামত",
@@ -458,15 +385,12 @@ const Services = () => {
     latitude: 23.7700,
     longitude: 90.3750
   }];
-  
   const toggleFilter = () => {
     setFilterVisible(!filterVisible);
   };
-  
   const handleServiceClick = (serviceId: number) => {
     navigate(`/services/${serviceId}`);
   };
-  
   const handleBookmark = (e: React.MouseEvent, serviceId: number) => {
     e.stopPropagation();
     toast({
@@ -474,7 +398,6 @@ const Services = () => {
       description: "সার্ভিসটি আপনার পছন্দের তালিকায় যোগ করা হয়েছে"
     });
   };
-  
   const handleShare = (e: React.MouseEvent, service: any) => {
     e.stopPropagation();
     setShareItem({
@@ -483,7 +406,6 @@ const Services = () => {
     });
     setShowShareModal(true);
   };
-  
   const handleCategoryClick = (category: any) => {
     if (category.features) {
       toast({
@@ -493,7 +415,6 @@ const Services = () => {
     }
     navigate(category.path);
   };
-  
   const handleBookingFeature = (feature: any, category: any) => {
     const bookingActions: Record<string, () => void> = {
       'video-consultation': () => navigate('/service-booking?type=video-consultation'),
@@ -530,7 +451,6 @@ const Services = () => {
       'house-construction': () => navigate('/service-booking?type=house-construction'),
       'renovation': () => navigate('/service-booking?type=renovation')
     };
-    
     const action = bookingActions[feature.bookingType];
     if (action) {
       action();
@@ -545,9 +465,7 @@ const Services = () => {
       });
     }
   };
-  
-  return (
-    <div className="container px-4 pt-20 pb-20">
+  return <div className="container px-4 pt-20 pb-20">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">সার্ভিস</h1>
         <div className="flex gap-2">
@@ -638,44 +556,36 @@ const Services = () => {
       <div className="mb-8">
         <h2 className="text-lg font-medium mb-4">ক্যাটাগরি</h2>
         <div className="grid grid-cols-4 gap-3">
-          {serviceCategories.slice(0, 8).map((category, index) => (
-            <div key={index} className="flex flex-col items-center justify-center transition-all hover:scale-105 cursor-pointer">
+          {serviceCategories.slice(0, 8).map((category, index) => <div key={index} className="flex flex-col items-center justify-center transition-all hover:scale-105 cursor-pointer">
               <div className={`h-16 w-16 rounded-full ${category.color} flex items-center justify-center mb-2`}>
                 {category.icon}
               </div>
               <span className="text-xs text-center mb-1">{category.name}</span>
-              <Badge variant="outline" className="text-[10px] px-1">{category.count}</Badge>
-            </div>
-          ))}
+              
+            </div>)}
         </div>
         
         <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className="w-full mt-3">
           <CollapsibleContent className="mt-3">
             <div className="grid grid-cols-4 gap-3">
-              {serviceCategories.slice(8).map((category, index) => (
-                <div key={index} className="flex flex-col items-center justify-center transition-all hover:scale-105 cursor-pointer">
+              {serviceCategories.slice(8).map((category, index) => <div key={index} className="flex flex-col items-center justify-center transition-all hover:scale-105 cursor-pointer">
                   <div className={`h-16 w-16 rounded-full ${category.color} flex items-center justify-center mb-2`}>
                     {category.icon}
                   </div>
                   <span className="text-xs text-center mb-1">{category.name}</span>
-                  <Badge variant="outline" className="text-[10px] px-1">{category.count}</Badge>
-                </div>
-              ))}
+                  
+                </div>)}
             </div>
           </CollapsibleContent>
           
           <div className="w-full flex justify-center mt-4">
             <CollapsibleTrigger asChild>
               <Button variant="outline" size="sm" className="flex items-center gap-1">
-                {isExpanded ? (
-                  <>
+                {isExpanded ? <>
                     <ChevronUp className="h-4 w-4" /> কম দেখুন
-                  </>
-                ) : (
-                  <>
+                  </> : <>
                     <ChevronDown className="h-4 w-4" /> আরও দেখুন
-                  </>
-                )}
+                  </>}
               </Button>
             </CollapsibleTrigger>
           </div>
@@ -767,15 +677,7 @@ const Services = () => {
           </div>}
       </div>
 
-      {shareItem && (
-        <SocialShareModal 
-          open={showShareModal} 
-          onOpenChange={setShowShareModal} 
-          item={shareItem} 
-        />
-      )}
-    </div>
-  );
+      {shareItem && <SocialShareModal open={showShareModal} onOpenChange={setShowShareModal} item={shareItem} />}
+    </div>;
 };
-
 export default Services;
