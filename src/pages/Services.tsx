@@ -419,33 +419,34 @@ const Services = () => {
     navigate(category.path);
   };
 
-  const handleBookingFeature = (feature: any, category: any) => {
+  const handleBookingFeature = (e: React.MouseEvent, feature: any, category: any) => {
+    e.stopPropagation();
     const bookingActions: Record<string, () => void> = {
-      'video-consultation': () => navigate('/service-booking?type=video-consultation'),
-      'home-visit': () => navigate('/service-booking?type=home-visit'),
-      'lab-test': () => navigate('/service-booking?type=lab-test'),
-      'dental-checkup': () => navigate('/service-booking?type=dental-checkup'),
-      'emergency-dental': () => navigate('/service-booking?type=emergency-dental'),
-      'house-painting': () => navigate('/service-booking?type=house-painting'),
-      'art-painting': () => navigate('/service-booking?type=art-painting'),
-      'haircut': () => navigate('/service-booking?type=haircut'),
-      'home-salon': () => navigate('/service-booking?type=home-salon'),
-      'food-order': () => navigate('/service-booking?type=food-order'),
-      'home-cooking': () => navigate('/service-booking?type=home-cooking'),
-      'electronics-repair': () => navigate('/service-booking?type=electronics-repair'),
-      'furniture-repair': () => navigate('/service-booking?type=furniture-repair'),
-      'fast-delivery': () => navigate('/service-booking?type=fast-delivery'),
-      'bulk-delivery': () => navigate('/service-booking?type=bulk-delivery'),
-      'legal-consultation': () => navigate('/service-booking?type=legal-consultation'),
-      'document-prep': () => navigate('/service-booking?type=document-prep'),
-      'ride-booking': () => navigate('/service-booking?type=ride-booking'),
-      'driver-hire': () => navigate('/service-booking?type=driver-hire'),
-      'computer-setup': () => navigate('/service-booking?type=computer-setup'),
-      'data-recovery': () => navigate('/service-booking?type=data-recovery'),
-      'home-tutor': () => navigate('/service-booking?type=home-tutor'),
-      'online-class': () => navigate('/service-booking?type=online-class'),
-      'mobile-repair': () => navigate('/service-booking?type=mobile-repair'),
-      'laptop-repair': () => navigate('/service-booking?type=laptop-repair')
+      'video-consultation': () => navigate('/appointment-booking?type=video-consultation'),
+      'home-visit': () => navigate('/appointment-booking?type=home-visit'),
+      'lab-test': () => navigate('/appointment-booking?type=lab-test'),
+      'dental-checkup': () => navigate('/appointment-booking?type=dental-checkup'),
+      'emergency-dental': () => navigate('/appointment-booking?type=emergency-dental'),
+      'house-painting': () => navigate('/appointment-booking?type=house-painting'),
+      'art-painting': () => navigate('/appointment-booking?type=art-painting'),
+      'haircut': () => navigate('/appointment-booking?type=haircut'),
+      'home-salon': () => navigate('/appointment-booking?type=home-salon'),
+      'food-order': () => navigate('/appointment-booking?type=food-order'),
+      'home-cooking': () => navigate('/appointment-booking?type=home-cooking'),
+      'electronics-repair': () => navigate('/appointment-booking?type=electronics-repair'),
+      'furniture-repair': () => navigate('/appointment-booking?type=furniture-repair'),
+      'fast-delivery': () => navigate('/appointment-booking?type=fast-delivery'),
+      'bulk-delivery': () => navigate('/appointment-booking?type=bulk-delivery'),
+      'legal-consultation': () => navigate('/appointment-booking?type=legal-consultation'),
+      'document-prep': () => navigate('/appointment-booking?type=document-prep'),
+      'ride-booking': () => navigate('/appointment-booking?type=ride-booking'),
+      'driver-hire': () => navigate('/appointment-booking?type=driver-hire'),
+      'computer-setup': () => navigate('/appointment-booking?type=computer-setup'),
+      'data-recovery': () => navigate('/appointment-booking?type=data-recovery'),
+      'home-tutor': () => navigate('/appointment-booking?type=home-tutor'),
+      'online-class': () => navigate('/appointment-booking?type=online-class'),
+      'mobile-repair': () => navigate('/appointment-booking?type=mobile-repair'),
+      'laptop-repair': () => navigate('/appointment-booking?type=laptop-repair')
     };
 
     const action = bookingActions[feature.bookingType];
@@ -558,8 +559,8 @@ const Services = () => {
         <h2 className="text-lg font-medium mb-4">ক্যাটাগরি</h2>
         <div className="grid grid-cols-4 gap-3">
           {serviceCategories.slice(0, 8).map((category, index) => (
-            <Card key={index} className="overflow-hidden cursor-pointer hover:shadow-md transition-all hover:scale-105" onClick={() => handleCategoryClick(category)}>
-              <CardContent className="p-3">
+            <Card key={index} className="overflow-hidden cursor-pointer hover:shadow-md transition-all hover:scale-105">
+              <CardContent className="p-3" onClick={() => handleCategoryClick(category)}>
                 <div className="flex flex-col items-center justify-center">
                   <div className={`h-16 w-16 rounded-full ${category.color} flex items-center justify-center mb-2`}>
                     {category.icon}
@@ -575,10 +576,7 @@ const Services = () => {
                         variant="outline"
                         size="sm"
                         className="w-full text-xs h-6 justify-start"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleBookingFeature(feature, category);
-                        }}
+                        onClick={(e) => handleBookingFeature(e, feature, category)}
                       >
                         {feature.icon}
                         <span className="ml-1 truncate">{feature.name}</span>
@@ -595,8 +593,8 @@ const Services = () => {
           <CollapsibleContent className="mt-3">
             <div className="grid grid-cols-4 gap-3">
               {serviceCategories.slice(8).map((category, index) => (
-                <Card key={index} className="overflow-hidden cursor-pointer hover:shadow-md transition-all hover:scale-105" onClick={() => handleCategoryClick(category)}>
-                  <CardContent className="p-3">
+                <Card key={index} className="overflow-hidden cursor-pointer hover:shadow-md transition-all hover:scale-105">
+                  <CardContent className="p-3" onClick={() => handleCategoryClick(category)}>
                     <div className="flex flex-col items-center justify-center">
                       <div className={`h-16 w-16 rounded-full ${category.color} flex items-center justify-center mb-2`}>
                         {category.icon}
@@ -612,10 +610,7 @@ const Services = () => {
                             variant="outline"
                             size="sm"
                             className="w-full text-xs h-6 justify-start"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleBookingFeature(feature, category);
-                            }}
+                            onClick={(e) => handleBookingFeature(e, feature, category)}
                           >
                             {feature.icon}
                             <span className="ml-1 truncate">{feature.name}</span>
@@ -756,3 +751,5 @@ const Services = () => {
 };
 
 export default Services;
+
+}
