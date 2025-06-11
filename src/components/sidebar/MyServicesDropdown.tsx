@@ -53,7 +53,10 @@ export const MyServicesDropdown = () => {
     }
   ];
 
-  const handleMenuClick = (path: string) => {
+  const handleMenuClick = (event: React.MouseEvent, path: string) => {
+    event.preventDefault();
+    event.stopPropagation();
+    console.log('Navigating to:', path);
     navigate(path);
   };
 
@@ -80,10 +83,14 @@ export const MyServicesDropdown = () => {
             {myServicesMenuItems.map((item, index) => (
               <DropdownMenuItem 
                 key={index} 
-                className="cursor-pointer hover:bg-gray-50 focus:bg-gray-50"
-                onClick={() => handleMenuClick(item.path)}
+                className="cursor-pointer hover:bg-gray-50 focus:bg-gray-50 p-0"
+                asChild
               >
-                <div className="flex items-start gap-3 w-full py-2">
+                <Link 
+                  to={item.path}
+                  className="flex items-start gap-3 w-full py-3 px-3 no-underline"
+                  onClick={(e) => handleMenuClick(e, item.path)}
+                >
                   <div className="text-primary mt-0.5">
                     {item.icon}
                   </div>
@@ -91,7 +98,7 @@ export const MyServicesDropdown = () => {
                     <div className="font-medium text-gray-900">{item.name}</div>
                     <div className="text-xs text-gray-500 mt-0.5">{item.description}</div>
                   </div>
-                </div>
+                </Link>
               </DropdownMenuItem>
             ))}
           </DropdownMenuGroup>
