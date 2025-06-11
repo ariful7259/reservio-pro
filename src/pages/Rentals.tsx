@@ -397,7 +397,7 @@ const Rentals = () => {
                 </div>
                 <span className="text-xs text-center mb-1">{category.name}</span>
                 <Badge variant="outline" className="text-xs mb-1">{category.count}</Badge>
-                <ChevronDown className="h-3 w-3 text-primary" />
+                
               </div>
             </CollapsibleTrigger>
             <CollapsibleContent className="mt-3">
