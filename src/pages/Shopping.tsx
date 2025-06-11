@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, ShoppingBag, Package, Tag, Heart, Share2, MapPin, ChevronDown, ChevronUp, Star, Filter, TruckIcon, CreditCard, CalendarClock, CircleDollarSign, LayoutGrid, Map as MapIcon, Locate, Smartphone, Laptop, Camera, HeartPulse, Headphones, Watch, Shirt, Baby, Utensils, Book, Tv, Gamepad, ActivitySquare, Car, Home, ArrowDown, ArrowUp, Building, Clock } from 'lucide-react';
+import { Search, ShoppingBag, Package, Tag, Heart, Share2, MapPin, ChevronDown, ChevronUp, Star, Filter, TruckIcon, CreditCard, CalendarClock, CircleDollarSign, LayoutGrid, Map as MapIcon, Locate, Smartphone, Laptop, Camera, HeartPulse, Headphones, Watch, Shirt, Baby, Utensils, Book, Tv, Gamepad, ActivitySquare, Car, Home, ArrowDown, ArrowUp, Building, Clock, Calendar, Stethoscope, Scissors, PaintBucket, Wrench } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -10,6 +10,7 @@ import { Slider } from '@/components/ui/slider';
 import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import MapView from '@/components/MapView';
 import { useToast } from '@/components/ui/use-toast';
 import SocialShareModal from '@/components/SocialShareModal';
@@ -23,6 +24,8 @@ const Shopping = () => {
   const [showMoreCategories, setShowMoreCategories] = useState(false);
   const [shareItem, setShareItem] = useState<any | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<any | null>(null);
+  const [showBookingDialog, setShowBookingDialog] = useState(false);
   const [priceRange, setPriceRange] = useState<number[]>([1000, 10000]);
   const [distanceRange, setDistanceRange] = useState<number[]>([5]);
   const [sortBy, setSortBy] = useState('recommended');
@@ -49,99 +52,275 @@ const Shopping = () => {
   const categories = [{
     id: "electronics",
     name: "এলেকট্রনিক্স",
-    icon: <Laptop className="h-8 w-8 mb-2" />,
+    icon: <Laptop className="h-6 w-6" />,
     count: 245,
-    color: categoryIconColors.electronics
+    color: categoryIconColors.electronics,
+    features: [
+      {
+        name: "তাৎক্ষণিক অর্ডার",
+        description: "দ্রুত ডেলিভারি পান",
+        icon: <TruckIcon className="h-4 w-4" />,
+        bookingType: "instant-order"
+      },
+      {
+        name: "হোম ডেমো",
+        description: "বাড়িতে এসে দেখান",
+        icon: <Home className="h-4 w-4" />,
+        bookingType: "home-demo"
+      }
+    ]
   }, {
     id: "fashion",
     name: "ফ্যাশন",
-    icon: <Shirt className="h-8 w-8 mb-2" />,
+    icon: <Shirt className="h-6 w-6" />,
     count: 189,
-    color: categoryIconColors.fashion
+    color: categoryIconColors.fashion,
+    features: [
+      {
+        name: "ট্রাই-অন সার্ভিস",
+        description: "পরে দেখে কিনুন",
+        icon: <Calendar className="h-4 w-4" />,
+        bookingType: "try-on"
+      },
+      {
+        name: "কাস্টম ফিটিং",
+        description: "মাপ অনুযায়ী তৈরি",
+        icon: <Scissors className="h-4 w-4" />,
+        bookingType: "custom-fitting"
+      }
+    ]
   }, {
     id: "grocery",
     name: "গ্রোসারি",
-    icon: <Tag className="h-8 w-8 mb-2" />,
+    icon: <Tag className="h-6 w-6" />,
     count: 156,
-    color: categoryIconColors.grocery
+    color: categoryIconColors.grocery,
+    features: [
+      {
+        name: "সাবস্ক্রিপশন",
+        description: "নিয়মিত ডেলিভারি",
+        icon: <CalendarClock className="h-4 w-4" />,
+        bookingType: "subscription"
+      },
+      {
+        name: "বাল্ক অর্ডার",
+        description: "বড় পরিমাণে কিনুন",
+        icon: <Package className="h-4 w-4" />,
+        bookingType: "bulk-order"
+      }
+    ]
   }, {
     id: "mobile",
     name: "মোবাইল",
-    icon: <Smartphone className="h-8 w-8 mb-2" />,
+    icon: <Smartphone className="h-6 w-6" />,
     count: 127,
-    color: categoryIconColors.mobile
+    color: categoryIconColors.mobile,
+    features: [
+      {
+        name: "EMI সুবিধা",
+        description: "কিস্তিতে পেমেন্ট",
+        icon: <CreditCard className="h-4 w-4" />,
+        bookingType: "emi"
+      },
+      {
+        name: "ট্রেড-ইন",
+        description: "পুরানো ফোন দিয়ে নতুন কিনুন",
+        icon: <CircleDollarSign className="h-4 w-4" />,
+        bookingType: "trade-in"
+      }
+    ]
   }, {
     id: "healthcare",
     name: "হেলথকেয়ার",
-    icon: <HeartPulse className="h-8 w-8 mb-2" />,
+    icon: <HeartPulse className="h-6 w-6" />,
     count: 98,
-    color: categoryIconColors.healthcare
+    color: categoryIconColors.healthcare,
+    features: [
+      {
+        name: "প্রেসক্রিপশন আপলোড",
+        description: "ডাক্তারের দেওয়া ঔষধ অর্ডার",
+        icon: <Stethoscope className="h-4 w-4" />,
+        bookingType: "prescription"
+      },
+      {
+        name: "হোম ডেলিভারি",
+        description: "বাড়িতে পৌঁছে দিন",
+        icon: <Home className="h-4 w-4" />,
+        bookingType: "home-delivery"
+      }
+    ]
   }, {
     id: "books",
     name: "বই",
-    icon: <Book className="h-8 w-8 mb-2" />,
+    icon: <Book className="h-6 w-6" />,
     count: 67,
-    color: categoryIconColors.books
+    color: categoryIconColors.books,
+    features: [
+      {
+        name: "প্রি-অর্ডার",
+        description: "নতুন বই আগেই অর্ডার",
+        icon: <Calendar className="h-4 w-4" />,
+        bookingType: "pre-order"
+      },
+      {
+        name: "বুক এক্সচেঞ্জ",
+        description: "পুরানো বই দিয়ে নতুন নিন",
+        icon: <CircleDollarSign className="h-4 w-4" />,
+        bookingType: "book-exchange"
+      }
+    ]
   }, {
     id: "kitchen",
     name: "কিচেন",
-    icon: <Utensils className="h-8 w-8 mb-2" />,
+    icon: <Utensils className="h-6 w-6" />,
     count: 54,
-    color: categoryIconColors.kitchen
+    color: categoryIconColors.kitchen,
+    features: [
+      {
+        name: "ইনস্টলেশন সার্ভিস",
+        description: "বাড়িতে এসে লাগিয়ে দিন",
+        icon: <Wrench className="h-4 w-4" />,
+        bookingType: "installation"
+      },
+      {
+        name: "ওয়ারেন্টি সার্ভিস",
+        description: "বিনামূল্যে মেরামত",
+        icon: <Star className="h-4 w-4" />,
+        bookingType: "warranty"
+      }
+    ]
   }, {
     id: "kids",
     name: "বাচ্চাদের",
-    icon: <Baby className="h-8 w-8 mb-2" />,
+    icon: <Baby className="h-6 w-6" />,
     count: 43,
-    color: categoryIconColors.kids
+    color: categoryIconColors.kids,
+    features: [
+      {
+        name: "গিফট র্যাপিং",
+        description: "সুন্দর প্যাকেজিং",
+        icon: <Package className="h-4 w-4" />,
+        bookingType: "gift-wrap"
+      },
+      {
+        name: "কাস্টমাইজেশন",
+        description: "নাম লিখে দিন",
+        icon: <PaintBucket className="h-4 w-4" />,
+        bookingType: "customization"
+      }
+    ]
   }, {
     id: "computer",
     name: "কম্পিউটার",
-    icon: <Laptop className="h-8 w-8 mb-2" />,
+    icon: <Laptop className="h-6 w-6" />,
     count: 120,
-    color: categoryIconColors.computer
+    color: categoryIconColors.computer,
+    features: [
+      {
+        name: "সেটআপ সার্ভিস",
+        description: "কম্পিউটার সেটআপ করে দিন",
+        icon: <Wrench className="h-4 w-4" />,
+        bookingType: "setup"
+      }
+    ]
   }, {
     id: "camera",
     name: "ক্যামেরা",
-    icon: <Camera className="h-8 w-8 mb-2" />,
+    icon: <Camera className="h-6 w-6" />,
     count: 65,
-    color: categoryIconColors.camera
+    color: categoryIconColors.camera,
+    features: [
+      {
+        name: "ট্রেনিং সেশন",
+        description: "ব্যবহার শিখান",
+        icon: <Calendar className="h-4 w-4" />,
+        bookingType: "training"
+      }
+    ]
   }, {
     id: "audio",
     name: "অডিও",
-    icon: <Headphones className="h-8 w-8 mb-2" />,
+    icon: <Headphones className="h-6 w-6" />,
     count: 78,
-    color: categoryIconColors.audio
+    color: categoryIconColors.audio,
+    features: [
+      {
+        name: "সাউন্ড টেস্ট",
+        description: "কেনার আগে টেস্ট করুন",
+        icon: <Star className="h-4 w-4" />,
+        bookingType: "sound-test"
+      }
+    ]
   }, {
     id: "smartwatch",
     name: "স্মার্টওয়াচ",
-    icon: <Watch className="h-8 w-8 mb-2" />,
+    icon: <Watch className="h-6 w-6" />,
     count: 56,
-    color: categoryIconColors.smartwatch
+    color: categoryIconColors.smartwatch,
+    features: [
+      {
+        name: "ফিটনেস কনসালটেশন",
+        description: "স্বাস্থ্য পরামর্শ",
+        icon: <HeartPulse className="h-4 w-4" />,
+        bookingType: "fitness-consultation"
+      }
+    ]
   }, {
     id: "sports",
     name: "স্পোর্টস",
-    icon: <ActivitySquare className="h-8 w-8 mb-2" />,
+    icon: <ActivitySquare className="h-6 w-6" />,
     count: 92,
-    color: categoryIconColors.sports
+    color: categoryIconColors.sports,
+    features: [
+      {
+        name: "কোচিং সেশন",
+        description: "খেলা শিখান",
+        icon: <Calendar className="h-4 w-4" />,
+        bookingType: "coaching"
+      }
+    ]
   }, {
     id: "auto",
     name: "অটো",
-    icon: <Car className="h-8 w-8 mb-2" />,
+    icon: <Car className="h-6 w-6" />,
     count: 64,
-    color: categoryIconColors.auto
+    color: categoryIconColors.auto,
+    features: [
+      {
+        name: "পার্টস ইনস্টলেশন",
+        description: "গাড়িতে লাগিয়ে দিন",
+        icon: <Wrench className="h-4 w-4" />,
+        bookingType: "parts-installation"
+      }
+    ]
   }, {
     id: "home",
     name: "হোম",
-    icon: <Home className="h-8 w-8 mb-2" />,
+    icon: <Home className="h-6 w-6" />,
     count: 105,
-    color: categoryIconColors.home
+    color: categoryIconColors.home,
+    features: [
+      {
+        name: "ইনটেরিয়র ডিজাইন",
+        description: "ঘর সাজানোর পরামর্শ",
+        icon: <PaintBucket className="h-4 w-4" />,
+        bookingType: "interior-design"
+      }
+    ]
   }, {
     id: "other",
     name: "অন্যান্য",
-    icon: <ShoppingBag className="h-8 w-8 mb-2" />,
+    icon: <ShoppingBag className="h-6 w-6" />,
     count: 145,
-    color: categoryIconColors.other
+    color: categoryIconColors.other,
+    features: [
+      {
+        name: "কাস্টম অর্ডার",
+        description: "বিশেষ প্রয়োজন অনুযায়ী",
+        icon: <Star className="h-4 w-4" />,
+        bookingType: "custom-order"
+      }
+    ]
   }];
   const products = [{
     id: 1,
@@ -250,8 +429,59 @@ const Shopping = () => {
     navigate(`/product/${id}`);
   };
   const handleCategoryClick = (categoryId: string) => {
-    navigate(`/shopping/category/${categoryId}`);
+    const category = categories.find(cat => cat.id === categoryId);
+    if (category && category.features && category.features.length > 0) {
+      setSelectedCategory(category);
+      setShowBookingDialog(true);
+    } else {
+      navigate(`/shopping/category/${categoryId}`);
+    }
   };
+
+  const handleBookingFeature = (feature: any, category: any) => {
+    const bookingActions: Record<string, () => void> = {
+      'instant-order': () => navigate('/shopping-booking?type=instant-order'),
+      'home-demo': () => navigate('/shopping-booking?type=home-demo'),
+      'try-on': () => navigate('/shopping-booking?type=try-on'),
+      'custom-fitting': () => navigate('/shopping-booking?type=custom-fitting'),
+      'subscription': () => navigate('/shopping-booking?type=subscription'),
+      'bulk-order': () => navigate('/shopping-booking?type=bulk-order'),
+      'emi': () => navigate('/shopping-booking?type=emi'),
+      'trade-in': () => navigate('/shopping-booking?type=trade-in'),
+      'prescription': () => navigate('/shopping-booking?type=prescription'),
+      'home-delivery': () => navigate('/shopping-booking?type=home-delivery'),
+      'pre-order': () => navigate('/shopping-booking?type=pre-order'),
+      'book-exchange': () => navigate('/shopping-booking?type=book-exchange'),
+      'installation': () => navigate('/shopping-booking?type=installation'),
+      'warranty': () => navigate('/shopping-booking?type=warranty'),
+      'gift-wrap': () => navigate('/shopping-booking?type=gift-wrap'),
+      'customization': () => navigate('/shopping-booking?type=customization'),
+      'setup': () => navigate('/shopping-booking?type=setup'),
+      'training': () => navigate('/shopping-booking?type=training'),
+      'sound-test': () => navigate('/shopping-booking?type=sound-test'),
+      'fitness-consultation': () => navigate('/shopping-booking?type=fitness-consultation'),
+      'coaching': () => navigate('/shopping-booking?type=coaching'),
+      'parts-installation': () => navigate('/shopping-booking?type=parts-installation'),
+      'interior-design': () => navigate('/shopping-booking?type=interior-design'),
+      'custom-order': () => navigate('/shopping-booking?type=custom-order')
+    };
+
+    const action = bookingActions[feature.bookingType];
+    if (action) {
+      action();
+      toast({
+        title: "বুকিং প্রক্রিয়া শুরু",
+        description: `${feature.name} এর জন্য বুকিং পেজে রিডাইরেক্ট করা হচ্ছে`
+      });
+    } else {
+      toast({
+        title: feature.name,
+        description: feature.description
+      });
+    }
+    setShowBookingDialog(false);
+  };
+
   const handleBookmark = (e: React.MouseEvent, productId: number) => {
     e.stopPropagation();
     toast({
@@ -640,6 +870,65 @@ const Shopping = () => {
       </div>
 
       {shareItem && <SocialShareModal open={showShareModal} onOpenChange={setShowShareModal} item={shareItem} />}
+      
+      {/* Category Booking Dialog */}
+      <Dialog open={showBookingDialog} onOpenChange={setShowBookingDialog}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {selectedCategory && (
+                <div className={`h-8 w-8 rounded-full ${selectedCategory.color} flex items-center justify-center`}>
+                  {selectedCategory.icon}
+                </div>
+              )}
+              {selectedCategory?.name} - বিশেষ সুবিধা
+            </DialogTitle>
+            <DialogDescription>
+              আপনার পছন্দের সার্ভিস নির্বাচন করুন
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-3 py-4">
+            {selectedCategory?.features?.map((feature: any, index: number) => (
+              <Card 
+                key={index} 
+                className="cursor-pointer hover:shadow-md transition-all hover:scale-105"
+                onClick={() => handleBookingFeature(feature, selectedCategory)}
+              >
+                <CardContent className="flex items-center p-4">
+                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                    {feature.icon}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-medium text-sm">{feature.name}</h3>
+                    <p className="text-xs text-muted-foreground">{feature.description}</p>
+                  </div>
+                  <ChevronDown className="h-4 w-4 rotate-[-90deg] text-muted-foreground" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              className="flex-1" 
+              onClick={() => setShowBookingDialog(false)}
+            >
+              বাতিল
+            </Button>
+            <Button 
+              className="flex-1" 
+              onClick={() => {
+                navigate(`/shopping/category/${selectedCategory?.id}`);
+                setShowBookingDialog(false);
+              }}
+            >
+              সব প্রোডাক্ট দেখুন
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>;
 };
 export default Shopping;
