@@ -113,7 +113,7 @@ const VendorFinancing = () => {
   const handleSubmitApplication = () => {
     toast({
       title: "আবেদন জমা হয়েছে",
-      description: "আপনার লোন আবেদন সফলভাবে জমা হয়েছে। ২৪ ঘন্টার মধ্যে আপডেট পাবেন।",
+      description: "আপনার লোন আবেদন সফলভাবে জমা হয়েছে। ২ৄ ঘন্টার মধ্যে আপডেট পাবেন।",
     });
     setApplicationStep(1);
   };
@@ -430,8 +430,8 @@ const VendorFinancing = () => {
                         </div>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </CardContent>
               </Card>
             </TabsContent>
           </Tabs>
