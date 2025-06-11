@@ -17,13 +17,13 @@ export const NavbarSearch: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-md mx-4 relative">
+    <div className="w-full relative">
       <form onSubmit={handleSearch} className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-gray-400" />
         <input 
           type="text" 
           placeholder="খুঁজুন" 
-          className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
+          className="w-full pl-9 md:pl-10 pr-10 md:pr-12 py-2 md:py-2.5 text-sm md:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
           value={searchTerm} 
           onChange={e => setSearchTerm(e.target.value)} 
         />
@@ -31,9 +31,9 @@ export const NavbarSearch: React.FC = () => {
           type="submit" 
           variant="ghost" 
           size="icon" 
-          className="absolute right-1 top-1/2 transform -translate-y-1/2"
+          className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 md:h-9 md:w-9"
         >
-          <ChevronDown className="h-4 w-4" />
+          <ChevronDown className="h-3 w-3 md:h-4 md:w-4" />
         </Button>
       </form>
     </div>
