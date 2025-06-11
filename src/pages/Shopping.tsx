@@ -888,5 +888,3 @@ const Shopping = () => {
 };
 
 export default Shopping;
-
-</edits_to_apply>
