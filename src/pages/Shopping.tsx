@@ -13,11 +13,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import MapView from '@/components/MapView';
 import { useToast } from '@/components/ui/use-toast';
 import SocialShareModal from '@/components/SocialShareModal';
+
 const Shopping = () => {
   const navigate = useNavigate();
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
   const [filterVisible, setFilterVisible] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
   const [showMoreCategories, setShowMoreCategories] = useState(false);
@@ -312,7 +311,8 @@ const Shopping = () => {
     rating: 4.7,
     products: 95
   }];
-  return <div className="container px-4 pt-20 pb-20">
+  return (
+    <div className="container px-4 pt-20 pb-20">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">মার্কেটপ্লেস</h1>
         <div className="flex gap-2">
@@ -424,7 +424,7 @@ const Shopping = () => {
                 <Slider value={distanceRange} max={20} step={1} onValueChange={handleDistanceRangeChange} />
                 <div className="flex justify-between mt-1 text-xs text-muted-foreground">
                   <span>1 কিমি</span>
-                  <span>10 ক���মি</span>
+                  <span>10 কিমি</span>
                   <span>20 কিমি</span>
                 </div>
               </div>
@@ -461,7 +461,6 @@ const Shopping = () => {
                 {category.icon}
               </div>
               <span className="text-xs text-center font-medium">{category.name}</span>
-              
             </div>)}
         </div>
         
@@ -471,7 +470,6 @@ const Shopping = () => {
                   {category.icon}
                 </div>
                 <span className="text-xs text-center font-medium">{category.name}</span>
-                
               </div>)}
           </div>}
         
@@ -500,6 +498,137 @@ const Shopping = () => {
           <CarouselPrevious className="left-2" />
           <CarouselNext className="right-2" />
         </Carousel>
+      </div>
+
+      <Separator className="my-6" />
+
+      {/* New Digital Store Themes Section */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-medium">ডিজিটাল স্টোর থিম ও টেমপ্লেট</h2>
+          <Button variant="outline" size="sm" onClick={() => navigate('/digital-themes')}>
+            সব দেখুন
+          </Button>
+        </div>
+        <p className="text-sm text-muted-foreground mb-4">
+          আপনার অনলাইন স্টোর ও সার্ভিস পেজের জন্য প্রফেশনাল থিম ও ডিজাইন টেমপ্লেট
+        </p>
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            {
+              id: 'theme-1',
+              name: 'ই-কমার্স প্রো থিম',
+              image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop',
+              price: '৳ ২,৫০০',
+              originalPrice: '৳ ৩,৫০০',
+              category: 'স্টোর থিম',
+              rating: 4.9,
+              reviews: 128,
+              features: ['রেসপন্সিভ ডিজাইন', 'পেমেন্ট গেটওয়ে', 'ইনভেন্টরি ম্যানেজমেন্ট']
+            },
+            {
+              id: 'theme-2',
+              name: 'সার্ভিস বুকিং থিম',
+              image: 'https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=1000&auto=format&fit=crop',
+              price: '৳ ২,০০০',
+              originalPrice: '৳ ২,৮০০',
+              category: 'সার্ভিস থিম',
+              rating: 4.7,
+              reviews: 95,
+              features: ['অ্যাপয়েন্টমেন্ট বুকিং', 'ক্যালেন্ডার ইন্টিগ্রেশন', 'পেমেন্ট সিস্টেম']
+            },
+            {
+              id: 'theme-3',
+              name: 'রেস্তোরাঁ অর্ডার থিম',
+              image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1000&auto=format&fit=crop',
+              price: '৳ ১,৮০০',
+              originalPrice: '৳ ২,৫০০',
+              category: 'রেস্তোরাঁ থিম',
+              rating: 4.8,
+              reviews: 156,
+              features: ['অনলাইন অর্ডার', 'ডেলিভারি ট্র্যাকিং', 'মেনু ম্যানেজমেন্ট']
+            },
+            {
+              id: 'theme-4',
+              name: 'ডিজিটাল এজেন্সি থিম',
+              image: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?q=80&w=1000&auto=format&fit=crop',
+              price: '৳ ৩,০০০',
+              originalPrice: '৳ ৪,২০০',
+              category: 'এজেন্সি থিম',
+              rating: 4.9,
+              reviews: 89,
+              features: ['পোর্টফোলিও গ্যালারি', 'কন্টাক্ট ফর্ম', 'টিম সেকশন']
+            }
+          ].map((theme) => (
+            <Card key={theme.id} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => navigate(`/digital-theme/${theme.id}`)}>
+              <div className="relative">
+                <img src={theme.image} alt={theme.name} className="aspect-square w-full object-cover" />
+                <Badge className="absolute top-2 left-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+                  {theme.category}
+                </Badge>
+                <div className="absolute top-2 right-2 flex flex-col gap-2">
+                  <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={(e) => handleBookmark(e, parseInt(theme.id.split('-')[1]))}>
+                    <Heart className="h-4 w-4 text-gray-600" />
+                  </Button>
+                  <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={(e) => handleShare(e, theme)}>
+                    <Share2 className="h-4 w-4 text-gray-600" />
+                  </Button>
+                </div>
+              </div>
+              <CardContent className="p-3">
+                <h3 className="font-medium text-sm line-clamp-1">{theme.name}</h3>
+                <div className="flex items-center text-xs text-muted-foreground my-1">
+                  <div className="flex items-center">
+                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                    <span className="ml-1">{theme.rating}</span>
+                  </div>
+                  <span className="mx-1">•</span>
+                  <span>{theme.reviews} রিভিউ</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="text-sm font-bold text-primary">{theme.price}</span>
+                  {theme.originalPrice && <span className="text-xs text-muted-foreground line-through ml-2">{theme.originalPrice}</span>}
+                </div>
+                <div className="mt-2">
+                  <div className="flex flex-wrap gap-1">
+                    {theme.features.slice(0, 2).map((feature, idx) => (
+                      <Badge key={idx} variant="secondary" className="text-[10px] px-1 py-0">
+                        {feature}
+                      </Badge>
+                    ))}
+                    {theme.features.length > 2 && (
+                      <Badge variant="outline" className="text-[10px] px-1 py-0">
+                        +{theme.features.length - 2}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        
+        {/* Template Categories */}
+        <div className="mt-6">
+          <h3 className="text-md font-medium mb-3">টেমপ্লেট ক্যাটাগরি</h3>
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+            {[
+              { name: 'ই-কমার্স', icon: '🛍️', count: 45 },
+              { name: 'সার্ভিস', icon: '🔧', count: 32 },
+              { name: 'রেস্তোরাঁ', icon: '🍽️', count: 28 },
+              { name: 'এজেন্সি', icon: '💼', count: 21 },
+              { name: 'পোর্টফোলিও', icon: '🎨', count: 38 },
+              { name: 'ব্লগ', icon: '📝', count: 19 }
+            ].map((cat, idx) => (
+              <div key={idx} className="flex flex-col items-center p-3 border rounded-lg hover:bg-gray-50 transition-all cursor-pointer" onClick={() => navigate(`/digital-themes/category/${cat.name.toLowerCase()}`)}>
+                <div className="text-2xl mb-2">{cat.icon}</div>
+                <span className="text-xs font-medium">{cat.name}</span>
+                <span className="text-xs text-muted-foreground">{cat.count}+ থিম</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       <Separator className="my-6" />
@@ -640,6 +769,8 @@ const Shopping = () => {
       </div>
 
       {shareItem && <SocialShareModal open={showShareModal} onOpenChange={setShowShareModal} item={shareItem} />}
-    </div>;
+    </div>
+  );
 };
+
 export default Shopping;
