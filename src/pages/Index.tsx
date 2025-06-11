@@ -136,9 +136,7 @@ const Index = () => {
             <LogIn className="h-4 w-4" /> লগইন
           </Button> : <>
             
-            {isSeller && <Button onClick={() => navigate(user?.sellerType ? `/dashboard/${user.sellerType}` : '/seller-dashboard')} variant="outline" className="flex items-center gap-1">
-                <Store className="h-4 w-4" /> বিক্রেতা কেন্দ্র
-              </Button>}
+            {isSeller}
             {isAdmin && <Button onClick={() => navigate('/admin-dashboard')} variant="outline" className="flex items-center gap-1">
                 <Briefcase className="h-4 w-4" /> অ্যাডমিন প্যানেল
               </Button>}
