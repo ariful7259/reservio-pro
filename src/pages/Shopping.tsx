@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, ShoppingBag, Package, Tag, Heart, Share2, MapPin, ChevronDown, ChevronUp, Star, Filter, TruckIcon, CreditCard, CalendarClock, CircleDollarSign, LayoutGrid, Map as MapIcon, Locate, Smartphone, Laptop, Camera, HeartPulse, Headphones, Watch, Shirt, Baby, Utensils, Book, Tv, Gamepad, ActivitySquare, Car, Home, ArrowDown, ArrowUp, Building, Clock } from 'lucide-react';
+import { Search, ShoppingBag, Package, Tag, Heart, Share2, MapPin, ChevronDown, ChevronUp, Star, Filter, TruckIcon, CreditCard, CalendarClock, CircleDollarSign, LayoutGrid, Map as MapIcon, Locate, Smartphone, Laptop, Camera, HeartPulse, Headphones, Watch, Shirt, Baby, Utensils, Book, Tv, Gamepad, ActivitySquare, Car, Home, ArrowDown, ArrowUp, Building, Clock, Store } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -26,6 +26,7 @@ const Shopping = () => {
   const [distanceRange, setDistanceRange] = useState<number[]>([5]);
   const [sortBy, setSortBy] = useState('recommended');
   const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState('products');
   const bannerImages = ["https://images.unsplash.com/photo-1607082349566-187342175e2f?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1607082350899-7e105aa886ae?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?q=80&w=1000&auto=format&fit=crop"];
   const categoryIconColors = {
     electronics: 'bg-blue-100 text-blue-600',
@@ -291,26 +292,57 @@ const Shopping = () => {
     name: "টপটেক ইলেকট্রনিক্স",
     verified: true,
     rating: 4.8,
-    products: 250
+    products: 250,
+    image: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?q=80&w=1000&auto=format&fit=crop",
+    location: "গুলশান, ঢাকা",
+    categories: ["ইলেকট্রনিক্স", "গ্যাজেট"]
   }, {
     id: 2,
     name: "ফ্যাশন হাউস",
     verified: true,
     rating: 4.6,
-    products: 180
+    products: 180,
+    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1000&auto=format&fit=crop",
+    location: "ধানমন্ডি, ঢাকা",
+    categories: ["ফ্যাশন", "জুতা"]
   }, {
     id: 3,
     name: "গ্যাজেট ওয়ার্ল্ড",
     verified: false,
     rating: 4.5,
-    products: 125
+    products: 125,
+    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1000&auto=format&fit=crop",
+    location: "বনানী, ঢাকা",
+    categories: ["মোবাইল", "অ্যাক্সেসরিজ"]
   }, {
     id: 4,
     name: "হোম ডেকোর",
     verified: true,
     rating: 4.7,
-    products: 95
+    products: 95,
+    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1000&auto=format&fit=crop",
+    location: "উত্তরা, ঢাকা",
+    categories: ["হোম", "ডেকোর"]
+  }, {
+    id: 5,
+    name: "স্পোর্টস প্রো",
+    verified: true,
+    rating: 4.4,
+    products: 156,
+    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1000&auto=format&fit=crop",
+    location: "মিরপুর, ঢাকা",
+    categories: ["স্পোর্টস", "ফিটনেস"]
+  }, {
+    id: 6,
+    name: "কিডস কালেকশন",
+    verified: true,
+    rating: 4.6,
+    products: 89,
+    image: "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?q=80&w=1000&auto=format&fit=crop",
+    location: "বারিধারা, ঢাকা",
+    categories: ["বাচ্চাদের", "খেলনা"]
   }];
+
   return (
     <div className="container px-4 pt-20 pb-20">
       <div className="flex items-center justify-between mb-6">
@@ -332,6 +364,7 @@ const Shopping = () => {
         </div>
       </div>
       
+      {/* Search Bar */}
       <div className="mb-6">
         <form onSubmit={handleSearch} className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -342,6 +375,7 @@ const Shopping = () => {
         </form>
       </div>
 
+      {/* Filter Section */}
       {filterVisible && <div className="mb-6 p-4 border rounded-lg bg-gray-50 dark:bg-gray-800 animate-fade-in">
           <div className="flex justify-between items-center mb-4">
             <h2 className="font-medium">ফিল্টার সেটিংস</h2>
@@ -453,6 +487,7 @@ const Shopping = () => {
           </div>
         </div>}
 
+      {/* Categories Section */}
       <div className="mb-6">
         <h2 className="text-lg font-medium mb-4">ক্যাটেগরি</h2>
         <div className="grid grid-cols-4 gap-3">
@@ -484,6 +519,7 @@ const Shopping = () => {
         </div>
       </div>
       
+      {/* Banner Carousel */}
       <div className="mb-6 overflow-hidden rounded-lg">
         <Carousel className="w-full">
           <CarouselContent>
@@ -502,270 +538,348 @@ const Shopping = () => {
 
       <Separator className="my-6" />
 
-      {/* New Digital Store Themes Section */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-medium">ডিজিটাল স্টোর থিম ও টেমপ্লেট</h2>
-          <Button variant="outline" size="sm" onClick={() => navigate('/digital-themes')}>
-            সব দেখুন
-          </Button>
-        </div>
-        <p className="text-sm text-muted-foreground mb-4">
-          আপনার অনলাইন স্টোর ও সার্ভিস পেজের জন্য প্রফেশনাল থিম ও ডিজাইন টেমপ্লেট
-        </p>
-        
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            {
-              id: 'theme-1',
-              name: 'ই-কমার্স প্রো থিম',
-              image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop',
-              price: '৳ ২,৫০০',
-              originalPrice: '৳ ৩,৫০০',
-              category: 'স্টোর থিম',
-              rating: 4.9,
-              reviews: 128,
-              features: ['রেসপন্সিভ ডিজাইন', 'পেমেন্ট গেটওয়ে', 'ইনভেন্টরি ম্যানেজমেন্ট']
-            },
-            {
-              id: 'theme-2',
-              name: 'সার্ভিস বুকিং থিম',
-              image: 'https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=1000&auto=format&fit=crop',
-              price: '৳ ২,০০০',
-              originalPrice: '৳ ২,৮০০',
-              category: 'সার্ভিস থিম',
-              rating: 4.7,
-              reviews: 95,
-              features: ['অ্যাপয়েন্টমেন্ট বুকিং', 'ক্যালেন্ডার ইন্টিগ্রেশন', 'পেমেন্ট সিস্টেম']
-            },
-            {
-              id: 'theme-3',
-              name: 'রেস্তোরাঁ অর্ডার থিম',
-              image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1000&auto=format&fit=crop',
-              price: '৳ ১,৮০০',
-              originalPrice: '৳ ২,৫০০',
-              category: 'রেস্তোরাঁ থিম',
-              rating: 4.8,
-              reviews: 156,
-              features: ['অনলাইন অর্ডার', 'ডেলিভারি ট্র্যাকিং', 'মেনু ম্যানেজমেন্ট']
-            },
-            {
-              id: 'theme-4',
-              name: 'ডিজিটাল এজেন্সি থিম',
-              image: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?q=80&w=1000&auto=format&fit=crop',
-              price: '৳ ৩,০০০',
-              originalPrice: '৳ ৪,২০০',
-              category: 'এজেন্সি থিম',
-              rating: 4.9,
-              reviews: 89,
-              features: ['পোর্টফোলিও গ্যালারি', 'কন্টাক্ট ফর্ম', 'টিম সেকশন']
-            }
-          ].map((theme) => (
-            <Card key={theme.id} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => navigate(`/digital-theme/${theme.id}`)}>
-              <div className="relative">
-                <img src={theme.image} alt={theme.name} className="aspect-square w-full object-cover" />
-                <Badge className="absolute top-2 left-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-                  {theme.category}
-                </Badge>
-                <div className="absolute top-2 right-2 flex flex-col gap-2">
-                  <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={(e) => handleBookmark(e, parseInt(theme.id.split('-')[1]))}>
-                    <Heart className="h-4 w-4 text-gray-600" />
-                  </Button>
-                  <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={(e) => handleShare(e, theme)}>
-                    <Share2 className="h-4 w-4 text-gray-600" />
-                  </Button>
-                </div>
+      {/* Main Navigation Tabs */}
+      <div className="mb-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="products" className="flex items-center gap-2">
+              <ShoppingBag className="h-4 w-4" />
+              প্রোডাক্টস
+            </TabsTrigger>
+            <TabsTrigger value="services" className="flex items-center gap-2">
+              <Package className="h-4 w-4" />
+              সার্ভিস
+            </TabsTrigger>
+            <TabsTrigger value="rental" className="flex items-center gap-2">
+              <Home className="h-4 w-4" />
+              ভাড়া
+            </TabsTrigger>
+            <TabsTrigger value="sellers" className="flex items-center gap-2">
+              <Store className="h-4 w-4" />
+              টপ সেলার
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="products" className="mt-6">
+            {/* Digital Store Themes Section */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-medium">ডিজিটাল স্টোর থিম ও টেমপ্লেট</h2>
+                <Button variant="outline" size="sm" onClick={() => navigate('/digital-themes')}>
+                  সব দেখুন
+                </Button>
               </div>
-              <CardContent className="p-3">
-                <h3 className="font-medium text-sm line-clamp-1">{theme.name}</h3>
-                <div className="flex items-center text-xs text-muted-foreground my-1">
-                  <div className="flex items-center">
-                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                    <span className="ml-1">{theme.rating}</span>
-                  </div>
-                  <span className="mx-1">•</span>
-                  <span>{theme.reviews} রিভিউ</span>
-                </div>
-                <div className="flex items-center">
-                  <span className="text-sm font-bold text-primary">{theme.price}</span>
-                  {theme.originalPrice && <span className="text-xs text-muted-foreground line-through ml-2">{theme.originalPrice}</span>}
-                </div>
-                <div className="mt-2">
-                  <div className="flex flex-wrap gap-1">
-                    {theme.features.slice(0, 2).map((feature, idx) => (
-                      <Badge key={idx} variant="secondary" className="text-[10px] px-1 py-0">
-                        {feature}
+              <p className="text-sm text-muted-foreground mb-4">
+                আপনার অনলাইন স্টোর ও সার্ভিস পেজের জন্য প্রফেশনাল থিম ও ডিজাইন টেমপ্লেট
+              </p>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[
+                  {
+                    id: 'theme-1',
+                    name: 'ই-কমার্স প্রো থিম',
+                    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop',
+                    price: '৳ ২,৫০০',
+                    originalPrice: '৳ ৩,৫০০',
+                    category: 'স্টোর থিম',
+                    rating: 4.9,
+                    reviews: 128,
+                    features: ['রেসপন্সিভ ডিজাইন', 'পেমেন্ট গেটওয়ে', 'ইনভেন্টরি ম্যানেজমেন্ট']
+                  },
+                  {
+                    id: 'theme-2',
+                    name: 'সার্ভিস বুকিং থিম',
+                    image: 'https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=1000&auto=format&fit=crop',
+                    price: '৳ ২,০০০',
+                    originalPrice: '৳ ২,৮০০',
+                    category: 'সার্ভিস থিম',
+                    rating: 4.7,
+                    reviews: 95,
+                    features: ['অ্যাপয়েন্টমেন্ট বুকিং', 'ক্যালেন্ডার ইন্টিগ্রেশন', 'পেমেন্ট সিস্টেম']
+                  },
+                  {
+                    id: 'theme-3',
+                    name: 'রেস্তোরাঁ অর্ডার থিম',
+                    image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1000&auto=format&fit=crop',
+                    price: '৳ ১,৮০০',
+                    originalPrice: '৳ ২,৫০০',
+                    category: 'রেস্তোরাঁ থিম',
+                    rating: 4.8,
+                    reviews: 156,
+                    features: ['অনলাইন অর্ডার', 'ডেলিভারি ট্র্যাকিং', 'মেনু ম্যানেজমেন্ট']
+                  },
+                  {
+                    id: 'theme-4',
+                    name: 'ডিজিটাল এজেন্সি থিম',
+                    image: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?q=80&w=1000&auto=format&fit=crop',
+                    price: '৳ ৩,০০০',
+                    originalPrice: '৳ ৪,২০০',
+                    category: 'এজেন্সি থিম',
+                    rating: 4.9,
+                    reviews: 89,
+                    features: ['পোর্টফোলিও গ্যালারি', 'কন্টাক্ট ফর্ম', 'টিম সেকশন']
+                  }
+                ].map((theme) => (
+                  <Card key={theme.id} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => navigate(`/digital-theme/${theme.id}`)}>
+                    <div className="relative">
+                      <img src={theme.image} alt={theme.name} className="aspect-square w-full object-cover" />
+                      <Badge className="absolute top-2 left-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+                        {theme.category}
                       </Badge>
-                    ))}
-                    {theme.features.length > 2 && (
-                      <Badge variant="outline" className="text-[10px] px-1 py-0">
-                        +{theme.features.length - 2}
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-        
-        {/* Template Categories */}
-        <div className="mt-6">
-          <h3 className="text-md font-medium mb-3">টেমপ্লেট ক্যাটাগরি</h3>
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
-            {[
-              { name: 'ই-কমার্স', icon: '🛍️', count: 45 },
-              { name: 'সার্ভিস', icon: '🔧', count: 32 },
-              { name: 'রেস্তোরাঁ', icon: '🍽️', count: 28 },
-              { name: 'এজেন্সি', icon: '💼', count: 21 },
-              { name: 'পোর্টফোলিও', icon: '🎨', count: 38 },
-              { name: 'ব্লগ', icon: '📝', count: 19 }
-            ].map((cat, idx) => (
-              <div key={idx} className="flex flex-col items-center p-3 border rounded-lg hover:bg-gray-50 transition-all cursor-pointer" onClick={() => navigate(`/digital-themes/category/${cat.name.toLowerCase()}`)}>
-                <div className="text-2xl mb-2">{cat.icon}</div>
-                <span className="text-xs font-medium">{cat.name}</span>
-                <span className="text-xs text-muted-foreground">{cat.count}+ থিম</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <Separator className="my-6" />
-
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-medium">ফিচার্ড প্রোডাক্ট</h2>
-          <div className="flex items-center text-sm gap-2">
-            <span className="text-muted-foreground">সর্ট করুন:</span>
-            <Select value={sortBy} onValueChange={handleSortChange}>
-              <SelectTrigger className="h-8 w-[140px] text-xs">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="recommended">রেকমেন্ডেড</SelectItem>
-                <SelectItem value="price_low">
-                  <div className="flex items-center">
-                    <CircleDollarSign className="h-3 w-3 mr-1" />
-                    <ArrowUp className="h-3 w-3 mr-1" />
-                    দাম (কম থেকে বেশি)
-                  </div>
-                </SelectItem>
-                <SelectItem value="price_high">
-                  <div className="flex items-center">
-                    <CircleDollarSign className="h-3 w-3 mr-1" />
-                    <ArrowDown className="h-3 w-3 mr-1" />
-                    দাম (বেশি থেকে কম)
-                  </div>
-                </SelectItem>
-                <SelectItem value="rating">
-                  <div className="flex items-center">
-                    <Star className="h-3 w-3 mr-1" />
-                    রেটিং
-                  </div>
-                </SelectItem>
-                <SelectItem value="newest">
-                  <div className="flex items-center">
-                    <Clock className="h-3 w-3 mr-1" />
-                    নতুন
-                  </div>
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-        
-        {viewMode === 'grid' && <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {products.map(product => <Card key={product.id} className="overflow-hidden cursor-pointer hover:shadow-md transition-all relative" onClick={() => handleProductClick(product.id)}>
-                {product.isSponsored && <Badge className="absolute top-2 left-2 bg-amber-500 hover:bg-amber-600 z-10">স্পন্সর্ড</Badge>}
-                <div className="relative">
-                  <img src={product.image} alt={product.name} className="aspect-square w-full object-cover" />
-                  <div className="absolute top-2 right-2 flex flex-col gap-2">
-                    <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={e => handleBookmark(e, product.id)}>
-                      <Heart className="h-4 w-4 text-gray-600" />
-                    </Button>
-                    <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={e => handleShare(e, product)}>
-                      <Share2 className="h-4 w-4 text-gray-600" />
-                    </Button>
-                  </div>
-                </div>
-                <CardContent className="p-3">
-                  <h3 className="font-medium text-sm line-clamp-1">{product.name}</h3>
-                  <div className="flex items-center text-xs text-muted-foreground my-1">
-                    <MapPin className="h-3 w-3 mr-1" /> {product.location}
-                  </div>
-                  <div className="flex items-center text-xs text-muted-foreground mb-1">
-                    <div className="flex items-center">
-                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                      <span className="ml-1">{product.rating}</span>
-                    </div>
-                    <span className="mx-1">•</span>
-                    <span>{product.reviews} রিভিউ</span>
-                  </div>
-                  <div className="flex items-center">
-                    <span className="text-sm font-bold text-primary">{product.price}</span>
-                    {product.originalPrice && <span className="text-xs text-muted-foreground line-through ml-2">{product.originalPrice}</span>}
-                  </div>
-                </CardContent>
-              </Card>)}
-          </div>}
-        
-        {viewMode === 'map' && <div className="mb-4">
-            <div className="h-[450px] mb-4 border rounded-lg overflow-hidden">
-              <MapView listings={products.map(product => ({
-            id: product.id,
-            title: product.name,
-            location: product.location,
-            latitude: product.latitude,
-            longitude: product.longitude
-          }))} />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-              {products.slice(0, 3).map(product => <Card key={product.id} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => handleProductClick(product.id)}>
-                  <div className="flex h-24">
-                    <div className="w-1/3">
-                      <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
-                    </div>
-                    <div className="w-2/3 p-2">
-                      <h3 className="font-medium text-sm line-clamp-1">{product.name}</h3>
-                      <p className="text-xs text-muted-foreground">{product.location}</p>
-                      <div className="flex items-center mt-1">
-                        <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                        <span className="text-xs ml-1">{product.rating}</span>
+                      <div className="absolute top-2 right-2 flex flex-col gap-2">
+                        <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={(e) => handleBookmark(e, parseInt(theme.id.split('-')[1]))}>
+                          <Heart className="h-4 w-4 text-gray-600" />
+                        </Button>
+                        <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={(e) => handleShare(e, theme)}>
+                          <Share2 className="h-4 w-4 text-gray-600" />
+                        </Button>
                       </div>
-                      <p className="text-sm font-bold text-primary">{product.price}</p>
                     </div>
-                  </div>
-                </Card>)}
-            </div>
-          </div>}
-      </div>
-
-      <div className="mb-8">
-        <h2 className="text-lg font-medium mb-4">টপ সেলার দোকান</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {topSellers.map(seller => <Card key={seller.id} className="hover:shadow-md transition-all">
-              <CardContent className="p-4">
-                <div className="flex flex-col items-center text-center">
-                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
-                    <Building className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-sm font-medium flex items-center gap-1">
-                    {seller.name}
-                    {seller.verified && <Badge variant="outline" className="h-4 text-[10px] bg-blue-100 text-blue-600 border-blue-200">ভেরিফাইড</Badge>}
-                  </h3>
-                  <div className="flex items-center mt-1">
-                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                    <span className="text-xs ml-1">{seller.rating}</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1">{seller.products}+ প্রোডাক্ট</p>
-                  <Button variant="outline" size="sm" className="mt-2 w-full" onClick={() => handleStoreClick(seller.id)}>
-                    দোকান দেখুন
-                  </Button>
+                    <CardContent className="p-3">
+                      <h3 className="font-medium text-sm line-clamp-1">{theme.name}</h3>
+                      <div className="flex items-center text-xs text-muted-foreground my-1">
+                        <div className="flex items-center">
+                          <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                          <span className="ml-1">{theme.rating}</span>
+                        </div>
+                        <span className="mx-1">•</span>
+                        <span>{theme.reviews} রিভিউ</span>
+                      </div>
+                      <div className="flex items-center">
+                        <span className="text-sm font-bold text-primary">{theme.price}</span>
+                        {theme.originalPrice && <span className="text-xs text-muted-foreground line-through ml-2">{theme.originalPrice}</span>}
+                      </div>
+                      <div className="mt-2">
+                        <div className="flex flex-wrap gap-1">
+                          {theme.features.slice(0, 2).map((feature, idx) => (
+                            <Badge key={idx} variant="secondary" className="text-[10px] px-1 py-0">
+                              {feature}
+                            </Badge>
+                          ))}
+                          {theme.features.length > 2 && (
+                            <Badge variant="outline" className="text-[10px] px-1 py-0">
+                              +{theme.features.length - 2}
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+              
+              {/* Template Categories */}
+              <div className="mt-6">
+                <h3 className="text-md font-medium mb-3">টেমপ্লেট ক্যাটাগরি</h3>
+                <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+                  {[
+                    { name: 'ই-কমার্স', icon: '🛍️', count: 45 },
+                    { name: 'সার্ভিস', icon: '🔧', count: 32 },
+                    { name: 'রেস্তোরাঁ', icon: '🍽️', count: 28 },
+                    { name: 'এজেন্সি', icon: '💼', count: 21 },
+                    { name: 'পোর্টফোলিও', icon: '🎨', count: 38 },
+                    { name: 'ব্লগ', icon: '📝', count: 19 }
+                  ].map((cat, idx) => (
+                    <div key={idx} className="flex flex-col items-center p-3 border rounded-lg hover:bg-gray-50 transition-all cursor-pointer" onClick={() => navigate(`/digital-themes/category/${cat.name.toLowerCase()}`)}>
+                      <div className="text-2xl mb-2">{cat.icon}</div>
+                      <span className="text-xs font-medium">{cat.name}</span>
+                      <span className="text-xs text-muted-foreground">{cat.count}+ থিম</span>
+                    </div>
+                  ))}
                 </div>
-              </CardContent>
-            </Card>)}
-        </div>
+              </div>
+            </div>
+
+            <Separator className="my-6" />
+
+            {/* Featured Products */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-medium">ফিচার্ড প্রোডাক্ট</h2>
+                <div className="flex items-center text-sm gap-2">
+                  <span className="text-muted-foreground">সর্ট করুন:</span>
+                  <Select value={sortBy} onValueChange={handleSortChange}>
+                    <SelectTrigger className="h-8 w-[140px] text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="recommended">রেকমেন্ডেড</SelectItem>
+                      <SelectItem value="price_low">
+                        <div className="flex items-center">
+                          <CircleDollarSign className="h-3 w-3 mr-1" />
+                          <ArrowUp className="h-3 w-3 mr-1" />
+                          দাম (কম থেকে বেশি)
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="price_high">
+                        <div className="flex items-center">
+                          <CircleDollarSign className="h-3 w-3 mr-1" />
+                          <ArrowDown className="h-3 w-3 mr-1" />
+                          দাম (বেশি থেকে কম)
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="rating">
+                        <div className="flex items-center">
+                          <Star className="h-3 w-3 mr-1" />
+                          রেটিং
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="newest">
+                        <div className="flex items-center">
+                          <Clock className="h-3 w-3 mr-1" />
+                          নতুন
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              
+              {viewMode === 'grid' && <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {products.map(product => <Card key={product.id} className="overflow-hidden cursor-pointer hover:shadow-md transition-all relative" onClick={() => handleProductClick(product.id)}>
+                      {product.isSponsored && <Badge className="absolute top-2 left-2 bg-amber-500 hover:bg-amber-600 z-10">স্পন্সর্ড</Badge>}
+                      <div className="relative">
+                        <img src={product.image} alt={product.name} className="aspect-square w-full object-cover" />
+                        <div className="absolute top-2 right-2 flex flex-col gap-2">
+                          <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={e => handleBookmark(e, product.id)}>
+                            <Heart className="h-4 w-4 text-gray-600" />
+                          </Button>
+                          <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={e => handleShare(e, product)}>
+                            <Share2 className="h-4 w-4 text-gray-600" />
+                          </Button>
+                        </div>
+                      </div>
+                      <CardContent className="p-3">
+                        <h3 className="font-medium text-sm line-clamp-1">{product.name}</h3>
+                        <div className="flex items-center text-xs text-muted-foreground my-1">
+                          <MapPin className="h-3 w-3 mr-1" /> {product.location}
+                        </div>
+                        <div className="flex items-center text-xs text-muted-foreground mb-1">
+                          <div className="flex items-center">
+                            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                            <span className="ml-1">{product.rating}</span>
+                          </div>
+                          <span className="mx-1">•</span>
+                          <span>{product.reviews} রিভিউ</span>
+                        </div>
+                        <div className="flex items-center">
+                          <span className="text-sm font-bold text-primary">{product.price}</span>
+                          {product.originalPrice && <span className="text-xs text-muted-foreground line-through ml-2">{product.originalPrice}</span>}
+                        </div>
+                      </CardContent>
+                    </Card>)}
+                </div>}
+              
+              {viewMode === 'map' && <div className="mb-4">
+                  <div className="h-[450px] mb-4 border rounded-lg overflow-hidden">
+                    <MapView listings={products.map(product => ({
+                  id: product.id,
+                  title: product.name,
+                  location: product.location,
+                  latitude: product.latitude,
+                  longitude: product.longitude
+                }))} />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                    {products.slice(0, 3).map(product => <Card key={product.id} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => handleProductClick(product.id)}>
+                        <div className="flex h-24">
+                          <div className="w-1/3">
+                            <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                          </div>
+                          <div className="w-2/3 p-2">
+                            <h3 className="font-medium text-sm line-clamp-1">{product.name}</h3>
+                            <p className="text-xs text-muted-foreground">{product.location}</p>
+                            <div className="flex items-center mt-1">
+                              <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
+                              <span className="text-xs ml-1">{product.rating}</span>
+                            </div>
+                            <p className="text-sm font-bold text-primary">{product.price}</p>
+                          </div>
+                        </div>
+                      </Card>)}
+                  </div>
+                </div>}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="services" className="mt-6">
+            <div className="text-center py-12">
+              <Package className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+              <h3 className="text-lg font-medium mb-2">সার্ভিস সেকশন</h3>
+              <p className="text-muted-foreground mb-4">বিভিন্ন ধরনের সার্ভিস এখানে দেখানো হবে</p>
+              <Button onClick={() => navigate('/services')}>
+                সার্ভিস দেখুন
+              </Button>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="rental" className="mt-6">
+            <div className="text-center py-12">
+              <Home className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+              <h3 className="text-lg font-medium mb-2">ভাড়া সেকশন</h3>
+              <p className="text-muted-foreground mb-4">ভাড়ার জিনিসপত্র এখানে দেখানো হবে</p>
+              <Button onClick={() => navigate('/rentals')}>
+                ভাড়া দেখুন
+              </Button>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="sellers" className="mt-6">
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-medium">টপ সেলার দোকান</h2>
+                <Button variant="outline" size="sm">
+                  সব সেলার দেখুন
+                </Button>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {topSellers.map(seller => (
+                  <Card key={seller.id} className="hover:shadow-md transition-all cursor-pointer" onClick={() => handleStoreClick(seller.id)}>
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-3">
+                        <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                          <img src={seller.image} alt={seller.name} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="text-sm font-medium truncate">{seller.name}</h3>
+                            {seller.verified && (
+                              <Badge variant="outline" className="h-4 text-[10px] bg-blue-100 text-blue-600 border-blue-200">
+                                ভেরিফাইড
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-1 mb-1">
+                            <MapPin className="h-3 w-3 text-muted-foreground" />
+                            <span className="text-xs text-muted-foreground">{seller.location}</span>
+                          </div>
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="flex items-center">
+                              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                              <span className="text-xs ml-1">{seller.rating}</span>
+                            </div>
+                            <span className="text-xs text-muted-foreground">•</span>
+                            <span className="text-xs text-muted-foreground">{seller.products}+ প্রোডাক্ট</span>
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {seller.categories.map((category, idx) => (
+                              <Badge key={idx} variant="secondary" className="text-[10px] px-1 py-0">
+                                {category}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm" className="w-full mt-3">
+                        দোকান দেখুন
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
 
       {shareItem && <SocialShareModal open={showShareModal} onOpenChange={setShowShareModal} item={shareItem} />}
@@ -774,3 +888,5 @@ const Shopping = () => {
 };
 
 export default Shopping;
+
+</initial_code>
