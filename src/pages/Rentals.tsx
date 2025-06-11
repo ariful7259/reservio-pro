@@ -36,14 +36,14 @@ const Rentals = () => {
   const rentCategories = [
     // Main "বাসা বাড়ি" category with colorful digital icon and booking features
     {
-      icon: <div className="text-3xl">🏠</div>,
+      icon: <div className="text-2xl">🏠</div>,
       name: "বাসা বাড়ি",
       path: "/rental-category/housing",
       count: 892,
       isMainCategory: true,
       subcategories: [
         {
-          icon: <div className="text-2xl">🏢</div>,
+          icon: <div className="text-xl">🏢</div>,
           name: "অ্যাপার্টমেন্ট/ফ্ল্যাট",
           path: "/rental-category/apartment",
           count: 187,
@@ -87,7 +87,7 @@ const Rentals = () => {
           ]
         },
         {
-          icon: <div className="text-2xl">🏡</div>,
+          icon: <div className="text-xl">🏡</div>,
           name: "বাসা/বাড়ি",
           path: "/rental-category/house",
           count: 156,
@@ -131,7 +131,7 @@ const Rentals = () => {
           ]
         },
         {
-          icon: <div className="text-2xl">🏨</div>,
+          icon: <div className="text-xl">🏨</div>,
           name: "মেস/হোস্টেল",
           path: "/rental-category/hostel",
           count: 83,
@@ -175,7 +175,7 @@ const Rentals = () => {
           ]
         },
         {
-          icon: <div className="text-2xl">🛏️</div>,
+          icon: <div className="text-xl">🛏️</div>,
           name: "সিঙ্গেল রুম/শেয়ারড",
           path: "/rental-category/room",
           count: 119,
@@ -459,16 +459,16 @@ const Rentals = () => {
   const renderCategoryItem = (category: any, index: number) => {
     if (category.isMainCategory && category.subcategories) {
       return (
-        <div key={index} className="col-span-full">
+        <div key={index}>
           <Collapsible>
             <CollapsibleTrigger asChild>
-              <div className="flex flex-col items-center justify-center transition-all hover:scale-105 cursor-pointer p-4 border-2 border-primary/20 rounded-lg bg-gradient-to-br from-primary/5 to-primary/10 mb-4">
-                <div className="h-16 w-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center mb-2 shadow-lg">
+              <div className="flex flex-col items-center justify-center transition-all hover:scale-105 cursor-pointer">
+                <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
                   {category.icon}
                 </div>
-                <span className="text-sm text-center mb-1 font-semibold">{category.name}</span>
-                <Badge variant="outline" className="text-xs bg-primary text-primary-foreground">{category.count}</Badge>
-                <ChevronDown className="h-4 w-4 mt-2 text-primary" />
+                <span className="text-xs text-center mb-1">{category.name}</span>
+                <Badge variant="outline" className="text-xs mb-1">{category.count}</Badge>
+                <ChevronDown className="h-3 w-3 text-primary" />
               </div>
             </CollapsibleTrigger>
             <CollapsibleContent className="mt-3">
@@ -764,4 +764,3 @@ const Rentals = () => {
 };
 
 export default Rentals;
-
