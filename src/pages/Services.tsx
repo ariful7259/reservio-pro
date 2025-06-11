@@ -315,7 +315,7 @@ const Services = () => {
                     {category.icon}
                   </div>
                   <span className="text-xs text-center mb-1">{category.name}</span>
-                  <Badge variant="outline" className="text-xs">{category.count}</Badge>
+                  
                 </Link>)}
             </div>
           </CollapsibleContent>
