@@ -243,50 +243,6 @@ const Shopping = () => {
     latitude: 23.7925,
     longitude: 90.4078
   }];
-  const handleFilterToggle = () => {
-    setFilterVisible(!filterVisible);
-  };
-  const handleProductClick = (id: number) => {
-    navigate(`/product/${id}`);
-  };
-  const handleCategoryClick = (categoryId: string) => {
-    navigate(`/shopping/category/${categoryId}`);
-  };
-  const handleBookmark = (e: React.MouseEvent, productId: number) => {
-    e.stopPropagation();
-    toast({
-      title: "সংরক্ষিত হয়েছে",
-      description: "প্রোডাক্টটি আপনার পছন্দের তালিকায় যোগ করা হয়েছে"
-    });
-  };
-  const handleShare = (e: React.MouseEvent, product: any) => {
-    e.stopPropagation();
-    setShareItem({
-      ...product,
-      type: 'product'
-    });
-    setShowShareModal(true);
-  };
-  const handlePriceRangeChange = (value: number[]) => {
-    setPriceRange(value);
-  };
-  const handleDistanceRangeChange = (value: number[]) => {
-    setDistanceRange(value);
-  };
-  const handleSortChange = (value: string) => {
-    setSortBy(value);
-  };
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle search functionality
-    toast({
-      title: "অনুসন্ধান করা হচ্ছে",
-      description: `"${searchTerm}" এর জন্য ফলাফল দেখানো হচ্ছে`
-    });
-  };
-  const handleStoreClick = (storeId: number) => {
-    navigate(`/store/${storeId}`);
-  };
   const topSellers = [{
     id: 1,
     name: "টপটেক ইলেকট্রনিক্স",
@@ -342,6 +298,50 @@ const Shopping = () => {
     location: "বারিধারা, ঢাকা",
     categories: ["বাচ্চাদের", "খেলনা"]
   }];
+
+  const handleFilterToggle = () => {
+    setFilterVisible(!filterVisible);
+  };
+  const handleProductClick = (id: number) => {
+    navigate(`/product/${id}`);
+  };
+  const handleCategoryClick = (categoryId: string) => {
+    navigate(`/shopping/category/${categoryId}`);
+  };
+  const handleBookmark = (e: React.MouseEvent, productId: number) => {
+    e.stopPropagation();
+    toast({
+      title: "সংরক্ষিত হয়েছে",
+      description: "প্রোডাক্টটি আপনার পছন্দের তালিকায় যোগ করা হয়েছে"
+    });
+  };
+  const handleShare = (e: React.MouseEvent, product: any) => {
+    e.stopPropagation();
+    setShareItem({
+      ...product,
+      type: 'product'
+    });
+    setShowShareModal(true);
+  };
+  const handlePriceRangeChange = (value: number[]) => {
+    setPriceRange(value);
+  };
+  const handleDistanceRangeChange = (value: number[]) => {
+    setDistanceRange(value);
+  };
+  const handleSortChange = (value: string) => {
+    setSortBy(value);
+  };
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast({
+      title: "অনুসন্ধান করা হচ্ছে",
+      description: `"${searchTerm}" এর জন্য ফলাফল দেখানো হচ্ছে`
+    });
+  };
+  const handleStoreClick = (storeId: number) => {
+    navigate(`/store/${storeId}`);
+  };
 
   return (
     <div className="container px-4 pt-20 pb-20">
@@ -889,4 +889,4 @@ const Shopping = () => {
 
 export default Shopping;
 
-</initial_code>
+</edits_to_apply>
