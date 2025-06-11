@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -14,385 +13,185 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import MapView from '@/components/MapView';
 import SocialShareModal from '@/components/SocialShareModal';
 import { useToast } from '@/components/ui/use-toast';
-
 const Services = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const [isExpanded, setIsExpanded] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
   const [shareItem, setShareItem] = useState<any | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
-
-  const bannerImages = [
-    "https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1606836591695-4d58a73fba39?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1508873699372-7aeab60b44ab?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1455849318743-b2233052fcff?q=80&w=1000&auto=format&fit=crop"
-  ];
-
-  // Enhanced service categories with colorful digital icons and booking features
-  const serviceCategories = [
-    {
-      icon: <Stethoscope className="h-8 w-8 text-red-600" />,
-      name: "ডাক্তার",
-      path: "/services/category/doctor",
-      count: 278,
-      color: "bg-red-100",
-      features: [
-        {
-          name: "অনলাইন অ্যাপয়েন্টমেন্ট",
-          description: "ডাক্তারের সাথে ভিডিও কল করুন",
-          icon: <Calendar className="h-4 w-4" />,
-          bookingType: "video-consultation"
-        },
-        {
-          name: "হোম ভিজিট বুকিং",
-          description: "ডাক্তার বাড়িতে এসে দেখবেন",
-          icon: <Home className="h-4 w-4" />,
-          bookingType: "home-visit"
-        },
-        {
-          name: "ল্যাব টেস্ট বুকিং",
-          description: "ঘরে বসে টেস্ট করান",
-          icon: <Stethoscope className="h-4 w-4" />,
-          bookingType: "lab-test"
-        }
-      ]
-    },
-    {
-      icon: <HeartPulse className="h-8 w-8 text-blue-600" />,
-      name: "ডেন্টাল",
-      path: "/services/category/dental",
-      count: 124,
-      color: "bg-blue-100",
-      features: [
-        {
-          name: "দাঁতের চেকআপ",
-          description: "নিয়মিত দাঁতের পরীক্ষা",
-          icon: <Calendar className="h-4 w-4" />,
-          bookingType: "dental-checkup"
-        },
-        {
-          name: "ইমার্জেন্সি ট্রিটমেন্ট",
-          description: "জরুরি দাঁতের চিকিৎসা",
-          icon: <HeartPulse className="h-4 w-4" />,
-          bookingType: "emergency-dental"
-        }
-      ]
-    },
-    {
-      icon: <Palette className="h-8 w-8 text-purple-600" />,
-      name: "পেইন্টিং",
-      path: "/services/category/painting",
-      count: 98,
-      color: "bg-purple-100",
-      features: [
-        {
-          name: "ঘর পেইন্টিং",
-          description: "বাড়ির দেয়াল রং করা",
-          icon: <PaintBucket className="h-4 w-4" />,
-          bookingType: "house-painting"
-        },
-        {
-          name: "আর্ট পেইন্টিং",
-          description: "ছবি আঁকা ও ডিজাইন",
-          icon: <Palette className="h-4 w-4" />,
-          bookingType: "art-painting"
-        }
-      ]
-    },
-    {
-      icon: <Scissors className="h-8 w-8 text-pink-600" />,
-      name: "সেলুন",
-      path: "/services/category/salon",
-      count: 186,
-      color: "bg-pink-100",
-      features: [
-        {
-          name: "হেয়ার কাট বুকিং",
-          description: "চুল কাটা ও স্টাইলিং",
-          icon: <Scissors className="h-4 w-4" />,
-          bookingType: "haircut"
-        },
-        {
-          name: "হোম সার্ভিস",
-          description: "বাড়িতে এসে সেবা",
-          icon: <Home className="h-4 w-4" />,
-          bookingType: "home-salon"
-        }
-      ]
-    },
-    {
-      icon: <Utensils className="h-8 w-8 text-orange-600" />,
-      name: "খাবার",
-      path: "/services/category/food",
-      count: 312,
-      color: "bg-orange-100",
-      features: [
-        {
-          name: "খাবার অর্ডার",
-          description: "রেস্তোরাঁ থেকে খাবার অর্ডার",
-          icon: <Utensils className="h-4 w-4" />,
-          bookingType: "food-order"
-        },
-        {
-          name: "হোম কুকিং",
-          description: "রাঁধুনি বুকিং",
-          icon: <Home className="h-4 w-4" />,
-          bookingType: "home-cooking"
-        }
-      ]
-    },
-    {
-      icon: <Wrench className="h-8 w-8 text-gray-600" />,
-      name: "রিপেয়ার",
-      path: "/services/category/repair",
-      count: 165,
-      color: "bg-gray-100",
-      features: [
-        {
-          name: "ইলেকট্রনিক্স রিপেয়ার",
-          description: "টিভি, ফ্রিজ, এসি মেরামত",
-          icon: <Wrench className="h-4 w-4" />,
-          bookingType: "electronics-repair"
-        },
-        {
-          name: "ফার্নিচার রিপেয়ার",
-          description: "আসবাবপত্র মেরামত",
-          icon: <Construction className="h-4 w-4" />,
-          bookingType: "furniture-repair"
-        }
-      ]
-    },
-    {
-      icon: <Truck className="h-8 w-8 text-green-600" />,
-      name: "ডেলিভারি",
-      path: "/services/category/delivery",
-      count: 143,
-      color: "bg-green-100",
-      features: [
-        {
-          name: "ফাস্ট ডেলিভারি",
-          description: "তাৎক্ষণিক পণ্য পৌঁছানো",
-          icon: <Truck className="h-4 w-4" />,
-          bookingType: "fast-delivery"
-        },
-        {
-          name: "বাল্ক ডেলিভারি",
-          description: "বড় পরিমাণ সামগ্রী পরিবহন",
-          icon: <Building className="h-4 w-4" />,
-          bookingType: "bulk-delivery"
-        }
-      ]
-    },
-    {
-      icon: <Briefcase className="h-8 w-8 text-indigo-600" />,
-      name: "আইনি সেবা",
-      path: "/services/category/legal",
-      count: 78,
-      color: "bg-indigo-100",
-      features: [
-        {
-          name: "আইনি পরামর্শ",
-          description: "আইনজীবীর সাথে কথা বলুন",
-          icon: <Briefcase className="h-4 w-4" />,
-          bookingType: "legal-consultation"
-        },
-        {
-          name: "ডকুমেন্ট প্রস্তুতি",
-          description: "আইনি কাগজপত্র তৈরি",
-          icon: <Calendar className="h-4 w-4" />,
-          bookingType: "document-prep"
-        }
-      ]
-    },
-    {
-      icon: <Car className="h-8 w-8 text-yellow-600" />,
-      name: "ট্রান্সপোর্ট",
-      path: "/services/category/transport",
-      count: 145,
-      color: "bg-yellow-100",
-      features: [
-        {
-          name: "রাইড বুকিং",
-          description: "গাড়ি ভাড়া করুন",
-          icon: <Car className="h-4 w-4" />,
-          bookingType: "ride-booking"
-        },
-        {
-          name: "ড্রাইভার হায়ার",
-          description: "চালক নিয়োগ করুন",
-          icon: <Briefcase className="h-4 w-4" />,
-          bookingType: "driver-hire"
-        }
-      ]
-    },
-    {
-      icon: <Laptop className="h-8 w-8 text-cyan-600" />,
-      name: "আইটি সেবা",
-      path: "/services/category/it",
-      count: 126,
-      color: "bg-cyan-100",
-      features: [
-        {
-          name: "কম্পিউটার সেটআপ",
-          description: "সফটওয়্যার ইনস্টলেশন",
-          icon: <Laptop className="h-4 w-4" />,
-          bookingType: "computer-setup"
-        },
-        {
-          name: "ডেটা রিকভারি",
-          description: "হারানো ডেটা উদ্ধার",
-          icon: <Smartphone className="h-4 w-4" />,
-          bookingType: "data-recovery"
-        }
-      ]
-    },
-    {
-      icon: <GraduationCap className="h-8 w-8 text-emerald-600" />,
-      name: "শিক্ষা",
-      path: "/services/category/education",
-      count: 215,
-      color: "bg-emerald-100",
-      features: [
-        {
-          name: "হোম টিউটর",
-          description: "বাড়িতে এসে পড়ানো",
-          icon: <GraduationCap className="h-4 w-4" />,
-          bookingType: "home-tutor"
-        },
-        {
-          name: "অনলাইন ক্লাস",
-          description: "ভার্চুয়াল শিক্ষা",
-          icon: <Laptop className="h-4 w-4" />,
-          bookingType: "online-class"
-        }
-      ]
-    },
-    {
-      icon: <Smartphone className="h-8 w-8 text-violet-600" />,
-      name: "গ্যাজেট রিপেয়ার",
-      path: "/services/category/gadget-repair",
-      count: 87,
-      color: "bg-violet-100",
-      features: [
-        {
-          name: "মোবাইল রিপেয়ার",
-          description: "ফোন স্ক্রিন ও যন্ত্রাংশ মেরামত",
-          icon: <Smartphone className="h-4 w-4" />,
-          bookingType: "mobile-repair"
-        },
-        {
-          name: "ল্যাপটপ রিপেয়ার",
-          description: "কম্পিউটার মেরামত সেবা",
-          icon: <Laptop className="h-4 w-4" />,
-          bookingType: "laptop-repair"
-        }
-      ]
-    }
-  ];
-
-  const featuredServices = [
-    {
-      id: 1,
-      title: "ইলেকট্রনিক্স মেরামত",
-      image: "https://images.unsplash.com/photo-1588964895597-cfccd6e2dbf9?q=80&w=1000&auto=format&fit=crop",
-      price: "৳ ৮০০/ঘণ্টা",
-      location: "ঢাকা",
-      rating: 4.8,
-      category: "মেরামত",
-      latitude: 23.7937,
-      longitude: 90.4137
-    },
-    {
-      id: 2,
-      title: "ফার্নিচার ইন্সটলেশন",
-      image: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?q=80&w=1000&auto=format&fit=crop",
-      price: "৳ ১,২০০/সেশন",
-      location: "ঢাকা",
-      rating: 4.6,
-      category: "ইন্সটলেশন",
-      latitude: 23.7965,
-      longitude: 90.4070
-    },
-    {
-      id: 3,
-      title: "ড্রাইভার সার্ভিস",
-      image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1000&auto=format&fit=crop",
-      price: "৳ ১,০০০/দিন",
-      location: "ঢাকা",
-      rating: 4.7,
-      category: "ট্রান্সপোর্ট",
-      latitude: 23.8103,
-      longitude: 90.3420
-    },
-    {
-      id: 4,
-      title: "ফটোগ্রাফি সার্ভিস",
-      image: "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=1000&auto=format&fit=crop",
-      price: "৳ ৩,০০০/সেশন",
-      location: "ঢাকা",
-      rating: 4.9,
-      category: "ইভেন্ট",
-      latitude: 23.7465,
-      longitude: 90.3751
-    },
-    {
-      id: 5,
-      title: "হোম ক্লিনিং",
-      image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1000&auto=format&fit=crop",
-      price: "৳ ১,৫০০/সেশন",
-      location: "ঢাকা",
-      rating: 4.5,
-      category: "হোম সার্ভিস",
-      latitude: 23.7550,
-      longitude: 90.3900
-    },
-    {
-      id: 6,
-      title: "প্লাম্বিং সার্ভিস",
-      image: "https://images.unsplash.com/photo-1508802597834-805c2f2db892?q=80&w=1000&auto=format&fit=crop",
-      price: "৳ ৭০০/ঘণ্টা",
-      location: "ঢাকা",
-      rating: 4.4,
-      category: "রিপেয়ার",
-      latitude: 23.8330,
-      longitude: 90.4170
-    },
-    {
-      id: 7,
-      title: "আইটি সাপোর্ট",
-      image: "https://images.unsplash.com/photo-1539193143244-c83d9436d633?q=80&w=1000&auto=format&fit=crop",
-      price: "৳ ১,২০০/সেশন",
-      location: "ঢাকা",
-      rating: 4.8,
-      category: "আইটি",
-      latitude: 23.7900,
-      longitude: 90.3850
-    },
-    {
-      id: 8,
-      title: "ফুড ডেলিভারি",
-      image: "https://images.unsplash.com/photo-1565695776882-f1bb95eb1781?q=80&w=1000&auto=format&fit=crop",
-      price: "৳ ৫০/কিমি",
-      location: "ঢাকা",
-      rating: 4.5,
-      category: "ডেলিভারি",
-      latitude: 23.7700,
-      longitude: 90.3750
-    }
-  ];
-
+  const bannerImages = ["https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1606836591695-4d58a73fba39?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1508873699372-7aeab60b44ab?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1455849318743-b2233052fcff?q=80&w=1000&auto=format&fit=crop"];
+  const serviceCategories = [{
+    icon: <Stethoscope className="h-8 w-8" />,
+    name: "ডাক্তার",
+    path: "/services/category/doctor",
+    count: 278
+  }, {
+    icon: <HeartPulse className="h-8 w-8" />,
+    name: "ডেন্টাল",
+    path: "/services/category/dental",
+    count: 124
+  }, {
+    icon: <PaintBucket className="h-8 w-8" />,
+    name: "পেইন্টিং",
+    path: "/services/category/painting",
+    count: 98
+  }, {
+    icon: <Scissors className="h-8 w-8" />,
+    name: "সেলুন",
+    path: "/services/category/salon",
+    count: 186
+  }, {
+    icon: <Utensils className="h-8 w-8" />,
+    name: "খাবার",
+    path: "/services/category/food",
+    count: 312
+  }, {
+    icon: <Wrench className="h-8 w-8" />,
+    name: "রিপেয়ার",
+    path: "/services/category/repair",
+    count: 165
+  }, {
+    icon: <Truck className="h-8 w-8" />,
+    name: "ডেলিভারি",
+    path: "/services/category/delivery",
+    count: 143
+  }, {
+    icon: <Briefcase className="h-8 w-8" />,
+    name: "আইনি সেবা",
+    path: "/services/category/legal",
+    count: 78
+  }, {
+    icon: <Car className="h-8 w-8" />,
+    name: "ট্রান্সপোর্ট",
+    path: "/services/category/transport",
+    count: 145
+  }, {
+    icon: <Laptop className="h-8 w-8" />,
+    name: "আইটি সেবা",
+    path: "/services/category/it",
+    count: 126
+  }, {
+    icon: <GraduationCap className="h-8 w-8" />,
+    name: "শিক্ষা",
+    path: "/services/category/education",
+    count: 215
+  }, {
+    icon: <Smartphone className="h-8 w-8" />,
+    name: "গ্যাজেট রিপেয়ার",
+    path: "/services/category/gadget-repair",
+    count: 87
+  }, {
+    icon: <Palette className="h-8 w-8" />,
+    name: "ডিজাইন",
+    path: "/services/category/design",
+    count: 92
+  }, {
+    icon: <Calendar className="h-8 w-8" />,
+    name: "ইভেন্ট",
+    path: "/services/category/event",
+    count: 104
+  }, {
+    icon: <Camera className="h-8 w-8" />,
+    name: "ফটোগ্রাফি",
+    path: "/services/category/photography",
+    count: 67
+  }, {
+    icon: <Construction className="h-8 w-8" />,
+    name: "কনস্ট্রাকশন",
+    path: "/services/category/construction",
+    count: 58
+  }];
+  const featuredServices = [{
+    id: 1,
+    title: "ইলেকট্রনিক্স মেরামত",
+    image: "https://images.unsplash.com/photo-1588964895597-cfccd6e2dbf9?q=80&w=1000&auto=format&fit=crop",
+    price: "৳ ৮০০/ঘণ্টা",
+    location: "ঢাকা",
+    rating: 4.8,
+    category: "মেরামত",
+    latitude: 23.7937,
+    longitude: 90.4137
+  }, {
+    id: 2,
+    title: "ফার্নিচার ইন্সটলেশন",
+    image: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?q=80&w=1000&auto=format&fit=crop",
+    price: "৳ ১,২০০/সেশন",
+    location: "ঢাকা",
+    rating: 4.6,
+    category: "ইন্সটলেশন",
+    latitude: 23.7965,
+    longitude: 90.4070
+  }, {
+    id: 3,
+    title: "ড্রাইভার সার্ভিস",
+    image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1000&auto=format&fit=crop",
+    price: "৳ ১,০০০/দিন",
+    location: "ঢাকা",
+    rating: 4.7,
+    category: "ট্রান্সপোর্ট",
+    latitude: 23.8103,
+    longitude: 90.3420
+  }, {
+    id: 4,
+    title: "ফটোগ্রাফি সার্ভিস",
+    image: "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=1000&auto=format&fit=crop",
+    price: "৳ ৩,০০০/সেশন",
+    location: "ঢাকা",
+    rating: 4.9,
+    category: "ইভেন্ট",
+    latitude: 23.7465,
+    longitude: 90.3751
+  }, {
+    id: 5,
+    title: "হোম ক্লিনিং",
+    image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1000&auto=format&fit=crop",
+    price: "৳ ১,৫০০/সেশন",
+    location: "ঢাকা",
+    rating: 4.5,
+    category: "হোম সার্ভিস",
+    latitude: 23.7550,
+    longitude: 90.3900
+  }, {
+    id: 6,
+    title: "প্লাম্বিং সার্ভিস",
+    image: "https://images.unsplash.com/photo-1508802597834-805c2f2db892?q=80&w=1000&auto=format&fit=crop",
+    price: "৳ ৭০০/ঘণ্টা",
+    location: "ঢাকা",
+    rating: 4.4,
+    category: "রিপেয়ার",
+    latitude: 23.8330,
+    longitude: 90.4170
+  }, {
+    id: 7,
+    title: "আইটি সাপোর্ট",
+    image: "https://images.unsplash.com/photo-1539193143244-c83d9436d633?q=80&w=1000&auto=format&fit=crop",
+    price: "৳ ১,২০০/সেশন",
+    location: "ঢাকা",
+    rating: 4.8,
+    category: "আইটি",
+    latitude: 23.7900,
+    longitude: 90.3850
+  }, {
+    id: 8,
+    title: "ফুড ডেলিভারি",
+    image: "https://images.unsplash.com/photo-1565695776882-f1bb95eb1781?q=80&w=1000&auto=format&fit=crop",
+    price: "৳ ৫০/কিমি",
+    location: "ঢাকা",
+    rating: 4.5,
+    category: "ডেলিভারি",
+    latitude: 23.7700,
+    longitude: 90.3750
+  }];
   const toggleFilter = () => {
     setFilterVisible(!filterVisible);
   };
-
   const handleServiceClick = (serviceId: number) => {
     navigate(`/services/${serviceId}`);
   };
-
   const handleBookmark = (e: React.MouseEvent, serviceId: number) => {
     e.stopPropagation();
     toast({
@@ -400,7 +199,6 @@ const Services = () => {
       description: "সার্ভিসটি আপনার পছন্দের তালিকায় যোগ করা হয়েছে"
     });
   };
-
   const handleShare = (e: React.MouseEvent, service: any) => {
     e.stopPropagation();
     setShareItem({
@@ -409,68 +207,11 @@ const Services = () => {
     });
     setShowShareModal(true);
   };
-
-  const handleCategoryClick = (category: any) => {
-    if (category.features) {
-      toast({
-        title: `${category.name} এর ফিচারসমূহ`,
-        description: `${category.features.length}টি বিশেষ সুবিধা উপলব্ধ`
-      });
-    }
-    navigate(category.path);
-  };
-
-  const handleBookingFeature = (e: React.MouseEvent, feature: any, category: any) => {
-    e.stopPropagation();
-    const bookingActions: Record<string, () => void> = {
-      'video-consultation': () => navigate('/appointment-booking?type=video-consultation'),
-      'home-visit': () => navigate('/appointment-booking?type=home-visit'),
-      'lab-test': () => navigate('/appointment-booking?type=lab-test'),
-      'dental-checkup': () => navigate('/appointment-booking?type=dental-checkup'),
-      'emergency-dental': () => navigate('/appointment-booking?type=emergency-dental'),
-      'house-painting': () => navigate('/appointment-booking?type=house-painting'),
-      'art-painting': () => navigate('/appointment-booking?type=art-painting'),
-      'haircut': () => navigate('/appointment-booking?type=haircut'),
-      'home-salon': () => navigate('/appointment-booking?type=home-salon'),
-      'food-order': () => navigate('/appointment-booking?type=food-order'),
-      'home-cooking': () => navigate('/appointment-booking?type=home-cooking'),
-      'electronics-repair': () => navigate('/appointment-booking?type=electronics-repair'),
-      'furniture-repair': () => navigate('/appointment-booking?type=furniture-repair'),
-      'fast-delivery': () => navigate('/appointment-booking?type=fast-delivery'),
-      'bulk-delivery': () => navigate('/appointment-booking?type=bulk-delivery'),
-      'legal-consultation': () => navigate('/appointment-booking?type=legal-consultation'),
-      'document-prep': () => navigate('/appointment-booking?type=document-prep'),
-      'ride-booking': () => navigate('/appointment-booking?type=ride-booking'),
-      'driver-hire': () => navigate('/appointment-booking?type=driver-hire'),
-      'computer-setup': () => navigate('/appointment-booking?type=computer-setup'),
-      'data-recovery': () => navigate('/appointment-booking?type=data-recovery'),
-      'home-tutor': () => navigate('/appointment-booking?type=home-tutor'),
-      'online-class': () => navigate('/appointment-booking?type=online-class'),
-      'mobile-repair': () => navigate('/appointment-booking?type=mobile-repair'),
-      'laptop-repair': () => navigate('/appointment-booking?type=laptop-repair')
-    };
-
-    const action = bookingActions[feature.bookingType];
-    if (action) {
-      action();
-      toast({
-        title: "বুকিং প্রক্রিয়া শুরু",
-        description: `${feature.name} এর জন্য বুকিং পেজে রিডাইরেক্ট করা হচ্ছে`
-      });
-    } else {
-      toast({
-        title: feature.name,
-        description: feature.description
-      });
-    }
-  };
-
-  return (
-    <div className="container px-4 pt-20 pb-20">
+  return <div className="container px-4 pt-20 pb-20">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">সার্ভিস</h1>
         <div className="flex gap-2">
-          <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as 'grid' | 'map')} className="w-[180px]">
+          <Tabs value={viewMode} onValueChange={value => setViewMode(value as 'grid' | 'map')} className="w-[180px]">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="grid" className="flex items-center gap-1">
                 <LayoutGrid className="h-4 w-4" /> গ্রিড
@@ -486,8 +227,7 @@ const Services = () => {
         </div>
       </div>
       
-      {filterVisible && (
-        <div className="mb-6 p-4 border rounded-lg bg-gray-50">
+      {filterVisible && <div className="mb-6 p-4 border rounded-lg bg-gray-50">
           <h2 className="font-medium mb-3">ফিল্টার</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -553,90 +293,41 @@ const Services = () => {
             <Button className="flex-1">ফিল্টার করুন</Button>
             <Button variant="outline" onClick={toggleFilter}>বাতিল করুন</Button>
           </div>
-        </div>
-      )}
+        </div>}
       
       <div className="mb-8">
         <h2 className="text-lg font-medium mb-4">ক্যাটাগরি</h2>
         <div className="grid grid-cols-4 gap-3">
-          {serviceCategories.slice(0, 8).map((category, index) => (
-            <Card key={index} className="overflow-hidden cursor-pointer hover:shadow-md transition-all hover:scale-105">
-              <CardContent className="p-3" onClick={() => handleCategoryClick(category)}>
-                <div className="flex flex-col items-center justify-center">
-                  <div className={`h-16 w-16 rounded-full ${category.color} flex items-center justify-center mb-2`}>
-                    {category.icon}
-                  </div>
-                  <span className="text-xs text-center font-medium mb-1">{category.name}</span>
-                  <Badge variant="secondary" className="text-xs">{category.count}</Badge>
-                  
-                  {/* Features */}
-                  <div className="w-full mt-2 space-y-1">
-                    {category.features.slice(0, 2).map((feature, featureIndex) => (
-                      <Button
-                        key={featureIndex}
-                        variant="outline"
-                        size="sm"
-                        className="w-full text-xs h-6 justify-start"
-                        onClick={(e) => handleBookingFeature(e, feature, category)}
-                      >
-                        {feature.icon}
-                        <span className="ml-1 truncate">{feature.name}</span>
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+          {serviceCategories.slice(0, 8).map((category, index) => <Link key={index} to={category.path} className="flex flex-col items-center justify-center transition-all hover:scale-105">
+              <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                {category.icon}
+              </div>
+              <span className="text-xs text-center mb-1">{category.name}</span>
+              
+            </Link>)}
         </div>
         
         <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className="w-full mt-3">
           <CollapsibleContent className="mt-3">
             <div className="grid grid-cols-4 gap-3">
-              {serviceCategories.slice(8).map((category, index) => (
-                <Card key={index} className="overflow-hidden cursor-pointer hover:shadow-md transition-all hover:scale-105">
-                  <CardContent className="p-3" onClick={() => handleCategoryClick(category)}>
-                    <div className="flex flex-col items-center justify-center">
-                      <div className={`h-16 w-16 rounded-full ${category.color} flex items-center justify-center mb-2`}>
-                        {category.icon}
-                      </div>
-                      <span className="text-xs text-center font-medium mb-1">{category.name}</span>
-                      <Badge variant="secondary" className="text-xs">{category.count}</Badge>
-                      
-                      {/* Features */}
-                      <div className="w-full mt-2 space-y-1">
-                        {category.features.slice(0, 2).map((feature, featureIndex) => (
-                          <Button
-                            key={featureIndex}
-                            variant="outline"
-                            size="sm"
-                            className="w-full text-xs h-6 justify-start"
-                            onClick={(e) => handleBookingFeature(e, feature, category)}
-                          >
-                            {feature.icon}
-                            <span className="ml-1 truncate">{feature.name}</span>
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+              {serviceCategories.slice(8).map((category, index) => <Link key={index} to={category.path} className="flex flex-col items-center justify-center transition-all hover:scale-105">
+                  <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                    {category.icon}
+                  </div>
+                  <span className="text-xs text-center mb-1">{category.name}</span>
+                  
+                </Link>)}
             </div>
           </CollapsibleContent>
           
           <div className="w-full flex justify-center mt-4">
             <CollapsibleTrigger asChild>
               <Button variant="outline" size="sm" className="flex items-center gap-1">
-                {isExpanded ? (
-                  <>
+                {isExpanded ? <>
                     <ChevronUp className="h-4 w-4" /> কম দেখুন
-                  </>
-                ) : (
-                  <>
+                  </> : <>
                     <ChevronDown className="h-4 w-4" /> আরও দেখুন
-                  </>
-                )}
+                  </>}
               </Button>
             </CollapsibleTrigger>
           </div>
@@ -646,15 +337,13 @@ const Services = () => {
       <div className="mb-6 overflow-hidden rounded-lg">
         <Carousel className="w-full">
           <CarouselContent>
-            {bannerImages.map((image, index) => (
-              <CarouselItem key={index}>
+            {bannerImages.map((image, index) => <CarouselItem key={index}>
                 <div className="p-1">
                   <div className="overflow-hidden rounded-lg aspect-[16/6] w-full">
                     <img src={image} alt={`Banner ${index + 1}`} className="w-full h-full object-cover" />
                   </div>
                 </div>
-              </CarouselItem>
-            ))}
+              </CarouselItem>)}
           </CarouselContent>
           <CarouselPrevious className="left-2" />
           <CarouselNext className="right-2" />
@@ -666,19 +355,17 @@ const Services = () => {
       <div className="mb-6">
         <h2 className="text-lg font-medium mb-4">ফিচার্ড সার্ভিস</h2>
         
-        {viewMode === 'grid' && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {featuredServices.map((service) => (
-              <Card key={service.id} className="overflow-hidden cursor-pointer hover:shadow-md transition-all hover:scale-105" onClick={() => handleServiceClick(service.id)}>
+        {viewMode === 'grid' && <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {featuredServices.map(service => <Card key={service.id} className="overflow-hidden cursor-pointer hover:shadow-md transition-all hover:scale-105" onClick={() => handleServiceClick(service.id)}>
                 <CardContent className="p-0">
                   <div className="relative aspect-square">
                     <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
                     <Badge className="absolute top-2 left-2">{service.category}</Badge>
                     <div className="absolute top-2 right-2 flex flex-col gap-2">
-                      <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={(e) => handleBookmark(e, service.id)}>
+                      <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={e => handleBookmark(e, service.id)}>
                         <Heart className="h-4 w-4 text-gray-600" />
                       </Button>
-                      <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={(e) => handleShare(e, service)}>
+                      <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={e => handleShare(e, service)}>
                         <Share2 className="h-4 w-4 text-gray-600" />
                       </Button>
                     </div>
@@ -698,25 +385,19 @@ const Services = () => {
                     </div>
                   </div>
                 </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+              </Card>)}
+          </div>}
         
-        {viewMode === 'map' && (
-          <div className="mb-4">
-            <MapView 
-              listings={featuredServices.map(service => ({
-                id: service.id,
-                title: service.title,
-                location: service.location,
-                latitude: service.latitude,
-                longitude: service.longitude
-              }))} 
-            />
+        {viewMode === 'map' && <div className="mb-4">
+            <MapView listings={featuredServices.map(service => ({
+          id: service.id,
+          title: service.title,
+          location: service.location,
+          latitude: service.latitude,
+          longitude: service.longitude
+        }))} />
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-              {featuredServices.slice(0, 3).map((service) => (
-                <Card key={service.id} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => handleServiceClick(service.id)}>
+              {featuredServices.slice(0, 3).map(service => <Card key={service.id} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => handleServiceClick(service.id)}>
                   <div className="flex h-24">
                     <div className="w-1/3">
                       <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
@@ -733,22 +414,12 @@ const Services = () => {
                       </div>
                     </div>
                   </div>
-                </Card>
-              ))}
+                </Card>)}
             </div>
-          </div>
-        )}
+          </div>}
       </div>
 
-      {shareItem && (
-        <SocialShareModal 
-          open={showShareModal} 
-          onOpenChange={setShowShareModal} 
-          item={shareItem} 
-        />
-      )}
-    </div>
-  );
+      {shareItem && <SocialShareModal open={showShareModal} onOpenChange={setShowShareModal} item={shareItem} />}
+    </div>;
 };
-
 export default Services;
