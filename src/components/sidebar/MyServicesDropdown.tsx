@@ -57,7 +57,8 @@ export const MyServicesDropdown = () => {
     event.preventDefault();
     event.stopPropagation();
     console.log('Navigating to:', path);
-    navigate(path);
+    // Force navigation by using window.location to ensure proper routing
+    window.location.href = path;
   };
 
   return (
@@ -84,11 +85,9 @@ export const MyServicesDropdown = () => {
               <DropdownMenuItem 
                 key={index} 
                 className="cursor-pointer hover:bg-gray-50 focus:bg-gray-50 p-0"
-                asChild
               >
-                <Link 
-                  to={item.path}
-                  className="flex items-start gap-3 w-full py-3 px-3 no-underline"
+                <div 
+                  className="flex items-start gap-3 w-full py-3 px-3 cursor-pointer"
                   onClick={(e) => handleMenuClick(e, item.path)}
                 >
                   <div className="text-primary mt-0.5">
@@ -98,7 +97,7 @@ export const MyServicesDropdown = () => {
                     <div className="font-medium text-gray-900">{item.name}</div>
                     <div className="text-xs text-gray-500 mt-0.5">{item.description}</div>
                   </div>
-                </Link>
+                </div>
               </DropdownMenuItem>
             ))}
           </DropdownMenuGroup>
