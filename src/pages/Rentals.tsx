@@ -396,7 +396,7 @@ const Rentals = () => {
                   {category.icon}
                 </div>
                 <span className="text-xs text-center mb-1">{category.name}</span>
-                <Badge variant="outline" className="text-xs mb-1">{category.count}</Badge>
+                
                 
               </div>
             </CollapsibleTrigger>
@@ -411,7 +411,7 @@ const Rentals = () => {
           {category.icon}
         </div>
         <span className="text-xs text-center mb-1">{category.name}</span>
-        <Badge variant="outline" className="text-xs">{category.count}</Badge>
+        
       </Link>;
   };
   return <div className="container px-4 pt-20 pb-20">
