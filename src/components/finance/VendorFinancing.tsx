@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -112,7 +113,7 @@ const VendorFinancing = () => {
   const handleSubmitApplication = () => {
     toast({
       title: "আবেদন জমা হয়েছে",
-      description: "আপনার লোন আবেদন সফলভাবে জমা হয়েছে। ২ৄ ঘন্টার মধ্যে আপডেট পাবেন।",
+      description: "আপনার লোন আবেদন সফলভাবে জমা হয়েছে। ২৪ ঘন্টার মধ্যে আপডেট পাবেন।",
     });
     setApplicationStep(1);
   };
@@ -223,7 +224,8 @@ const VendorFinancing = () => {
                       আবেদন করার আগে 'লোন অপশন' ট্যাব থেকে আপনার পছন্দের লোন নির্বাচন করুন
                     </p>
                     <Button onClick={() => {
-                      const loansTab = document.querySelector('[value="loans"]') as HTMLElement;
+                      const tabsList = document.querySelector('[data-state="active"][value="apply"]')?.parentElement;
+                      const loansTab = tabsList?.querySelector('[value="loans"]') as HTMLElement;
                       loansTab?.click();
                     }}>
                       লোন নির্বাচন করুন
@@ -444,5 +446,3 @@ const VendorFinancing = () => {
 };
 
 export default VendorFinancing;
-
-```
