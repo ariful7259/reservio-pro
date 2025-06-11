@@ -15,8 +15,8 @@ export const HeaderNav: React.FC = () => {
         <ActionButtons />
       </header>
       
-      {/* Mobile search bar - shown below header on small screens */}
-      <div className="sm:hidden border-t bg-white px-3 py-2">
+      {/* Mobile search bar - optimized spacing and visibility */}
+      <div className="sm:hidden border-t bg-white px-3 py-3">
         <NavbarSearch />
       </div>
     </div>
