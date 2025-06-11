@@ -538,6 +538,70 @@ const Shopping = () => {
 
       <Separator className="my-6" />
 
+      {/* Top Seller Shops Section - NEW */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-medium flex items-center gap-2">
+            <Store className="h-5 w-5 text-primary" />
+            টপ সেলার দোকান
+          </h2>
+          <Button variant="outline" size="sm" onClick={() => setActiveTab('sellers')}>
+            সব দেখুন
+          </Button>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {topSellers.slice(0, 6).map(seller => (
+            <Card key={seller.id} className="hover:shadow-md transition-all cursor-pointer border border-gray-200" onClick={() => handleStoreClick(seller.id)}>
+              <CardContent className="p-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                    <img src={seller.image} alt={seller.name} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-sm font-medium truncate">{seller.name}</h3>
+                      {seller.verified && (
+                        <Badge variant="outline" className="h-4 text-[10px] bg-blue-50 text-blue-600 border-blue-200">
+                          ✓ ভেরিফাইড
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1 mb-1">
+                      <MapPin className="h-3 w-3 text-muted-foreground" />
+                      <span className="text-xs text-muted-foreground">{seller.location}</span>
+                    </div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="flex items-center">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                        <span className="text-xs ml-1">{seller.rating}</span>
+                      </div>
+                      <span className="text-xs text-muted-foreground">•</span>
+                      <span className="text-xs text-muted-foreground">{seller.products}+ প্রোডাক্ট</span>
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {seller.categories.map((category, idx) => (
+                        <Badge key={idx} variant="secondary" className="text-[10px] px-1 py-0">
+                          {category}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <Button variant="outline" size="sm" className="w-full mt-3" onClick={(e) => {
+                  e.stopPropagation();
+                  handleStoreClick(seller.id);
+                }}>
+                  দোকান দেখুন
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      <Separator className="my-6" />
+
       {/* Main Navigation Tabs */}
       <div className="mb-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -888,3 +952,5 @@ const Shopping = () => {
 };
 
 export default Shopping;
+
+}
