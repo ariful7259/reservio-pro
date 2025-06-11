@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Building, Home, Truck, Briefcase, PaintBucket, Wrench, ChevronDown, ChevronUp, ChevronRight, Filter, MapPin, LayoutGrid, Map as MapIcon, Camera, Laptop, Smartphone, Speaker, Car, Bike, Bus, Tractor, Tent, Armchair, ShowerHead, Tv, BookOpen, HeartPulse, Store, Hammer, Hotel, Building2, Home as HomeIcon, User, DoorOpen, Building as BuildingIcon, HotelIcon, Warehouse, Camera as CameraIcon, Table, Star, Clock, Clipboard, Wrench as WrenchIcon, Settings, PenTool, Share2, Heart } from 'lucide-react';
+import { Building, Home, Truck, Briefcase, PaintBucket, Wrench, ChevronDown, ChevronUp, ChevronRight, Filter, MapPin, LayoutGrid, Map as MapIcon, Camera, Laptop, Smartphone, Speaker, Car, Bike, Bus, Tractor, Tent, Armchair, ShowerHead, Tv, BookOpen, HeartPulse, Store, Hammer, Hotel, Building2, Home as HomeIcon, User, DoorOpen, Building as BuildingIcon, HotelIcon, Warehouse, Camera as CameraIcon, Table, Star, Clock, Clipboard, Wrench as WrenchIcon, Settings, PenTool, Share2, Heart, Calendar, CreditCard, Shield, MapPin as LocationIcon, CheckCircle2, Users, Wifi, Car as ParkingIcon, Coffee, Utensils, Bed, Bath, BookCheck, Phone } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -32,9 +32,9 @@ const Rentals = () => {
     "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?q=80&w=1000&auto=format&fit=crop"
   ];
 
-  // Updated rent categories with "বাসা বাড়ি" as the first category and its subcategories
+  // Updated rent categories with "বাসা বাড়ি" as the first category and enhanced booking features
   const rentCategories = [
-    // Main "বাসা বাড়ি" category with colorful digital icon
+    // Main "বাসা বাড়ি" category with colorful digital icon and booking features
     {
       icon: <div className="text-3xl">🏠</div>,
       name: "বাসা বাড়ি",
@@ -48,10 +48,42 @@ const Rentals = () => {
           path: "/rental-category/apartment",
           count: 187,
           features: [
-            { name: "অনলাইন ভার্চুয়াল ট্যুর", description: "ঘরে বসে অ্যাপার্টমেন্ট দেখুন" },
-            { name: "ইনস্ট্যান্ট বুকিং", description: "তাৎক্ষণিক বুকিং কনফার্মেশন" },
-            { name: "ইউটিলিটি বিল ট্র্যাকিং", description: "বিদ্যুৎ, গ্যাস, পানির বিল ম্যানেজমেন্ট" },
-            { name: "নিরাপত্তা সিস্টেম", description: "CCTV ও নিরাপত্তা ক্যামেরা" }
+            { 
+              name: "ইনস্ট্যান্ট বুকিং", 
+              description: "তাৎক্ষণিক বুকিং কনফার্মেশন",
+              icon: <Calendar className="h-4 w-4" />,
+              bookingType: "instant"
+            },
+            { 
+              name: "অনলাইন ভার্চুয়াল ট্যুর", 
+              description: "ঘরে বসে অ্যাপার্টমেন্ট দেখুন",
+              icon: <Camera className="h-4 w-4" />,
+              bookingType: "scheduled"
+            },
+            { 
+              name: "সিকিউরিটি ডিপোজিট", 
+              description: "অনলাইন সিকিউরিটি পেমেন্ট",
+              icon: <Shield className="h-4 w-4" />,
+              bookingType: "payment"
+            },
+            { 
+              name: "লোকেশন ভেরিফিকেশন", 
+              description: "GPS ভিত্তিক লোকেশন যাচাই",
+              icon: <LocationIcon className="h-4 w-4" />,
+              bookingType: "verification"
+            },
+            { 
+              name: "ইউটিলিটি বিল ট্র্যাকিং", 
+              description: "বিদ্যুৎ, গ্যাস, পানির বিল ম্যানেজমেন্ট",
+              icon: <CreditCard className="h-4 w-4" />,
+              bookingType: "monthly"
+            },
+            { 
+              name: "নিরাপত্তা সিস্টেম", 
+              description: "CCTV ও নিরাপত্তা ক্যামেরা",
+              icon: <CheckCircle2 className="h-4 w-4" />,
+              bookingType: "security"
+            }
           ]
         },
         {
@@ -60,10 +92,42 @@ const Rentals = () => {
           path: "/rental-category/house",
           count: 156,
           features: [
-            { name: "গার্ডেন স্পেস", description: "বাগান ও বহিরাঙ্গন এলাকা" },
-            { name: "পার্কিং ফ্যাসিলিটি", description: "গাড়ি পার্কিং এর ব্যবস্থা" },
-            { name: "পোষা প্রাণী বান্ধব", description: "পোষা প্রাণী রাখার সুবিধা" },
-            { name: "ফ্যামিলি এরিয়া", description: "পারিবারিক পরিবেশ" }
+            { 
+              name: "পূর্ণ বাড়ি বুকিং", 
+              description: "সম্পূর্ণ বাড়ি ভাড়া নিন",
+              icon: <Home className="h-4 w-4" />,
+              bookingType: "full-house"
+            },
+            { 
+              name: "গার্ডেন স্পেস বুকিং", 
+              description: "বাগান ও বহিরাঙ্গন এলাকা অন্তর্ভুক্ত",
+              icon: <Users className="h-4 w-4" />,
+              bookingType: "garden-included"
+            },
+            { 
+              name: "পার্কিং স্লট", 
+              description: "গাড়ি পার্কিং এর গ্যারান্টি",
+              icon: <ParkingIcon className="h-4 w-4" />,
+              bookingType: "parking-included"
+            },
+            { 
+              name: "পোষা প্রাণী অনুমতি", 
+              description: "পোষা প্রাণী রাখার সুবিধা",
+              icon: <Heart className="h-4 w-4" />,
+              bookingType: "pet-friendly"
+            },
+            { 
+              name: "দীর্ঘমেয়াদী চুক্তি", 
+              description: "১ বছর বা তার বেশি সময়ের জন্য",
+              icon: <Calendar className="h-4 w-4" />,
+              bookingType: "long-term"
+            },
+            { 
+              name: "ফ্যামিলি প্রেফারেন্স", 
+              description: "পারিবারিক পরিবেশ নিশ্চিত",
+              icon: <Users className="h-4 w-4" />,
+              bookingType: "family-only"
+            }
           ]
         },
         {
@@ -72,10 +136,42 @@ const Rentals = () => {
           path: "/rental-category/hostel",
           count: 83,
           features: [
-            { name: "খাবার সুবিধা", description: "৩ বেলা খাবারের ব্যবস্থা" },
-            { name: "ওয়াইফাই ইন্টারনেট", description: "হাই-স্পিড ইন্টারনেট" },
-            { name: "লন্ড্রি সার্ভিস", description: "কাপড় ধোয়ার সুবিধা" },
-            { name: "স্টাডি রুম", description: "পড়াশোনার জন্য আলাদা রুম" }
+            { 
+              name: "মিল প্যাকেজ বুকিং", 
+              description: "৩ বেলা খাবারের সাথে বুকিং",
+              icon: <Utensils className="h-4 w-4" />,
+              bookingType: "meal-included"
+            },
+            { 
+              name: "বেড স্লট রিজার্ভেশন", 
+              description: "নির্দিষ্ট বেড নম্বর নিশ্চিত করুন",
+              icon: <Bed className="h-4 w-4" />,
+              bookingType: "bed-reservation"
+            },
+            { 
+              name: "ওয়াইফাই প্যাকেজ", 
+              description: "হাই-স্পিড ইন্টারনেট গ্যারান্টি",
+              icon: <Wifi className="h-4 w-4" />,
+              bookingType: "wifi-included"
+            },
+            { 
+              name: "লন্ড্রি সার্ভিস", 
+              description: "সাপ্তাহিক কাপড় ধোয়ার সুবিধা",
+              icon: <Coffee className="h-4 w-4" />,
+              bookingType: "laundry-included"
+            },
+            { 
+              name: "স্টাডি রুম এক্সেস", 
+              description: "২৪/৭ পড়াশোনার রুম",
+              icon: <BookCheck className="h-4 w-4" />,
+              bookingType: "study-access"
+            },
+            { 
+              name: "শর্ট টার্ম স্টে", 
+              description: "১ মাস থেকে ৬ মাস পর্যন্ত",
+              icon: <Clock className="h-4 w-4" />,
+              bookingType: "short-term"
+            }
           ]
         },
         {
@@ -84,10 +180,42 @@ const Rentals = () => {
           path: "/rental-category/room",
           count: 119,
           features: [
-            { name: "ফার্নিশড রুম", description: "সম্পূর্ণ আসবাবপত্র সহ" },
-            { name: "এটাচড বাথরুম", description: "নিজস্ব বাথরুম সুবিধা" },
-            { name: "কমন এরিয়া", description: "শেয়ার্ড রান্নাঘর ও বসার ঘর" },
-            { name: "২৪/৭ নিরাপত্তা", description: "সার্বক্ষণিক নিরাপত্তা ব্যবস্থা" }
+            { 
+              name: "রুম টাইপ সিলেকশন", 
+              description: "সিঙ্গেল/শেয়ারড রুম পছন্দ",
+              icon: <Users className="h-4 w-4" />,
+              bookingType: "room-type"
+            },
+            { 
+              name: "ফার্নিশড অপশন", 
+              description: "সম্পূর্ণ আসবাবপত্র সহ বুকিং",
+              icon: <Table className="h-4 w-4" />,
+              bookingType: "furnished"
+            },
+            { 
+              name: "প্রাইভেট বাথরুম", 
+              description: "নিজস্ব বাথরুম সুবিধা",
+              icon: <Bath className="h-4 w-4" />,
+              bookingType: "private-bathroom"
+            },
+            { 
+              name: "কমন এরিয়া এক্সেস", 
+              description: "শেয়ার্ড রান্নাঘর ও বসার ঘর",
+              icon: <Coffee className="h-4 w-4" />,
+              bookingType: "common-access"
+            },
+            { 
+              name: "২৪/৭ নিরাপত্তা", 
+              description: "সার্বক্ষণিক নিরাপত্তা গ্যারান্টি",
+              icon: <Shield className="h-4 w-4" />,
+              bookingType: "security-24-7"
+            },
+            { 
+              name: "ইমার্জেন্সি কন্ট্যাক্ট", 
+              description: "জরুরি যোগাযোগের নম্বর",
+              icon: <Phone className="h-4 w-4" />,
+              bookingType: "emergency-contact"
+            }
           ]
         }
       ]
@@ -284,6 +412,50 @@ const Rentals = () => {
     navigate(category.path);
   };
 
+  // Enhanced booking feature handler
+  const handleBookingFeature = (feature: any, subcategory: any) => {
+    const bookingActions: Record<string, () => void> = {
+      'instant': () => navigate('/rental-booking?type=instant'),
+      'scheduled': () => navigate('/rental-booking?type=scheduled'),
+      'payment': () => navigate('/rental-booking?type=payment'),
+      'verification': () => navigate('/rental-booking?type=verification'),
+      'monthly': () => navigate('/rental-booking?type=monthly'),
+      'security': () => navigate('/rental-booking?type=security'),
+      'full-house': () => navigate('/rental-booking?type=full-house'),
+      'garden-included': () => navigate('/rental-booking?type=garden'),
+      'parking-included': () => navigate('/rental-booking?type=parking'),
+      'pet-friendly': () => navigate('/rental-booking?type=pet-friendly'),
+      'long-term': () => navigate('/rental-booking?type=long-term'),
+      'family-only': () => navigate('/rental-booking?type=family'),
+      'meal-included': () => navigate('/rental-booking?type=meal'),
+      'bed-reservation': () => navigate('/rental-booking?type=bed'),
+      'wifi-included': () => navigate('/rental-booking?type=wifi'),
+      'laundry-included': () => navigate('/rental-booking?type=laundry'),
+      'study-access': () => navigate('/rental-booking?type=study'),
+      'short-term': () => navigate('/rental-booking?type=short-term'),
+      'room-type': () => navigate('/rental-booking?type=room-type'),
+      'furnished': () => navigate('/rental-booking?type=furnished'),
+      'private-bathroom': () => navigate('/rental-booking?type=private-bath'),
+      'common-access': () => navigate('/rental-booking?type=common-area'),
+      'security-24-7': () => navigate('/rental-booking?type=security-247'),
+      'emergency-contact': () => navigate('/rental-booking?type=emergency')
+    };
+
+    const action = bookingActions[feature.bookingType];
+    if (action) {
+      action();
+      toast({
+        title: "বুকিং প্রক্রিয়া শুরু",
+        description: `${feature.name} এর জন্য বুকিং পেজে রিডাইরেক্ট করা হচ্ছে`
+      });
+    } else {
+      toast({
+        title: feature.name,
+        description: feature.description
+      });
+    }
+  };
+
   const renderCategoryItem = (category: any, index: number) => {
     if (category.isMainCategory && category.subcategories) {
       return (
@@ -300,40 +472,52 @@ const Rentals = () => {
               </div>
             </CollapsibleTrigger>
             <CollapsibleContent className="mt-3">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 bg-muted/30 rounded-lg">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-muted/30 rounded-lg">
                 {category.subcategories.map((subcategory: any, subIndex: number) => (
                   <div key={subIndex} className="group">
                     <Link 
                       to={subcategory.path} 
-                      className="flex flex-col items-center justify-center transition-all hover:scale-105 p-3 rounded-lg hover:bg-white hover:shadow-md"
+                      className="flex flex-col items-center justify-center transition-all hover:scale-105 p-4 rounded-lg hover:bg-white hover:shadow-md border border-transparent hover:border-primary/20"
                       onClick={() => handleCategoryClick(subcategory)}
                     >
-                      <div className="h-14 w-14 rounded-full bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center mb-2 group-hover:from-blue-500 group-hover:to-purple-600 transition-all duration-300">
+                      <div className="h-14 w-14 rounded-full bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center mb-3 group-hover:from-blue-500 group-hover:to-purple-600 transition-all duration-300">
                         {subcategory.icon}
                       </div>
-                      <span className="text-xs text-center mb-1 font-medium">{subcategory.name}</span>
-                      <Badge variant="outline" className="text-xs">{subcategory.count}</Badge>
+                      <span className="text-sm text-center mb-2 font-medium">{subcategory.name}</span>
+                      <Badge variant="outline" className="text-xs mb-3">{subcategory.count}</Badge>
+                      
                       {subcategory.features && (
-                        <div className="mt-2 text-xs text-muted-foreground text-center">
-                          {subcategory.features.length} ফিচার
+                        <div className="w-full space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="text-xs text-center text-primary font-medium mb-2">
+                            বুকিং ফিচারসমূহ:
+                          </div>
+                          {subcategory.features.slice(0, 3).map((feature: any, featureIndex: number) => (
+                            <Button
+                              key={featureIndex}
+                              variant="outline"
+                              size="sm"
+                              className="w-full text-xs h-auto py-2 px-3 flex items-center gap-2 hover:bg-primary hover:text-primary-foreground"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handleBookingFeature(feature, subcategory);
+                              }}
+                            >
+                              {feature.icon}
+                              <div className="text-left flex-1">
+                                <div className="font-medium">{feature.name}</div>
+                                <div className="text-xs opacity-80">{feature.description}</div>
+                              </div>
+                            </Button>
+                          ))}
+                          {subcategory.features.length > 3 && (
+                            <div className="text-xs text-center text-primary font-medium">
+                              +{subcategory.features.length - 3} আরও বুকিং অপশন
+                            </div>
+                          )}
                         </div>
                       )}
                     </Link>
-                    {subcategory.features && (
-                      <div className="mt-2 space-y-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        {subcategory.features.slice(0, 2).map((feature: any, featureIndex: number) => (
-                          <div key={featureIndex} className="text-xs bg-white p-2 rounded shadow-sm border">
-                            <div className="font-medium text-primary">{feature.name}</div>
-                            <div className="text-muted-foreground">{feature.description}</div>
-                          </div>
-                        ))}
-                        {subcategory.features.length > 2 && (
-                          <div className="text-xs text-center text-primary font-medium">
-                            +{subcategory.features.length - 2} আরও ফিচার
-                          </div>
-                        )}
-                      </div>
-                    )}
                   </div>
                 ))}
               </div>
@@ -580,3 +764,4 @@ const Rentals = () => {
 };
 
 export default Rentals;
+
