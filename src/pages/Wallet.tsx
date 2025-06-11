@@ -126,7 +126,7 @@ const Wallet = () => {
           </Button>
           <h1 className="text-2xl font-bold">ওয়ালেট</h1>
         </div>
-        <WalletCard />
+        <WalletCard balance={25000} />
       </div>
 
       <Tabs defaultValue="home" className="space-y-6">
@@ -163,7 +163,17 @@ const Wallet = () => {
                 <CardTitle>Nearby Services</CardTitle>
               </CardHeader>
               <CardContent>
-                <WalletNearbyServices services={nearbyServices} />
+                <div className="space-y-3">
+                  {nearbyServices.map(service => (
+                    <div key={service.id} className="flex items-center justify-between p-2 border rounded">
+                      <div>
+                        <div className="font-medium">{service.name}</div>
+                        <div className="text-sm text-muted-foreground">{service.category}</div>
+                      </div>
+                      <div className="text-sm text-blue-600">{service.distance}</div>
+                    </div>
+                  ))}
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -174,7 +184,18 @@ const Wallet = () => {
             </CardHeader>
             <CardContent>
               {transactions.map(transaction => (
-                <TransactionItem key={transaction.id} transaction={transaction} />
+                <div key={transaction.id} className="flex items-center justify-between p-3 border-b last:border-b-0">
+                  <div>
+                    <div className="font-medium">{transaction.description}</div>
+                    <div className="text-sm text-muted-foreground">{transaction.date}</div>
+                  </div>
+                  <div className={`font-semibold ${
+                    transaction.type === 'income' ? 'text-green-600' : 
+                    transaction.type === 'expense' ? 'text-red-600' : 'text-blue-600'
+                  }`}>
+                    {transaction.type === 'income' ? '+' : '-'}৳{transaction.amount}
+                  </div>
+                </div>
               ))}
               <Button variant="link" className="w-full">View All Transactions</Button>
             </CardContent>
@@ -352,9 +373,49 @@ const Wallet = () => {
       </Tabs>
 
       {/* Modals */}
-      {showQRCode && <WalletQRCode onClose={() => setShowQRCode(false)} />}
-      {showSendMoney && <SendMoneyForm onClose={() => setShowSendMoney(false)} />}
-      {showP2PPayment && <P2PPaymentModal onClose={() => setShowP2PPayment(false)} />}
+      {showQRCode && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg max-w-sm w-full mx-4">
+            <h3 className="text-lg font-semibold mb-4">আপনার QR কোড</h3>
+            <div className="flex justify-center mb-4">
+              <div className="w-48 h-48 bg-gray-200 flex items-center justify-center">
+                QR Code Here
+              </div>
+            </div>
+            <Button onClick={() => setShowQRCode(false)} className="w-full">
+              বন্ধ করুন
+            </Button>
+          </div>
+        </div>
+      )}
+      
+      {showSendMoney && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg max-w-sm w-full mx-4">
+            <h3 className="text-lg font-semibold mb-4">টাকা পাঠান</h3>
+            <div className="space-y-4">
+              <Input placeholder="ফোন নম্বর" />
+              <Input placeholder="পরিমাণ" />
+              <Button className="w-full">পাঠান</Button>
+              <Button variant="outline" onClick={() => setShowSendMoney(false)} className="w-full">
+                বন্ধ করুন
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {showP2PPayment && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg max-w-sm w-full mx-4">
+            <h3 className="text-lg font-semibold mb-4">P2P পেমেন্ট</h3>
+            <Button variant="outline" onClick={() => setShowP2PPayment(false)} className="w-full">
+              বন্ধ করুন
+            </Button>
+          </div>
+        </div>
+      )}
+      
       {showTemplatePreview && selectedTemplate && (
         <TemplatePreviewModal
           template={selectedTemplate}

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -81,13 +80,13 @@ const VendorFinancing = () => {
     {
       id: 'equipment_finance',
       type: 'যন্ত্রপাতি',
-      name: 'ইকুইপমেন্ট ফাইন্যান্স',
+      name: 'ইকুপমেন্ট ফাইন্যান্স',
       minAmount: 50000,
       maxAmount: 1000000,
       interestRate: 18,
       tenure: '১২-৩৬ মাস',
       processingTime: '৭২ ঘন্টা',
-      requirements: ['বিজনেস রেজিস্ট্রেশন', 'ইনকাম সার্টিফিকেট', 'ইকুইপমেন্ট কোটেশন'],
+      requirements: ['বিজনেস রেজিস্ট্রেশন', 'ইনকাম সার্টিফিকেট', 'ইকুপমেন্ট কোটেশন'],
       benefits: ['যন্ত্রপাতি কেনার জন্য', 'কম সুদের হার', '৩ বছর পর্যন্ত']
     }
   ];
@@ -223,7 +222,10 @@ const VendorFinancing = () => {
                     <p className="text-muted-foreground mb-4">
                       আবেদন করার আগে 'লোন অপশন' ট্যাব থেকে আপনার পছন্দের লোন নির্বাচন করুন
                     </p>
-                    <Button onClick={() => document.querySelector('[value="loans"]')?.click()}>
+                    <Button onClick={() => {
+                      const loansTab = document.querySelector('[value="loans"]') as HTMLElement;
+                      loansTab?.click();
+                    }}>
                       লোন নির্বাচন করুন
                     </Button>
                   </CardContent>
@@ -442,3 +444,5 @@ const VendorFinancing = () => {
 };
 
 export default VendorFinancing;
+
+```

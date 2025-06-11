@@ -43,7 +43,7 @@ const AIBookingAssistant = () => {
     scrollToBottom();
   }, [messages]);
 
-  const botResponses = {
+  const botResponses: Record<string, { text: string; suggestions: string[]; serviceData?: any }> = {
     'হোম ক্লিনিং': {
       text: 'দুর্দান্ত! হোম ক্লিনিং সার্ভিসের জন্য আপনার এলাকা কোনটি? আমরা ঢাকার সব এলাকায় পেশাদার ক্লিনার পাঠাই।',
       suggestions: ['ধানমন্ডি', 'গুলশান', 'বনানী', 'উত্তরা', 'মিরপুর'],
@@ -77,7 +77,7 @@ const AIBookingAssistant = () => {
 
     // Simulate bot response
     setTimeout(() => {
-      const response = botResponses[inputMessage as keyof typeof botResponses] || {
+      const response = botResponses[inputMessage] || {
         text: 'আপনার অনুরোধটি বুঝতে পারছি। আমাদের কাস্টমার সার্ভিস টিম শীঘ্রই আপনার সাথে যোগাযোগ করবে।',
         suggestions: ['অন্য সার্ভিস দেখুন', 'কল করুন', 'লাইভ চ্যাট']
       };
