@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -166,29 +165,49 @@ const KycVerification = () => {
             </CardHeader>
             <CardContent className="px-5">
               <div className="space-y-4">
-                {kycItems.map((item) => (
-                  <div key={item.id} className="flex justify-between items-center p-4 rounded-lg border">
-                    <div className="flex items-center gap-3">
-                      <div className={`h-10 w-10 rounded-full ${item.iconColor} flex items-center justify-center`}>
-                        <item.icon className="h-5 w-5" />
+                {kycItems.map((item) => {
+                  let buttonText = '';
+                  let buttonVariant: "default" | "outline" | "ghost" = 'ghost';
+
+                  if (item.status === 'incomplete') {
+                    buttonText = 'শুরু করুন';
+                    buttonVariant = 'default';
+                  } else if (item.status === 'completed') {
+                    buttonText = 'দেখুন';
+                    buttonVariant = 'outline';
+                  } else if (item.status === 'pending') {
+                    buttonText = 'পেন্ডিং';
+                    buttonVariant = 'outline';
+                  }
+
+                  return (
+                    <div key={item.id} className="flex justify-between items-center p-4 rounded-lg border bg-white hover:bg-accent/50 transition">
+                      <div className="flex items-center gap-3">
+                        <div className={`h-10 w-10 rounded-full ${item.iconColor} flex items-center justify-center`}>
+                          <item.icon className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <p className="font-medium">{item.title}</p>
+                          <p className="text-sm text-muted-foreground">{item.description}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium">{item.title}</p>
-                        <p className="text-sm text-muted-foreground">{item.description}</p>
+                      <div className="flex items-center gap-2">
+                        {getStatusBadge(item.status)}
+                        <Button
+                          variant={buttonVariant}
+                          size="sm"
+                          className={`flex items-center gap-1 px-3 py-1 text-[15px] font-semibold rounded hover:scale-[1.06] transition-transform ${item.status === 'incomplete' ? 'bg-primary text-white' : ''}`}
+                          onClick={() => navigate(`/kyc-verification/${item.id}`)}
+                        >
+                          <span>
+                            {buttonText}
+                          </span>
+                          <ChevronRight className="h-4 w-4 ml-1" />
+                        </Button>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      {getStatusBadge(item.status)}
-                      <Button 
-                        variant="ghost" 
-                        size="icon"
-                        onClick={() => navigate(`/kyc-verification/${item.id}`)}
-                      >
-                        <ChevronRight className="h-5 w-5" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             </CardContent>
           </Card>
