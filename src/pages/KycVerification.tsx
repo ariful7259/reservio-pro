@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -19,8 +18,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import { useAuth } from '@/hooks/useAuth';
 
 const KycVerification = () => {
+  const { user, isSeller } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('status');
@@ -128,9 +130,35 @@ const KycVerification = () => {
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mb-4">আপনার KYC প্রক্রিয়া সম্পূর্ণ করতে বাকি স্টেপগুলো শেষ করুন</p>
-              <Button variant="default" className="w-full" onClick={handleCompleteKyc}>
-                KYC সম্পূর্ণ করুন
-              </Button>
+              
+              <div className="flex gap-2 w-full">
+                <Button variant="default" className="flex-1" onClick={handleCompleteKyc}>
+                  KYC সম্পূর্ণ করুন
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="icon" className="border-gray-300">
+                      <ChevronRight className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => navigate('/profile-management')}>
+                      <User className="mr-2 h-4 w-4" />
+                      প্রোফাইল দেখুন
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() =>
+                        isSeller
+                          ? navigate('/seller-dashboard')
+                          : navigate('/become-seller')
+                      }
+                    >
+                      <ShieldCheck className="mr-2 h-4 w-4" />
+                      {isSeller ? "Seller Dashboard" : "Become a Seller"}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </CardContent>
           </Card>
 
