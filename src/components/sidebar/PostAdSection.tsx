@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Plus, CheckCircle2 } from 'lucide-react';
@@ -18,13 +17,13 @@ export const PostAdSection = () => {
     setTimeout(() => {
       setLoading(false);
       toast({
-        title: (
+        title: "আপনার বিজ্ঞাপন সফলভাবে প্রকাশিত হয়েছে!",
+        description: (
           <span className="flex items-center gap-2">
             <CheckCircle2 className="text-green-500 h-5 w-5" />
-            আপনার বিজ্ঞাপন সফলভাবে প্রকাশিত হয়েছে!
+            এখন সবাই দেখতে পারবে আপনার পোস্ট করা বিজ্ঞাপনটি।
           </span>
         ),
-        description: "এখন সবাই দেখতে পারবে আপনার পোস্ট করা বিজ্ঞাপনটি।",
       });
       navigate('/create-post');
     }, 1200);
