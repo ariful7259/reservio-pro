@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   ShoppingBag,
@@ -25,6 +26,7 @@ const BanglaTip: React.FC<{ tip: string }> = ({ tip }) => (
   </div>
 );
 
+// Features config & Short name (Bangla, concise, 7 char max)
 const wishFeatures = [
   {
     key: "wishlist",
@@ -32,7 +34,8 @@ const wishFeatures = [
     iconColor: "text-blue-500",
     gradient: "from-blue-100 via-pink-50 to-yellow-50",
     title: "Wishlist Goal System",
-    desc: "ইউজার তার পছন্দের প্রোডাক্ট বা সার্ভিস উইশলিস্টে যোগ করবে, বারবার টার্গেট ইনকাম ট্র্যাক হবে।",
+    short: "উইশলিস্ট",
+    desc: "ইউজার তাদের পছন্দের প্রোডাক্ট বা সার্ভিস অ্যাপে Wishlist করবে। নির্দিষ্ট সময়ের ভিতরে টার্গেট ইনকাম দেখাবে (যেমন: ৭ দিনে ২৫০০ টাকা)।",
     component: <WishlistGoalFeature />
   },
   {
@@ -41,7 +44,8 @@ const wishFeatures = [
     iconColor: "text-green-500",
     gradient: "from-green-100 via-white to-pink-50",
     title: "টাস্ক কমপ্লিশন দিয়ে আয়",
-    desc: "ভিডিও শেয়ার, রেফারেল, লোকেশন ভিত্তিক কাজ, নানান সহজ টাস্ক সম্পূর্ণ করলেই ইনকাম।",
+    short: "টাস্ক",
+    desc: "ডিজিটাল টাস্ক: ভিডিও শেয়ার, রেফারেল, অ্যাপ ডাউনলোড এবং লোকেশন ভিত্তিক কাজ: ডেলিভারি, পরিচ্ছন্নতা, গৃহশিক্ষক ইত্যাদি।",
     component: <TaskCompletionFeature />
   },
   {
@@ -50,7 +54,8 @@ const wishFeatures = [
     iconColor: "text-purple-500",
     gradient: "from-purple-100 via-white to-yellow-50",
     title: "নিজের প্রোডাক্ট/সার্ভিস অফার দিয়ে আয়",
-    desc: "ইউজার নিজের প্রোডাক্ট বা সার্ভিস অফার করবে, যেমন ক্যামেরা ভাড়া বা ফ্রিল্যান্স কাজ।",
+    short: "অফার",
+    desc: "ইউজার পারবে তার প্রোডাক্ট ভাড়া দিতে বা সার্ভিস অফার করতে। উদাহরণ: ক্যামেরা ভাড়া, হেল্পিং সার্ভিস, ফ্রিল্যান্স ডিজাইন।",
     component: <ProductServiceOfferFeature />
   },
   {
@@ -59,7 +64,8 @@ const wishFeatures = [
     iconColor: "text-orange-500",
     gradient: "from-orange-100 via-white to-pink-50",
     title: "লোকেশন ভিত্তিক Task ও Rent Map",
-    desc: "আশেপাশের কাজ বা রেন্ট-অপশন ম্যাপে দেখা যাবে, ফিল্টার করা যাবে।",
+    short: "ম্যাপ",
+    desc: "আশেপাশে কি কাজ বা রেন্ট অপশন আছে ম্যাপে দেখা যাবে, লোকেশন অনুযায়ী ফিল্টার করা যাবে।",
     component: <LocationBasedTaskFeature />
   },
   {
@@ -68,17 +74,9 @@ const wishFeatures = [
     iconColor: "text-indigo-500",
     gradient: "from-indigo-100 via-yellow-50 to-green-50",
     title: "Earn Meter + Countdown",
-    desc: "ইনকাম কীভাবে বাড়ছে তা গ্রাফে দেখা যাবে, নির্দিষ্ট সময়ের জন্য Countdown টাইমার।",
+    short: "আয়",
+    desc: "প্রতিটি উইশলিস্ট-এর জন্য ইনকাম কতটুকু হলো ট্র্যাক, সময়সীমার ভিতরে না পারলে Retry/Partial Unlock।",
     component: <EarnMeterCountdownFeature />
-  },
-  {
-    key: "gamified",
-    icon: Star,
-    iconColor: "text-yellow-500",
-    gradient: "from-yellow-100 via-blue-50 to-white",
-    title: "Gamified Progress (ব্যাজ, লেভেল)",
-    desc: "প্রতিটি অর্জনে ব্যাজ, লেভেল, মিশন ও রিওয়ার্ড দিয়ে উৎসাহ।",
-    component: <GamifiedProgressFeature />
   },
   {
     key: "video",
@@ -86,9 +84,20 @@ const wishFeatures = [
     iconColor: "text-rose-500",
     gradient: "from-rose-100 via-white to-yellow-50",
     title: "ভিডিও/লিংক শেয়ার ইনকাম",
-    desc: "ইউজার ভিডিও/ফাইল লিংক শেয়ার করে ইনকাম পাবেন, ইন-অ্যাপ প্লেয়ারেই দেখা যাবে।",
+    short: "শেয়ার",
+    desc: "ইউজার ভিডিও বা ফাইল লিঙ্ক শেয়ার করলে ইনকাম করবে, ইন-অ্যাপ প্লেয়ারেই দেখা যাবে।",
     component: <VideoShareEarnFeature />
-  }
+  },
+  {
+    key: "gamified",
+    icon: Star,
+    iconColor: "text-yellow-500",
+    gradient: "from-yellow-100 via-blue-50 to-white",
+    title: "Gamified Progress (ব্যাজ, লেভেল)",
+    short: "গেমি",
+    desc: "ব্যাজ, লেভেল, র্যাংক, মিশন ও টাস্ক রিওয়ার্ডসহ গেমিফিকেশনের পূর্ণ অভিজ্ঞতা।",
+    component: <GamifiedProgressFeature />
+  },
 ];
 
 export const Wish2EarnModule: React.FC = () => {
@@ -107,7 +116,7 @@ export const Wish2EarnModule: React.FC = () => {
         <BanglaTip tip="প্রত্যেক ছোট কাজ আপনাকে এগিয়ে নিয়ে যাবে স্বপ্নের দিকে। আয় বাড়ান, ব্যাজ আর রিওয়ার্ড অর্জন করুন!" />
       </div>
 
-      {/* Feature Icon Grid: Always 4 columns, scrollable on xs/sm */}
+      {/* Feature Icon Grid: always 4 columns, scrollable on xs/sm */}
       <div
         className={`
           grid grid-cols-4
@@ -151,7 +160,10 @@ export const Wish2EarnModule: React.FC = () => {
               >
                 <IconCmp className={`w-[22px] h-[22px] sm:w-[26px] sm:h-[26px] ${feat.iconColor} transition-all`} />
               </span>
-              <span className={`block text-[11px] sm:text-xs text-center font-medium text-gray-700 leading-tight truncate max-w-[56px] sm:max-w-[80px] mt-1 ${isSelected ? 'text-primary' : ''}`}>
+              <span className="block text-[11px] font-bold text-zinc-600 mt-1 mb-[1px] leading-tight drop-shadow-sm">
+                {feat.short}
+              </span>
+              <span className={`block text-[10px] sm:text-xs text-center font-medium text-gray-400 leading-tight truncate max-w-[56px] sm:max-w-[80px] mt-[2px] ${isSelected ? 'text-primary' : ''}`}>
                 {feat.title}
               </span>
             </button>
@@ -163,8 +175,11 @@ export const Wish2EarnModule: React.FC = () => {
       {modal && (() => {
         const feat = wishFeatures.find(f => f.key === modal);
         return feat ? (
-          <FeatureModal open={true} onOpenChange={v => v ? setModal(feat.key) : setModal(null)}>
-            {feat.component}
+          <FeatureModal open={true} onOpenChange={v => v ? setModal(feat.key) : setModal(null)} title={feat.title}>
+            <div className="p-2">
+              <div className="mb-2 text-sm text-gray-700">{feat.desc}</div>
+              {feat.component}
+            </div>
           </FeatureModal>
         ) : null;
       })()}
