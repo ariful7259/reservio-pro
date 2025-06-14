@@ -133,7 +133,8 @@ const KycVerification = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('status');
-  const { stepId } = useParams<{ stepId: string }>();
+  // FIX: use correct param name from App.tsx route (':step')
+  const { step } = useParams<{ step: string }>();
 
   const getStatusBadge = (status: string) => {
     switch(status) {
@@ -173,9 +174,9 @@ const KycVerification = () => {
     navigate(`/kyc-verification/${stepId}`);
   };
 
-  // যদি কোন স্টেপ আইডি রাউটে থাকে, চেকলিস্ট/স্ট্যাটাস না দেখিয়ে ঐ স্টেপ ডিটেইল কম্পোনেন্ট দেখাবে
-  if (stepId) {
-    return <KycStepDetail stepId={stepId} onBack={() => navigate('/kyc-verification')} />;
+  // যদি কোন স্টেপ রাউটে থাকে, চেকলিস্ট/স্ট্যাটাস না দেখিয়ে ঐ স্টেপ ডিটেইল কম্পোনেন্ট দেখাবে
+  if (step) {
+    return <KycStepDetail stepId={step} onBack={() => navigate('/kyc-verification')} />;
   }
 
   return (
