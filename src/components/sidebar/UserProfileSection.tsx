@@ -44,39 +44,8 @@ export const UserProfileSection = () => {
       <div className="flex flex-col min-w-0">
         <DrawerTitle className="text-lg truncate">{user?.name}</DrawerTitle>
         <p className="text-sm text-muted-foreground truncate">{user?.phone || user?.email}</p>
-        <div className="flex gap-2 mt-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-7 px-3 font-normal"
-            asChild
-          >
-            <Link to="/profile-management">প্রোফাইল দেখুন</Link>
-          </Button>
-          {isSeller ? (
-            <Button
-              variant="default"
-              size="sm"
-              className="h-7 px-3 font-normal bg-purple-600 hover:bg-purple-700"
-              asChild
-            >
-              <Link to="/seller-dashboard">
-                <Store className="h-4 w-4 mr-1" /> Seller Dashboard
-              </Link>
-            </Button>
-          ) : (
-            <Button
-              variant="secondary"
-              size="sm"
-              className="h-7 px-3 font-normal"
-              asChild
-            >
-              <Link to="/become-seller">Become a Seller</Link>
-            </Button>
-          )}
-        </div>
       </div>
-      {/* ড্রপডাউন -- ন্যাভিগেশন ও অ্যাকশনসমূহ */}
+      {/* ড্রপডাউন -- সব বাটন ও ন্যাভিগেশন */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="h-8 w-8 ml-auto">
@@ -84,6 +53,29 @@ export const UserProfileSection = () => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">
+
+          {/* দুইটা বাটন drop down menu-র একদম উপরে */}
+          <DropdownMenuItem asChild>
+            <Link to="/profile-management" className="flex items-center gap-2 w-full">
+              <UserIcon className="h-4 w-4" /> <span>প্রোফাইল দেখুন</span>
+            </Link>
+          </DropdownMenuItem>
+          {isSeller ? (
+            <DropdownMenuItem asChild>
+              <Link to="/seller-dashboard" className="flex items-center gap-2 w-full">
+                <Store className="h-4 w-4" /> <span>Seller Dashboard</span>
+              </Link>
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem asChild>
+              <Link to="/become-seller" className="flex items-center gap-2 w-full">
+                <Store className="h-4 w-4" /> <span>Become a Seller</span>
+              </Link>
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuSeparator />
+
+          {/* আগে থেকে থাকা অপশনগুলো নিচে */}
           <DropdownMenuItem asChild>
             <Link to="/orders" className="flex items-center gap-2 w-full">
               <ShoppingBag className="h-4 w-4" /> <span>অর্ডারসমূহ</span>
@@ -122,3 +114,4 @@ export const UserProfileSection = () => {
     </div>
   );
 };
+
