@@ -93,6 +93,47 @@ const KycVerification = () => {
     setActiveTab('checklist');
   }
 
+  // Checklist action function per step
+  const handleChecklistAction = (stepId: string) => {
+    switch (stepId) {
+      case "personal":
+        toast({
+          title: "ব্যক্তিগত তথ্য",
+          description: "আপনার ব্যক্তিগত তথ্য সম্পাদনার অপশন আসবে এখানে।",
+        });
+        // এখানে পরবর্তীতে Edit Personal Info Modal ইত্যাদি খুলতে পারেন
+        break;
+      case "nid":
+        toast({
+          title: "NID যাচাইকরণ",
+          description: "এখানে NID আপলোড/যাচাই ফ্লো চালু হবে।",
+        });
+        // এখানে NID verification/Upload dialog/modal/functionality কল করুন
+        break;
+      case "address":
+        toast({
+          title: "ঠিকানা যাচাইকরণ",
+          description: "ঠিকানার প্রমাণ আপলোডের ফিচার আসবে এখানে।",
+        });
+        // এখানে address verification/Upload functionality কল করা যাবে
+        break;
+      case "selfie":
+        toast({
+          title: "সেলফি ভেরিফিকেশন",
+          description: "লাইভ ক্যামেরা বা সেলফি যাচাইকরণ ফিচার এখানে চাইল্ড করা যাবে।",
+        });
+        // এখানে selfie verification/camera modal/trigger যোগ করা যাবে
+        break;
+      default:
+        toast({
+          title: "অজানা ধাপ",
+          description: "এই ধাপ নির্ধারিত নয়।",
+        });
+    }
+    // চাইলে ন্যাভিগেশনও চালু রাখুন
+    navigate(`/kyc-verification/${stepId}`);
+  };
+
   return (
     <div className="container px-4 pt-16 pb-20">
       <div className="flex items-center gap-3 mb-6">
@@ -197,7 +238,7 @@ const KycVerification = () => {
                           variant={buttonVariant}
                           size="sm"
                           className={`flex items-center gap-1 px-3 py-1 text-[15px] font-semibold rounded hover:scale-[1.06] transition-transform ${item.status === 'incomplete' ? 'bg-primary text-white' : ''}`}
-                          onClick={() => navigate(`/kyc-verification/${item.id}`)}
+                          onClick={() => handleChecklistAction(item.id)}
                         >
                           <span>
                             {buttonText}
