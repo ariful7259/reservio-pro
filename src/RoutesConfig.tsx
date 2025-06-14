@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
@@ -38,6 +37,7 @@ import SecurePay from '@/pages/SecurePay';
 import SecurePayCreator from '@/pages/SecurePayCreator';
 import SecurePayBuyer from '@/pages/SecurePayBuyer';
 import SecurePayAdmin from '@/pages/SecurePayAdmin';
+import Wish2Earn from './pages/Wish2Earn';
 
 const RoutesConfig = () => {
   return (
@@ -91,6 +91,9 @@ const RoutesConfig = () => {
       <Route path="/digital-products" element={<DigitalProductsMarketplace />} />
       <Route path="/digital-products/:productId" element={<DigitalProductDetail />} />
       <Route path="/create-digital-product" element={<CreateDigitalProduct />} />
+      
+      {/* Wish2Earn Full Page */}
+      <Route path="/wish2earn" element={<Wish2Earn />} />
       
       {/* Seller Dashboard */}
       <Route path="/seller-dashboard" element={<SellerDashboard />} />

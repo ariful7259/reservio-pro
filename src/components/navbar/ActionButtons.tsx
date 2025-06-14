@@ -11,8 +11,8 @@ export const ActionButtons: React.FC = () => {
   const navigate = useNavigate();
 
   const handleWish2EarnClick = () => {
-    // ডিজিটাল প্রোডাক্টস মার্কেটপ্লেসে Wish2Earn ট্যাব চালু
-    navigate('/digital-products?tab=wish2earn');
+    // এখন Wish2Earn-এর ফুলপেজে যাবে
+    navigate('/wish2earn');
   };
 
   return (
