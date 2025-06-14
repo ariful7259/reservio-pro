@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -19,7 +18,6 @@ export const BottomNavItem: React.FC<BottomNavItemProps> = ({ title, path, icon,
         ${isActive ? 'text-primary' : 'text-gray-500'}
         transition-colors duration-150
         focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30
-        active:scale-95
         `
       }
       style={{
@@ -42,3 +40,4 @@ export const BottomNavItem: React.FC<BottomNavItemProps> = ({ title, path, icon,
     </Link>
   );
 };
+
