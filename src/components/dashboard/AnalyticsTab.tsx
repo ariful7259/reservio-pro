@@ -196,7 +196,7 @@ const AnalyticsTab = ({ dateRange, onDateRangeChange, businessType }: AnalyticsT
                 </div>
               </div>
               <div className="h-12 w-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                <LineChart className="h-6 w-6 text-orange-600" />
+                <LucideLineChart className="h-6 w-6 text-orange-600" />
               </div>
             </div>
           </CardContent>
