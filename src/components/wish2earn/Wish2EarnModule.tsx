@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   ShoppingBag,
@@ -108,18 +107,18 @@ export const Wish2EarnModule: React.FC = () => {
         <BanglaTip tip="প্রত্যেক ছোট কাজ আপনাকে এগিয়ে নিয়ে যাবে স্বপ্নের দিকে। আয় বাড়ান, ব্যাজ আর রিওয়ার্ড অর্জন করুন!" />
       </div>
 
-      {/* Feature Icon Grid */}
+      {/* Feature Icon Grid: Always 4 columns, scrollable on xs/sm */}
       <div
         className={`
-          grid
-          grid-cols-2
-          md:grid-cols-3
-          lg:grid-cols-4
+          grid grid-cols-4
           gap-y-5 gap-x-3
           justify-items-center
           px-2 sm:px-0
           mb-2
+          overflow-x-auto
+          w-full
         `}
+        style={{ minWidth: 340 }}
       >
         {wishFeatures.map((feat) => {
           const isSelected = modal === feat.key;
