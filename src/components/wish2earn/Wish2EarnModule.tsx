@@ -1,6 +1,14 @@
+
 import React, { useState } from "react";
-import { ShoppingBag, BadgeDollarSign, Award, MapPin, BarChart2, Star, Heart, Video } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  ShoppingBag,
+  BadgeDollarSign,
+  Award,
+  MapPin,
+  BarChart2,
+  Star,
+  Heart
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { FeatureModal } from "./FeatureModal";
 import { WishlistGoalFeature } from "./features/WishlistGoalFeature";
@@ -18,56 +26,69 @@ const BanglaTip: React.FC<{ tip: string }> = ({ tip }) => (
   </div>
 );
 
-// Feature List/Config
 const wishFeatures = [
   {
     key: "wishlist",
-    icon: <ShoppingBag className="h-6 w-6 text-blue-500" />,
+    icon: ShoppingBag,
+    iconColor: "text-blue-500",
+    gradient: "from-blue-100 via-pink-50 to-yellow-50",
     title: "Wishlist Goal System",
     desc: "ইউজার তার পছন্দের প্রোডাক্ট বা সার্ভিস উইশলিস্টে যোগ করবে, বারবার টার্গেট ইনকাম ট্র্যাক হবে।",
-    component: <WishlistGoalFeature />,
+    component: <WishlistGoalFeature />
   },
   {
     key: "task",
-    icon: <BadgeDollarSign className="h-6 w-6 text-green-500" />,
+    icon: BadgeDollarSign,
+    iconColor: "text-green-500",
+    gradient: "from-green-100 via-white to-pink-50",
     title: "টাস্ক কমপ্লিশন দিয়ে আয়",
     desc: "ভিডিও শেয়ার, রেফারেল, লোকেশন ভিত্তিক কাজ, নানান সহজ টাস্ক সম্পূর্ণ করলেই ইনকাম।",
-    component: <TaskCompletionFeature />,
+    component: <TaskCompletionFeature />
   },
   {
     key: "offer",
-    icon: <Award className="h-6 w-6 text-purple-500" />,
+    icon: Award,
+    iconColor: "text-purple-500",
+    gradient: "from-purple-100 via-white to-yellow-50",
     title: "নিজের প্রোডাক্ট/সার্ভিস অফার দিয়ে আয়",
     desc: "ইউজার নিজের প্রোডাক্ট বা সার্ভিস অফার করবে, যেমন ক্যামেরা ভাড়া বা ফ্রিল্যান্স কাজ।",
-    component: <ProductServiceOfferFeature />,
+    component: <ProductServiceOfferFeature />
   },
   {
     key: "location",
-    icon: <MapPin className="h-6 w-6 text-orange-500" />,
+    icon: MapPin,
+    iconColor: "text-orange-500",
+    gradient: "from-orange-100 via-white to-pink-50",
     title: "লোকেশন ভিত্তিক Task ও Rent Map",
     desc: "আশেপাশের কাজ বা রেন্ট-অপশন ম্যাপে দেখা যাবে, ফিল্টার করা যাবে।",
-    component: <LocationBasedTaskFeature />,
+    component: <LocationBasedTaskFeature />
   },
   {
     key: "earnMeter",
-    icon: <BarChart2 className="h-6 w-6 text-indigo-500" />,
+    icon: BarChart2,
+    iconColor: "text-indigo-500",
+    gradient: "from-indigo-100 via-yellow-50 to-green-50",
     title: "Earn Meter + Countdown",
     desc: "ইনকাম কীভাবে বাড়ছে তা গ্রাফে দেখা যাবে, নির্দিষ্ট সময়ের জন্য Countdown টাইমার।",
-    component: <EarnMeterCountdownFeature />,
+    component: <EarnMeterCountdownFeature />
   },
   {
     key: "gamified",
-    icon: <Star className="h-6 w-6 text-yellow-500" />,
+    icon: Star,
+    iconColor: "text-yellow-500",
+    gradient: "from-yellow-100 via-blue-50 to-white",
     title: "Gamified Progress (ব্যাজ, লেভেল)",
     desc: "প্রতিটি অর্জনে ব্যাজ, লেভেল, মিশন ও রিওয়ার্ড দিয়ে উৎসাহ।",
-    component: <GamifiedProgressFeature />,
+    component: <GamifiedProgressFeature />
   },
   {
     key: "video",
-    icon: <Heart className="h-6 w-6 text-rose-500" />,
+    icon: Heart,
+    iconColor: "text-rose-500",
+    gradient: "from-rose-100 via-white to-yellow-50",
     title: "ভিডিও/লিংক শেয়ার ইনকাম",
     desc: "ইউজার ভিডিও/ফাইল লিংক শেয়ার করে ইনকাম পাবেন, ইন-অ্যাপ প্লেয়ারেই দেখা যাবে।",
-    component: <VideoShareEarnFeature />,
+    component: <VideoShareEarnFeature />
   }
 ];
 
@@ -89,46 +110,55 @@ export const Wish2EarnModule: React.FC = () => {
 
       {/* Feature Icon Grid */}
       <div
-        className="
-          grid 
-          grid-cols-4
-          gap-y-6 gap-x-3 
+        className={`
+          grid
+          grid-cols-2
+          md:grid-cols-3
+          lg:grid-cols-4
+          gap-y-5 gap-x-3
           justify-items-center
           px-2 sm:px-0
           mb-2
-        "
+        `}
       >
-        {wishFeatures.map((feat) => (
-          <button
-            key={feat.key}
-            type="button"
-            onClick={() => setModal(feat.key)}
-            aria-label={feat.title}
-            className={`
-              group w-20 h-20 sm:w-24 sm:h-24 
-              flex flex-col items-center justify-center
-              bg-gradient-to-br from-pink-50 via-blue-50 to-yellow-50
-              rounded-full shadow-md border-2 border-stone-200
-              hover:shadow-lg hover:border-pink-200 hover:scale-105 
-              active:scale-100 
-              focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2
-              transition-all duration-200
-              cursor-pointer
-              outline-none
-              relative
-              p-0
-            `}
-            tabIndex={0}
-          >
-            <span className="flex items-center justify-center mb-1">
-              {feat.icon}
-            </span>
-            {/* ফিচারের নাম নিচে দেখানো হবে */}
-            <span className="block text-xs text-center font-medium text-gray-700 leading-tight mt-0.5">
-              {feat.title}
-            </span>
-          </button>
-        ))}
+        {wishFeatures.map((feat) => {
+          const isSelected = modal === feat.key;
+          const IconCmp = feat.icon;
+          return (
+            <button
+              key={feat.key}
+              type="button"
+              aria-label={feat.title}
+              onClick={() => setModal(feat.key)}
+              className={`
+                group w-24 h-28 xs:w-20 xs:h-24 sm:w-28 sm:h-32
+                flex flex-col items-center justify-center
+                rounded-2xl shadow-md border-2
+                bg-gradient-to-br ${feat.gradient}
+                border-stone-200
+                hover:border-primary hover:shadow-lg
+                focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
+                transition-all duration-200 cursor-pointer outline-none relative
+                ${isSelected ? 'border-primary shadow-lg scale-105' : ''}
+              `}
+              tabIndex={0}
+            >
+              <span
+                className={`
+                  flex items-center justify-center rounded-full bg-white shadow
+                  transition-all mb-2
+                  ${isSelected ? 'ring-2 ring-primary scale-110' : ''}
+                  h-12 w-12 sm:h-14 sm:w-14
+                `}
+              >
+                <IconCmp className={`w-8 h-8 sm:w-9 sm:h-9 ${feat.iconColor} transition-all`} />
+              </span>
+              <span className={`block text-xs sm:text-sm text-center font-semibold text-gray-700 leading-tight mt-1 mb-0 ${isSelected ? 'text-primary' : ''}`}>
+                {feat.title}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Show only the selected feature modal */}
