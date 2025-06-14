@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, LogOut, LogIn, Plus, Store, Building } from 'lucide-react';
@@ -11,8 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 // Import refactored components
 import { ServiceCategoriesGrid } from './ServiceCategoriesGrid';
 import { VideoCarousel } from './VideoCarousel';
-// FIX: import as default, not named
-import UserProfileSection from './UserProfileSection';
+import { UserProfileSection } from './UserProfileSection';
 import { GuestSection } from './GuestSection';
 import { PostAdSection } from './PostAdSection';
 import { MyServicesDropdown } from './MyServicesDropdown';
@@ -81,7 +79,7 @@ export const SidebarDrawer = () => {
       <DrawerContent className="w-[85%] max-w-[350px] h-[100vh] overflow-y-auto left-0 right-auto">
         <DrawerHeader className="border-b pb-4">
           {isAuthenticated && user ? (
-            <UserProfileSection />
+            <UserProfileSection profileMenuItems={profileMenuItems} />
           ) : (
             <GuestSection />
           )}
