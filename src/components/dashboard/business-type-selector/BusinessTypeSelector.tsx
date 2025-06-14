@@ -177,6 +177,7 @@ const BusinessTypeSelector: React.FC<Props> = ({
   );
 };
 
+// Only export the wrapped Selector component! No named export.
 const SelectorWithProvider: React.FC<Props> = (props) => (
   <BusinessFeatureProvider>
     <BusinessTypeSelector {...props} />
