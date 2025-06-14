@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { Home, Building, Search, ShoppingBag, Plus } from 'lucide-react';
@@ -46,6 +45,7 @@ export const BottomNav: React.FC = () => {
             return <CreatePostPopover key={link.path} />;
           }
           
+          // ensure only BottomNavItem used, and no hardcoded indicator/line div anywhere
           return (
             <BottomNavItem
               key={link.path}

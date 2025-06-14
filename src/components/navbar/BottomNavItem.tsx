@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -32,8 +31,7 @@ export const BottomNavItem: React.FC<BottomNavItemProps> = ({ title, path, icon,
       <span className="text-xs mt-1 font-medium leading-4 max-w-[56px] whitespace-nowrap overflow-hidden text-ellipsis">
         {title}
       </span>
-      {/* নিচের কালো/primary লাইনটি বাদ দিয়েছি */}
+      {/* লাইন একেবারেই বাদ দেওয়া হয়েছে। */}
     </Link>
   );
 };
-
