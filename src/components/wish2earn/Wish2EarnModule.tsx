@@ -116,13 +116,17 @@ export const Wish2EarnModule: React.FC = () => {
               cursor-pointer
               outline-none
               relative
+              p-0
             `}
             tabIndex={0}
           >
             <span className="flex items-center justify-center mb-1">
               {feat.icon}
             </span>
-            <span className="sr-only">{feat.title}</span>
+            {/* ফিচারের নাম নিচে দেখানো হবে */}
+            <span className="block text-xs text-center font-medium text-gray-700 leading-tight mt-0.5">
+              {feat.title}
+            </span>
           </button>
         ))}
       </div>
