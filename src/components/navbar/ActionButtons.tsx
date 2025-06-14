@@ -4,10 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import { Wallet, StoreIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CommunityMenu } from './CommunityMenu';
-import { UserProfile } from './UserProfile';
+// import { UserProfile } from './UserProfile'; // পুরনো প্রোফাইল ইমেজ সরানো হয়েছে
+import Wish2EarnBadge from '@/components/wish2earn/Wish2EarnBadge';
 
 export const ActionButtons: React.FC = () => {
   const navigate = useNavigate();
+
+  const handleWish2EarnClick = () => {
+    // ডিজিটাল প্রোডাক্টস মার্কেটপ্লেসে Wish2Earn ট্যাব চালু
+    navigate('/digital-products?tab=wish2earn');
+  };
 
   return (
     <div className="flex items-center gap-1 md:gap-3">
@@ -33,7 +39,10 @@ export const ActionButtons: React.FC = () => {
         <StoreIcon className="h-4 w-4 md:h-5 md:w-5" />
       </Button>
 
-      <UserProfile />
+      {/* নিচের Profile (avatar) বাদ দিয়ে Wish2EarnBadge লাগানো হলো */}
+      <div className="ml-0 md:ml-2">
+        <Wish2EarnBadge onClick={handleWish2EarnClick} />
+      </div>
     </div>
   );
 };
