@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Settings, MessageCircle } from "lucide-react";
@@ -9,6 +9,7 @@ import { FeatureList } from "./FeatureList";
 import { CustomFeatureDialog } from "./CustomFeatureDialog";
 import { useFeatureEnablement } from "./useFeatureEnablement";
 import { BusinessFeatureProvider, useBusinessFeatureContext } from "./BusinessFeatureProvider";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {
   businessTypes: BusinessType[];
@@ -21,8 +22,9 @@ const BusinessTypeSelector: React.FC<Props> = ({
   activeType,
   onChange,
 }) => {
-  const [expandedType, setExpandedType] = useState<string | null>(null);
-  const [customDialogOpen, setCustomDialogOpen] = useState(false);
+  const [expandedType, setExpandedType] = React.useState<string | null>(null);
+  const [customDialogOpen, setCustomDialogOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const {
     enabledFeatures,
@@ -36,31 +38,38 @@ const BusinessTypeSelector: React.FC<Props> = ({
     setFilter,
   } = useBusinessFeatureContext();
 
-  const handleTypeClick = (typeId: string) => {
-    const newActiveType = activeType === typeId ? null : typeId;
-    onChange(newActiveType);
+  // Memoize to avoid re-renders
+  const activeFeatureList = React.useMemo(() => 
+    expandedType ? featureMap[expandedType] || [] : [], 
+    [featureMap, expandedType]
+  );
 
-    if (expandedType === typeId) {
-      setExpandedType(null);
-    } else {
-      setExpandedType(typeId);
-    }
-  };
-
-  const handleCustomFeature = () => setCustomDialogOpen(true);
-
-  const handleSupport = () => {
-    toast({
-      title: "সাপোর্ট",
-      description: "সাপোর্ট পেজে রিডাইরেক্ট করা হচ্ছে...",
+  // Calculate pending/new count for badge (demo logic)
+  const badgeCounts = React.useMemo(() => {
+    const res: Record<string, { pending: number, newCount: number }> = {};
+    businessTypes.forEach(t => {
+      const feats = featureMap[t.id] || [];
+      res[t.id] = {
+        pending: feats.filter(f => !enabledFeatures.has(f.id) && f.setupProgress !== 100).length,
+        newCount: feats.filter(f => f.popular && !enabledFeatures.has(f.id)).length,
+      };
     });
-    window.location.href = "/help";
-  };
+    return res;
+  }, [featureMap, enabledFeatures, businessTypes]);
 
   // New: Filter/Search UI
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(e.target.value);
   };
+
+  // Fake loading demo (simulate API fetch, can be replaced with SWR/react-query)
+  React.useEffect(() => {
+    if (expandedType) {
+      setLoading(true);
+      const t = setTimeout(() => setLoading(false), 700);
+      return () => clearTimeout(t);
+    }
+  }, [expandedType]);
 
   return (
     <div className="space-y-4">
@@ -73,6 +82,8 @@ const BusinessTypeSelector: React.FC<Props> = ({
             onChange(null);
             setExpandedType(null);
           }}
+          aria-pressed={activeType === null}
+          aria-label="সকল ব্যবসা"
         >
           সকল ব্যবসা
         </Button>
@@ -81,8 +92,12 @@ const BusinessTypeSelector: React.FC<Props> = ({
             key={type.id}
             type={type}
             isActive={activeType === type.id}
-            onClick={handleTypeClick}
-            badgeCount={0}
+            onClick={id => {
+              onChange(id);
+              setExpandedType(id === expandedType ? null : id);
+            }}
+            pendingCount={badgeCounts[type.id]?.pending}
+            newCount={badgeCounts[type.id]?.newCount}
           />
         ))}
       </div>
@@ -101,9 +116,9 @@ const BusinessTypeSelector: React.FC<Props> = ({
       )}
       {/* Expanded features section */}
       {expandedType && (
-        <Card className="animate-fade-in border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10">
-          <CardContent className="p-4 sm:p-6">
-            <div className="space-y-4">
+        <div className="animate-fade-in">
+          <div className="border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg">
+            <div className="p-4 sm:p-6 space-y-4">
               <div className="flex items-center gap-2 mb-4">
                 {businessTypes.find((t) => t.id === expandedType)?.icon}
                 <h3 className="text-lg font-semibold">
@@ -111,10 +126,11 @@ const BusinessTypeSelector: React.FC<Props> = ({
                 </h3>
               </div>
               <FeatureList
-                features={featureMap[expandedType] || []}
+                features={activeFeatureList}
                 enabledFeatures={enabledFeatures}
                 onFeatureUse={onFeatureUse}
                 canUseFeature={canUseFeature}
+                loading={loading}
               />
               {/* Additional info section */}
               <div className="mt-6 p-3 sm:p-4 bg-muted/50 rounded-lg">
@@ -130,25 +146,27 @@ const BusinessTypeSelector: React.FC<Props> = ({
                       variant="outline"
                       size="sm"
                       className="flex-1 sm:flex-none flex items-center gap-1"
-                      onClick={handleCustomFeature}
+                      onClick={() => setCustomDialogOpen(true)}
+                      aria-label="কাস্টম ফিচার অনুরোধ"
                     >
-                      <Settings className="h-3 w-3" />
-                      কাস্টম ফিচার
+                      <span className="sr-only">কাস্টম ফিচার</span>
+                      ⚙
                     </Button>
                     <Button
                       size="sm"
                       className="flex-1 sm:flex-none flex items-center gap-1"
-                      onClick={handleSupport}
+                      onClick={() => window.open("/help", "_blank")}
+                      aria-label="সাপোর্ট"
                     >
-                      <MessageCircle className="h-3 w-3" />
-                      সাপোর্ট
+                      <span className="sr-only">সাপোর্ট</span>
+                      ℹ
                     </Button>
                   </div>
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
       {/* Custom Feature Dialog */}
       <CustomFeatureDialog
@@ -159,7 +177,6 @@ const BusinessTypeSelector: React.FC<Props> = ({
   );
 };
 
-// Provider wrap (with context)
 const SelectorWithProvider: React.FC<Props> = (props) => (
   <BusinessFeatureProvider>
     <BusinessTypeSelector {...props} />

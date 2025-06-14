@@ -3,8 +3,7 @@ import React, { useState, useContext, useMemo } from "react";
 import { BusinessType, BusinessFeature } from "./types";
 import { ShoppingBag, Building, Wrench, Pencil } from "lucide-react";
 
-// DEMO: Feature Map—এখানে বসবে (চাইলে API ডেটা ভবিষ্যতে)
-// Future: fetch features from API, just update here!
+// DEMO: Static feature map, future: fetch from API!
 const staticFeatures: Record<string, BusinessFeature[]> = {
   marketplace: [
     {
@@ -96,9 +95,10 @@ export const BusinessFeatureProvider: React.FC<{children: React.ReactNode}> = ({
   const [enabledFeatures, setEnabledFeatures] = useState<Set<string>>(new Set());
   const [filter, setFilter] = useState<string>("");
 
-  // It would be fetched dynamically from API in future
+  // API future: fetch and merge features
   const featureMap = useMemo(() => staticFeatures, []);
 
+  // Memoize context value to avoid unnecessary rerenders
   const ctxValue = useMemo(() => ({
     featureMap,
     enabledFeatures,

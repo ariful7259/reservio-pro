@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,7 +7,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 
 type Props = {
@@ -19,40 +18,61 @@ export const CustomFeatureDialog: React.FC<Props> = ({
   open,
   onOpenChange,
 }) => {
-  const navigate = useNavigate();
+  const [feature, setFeature] = useState("");
+  const [desc, setDesc] = useState("");
+  const [contact, setContact] = useState("");
+
+  const handleSubmit = () => {
+    // Fake send
+    onOpenChange(false);
+    toast({
+      title: "ধন্যবাদ!",
+      description: "আপনার অনুরোধ প্রাপ্ত হয়েছে। সাপোর্ট টিম দ্রুত যোগাযোগ করবে।",
+    });
+    setFeature("");
+    setDesc("");
+    setContact("");
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>কাস্টম ফিচার অনুরোধ</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
-          <p className="text-sm text-muted-foreground">
-            আপনার বিশেষ প্রয়োজনের জন্য কাস্টম ফিচার তৈরি করতে আমাদের সাথে যোগাযোগ করুন।
-          </p>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              className="flex-1"
-            >
-              বাতিল
-            </Button>
-            <Button
-              onClick={() => {
-                onOpenChange(false);
-                navigate("/help");
-                toast({
-                  title: "অনুরোধ পাঠানো হয়েছে",
-                  description: "আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব",
-                });
-              }}
-              className="flex-1"
-            >
-              অনুরোধ পাঠান
-            </Button>
+        <form
+          className="space-y-2"
+          onSubmit={e => { e.preventDefault(); handleSubmit(); }}
+          aria-label="কাস্টম ফিচার অনুরোধ ফর্ম"
+        >
+          <input
+            className="w-full p-2 border rounded my-1"
+            placeholder="আপনার প্রয়োজনীয় ফিচারের নাম"
+            value={feature}
+            onChange={e => setFeature(e.target.value)}
+            required
+            aria-label="ফিচারের নাম"
+          />
+          <textarea
+            className="w-full p-2 border rounded my-1"
+            placeholder="বিস্তারিত লিখুন (ঐচ্ছিক)"
+            value={desc}
+            onChange={e => setDesc(e.target.value)}
+            rows={3}
+            aria-label="বিস্তারিত"
+          />
+          <input
+            className="w-full p-2 border rounded my-1"
+            placeholder="আপনার ইমেইল (ঐচ্ছিক, যোগাযোগের জন্য)"
+            value={contact}
+            onChange={e => setContact(e.target.value)}
+            aria-label="যোগাযোগের ইমেইল"
+          />
+          <div className="flex gap-2 mt-2">
+            <Button variant="outline" type="button" onClick={() => onOpenChange(false)} className="flex-1">বাতিল</Button>
+            <Button type="submit" className="flex-1">অনুরোধ পাঠান</Button>
           </div>
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );

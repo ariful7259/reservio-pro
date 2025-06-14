@@ -1,15 +1,30 @@
 
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { ChevronUp, ChevronDown } from "lucide-react";
+import { ChevronUp, ChevronDown, BellDot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BusinessTypeButtonProps } from "./types";
 
-export const BusinessTypeButton: React.FC<BusinessTypeButtonProps> = ({
+// Utility: getBadge
+function getBadge({ pendingCount = 0, newCount = 0 }) {
+  if (pendingCount > 0) {
+    return <Badge variant="warning" className="ml-1">{pendingCount} pending</Badge>;
+  }
+  if (newCount > 0) {
+    return <Badge variant="success" className="ml-1">New</Badge>;
+  }
+  return null;
+}
+
+export const BusinessTypeButton: React.FC<BusinessTypeButtonProps & {
+  pendingCount?: number;
+  newCount?: number;
+}> = ({
   type,
   isActive,
   onClick,
-  badgeCount = 0,
+  pendingCount = 0,
+  newCount = 0,
 }) => {
   return (
     <Button
@@ -21,9 +36,7 @@ export const BusinessTypeButton: React.FC<BusinessTypeButtonProps> = ({
     >
       {type.icon}
       <span className="hidden sm:inline">{type.name}</span>
-      {badgeCount > 0 ? (
-        <Badge variant="warning" className="ml-1">{badgeCount}</Badge>
-      ) : null}
+      {getBadge({ pendingCount, newCount })}
       {isActive ? (
         <ChevronUp className="h-3 w-3 ml-1" />
       ) : (
