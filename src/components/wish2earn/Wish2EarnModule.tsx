@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Heart, Star, BadgeDollarSign, CalendarDays, ShoppingBag, Award, Clock, GraphBar } from 'lucide-react';
+import { Heart, Star, BadgeDollarSign, CalendarDays, ShoppingBag, Award, Clock, BarChart2, MapPin } from 'lucide-react';
 
 const wishFeatures = [
   {
@@ -24,7 +24,7 @@ const wishFeatures = [
     desc: "আশেপাশের কাজ বা রেন্ট-অপশন ম্যাপে দেখা যাবে, ফিল্টার করা যাবে।",
   },
   {
-    icon: <GraphBar className="h-5 w-5 text-indigo-500" />,
+    icon: <BarChart2 className="h-5 w-5 text-indigo-500" />,
     title: "Earn Meter + Countdown",
     desc: "ইনকাম কীভাবে বাড়ছে তা গ্রাফে দেখা যাবে, নির্দিষ্ট সময়ের জন্য Countdown টাইমার।",
   },
@@ -69,3 +69,4 @@ export const Wish2EarnModule = () => (
   </section>
 );
 export default Wish2EarnModule;
+
