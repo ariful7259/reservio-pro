@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, LogOut, LogIn, Plus, Store, Building } from 'lucide-react';
@@ -10,7 +11,8 @@ import { useToast } from '@/hooks/use-toast';
 // Import refactored components
 import { ServiceCategoriesGrid } from './ServiceCategoriesGrid';
 import { VideoCarousel } from './VideoCarousel';
-import { UserProfileSection } from './UserProfileSection';
+// FIX: import as default, not named
+import UserProfileSection from './UserProfileSection';
 import { GuestSection } from './GuestSection';
 import { PostAdSection } from './PostAdSection';
 import { MyServicesDropdown } from './MyServicesDropdown';
