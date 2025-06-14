@@ -2,7 +2,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Heart, Plus } from "lucide-react";
-import Wish2EarnBadge from "@/components/wish2earn/Wish2EarnBadge";
 import { Badge } from "@/components/ui/badge";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useShoppingState } from "@/hooks/useShoppingState";
@@ -69,10 +68,10 @@ const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({ onTabChange, wish
             {isMobile ? 'বিক্রি' : 'প্রোডাক্ট বিক্রি করুন'}
           </span>
         </Button>
-        {/* Profile/Image section রিমুভড, তার পরিবর্তে Wish2Earn badge */}
-        <div className="ml-2">
+        {/* Profile/Image section রিমুভড, তার পরিবর্তে Wish2Earn badge ও ছিল, এখন বাদ */}
+        {/* <div className="ml-2">
           <Wish2EarnBadge onClick={() => onTabChange('wish2earn')} />
-        </div>
+        </div> */}
       </div>
     </div>
   );
