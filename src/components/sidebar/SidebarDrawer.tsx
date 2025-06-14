@@ -17,7 +17,6 @@ import { MyServicesDropdown } from './MyServicesDropdown';
 import { CollapsibleMenuSection } from './CollapsibleMenuSection';
 import { ReferralSystem } from './ReferralSystem';
 import { SellerDashboardSection } from './SellerDashboardSection';
-import { Wish2EarnSection } from './Wish2EarnSection';
 import { 
   getProfileMenuItems, 
   legalAssistanceMenuItems, 
@@ -95,24 +94,24 @@ export const SidebarDrawer = () => {
             
             {/* Service Categories Grid - পুনরায় স্থাপিত, এখন ভিডিও ক্যারোসেলের নিচে */}
             <ServiceCategoriesGrid />
-            
+
             {/* Housing Menu Section */}
             <CollapsibleMenuSection 
               title="হাউজিং এবং সম্পত্তি" 
               icon={<Building className="h-5 w-5 text-blue-500 mr-2" />} 
               items={housingMenuItems} 
             />
-            
+
             {/* My Services Dropdown - only shown to authenticated users */}
             {isAuthenticated && (
               <MyServicesDropdown />
             )}
-            
+
             {/* Seller Dashboard Section - For sellers, placed before the collapsible menu sections */}
             {isAuthenticated && isSeller && (
               <SellerDashboardSection />
             )}
-            
+
             {/* Collapsible Menu Sections */}
             <div className="space-y-2 mt-4">
               {/* নতুন পেমেন্ট মেনু সেকশন */}
@@ -132,28 +131,25 @@ export const SidebarDrawer = () => {
                   items={merchantResources} 
                 />
               )}
-              
+
               <CollapsibleMenuSection 
                 title="লিগ্যাল অ্যাসিস্ট্যান্স এন্ড লোন" 
                 icon={collapsibleMenuIcons.legal} 
                 items={legalAssistanceMenuItems} 
               />
-              
+
               <CollapsibleMenuSection 
                 title="ইউটিলিটিস" 
                 icon={collapsibleMenuIcons.utilities} 
                 items={utilitiesMenuItems} 
               />
-              
+
               <CollapsibleMenuSection 
                 title="হেল্প এন্ড সাপোর্ট" 
                 icon={collapsibleMenuIcons.help} 
                 items={helpAndSupportMenuItems} 
               />
             </div>
-            
-            {/* Wish2EarnSection */}
-            <Wish2EarnSection />
             
             {/* Referral System */}
             <ReferralSystem />
