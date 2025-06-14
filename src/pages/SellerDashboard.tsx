@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { 
   BarChart, 
@@ -33,7 +32,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Separator } from '@/components/ui/separator';
 import DashboardOverview from '@/components/dashboard/DashboardOverview';
-import BusinessTypeSelector from '@/components/dashboard/BusinessTypeSelector';
+import BusinessTypeSelector from "@/components/dashboard/business-type-selector/BusinessTypeSelector";
 import ActivityFeed from '@/components/dashboard/ActivityFeed';
 import AlertNotifications from '@/components/dashboard/AlertNotifications';
 import RevenueChart from '@/components/dashboard/RevenueChart';
