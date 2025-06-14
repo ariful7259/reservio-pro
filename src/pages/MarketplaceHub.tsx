@@ -1,9 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, Heart, Grid, Cog, Search, Plus } from 'lucide-react';
+import { ShoppingCart, Heart, Grid, Plus } from 'lucide-react';
 import DigitalProductsMarketplace from './DigitalProductsMarketplace';
 import CartComponent from '@/components/product/CartComponent';
 import WishlistComponent from '@/components/product/WishlistComponent';
@@ -11,14 +12,12 @@ import PostDigitalProduct from '@/components/product/PostDigitalProduct';
 import { useShoppingState } from '@/hooks/useShoppingState';
 import { Badge } from '@/components/ui/badge';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Wish2EarnModule } from '@/components/wish2earn/Wish2EarnModule';
-import Wish2EarnBadge from '@/components/wish2earn/Wish2EarnBadge';
 import MarketplaceHeader from "@/components/marketplace/MarketplaceHeader";
 import BrowseTabContent from "@/components/marketplace/BrowseTabContent";
 import CartTabContent from "@/components/marketplace/CartTabContent";
 import WishlistTabContent from "@/components/marketplace/WishlistTabContent";
 import SellTabContent from "@/components/marketplace/SellTabContent";
-import Wish2EarnTabContent from "@/components/marketplace/Wish2EarnTabContent";
+// Wish2EarnTabContent removed
 
 const MarketplaceHub = () => {
   const navigate = useNavigate();
@@ -32,8 +31,8 @@ const MarketplaceHub = () => {
       'browse': 'ডিজিটাল প্রোডাক্টস মার্কেটপ্লেস',
       'cart': 'শপিং কার্ট',
       'wishlist': 'উইশলিস্ট',
-      'sell': 'প্রোডাক্ট বিক্রয় করুন',
-      'wish2earn': 'Wish2Earn'
+      'sell': 'প্রোডাক্ট বিক্রয় করুন'
+      // Removed wish2earn title
     };
     
     document.title = titles[activeTab] || 'মার্কেটপ্লেস';
@@ -47,7 +46,7 @@ const MarketplaceHub = () => {
         cartCount={getCartItemsCount()}
       />
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-3 sm:space-y-4">
-        <TabsList className="w-full h-auto p-1 grid grid-cols-5 gap-1">
+        <TabsList className="w-full h-auto p-1 grid grid-cols-4 gap-1">
           <TabsTrigger 
             value="browse" 
             className="flex flex-col sm:flex-row items-center gap-1 py-2 px-2 text-xs sm:text-sm"
@@ -85,13 +84,7 @@ const MarketplaceHub = () => {
             <span className="hidden xs:inline">বিক্রি</span>
             <span className="hidden sm:inline">বিক্রি করুন</span>
           </TabsTrigger>
-          <TabsTrigger 
-            value="wish2earn" 
-            className="flex flex-col sm:flex-row items-center gap-1 py-2 px-2 text-xs sm:text-sm !text-pink-600 font-bold"
-          >
-            <Heart className="h-4 w-4" />
-            <span>Wish2Earn</span>
-          </TabsTrigger>
+          {/* Removed Wish2Earn tabs trigger */}
         </TabsList>
         
         <TabsContent value="browse" className="mt-3 sm:mt-4">
@@ -109,10 +102,7 @@ const MarketplaceHub = () => {
         <TabsContent value="sell" className="mt-3 sm:mt-4">
           <SellTabContent />
         </TabsContent>
-        
-        <TabsContent value="wish2earn" className="mt-3 sm:mt-4 flex justify-center">
-          <Wish2EarnTabContent />
-        </TabsContent>
+        {/* Removed Wish2EarnTabContent here */}
       </Tabs>
     </div>
   );
