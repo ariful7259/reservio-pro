@@ -1,8 +1,9 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Play } from 'lucide-react';
+import { Play, Book } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { toast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 interface VideoAd {
   thumbnail: string;
@@ -32,6 +33,18 @@ export const VideoCarousel = () => {
       videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
     }
   ];
+  const navigate = useNavigate();
+
+  const handleBook = (ad: VideoAd) => {
+    toast({
+      title: "বুকিং কনফার্ম হয়েছে",
+      description: `আপনি "${ad.title}" ভিডিওর জন্য বুকিং করেছেন!`,
+    });
+    // Redirect as needed (for demo to a booking page)
+    setTimeout(() => {
+      navigate('/services');
+    }, 1000);
+  };
 
   return (
     <div className="space-y-2">
@@ -46,11 +59,12 @@ export const VideoCarousel = () => {
                     <source src={ad.videoUrl} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
-                  <div className="absolute inset-0 flex items-center justify-center">
+                  {/* Play toggle button */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                     <Button 
                       variant="outline" 
                       size="icon" 
-                      className="bg-black/30 text-white border-white hover:bg-black/50 hover:text-white" 
+                      className="bg-black/30 text-white border-white hover:bg-black/50 hover:text-white pointer-events-auto"
                       onClick={e => {
                         e.stopPropagation();
                         const video = e.currentTarget.closest('.aspect-video')?.querySelector('video');
@@ -62,15 +76,37 @@ export const VideoCarousel = () => {
                           }
                         }
                       }}
+                      aria-label="ভিডিও চালান/বন্ধ করুন"
                     >
                       <Play className="h-6 w-6" />
+                    </Button>
+                  </div>
+                  {/* Book button: placed at bottom right over video */}
+                  <div className="absolute bottom-2 right-2 flex pointer-events-none">
+                    <Button 
+                      variant="success" 
+                      size="sm" 
+                      className="shadow-lg pointer-events-auto"
+                      onClick={() => handleBook(ad)}
+                      aria-label={`${ad.title} বুক করুন`}
+                    >
+                      <span className="flex items-center gap-1">
+                        <Book className="h-4 w-4 mr-1" />
+                        বুক করুন
+                      </span>
                     </Button>
                   </div>
                 </div>
                 <div className="p-3">
                   <h3 className="font-medium mb-2">{ad.title}</h3>
                   <p className="text-sm text-gray-600 mb-3">{ad.description}</p>
-                  <Button variant="default" size="sm" className="w-full" onClick={() => window.location.href = '/services'}>
+                  {/* Keep existing booking button for redundancy, or remove if not needed */}
+                  <Button 
+                    variant="default" 
+                    size="sm" 
+                    className="w-full md:hidden"
+                    onClick={() => handleBook(ad)}
+                  >
                     বুক করুন
                   </Button>
                 </div>
