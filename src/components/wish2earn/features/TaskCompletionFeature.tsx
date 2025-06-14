@@ -33,7 +33,7 @@ export const TaskCompletionFeature: React.FC = () => {
                 </span>
               )}
             </div>
-            <Button size="xs" className="mt-1 w-fit" onClick={() => toggleTask(task.id)}>
+            <Button size="sm" className="mt-1 w-fit" onClick={() => toggleTask(task.id)}>
               {task.completed ? "আবার করুন" : "Complete"}
             </Button>
           </li>
