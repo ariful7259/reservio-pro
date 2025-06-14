@@ -9,6 +9,9 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import FeaturedDigitalProducts from '@/components/FeaturedDigitalProducts';
 import { usePostStore, Post, PostType } from '@/store/usePostStore';
 import { useAuth } from '@/hooks/useAuth';
+import CategoryTabs from "@/components/CategoryTabs";
+import { Skeleton } from "@/components/ui/skeleton";
+
 const Index = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
@@ -130,7 +133,21 @@ const Index = () => {
   const handleListingClick = (path: string) => {
     navigate(path);
   };
-  return <div className="container px-4 pt-20 pb-20">
+
+  // Add local state for active tab
+  const [activeTab, setActiveTab] = useState("all");
+  // Add local state for loading simulation (demo)
+  const [loading, setLoading] = useState<boolean>(false);
+
+  // Simulate loading for demonstration (2s)
+  useEffect(() => {
+    setLoading(true);
+    const timeout = setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(timeout);
+  }, [activeTab]);
+
+  return (
+    <div className="container px-4 pt-20 pb-20">
       <div className="flex flex-wrap justify-center gap-2 mb-6">
         {!isAuthenticated ? <Button onClick={() => navigate('/login')} variant="outline" className="flex items-center gap-1">
             <LogIn className="h-4 w-4" /> লগইন
@@ -168,17 +185,30 @@ const Index = () => {
           <h2 className="text-xl font-semibold">ফিচার্ড লিস্টিং</h2>
         </div>
 
-        <Tabs defaultValue="all">
-          <TabsList className="mb-4 w-full bg-secondary/50">
-            <TabsTrigger value="all" className="flex-1">সব</TabsTrigger>
-            <TabsTrigger value="rent" className="flex-1">রেন্ট</TabsTrigger>
-            <TabsTrigger value="services" className="flex-1">সার্ভিস</TabsTrigger>
-            <TabsTrigger value="marketplace" className="flex-1">মার্কেটপ্লেস</TabsTrigger>
-          </TabsList>
+        {/* Category Tabs: Replace old TabsList with new UX */}
+        <CategoryTabs active={activeTab} setActive={setActiveTab} />
 
-          <TabsContent value="all">
+        {/* Feature Listings: skeleton show on loading */}
+        <div className="mt-4">
+          {loading ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {getListings('all').map(listing => <Card key={`all-${listing.id}-${listing.category}`} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => handleListingClick(listing.path)}>
+              {Array.from({length: 4}).map((_,i) => (
+                <div key={i} className="rounded-lg overflow-hidden bg-gray-100">
+                  <Skeleton className="h-40 w-full mb-3" />
+                  <Skeleton className="h-6 w-3/4 mb-2" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {getListings(activeTab).map(listing => (
+                <Card
+                  key={`${activeTab}-${listing.id}-${listing.category}`}
+                  className="overflow-hidden cursor-pointer hover:shadow-lg transition-all hover:scale-105 hover:border-primary 
+                  active:scale-100 duration-200 card-hover-effect"
+                  onClick={() => handleListingClick(listing.path)}
+                >
                   <div className="relative aspect-square">
                     <img src={listing.image} alt={listing.title} className="w-full h-full object-cover" />
                     <Badge className="absolute top-2 right-2">{listing.category}</Badge>
@@ -197,106 +227,28 @@ const Index = () => {
                       </div>
                     </div>
                   </CardContent>
-                </Card>)}
+                </Card>
+              ))}
             </div>
-            <div className="flex justify-center mt-4">
-              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/shopping')}>
-                সব দেখুন <ArrowRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="rent">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {getListings('rent').map(listing => <Card key={`rent-${listing.id}`} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => handleListingClick(listing.path)}>
-                  <div className="relative aspect-square">
-                    <img src={listing.image} alt={listing.title} className="w-full h-full object-cover" />
-                    <Badge className="absolute top-2 right-2">{listing.category}</Badge>
-                  </div>
-                  <CardContent className="p-3">
-                    <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
-                    <div className="flex items-center text-xs text-muted-foreground mt-1">
-                      <MapPin className="h-3 w-3 mr-1" />
-                      <span>{listing.location}</span>
-                    </div>
-                    <div className="flex items-center justify-between mt-2">
-                      <p className="text-sm font-bold text-primary">{listing.price}</p>
-                      <div className="flex items-center text-xs">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
-                        <span>4.8</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>)}
-            </div>
-            <div className="flex justify-center mt-4">
-              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/rentals')}>
-                আরও দেখুন <ArrowRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="services">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {getListings('services').map(listing => <Card key={`service-${listing.id}`} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => handleListingClick(listing.path)}>
-                  <div className="relative aspect-square">
-                    <img src={listing.image} alt={listing.title} className="w-full h-full object-cover" />
-                    <Badge className="absolute top-2 right-2">{listing.category}</Badge>
-                  </div>
-                  <CardContent className="p-3">
-                    <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
-                    <div className="flex items-center text-xs text-muted-foreground mt-1">
-                      <MapPin className="h-3 w-3 mr-1" />
-                      <span>{listing.location}</span>
-                    </div>
-                    <div className="flex items-center justify-between mt-2">
-                      <p className="text-sm font-bold text-primary">{listing.price}</p>
-                      <div className="flex items-center text-xs">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
-                        <span>4.8</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>)}
-            </div>
-            <div className="flex justify-center mt-4">
-              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/services')}>
-                আরও দেখুন <ArrowRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="marketplace">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {getListings('marketplace').map(listing => <Card key={`marketplace-${listing.id}`} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => handleListingClick(listing.path)}>
-                  <div className="relative aspect-square">
-                    <img src={listing.image} alt={listing.title} className="w-full h-full object-cover" />
-                    <Badge className="absolute top-2 right-2">{listing.category}</Badge>
-                  </div>
-                  <CardContent className="p-3">
-                    <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
-                    <div className="flex items-center text-xs text-muted-foreground mt-1">
-                      <MapPin className="h-3 w-3 mr-1" />
-                      <span>{listing.location}</span>
-                    </div>
-                    <div className="flex items-center justify-between mt-2">
-                      <p className="text-sm font-bold text-primary">{listing.price}</p>
-                      <div className="flex items-center text-xs">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
-                        <span>4.8</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>)}
-            </div>
-            <div className="flex justify-center mt-4">
-              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/marketplace')}>
-                আরও দেখুন <ArrowRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </TabsContent>
-        </Tabs>
+          )}
+        </div>
+        <div className="flex justify-center mt-4">
+          <Button 
+            variant="outline" 
+            className="flex items-center gap-1 animate-pulse-soft shadow-button button-pop"
+            onClick={() => {
+              // user তুলে দেখার মতো রুট
+              if(activeTab==="all") navigate('/shopping');
+              else if(activeTab==="rent") navigate('/rentals');
+              else if(activeTab==="services") navigate('/services');
+              else if(activeTab==="marketplace") navigate('/marketplace');
+            }}>
+            {activeTab==="all" ? "সব দেখুন" : "আরও দেখুন"}
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
-    </div>;
+    </div>
+  );
 };
 export default Index;
