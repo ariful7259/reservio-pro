@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, LogOut, LogIn, Plus, Store } from 'lucide-react';
@@ -11,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 // Import refactored components
 import { ServiceCategoriesGrid } from './sidebar/ServiceCategoriesGrid';
 import { VideoCarousel } from './sidebar/VideoCarousel';
-import { UserProfileSection } from './sidebar/UserProfileSection';
+import UserProfileSection from './sidebar/UserProfileSection';
 import { GuestSection } from './sidebar/GuestSection';
 import { PostAdSection } from './sidebar/PostAdSection';
 import { MyServicesDropdown } from './sidebar/MyServicesDropdown';
