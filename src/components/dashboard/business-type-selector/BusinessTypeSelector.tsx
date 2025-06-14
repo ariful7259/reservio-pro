@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,16 +8,12 @@ import { BusinessTypeButton } from "./BusinessTypeButton";
 import { FeatureList } from "./FeatureList";
 import { CustomFeatureDialog } from "./CustomFeatureDialog";
 import { useFeatureEnablement } from "./useFeatureEnablement";
+import { BusinessFeatureProvider, useBusinessFeatureContext } from "./BusinessFeatureProvider";
 
 type Props = {
   businessTypes: BusinessType[];
   activeType: string | null;
   onChange: (id: string | null) => void;
-};
-
-const featureMap: Record<string, any[]> = {
-  // ... See your old featureMap here; for brevity not shown!
-  // Fill from your previous code
 };
 
 const BusinessTypeSelector: React.FC<Props> = ({
@@ -35,8 +30,12 @@ const BusinessTypeSelector: React.FC<Props> = ({
     canUseFeature,
     setEnabledFeatures,
   } = useFeatureEnablement();
+  const {
+    featureMap,
+    filter,
+    setFilter,
+  } = useBusinessFeatureContext();
 
-  // Handler
   const handleTypeClick = (typeId: string) => {
     const newActiveType = activeType === typeId ? null : typeId;
     onChange(newActiveType);
@@ -56,6 +55,11 @@ const BusinessTypeSelector: React.FC<Props> = ({
       description: "সাপোর্ট পেজে রিডাইরেক্ট করা হচ্ছে...",
     });
     window.location.href = "/help";
+  };
+
+  // New: Filter/Search UI
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilter(e.target.value);
   };
 
   return (
@@ -82,6 +86,19 @@ const BusinessTypeSelector: React.FC<Props> = ({
           />
         ))}
       </div>
+      {/* Filter/Search box */}
+      {expandedType && (
+        <div className="max-w-xs mt-2">
+          <input
+            type="text"
+            className="w-full px-2 py-1 border text-sm rounded bg-background border-accent placeholder:text-muted-foreground"
+            placeholder="ফিচার সার্চ করুন..."
+            value={filter}
+            onChange={handleSearchChange}
+            aria-label="ফিচার সার্চ করুন"
+          />
+        </div>
+      )}
       {/* Expanded features section */}
       {expandedType && (
         <Card className="animate-fade-in border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10">
@@ -142,4 +159,11 @@ const BusinessTypeSelector: React.FC<Props> = ({
   );
 };
 
-export default BusinessTypeSelector;
+// Provider wrap (with context)
+const SelectorWithProvider: React.FC<Props> = (props) => (
+  <BusinessFeatureProvider>
+    <BusinessTypeSelector {...props} />
+  </BusinessFeatureProvider>
+);
+
+export default SelectorWithProvider;
