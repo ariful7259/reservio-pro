@@ -160,214 +160,185 @@ const SellerDashboard = () => {
         activeType={activeBusinessType}
         onChange={handleBusinessTypeChange} 
       />
-      
-      {/* Dashboard tabs - Enhanced responsive layout */}
-      <Tabs defaultValue="overview" className="mt-6">
-        <div className="w-full overflow-x-auto">
-          <TabsList className="grid w-full min-w-[640px] grid-cols-5 gap-1 h-auto p-1 lg:w-auto lg:inline-flex">
-            <TabsTrigger 
-              value="overview" 
-              className="flex items-center justify-center gap-1 px-2 py-2 text-xs sm:text-sm md:px-4 lg:gap-2"
-            >
-              <LayoutDashboard className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">অভারভিউ</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="analytics" 
-              className="flex items-center justify-center gap-1 px-2 py-2 text-xs sm:text-sm md:px-4 lg:gap-2"
-            >
-              <PieChart className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">এনালিটিক্স</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="orders" 
-              className="flex items-center justify-center gap-1 px-2 py-2 text-xs sm:text-sm md:px-4 lg:gap-2"
-            >
-              <ShoppingBag className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">অর্ডার/বুকিং</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="customers" 
-              className="flex items-center justify-center gap-1 px-2 py-2 text-xs sm:text-sm md:px-4 lg:gap-2"
-            >
-              <Users className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">গ্রাহক</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="products" 
-              className="flex items-center justify-center gap-1 px-2 py-2 text-xs sm:text-sm md:px-4 lg:gap-2"
-            >
-              <FileText className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">প্রোডাক্ট/সার্ভিস</span>
-            </TabsTrigger>
-          </TabsList>
-        </div>
-        
-        {/* Overview tab */}
-        <TabsContent value="overview" className="space-y-6">
-          {/* Alert notifications system */}
-          <AlertNotifications alertsCount={alertsCount} />
-          
-          {/* Main statistics */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            {/* Total sales */}
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">মোট বিক্রয়</p>
-                    <h3 className="text-2xl font-bold mt-1">{currentStats.sales}</h3>
-                    <div className="flex items-center mt-1 text-sm text-emerald-600">
-                      <TrendingUp className="h-4 w-4 mr-1" />
-                      <span>+{currentStats.growth}% গত মাস থেকে</span>
-                    </div>
-                  </div>
-                  <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center">
-                    <CircleDollarSign className="h-6 w-6 text-primary" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            {/* Total orders */}
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">মোট অর্ডার</p>
-                    <h3 className="text-2xl font-bold mt-1">{currentStats.orders}</h3>
-                    <div className="flex items-center mt-1 text-sm text-emerald-600">
-                      <TrendingUp className="h-4 w-4 mr-1" />
-                      <span>+{Math.round(currentStats.growth * 0.8)}% গত মাস থেকে</span>
-                    </div>
-                  </div>
-                  <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center">
-                    <ShoppingBag className="h-6 w-6 text-primary" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            {/* Total customers */}
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">মোট গ্রাহক</p>
-                    <h3 className="text-2xl font-bold mt-1">{currentStats.customers}</h3>
-                    <div className="flex items-center mt-1 text-sm text-emerald-600">
-                      <TrendingUp className="h-4 w-4 mr-1" />
-                      <span>+{Math.round(currentStats.growth * 0.9)}% গত মাস থেকে</span>
-                    </div>
-                  </div>
-                  <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center">
-                    <Users className="h-6 w-6 text-primary" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            {/* Business stock */}
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">মোট আইটেম</p>
-                    <h3 className="text-2xl font-bold mt-1">
-                      {currentStats.products + currentStats.properties + currentStats.contentPieces}
-                    </h3>
-                    <div className="flex items-center mt-1 text-sm text-gray-500">
-                      <span>{currentStats.products} প্রোডাক্ট, {currentStats.properties} প্রপার্টি, {currentStats.contentPieces} কন্টেন্ট</span>
-                    </div>
-                  </div>
-                  <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center">
-                    <FileText className="h-6 w-6 text-primary" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-          
-          {/* Revenue chart and overall activities */}
-          <div className="grid grid-cols-1 lg:grid-cols-7 gap-6">
-            <div className="lg:col-span-5">
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle>আয় পরিসংখ্যান</CardTitle>
-                    <Select defaultValue={dateRange} onValueChange={setDateRange}>
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="সময়কাল নির্বাচন করুন" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="this-month">এই মাস</SelectItem>
-                        <SelectItem value="last-month">গত মাস</SelectItem>
-                        <SelectItem value="this-year">এই বছর</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </CardHeader>
-                <CardContent className="px-2">
-                  <RevenueChart />
-                </CardContent>
-              </Card>
-            </div>
-            <div className="lg:col-span-2">
-              <Card className="h-full">
-                <CardHeader>
-                  <CardTitle>সাম্প্রতিক কার্যকলাপ</CardTitle>
-                </CardHeader>
-                <CardContent className="px-2">
-                  <ActivityFeed />
-                </CardContent>
-                <CardFooter>
-                  <Button variant="ghost" className="w-full gap-1">
-                    সব দেখুন <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </CardFooter>
-              </Card>
-            </div>
-          </div>
-          
-          {/* Orders and products summary */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <OrderBookingManagement />
-            
-            {/* Integrated booking calendar */}
-            <IntegratedBookingCalendar />
-          </div>
 
-          {/* Marketing tools and cross-promotion */}
-          <MarketingToolsSystem />
+      {/* কন্ডিশনাল ট্যাব রেন্ডার */}
+      {activeBusinessType ? (
+        <Tabs defaultValue="overview" className="mt-6">
+          {/* Overview tab */}
+          <TabsContent value="overview" className="space-y-6">
+            {/* Alert notifications system */}
+            <AlertNotifications alertsCount={alertsCount} />
+            
+            {/* Main statistics */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              {/* Total sales */}
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">মোট বিক্রয়</p>
+                      <h3 className="text-2xl font-bold mt-1">{currentStats.sales}</h3>
+                      <div className="flex items-center mt-1 text-sm text-emerald-600">
+                        <TrendingUp className="h-4 w-4 mr-1" />
+                        <span>+{currentStats.growth}% গত মাস থেকে</span>
+                      </div>
+                    </div>
+                    <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center">
+                      <CircleDollarSign className="h-6 w-6 text-primary" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              {/* Total orders */}
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">মোট অর্ডার</p>
+                      <h3 className="text-2xl font-bold mt-1">{currentStats.orders}</h3>
+                      <div className="flex items-center mt-1 text-sm text-emerald-600">
+                        <TrendingUp className="h-4 w-4 mr-1" />
+                        <span>+{Math.round(currentStats.growth * 0.8)}% গত মাস থেকে</span>
+                      </div>
+                    </div>
+                    <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center">
+                      <ShoppingBag className="h-6 w-6 text-primary" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              {/* Total customers */}
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">মোট গ্রাহক</p>
+                      <h3 className="text-2xl font-bold mt-1">{currentStats.customers}</h3>
+                      <div className="flex items-center mt-1 text-sm text-emerald-600">
+                        <TrendingUp className="h-4 w-4 mr-1" />
+                        <span>+{Math.round(currentStats.growth * 0.9)}% গত মাস থেকে</span>
+                      </div>
+                    </div>
+                    <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center">
+                      <Users className="h-6 w-6 text-primary" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              {/* Business stock */}
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">মোট আইটেম</p>
+                      <h3 className="text-2xl font-bold mt-1">
+                        {currentStats.products + currentStats.properties + currentStats.contentPieces}
+                      </h3>
+                      <div className="flex items-center mt-1 text-sm text-gray-500">
+                        <span>{currentStats.products} প্রোডাক্ট, {currentStats.properties} প্রপার্টি, {currentStats.contentPieces} কন্টেন্ট</span>
+                      </div>
+                    </div>
+                    <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center">
+                      <FileText className="h-6 w-6 text-primary" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
+            {/* Revenue chart and overall activities */}
+            <div className="grid grid-cols-1 lg:grid-cols-7 gap-6">
+              <div className="lg:col-span-5">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle>আয় পরিসংখ্যান</CardTitle>
+                      <Select defaultValue={dateRange} onValueChange={setDateRange}>
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="সময়কাল নির্বাচন করুন" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="this-month">এই মাস</SelectItem>
+                          <SelectItem value="last-month">গত মাস</SelectItem>
+                          <SelectItem value="this-year">এই বছর</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="px-2">
+                    <RevenueChart />
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="lg:col-span-2">
+                <Card className="h-full">
+                  <CardHeader>
+                    <CardTitle>সাম্প্রতিক কার্যকলাপ</CardTitle>
+                  </CardHeader>
+                  <CardContent className="px-2">
+                    <ActivityFeed />
+                  </CardContent>
+                  <CardFooter>
+                    <Button variant="ghost" className="w-full gap-1">
+                      সব দেখুন <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </div>
+            </div>
+            
+            {/* Orders and products summary */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <OrderBookingManagement />
+              
+              {/* Integrated booking calendar */}
+              <IntegratedBookingCalendar />
+            </div>
+
+            {/* Marketing tools and cross-promotion */}
+            <MarketingToolsSystem />
+            
+            {/* Customer relationship management */}
+            <CustomerRelationshipManagement />
+          </TabsContent>
           
-          {/* Customer relationship management */}
-          <CustomerRelationshipManagement />
-        </TabsContent>
-        
-        {/* Analytics tab - Enhanced */}
-        <TabsContent value="analytics" className="space-y-6">
-          <AnalyticsTab 
-            dateRange={dateRange} 
-            onDateRangeChange={setDateRange}
-            businessType={activeBusinessType}
-          />
-        </TabsContent>
-        
-        {/* Orders and booking tab - Enhanced */}
-        <TabsContent value="orders" className="space-y-6">
-          <OrdersTab businessType={activeBusinessType} />
-        </TabsContent>
-        
-        {/* Customers tab - Enhanced */}
-        <TabsContent value="customers" className="space-y-6">
-          <CustomersTab businessType={activeBusinessType} />
-        </TabsContent>
-        
-        {/* Products tab - Enhanced */}
-        <TabsContent value="products" className="space-y-6">
-          <ProductsTab businessType={activeBusinessType} />
-        </TabsContent>
-      </Tabs>
+          {/* Analytics tab - Enhanced */}
+          <TabsContent value="analytics" className="space-y-6">
+            <AnalyticsTab 
+              dateRange={dateRange} 
+              onDateRangeChange={setDateRange}
+              businessType={activeBusinessType}
+            />
+          </TabsContent>
+          
+          {/* Orders and booking tab - Enhanced */}
+          <TabsContent value="orders" className="space-y-6">
+            <OrdersTab businessType={activeBusinessType} />
+          </TabsContent>
+          
+          {/* Customers tab - Enhanced */}
+          <TabsContent value="customers" className="space-y-6">
+            <CustomersTab businessType={activeBusinessType} />
+          </TabsContent>
+          
+          {/* Products tab - Enhanced */}
+          <TabsContent value="products" className="space-y-6">
+            <ProductsTab businessType={activeBusinessType} />
+          </TabsContent>
+        </Tabs>
+      ) : (
+        <div className="mt-10 w-full flex flex-col items-center justify-center h-64">
+          <div className="text-lg font-medium text-muted-foreground mb-2">
+            কোনো ব্যবসা সিলেক্ট করুন
+          </div>
+          <div className="text-sm text-muted-foreground">
+            ব্যবসার ধরন সিলেক্ট করলে ড্যাশবোর্ডের ডিটেইলস দেখতে পারবেন
+          </div>
+        </div>
+      )}
     </div>
   );
 };
