@@ -79,7 +79,7 @@ export const SidebarDrawer = () => {
       <DrawerContent className="w-[85%] max-w-[350px] h-[100vh] overflow-y-auto left-0 right-auto">
         <DrawerHeader className="border-b pb-4">
           {isAuthenticated && user ? (
-            <UserProfileSection profileMenuItems={profileMenuItems} />
+            <UserProfileSection />
           ) : (
             <GuestSection />
           )}

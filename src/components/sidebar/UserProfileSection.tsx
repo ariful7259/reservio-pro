@@ -47,7 +47,7 @@ const UserProfileSection = () => {
         <Button
           onClick={() => navigate("/profile")}
           variant="outline"
-          size="xs"
+          size="sm"
           className="mt-0 w-[96px] border-primary text-primary h-7 rounded-md text-xs px-2 py-1"
         >
           <User2 className="h-3 w-3 mr-1" />
@@ -60,7 +60,7 @@ const UserProfileSection = () => {
         {!user.isSeller ? (
           <Button
             onClick={() => navigate("/become-seller")}
-            size="xs"
+            size="sm"
             variant="secondary"
             className="w-full text-xs h-8 rounded-md bg-primary/10 text-primary border border-primary/20 flex items-center gap-1.5 font-medium"
             style={{boxShadow: "none"}}
@@ -71,7 +71,7 @@ const UserProfileSection = () => {
         ) : (
           <Button
             onClick={() => navigate("/seller/dashboard")}
-            size="xs"
+            size="sm"
             variant="secondary"
             className="w-full text-xs h-8 rounded-md bg-primary text-white flex items-center gap-1.5 font-medium"
             style={{boxShadow: "none"}}
@@ -125,7 +125,7 @@ const UserProfileSection = () => {
       {/* Language & Theme Switcher: compact under menu */}
       <div className="flex justify-between items-center w-full gap-2 mt-2">
         <Button
-          size="xs"
+          size="sm"
           variant={lang === "bn" ? "secondary" : "outline"}
           className="flex-1 flex items-center justify-center gap-1 h-7 rounded bg-primary/10 text-primary border-primary/10 text-xs"
           onClick={() => setLang(lang === "bn" ? "en" : "bn")}
@@ -134,7 +134,7 @@ const UserProfileSection = () => {
           {lang === "bn" ? "বাংলা" : "EN"}
         </Button>
         <Button
-          size="xs"
+          size="sm"
           variant={isDark ? "secondary" : "outline"}
           className="flex-1 flex items-center justify-center gap-1 h-7 rounded text-xs"
           onClick={() => setIsDark((val) => !val)}
