@@ -131,12 +131,15 @@ export const Wish2EarnModule: React.FC = () => {
         ))}
       </div>
 
-      {/* Modal for Features */}
-      {wishFeatures.map((feat) =>
-        <FeatureModal key={feat.key} open={modal === feat.key} onOpenChange={v => v ? setModal(feat.key) : setModal(null)}>
-          {feat.component}
-        </FeatureModal>
-      )}
+      {/* Show only the selected feature modal */}
+      {modal && (() => {
+        const feat = wishFeatures.find(f => f.key === modal);
+        return feat ? (
+          <FeatureModal open={true} onOpenChange={v => v ? setModal(feat.key) : setModal(null)}>
+            {feat.component}
+          </FeatureModal>
+        ) : null;
+      })()}
 
       {/* Bengali CTA Tip */}
       <div className="mt-9 flex justify-center">
