@@ -111,7 +111,7 @@ export const Wish2EarnModule: React.FC = () => {
       <div
         className={`
           grid grid-cols-4
-          gap-y-5 gap-x-3
+          gap-y-6 gap-x-3
           justify-items-center
           px-2 sm:px-0
           mb-2
@@ -130,29 +130,28 @@ export const Wish2EarnModule: React.FC = () => {
               aria-label={feat.title}
               onClick={() => setModal(feat.key)}
               className={`
-                group w-24 h-28 xs:w-20 xs:h-24 sm:w-28 sm:h-32
+                group w-16 h-20 sm:w-20 sm:h-24
                 flex flex-col items-center justify-center
-                rounded-2xl shadow-md border-2
-                bg-gradient-to-br ${feat.gradient}
-                border-stone-200
-                hover:border-primary hover:shadow-lg
-                focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
-                transition-all duration-200 cursor-pointer outline-none relative
-                ${isSelected ? 'border-primary shadow-lg scale-105' : ''}
+                rounded-xl
+                border
+                bg-white shadow-card card-hover-effect hover:border-primary/70
+                focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2
+                outline-none cursor-pointer relative transition-all duration-200
+                ${isSelected ? 'border-primary shadow-lg scale-105 ring-2 ring-primary/50' : 'border-gray-200'}
               `}
               tabIndex={0}
             >
               <span
                 className={`
-                  flex items-center justify-center rounded-full bg-white shadow
-                  transition-all mb-2
-                  ${isSelected ? 'ring-2 ring-primary scale-110' : ''}
-                  h-12 w-12 sm:h-14 sm:w-14
+                  flex items-center justify-center rounded-full bg-gradient-to-br from-gray-50 via-white to-pink-50 shadow-md
+                  transition-all mb-1
+                  ${isSelected ? 'ring-2 ring-primary/50 scale-110' : ''}
+                  h-9 w-9 sm:h-10 sm:w-10
                 `}
               >
-                <IconCmp className={`w-8 h-8 sm:w-9 sm:h-9 ${feat.iconColor} transition-all`} />
+                <IconCmp className={`w-[22px] h-[22px] sm:w-[26px] sm:h-[26px] ${feat.iconColor} transition-all`} />
               </span>
-              <span className={`block text-xs sm:text-sm text-center font-semibold text-gray-700 leading-tight mt-1 mb-0 ${isSelected ? 'text-primary' : ''}`}>
+              <span className={`block text-[11px] sm:text-xs text-center font-medium text-gray-700 leading-tight truncate max-w-[56px] sm:max-w-[80px] mt-1 ${isSelected ? 'text-primary' : ''}`}>
                 {feat.title}
               </span>
             </button>
