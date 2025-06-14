@@ -90,19 +90,45 @@ export const Wish2EarnModule: React.FC = () => {
       {/* Feature Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-2 sm:px-0">
         {wishFeatures.map((feat, i) => (
-          <Card
+          <button
             key={feat.key}
+            type="button"
             onClick={() => setModal(feat.key)}
-            className="flex flex-row gap-3 items-center border bg-white hover:shadow-lg hover:scale-105 cursor-pointer transition-all animate-fade-in px-2 py-3"
+            className={`
+              group w-full text-left focus:outline-none
+              card-gradient-light
+              rounded-2xl border border-stone-200 shadow-sm
+              hover:shadow-lg hover:scale-[1.03] active:scale-100
+              transition-all duration-200
+              flex flex-row gap-4 sm:gap-5 items-center
+              px-4 py-4 sm:py-5 
+              relative
+              focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2
+              aria-[current=true]:ring-2 aria-[current=true]:ring-primary
+            `}
+            tabIndex={0}
+            aria-label={feat.title}
+            aria-current={modal === feat.key}
           >
-            <div className="flex-shrink-0">{feat.icon}</div>
-            <CardContent className="p-0 pl-2">
-              <div className="font-bold text-md sm:text-lg text-sky-700 mb-0 flex gap-1 items-center">
+            <span className="
+              flex items-center justify-center
+              rounded-full bg-gradient-to-br from-pink-100 via-blue-100 to-amber-100
+              shadow-md w-12 h-12 sm:w-14 sm:h-14
+              mr-0.5
+              group-hover:scale-110 group-active:scale-105 
+              transition-all
+            ">
+              {feat.icon}
+            </span>
+            <div className="flex-1 min-w-0">
+              <div className="font-extrabold text-base sm:text-lg text-primary mb-1 leading-snug group-hover:text-pink-700 transition-all duration-150">
                 {feat.title}
               </div>
-              <div className="text-xs text-gray-700 mt-0.5 leading-snug">{feat.desc}</div>
-            </CardContent>
-          </Card>
+              <div className="text-xs sm:text-sm text-gray-600 group-hover:text-gray-800 transition">
+                {feat.desc}
+              </div>
+            </div>
+          </button>
         ))}
       </div>
       {/* Modal for Features */}
