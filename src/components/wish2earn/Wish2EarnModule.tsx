@@ -91,8 +91,7 @@ export const Wish2EarnModule: React.FC = () => {
       <div
         className="
           grid 
-          grid-cols-2 
-          sm:grid-cols-4
+          grid-cols-4
           gap-y-6 gap-x-3 
           justify-items-center
           px-2 sm:px-0
