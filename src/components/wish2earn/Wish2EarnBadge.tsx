@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Heart } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -32,21 +31,7 @@ export const Wish2EarnBadge: React.FC<{
         style={{ fontWeight: 700 }}
         aria-label="Wish2Earn"
       >
-        <Heart className={isMobile
-          ? "h-4 w-4 text-white mr-1 group-hover:animate-pulse"
-          : "h-5 w-5 text-white drop-shadow mr-1 group-hover:animate-pulse"
-        } />
-        <span className={isMobile
-          ? "text-white text-xs font-bold mr-0"
-          : "text-white text-base font-bold mr-2 drop-shadow"
-        }>
-          Wish2Earn
-        </span>
-        {!isMobile && (
-          <span className="bg-white bg-opacity-80 text-pink-600 text-xs font-semibold rounded px-2 py-0.5 ml-1">
-            Goal-based Earning
-          </span>
-        )}
+        {/* সব কিছু মুছে ফেলা হয়েছে */}
       </button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogOverlay className="fixed inset-0 z-[9998] bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
