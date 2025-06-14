@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { 
   ArrowLeft, 
   ChevronRight, 
@@ -19,45 +19,121 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
 
+const kycItems = [
+  {
+    id: 'personal',
+    title: 'ব্যক্তিগত তথ্য',
+    description: 'নাম, জন্ম তারিখ, এবং যোগাযোগের তথ্য',
+    icon: User,
+    status: 'completed',
+    iconColor: 'bg-green-100 text-green-600'
+  },
+  {
+    id: 'nid',
+    title: 'NID যাচাইকরণ',
+    description: 'জাতীয় পরিচয়পত্রের তথ্য যাচাইকরণ',
+    icon: CreditCard,
+    status: 'pending',
+    iconColor: 'bg-amber-100 text-amber-600'
+  },
+  {
+    id: 'address',
+    title: 'ঠিকানা যাচাইকরণ',
+    description: 'বর্তমান ঠিকানার প্রমাণ আপলোড করুন',
+    icon: Upload,
+    status: 'incomplete',
+    iconColor: 'bg-red-100 text-red-600'
+  },
+  {
+    id: 'selfie',
+    title: 'সেলফি ভেরিফিকেশন',
+    description: 'NID-এর সাথে মিলিয়ে সেলফি যাচাই',
+    icon: Upload,
+    status: 'incomplete',
+    iconColor: 'bg-red-100 text-red-600'
+  }
+];
+
+// Step Detail Component
+const stepDetailInfo: {
+  [key: string]: {
+    title: string;
+    description: string;
+    content: React.ReactNode;
+  }
+} = {
+  personal: {
+    title: "ব্যক্তিগত তথ্য সম্পাদনা",
+    description: "এখানে আপনার নাম, জন্ম তারিখ ইত্যাদি আপডেট করুন।",
+    content: (
+      <div className="space-y-3">
+        <p className="text-sm">[ডেমো]: এখানে ফরম আসবে, যাতে ইউজার পার্সোনাল তথ্য এডিট করতে পারবে।</p>
+        <Button variant="outline">তথ্য আপডেট করুন</Button>
+      </div>
+    )
+  },
+  nid: {
+    title: "NID যাচাইকরণ",
+    description: "জাতীয় পরিচয়পত্রের তথ্য আপলোড ও যাচাইকরণ।",
+    content: (
+      <div className="space-y-3">
+        <p className="text-sm">[ডেমো]: এখানে NID ফ্রন্ট ও ব্যাক ইমেজ আপলোডের অপশন থাকবে।</p>
+        <Button variant="outline">NID আপলোড করুন</Button>
+      </div>
+    )
+  },
+  address: {
+    title: "ঠিকানা যাচাইকরণ",
+    description: "আপনার বাসার ঠিকানা ও ডকুমেন্ট প্রমাণপত্র আপলোড করুন।",
+    content: (
+      <div className="space-y-3">
+        <p className="text-sm">[ডেমো]: এখানে ঠিকানা ও utility bill ইমেজ আপলোডের অপশন থাকবে।</p>
+        <Button variant="outline">ঠিকানা আপলোড করুন</Button>
+      </div>
+    )
+  },
+  selfie: {
+    title: "সেলফি ভেরিফিকেশন",
+    description: "যাচাইয়ের জন্য লাইভ সেলফি/ছবি তুলুন।",
+    content: (
+      <div className="space-y-3">
+        <p className="text-sm">[ডেমো]: এখানে সেলফি ক্যামেরা চালু হবে অথবা ছবি আপলোড অপশন থাকবে।</p>
+        <Button variant="outline">সেলফি তুলুন অথবা আপলোড করুন</Button>
+      </div>
+    )
+  }
+};
+
+function KycStepDetail({ stepId, onBack }: { stepId: string, onBack: () => void }) {
+  const info = stepDetailInfo[stepId];
+  if (!info) {
+    return (
+      <div className="flex flex-col items-center justify-center h-72 gap-4">
+        <AlertCircle className="w-10 h-10 text-red-500" />
+        <p className="font-bold text-lg">ধাপ পাওয়া যায়নি</p>
+        <Button onClick={onBack}>ফিরে যান</Button>
+      </div>
+    );
+  }
+  return (
+    <div className="max-w-lg mx-auto my-10 p-6 border rounded-xl bg-white shadow-md animate-fade-in">
+      <div className="flex items-center gap-2 mb-3">
+        <Button variant="ghost" size="icon" onClick={onBack}>
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <h2 className="font-semibold text-xl">{info.title}</h2>
+      </div>
+      <p className="text-muted-foreground mb-6">{info.description}</p>
+      {info.content}
+    </div>
+  );
+}
+
 const KycVerification = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('status');
-
-  const kycItems = [
-    {
-      id: 'personal',
-      title: 'ব্যক্তিগত তথ্য',
-      description: 'নাম, জন্ম তারিখ, এবং যোগাযোগের তথ্য',
-      icon: User,
-      status: 'completed',
-      iconColor: 'bg-green-100 text-green-600'
-    },
-    {
-      id: 'nid',
-      title: 'NID যাচাইকরণ',
-      description: 'জাতীয় পরিচয়পত্রের তথ্য যাচাইকরণ',
-      icon: CreditCard,
-      status: 'pending',
-      iconColor: 'bg-amber-100 text-amber-600'
-    },
-    {
-      id: 'address',
-      title: 'ঠিকানা যাচাইকরণ',
-      description: 'বর্তমান ঠিকানার প্রমাণ আপলোড করুন',
-      icon: Upload,
-      status: 'incomplete',
-      iconColor: 'bg-red-100 text-red-600'
-    },
-    {
-      id: 'selfie',
-      title: 'সেলফি ভেরিফিকেশন',
-      description: 'NID-এর সাথে মিলিয়ে সেলফি যাচাই',
-      icon: Upload,
-      status: 'incomplete',
-      iconColor: 'bg-red-100 text-red-600'
-    }
-  ];
+  const { stepId } = useParams<{ stepId: string }>();
 
   const getStatusBadge = (status: string) => {
     switch(status) {
@@ -93,46 +169,14 @@ const KycVerification = () => {
     setActiveTab('checklist');
   }
 
-  // Checklist action function per step
   const handleChecklistAction = (stepId: string) => {
-    switch (stepId) {
-      case "personal":
-        toast({
-          title: "ব্যক্তিগত তথ্য",
-          description: "আপনার ব্যক্তিগত তথ্য সম্পাদনার অপশন আসবে এখানে।",
-        });
-        // এখানে পরবর্তীতে Edit Personal Info Modal ইত্যাদি খুলতে পারেন
-        break;
-      case "nid":
-        toast({
-          title: "NID যাচাইকরণ",
-          description: "এখানে NID আপলোড/যাচাই ফ্লো চালু হবে।",
-        });
-        // এখানে NID verification/Upload dialog/modal/functionality কল করুন
-        break;
-      case "address":
-        toast({
-          title: "ঠিকানা যাচাইকরণ",
-          description: "ঠিকানার প্রমাণ আপলোডের ফিচার আসবে এখানে।",
-        });
-        // এখানে address verification/Upload functionality কল করা যাবে
-        break;
-      case "selfie":
-        toast({
-          title: "সেলফি ভেরিফিকেশন",
-          description: "লাইভ ক্যামেরা বা সেলফি যাচাইকরণ ফিচার এখানে চাইল্ড করা যাবে।",
-        });
-        // এখানে selfie verification/camera modal/trigger যোগ করা যাবে
-        break;
-      default:
-        toast({
-          title: "অজানা ধাপ",
-          description: "এই ধাপ নির্ধারিত নয়।",
-        });
-    }
-    // চাইলে ন্যাভিগেশনও চালু রাখুন
     navigate(`/kyc-verification/${stepId}`);
   };
+
+  // যদি কোন স্টেপ আইডি রাউটে থাকে, চেকলিস্ট/স্ট্যাটাস না দেখিয়ে ঐ স্টেপ ডিটেইল কম্পোনেন্ট দেখাবে
+  if (stepId) {
+    return <KycStepDetail stepId={stepId} onBack={() => navigate('/kyc-verification')} />;
+  }
 
   return (
     <div className="container px-4 pt-16 pb-20">
