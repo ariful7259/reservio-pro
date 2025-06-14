@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Play, Book } from 'lucide-react';
@@ -40,7 +41,6 @@ export const VideoCarousel = () => {
       title: "বুকিং কনফার্ম হয়েছে",
       description: `আপনি "${ad.title}" ভিডিওর জন্য বুকিং করেছেন!`,
     });
-    // Redirect as needed (for demo to a booking page)
     setTimeout(() => {
       navigate('/services');
     }, 1000);
@@ -53,7 +53,7 @@ export const VideoCarousel = () => {
         <CarouselContent>
           {videoAds.map((ad, index) => (
             <CarouselItem key={index}>
-              <div className="rounded-lg overflow-hidden border">
+              <div className="rounded-lg overflow-hidden border shadow-card">
                 <div className="aspect-video bg-black flex items-center justify-center relative">
                   <video className="w-full h-full object-cover" poster={ad.thumbnail} controls>
                     <source src={ad.videoUrl} type="video/mp4" />
@@ -81,32 +81,35 @@ export const VideoCarousel = () => {
                       <Play className="h-6 w-6" />
                     </Button>
                   </div>
-                  {/* Book button: placed at bottom right over video */}
+                  {/* Optimized Book button: primary color, mobile-friendly, fixed position */}
                   <div className="absolute bottom-2 right-2 flex pointer-events-none">
-                    <Button 
-                      variant="success" 
-                      size="sm" 
-                      className="shadow-lg pointer-events-auto"
+                    <Button
+                      variant="default"
+                      size="lg"
+                      className="pointer-events-auto bg-primary text-white font-bold px-5 py-2 rounded-full shadow-lg hover:bg-primary/90
+                        flex items-center gap-1 transition-smooth
+                        md:text-base text-sm md:px-5 md:py-2 px-4 py-1.5
+                        active:scale-95"
                       onClick={() => handleBook(ad)}
                       aria-label={`${ad.title} বুক করুন`}
                     >
-                      <span className="flex items-center gap-1">
-                        <Book className="h-4 w-4 mr-1" />
-                        বুক করুন
-                      </span>
+                      <Book className="h-5 w-5 mr-1 -ml-1" />
+                      <span className="hidden md:inline">বুক করুন</span>
+                      <span className="md:hidden text-base">বুক</span>
                     </Button>
                   </div>
                 </div>
                 <div className="p-3">
                   <h3 className="font-medium mb-2">{ad.title}</h3>
                   <p className="text-sm text-gray-600 mb-3">{ad.description}</p>
-                  {/* Keep existing booking button for redundancy, or remove if not needed */}
-                  <Button 
-                    variant="default" 
-                    size="sm" 
-                    className="w-full md:hidden"
+                  {/* Responsive Book button (only on mobile, primary color) */}
+                  <Button
+                    variant="default"
+                    size="lg"
+                    className="w-full mt-1 block md:hidden bg-primary text-white font-bold py-3 rounded-full"
                     onClick={() => handleBook(ad)}
                   >
+                    <Book className="h-4 w-4 mr-1" />
                     বুক করুন
                   </Button>
                 </div>
