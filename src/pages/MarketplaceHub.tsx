@@ -12,6 +12,7 @@ import { useShoppingState } from '@/hooks/useShoppingState';
 import { Badge } from '@/components/ui/badge';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Wish2EarnModule } from '@/components/wish2earn/Wish2EarnModule';
+import Wish2EarnBadge from '@/components/wish2earn/Wish2EarnBadge';
 
 const MarketplaceHub = () => {
   const navigate = useNavigate();
@@ -35,18 +36,12 @@ const MarketplaceHub = () => {
   return (
     <div className="container min-h-screen pt-20 sm:pt-24 pb-20 px-3 sm:px-4">
       <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6">
-        <h1 className="text-lg sm:text-xl md:text-2xl font-bold leading-tight flex items-center gap-3">
-          <span>ডিজিটাল প্রোডাক্টস মার্কেটপ্লেস</span>
-          <Button
-            onClick={() => setActiveTab('wish2earn')}
-            size="sm"
-            variant={activeTab === 'wish2earn' ? "default" : "outline"}
-            className="gap-1 bg-gradient-to-r from-sky-400 to-pink-400 text-white border-0 shadow-sm hover:from-rose-400 hover:to-yellow-400"
-          >
-            <Heart className="h-4 w-4" />
-            Wish2Earn
-          </Button>
-        </h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-lg sm:text-xl md:text-2xl font-bold leading-tight flex items-center gap-3">
+            <span>ডিজিটাল প্রোডাক্টস মার্কেটপ্লেস</span>
+          </h1>
+          <Wish2EarnBadge onClick={() => setActiveTab('wish2earn')} />
+        </div>
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
