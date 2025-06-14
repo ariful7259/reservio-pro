@@ -7,14 +7,16 @@ import { Button } from '@/components/ui/button';
 import { serviceCategories } from './services/serviceData';
 import { ServiceCategoryItem } from './services/ServiceCategoryItem';
 import { CustomServiceItem } from './services/CustomServiceItem';
-import { AddServiceButton } from './services/AddServiceButton';
+// import { AddServiceButton } from './services/AddServiceButton';
 import { CustomService } from './services/serviceTypes';
+import { ServiceSelectionModal } from './services/ServiceSelectionModal';
 
 export const ServiceCategoriesGrid = () => {
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [customServices, setCustomServices] = useState<CustomService[]>([]);
-  
+  const [showModal, setShowModal] = useState(false);
+
   // Load custom services from localStorage when component mounts
   useEffect(() => {
     const savedServices = localStorage.getItem('customServices');
@@ -26,22 +28,43 @@ export const ServiceCategoriesGrid = () => {
       }
     }
   }, []);
-  
+
+  // Save custom services to localStorage when changed
+  const saveCustomServices = (services: CustomService[]) => {
+    setCustomServices(services);
+    localStorage.setItem('customServices', JSON.stringify(services));
+  }
+
   // Toggle category expansion
   const toggleCategoryExpansion = (categoryName: string) => {
     setExpandedCategory(prevExpanded => 
       prevExpanded === categoryName ? null : categoryName
     );
   };
-  
+
   // Remove a custom service
   const handleRemoveCustomService = (id: string) => {
     const updatedServices = customServices.filter(service => service.id !== id);
-    setCustomServices(updatedServices);
-    localStorage.setItem('customServices', JSON.stringify(updatedServices));
+    saveCustomServices(updatedServices);
     toast.info("সার্ভিস মুছে ফেলা হয়েছে");
   };
-  
+
+  // Add a custom service (avoid duplicates, limit to 12 max)
+  const handleAddCustomService = (service: CustomService) => {
+    const exists = customServices.some(s => s.id === service.id);
+    if (exists) {
+      toast.error("এই সার্ভিস ইতিমধ্যে যোগ করা হয়েছে");
+      return;
+    }
+    if (customServices.length >= 12) {
+      toast.error("সর্বাধিক ১২টি সার্ভিস যোগ করা যাবে");
+      return;
+    }
+    const updated = [...customServices, service];
+    saveCustomServices(updated);
+    toast.success("নতুন সার্ভিস যোগ হয়েছে");
+  };
+
   // Display limited number of categories based on showAllCategories state
   const displayedCategories = useMemo(() => 
     showAllCategories ? serviceCategories : serviceCategories.slice(0, 4),
@@ -70,8 +93,18 @@ export const ServiceCategoriesGrid = () => {
           />
         ))}
 
-        {/* Add service button */}
-        <AddServiceButton />
+        {/* Add service button replaced by modal trigger */}
+        <div className="flex flex-col">
+          <button 
+            onClick={() => setShowModal(true)}
+            className="flex flex-col items-center justify-center p-2 border border-dashed rounded-lg hover:bg-blue-50 hover:border-blue-200 transition-colors h-full min-h-[90px]"
+          >
+            <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mb-2">
+              +
+            </div>
+            <span className="text-xs font-medium text-center text-primary">সার্ভিস যোগ করুন</span>
+          </button>
+        </div>
       </div>
       
       {/* Toggle to show more/less categories */}
@@ -83,6 +116,14 @@ export const ServiceCategoriesGrid = () => {
         {showAllCategories ? "কম দেখুন" : "আরও দেখুন"}
         <ChevronRight className={`h-4 w-4 transition-transform duration-200 ${showAllCategories ? 'rotate-90' : ''}`} />
       </Button>
+      {/* Service select modal */}
+      <ServiceSelectionModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        selectedServices={customServices}
+        onAddService={handleAddCustomService}
+        onRemoveService={handleRemoveCustomService}
+      />
     </div>
   );
 };
