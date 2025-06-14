@@ -22,7 +22,6 @@ const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({ onTabChange, wish
         <h1 className="text-lg sm:text-xl md:text-2xl font-bold leading-tight flex items-center gap-3">
           <span>ডিজিটাল প্রোডাক্টস মার্কেটপ্লেস</span>
         </h1>
-        <Wish2EarnBadge onClick={() => onTabChange('wish2earn')} />
       </div>
       <div className="flex items-center gap-2">
         <Button
@@ -70,9 +69,14 @@ const MarketplaceHeader: React.FC<MarketplaceHeaderProps> = ({ onTabChange, wish
             {isMobile ? 'বিক্রি' : 'প্রোডাক্ট বিক্রি করুন'}
           </span>
         </Button>
+        {/* Profile/Image section রিমুভড, তার পরিবর্তে Wish2Earn badge */}
+        <div className="ml-2">
+          <Wish2EarnBadge onClick={() => onTabChange('wish2earn')} />
+        </div>
       </div>
     </div>
   );
 };
 
 export default MarketplaceHeader;
+
