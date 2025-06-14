@@ -201,39 +201,47 @@ const ServiceCategory = () => {
   };
 
   return (
-    <div className="container px-4 pt-20 pb-20">
-      <div className="flex items-center gap-2 mb-6">
+    <div className="container px-2 sm:px-4 pt-16 sm:pt-20 pb-32 sm:pb-20">
+      <div className="flex items-center gap-2 mb-4 sm:mb-6">
         <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
           <ChevronLeft className="h-5 w-5" />
         </Button>
-        <h1 className="text-2xl font-bold">{categoryName}</h1>
+        <h1 className="text-xl sm:text-2xl font-bold">{categoryName}</h1>
       </div>
 
-      <div className="mb-6 flex gap-2">
+      <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row gap-2">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder={`${categoryName} সার্ভিস খুঁজুন`} className="pl-9 pr-16" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input 
+            placeholder={`${categoryName} সার্ভিস খুঁজুন`} 
+            className="pl-9 pr-16 text-sm sm:text-base h-11 sm:h-12 rounded-md"
+          />
           <Button 
             variant="default" 
             size="sm" 
-            className="absolute right-1 top-1/2 transform -translate-y-1/2"
+            className="absolute right-1 top-1/2 -translate-y-1/2 h-9 sm:h-10 px-3 sm:px-4 rounded"
           >
             খুঁজুন
           </Button>
         </div>
-        <Button variant="outline" size="icon" onClick={handleFilterToggle}>
+        <Button 
+          variant="outline" 
+          size="icon" 
+          className="h-11 sm:h-12 w-11 sm:w-12" 
+          onClick={handleFilterToggle}
+        >
           <Filter className="h-4 w-4" />
         </Button>
       </div>
 
       {filterVisible && (
-        <div className="mb-6 p-4 border rounded-lg bg-gray-50">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="mb-4 sm:mb-6 p-3 sm:p-4 border rounded-lg bg-gray-50">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-4">
             <div>
               <h3 className="text-sm font-medium mb-2">সাব-ক্যাটেগরি</h3>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-1 sm:gap-2">
                 {services.map(service => (
-                  <Button key={service.id} variant="outline" size="sm" className="justify-start">
+                  <Button key={service.id} variant="outline" size="sm" className="justify-start text-xs sm:text-sm py-2">
                     {service.subcategory}
                   </Button>
                 )).filter((elem, index, self) => 
@@ -246,38 +254,37 @@ const ServiceCategory = () => {
             <div>
               <h3 className="text-sm font-medium mb-2">মূল্য সীমা</h3>
               <div className="flex gap-2 items-center">
-                <Input type="number" placeholder="মিন" className="w-24" />
-                <Separator className="w-6" />
-                <Input type="number" placeholder="ম্যাক্স" className="w-24" />
-                <Button size="sm">প্রয়োগ করুন</Button>
+                <Input type="number" placeholder="মিন" className="w-20 sm:w-24 h-9 text-xs sm:text-sm" />
+                <Separator className="w-4 sm:w-6" />
+                <Input type="number" placeholder="ম্যাক্স" className="w-20 sm:w-24 h-9 text-xs sm:text-sm" />
+                <Button size="sm" className="text-xs sm:text-sm px-2 sm:px-3">প্রয়োগ করুন</Button>
               </div>
             </div>
           </div>
-          
-          <div className="flex gap-2 mt-4 justify-end">
-            <Button variant="outline" onClick={handleFilterToggle}>বাতিল</Button>
-            <Button>ফিল্টার করুন</Button>
+          <div className="flex gap-2 mt-3 sm:mt-4 justify-end">
+            <Button variant="outline" size="sm" className="text-xs sm:text-sm px-3 sm:px-4" onClick={handleFilterToggle}>বাতিল</Button>
+            <Button size="sm" className="text-xs sm:text-sm px-3 sm:px-4">ফিল্টার করুন</Button>
           </div>
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6">
         {services.length > 0 ? (
           services.map(service => (
             <Card 
               key={service.id}
-              className="overflow-hidden cursor-pointer hover:shadow-md transition-all relative h-full"
+              className="overflow-hidden cursor-pointer hover:shadow-md transition-all relative h-full min-h-[210px] sm:min-h-[236px] flex flex-col"
               onClick={() => handleServiceClick(service.id)}
             >
               {service.isSponsored && (
                 <Badge className="absolute top-2 left-2 bg-amber-500 hover:bg-amber-600 z-10">স্পন্সর্ড</Badge>
               )}
-              <div className="flex h-full flex-col md:flex-row">
-                <div className="relative w-full md:w-1/3">
+              <div className="flex flex-col md:flex-row h-full">
+                <div className="relative w-full md:w-1/3 h-36 md:h-auto">
                   <img 
                     src={service.image} 
                     alt={service.title}
-                    className="w-full h-full object-cover aspect-square md:aspect-auto"
+                    className="w-full h-full md:h-full object-cover aspect-square md:aspect-auto rounded-t-md md:rounded-l-md"
                   />
                   <div className="absolute top-2 right-2 flex flex-col gap-2 z-10">
                     <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full"
@@ -290,18 +297,18 @@ const ServiceCategory = () => {
                     </Button>
                   </div>
                 </div>
-                <div className="p-4 flex-1 flex flex-col justify-between">
+                <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between">
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <Badge variant="outline">{service.subcategory}</Badge>
+                      <Badge variant="outline" className="text-xs sm:text-sm">{service.subcategory}</Badge>
                       {service.isVerified && (
-                        <Badge variant="secondary" className="flex items-center gap-1">
+                        <Badge variant="secondary" className="flex items-center gap-1 text-xs sm:text-sm">
                           <CheckCircle className="h-3 w-3" /> ভেরিফায়েড
                         </Badge>
                       )}
                     </div>
-                    <h3 className="font-medium text-lg mb-1">{service.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-2">{service.provider}</p>
+                    <h3 className="font-medium text-base sm:text-lg mb-1 line-clamp-1">{service.title}</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-2">{service.provider}</p>
                     <div className="flex items-center text-xs text-muted-foreground mb-2">
                       <MapPin className="h-3 w-3 mr-1" />
                       <span>{service.location}</span>
@@ -316,10 +323,10 @@ const ServiceCategory = () => {
                     </div>
                   </div>
                   <div className="flex items-center justify-between mt-2">
-                    <span className="font-bold text-primary">{service.price}</span>
+                    <span className="font-bold text-primary text-sm sm:text-base">{service.price}</span>
                     <Button 
                       size="sm" 
-                      className="gap-1"
+                      className="gap-1 text-xs sm:text-sm px-2 sm:px-3 h-8 sm:h-9"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleBookService(service.id);
@@ -333,9 +340,9 @@ const ServiceCategory = () => {
             </Card>
           ))
         ) : (
-          <div className="col-span-2 text-center py-12">
-            <p className="text-muted-foreground">এই ক্যাটাগরিতে কোন সার্ভিস পাওয়া যায়নি</p>
-            <Button variant="outline" className="mt-4" onClick={() => navigate('/services')}>
+          <div className="col-span-2 text-center py-10 sm:py-12">
+            <p className="text-muted-foreground text-sm sm:text-base">এই ক্যাটাগরিতে কোন সার্ভিস পাওয়া যায়নি</p>
+            <Button variant="outline" className="mt-4 px-4 py-2 text-sm sm:text-base" onClick={() => navigate('/services')}>
               সকল সার্ভিস দেখুন
             </Button>
           </div>
