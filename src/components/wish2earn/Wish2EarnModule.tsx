@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ShoppingBag, BadgeDollarSign, Award, MapPin, BarChart2, Star, Heart, Video } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -31,14 +30,14 @@ const wishFeatures = [
   {
     key: "task",
     icon: <BadgeDollarSign className="h-6 w-6 text-green-500" />,
-    title: "টাস্ক কমপ্লিশন দিয়ে আয়",
-    desc: "ভিডিও শেয়ার, রেফারেল, লোকেশন ভিত্তিক কাজ, নানান সহজ টাস্ক সম্পূর্ণ করলেই ইনকাম।",
+    title: "টাস্ক কমপ্লিশন দিয়ে আয়",
+    desc: "ভিডিও শেয়ার, রেফারেল, লোকেশন ভিত্তিক কাজ, নানান সহজ টাস্ক সম্পূর্ণ করলেই ইনকাম।",
     component: <TaskCompletionFeature />,
   },
   {
     key: "offer",
     icon: <Award className="h-6 w-6 text-purple-500" />,
-    title: "নিজের প্রোডাক্ট/সার্ভিস অফার দিয়ে আয়",
+    title: "নিজের প্রোডাক্ট/সার্ভিস অফার দিয়ে আয়",
     desc: "ইউজার নিজের প্রোডাক্ট বা সার্ভিস অফার করবে, যেমন ক্যামেরা ভাড়া বা ফ্রিল্যান্স কাজ।",
     component: <ProductServiceOfferFeature />,
   },
@@ -60,14 +59,14 @@ const wishFeatures = [
     key: "gamified",
     icon: <Star className="h-6 w-6 text-yellow-500" />,
     title: "Gamified Progress (ব্যাজ, লেভেল)",
-    desc: "প্রতিটি অর্জনে ব্যাজ, লেভেল, মিশন ও রিওয়ার্ড দিয়ে উৎসাহ।",
+    desc: "প্রতিটি অর্জনে ব্যাজ, লেভেল, মিশন ও রিওয়ার্ড দিয়ে উৎসাহ।",
     component: <GamifiedProgressFeature />,
   },
   {
     key: "video",
     icon: <Heart className="h-6 w-6 text-rose-500" />,
     title: "ভিডিও/লিংক শেয়ার ইনকাম",
-    desc: "ইউজার ভিডিও/ফাইল লিংক শেয়ার করে ইনকাম পাবেন, ইন-অ্যাপ প্লেয়ারেই দেখা যাবে।",
+    desc: "ইউজার ভিডিও/ফাইল লিংক শেয়ার করে ইনকাম পাবেন, ইন-অ্যাপ প্লেয়ারেই দেখা যাবে।",
     component: <VideoShareEarnFeature />,
   }
 ];
@@ -85,58 +84,57 @@ export const Wish2EarnModule: React.FC = () => {
         <p className="text-center text-sm sm:text-base text-gray-700 font-medium max-w-lg">
           নিজের স্বপ্ন পূরণের জন্য ছোট ছোট টাস্কে ইনকাম করুন, লক্ষ্যে পৌঁছান—এতেই আত্মনির্ভরতা!
         </p>
-        <BanglaTip tip="প্রত্যেক ছোট কাজ আপনাকে এগিয়ে নিয়ে যাবে স্বপ্নের দিকে। আয় বাড়ান, ব্যাজ আর রিওয়ার্ড অর্জন করুন!" />
+        <BanglaTip tip="প্রত্যেক ছোট কাজ আপনাকে এগিয়ে নিয়ে যাবে স্বপ্নের দিকে। আয় বাড়ান, ব্যাজ আর রিওয়ার্ড অর্জন করুন!" />
       </div>
-      {/* Feature Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-2 sm:px-0">
-        {wishFeatures.map((feat, i) => (
+
+      {/* Feature Icon Grid */}
+      <div
+        className="
+          grid 
+          grid-cols-2 
+          sm:grid-cols-4
+          gap-y-6 gap-x-3 
+          justify-items-center
+          px-2 sm:px-0
+          mb-2
+        "
+      >
+        {wishFeatures.map((feat) => (
           <button
             key={feat.key}
             type="button"
             onClick={() => setModal(feat.key)}
+            aria-label={feat.title}
             className={`
-              group w-full text-left focus:outline-none
-              card-gradient-light
-              rounded-2xl border border-stone-200 shadow-sm
-              hover:shadow-lg hover:scale-[1.03] active:scale-100
-              transition-all duration-200
-              flex flex-row gap-4 sm:gap-5 items-center
-              px-4 py-4 sm:py-5 
-              relative
+              group w-20 h-20 sm:w-24 sm:h-24 
+              flex flex-col items-center justify-center
+              bg-gradient-to-br from-pink-50 via-blue-50 to-yellow-50
+              rounded-full shadow-md border-2 border-stone-200
+              hover:shadow-lg hover:border-pink-200 hover:scale-105 
+              active:scale-100 
               focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2
-              aria-[current=true]:ring-2 aria-[current=true]:ring-primary
+              transition-all duration-200
+              cursor-pointer
+              outline-none
+              relative
             `}
             tabIndex={0}
-            aria-label={feat.title}
-            aria-current={modal === feat.key}
           >
-            <span className="
-              flex items-center justify-center
-              rounded-full bg-gradient-to-br from-pink-100 via-blue-100 to-amber-100
-              shadow-md w-12 h-12 sm:w-14 sm:h-14
-              mr-0.5
-              group-hover:scale-110 group-active:scale-105 
-              transition-all
-            ">
+            <span className="flex items-center justify-center mb-1">
               {feat.icon}
             </span>
-            <div className="flex-1 min-w-0">
-              <div className="font-extrabold text-base sm:text-lg text-primary mb-1 leading-snug group-hover:text-pink-700 transition-all duration-150">
-                {feat.title}
-              </div>
-              <div className="text-xs sm:text-sm text-gray-600 group-hover:text-gray-800 transition">
-                {feat.desc}
-              </div>
-            </div>
+            <span className="sr-only">{feat.title}</span>
           </button>
         ))}
       </div>
+
       {/* Modal for Features */}
       {wishFeatures.map((feat) =>
         <FeatureModal key={feat.key} open={modal === feat.key} onOpenChange={v => v ? setModal(feat.key) : setModal(null)}>
           {feat.component}
         </FeatureModal>
       )}
+
       {/* Bengali CTA Tip */}
       <div className="mt-9 flex justify-center">
         <Badge variant="premium" className="px-4 py-2 text-base shadow-md animate-fade-in">
