@@ -178,7 +178,7 @@ const AnalyticsTab = ({ dateRange, onDateRangeChange, businessType }: AnalyticsT
                 </div>
               </div>
               <div className="h-12 w-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <PieChart className="h-6 w-6 text-purple-600" />
+                <LucidePieChart className="h-6 w-6 text-purple-600" />
               </div>
             </div>
           </CardContent>
