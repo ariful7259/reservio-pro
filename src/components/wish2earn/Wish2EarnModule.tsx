@@ -78,60 +78,86 @@ export const Wish2EarnModule: React.FC = () => {
         <div className="flex items-center gap-2">
           <span className="font-extrabold text-xl bg-gradient-to-r from-purple-700 via-blue-600 to-fuchsia-500 bg-clip-text text-transparent">Wish2Earn</span>
         </div>
+        {/* BEAUTIFULLY CUSTOMIZED MOBILE NAVBAR */}
         <div
-          className="
+          className={`
             flex 
             gap-1
-            bg-slate-100
+            bg-white/80
+            backdrop-blur-xl
             p-1
             rounded-full
-            shadow-inner
+            shadow-xl
             w-full
             max-w-[440px]
             md:max-w-none
             md:gap-2
             md:w-auto
             fixed
-            bottom-0
-            left-0
-            right-0
-            z-20
-            border-t
-            border-slate-200
+            bottom-3
+            left-1/2
+            -translate-x-1/2
+            z-30
+            border
+            border-slate-100
             md:static
             md:border-0
             md:rounded-full
             md:shadow-inner
             md:bg-slate-100
             md:p-1
-          "
+            transition-smooth
+          `}
           style={{
-            // Avoid double shadow on mobile 
-            boxShadow: "0 -3px 24px 0 rgb(0 0 0 / 8%)" 
+            boxShadow:
+              "0 6px 24px 0 rgba(163,143,255,0.07), 0 1.5px 8px 0 rgb(0 0 0 / 10%)",
+            // Nice floating effect on mobile
+            backdropFilter: "blur(12px)",
           }}
         >
           <button
-            className={`flex flex-col items-center flex-1 px-0 py-2 rounded-full transition-all ${tab === "play"
-              ? "bg-white shadow text-purple-600"
-              : "text-gray-500 bg-transparent"} md:flex-row md:px-4 md:py-1.5 md:w-auto md:gap-2 md:justify-center`}
+            className={`
+              flex flex-col items-center flex-1 px-0 py-2 rounded-xl transition-all focus-visible:ring-2
+              ${tab === "play"
+                ? "bg-gradient-to-r from-purple-100 to-blue-100 shadow-lg text-purple-700 scale-105 ring-2 ring-purple-300"
+                : "text-gray-500 bg-transparent hover:bg-purple-50/70"}
+              md:flex-row md:px-4 md:py-1.5 md:w-auto md:gap-2 md:justify-center
+              font-semibold
+              active:scale-95
+              hover:shadow
+              transition-all
+              duration-200
+              ease-in
+            `}
             onClick={() => setTab("play")}
           >
-            <Home className="h-5 w-5 md:h-4 md:w-4" />
+            <Home className={`h-5 w-5 md:h-4 md:w-4 ${tab === "play" ? "text-purple-600 drop-shadow" : ""} transition-all`} />
             <span className="text-xs md:text-xs font-semibold leading-tight mt-1 md:mt-0">Home</span>
           </button>
           <button
-            className={`flex flex-col items-center flex-1 px-0 py-2 rounded-full transition-all ${tab === "wishlist"
-              ? "bg-white shadow text-purple-600"
-              : "text-gray-500 bg-transparent"} md:flex-row md:px-4 md:py-1.5 md:w-auto md:gap-2 md:justify-center`}
+            className={`
+              flex flex-col items-center flex-1 px-0 py-2 rounded-xl transition-all focus-visible:ring-2
+              ${tab === "wishlist"
+                ? "bg-gradient-to-r from-fuchsia-100 to-violet-50 shadow-lg text-fuchsia-700 scale-105 ring-2 ring-fuchsia-200"
+                : "text-gray-500 bg-transparent hover:bg-fuchsia-50/80"}
+              md:flex-row md:px-4 md:py-1.5 md:w-auto md:gap-2 md:justify-center
+              font-semibold
+              active:scale-95
+              hover:shadow
+              transition-all
+              duration-200
+              ease-in
+            `}
             onClick={() => setTab("wishlist")}
           >
-            <List className="h-5 w-5 md:h-4 md:w-4" />
+            <List className={`h-5 w-5 md:h-4 md:w-4 ${tab === "wishlist" ? "text-fuchsia-500 drop-shadow" : ""} transition-all`} />
             <span className="text-xs md:text-xs font-semibold leading-tight mt-1 md:mt-0">ইচ্ছা তালিকা</span>
           </button>
+          {/* অন্যান্য ট্যাব/বাটন অপরিবর্তিত */}
           <Button
             size="sm"
             variant="ghost"
-            className="flex flex-col items-center flex-1 rounded-full px-0 py-2 text-gray-600 hover:text-purple-600 focus-visible:ring-2 md:flex-row md:px-3 md:py-1.5 md:w-auto md:gap-1 md:justify-center font-bold"
+            className="flex flex-col items-center flex-1 rounded-xl px-0 py-2 text-gray-600 hover:text-purple-600 focus-visible:ring-2 md:flex-row md:px-3 md:py-1.5 md:w-auto md:gap-1 md:justify-center font-bold active:scale-95 hover:shadow"
           >
             <Briefcase className="h-5 w-5 md:h-4 md:w-4 text-purple-600" />
             <span className="text-xs font-semibold leading-tight mt-1 md:mt-0">কাজ</span>
@@ -139,7 +165,7 @@ export const Wish2EarnModule: React.FC = () => {
           <Button
             size="sm"
             variant="ghost"
-            className="flex flex-col items-center flex-1 rounded-full px-0 py-2 text-gray-600 hover:text-blue-600 focus-visible:ring-2 md:flex-row md:px-3 md:py-1.5 md:w-auto md:gap-1 md:justify-center font-bold"
+            className="flex flex-col items-center flex-1 rounded-xl px-0 py-2 text-gray-600 hover:text-blue-600 focus-visible:ring-2 md:flex-row md:px-3 md:py-1.5 md:w-auto md:gap-1 md:justify-center font-bold active:scale-95 hover:shadow"
           >
             <Layers3 className="h-5 w-5 md:h-4 md:w-4 text-blue-600" />
             <span className="text-xs font-semibold leading-tight mt-1 md:mt-0">সার্ভিস</span>
@@ -147,7 +173,7 @@ export const Wish2EarnModule: React.FC = () => {
           <Button
             size="sm"
             variant="ghost"
-            className="flex flex-col items-center flex-1 rounded-full px-0 py-2 text-gray-600 hover:text-gray-800 focus-visible:ring-2 md:flex-row md:px-3 md:py-1.5 md:w-auto md:gap-1 md:justify-center font-bold"
+            className="flex flex-col items-center flex-1 rounded-xl px-0 py-2 text-gray-600 hover:text-gray-800 focus-visible:ring-2 md:flex-row md:px-3 md:py-1.5 md:w-auto md:gap-1 md:justify-center font-bold active:scale-95 hover:shadow"
           >
             <User2 className="h-5 w-5 md:h-4 md:w-4 text-gray-700" />
             <span className="text-xs font-semibold leading-tight mt-1 md:mt-0">প্রোফাইল</span>
