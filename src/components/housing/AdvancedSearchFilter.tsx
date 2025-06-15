@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Search, MapPin, Filter, X, Sliders } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -20,6 +19,9 @@ interface SearchFilters {
   priceRange: [number, number];
   bedrooms: string;
   keywords: string;
+  gender: 'any' | 'male' | 'female' | 'couple';
+  verified: boolean;
+  premium: boolean;
 }
 
 interface AdvancedSearchFilterProps {
@@ -41,7 +43,10 @@ const AdvancedSearchFilter: React.FC<AdvancedSearchFilterProps> = ({
     amenities: [],
     priceRange: [5000, 50000],
     bedrooms: 'all',
-    keywords: ''
+    keywords: '',
+    gender: 'any',
+    verified: false,
+    premium: false,
   });
 
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -50,8 +55,6 @@ const AdvancedSearchFilter: React.FC<AdvancedSearchFilterProps> = ({
   const handleFilterChange = (key: keyof SearchFilters, value: any) => {
     const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
-    
-    // Update active filters for display
     updateActiveFilters(newFilters);
   };
 
@@ -84,6 +87,16 @@ const AdvancedSearchFilter: React.FC<AdvancedSearchFilterProps> = ({
     if (currentFilters.amenities.length > 0) {
       active.push(`সুবিধা: ${currentFilters.amenities.length}টি`);
     }
+    if (currentFilters.gender && currentFilters.gender !== "any") {
+      let bnGender = currentFilters.gender === "male" ? "ছেলে" : currentFilters.gender === "female" ? "মেয়ে" : "কাপল";
+      active.push(`জনপ্রকার: ${bnGender}`);
+    }
+    if (currentFilters.verified) {
+      active.push("Verified");
+    }
+    if (currentFilters.premium) {
+      active.push("Premium");
+    }
 
     setActiveFilters(active);
   };
@@ -101,6 +114,12 @@ const AdvancedSearchFilter: React.FC<AdvancedSearchFilterProps> = ({
       handleFilterChange('bedrooms', 'all');
     } else if (filterText.startsWith('সুবিধা:')) {
       handleFilterChange('amenities', []);
+    } else if (filterText.startsWith('জনপ্রকার:')) {
+      handleFilterChange('gender', 'any');
+    } else if (filterText === "Verified") {
+      handleFilterChange('verified', false);
+    } else if (filterText === "Premium") {
+      handleFilterChange('premium', false);
     }
   };
 
@@ -113,7 +132,10 @@ const AdvancedSearchFilter: React.FC<AdvancedSearchFilterProps> = ({
       amenities: [],
       priceRange: [5000, 50000],
       bedrooms: 'all',
-      keywords: ''
+      keywords: '',
+      gender: 'any',
+      verified: false,
+      premium: false,
     };
     setFilters(defaultFilters);
     setActiveFilters([]);
@@ -188,6 +210,66 @@ const AdvancedSearchFilter: React.FC<AdvancedSearchFilterProps> = ({
             ))}
           </SelectContent>
         </Select>
+      </div>
+
+      {/* নতুন Gender Radio + Verified/Premium Checkbox গ্রুপ */}
+      <div className="flex items-center gap-3 border rounded-lg px-3 py-2 bg-gray-50">
+        <span className="text-sm font-medium mr-2">জনপ্রকার:</span>
+        <label className="inline-flex items-center gap-1">
+          <input
+            type="radio"
+            name="search-gender"
+            value="male"
+            checked={filters.gender === "male"}
+            onChange={() => handleFilterChange('gender', 'male')}
+            className="accent-blue-600"
+          />
+          <span className="text-xs">ছেলে</span>
+        </label>
+        <label className="inline-flex items-center gap-1">
+          <input
+            type="radio"
+            name="search-gender"
+            value="female"
+            checked={filters.gender === "female"}
+            onChange={() => handleFilterChange('gender', 'female')}
+            className="accent-pink-500"
+          />
+          <span className="text-xs">মেয়ে</span>
+        </label>
+        <label className="inline-flex items-center gap-1">
+          <input
+            type="radio"
+            name="search-gender"
+            value="couple"
+            checked={filters.gender === "couple"}
+            onChange={() => handleFilterChange('gender', 'couple')}
+            className="accent-green-600"
+          />
+          <span className="text-xs">কাপল</span>
+        </label>
+      </div>
+
+      {/* Verified & Premium */}
+      <div className="flex items-center gap-3 border rounded-lg px-3 py-2 bg-gray-50">
+        <label className="inline-flex items-center gap-1">
+          <input
+            type="checkbox"
+            checked={filters.verified}
+            onChange={(e) => handleFilterChange('verified', e.target.checked)}
+            className="accent-blue-600"
+          />
+          <span className="text-xs">Verified</span>
+        </label>
+        <label className="inline-flex items-center gap-1">
+          <input
+            type="checkbox"
+            checked={filters.premium}
+            onChange={(e) => handleFilterChange('premium', e.target.checked)}
+            className="accent-amber-600"
+          />
+          <span className="text-xs">Premium</span>
+        </label>
       </div>
 
       {/* Active Filters */}
