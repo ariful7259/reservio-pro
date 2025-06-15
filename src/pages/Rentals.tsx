@@ -28,6 +28,14 @@ const Rentals = () => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [activeSection, setActiveSection] = useState<'categories' | 'housing'>('categories');
 
+  // Banner images for the carousel
+  const bannerImages = [
+    'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=1000&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1000&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=1000&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1000&auto=format&fit=crop'
+  ];
+
   // Updated rent categories with "বাসা বাড়ি" as the first category and enhanced booking features
   const rentCategories = [
     {
@@ -490,6 +498,7 @@ const Rentals = () => {
         <EnhancedHousingSection language={language || 'bn'} />
       ) : (
         <>
+          {/* Filter Section */}
           {filterVisible && (
             <div className="mb-6 p-4 border rounded-lg bg-gray-50">
               <h2 className="font-medium mb-3">ফিল্টার</h2>
@@ -560,6 +569,7 @@ const Rentals = () => {
             </div>
           )}
           
+          {/* Categories Section */}
           <div className="mb-8">
             <h2 className="text-lg font-medium mb-4">ক্যাটাগরি</h2>
             <div className="grid grid-cols-4 gap-3">
@@ -591,6 +601,7 @@ const Rentals = () => {
             </Collapsible>
           </div>
           
+          {/* Banner Carousel */}
           <div className="mb-6 overflow-hidden rounded-lg">
             <Carousel className="w-full">
               <CarouselContent>
@@ -611,6 +622,7 @@ const Rentals = () => {
           
           <Separator className="my-6" />
           
+          {/* Featured Listings */}
           <div className="mb-6">
             <h2 className="text-lg font-medium mb-4">ফিচার্ড লিস্টিং</h2>
             
