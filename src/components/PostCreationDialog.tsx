@@ -10,6 +10,8 @@ import {
   Rocket
 } from 'lucide-react';
 import PostDigitalProduct from './product/PostDigitalProduct';
+// Category selector import
+import CategorySelector from './CategorySelector';
 
 interface PostCreationDialogProps {
   isOpen: boolean;
@@ -18,6 +20,7 @@ interface PostCreationDialogProps {
 
 const PostCreationDialog = ({ isOpen, onClose }: PostCreationDialogProps) => {
   const [activeTab, setActiveTab] = useState('rental');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -50,13 +53,15 @@ const PostCreationDialog = ({ isOpen, onClose }: PostCreationDialogProps) => {
           </TabsList>
           
           <TabsContent value="rental">
+            {/* নতুন CategorySelector এখানে */}
             <div className="p-4">
+              <CategorySelector selected={selectedCategory} onSelect={setSelectedCategory} />
               <h3 className="font-medium mb-2">রেন্টাল পোস্ট</h3>
               <p className="text-sm text-muted-foreground mb-4">
                 আপনার প্রোপার্টি (বাসা, দোকান, অফিস, গাড়ি ইত্যাদি) ভাড়া দিতে পোস্ট করুন
               </p>
               {/* Rental posting form would go here */}
-              <Button className="w-full">রেন্টাল পোস্ট করুন</Button>
+              <Button className="w-full" disabled={!selectedCategory}>রেন্টাল পোস্ট করুন</Button>
             </div>
           </TabsContent>
           
