@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Building, 
   Search, 
@@ -74,8 +74,19 @@ import { usePostStore } from '@/store/usePostStore';
 
 const CreatePost = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
-  const [postType, setPostType] = useState<'rent' | 'service' | 'marketplace'>('rent');
+
+  // Get postType from query string initially
+  const getTypeFromQuery = () => {
+    const params = new URLSearchParams(location.search);
+    const type = params.get('type');
+    if (type === 'service' || type === 'marketplace') return type;
+    return 'rent' as 'rent' | 'service' | 'marketplace';
+  };
+
+  // State for post type, synchronizing with query param
+  const [postType, setPostType] = useState<'rent' | 'service' | 'marketplace'>(getTypeFromQuery());
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [subcategories, setSubcategories] = useState<{name: string, value: string, icon?: JSX.Element}[]>([]);
@@ -265,20 +276,14 @@ const CreatePost = () => {
 
   const addPost = usePostStore((state) => state.addPost);
 
+  // --- NEW: Sync postType with URL query string ---
   useEffect(() => {
-    if (postType === 'rent' && rentForm.category) {
-      const category = rentCategories.find(c => c.value === rentForm.category);
-      setSubcategories(category?.subcategories || []);
-    } else if (postType === 'service' && serviceForm.category) {
-      const category = serviceCategories.find(c => c.value === serviceForm.category);
-      setSubcategories(category?.subcategories || []);
-    } else if (postType === 'marketplace' && marketplaceForm.category) {
-      const category = marketplaceCategories.find(c => c.value === marketplaceForm.category);
-      setSubcategories(category?.subcategories || []);
-    } else {
-      setSubcategories([]);
+    const queryType = getTypeFromQuery();
+    if (postType !== queryType) {
+      setPostType(queryType);
     }
-  }, [rentForm.category, serviceForm.category, marketplaceForm.category, postType]);
+    // eslint-disable-next-line
+  }, [location.search]);
 
   const handleFileUpload = (files: FileList | null, type: 'rent' | 'service' | 'marketplace') => {
     if (!files) return;
@@ -373,6 +378,15 @@ const CreatePost = () => {
     }
   };
 
+  // On tab change, also update the URL (for deep linking)
+  const handleTabChange = (value: string) => {
+    let typeParam = '';
+    if (value === 'service') typeParam = '?type=service';
+    else if (value === 'marketplace') typeParam = '?type=marketplace';
+    else typeParam = '';
+    navigate('/create-post' + typeParam, { replace: true });
+  };
+
   return (
     <div className="container px-4 pt-20 pb-20">
       <div className="flex items-center gap-2 mb-6">
@@ -382,7 +396,7 @@ const CreatePost = () => {
         <h1 className="text-2xl font-bold">পোস্ট করুন</h1>
       </div>
 
-      <Tabs defaultValue="rent" onValueChange={(value) => setPostType(value as any)} className="mb-6">
+      <Tabs value={postType} onValueChange={handleTabChange} className="mb-6">
         <TabsList className="grid grid-cols-3 mb-6">
           <TabsTrigger value="rent" className="flex items-center gap-2">
             <Building className="h-4 w-4 text-amber-500" /> রেন্ট
