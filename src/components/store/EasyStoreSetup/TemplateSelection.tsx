@@ -1,10 +1,11 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Link } from 'lucide-react';
 import { StoreTemplate } from './types';
 import { storeTemplates } from './templateData';
+import { ProductSearchBar } from ".";
+import { useState, useMemo } from "react";
 
 interface TemplateSelectionProps {
   selectedTemplate: string;
@@ -15,21 +16,35 @@ const TemplateSelection: React.FC<TemplateSelectionProps> = ({
   selectedTemplate,
   onTemplateSelect
 }) => {
+  // SEARCH + FILTER
+  const [search, setSearch] = useState("");
+  const filteredTemplates = useMemo(
+    () =>
+      storeTemplates.filter((template) =>
+        template.name.toLowerCase().includes(search.toLowerCase()) ||
+        template.category.toLowerCase().includes(search.toLowerCase())
+      ),
+    [search]
+  );
+
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold mb-2">আপনার প্রয়োজন নির্বাচন করুন</h2>
         <p className="text-muted-foreground">অনলাইন স্টোর নাকি লিংক ইন বায়ো পেজ তৈরি করতে চান?</p>
       </div>
-      
+
+      <ProductSearchBar value={search} onChange={setSearch} placeholder="টেমপ্লেট নাম বা ক্যাটেগরি লিখুন…" />
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {storeTemplates.map((template) => (
+        {filteredTemplates.map((template) => (
           <Card 
             key={template.id}
             className={`cursor-pointer transition-all hover:shadow-lg ${
               selectedTemplate === template.id ? 'ring-2 ring-primary border-primary' : ''
             } ${template.type === 'linkinbio' ? 'border-purple-200 bg-purple-50/50' : ''}`}
             onClick={() => onTemplateSelect(template.id)}
+            aria-label={`Select template ${template.name}`}
           >
             <div className="relative">
               <img 

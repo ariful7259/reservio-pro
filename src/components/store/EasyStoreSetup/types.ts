@@ -1,20 +1,3 @@
-
-export interface StoreTemplate {
-  id: string;
-  name: string;
-  description: string;
-  image: string;
-  category: string;
-  features: string[];
-  type: 'store' | 'linkinbio';
-}
-
-export interface LinkData {
-  title: string;
-  url: string;
-  icon?: string;
-}
-
 export interface StoreData {
   businessName: string;
   ownerName: string;
@@ -29,6 +12,17 @@ export interface LinkInBioData {
   displayName: string;
   bio: string;
   profileImage: string;
-  links: LinkData[];
+  links: { title: string; url: string }[];
   category?: string;
 }
+
+export interface StoreTemplate {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  features: string[];
+  type: 'store' | 'linkinbio';
+  category: string;
+}
+// Optionally add accessibility metadata if needed for future extension

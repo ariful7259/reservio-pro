@@ -1,19 +1,32 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { MapPin } from 'lucide-react';
 import { StoreData } from './types';
+import { ProductImageGallery } from ".";
 
 interface StoreInfoFormProps {
   storeData: StoreData;
   setStoreData: React.Dispatch<React.SetStateAction<StoreData>>;
 }
 
-const StoreInfoForm: React.FC<StoreInfoFormProps> = ({ storeData, setStoreData }) => {
+const StoreInfoForm: React.FC<StoreInfoFormProps> = ({
+  storeData,
+  setStoreData
+}) => {
+  const [products, setProducts] = useState([
+    { id: "dummy1", name: "টেস্ট পণ্য ১", images: [] },
+    { id: "dummy2", name: "টেস্ট পণ্য ২", images: [] }
+  ]);
+  const handleGalleryChange = (images: string[], productIdx: number) => {
+    setProducts((prev) =>
+      prev.map((p, i) => (i === productIdx ? { ...p, images } : p))
+    );
+  };
+
   return (
-    <>
+    <div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="businessName">দোকানের নাম *</Label>
@@ -82,7 +95,19 @@ const StoreInfoForm: React.FC<StoreInfoFormProps> = ({ storeData, setStoreData }
           onChange={(e) => setStoreData(prev => ({ ...prev, description: e.target.value }))}
         />
       </div>
-    </>
+
+      <div className="space-y-4 mt-4">
+        <div className="text-base font-bold mb-2">পণ্যের ছবি</div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {products.map((product, idx) => (
+            <div key={product.id}>
+              <div className="font-semibold mb-1">{product.name}</div>
+              <ProductImageGallery images={product.images} onChange={(imgs) => handleGalleryChange(imgs, idx)} editable />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 

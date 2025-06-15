@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -28,6 +27,7 @@ import { ReferralSystem } from '@/components/sidebar/ReferralSystem';
 
 // নতুন সহজ স্টোর সেটআপ কম্পোনেন্ট
 import EasyStoreSetup from '@/components/store/EasyStoreSetup';
+import { StoreDemoButton, FAQSection } from "@/components/store/EasyStoreSetup";
 
 // নতুন কম্পোনেন্টস
 import RealTimeAnalytics from '@/components/analytics/RealTimeAnalytics';
@@ -337,6 +337,10 @@ const CreateStore = () => {
     <div className="min-h-screen bg-background">
       {/* Mobile Header */}
       <div className="container mx-auto px-4 py-4 pt-20">
+        {/* Demo Button */}
+        <div className="flex justify-end mb-4">
+          <StoreDemoButton />
+        </div>
         <Card className="shadow-lg">
           <CardHeader className="pb-4">
             <div className="flex flex-col gap-3">
@@ -445,6 +449,8 @@ const CreateStore = () => {
             </Tabs>
           </CardContent>
         </Card>
+        {/* FAQ Section */}
+        <FAQSection />
       </div>
       
       {/* Mobile-Optimized Live Chat Support */}
