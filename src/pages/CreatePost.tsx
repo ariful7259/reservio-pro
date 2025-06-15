@@ -133,6 +133,7 @@ const CreatePost = () => {
     bedrooms: 'all',
     priceRange: [5000, 50000],
     amenities: [] as string[],
+    peopleType: 'all', // নতুন key!
   });
 
   const amenityItems = [
@@ -671,6 +672,25 @@ const CreatePost = () => {
                           />
                         </div>
                       </div>
+                      {/* ======= New: People type ======= */}
+                      <div className="flex-1 min-w-[180px]">
+                        <label className="text-sm font-medium mb-1 block">জন প্রকার</label>
+                        <Select
+                          value={housingFeatures.peopleType}
+                          onValueChange={value => setHousingFeatures(f => ({ ...f, peopleType: value }))}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="সকল" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">সকল</SelectItem>
+                            <SelectItem value="male">পুরুষ</SelectItem>
+                            <SelectItem value="female">মহিলা</SelectItem>
+                            <SelectItem value="family">ফ্যামিলি</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      {/* ======= /People type ======= */}
                     </div>
                     {/* Amenities checkboxes */}
                     <div className="mt-4">
