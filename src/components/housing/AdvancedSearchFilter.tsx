@@ -9,6 +9,7 @@ import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { dhakaAreas, propertyTypes, budgetRanges, amenitiesList } from '@/data/enhanced-property-data';
+import GenderVerifiedDropdown from "./GenderVerifiedDropdown";
 
 interface SearchFilters {
   location: string;
@@ -175,7 +176,7 @@ const AdvancedSearchFilter: React.FC<AdvancedSearchFilterProps> = ({
         </div>
       </div>
 
-      {/* NEW: Combined Quick Filters + Gender/Verified/Premium (single flex row) */}
+      {/* NEW: Combined Quick Filters (location/property/budget) + Dropdown */}
       <div className="flex flex-col lg:flex-row gap-2">
         {/* Quick Filters */}
         <div className="flex flex-wrap gap-2 flex-1">
@@ -211,66 +212,14 @@ const AdvancedSearchFilter: React.FC<AdvancedSearchFilterProps> = ({
             </SelectContent>
           </Select>
         </div>
-        {/* Gender & Verified/Premium -- now right beside quick filters */}
-        <div className="flex flex-col sm:flex-row gap-2 flex-shrink-0">
-          {/* Gender */}
-          <div className="flex items-center gap-3 border rounded-lg px-3 py-2 bg-gray-50">
-            <span className="text-sm font-medium mr-2">জনপ্রকার:</span>
-            <label className="inline-flex items-center gap-1">
-              <input
-                type="radio"
-                name="search-gender"
-                value="male"
-                checked={filters.gender === "male"}
-                onChange={() => handleFilterChange('gender', 'male')}
-                className="accent-blue-600"
-              />
-              <span className="text-xs">ছেলে</span>
-            </label>
-            <label className="inline-flex items-center gap-1">
-              <input
-                type="radio"
-                name="search-gender"
-                value="female"
-                checked={filters.gender === "female"}
-                onChange={() => handleFilterChange('gender', 'female')}
-                className="accent-pink-500"
-              />
-              <span className="text-xs">মেয়ে</span>
-            </label>
-            <label className="inline-flex items-center gap-1">
-              <input
-                type="radio"
-                name="search-gender"
-                value="couple"
-                checked={filters.gender === "couple"}
-                onChange={() => handleFilterChange('gender', 'couple')}
-                className="accent-green-600"
-              />
-              <span className="text-xs">কাপল</span>
-            </label>
-          </div>
-          {/* Verified & Premium */}
-          <div className="flex items-center gap-3 border rounded-lg px-3 py-2 bg-gray-50">
-            <label className="inline-flex items-center gap-1">
-              <input
-                type="checkbox"
-                checked={filters.verified}
-                onChange={(e) => handleFilterChange('verified', e.target.checked)}
-                className="accent-blue-600"
-              />
-              <span className="text-xs">Verified</span>
-            </label>
-            <label className="inline-flex items-center gap-1">
-              <input
-                type="checkbox"
-                checked={filters.premium}
-                onChange={(e) => handleFilterChange('premium', e.target.checked)}
-                className="accent-amber-600"
-              />
-              <span className="text-xs">Premium</span>
-            </label>
-          </div>
+        {/* Gender & Verified/Premium as Dropdown -- to the right of budget */}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <GenderVerifiedDropdown
+            gender={filters.gender}
+            verified={filters.verified}
+            premium={filters.premium}
+            onChange={handleFilterChange}
+          />
         </div>
       </div>
 
