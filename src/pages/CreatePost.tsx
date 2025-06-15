@@ -128,7 +128,19 @@ const CreatePost = () => {
   });
 
   const rentCategories = [
-    { name: 'বাসা বাড়ি', value: 'housing', icon: <Home className="h-5 w-5 text-primary" />, subcategories: [] },
+    { 
+      name: 'বাসা বাড়ি', 
+      value: 'housing', 
+      icon: <Home className="h-5 w-5 text-primary" />, 
+      subcategories: [
+        { name: 'সব ধরন', value: 'all' },
+        { name: 'অ্যাপার্টমেন্ট', value: 'apartment' },
+        { name: 'বাসা/বাড়ি', value: 'house' },
+        { name: 'মেস', value: 'mess' },
+        { name: 'শেয়ারড', value: 'shared' },
+        { name: 'হোস্টেল', value: 'hostel' },
+      ] 
+    },
     { name: 'ইলেকট্রনিক্স', value: 'electronics', icon: <Laptop className="h-5 w-5 text-blue-500" />, subcategories: [] },
     { name: 'পরিবহন', value: 'transport', icon: <Car className="h-5 w-5 text-red-500" />, subcategories: [] },
     { name: 'ইভেন্ট সামগ্রী', value: 'event', icon: <Tent className="h-5 w-5 text-green-500" />, subcategories: [] },
@@ -253,6 +265,31 @@ const CreatePost = () => {
     }
     // eslint-disable-next-line
   }, [location.search]);
+
+  // Auto update subcategory list based on category select
+  useEffect(() => {
+    let categories;
+    let catValue;
+
+    if(postType === 'rent') {
+      categories = rentCategories;
+      catValue = rentForm.category;
+    } else if(postType === 'service') {
+      categories = serviceCategories;
+      catValue = serviceForm.category;
+    } else {
+      categories = marketplaceCategories;
+      catValue = marketplaceForm.category;
+    }
+
+    const catObj = categories.find(c => c.value === catValue);
+    if(catObj && catObj.subcategories && catObj.subcategories.length > 0) {
+      setSubcategories(catObj.subcategories);
+    } else {
+      setSubcategories([]);
+    }
+  // পোস্টটাইপ, এবং সংশ্লিষ্ট ফর্মের ক্যাটাগরি পরিবর্তনে চলবে:
+  }, [postType, rentForm.category, serviceForm.category, marketplaceForm.category]);
 
   const handleFileUpload = (files: FileList | null, type: 'rent' | 'service' | 'marketplace') => {
     if (!files) return;
@@ -474,11 +511,8 @@ const CreatePost = () => {
                       </SelectTrigger>
                       <SelectContent>
                         {subcategories.map(sub => (
-                          <SelectItem key={sub.value} value={sub.value} className="flex items-center gap-2">
-                            <div className="flex items-center gap-2">
-                              {sub.icon}
-                              <span>{sub.name}</span>
-                            </div>
+                          <SelectItem key={sub.value} value={sub.value}>
+                            {sub.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
