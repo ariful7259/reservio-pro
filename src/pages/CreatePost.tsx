@@ -73,6 +73,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from "@/components/ui/use-toast";
 import { usePostStore } from '@/store/usePostStore';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
+import { Slider } from '@mui/material';
 
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -126,6 +127,28 @@ const CreatePost = () => {
     description: '',
     images: [] as File[]
   });
+
+  const [housingFeatures, setHousingFeatures] = useState({
+    furnishing: 'all',
+    bedrooms: 'all',
+    priceRange: [5000, 50000],
+    amenities: [] as string[],
+  });
+
+  const amenityItems = [
+    { value: "wifi", label: "ওয়াইফাই" },
+    { value: "ac", label: "এসি" },
+    { value: "lift", label: "লিফট" },
+    { value: "generator", label: "জেনারেটর" },
+    { value: "security", label: "নিরাপত্তা" },
+    { value: "parking", label: "পার্কিং" },
+    { value: "garden", label: "গার্ডেন" },
+    { value: "roof", label: "ছাদ" },
+    { value: "gym", label: "জিম" },
+    { value: "gas", label: "গ্যাস" },
+    { value: "swimming-pool", label: "সুইমিং পুল" },
+    { value: "community-hall", label: "কমিউনিটি হল" },
+  ];
 
   const rentCategories = [
     { 
@@ -226,7 +249,7 @@ const CreatePost = () => {
       value: 'fitness',
       icon: <User className="h-4 w-4 text-green-500" />,
       subcategories: [
-        { name: 'জিম ইকুইপমেন্ট', value: 'gym-equipment', icon: <User className="h-4 w-4 text-green-500" /> },
+        { name: 'জিম ইকুপমেন্ট', value: 'gym-equipment', icon: <User className="h-4 w-4 text-green-500" /> },
         { name: 'ফিটনেস ট্র্যাকার', value: 'fitness-tracker', icon: <Smartphone className="h-4 w-4 text-green-500" /> }
       ]
     },
@@ -410,7 +433,7 @@ const CreatePost = () => {
       title: "চুক্তি তৈরি",
       icon: <Book className="h-10 w-10 text-blue-500 mb-2" />,
       desc: "অটোমেটিক রেন্টাল এগ্রিমেন্ট তৈরি করুন",
-      details: "নির্বাচিত অর্ডার ও ব্যবহারকারীর তথ্য থেকে স্বয়ংক্রিয়ভাবে এগ্রিমেন্ট জেনারেশন—রেন্ট চালু হওয়ার সাথে সাথে কপি ডাউনলোডও নিশ্চিত।"
+      details: "নির্বাচিত অর্ডার ও ব্যবহারকারীর তথ্য থেকে স্বযংক্রিয়ভাবে এগ্রিমেন্ট জেনারেশন—রেন্ট চালু হওয়ার সাথে সাথে কপি ডাউনলোডও নিশ্চিত।"
     },
   ];
 
@@ -592,6 +615,89 @@ const CreatePost = () => {
                     </div>
                   )}
                 </div>
+                
+                {/* --- New: Filter section, only for "housing" + subcategory selected --- */}
+                {(rentForm.category === "housing" && rentForm.subcategory) && (
+                  <div className="border rounded-lg p-4 bg-white/80 my-3 shadow-sm">
+                    <h3 className="font-semibold flex items-center gap-2 text-base mb-2">
+                      <svg width="18" height="18" className="inline-block"><path fill="currentColor" d="M3 8v2a6 6 0 1012 0V8" opacity=".2"/><path d="M9 3v4m0 0l-2-2m2 2l2-2M4 10h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+                      বিস্তারিত ফিল্টার
+                    </h3>
+                    <div className="flex flex-col gap-3 md:flex-row">
+                      {/* Furnishing */}
+                      <div className="flex-1 min-w-[180px]">
+                        <label className="text-sm font-medium mb-1 block">ফার্নিশিং</label>
+                        <Select value={housingFeatures.furnishing} onValueChange={(value) => setHousingFeatures(f => ({...f, furnishing: value}))}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="সব ধরন" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">সব ধরন</SelectItem>
+                            <SelectItem value="furnished">ফার্নিশড</SelectItem>
+                            <SelectItem value="semi-furnished">সেমি-ফার্নিশড</SelectItem>
+                            <SelectItem value="unfurnished">আনফার্নিশড</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      {/* Bedrooms */}
+                      <div className="flex-1 min-w-[180px]">
+                        <label className="text-sm font-medium mb-1 block">বেডরুম</label>
+                        <Select value={housingFeatures.bedrooms} onValueChange={(value) => setHousingFeatures(f => ({...f, bedrooms: value}))}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="সব" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">সব</SelectItem>
+                            <SelectItem value="1">১ বেডরুম</SelectItem>
+                            <SelectItem value="2">২ বেডরুম</SelectItem>
+                            <SelectItem value="3">৩ বেডরুম</SelectItem>
+                            <SelectItem value="4+">৪+ বেডরুম</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      {/* Price slider */}
+                      <div className="flex-1 min-w-[220px]">
+                        <label className="text-sm font-medium mb-1 block text-end md:text-left md:mb-0">
+                          <span>মূল্য সীমা: ৳{housingFeatures.priceRange[0].toLocaleString()} - ৳{housingFeatures.priceRange[1].toLocaleString()}</span>
+                        </label>
+                        <div className="px-0 pt-2">
+                          <Slider
+                            value={housingFeatures.priceRange}
+                            onValueChange={value => setHousingFeatures(f => ({...f, priceRange: value as [number, number]}))}
+                            max={50000}
+                            min={5000}
+                            step={500}
+                            className="w-full"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    {/* Amenities checkboxes */}
+                    <div className="mt-4">
+                      <label className="text-sm font-medium mb-2 block">সুবিধাসমূহ</label>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                        {amenityItems.map(item => (
+                          <label key={item.value} className="flex items-center gap-2 text-sm font-normal cursor-pointer select-none">
+                            <input
+                              type="checkbox"
+                              checked={housingFeatures.amenities.includes(item.value)}
+                              onChange={e => {
+                                setHousingFeatures(f => ({
+                                  ...f,
+                                  amenities: e.target.checked
+                                    ? [...f.amenities, item.value]
+                                    : f.amenities.filter(a => a !== item.value)
+                                }))
+                              }}
+                              className="accent-red-400 w-4 h-4 border-2 rounded"
+                            />
+                            {item.label}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
             
