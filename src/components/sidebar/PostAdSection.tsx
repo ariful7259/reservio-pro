@@ -1,32 +1,24 @@
+
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Plus, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
+import { useDrawer } from '@/components/ui/drawer';
 
 export const PostAdSection = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const drawer = useDrawer(); // <-- Drawer context for closing sidebar
 
   // Announce for accessibility with ARIA live region
   const handlePostAd = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setLoading(true);
-
-    // Simulate short delay for loader feedback
+    if (drawer?.onClose) drawer.onClose(); // Sidebar কে আগে বন্ধ করা
+    // navigate to create-post after a tiny delay, so the close anim plays
     setTimeout(() => {
-      setLoading(false);
-      toast({
-        title: "আপনার বিজ্ঞাপন সফলভাবে প্রকাশিত হয়েছে!",
-        description: (
-          <span className="flex items-center gap-2">
-            <CheckCircle2 className="text-green-500 h-5 w-5" />
-            এখন সবাই দেখতে পারবে আপনার পোস্ট করা বিজ্ঞাপনটি।
-          </span>
-        ),
-      });
       navigate('/create-post');
-    }, 1200);
+    }, 120); // 120ms delay for smooth UI
   };
 
   return (
@@ -66,3 +58,4 @@ export const PostAdSection = () => {
     </section>
   );
 };
+
