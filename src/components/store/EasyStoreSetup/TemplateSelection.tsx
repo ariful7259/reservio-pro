@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Link } from 'lucide-react';
 import { StoreTemplate } from './types';
 import { storeTemplates } from './templateData';
-import { ProductSearchBar } from ".";
+import ProductSearchBar from './ProductSearchBar';
 import { useState, useMemo } from "react";
 
 interface TemplateSelectionProps {

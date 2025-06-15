@@ -27,7 +27,8 @@ import { ReferralSystem } from '@/components/sidebar/ReferralSystem';
 
 // নতুন সহজ স্টোর সেটআপ কম্পোনেন্ট
 import EasyStoreSetup from '@/components/store/EasyStoreSetup';
-import { StoreDemoButton, FAQSection } from "@/components/store/EasyStoreSetup";
+import StoreDemoButton from '@/components/store/EasyStoreSetup/StoreDemoButton';
+import FAQSection from '@/components/store/EasyStoreSetup/FAQSection';
 
 // নতুন কম্পোনেন্টস
 import RealTimeAnalytics from '@/components/analytics/RealTimeAnalytics';
