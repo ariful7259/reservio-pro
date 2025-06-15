@@ -1,24 +1,19 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, CheckCircle2 } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { toast } from '@/hooks/use-toast';
-import { useDrawer } from '@/components/ui/drawer';
+import { DrawerClose } from '@/components/ui/drawer';
 
 export const PostAdSection = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const navigate = useNavigate();
-  const drawer = useDrawer(); // <-- Drawer context for closing sidebar
 
-  // Announce for accessibility with ARIA live region
-  const handlePostAd = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handlePostAd = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (drawer?.onClose) drawer.onClose(); // Sidebar কে আগে বন্ধ করা
-    // navigate to create-post after a tiny delay, so the close anim plays
     setTimeout(() => {
       navigate('/create-post');
-    }, 120); // 120ms delay for smooth UI
+    }, 120); // Allow drawer close animation to finish
   };
 
   return (
@@ -36,24 +31,26 @@ export const PostAdSection = () => {
         <li>ড্যাশবোর্ড থেকে সহজে বিজ্ঞাপন পরিচালনা করুন</li>
       </ul>
       <div>
-        <Button
-          aria-label="এখনি বিজ্ঞাপন পোস্ট করুন"
-          type="button"
-          className={`w-full bg-primary text-white text-base font-semibold py-3 rounded-lg flex gap-2 items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 transition 
-            active:scale-95 ${loading ? "opacity-80 pointer-events-none" : ""}`}
-          size="lg"
-          onClick={handlePostAd}
-          disabled={loading}
-        >
-          <Plus className="h-5 w-5 mr-2" />
-          {loading ? (
-            <span>
-              <span className="animate-spin mr-2 inline-block align-middle">&#9696;</span> পোস্ট হচ্ছে...
-            </span>
-          ) : (
-            "এখনি বিজ্ঞাপন পোস্ট করুন"
-          )}
-        </Button>
+        <DrawerClose asChild>
+          <Button
+            aria-label="এখনি বিজ্ঞাপন পোস্ট করুন"
+            type="button"
+            className={`w-full bg-primary text-white text-base font-semibold py-3 rounded-lg flex gap-2 items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/80 transition 
+              active:scale-95 ${loading ? "opacity-80 pointer-events-none" : ""}`}
+            size="lg"
+            onClick={handlePostAd}
+            disabled={loading}
+          >
+            <Plus className="h-5 w-5 mr-2" />
+            {loading ? (
+              <span>
+                <span className="animate-spin mr-2 inline-block align-middle">&#9696;</span> পোস্ট হচ্ছে...
+              </span>
+            ) : (
+              "এখনি বিজ্ঞাপন পোস্ট করুন"
+            )}
+          </Button>
+        </DrawerClose>
       </div>
     </section>
   );
