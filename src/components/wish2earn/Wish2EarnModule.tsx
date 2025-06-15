@@ -79,10 +79,44 @@ export const Wish2EarnModule: React.FC = () => {
           <span className="font-extrabold text-xl bg-gradient-to-r from-purple-700 via-blue-600 to-fuchsia-500 bg-clip-text text-transparent">Wish2Earn</span>
         </div>
         <div className="flex gap-2 bg-slate-100 p-1 rounded-full shadow-inner">
-          <button className={`text-sm px-4 py-1.5 font-bold rounded-full transition-all ${tab === "play" ? "bg-white shadow text-purple-600" : "text-gray-500 bg-transparent"}`} onClick={() => setTab("play")}>Home</button>
-          <button className={`text-sm px-4 py-1.5 font-bold rounded-full transition-all ${tab === "wishlist" ? "bg-white shadow text-purple-600" : "text-gray-500 bg-transparent"}`} onClick={() => setTab("wishlist")}>ইচ্ছা তালিকা</button>
+          <button
+            className={`text-sm px-4 py-1.5 font-bold rounded-full transition-all ${tab === "play" ? "bg-white shadow text-purple-600" : "text-gray-500 bg-transparent"}`}
+            onClick={() => setTab("play")}
+          >
+            Home
+          </button>
+          <button
+            className={`text-sm px-4 py-1.5 font-bold rounded-full transition-all ${tab === "wishlist" ? "bg-white shadow text-purple-600" : "text-gray-500 bg-transparent"}`}
+            onClick={() => setTab("wishlist")}
+          >
+            ইচ্ছা তালিকা
+          </button>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="rounded-full px-3 flex items-center gap-1 font-bold text-gray-600 hover:text-purple-600 focus-visible:ring-2"
+          >
+            <Briefcase className="h-4 w-4 text-purple-600" />
+            <span className="text-xs">কাজ</span>
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="rounded-full px-3 flex items-center gap-1 font-bold text-gray-600 hover:text-blue-600 focus-visible:ring-2"
+          >
+            <Layers3 className="h-4 w-4 text-blue-600" />
+            <span className="text-xs">সার্ভিস</span>
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="rounded-full px-3 flex items-center gap-1 font-bold text-gray-600 hover:text-gray-800 focus-visible:ring-2"
+          >
+            <User2 className="h-4 w-4 text-gray-700" />
+            <span className="text-xs">প্রোফাইল</span>
+          </Button>
         </div>
-        {/* এখানে কাজ, সার্ভিস, প্রোফাইল - বাটন/আইকন সহ */}
+        {/* header right button group unchanged */}
         <div className="flex gap-2">
           <Button size="icon" variant="ghost" className="rounded-full">
             <Briefcase className="h-5 w-5 text-purple-600" />
