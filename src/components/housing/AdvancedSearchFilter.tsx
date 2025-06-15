@@ -10,6 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { dhakaAreas, propertyTypes, budgetRanges, amenitiesList } from '@/data/enhanced-property-data';
 import GenderVerifiedDropdown from "./GenderVerifiedDropdown";
+import RoommateAdvancedFilter from "./RoommateAdvancedFilter";
 
 interface SearchFilters {
   location: string;
@@ -52,6 +53,13 @@ const AdvancedSearchFilter: React.FC<AdvancedSearchFilterProps> = ({
 
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
+
+  // Roommate advanced filter state
+  const [showRoommateAdvanced, setShowRoommateAdvanced] = useState(false);
+  const [roommateFilters, setRoommateFilters] = useState<{ lifestyle: string[]; location: string }>({
+    lifestyle: [],
+    location: "যেকোনো এলাকা"
+  });
 
   const handleFilterChange = (key: keyof SearchFilters, value: any) => {
     const newFilters = { ...filters, [key]: value };
@@ -146,9 +154,15 @@ const AdvancedSearchFilter: React.FC<AdvancedSearchFilterProps> = ({
     onSearch(filters);
   };
 
+  const handleRoommateFilterApply = (filters: { lifestyle: string[]; location: string }) => {
+    setRoommateFilters(filters);
+    // আপনি চাইলে এগুলো মুল ফিল্টারেও যুক্ত করতে পারেন বা কনসোলে দেখতে পারেন
+    // console.log('Roommate Advanced Filters:', filters);
+  };
+
   return (
     <div className={`space-y-4 ${className}`}>
-      {/* Main Search Bar */}
+      {/* Main Search Bar, Filter, Advanced Filter Button */}
       <div className="flex flex-col sm:flex-row gap-2">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -172,6 +186,15 @@ const AdvancedSearchFilter: React.FC<AdvancedSearchFilterProps> = ({
           >
             <Sliders className="h-4 w-4" />
             ফিল্টার
+          </Button>
+          {/* নতুন: অ্যাডভান্সড roommate ফিল্টার খোলার বাটন */}
+          <Button
+            variant="outline"
+            onClick={() => setShowRoommateAdvanced(true)}
+            className="flex items-center gap-2"
+          >
+            <Sliders className="h-4 w-4" />
+            {language === 'bn' ? "অ্যাডভান্সড ফিল্টার" : "Advanced Filter"}
           </Button>
         </div>
       </div>
@@ -353,6 +376,13 @@ const AdvancedSearchFilter: React.FC<AdvancedSearchFilterProps> = ({
           </Card>
         </CollapsibleContent>
       </Collapsible>
+
+      {/* RoommateAdvancedFilter ডায়ালগ */}
+      <RoommateAdvancedFilter
+        open={showRoommateAdvanced}
+        onClose={() => setShowRoommateAdvanced(false)}
+        onApply={handleRoommateFilterApply}
+      />
     </div>
   );
 };
