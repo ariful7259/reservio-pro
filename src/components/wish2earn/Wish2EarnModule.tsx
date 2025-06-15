@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { ArrowUp, List, Upload, Video, Home, Briefcase, User2, Layers3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -69,8 +70,16 @@ const quickActions = [{
 
 // Utility for currency formatting
 const formatNumber = (v: number) => "৳" + v.toLocaleString("bn-BD");
+
 export const Wish2EarnModule: React.FC = () => {
   const [tab, setTab] = useState<"play" | "wishlist">("play");
-  return;
+  // Minimal placeholder UI to satisfy React.FC return type
+  return (
+    <div className="p-6 min-w-[320px]">
+      <h1 className="text-xl font-bold mb-4">Wish2Earn Module</h1>
+      {/* এখানে পরবর্তীতে ড্যাশবোর্ড/কম্পোনেন্ট হিসেবে নির্মাণ করা যাবে */}
+    </div>
+  );
 };
+
 export default Wish2EarnModule;
