@@ -72,198 +72,244 @@ const formatNumber = (v: number) => "৳" + v.toLocaleString("bn-BD");
 export const Wish2EarnModule: React.FC = () => {
   const [tab, setTab] = useState<"play" | "wishlist">("play");
   return (
-    <div className="w-full max-w-5xl mx-auto bg-gradient-to-b from-purple-50/50 via-white to-blue-50/10 rounded-2xl shadow-xl pb-16">
-      {/* Top navigation/tab */}
-      <nav className="flex items-center justify-between px-5 pt-6 mb-2">
-        <div className="flex items-center gap-2">
-          <span className="font-extrabold text-xl bg-gradient-to-r from-purple-700 via-blue-600 to-fuchsia-500 bg-clip-text text-transparent">Wish2Earn</span>
-        </div>
-        {/* BEAUTIFULLY CUSTOMIZED MOBILE NAVBAR */}
-        <div
-          className={`
-            flex 
-            gap-1
-            bg-white/80
-            backdrop-blur-xl
-            p-1
-            rounded-full
-            shadow-xl
-            w-full
-            max-w-[440px]
-            md:max-w-none
-            md:gap-2
-            md:w-auto
-            fixed
-            bottom-3
-            left-1/2
-            -translate-x-1/2
-            z-30
-            border
-            border-slate-100
-            md:static
-            md:border-0
-            md:rounded-full
-            md:shadow-inner
-            md:bg-slate-100
-            md:p-1
-            transition-smooth
-          `}
-          style={{
-            boxShadow:
-              "0 6px 24px 0 rgba(163,143,255,0.07), 0 1.5px 8px 0 rgb(0 0 0 / 10%)",
-            // Nice floating effect on mobile
-            backdropFilter: "blur(12px)",
-          }}
-        >
-          <button
+    <div
+      className={`
+        relative
+        z-20
+        w-full
+        min-h-[100dvh] 
+        max-w-full 
+        flex flex-col
+        bg-gradient-to-tr from-blue-100 via-white to-pink-100
+        shadow-2xl
+        border-0
+        rounded-none
+        md:rounded-3xl
+        overflow-x-hidden
+        transition-all
+        duration-500
+        px-0
+        md:px-0
+        pt-0
+        md:pt-6
+        pb-24
+        md:pb-16
+      `}
+      style={{
+        boxShadow:
+          "0 8px 32px 0 rgba(52,30,140,0.07), 0 4px 24px 0 rgba(218,44,102,0.12)",
+        minHeight: "100dvh",
+        // edge-to-edge app look!
+      }}
+    >
+      <div
+        className={`
+          flex-1 flex flex-col w-full h-full
+          px-2 sm:px-5
+          md:px-8
+          md:pt-2
+          pt-2
+          animate-fade-in
+          max-w-[640px]
+          mx-auto
+        `}
+        style={{
+          width: "100%",
+          minHeight: "100%",
+        }}
+      >
+        {/* Top navigation/tab */}
+        <nav className="flex items-center justify-between px-5 pt-6 mb-2">
+          <div className="flex items-center gap-2">
+            <span className="font-extrabold text-xl bg-gradient-to-r from-purple-700 via-blue-600 to-fuchsia-500 bg-clip-text text-transparent">Wish2Earn</span>
+          </div>
+          {/* BEAUTIFULLY CUSTOMIZED MOBILE NAVBAR */}
+          <div
             className={`
-              flex flex-col items-center flex-1 px-0 py-2 rounded-xl transition-all focus-visible:ring-2
-              ${tab === "play"
-                ? "bg-gradient-to-r from-purple-100 to-blue-100 shadow-lg text-purple-700 scale-105 ring-2 ring-purple-300"
-                : "text-gray-500 bg-transparent hover:bg-purple-50/70"}
-              md:flex-row md:px-4 md:py-1.5 md:w-auto md:gap-2 md:justify-center
-              font-semibold
-              active:scale-95
-              hover:shadow
-              transition-all
-              duration-200
-              ease-in
+              flex 
+              gap-1
+              bg-white/80
+              backdrop-blur-xl
+              p-1
+              rounded-full
+              shadow-xl
+              w-full
+              max-w-[440px]
+              md:max-w-none
+              md:gap-2
+              md:w-auto
+              fixed
+              bottom-3
+              left-1/2
+              -translate-x-1/2
+              z-30
+              border
+              border-slate-100
+              md:static
+              md:border-0
+              md:rounded-full
+              md:shadow-inner
+              md:bg-slate-100
+              md:p-1
+              transition-smooth
             `}
-            onClick={() => setTab("play")}
+            style={{
+              boxShadow:
+                "0 6px 24px 0 rgba(163,143,255,0.07), 0 1.5px 8px 0 rgb(0 0 0 / 10%)",
+              // Nice floating effect on mobile
+              backdropFilter: "blur(12px)",
+            }}
           >
-            <Home className={`h-5 w-5 md:h-4 md:w-4 ${tab === "play" ? "text-purple-600 drop-shadow" : ""} transition-all`} />
-            <span className="text-xs md:text-xs font-semibold leading-tight mt-1 md:mt-0">Home</span>
-          </button>
-          <button
-            className={`
-              flex flex-col items-center flex-1 px-0 py-2 rounded-xl transition-all focus-visible:ring-2
-              ${tab === "wishlist"
-                ? "bg-gradient-to-r from-fuchsia-100 to-violet-50 shadow-lg text-fuchsia-700 scale-105 ring-2 ring-fuchsia-200"
-                : "text-gray-500 bg-transparent hover:bg-fuchsia-50/80"}
-              md:flex-row md:px-4 md:py-1.5 md:w-auto md:gap-2 md:justify-center
-              font-semibold
-              active:scale-95
-              hover:shadow
-              transition-all
-              duration-200
-              ease-in
-            `}
-            onClick={() => setTab("wishlist")}
-          >
-            <List className={`h-5 w-5 md:h-4 md:w-4 ${tab === "wishlist" ? "text-fuchsia-500 drop-shadow" : ""} transition-all`} />
-            <span className="text-xs md:text-xs font-semibold leading-tight mt-1 md:mt-0">ইচ্ছা তালিকা</span>
-          </button>
-          {/* অন্যান্য ট্যাব/বাটন অপরিবর্তিত */}
-          <Button
-            size="sm"
-            variant="ghost"
-            className="flex flex-col items-center flex-1 rounded-xl px-0 py-2 text-gray-600 hover:text-purple-600 focus-visible:ring-2 md:flex-row md:px-3 md:py-1.5 md:w-auto md:gap-1 md:justify-center font-bold active:scale-95 hover:shadow"
-          >
-            <Briefcase className="h-5 w-5 md:h-4 md:w-4 text-purple-600" />
-            <span className="text-xs font-semibold leading-tight mt-1 md:mt-0">কাজ</span>
-          </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            className="flex flex-col items-center flex-1 rounded-xl px-0 py-2 text-gray-600 hover:text-blue-600 focus-visible:ring-2 md:flex-row md:px-3 md:py-1.5 md:w-auto md:gap-1 md:justify-center font-bold active:scale-95 hover:shadow"
-          >
-            <Layers3 className="h-5 w-5 md:h-4 md:w-4 text-blue-600" />
-            <span className="text-xs font-semibold leading-tight mt-1 md:mt-0">সার্ভিস</span>
-          </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            className="flex flex-col items-center flex-1 rounded-xl px-0 py-2 text-gray-600 hover:text-gray-800 focus-visible:ring-2 md:flex-row md:px-3 md:py-1.5 md:w-auto md:gap-1 md:justify-center font-bold active:scale-95 hover:shadow"
-          >
-            <User2 className="h-5 w-5 md:h-4 md:w-4 text-gray-700" />
-            <span className="text-xs font-semibold leading-tight mt-1 md:mt-0">প্রোফাইল</span>
-          </Button>
+            <button
+              className={`
+                flex flex-col items-center flex-1 px-0 py-2 rounded-xl transition-all focus-visible:ring-2
+                ${tab === "play"
+                  ? "bg-gradient-to-r from-purple-100 to-blue-100 shadow-lg text-purple-700 scale-105 ring-2 ring-purple-300"
+                  : "text-gray-500 bg-transparent hover:bg-purple-50/70"}
+                md:flex-row md:px-4 md:py-1.5 md:w-auto md:gap-2 md:justify-center
+                font-semibold
+                active:scale-95
+                hover:shadow
+                transition-all
+                duration-200
+                ease-in
+              `}
+              onClick={() => setTab("play")}
+            >
+              <Home className={`h-5 w-5 md:h-4 md:w-4 ${tab === "play" ? "text-purple-600 drop-shadow" : ""} transition-all`} />
+              <span className="text-xs md:text-xs font-semibold leading-tight mt-1 md:mt-0">Home</span>
+            </button>
+            <button
+              className={`
+                flex flex-col items-center flex-1 px-0 py-2 rounded-xl transition-all focus-visible:ring-2
+                ${tab === "wishlist"
+                  ? "bg-gradient-to-r from-fuchsia-100 to-violet-50 shadow-lg text-fuchsia-700 scale-105 ring-2 ring-fuchsia-200"
+                  : "text-gray-500 bg-transparent hover:bg-fuchsia-50/80"}
+                md:flex-row md:px-4 md:py-1.5 md:w-auto md:gap-2 md:justify-center
+                font-semibold
+                active:scale-95
+                hover:shadow
+                transition-all
+                duration-200
+                ease-in
+              `}
+              onClick={() => setTab("wishlist")}
+            >
+              <List className={`h-5 w-5 md:h-4 md:w-4 ${tab === "wishlist" ? "text-fuchsia-500 drop-shadow" : ""} transition-all`} />
+              <span className="text-xs md:text-xs font-semibold leading-tight mt-1 md:mt-0">ইচ্ছা তালিকা</span>
+            </button>
+            {/* অন্যান্য ট্যাব/বাটন অপরিবর্তিত */}
+            <Button
+              size="sm"
+              variant="ghost"
+              className="flex flex-col items-center flex-1 rounded-xl px-0 py-2 text-gray-600 hover:text-purple-600 focus-visible:ring-2 md:flex-row md:px-3 md:py-1.5 md:w-auto md:gap-1 md:justify-center font-bold active:scale-95 hover:shadow"
+            >
+              <Briefcase className="h-5 w-5 md:h-4 md:w-4 text-purple-600" />
+              <span className="text-xs font-semibold leading-tight mt-1 md:mt-0">কাজ</span>
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="flex flex-col items-center flex-1 rounded-xl px-0 py-2 text-gray-600 hover:text-blue-600 focus-visible:ring-2 md:flex-row md:px-3 md:py-1.5 md:w-auto md:gap-1 md:justify-center font-bold active:scale-95 hover:shadow"
+            >
+              <Layers3 className="h-5 w-5 md:h-4 md:w-4 text-blue-600" />
+              <span className="text-xs font-semibold leading-tight mt-1 md:mt-0">সার্ভিস</span>
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="flex flex-col items-center flex-1 rounded-xl px-0 py-2 text-gray-600 hover:text-gray-800 focus-visible:ring-2 md:flex-row md:px-3 md:py-1.5 md:w-auto md:gap-1 md:justify-center font-bold active:scale-95 hover:shadow"
+            >
+              <User2 className="h-5 w-5 md:h-4 md:w-4 text-gray-700" />
+              <span className="text-xs font-semibold leading-tight mt-1 md:mt-0">প্রোফাইল</span>
+            </Button>
+          </div>
+          {/* header right button group unchanged */}
+        </nav>
+
+        {/* Subtitle */}
+        <div className="text-center text-gray-500 mb-3 px-2 text-sm font-medium">
+          আপনার স্বপ্ন পূরণ করুন, ছোট কাজ করে টাকা আয় করুন এবং ইচ্ছা পূরণ করুন!
         </div>
-        {/* header right button group unchanged */}
-      </nav>
 
-      {/* Subtitle */}
-      <div className="text-center text-gray-500 mb-3 px-2 text-sm font-medium">
-        আপনার স্বপ্ন পূরণ করুন, ছোট কাজ করে টাকা আয় করুন এবং ইচ্ছা পূরণ করুন!
-      </div>
-
-      {/* Stats Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 px-3 mb-5">
-        {stats.map((s, idx) => <div key={idx} className={`rounded-xl flex flex-col items-center py-3 ${s.bg} shadow group`}>
-            <span className={`text-xl md:text-2xl font-extrabold ${s.color}`}>{s.value}</span>
-            <div className="text-xs md:text-sm mt-1 text-gray-500 font-semibold">{s.label}</div>
-          </div>)}
-      </div>
-
-      {/* সেকশান: সক্রিয় ইচ্ছা তালিকা */}
-      <div className="px-4 mb-1">
-        <h2 className="text-lg font-bold text-gray-700 mb-2 flex items-center gap-2">
-          <span>🎯</span>
-          সক্রিয় ইচ্ছা তালিকা
-          <span className="ml-auto">
-            <Button size="sm" variant="outline" className="text-xs px-3 py-1">সব দেখুন</Button>
-          </span>
-        </h2>
-        <div className="flex flex-col md:flex-row gap-4">
-          {wishlists.map(w => <div key={w.id} className="flex-1 bg-white shadow rounded-xl relative overflow-hidden px-4 py-4 min-w-[250px]">
-              <div className="flex justify-between items-start mb-2">
-                <Badge className={`text-xs px-2 ${w.badgeColor}`}>{w.badge}</Badge>
-                <span className="text-xs text-gray-400">{w.days} দিন</span>
-              </div>
-              {/* Card center target cross mock */}
-              <div className="w-full flex justify-center items-center mb-4">
-                <div className="border border-dashed border-gray-200 rounded-full h-14 w-14 flex items-center justify-center opacity-40">
-                  <List className="h-7 w-7 text-gray-200" />
-                </div>
-              </div>
-              <div className="font-bold text-lg text-gray-700">{w.title}</div>
-              {/* progress */}
-              <div className="flex items-center mt-1">
-                <span className="text-xs text-gray-400">অগ্রগতি: {w.progress}%</span>
-                <div className="flex-1 mx-2 h-2 bg-gray-100 rounded-full overflow-hidden">
-                  <div className={`h-2 bg-gradient-to-r from-green-400 to-blue-400 rounded-full`} style={{
-                width: `${w.progress}%`
-              }} />
-                </div>
-              </div>
-              {/* Numbers */}
-              <div className="flex justify-between items-center mt-3 mb-1 text-sm font-semibold">
-                <span className="text-green-600">{formatNumber(w.current)} জমা হয়েছে</span>
-                <span className={`ml-2 ${w.leftRed ? "text-rose-500" : "text-gray-500"}`}>{formatNumber(w.left)} বাকি আছে</span>
-              </div>
-              <Button className={`w-full mt-2 ${w.id === 2 ? "bg-purple-600 hover:bg-purple-700" : ""}`}>কাজ বন্ধ করুন</Button>
+        {/* Stats Row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 px-3 mb-5">
+          {stats.map((s, idx) => <div key={idx} className={`rounded-xl flex flex-col items-center py-3 ${s.bg} shadow group`}>
+              <span className={`text-xl md:text-2xl font-extrabold ${s.color}`}>{s.value}</span>
+              <div className="text-xs md:text-sm mt-1 text-gray-500 font-semibold">{s.label}</div>
             </div>)}
         </div>
-      </div>
 
-      {/* Application Opportunity */}
-      <div className="px-4 mt-8">
-        <h2 className="text-base font-bold text-pink-800 mb-2 flex items-center gap-1">
-          <span>📍</span> আবেদনেশনের সুযোগ
-        </h2>
-        <div className="rounded-xl bg-gradient-to-tr from-blue-50/60 to-violet-100 p-7 shadow-lg flex flex-col items-center justify-center min-h-[160px] relative mb-1">
-          <span className="mx-auto text-blue-500 text-lg">আপনার অবস্থান</span>
-          <div className="absolute right-3 top-3 flex flex-col gap-2">
-            <Button size="icon" variant="outline" className="p-1 h-7 w-7 rounded-full">+</Button>
-            <Button size="icon" variant="outline" className="p-1 h-7 w-7 rounded-full">-</Button>
+        {/* সেকশান: সক্রিয় ইচ্ছা তালিকা */}
+        <div className="px-4 mb-1">
+          <h2 className="text-lg font-bold text-gray-700 mb-2 flex items-center gap-2">
+            <span>🎯</span>
+            সক্রিয় ইচ্ছা তালিকা
+            <span className="ml-auto">
+              <Button size="sm" variant="outline" className="text-xs px-3 py-1">সব দেখুন</Button>
+            </span>
+          </h2>
+          <div className="flex flex-col md:flex-row gap-4">
+            {wishlists.map(w => <div key={w.id} className="flex-1 bg-white shadow rounded-xl relative overflow-hidden px-4 py-4 min-w-[250px]">
+                <div className="flex justify-between items-start mb-2">
+                  <Badge className={`text-xs px-2 ${w.badgeColor}`}>{w.badge}</Badge>
+                  <span className="text-xs text-gray-400">{w.days} দিন</span>
+                </div>
+                {/* Card center target cross mock */}
+                <div className="w-full flex justify-center items-center mb-4">
+                  <div className="border border-dashed border-gray-200 rounded-full h-14 w-14 flex items-center justify-center opacity-40">
+                    <List className="h-7 w-7 text-gray-200" />
+                  </div>
+                </div>
+                <div className="font-bold text-lg text-gray-700">{w.title}</div>
+                {/* progress */}
+                <div className="flex items-center mt-1">
+                  <span className="text-xs text-gray-400">অগ্রগতি: {w.progress}%</span>
+                  <div className="flex-1 mx-2 h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div className={`h-2 bg-gradient-to-r from-green-400 to-blue-400 rounded-full`} style={{
+                  width: `${w.progress}%`
+                }} />
+                  </div>
+                </div>
+                {/* Numbers */}
+                <div className="flex justify-between items-center mt-3 mb-1 text-sm font-semibold">
+                  <span className="text-green-600">{formatNumber(w.current)} জমা হয়েছে</span>
+                  <span className={`ml-2 ${w.leftRed ? "text-rose-500" : "text-gray-500"}`}>{formatNumber(w.left)} বাকি আছে</span>
+                </div>
+                <Button className={`w-full mt-2 ${w.id === 2 ? "bg-purple-600 hover:bg-purple-700" : ""}`}>কাজ বন্ধ করুন</Button>
+              </div>)}
           </div>
         </div>
-        <div className="text-xs text-gray-600 ml-1 flex items-center justify-between">
-          <span>০টি কাজ আবেদনেশনে পাওয়া যাবে</span>
-          <span className="text-[10px]">শেষ আপডেট: ১.২ মিনিট</span>
-        </div>
-      </div>
 
-      {/* Quick actions section */}
-      <div className="px-4 mt-8">
-        <h2 className="text-base font-bold text-gray-800 mb-2 flex items-center gap-1">⚡ দ্রুত কাজ</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {quickActions.map((a, idx) => <div key={idx} className={`rounded-xl bg-gradient-to-br ${idx === 0 ? "from-violet-100 to-purple-200" : idx === 1 ? "from-blue-100 to-blue-300" : "from-green-100 to-green-200"} p-5 shadow-md flex flex-col items-center`}>
-              {a.icon}
-              <div className="font-bold text-md text-center mb-1">{a.title}</div>
-              <div className="text-xs text-center mb-3 text-gray-500">{a.subtitle}</div>
-              <Button className="w-full">{a.btn}</Button>
-            </div>)}
+        {/* Application Opportunity */}
+        <div className="px-4 mt-8">
+          <h2 className="text-base font-bold text-pink-800 mb-2 flex items-center gap-1">
+            <span>📍</span> আবেদনেশনের সুযোগ
+          </h2>
+          <div className="rounded-xl bg-gradient-to-tr from-blue-50/60 to-violet-100 p-7 shadow-lg flex flex-col items-center justify-center min-h-[160px] relative mb-1">
+            <span className="mx-auto text-blue-500 text-lg">আপনার অবস্থান</span>
+            <div className="absolute right-3 top-3 flex flex-col gap-2">
+              <Button size="icon" variant="outline" className="p-1 h-7 w-7 rounded-full">+</Button>
+              <Button size="icon" variant="outline" className="p-1 h-7 w-7 rounded-full">-</Button>
+            </div>
+          </div>
+          <div className="text-xs text-gray-600 ml-1 flex items-center justify-between">
+            <span>০টি কাজ আবেদনেশনে পাওয়া যাবে</span>
+            <span className="text-[10px]">শেষ আপডেট: ১.২ মিনিট</span>
+          </div>
+        </div>
+
+        {/* Quick actions section */}
+        <div className="px-4 mt-8">
+          <h2 className="text-base font-bold text-gray-800 mb-2 flex items-center gap-1">⚡ দ্রুত কাজ</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {quickActions.map((a, idx) => <div key={idx} className={`rounded-xl bg-gradient-to-br ${idx === 0 ? "from-violet-100 to-purple-200" : idx === 1 ? "from-blue-100 to-blue-300" : "from-green-100 to-green-200"} p-5 shadow-md flex flex-col items-center`}>
+                {a.icon}
+                <div className="font-bold text-md text-center mb-1">{a.title}</div>
+                <div className="text-xs text-center mb-3 text-gray-500">{a.subtitle}</div>
+                <Button className="w-full">{a.btn}</Button>
+              </div>)}
+          </div>
         </div>
       </div>
     </div>
