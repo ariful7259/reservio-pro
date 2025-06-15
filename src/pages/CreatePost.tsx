@@ -60,7 +60,8 @@ import {
   DoorOpen,
   ShieldAlert,
   Coffee,
-  Users
+  Users,
+  Hammer
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -137,7 +138,6 @@ const CreatePost = () => {
     { name: 'ব্যবসায়িক সামগ্রী', value: 'business', icon: <Store className="h-5 w-5 text-pink-500" />, subcategories: [] },
     { name: 'কারিগরি টুলস', value: 'tools', icon: <Hammer className="h-5 w-5 text-gray-500" />, subcategories: [] },
     { name: 'কমার্শিয়াল স্পেস', value: 'commercial', icon: <Briefcase className="h-5 w-5 text-indigo-500" />, subcategories: [] },
-    { name: 'গেস্ট হাউস/স্বল্পমেয়াদী', value: 'guesthouse', icon: <Hotel className="h-5 w-5 text-teal-500" />, subcategories: [] },
     { name: 'গ্রামীণ বাসস্থান', value: 'rural', icon: <Building2 className="h-5 w-5 text-emerald-500" />, subcategories: [] },
     { name: 'স্টুডিও/স্পেশাল স্পেস', value: 'studio', icon: <Camera className="h-5 w-5 text-violet-500" />, subcategories: [] },
   ];
