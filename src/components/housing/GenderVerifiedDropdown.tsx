@@ -6,22 +6,17 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuCheckboxItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
 interface GenderVerifiedDropdownProps {
   gender: "any" | "male" | "female" | "couple";
-  verified: boolean;
-  premium: boolean;
-  onChange: (key: "gender" | "verified" | "premium", value: any) => void;
+  onChange: (key: "gender", value: any) => void;
 }
 
 const GenderVerifiedDropdown: React.FC<GenderVerifiedDropdownProps> = ({
   gender,
-  verified,
-  premium,
   onChange,
 }) => {
   // For display label
@@ -32,10 +27,6 @@ const GenderVerifiedDropdown: React.FC<GenderVerifiedDropdownProps> = ({
     return "জনপ্রকার";
   };
 
-  // Count active
-  const extra = [verified, premium].filter(Boolean).length;
-  const badge = extra > 0 ? `+${extra}` : "";
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -43,12 +34,12 @@ const GenderVerifiedDropdown: React.FC<GenderVerifiedDropdownProps> = ({
           className="inline-flex items-center border rounded-md px-3 py-2 bg-gray-50 text-sm gap-1 hover:bg-gray-100 focus:outline-none"
           type="button"
         >
-          {getLabel()} {badge && <span className="ml-1 text-xs text-muted-foreground">{badge}</span>}
+          {getLabel()}
           <ChevronDown className="w-4 h-4 ml-1" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[180px] z-50">
-        <DropdownMenuLabel>ফিল্টার</DropdownMenuLabel>
+      <DropdownMenuContent align="end" className="min-w-[145px] z-50 bg-white">
+        <DropdownMenuLabel>জনপ্রকার বাছাই করুন</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="gap-2"
@@ -102,21 +93,6 @@ const GenderVerifiedDropdown: React.FC<GenderVerifiedDropdownProps> = ({
           />
           <span className="text-xs">সব</span>
         </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuCheckboxItem
-          checked={verified}
-          onCheckedChange={(v) => onChange("verified", !!v)}
-          className="gap-2"
-        >
-          <span className="text-xs">Verified</span>
-        </DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem
-          checked={premium}
-          onCheckedChange={(v) => onChange("premium", !!v)}
-          className="gap-2"
-        >
-          <span className="text-xs">Premium</span>
-        </DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

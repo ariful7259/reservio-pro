@@ -212,14 +212,32 @@ const AdvancedSearchFilter: React.FC<AdvancedSearchFilterProps> = ({
             </SelectContent>
           </Select>
         </div>
-        {/* Gender & Verified/Premium Dropdown - ONLY AS DROPDOWN, NOT INLINE! */}
+        {/* Gender Dropdown + Verified/Premium Checkbox */}
         <div className="flex items-center gap-2 flex-shrink-0">
           <GenderVerifiedDropdown
             gender={filters.gender}
-            verified={filters.verified}
-            premium={filters.premium}
             onChange={handleFilterChange}
           />
+          <div className="flex items-center gap-1">
+            <label className="flex items-center gap-1 text-xs px-2 py-1 rounded-md">
+              <input
+                type="checkbox"
+                checked={filters.verified}
+                onChange={(e) => handleFilterChange('verified', e.target.checked)}
+                className="accent-blue-600"
+              />
+              <span>Verified</span>
+            </label>
+            <label className="flex items-center gap-1 text-xs px-2 py-1 rounded-md">
+              <input
+                type="checkbox"
+                checked={filters.premium}
+                onChange={(e) => handleFilterChange('premium', e.target.checked)}
+                className="accent-purple-500"
+              />
+              <span>Premium</span>
+            </label>
+          </div>
         </div>
       </div>
 
