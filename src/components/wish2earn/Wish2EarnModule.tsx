@@ -71,34 +71,89 @@ const quickActions = [{
 const formatNumber = (v: number) => "৳" + v.toLocaleString("bn-BD");
 export const Wish2EarnModule: React.FC = () => {
   const [tab, setTab] = useState<"play" | "wishlist">("play");
-  return <div className="w-full max-w-5xl mx-auto bg-gradient-to-b from-purple-50/50 via-white to-blue-50/10 rounded-2xl shadow-xl pb-16">
+  return (
+    <div className="w-full max-w-5xl mx-auto bg-gradient-to-b from-purple-50/50 via-white to-blue-50/10 rounded-2xl shadow-xl pb-16">
       {/* Top navigation/tab */}
       <nav className="flex items-center justify-between px-5 pt-6 mb-2">
         <div className="flex items-center gap-2">
           <span className="font-extrabold text-xl bg-gradient-to-r from-purple-700 via-blue-600 to-fuchsia-500 bg-clip-text text-transparent">Wish2Earn</span>
         </div>
-        <div className="flex gap-2 bg-slate-100 p-1 rounded-full shadow-inner">
-          <button className={`text-sm px-4 py-1.5 font-bold rounded-full transition-all ${tab === "play" ? "bg-white shadow text-purple-600" : "text-gray-500 bg-transparent"}`} onClick={() => setTab("play")}>
-            Home
+        <div
+          className="
+            flex 
+            gap-1
+            bg-slate-100
+            p-1
+            rounded-full
+            shadow-inner
+            w-full
+            max-w-[440px]
+            md:max-w-none
+            md:gap-2
+            md:w-auto
+            fixed
+            bottom-0
+            left-0
+            right-0
+            z-20
+            border-t
+            border-slate-200
+            md:static
+            md:border-0
+            md:rounded-full
+            md:shadow-inner
+            md:bg-slate-100
+            md:p-1
+          "
+          style={{
+            // Avoid double shadow on mobile 
+            boxShadow: "0 -3px 24px 0 rgb(0 0 0 / 8%)" 
+          }}
+        >
+          <button
+            className={`flex flex-col items-center flex-1 px-0 py-2 rounded-full transition-all ${tab === "play"
+              ? "bg-white shadow text-purple-600"
+              : "text-gray-500 bg-transparent"} md:flex-row md:px-4 md:py-1.5 md:w-auto md:gap-2 md:justify-center`}
+            onClick={() => setTab("play")}
+          >
+            <Home className="h-5 w-5 md:h-4 md:w-4" />
+            <span className="text-xs md:text-xs font-semibold leading-tight mt-1 md:mt-0">Home</span>
           </button>
-          <button className={`text-sm px-4 py-1.5 font-bold rounded-full transition-all ${tab === "wishlist" ? "bg-white shadow text-purple-600" : "text-gray-500 bg-transparent"}`} onClick={() => setTab("wishlist")}>
-            ইচ্ছা তালিকা
+          <button
+            className={`flex flex-col items-center flex-1 px-0 py-2 rounded-full transition-all ${tab === "wishlist"
+              ? "bg-white shadow text-purple-600"
+              : "text-gray-500 bg-transparent"} md:flex-row md:px-4 md:py-1.5 md:w-auto md:gap-2 md:justify-center`}
+            onClick={() => setTab("wishlist")}
+          >
+            <List className="h-5 w-5 md:h-4 md:w-4" />
+            <span className="text-xs md:text-xs font-semibold leading-tight mt-1 md:mt-0">ইচ্ছা তালিকা</span>
           </button>
-          <Button size="sm" variant="ghost" className="rounded-full px-3 flex items-center gap-1 font-bold text-gray-600 hover:text-purple-600 focus-visible:ring-2">
-            <Briefcase className="h-4 w-4 text-purple-600" />
-            <span className="text-xs">কাজ</span>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="flex flex-col items-center flex-1 rounded-full px-0 py-2 text-gray-600 hover:text-purple-600 focus-visible:ring-2 md:flex-row md:px-3 md:py-1.5 md:w-auto md:gap-1 md:justify-center font-bold"
+          >
+            <Briefcase className="h-5 w-5 md:h-4 md:w-4 text-purple-600" />
+            <span className="text-xs font-semibold leading-tight mt-1 md:mt-0">কাজ</span>
           </Button>
-          <Button size="sm" variant="ghost" className="rounded-full px-3 flex items-center gap-1 font-bold text-gray-600 hover:text-blue-600 focus-visible:ring-2">
-            <Layers3 className="h-4 w-4 text-blue-600" />
-            <span className="text-xs">সার্ভিস</span>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="flex flex-col items-center flex-1 rounded-full px-0 py-2 text-gray-600 hover:text-blue-600 focus-visible:ring-2 md:flex-row md:px-3 md:py-1.5 md:w-auto md:gap-1 md:justify-center font-bold"
+          >
+            <Layers3 className="h-5 w-5 md:h-4 md:w-4 text-blue-600" />
+            <span className="text-xs font-semibold leading-tight mt-1 md:mt-0">সার্ভিস</span>
           </Button>
-          <Button size="sm" variant="ghost" className="rounded-full px-3 flex items-center gap-1 font-bold text-gray-600 hover:text-gray-800 focus-visible:ring-2">
-            <User2 className="h-4 w-4 text-gray-700" />
-            <span className="text-xs">প্রোফাইল</span>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="flex flex-col items-center flex-1 rounded-full px-0 py-2 text-gray-600 hover:text-gray-800 focus-visible:ring-2 md:flex-row md:px-3 md:py-1.5 md:w-auto md:gap-1 md:justify-center font-bold"
+          >
+            <User2 className="h-5 w-5 md:h-4 md:w-4 text-gray-700" />
+            <span className="text-xs font-semibold leading-tight mt-1 md:mt-0">প্রোফাইল</span>
           </Button>
         </div>
         {/* header right button group unchanged */}
-        
       </nav>
 
       {/* Subtitle */}
@@ -185,6 +240,7 @@ export const Wish2EarnModule: React.FC = () => {
             </div>)}
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
 export default Wish2EarnModule;
