@@ -127,51 +127,19 @@ const CreatePost = () => {
   });
 
   const rentCategories = [
-    { 
-      name: 'অ্যাপার্টমেন্ট', 
-      value: 'apartment',
-      icon: <Building className="h-4 w-4 text-amber-500" />,
-      subcategories: [
-        { name: 'ফ্যামিলি ফ্ল্যাট', value: 'family-flat', icon: <Home className="h-4 w-4 text-amber-500" /> },
-        { name: 'বেচেলর ফ্ল্যাট', value: 'bachelor-flat', icon: <User className="h-4 w-4 text-amber-500" /> }
-      ]
-    },
-    { 
-      name: 'বাসা', 
-      value: 'house',
-      icon: <Home className="h-4 w-4 text-green-500" />,
-      subcategories: [
-        { name: 'ফ্যামিলি হাউস', value: 'family-house', icon: <Home className="h-4 w-4 text-green-500" /> },
-        { name: 'বেচেলর মেস', value: 'bachelor-mess', icon: <User className="h-4 w-4 text-green-500" /> }
-      ]
-    },
-    { 
-      name: 'গাড়ি', 
-      value: 'car',
-      icon: <Car className="h-4 w-4 text-blue-500" />,
-      subcategories: [
-        { name: 'ব্যক্তিগত কার', value: 'personal-car', icon: <Car className="h-4 w-4 text-blue-500" /> },
-        { name: 'কমার্শিয়াল', value: 'commercial-car', icon: <Car className="h-4 w-4 text-blue-500" /> }
-      ]
-    },
-    { 
-      name: 'অফিস স্পেস', 
-      value: 'office',
-      icon: <Briefcase className="h-4 w-4 text-indigo-500" />,
-      subcategories: [
-        { name: 'পূর্ণ অফিস', value: 'full-office', icon: <Building className="h-4 w-4 text-indigo-500" /> },
-        { name: 'কো-ওয়ার্কিং', value: 'co-working', icon: <Briefcase className="h-4 w-4 text-indigo-500" /> }
-      ]
-    },
-    { 
-      name: 'ই��ুইপমেন্ট', 
-      value: 'equipment',
-      icon: <Wrench className="h-4 w-4 text-purple-500" />,
-      subcategories: [
-        { name: 'ইলেকট্রনিক্স', value: 'electronic-equipment', icon: <Smartphone className="h-4 w-4 text-purple-500" /> },
-        { name: 'টুলস', value: 'tools-equipment', icon: <Wrench className="h-4 w-4 text-purple-500" /> }
-      ]
-    }
+    { name: 'বাসা বাড়ি', value: 'housing', icon: <Home className="h-5 w-5 text-primary" />, subcategories: [] },
+    { name: 'ইলেকট্রনিক্স', value: 'electronics', icon: <Laptop className="h-5 w-5 text-blue-500" />, subcategories: [] },
+    { name: 'পরিবহন', value: 'transport', icon: <Car className="h-5 w-5 text-red-500" />, subcategories: [] },
+    { name: 'ইভেন্ট সামগ্রী', value: 'event', icon: <Tent className="h-5 w-5 text-green-500" />, subcategories: [] },
+    { name: 'ঘরোয়া সামগ্রী', value: 'home-items', icon: <Armchair className="h-5 w-5 text-purple-500" />, subcategories: [] },
+    { name: 'শিক্ষা সামগ্রী', value: 'education', icon: <BookOpen className="h-5 w-5 text-orange-500" />, subcategories: [] },
+    { name: 'কৃষি যন্ত্রপাতি', value: 'agriculture', icon: <Tractor className="h-5 w-5 text-yellow-500" />, subcategories: [] },
+    { name: 'ব্যবসায়িক সামগ্রী', value: 'business', icon: <Store className="h-5 w-5 text-pink-500" />, subcategories: [] },
+    { name: 'কারিগরি টুলস', value: 'tools', icon: <Hammer className="h-5 w-5 text-gray-500" />, subcategories: [] },
+    { name: 'কমার্শিয়াল স্পেস', value: 'commercial', icon: <Briefcase className="h-5 w-5 text-indigo-500" />, subcategories: [] },
+    { name: 'গেস্ট হাউস/স্বল্পমেয়াদী', value: 'guesthouse', icon: <Hotel className="h-5 w-5 text-teal-500" />, subcategories: [] },
+    { name: 'গ্রামীণ বাসস্থান', value: 'rural', icon: <Building2 className="h-5 w-5 text-emerald-500" />, subcategories: [] },
+    { name: 'স্টুডিও/স্পেশাল স্পেস', value: 'studio', icon: <Camera className="h-5 w-5 text-violet-500" />, subcategories: [] },
   ];
 
   const serviceCategories = [
