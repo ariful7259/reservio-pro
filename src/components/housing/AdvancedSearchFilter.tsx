@@ -175,102 +175,102 @@ const AdvancedSearchFilter: React.FC<AdvancedSearchFilterProps> = ({
         </div>
       </div>
 
-      {/* Quick Filters */}
-      <div className="flex flex-wrap gap-2">
-        <Select value={filters.location} onValueChange={(value) => handleFilterChange('location', value)}>
-          <SelectTrigger className="w-auto min-w-[120px]">
-            <SelectValue placeholder="এলাকা" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="">সব এলাকা</SelectItem>
-            {dhakaAreas.map((area) => (
-              <SelectItem key={area} value={area}>{area}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        <Select value={filters.propertyType} onValueChange={(value) => handleFilterChange('propertyType', value)}>
-          <SelectTrigger className="w-auto min-w-[120px]">
-            <SelectValue placeholder="ধরন" />
-          </SelectTrigger>
-          <SelectContent>
-            {propertyTypes.map((type) => (
-              <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        <Select value={filters.budget} onValueChange={(value) => handleFilterChange('budget', value)}>
-          <SelectTrigger className="w-auto min-w-[120px]">
-            <SelectValue placeholder="বাজেট" />
-          </SelectTrigger>
-          <SelectContent>
-            {budgetRanges.map((range) => (
-              <SelectItem key={range.value} value={range.value}>{range.label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Gender + Verified/Premium SECTION moved up here */}
-      <div className="flex flex-col sm:flex-row gap-2">
-        {/* Gender */}
-        <div className="flex items-center gap-3 border rounded-lg px-3 py-2 bg-gray-50">
-          <span className="text-sm font-medium mr-2">জনপ্রকার:</span>
-          <label className="inline-flex items-center gap-1">
-            <input
-              type="radio"
-              name="search-gender"
-              value="male"
-              checked={filters.gender === "male"}
-              onChange={() => handleFilterChange('gender', 'male')}
-              className="accent-blue-600"
-            />
-            <span className="text-xs">ছেলে</span>
-          </label>
-          <label className="inline-flex items-center gap-1">
-            <input
-              type="radio"
-              name="search-gender"
-              value="female"
-              checked={filters.gender === "female"}
-              onChange={() => handleFilterChange('gender', 'female')}
-              className="accent-pink-500"
-            />
-            <span className="text-xs">মেয়ে</span>
-          </label>
-          <label className="inline-flex items-center gap-1">
-            <input
-              type="radio"
-              name="search-gender"
-              value="couple"
-              checked={filters.gender === "couple"}
-              onChange={() => handleFilterChange('gender', 'couple')}
-              className="accent-green-600"
-            />
-            <span className="text-xs">কাপল</span>
-          </label>
+      {/* NEW: Combined Quick Filters + Gender/Verified/Premium (single flex row) */}
+      <div className="flex flex-col lg:flex-row gap-2">
+        {/* Quick Filters */}
+        <div className="flex flex-wrap gap-2 flex-1">
+          <Select value={filters.location} onValueChange={(value) => handleFilterChange('location', value)}>
+            <SelectTrigger className="w-auto min-w-[120px]">
+              <SelectValue placeholder="এলাকা" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">সব এলাকা</SelectItem>
+              {dhakaAreas.map((area) => (
+                <SelectItem key={area} value={area}>{area}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={filters.propertyType} onValueChange={(value) => handleFilterChange('propertyType', value)}>
+            <SelectTrigger className="w-auto min-w-[120px]">
+              <SelectValue placeholder="ধরন" />
+            </SelectTrigger>
+            <SelectContent>
+              {propertyTypes.map((type) => (
+                <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={filters.budget} onValueChange={(value) => handleFilterChange('budget', value)}>
+            <SelectTrigger className="w-auto min-w-[120px]">
+              <SelectValue placeholder="বাজেট" />
+            </SelectTrigger>
+            <SelectContent>
+              {budgetRanges.map((range) => (
+                <SelectItem key={range.value} value={range.value}>{range.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
-        {/* Verified & Premium */}
-        <div className="flex items-center gap-3 border rounded-lg px-3 py-2 bg-gray-50">
-          <label className="inline-flex items-center gap-1">
-            <input
-              type="checkbox"
-              checked={filters.verified}
-              onChange={(e) => handleFilterChange('verified', e.target.checked)}
-              className="accent-blue-600"
-            />
-            <span className="text-xs">Verified</span>
-          </label>
-          <label className="inline-flex items-center gap-1">
-            <input
-              type="checkbox"
-              checked={filters.premium}
-              onChange={(e) => handleFilterChange('premium', e.target.checked)}
-              className="accent-amber-600"
-            />
-            <span className="text-xs">Premium</span>
-          </label>
+        {/* Gender & Verified/Premium -- now right beside quick filters */}
+        <div className="flex flex-col sm:flex-row gap-2 flex-shrink-0">
+          {/* Gender */}
+          <div className="flex items-center gap-3 border rounded-lg px-3 py-2 bg-gray-50">
+            <span className="text-sm font-medium mr-2">জনপ্রকার:</span>
+            <label className="inline-flex items-center gap-1">
+              <input
+                type="radio"
+                name="search-gender"
+                value="male"
+                checked={filters.gender === "male"}
+                onChange={() => handleFilterChange('gender', 'male')}
+                className="accent-blue-600"
+              />
+              <span className="text-xs">ছেলে</span>
+            </label>
+            <label className="inline-flex items-center gap-1">
+              <input
+                type="radio"
+                name="search-gender"
+                value="female"
+                checked={filters.gender === "female"}
+                onChange={() => handleFilterChange('gender', 'female')}
+                className="accent-pink-500"
+              />
+              <span className="text-xs">মেয়ে</span>
+            </label>
+            <label className="inline-flex items-center gap-1">
+              <input
+                type="radio"
+                name="search-gender"
+                value="couple"
+                checked={filters.gender === "couple"}
+                onChange={() => handleFilterChange('gender', 'couple')}
+                className="accent-green-600"
+              />
+              <span className="text-xs">কাপল</span>
+            </label>
+          </div>
+          {/* Verified & Premium */}
+          <div className="flex items-center gap-3 border rounded-lg px-3 py-2 bg-gray-50">
+            <label className="inline-flex items-center gap-1">
+              <input
+                type="checkbox"
+                checked={filters.verified}
+                onChange={(e) => handleFilterChange('verified', e.target.checked)}
+                className="accent-blue-600"
+              />
+              <span className="text-xs">Verified</span>
+            </label>
+            <label className="inline-flex items-center gap-1">
+              <input
+                type="checkbox"
+                checked={filters.premium}
+                onChange={(e) => handleFilterChange('premium', e.target.checked)}
+                className="accent-amber-600"
+              />
+              <span className="text-xs">Premium</span>
+            </label>
+          </div>
         </div>
       </div>
 
