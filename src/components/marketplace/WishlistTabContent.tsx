@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import WishlistButton from "@/components/store/EasyStoreSetup/WishlistButton";
+import ProductRecommendation from "@/components/store/EasyStoreSetup/ProductRecommendation";
 import { Heart, ShoppingCart, Star } from "lucide-react";
 
 interface Product {
@@ -126,6 +127,12 @@ const WishlistTabContent: React.FC<{ onTabChange: (tab: string) => void }> = ({ 
               </Button>
             </Card>
           )}
+          
+          {/* Product Recommendations */}
+          <ProductRecommendation 
+            title="আপনার পছন্দের পণ্য"
+            category="fashion"
+          />
           
           <WishlistComponent />
         </div>

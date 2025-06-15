@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart, Heart, Star, MapPin, Phone, Mail } from 'lucide-react';
 import OrderTrackingSection from '@/components/store/EasyStoreSetup/OrderTrackingSection';
+import ProductRecommendation from '@/components/store/EasyStoreSetup/ProductRecommendation';
 
 const StoreDemo = () => {
   const navigate = useNavigate();
@@ -153,6 +154,12 @@ const StoreDemo = () => {
                 ))}
               </div>
             </div>
+
+            {/* Product Recommendations */}
+            <ProductRecommendation 
+              category="fashion"
+              title="সিমিলার পণ্য"
+            />
           </div>
 
           {/* Sidebar */}
