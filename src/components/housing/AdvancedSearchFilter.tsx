@@ -212,7 +212,7 @@ const AdvancedSearchFilter: React.FC<AdvancedSearchFilterProps> = ({
             </SelectContent>
           </Select>
         </div>
-        {/* Gender & Verified/Premium as Dropdown -- to the right of budget */}
+        {/* Gender & Verified/Premium Dropdown - ONLY AS DROPDOWN, NOT INLINE! */}
         <div className="flex items-center gap-2 flex-shrink-0">
           <GenderVerifiedDropdown
             gender={filters.gender}
