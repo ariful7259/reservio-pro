@@ -84,8 +84,8 @@ const formatNumber = (v: number) => "৳" + v.toLocaleString("bn-BD");
 export const Wish2EarnModule: React.FC = () => {
   const [tab, setTab] = useState<"play" | "wishlist">("play");
   return (
-    // প্রকৃত fullscreen: min-h-screen, w-full, overflow-auto (scroll হলে), কেউ যেন পিছনে কিছু না দেখতে পায়
-    <div className="w-full min-h-screen bg-transparent pb-16 overflow-auto relative">
+    // প্রকৃত fullscreen: min-h-screen, w-full, h-full, overflow-y-auto এবং কোনো transparent bg নয়
+    <div className="w-full min-h-screen h-full overflow-y-auto px-0 relative">
       {/* Top navigation/tab */}
       <nav className="flex items-center justify-between px-5 pt-6 mb-2 w-full">
         <div className="flex items-center gap-2">
