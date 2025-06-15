@@ -71,6 +71,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { useToast } from "@/components/ui/use-toast";
 import { usePostStore } from '@/store/usePostStore';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -387,6 +388,55 @@ const CreatePost = () => {
     navigate('/create-post' + typeParam, { replace: true });
   };
 
+  const rentFeatureDetails = [
+    {
+      title: "লং এবং শর্ট টার্ম",
+      icon: <Clock className="h-10 w-10 text-amber-500 mb-2" />,
+      desc: "দৈনিক, মাসিক, বা বার্ষিক ভিত্তিতে ভাড়া দিন",
+      details: "এই ফিচারের মাধ্যমে আপনার প্রয়োজন অনুযায়ী সংক্ষিপ্ত/দীর্ঘ মেয়াদে ভাড়া দিতে পারবেন। কাস্টমার যেমন চায়, তেমন ফ্লেক্সিবিলিটি! যেমন: বাড়ি ৩ দিনের জন্য, গাড়ি ১ সপ্তাহের জন্য—সব সুযোগ।"
+    },
+    {
+      title: "ভেরিফাইড পেমেন্ট",
+      icon: <Shield className="h-10 w-10 text-green-500 mb-2" />,
+      desc: "সুরক্ষিত লেনদেন নিশ্চিত করুন",
+      details: "পেমেন্ট gateway ইন্টেগ্রেশনের মাধ্যমে লেনদেন সুরক্ষিত, ক্যাশ অন ডেলিভারি অথবা ডিজিটাল পেমেন্ট — যা নিয়েছেন, সব ডিল ট্র্যাক ও পেমেন্ট কনফার্মেশন পাবেন।"
+    },
+    {
+      title: "চুক্তি তৈরি",
+      icon: <Book className="h-10 w-10 text-blue-500 mb-2" />,
+      desc: "অটোমেটিক রেন্টাল এগ্রিমেন্ট তৈরি করুন",
+      details: "নির্বাচিত অর্ডার ও ব্যবহারকারীর তথ্য থেকে স্বয়ংক্রিয়ভাবে এগ্রিমেন্ট জেনারেশন—রেন্ট চালু হওয়ার সাথে সাথে কপি ডাউনলোডও নিশ্চিত।"
+    },
+  ];
+
+  const RentFeatureCard: React.FC<{
+    icon: React.ReactNode; title: string; desc: string; details: string;
+  }> = ({ icon, title, desc, details }) => {
+    return (
+      <Dialog>
+        <DialogTrigger asChild>
+          <button 
+            className="w-full rounded-lg bg-white/70 hover:bg-white shadow hover:shadow-xl focus:shadow-xl transition-all border border-border focus:ring-2 ring-primary group px-5 py-6 flex flex-col items-center text-center outline-none duration-150 cursor-pointer active:scale-[0.97]"
+            aria-label={`${title} details`}
+          >
+            <div className="pointer-events-none">{icon}</div>
+            <h3 className="font-medium text-base group-hover:text-primary">{title}</h3>
+            <p className="text-sm text-muted-foreground mt-1">{desc}</p>
+            <span className="mt-2 text-xs text-primary font-semibold opacity-80 group-hover:underline">See details</span>
+          </button>
+        </DialogTrigger>
+        <DialogContent className="max-w-md mx-auto">
+          <DialogHeader>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription>
+              {details}
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    );
+  };
+
   return (
     <div className="container px-4 pt-20 pb-20">
       <div className="flex items-center gap-2 mb-6">
@@ -545,30 +595,10 @@ const CreatePost = () => {
             
             <div className="mt-8">
               <h2 className="text-lg font-medium mb-4">রেন্ট ফিচারস</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card className="p-4 hover:shadow-md transition-all">
-                  <div className="flex flex-col items-center text-center">
-                    <Clock className="h-10 w-10 text-amber-500 mb-2" />
-                    <h3 className="font-medium">লং এবং শর্ট টার্ম</h3>
-                    <p className="text-sm text-muted-foreground mt-1">দৈনিক, মাসিক, বা বার্ষিক ভিত্তিতে ভাড়া দিন</p>
-                  </div>
-                </Card>
-                
-                <Card className="p-4 hover:shadow-md transition-all">
-                  <div className="flex flex-col items-center text-center">
-                    <Shield className="h-10 w-10 text-green-500 mb-2" />
-                    <h3 className="font-medium">ভেরিফাইড পেমেন্ট</h3>
-                    <p className="text-sm text-muted-foreground mt-1">সুরক্ষিত লেনদেন নিশ্চিত করুন</p>
-                  </div>
-                </Card>
-                
-                <Card className="p-4 hover:shadow-md transition-all">
-                  <div className="flex flex-col items-center text-center">
-                    <Book className="h-10 w-10 text-blue-500 mb-2" />
-                    <h3 className="font-medium">চুক্তি তৈরি</h3>
-                    <p className="text-sm text-muted-foreground mt-1">অটোমেটিক রেন্টাল এগ্রিমেন্ট তৈরি করুন</p>
-                  </div>
-                </Card>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {rentFeatureDetails.map((f, i) => (
+                  <RentFeatureCard key={i} {...f} />
+                ))}
               </div>
             </div>
             
