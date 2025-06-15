@@ -73,7 +73,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from "@/components/ui/use-toast";
 import { usePostStore } from '@/store/usePostStore';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
-import { Slider } from '@mui/material';
+import { Slider } from '@/components/ui/slider';
 
 const CreatePost = () => {
   const navigate = useNavigate();
