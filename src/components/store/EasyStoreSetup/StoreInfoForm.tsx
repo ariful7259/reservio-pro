@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { MapPin } from 'lucide-react';
 import { StoreData } from './types';
-import { ProductImageGallery } from ".";
+import ProductImageGallery from './ProductImageGallery';
 
 interface StoreInfoFormProps {
   storeData: StoreData;
