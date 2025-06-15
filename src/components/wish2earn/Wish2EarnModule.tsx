@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import { ArrowUp, List, Upload, Video, Home } from "lucide-react";
+import { ArrowUp, List, Upload, Video, Home, Briefcase, User2, Layers3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 // Header stats – mock data
 const stats = [{
-  label: "মোট আয়",
+  label: "মোট আয়",
   value: "৳70,650",
   color: "text-purple-500",
   bg: "bg-purple-50"
 }, {
-  label: "সক্রিয় ইচ্ছে",
+  label: "সক্রিয় ইচ্ছে",
   value: "2",
   color: "text-blue-500",
   bg: "bg-blue-50"
@@ -34,7 +34,7 @@ const wishlists = [{
   left: 74350,
   leftRed: true,
   days: 11,
-  status: "সক্রিয়",
+  status: "সক্রিয়",
   badge: "টপ লিস্ট",
   badgeColor: "bg-blue-100 text-blue-500"
 }, {
@@ -46,24 +46,24 @@ const wishlists = [{
   left: 59350,
   leftRed: true,
   days: 7,
-  status: "সক্রিয়",
+  status: "সক্রিয়",
   badge: "টপ লিস্ট",
   badgeColor: "bg-purple-100 text-purple-500"
 }];
 const quickActions = [{
   icon: <Upload className="h-8 w-8 mb-2 mx-auto" />,
   title: "সার্ভিস অফার করুন",
-  subtitle: "আপনার দক্ষতা দিয়ে আয় করুন",
+  subtitle: "আপনার দক্ষতা দিয়ে আয় করুন",
   btn: "শুরু করুন"
 }, {
   icon: <Video className="h-8 w-8 mb-2 mx-auto" />,
-  title: "ভিডিও শেয়ার করুন",
-  subtitle: "ভিডিও থেকে আয় করুন",
+  title: "ভিডিও শেয়ার করুন",
+  subtitle: "ভিডিও থেকে আয় করুন",
   btn: "আপলোড করুন"
 }, {
   icon: <Home className="h-8 w-8 mb-2 mx-auto" />,
   title: "রেফার করুন",
-  subtitle: "বন্ধুদের রেফার করে আয় করুন",
+  subtitle: "বন্ধুদের রেফার করে আয় করুন",
   btn: "রেফার করুন"
 }];
 
@@ -71,7 +71,8 @@ const quickActions = [{
 const formatNumber = (v: number) => "৳" + v.toLocaleString("bn-BD");
 export const Wish2EarnModule: React.FC = () => {
   const [tab, setTab] = useState<"play" | "wishlist">("play");
-  return <div className="w-full max-w-5xl mx-auto bg-gradient-to-b from-purple-50/50 via-white to-blue-50/10 rounded-2xl shadow-xl pb-16">
+  return (
+    <div className="w-full max-w-5xl mx-auto bg-gradient-to-b from-purple-50/50 via-white to-blue-50/10 rounded-2xl shadow-xl pb-16">
       {/* Top navigation/tab */}
       <nav className="flex items-center justify-between px-5 pt-6 mb-2">
         <div className="flex items-center gap-2">
@@ -81,12 +82,26 @@ export const Wish2EarnModule: React.FC = () => {
           <button className={`text-sm px-4 py-1.5 font-bold rounded-full transition-all ${tab === "play" ? "bg-white shadow text-purple-600" : "text-gray-500 bg-transparent"}`} onClick={() => setTab("play")}>Home</button>
           <button className={`text-sm px-4 py-1.5 font-bold rounded-full transition-all ${tab === "wishlist" ? "bg-white shadow text-purple-600" : "text-gray-500 bg-transparent"}`} onClick={() => setTab("wishlist")}>ইচ্ছা তালিকা</button>
         </div>
-        <div></div>
+        {/* এখানে কাজ, সার্ভিস, প্রোফাইল - বাটন/আইকন সহ */}
+        <div className="flex gap-2">
+          <Button size="icon" variant="ghost" className="rounded-full">
+            <Briefcase className="h-5 w-5 text-purple-600" />
+            <span className="sr-only">কাজ</span>
+          </Button>
+          <Button size="icon" variant="ghost" className="rounded-full">
+            <Layers3 className="h-5 w-5 text-blue-600" />
+            <span className="sr-only">সার্ভিস</span>
+          </Button>
+          <Button size="icon" variant="ghost" className="rounded-full">
+            <User2 className="h-5 w-5 text-gray-700" />
+            <span className="sr-only">প্রোফাইল</span>
+          </Button>
+        </div>
       </nav>
 
       {/* Subtitle */}
       <div className="text-center text-gray-500 mb-3 px-2 text-sm font-medium">
-        আপনার স্বপ্ন পূরণ করুন, ছোট কাজ করে টাকা আয় করুন এবং ইচ্ছা পূরণ করুন!
+        আপনার স্বপ্ন পূরণ করুন, ছোট কাজ করে টাকা আয় করুন এবং ইচ্ছা পূরণ করুন!
       </div>
 
       {/* Stats Row */}
@@ -97,11 +112,11 @@ export const Wish2EarnModule: React.FC = () => {
           </div>)}
       </div>
 
-      {/* সেকশান: সক্রিয় ইচ্ছা তালিকা */}
+      {/* সেকশান: সক্রিয় ইচ্ছা তালিকা */}
       <div className="px-4 mb-1">
         <h2 className="text-lg font-bold text-gray-700 mb-2 flex items-center gap-2">
           <span>🎯</span>
-          সক্রিয় ইচ্ছা তালিকা
+          সক্রিয় ইচ্ছা তালিকা
           <span className="ml-auto">
             <Button size="sm" variant="outline" className="text-xs px-3 py-1">সব দেখুন</Button>
           </span>
@@ -130,7 +145,7 @@ export const Wish2EarnModule: React.FC = () => {
               </div>
               {/* Numbers */}
               <div className="flex justify-between items-center mt-3 mb-1 text-sm font-semibold">
-                <span className="text-green-600">{formatNumber(w.current)} জমা হয়েছে</span>
+                <span className="text-green-600">{formatNumber(w.current)} জমা হয়েছে</span>
                 <span className={`ml-2 ${w.leftRed ? "text-rose-500" : "text-gray-500"}`}>{formatNumber(w.left)} বাকি আছে</span>
               </div>
               <Button className={`w-full mt-2 ${w.id === 2 ? "bg-purple-600 hover:bg-purple-700" : ""}`}>কাজ বন্ধ করুন</Button>
@@ -151,7 +166,7 @@ export const Wish2EarnModule: React.FC = () => {
           </div>
         </div>
         <div className="text-xs text-gray-600 ml-1 flex items-center justify-between">
-          <span>০টি কাজ আবেদনেশনে পাওয়া যাবে</span>
+          <span>০টি কাজ আবেদনেশনে পাওয়া যাবে</span>
           <span className="text-[10px]">শেষ আপডেট: ১.২ মিনিট</span>
         </div>
       </div>
@@ -168,6 +183,7 @@ export const Wish2EarnModule: React.FC = () => {
             </div>)}
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
 export default Wish2EarnModule;
