@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -16,7 +17,6 @@ const TemplateSelection: React.FC<TemplateSelectionProps> = ({
   selectedTemplate,
   onTemplateSelect
 }) => {
-  // SEARCH + FILTER
   const [search, setSearch] = useState("");
   const filteredTemplates = useMemo(
     () =>
