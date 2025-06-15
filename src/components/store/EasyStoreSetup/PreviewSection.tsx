@@ -1,5 +1,5 @@
 import React from "react";
-import { OrderTrackingSection } from ".";
+import OrderTrackingSection from './OrderTrackingSection';
 
 interface PreviewSectionProps {
   isLinkInBio: boolean;
