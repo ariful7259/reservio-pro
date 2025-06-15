@@ -16,11 +16,19 @@ import SocialShareModal from '@/components/SocialShareModal';
 import EnhancedHousingSection from '@/components/housing/EnhancedHousingSection';
 import { useToast } from '@/hooks/use-toast';
 import { useApp } from '@/context/AppContext';
+// Refactored components:
+import CategoryGrid from '@/components/rentals/CategoryGrid';
+import BannerCarousel from '@/components/rentals/BannerCarousel';
+import FeaturedListings from '@/components/rentals/FeaturedListings';
+import FilterSection from '@/components/rentals/FilterSection';
+import SectionToggle from '@/components/rentals/SectionToggle';
 
 const Rentals = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { language } = useApp();
+
+  // State
   const [isExpanded, setIsExpanded] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
@@ -28,15 +36,7 @@ const Rentals = () => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [activeSection, setActiveSection] = useState<'categories' | 'housing'>('categories');
 
-  // Banner images for the carousel
-  const bannerImages = [
-    'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=1000&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1000&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=1000&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1000&auto=format&fit=crop'
-  ];
-
-  // Updated rent categories with "বাসা বাড়ি" as the first category and enhanced booking features
+  // All data arrays and handlers (kept the same as before)
   const rentCategories = [
     {
       icon: <div className="text-2xl">🏠</div>,
@@ -325,7 +325,14 @@ const Rentals = () => {
     category: "ইভেন্ট"
   }];
 
-  // Updated rent categories with "বাসা বাড়ি" as the first category and enhanced booking features
+  // Moved bannerImages inside for prop passing
+  const bannerImages = [
+    'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=1000&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1000&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=1000&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1000&auto=format&fit=crop'
+  ];
+
   const toggleFilter = () => {
     setFilterVisible(!filterVisible);
   };
@@ -412,6 +419,7 @@ const Rentals = () => {
     }
   };
 
+  // Pass-down renderCategoryItem
   const renderCategoryItem = (category: any, index: number) => {
     if (category.isMainCategory && category.subcategories) {
       return (
@@ -452,6 +460,7 @@ const Rentals = () => {
     );
   };
 
+  // Page body
   return (
     <div className="container px-4 pt-20 pb-20">
       <div className="flex items-center justify-between mb-6">
@@ -473,216 +482,33 @@ const Rentals = () => {
         </div>
       </div>
 
-      {/* Section Toggle Buttons */}
-      <div className="flex gap-2 mb-6">
-        <Button 
-          variant={activeSection === 'categories' ? 'default' : 'outline'}
-          onClick={() => setActiveSection('categories')}
-          className="flex items-center gap-2"
-        >
-          <LayoutGrid className="h-4 w-4" />
-          সব ক্যাটাগরি
-        </Button>
-        <Button 
-          variant={activeSection === 'housing' ? 'default' : 'outline'}
-          onClick={() => setActiveSection('housing')}
-          className="flex items-center gap-2"
-        >
-          <Home className="h-4 w-4" />
-          বাসা বাড়ি
-        </Button>
-      </div>
-      
-      {/* Conditional Content Based on Active Section */}
+      {/* Section Toggle */}
+      <SectionToggle
+        activeSection={activeSection}
+        setActiveSection={setActiveSection}
+      />
+
       {activeSection === 'housing' ? (
         <EnhancedHousingSection language={language || 'bn'} />
       ) : (
         <>
-          {/* Filter Section */}
-          {filterVisible && (
-            <div className="mb-6 p-4 border rounded-lg bg-gray-50">
-              <h2 className="font-medium mb-3">ফিল্টার</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium mb-1 block">লোকেশন</label>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
-                    <Select defaultValue="dhaka">
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="এলাকা নির্বাচন করুন" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="dhaka">ঢাকা</SelectItem>
-                        <SelectItem value="chittagong">চট্টগ্রাম</SelectItem>
-                        <SelectItem value="khulna">খুলনা</SelectItem>
-                        <SelectItem value="rajshahi">রাজশাহী</SelectItem>
-                        <SelectItem value="sylhet">সিলেট</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="text-sm font-medium mb-1 block">ক্যাটাগরি</label>
-                  <Select>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="ক্যাটাগরি" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="apartment">অ্যাপার্টমেন্ট</SelectItem>
-                      <SelectItem value="house">বাসা</SelectItem>
-                      <SelectItem value="car">গাড়ি</SelectItem>
-                      <SelectItem value="office">অফিস</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div>
-                  <label className="text-sm font-medium mb-1 block">মূল্য সীমা</label>
-                  <div className="px-2">
-                    <Slider defaultValue={[25000]} max={100000} step={1000} />
-                    <div className="flex justify-between mt-1 text-xs text-muted-foreground">
-                      <span>৳১,০০০</span>
-                      <span>৳৫০,০০০</span>
-                      <span>৳১,০০,০০০</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="text-sm font-medium mb-1 block">দূরত্ব</label>
-                  <div className="px-2">
-                    <Slider defaultValue={[5]} max={20} step={1} />
-                    <div className="flex justify-between mt-1 text-xs text-muted-foreground">
-                      <span>1 কিমি</span>
-                      <span>10 কিমি</span>
-                      <span>20 কিমি</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex gap-2 mt-4">
-                <Button className="flex-1">ফিল্টার করুন</Button>
-                <Button variant="outline" onClick={toggleFilter}>বাতিল করুন</Button>
-              </div>
-            </div>
-          )}
-          
-          {/* Categories Section */}
-          <div className="mb-8">
-            <h2 className="text-lg font-medium mb-4">ক্যাটাগরি</h2>
-            <div className="grid grid-cols-4 gap-3">
-              {rentCategories.slice(0, 8).map((category, index) => renderCategoryItem(category, index))}
-            </div>
-            
-            <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className="w-full mt-3">
-              <CollapsibleContent className="mt-3">
-                <div className="grid grid-cols-4 gap-3">
-                  {rentCategories.slice(8).map((category, index) => renderCategoryItem(category, index + 8))}
-                </div>
-              </CollapsibleContent>
-              
-              <div className="w-full flex justify-center mt-4">
-                <CollapsibleTrigger asChild>
-                  <Button variant="outline" size="sm" className="flex items-center gap-1">
-                    {isExpanded ? (
-                      <>
-                        <ChevronUp className="h-4 w-4" /> কম দেখুন
-                      </>
-                    ) : (
-                      <>
-                        <ChevronDown className="h-4 w-4" /> আরও দেখুন
-                      </>
-                    )}
-                  </Button>
-                </CollapsibleTrigger>
-              </div>
-            </Collapsible>
-          </div>
-          
-          {/* Banner Carousel */}
-          <div className="mb-6 overflow-hidden rounded-lg">
-            <Carousel className="w-full">
-              <CarouselContent>
-                {bannerImages.map((image, index) => (
-                  <CarouselItem key={index}>
-                    <div className="p-1">
-                      <div className="overflow-hidden rounded-lg aspect-[16/6] w-full">
-                        <img src={image} alt={`Banner ${index + 1}`} className="w-full h-full object-cover" />
-                      </div>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="left-2" />
-              <CarouselNext className="right-2" />
-            </Carousel>
-          </div>
-          
+          <FilterSection filterVisible={filterVisible} toggleFilter={toggleFilter} />
+          <CategoryGrid
+            rentCategories={rentCategories}
+            isExpanded={isExpanded}
+            setIsExpanded={setIsExpanded}
+            renderCategoryItem={renderCategoryItem}
+          />
+          <BannerCarousel bannerImages={bannerImages} />
           <Separator className="my-6" />
-          
-          {/* Featured Listings */}
-          <div className="mb-6">
-            <h2 className="text-lg font-medium mb-4">ফিচার্ড লিস্টিং</h2>
-            
-            {viewMode === 'grid' && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {featuredListings.map(listing => (
-                  <Card key={listing.id} className="overflow-hidden cursor-pointer hover:shadow-md transition-all hover:scale-105" onClick={() => handleListingClick(listing.id)}>
-                    <CardContent className="p-0">
-                      <div className="relative aspect-square">
-                        <img src={listing.image} alt={listing.title} className="w-full h-full object-cover" />
-                        <Badge className="absolute top-2 left-2">{listing.category}</Badge>
-                        <div className="absolute top-2 right-2 flex flex-col gap-2">
-                          <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={e => handleBookmark(e, listing.id)}>
-                            <Heart className="h-4 w-4 text-gray-600" />
-                          </Button>
-                          <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={e => handleShare(e, listing)}>
-                            <Share2 className="h-4 w-4 text-gray-600" />
-                          </Button>
-                        </div>
-                      </div>
-                      <div className="p-3">
-                        <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
-                        <p className="text-xs text-muted-foreground mb-1">{listing.location}</p>
-                        <p className="text-sm font-bold text-primary">{listing.price}</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-            
-            {viewMode === 'map' && (
-              <div className="mb-4">
-                <MapView listings={featuredListings.map(listing => ({
-                  id: listing.id,
-                  title: listing.title,
-                  location: listing.location,
-                  latitude: listing.latitude,
-                  longitude: listing.longitude
-                }))} />
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-                  {featuredListings.slice(0, 3).map(listing => (
-                    <Card key={listing.id} className="overflow-hidden cursor-pointer hover:shadow-md transition-all" onClick={() => handleListingClick(listing.id)}>
-                      <div className="flex h-24">
-                        <div className="w-1/3">
-                          <img src={listing.image} alt={listing.title} className="w-full h-full object-cover" />
-                        </div>
-                        <div className="w-2/3 p-2">
-                          <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
-                          <p className="text-xs text-muted-foreground">{listing.location}</p>
-                          <p className="text-sm font-bold text-primary mt-auto">{listing.price}</p>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
+          <FeaturedListings
+            featuredListings={featuredListings}
+            viewMode={viewMode}
+            handleListingClick={handleListingClick}
+            handleBookmark={handleBookmark}
+            handleShare={handleShare}
+            MapViewComponent={MapView}
+          />
           <div className="mb-6">
             <div className="flex justify-center mt-4">
               <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/services')}>
@@ -692,7 +518,6 @@ const Rentals = () => {
           </div>
         </>
       )}
-
       {shareItem && <SocialShareModal open={showShareModal} onOpenChange={setShowShareModal} item={shareItem} />}
     </div>
   );
