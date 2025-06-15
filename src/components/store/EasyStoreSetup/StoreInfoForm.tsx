@@ -1,28 +1,72 @@
+
 import React, { useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { MapPin } from 'lucide-react';
+import { MapPin, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { StoreData } from './types';
 import ProductImageGallery from './ProductImageGallery';
+import ProductDragDropList from './ProductDragDropList';
+import WishlistButton from './WishlistButton';
 
 interface StoreInfoFormProps {
   storeData: StoreData;
   setStoreData: React.Dispatch<React.SetStateAction<StoreData>>;
 }
 
+interface Product {
+  id: string;
+  name: string;
+  images: string[];
+}
+
 const StoreInfoForm: React.FC<StoreInfoFormProps> = ({
   storeData,
   setStoreData
 }) => {
-  const [products, setProducts] = useState([
-    { id: "dummy1", name: "টেস্ট পণ্য ১", images: [] },
-    { id: "dummy2", name: "টেস্ট পণ্য ২", images: [] }
+  const [products, setProducts] = useState<Product[]>([
+    { id: "1", name: "টেস্ট পণ্য ১", images: [] },
+    { id: "2", name: "টেস্ট পণ্য ২", images: [] }
   ]);
+
+  const [wishlistedProducts, setWishlistedProducts] = useState<Set<string>>(new Set());
+
   const handleGalleryChange = (images: string[], productIdx: number) => {
     setProducts((prev) =>
       prev.map((p, i) => (i === productIdx ? { ...p, images } : p))
     );
+  };
+
+  const handleProductReorder = (reorderedProducts: Product[]) => {
+    setProducts(reorderedProducts);
+  };
+
+  const addNewProduct = () => {
+    const newProduct: Product = {
+      id: `${Date.now()}`,
+      name: `নতুন পণ্য ${products.length + 1}`,
+      images: []
+    };
+    setProducts(prev => [...prev, newProduct]);
+  };
+
+  const updateProductName = (productId: string, newName: string) => {
+    setProducts(prev =>
+      prev.map(p => p.id === productId ? { ...p, name: newName } : p)
+    );
+  };
+
+  const toggleWishlist = (productId: string) => {
+    setWishlistedProducts(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(productId)) {
+        newSet.delete(productId);
+      } else {
+        newSet.add(productId);
+      }
+      return newSet;
+    });
   };
 
   return (
@@ -96,13 +140,42 @@ const StoreInfoForm: React.FC<StoreInfoFormProps> = ({
         />
       </div>
 
-      <div className="space-y-4 mt-4">
-        <div className="text-base font-bold mb-2">পণ্যের ছবি</div>
+      <div className="space-y-4 mt-6">
+        <div className="flex items-center justify-between">
+          <div className="text-base font-bold">পণ্যের তালিকা</div>
+          <Button onClick={addNewProduct} size="sm" className="flex items-center gap-2">
+            <Plus className="h-4 w-4" />
+            নতুন পণ্য যোগ করুন
+          </Button>
+        </div>
+        
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <p className="text-sm text-gray-600 mb-3">পণ্যের ক্রম পরিবর্তন করতে drag & drop করুন:</p>
+          <ProductDragDropList 
+            items={products} 
+            onReorder={handleProductReorder}
+          />
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {products.map((product, idx) => (
-            <div key={product.id}>
-              <div className="font-semibold mb-1">{product.name}</div>
-              <ProductImageGallery images={product.images} onChange={(imgs) => handleGalleryChange(imgs, idx)} editable />
+            <div key={product.id} className="border rounded-lg p-4">
+              <div className="flex items-center justify-between mb-2">
+                <Input
+                  value={product.name}
+                  onChange={(e) => updateProductName(product.id, e.target.value)}
+                  className="font-semibold border-0 px-0 focus-visible:ring-0"
+                />
+                <WishlistButton
+                  wished={wishlistedProducts.has(product.id)}
+                  onToggle={() => toggleWishlist(product.id)}
+                />
+              </div>
+              <ProductImageGallery 
+                images={product.images} 
+                onChange={(imgs) => handleGalleryChange(imgs, idx)} 
+                editable 
+              />
             </div>
           ))}
         </div>

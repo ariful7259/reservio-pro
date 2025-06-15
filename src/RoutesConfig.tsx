@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
@@ -25,6 +26,7 @@ import DashboardLayout from './pages/dashboard/DashboardLayout';
 import ReferralSystem from './pages/ReferralSystem';
 import OnlineStoreFeatures from './components/product/OnlineStoreFeatures';
 import CreateStore from './pages/CreateStore';
+import StoreDemo from './pages/StoreDemo';
 import Housing from './pages/Housing';
 import Rentals from './pages/Rentals';
 import RentAnything from './pages/RentAnything';
@@ -84,6 +86,7 @@ const RoutesConfig = () => {
       <Route path="/digital-creator/store-templates" element={<IndustryTemplates />} />
       <Route path="/create-store" element={<CreateStore />} />
       <Route path="/create-store/new" element={<CreateStore />} />
+      <Route path="/store-demo" element={<StoreDemo />} />
       <Route path="/create-linkinbio" element={<CreateLinkInBio />} />
       <Route path="/multi-channel" element={<OnlineStoreFeatures />} />
       
