@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, Send, QrCode, CreditCard, Bell, BarChart3, Banknote, Globe, MapPin, Bot } from 'lucide-react';
@@ -23,6 +22,7 @@ import LocationBasedOffers from '@/components/notifications/LocationBasedOffers'
 import BNPLIntegration from '@/components/payment/BNPLIntegration';
 import VendorFinancing from '@/components/finance/VendorFinancing';
 import MultiLanguageCurrency from '@/components/language/MultiLanguageCurrency';
+import SecurePayPremiumGrid from "@/components/securepay/SecurePayPremiumGrid";
 
 const Wallet = () => {
   const navigate = useNavigate();
@@ -283,6 +283,9 @@ const Wallet = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* ⬇️ SecurePay Grid Section added here */}
+          <SecurePayPremiumGrid />
 
           <Tabs defaultValue="link-generator" className="space-y-4">
             <TabsList className="grid w-full grid-cols-4">
