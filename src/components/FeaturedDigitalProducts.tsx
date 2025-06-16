@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -41,7 +42,7 @@ const FeaturedDigitalProducts = () => {
       image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1000&auto=format&fit=crop",
       price: "৳৫,৯৯৯",
       category: "কোর্স",
-      path: "/course-builder"
+      path: "/digital-products"
     },
     {
       id: "ebook-1",
@@ -50,7 +51,7 @@ const FeaturedDigitalProducts = () => {
       image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=1000&auto=format&fit=crop",
       price: "৳৯৯৯",
       category: "ইবুক",
-      path: "/course-builder"
+      path: "/digital-products"
     },
     {
       id: "template-1",
@@ -59,7 +60,7 @@ const FeaturedDigitalProducts = () => {
       image: "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?q=80&w=1000&auto=format&fit=crop",
       price: "৳২,৫০০",
       category: "টেমপ্লেট",
-      path: "/course-builder"
+      path: "/digital-products"
     },
     {
       id: "software-1",
@@ -68,7 +69,7 @@ const FeaturedDigitalProducts = () => {
       image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?q=80&w=1000&auto=format&fit=crop",
       price: "৳৩,৫০০",
       category: "সফটওয়্যার",
-      path: "/course-builder"
+      path: "/digital-products"
     },
     {
       id: "video-1",
@@ -77,7 +78,7 @@ const FeaturedDigitalProducts = () => {
       image: "https://images.unsplash.com/photo-1574717024453-354056aafa98?q=80&w=1000&auto=format&fit=crop",
       price: "৳৪,৫০০",
       category: "কোর্স",
-      path: "/course-builder"
+      path: "/digital-products"
     },
     {
       id: "audio-1",
@@ -86,7 +87,7 @@ const FeaturedDigitalProducts = () => {
       image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1000&auto=format&fit=crop",
       price: "৳১,৯৯৯",
       category: "অডিও",
-      path: "/course-builder"
+      path: "/digital-products"
     },
     {
       id: "graphics-1",
@@ -95,7 +96,7 @@ const FeaturedDigitalProducts = () => {
       image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop",
       price: "৳১,৮০০",
       category: "গ্রাফিক্স",
-      path: "/course-builder"
+      path: "/digital-products"
     }
   ];
 
@@ -134,7 +135,7 @@ const FeaturedDigitalProducts = () => {
       <Carousel className="w-full">
         <CarouselContent>
           {digitalProducts.map((product) => (
-            <CarouselItem key={product.id} className="md:basis-1/2 lg:basis-1/3">
+            <CarouselItem key={product.id} className="basis-1/2 md:basis-1/3 lg:basis-1/4">
               <div className="p-1">
                 <Card 
                   className="cursor-pointer hover:shadow-md transition-all h-full" 

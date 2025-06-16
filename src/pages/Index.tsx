@@ -103,9 +103,13 @@ const Index = () => {
       
       <HeroCarousel bannerImages={bannerImages} />
 
-      <DigitalProductsSection />
+      <div className="my-8">
+        <DigitalProductsSection />
+      </div>
 
-      <FeaturedListings allListings={allListings as any[]} />
+      <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg my-8">
+        <FeaturedListings allListings={allListings as any[]} />
+      </div>
     </div>
   );
 };
