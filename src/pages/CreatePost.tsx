@@ -420,21 +420,21 @@ const CreatePost = () => {
   const rentFeatureDetails = [
     {
       title: "লং এবং শর্ট টার্ম",
-      icon: <Clock className="h-10 w-10 text-amber-500 mb-2" />,
+      icon: <Clock className="h-8 w-8 md:h-10 md:w-10 text-amber-500 mb-2" />,
       desc: "দৈনিক, মাসিক, বা বার্ষিক ভিত্তিতে ভাড়া দিন",
       details: "এই ফিচারের মাধ্যমে আপনার প্রয়োজন অনুযায়ী সংক্ষিপ্ত/দীর্ঘ মেয়াদে ভাড়া দিতে পারবেন। কাস্টমার যেমন চায়, তেমন ফ্লেক্সিবিলিটি! যেমন: বাড়ি ৩ দিনের জন্য, গাড়ি ১ সপ্তাহের জন্য—সব সুযোগ।"
     },
     {
       title: "ভেরিফাইড পেমেন্ট",
-      icon: <Shield className="h-10 w-10 text-green-500 mb-2" />,
+      icon: <Shield className="h-8 w-8 md:h-10 md:w-10 text-green-500 mb-2" />,
       desc: "সুরক্ষিত লেনদেন নিশ্চিত করুন",
       details: "পেমেন্ট gateway ইন্টেগ্রেশনের মাধ্যমে লেনদেন সুরক্ষিত, ক্যাশ অন ডেলিভারি অথবা ডিজিটাল পেমেন্ট — যা নিয়েছেন, সব ডিল ট্র্যাক ও পেমেন্ট কনফার্মেশন পাবেন।"
     },
     {
       title: "চুক্তি তৈরি",
-      icon: <Book className="h-10 w-10 text-blue-500 mb-2" />,
+      icon: <Book className="h-8 w-8 md:h-10 md:w-10 text-blue-500 mb-2" />,
       desc: "অটোমেটিক রেন্টাল এগ্রিমেন্ট তৈরি করুন",
-      details: "নির্বাচিত অর্ডার ও ব্যবহারকারীর তথ্য থেকে স্বযংক্রিয়ভাবে এগ্রিমেন্ট জেনারেশন—রেন্ট চালু হওয়ার সাথে সাথে কপি ডাউনলোডও নিশ্চিত।"
+      details: "নির্বাচিত অর্ডার ও ব্যবহারকারীর তথ্য থেকে স্বয়ংক্রিয়ভাবে এগ্রিমেন্ট জেনারেশন—রেন্ট চালু হওয়ার সাথে সাথে কপি ডাউনলোডও নিশ্চিত।"
     },
   ];
 
@@ -445,13 +445,13 @@ const CreatePost = () => {
       <Dialog>
         <DialogTrigger asChild>
           <button 
-            className="w-full rounded-lg bg-white/70 hover:bg-white shadow hover:shadow-xl focus:shadow-xl transition-all border border-border focus:ring-2 ring-primary group px-5 py-6 flex flex-col items-center text-center outline-none duration-150 cursor-pointer active:scale-[0.97]"
+            className="w-full rounded-lg bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-sm hover:from-white hover:to-white/90 shadow-lg hover:shadow-xl focus:shadow-xl transition-all duration-300 border border-border/50 hover:border-primary/30 focus:ring-2 ring-primary/20 group px-3 py-4 sm:px-4 sm:py-5 md:px-5 md:py-6 flex flex-col items-center text-center outline-none cursor-pointer active:scale-[0.98] hover:scale-[1.02] transform"
             aria-label={`${title} details`}
           >
-            <div className="pointer-events-none">{icon}</div>
-            <h3 className="font-medium text-base group-hover:text-primary">{title}</h3>
-            <p className="text-sm text-muted-foreground mt-1">{desc}</p>
-            <span className="mt-2 text-xs text-primary font-semibold opacity-80 group-hover:underline">See details</span>
+            <div className="pointer-events-none transition-transform duration-200 group-hover:scale-110">{icon}</div>
+            <h3 className="font-semibold text-sm sm:text-base md:text-base group-hover:text-primary transition-colors duration-200 mt-1">{title}</h3>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">{desc}</p>
+            <span className="mt-2 text-xs font-medium text-primary/80 group-hover:text-primary group-hover:underline transition-all duration-200">বিস্তারিত দেখুন</span>
           </button>
         </DialogTrigger>
         <DialogContent className="max-w-md mx-auto">
@@ -723,7 +723,7 @@ const CreatePost = () => {
             
             <div className="mt-8">
               <h2 className="text-lg font-medium mb-4">রেন্ট ফিচারস</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 {rentFeatureDetails.map((f, i) => (
                   <RentFeatureCard key={i} {...f} />
                 ))}
@@ -731,7 +731,7 @@ const CreatePost = () => {
             </div>
             
             <Button 
-              className="w-full" 
+              className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:shadow-lg focus:shadow-lg active:scale-[0.98] text-base" 
               onClick={() => handleSubmit('rent')} 
               disabled={isSubmitting}
             >
@@ -888,7 +888,7 @@ const CreatePost = () => {
             </Card>
             
             <Button 
-              className="w-full" 
+              className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:shadow-lg focus:shadow-lg active:scale-[0.98] text-base" 
               onClick={() => handleSubmit('service')}
               disabled={isSubmitting}
             >
@@ -1031,7 +1031,7 @@ const CreatePost = () => {
             </Card>
             
             <Button 
-              className="w-full" 
+              className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 hover:shadow-lg focus:shadow-lg active:scale-[0.98] text-base" 
               onClick={() => handleSubmit('marketplace')}
               disabled={isSubmitting}
             >
