@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
@@ -40,6 +39,7 @@ import SecurePayCreator from '@/pages/SecurePayCreator';
 import SecurePayBuyer from '@/pages/SecurePayBuyer';
 import SecurePayAdmin from '@/pages/SecurePayAdmin';
 import Wish2Earn from './pages/Wish2Earn';
+import CreateStoreNew from "@/pages/CreateStoreNew";
 
 const RoutesConfig = () => {
   return (
@@ -85,7 +85,7 @@ const RoutesConfig = () => {
       {/* Digital Creator */}
       <Route path="/digital-creator/store-templates" element={<IndustryTemplates />} />
       <Route path="/create-store" element={<CreateStore />} />
-      <Route path="/create-store/new" element={<CreateStore />} />
+      <Route path="/create-store/new" element={<CreateStoreNew />} />
       <Route path="/store-demo" element={<StoreDemo />} />
       <Route path="/create-linkinbio" element={<CreateLinkInBio />} />
       <Route path="/multi-channel" element={<OnlineStoreFeatures />} />
