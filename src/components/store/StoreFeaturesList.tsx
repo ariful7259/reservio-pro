@@ -7,7 +7,8 @@ import {
   Facebook, RefreshCw, Smartphone, Bell, Shield, Users, MessageSquare, Search,
   Package, Calculator, Palette, Zap, Camera, Video, Music, FileText, Code,
   Settings, Heart, Star, MapPin, Clock, TrendingUp, Megaphone, Gift,
-  Headphones, Lock, Cloud, Download, Share, Edit, Mail, Phone
+  Headphones, Lock, Cloud, Download, Share, Edit, Mail, Phone, Crown,
+  Database, Layers, Target, Eye, Percent, Tag, FileSpreadsheet, Store
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -15,188 +16,216 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 
 export const StoreFeaturesList: React.FC = () => {
-  // বেসিক স্টোর ফিচার
+  // ১. বেসিক স্টোর ফিচার
   const basicStoreFeatures = [
     {
       title: 'পণ্য ম্যানেজমেন্ট',
       description: 'আনলিমিটেড পণ্য যোগ, স্টক ট্র্যাকিং, ক্যাটাগরি সেটআপ',
       icon: <ShoppingCart className="h-5 w-5" />,
+      emoji: '📦'
     },
     {
       title: 'অর্ডার ম্যানেজমেন্ট',
       description: 'অর্ডার ট্র্যাকিং, স্ট্যাটাস আপডেট, কাস্টমার নোটিফিকেশন',
       icon: <Package className="h-5 w-5" />,
+      emoji: '📬'
     },
     {
       title: 'কাস্টমার ম্যানেজমেন্ট',
       description: 'কাস্টমার প্রোফাইল, অর্ডার হিস্ট্রি, উইশলিস্ট ফিচার',
       icon: <Users className="h-5 w-5" />,
+      emoji: '👥'
     },
     {
       title: 'ইনভেন্টরি কন্ট্রোল',
-      description: 'স্টক অ্যালার্ট, অটো রিঅর্ডার, প্রোডাক্ট ভেরিয়েন্ট',
+      description: 'স্টক অ্যালার্ট, অটো রিঅর্ডার, প্রোডাক্ট ভেরিয়েন্ট সাপোর্ট',
       icon: <RefreshCw className="h-5 w-5" />,
+      emoji: '🏷️'
     }
   ];
 
-  // পেমেন্ট ও ফিন্যান্সিয়াল ফিচার
+  // ২. পেমেন্ট ও ফিন্যান্স
   const paymentFeatures = [
     {
       title: 'মাল্টিপল পেমেন্ট গেটওয়ে',
       description: 'বিকাশ, নগদ, রকেট, কার্ড, ক্যাশ অন ডেলিভারি',
       icon: <CreditCard className="h-5 w-5" />,
       isPremium: true,
+      emoji: '💳'
     },
     {
       title: 'অটো ইনভয়েস জেনারেটর',
       description: 'প্রফেশনাল ইনভয়েস, ট্যাক্স ক্যালকুলেশন, ডাউনলোড অপশন',
       icon: <Calculator className="h-5 w-5" />,
+      emoji: '🧾'
     },
     {
       title: 'রিফান্ড ম্যানেজমেন্ট',
-      description: 'অটোমেটিক রিফান্ড প্রসেসিং, রিফান্ড পলিসি সেটিং',
+      description: 'অটোমেটিক রিফান্ড প্রসেসিং, রিফান্ড পলিসি কনফিগারেশন',
       icon: <RefreshCw className="h-5 w-5" />,
       isPremium: true,
+      emoji: '🔁'
     },
     {
       title: 'কমিশন ট্র্যাকিং',
       description: 'অ্যাফিলিয়েট কমিশন, রেফারেল বোনাস, আর্নিং ড্যাশবোর্ড',
       icon: <TrendingUp className="h-5 w-5" />,
       isPremium: true,
+      emoji: '📈'
     }
   ];
 
-  // মার্কেটিং ও SEO ফিচার
+  // ৩. মার্কেটিং ও প্রমোশন
   const marketingFeatures = [
     {
       title: 'সোশ্যাল মিডিয়া ইন্টিগ্রেশন',
-      description: 'ফেসবুক, ইন্সটাগ্রাম, টিকটক সরাসরি শেয়ারিং',
+      description: 'ফেসবুক, ইন্সটাগ্রাম, টিকটক শেয়ারিং',
       icon: <Facebook className="h-5 w-5" />,
+      emoji: '🌐'
     },
     {
       title: 'SEO অপটিমাইজেশন',
-      description: 'মেটা ট্যাগ, সাইটম্যাপ, গুগল সার্চ অপটিমাইজেশন',
+      description: 'মেটা ট্যাগ, সাইটম্যাপ, গুগল সার্চ ফ্রেন্ডলি',
       icon: <Search className="h-5 w-5" />,
       isPremium: true,
+      emoji: '🔍'
     },
     {
       title: 'ইমেইল মার্কেটিং',
-      description: 'অটোমেটিক ইমেইল, প্রমো ক্যাম্পেইন, নিউজলেটার',
+      description: 'অটোমেটিক ইমেইল, প্রমোশনাল ক্যাম্পেইন, নিউজলেটার',
       icon: <Mail className="h-5 w-5" />,
       isPremium: true,
+      emoji: '✉️'
     },
     {
-      title: 'ডিসকাউন্ট ও কুপন',
-      description: 'প্রমো কোড, সিজনাল অফার, বাল্ক ডিসকাউন্ট',
+      title: 'ডিসকাউন্ট ও কুপন সিস্টেম',
+      description: 'প্রোমো কোড, সিজনাল অফার, বাল্ক ডিসকাউন্ট',
       icon: <Gift className="h-5 w-5" />,
+      emoji: '💸'
     }
   ];
 
-  // ডেলিভারি ও লজিস্টিক ফিচার
+  // ৪. ডেলিভারি ও লজিস্টিক
   const deliveryFeatures = [
     {
       title: 'কুরিয়ার ইন্টিগ্রেশন',
       description: 'পাঠাও, eCourier, Steadfast, RedX সরাসরি বুকিং',
       icon: <Truck className="h-5 w-5" />,
       isPremium: true,
+      emoji: '📦'
     },
     {
       title: 'রিয়েল-টাইম ট্র্যাকিং',
-      description: 'লাইভ ডেলিভারি ট্র্যাকিং, জিপিএস লোকেশন',
+      description: 'GPS-ভিত্তিক লাইভ ট্র্যাকিং',
       icon: <MapPin className="h-5 w-5" />,
       isPremium: true,
+      emoji: '📍'
     },
     {
       title: 'ডেলিভারি এরিয়া সেটিং',
-      description: 'এলাকাভিত্তিক ডেলিভারি চার্জ, টাইম স্লট',
+      description: 'এলাকাভিত্তিক চার্জ, টাইম স্লট নির্বাচন',
       icon: <Clock className="h-5 w-5" />,
+      emoji: '🗺️'
     },
     {
       title: 'বাল্ক অর্ডার ম্যানেজমেন্ট',
-      description: 'একসাথে অনেক অর্ডার প্রসেস, ব্যাচ প্রিন্টিং',
+      description: 'একসাথে অর্ডার প্রসেসিং, ব্যাচ প্রিন্টিং সাপোর্ট',
       icon: <Upload className="h-5 w-5" />,
       isPremium: true,
+      emoji: '📑'
     }
   ];
 
-  // অ্যানালিটিক্স ও রিপোর্ট ফিচার
+  // ৫. অ্যানালিটিক্স ও রিপোর্টিং
   const analyticsFeatures = [
     {
       title: 'ট্র্যাকিং পিক্সেল',
-      description: 'ফেসবুক, গুগল অ্যাডস, টিকটক পিক্সেল ইন্টিগ্রেশন',
-      icon: <BarChart3 className="h-5 w-5" />,
+      description: 'ফেসবুক, গুগল, টিকটক পিক্সেল ইন্টিগ্রেশন',
+      icon: <Target className="h-5 w-5" />,
       isPremium: true,
+      emoji: '🎯'
     },
     {
       title: 'সেলস ড্যাশবোর্ড',
-      description: 'রিয়েল-টাইম সেলস ডেটা, প্রফিট অ্যানালাইসিস',
-      icon: <TrendingUp className="h-5 w-5" />,
+      description: 'রিয়েল-টাইম সেলস রিপোর্ট, প্রফিট অ্যানালাইসিস',
+      icon: <BarChart3 className="h-5 w-5" />,
+      emoji: '📉'
     },
     {
       title: 'কাস্টমার বিহেভিয়ার',
       description: 'ভিজিটর ট্র্যাকিং, হিটম্যাপ, কনভার্শন রেট',
-      icon: <Users className="h-5 w-5" />,
+      icon: <Eye className="h-5 w-5" />,
       isPremium: true,
+      emoji: '👣'
     },
     {
       title: 'পারফরমেন্স রিপোর্ট',
-      description: 'বিক্রয় রিপোর্ট, প্রোডাক্ট পারফরমেন্স, ট্রেন্ড অ্যানালাইসিস',
-      icon: <BarChart3 className="h-5 w-5" />,
+      description: 'প্রোডাক্ট পারফরমেন্স, বিক্রয় ট্রেন্ড',
+      icon: <TrendingUp className="h-5 w-5" />,
+      emoji: '📑'
     }
   ];
 
-  // ডিজাইন ও কাস্টমাইজেশন ফিচার
+  // ৬. ডিজাইন ও কাস্টমাইজেশন
   const designFeatures = [
     {
       title: 'কাস্টম ডোমেইন',
-      description: 'আপনার নিজস্ব ডোমেইন নেম ব্যবহার করুন',
+      description: 'নিজের ডোমেইন যুক্ত করার সুবিধা',
       icon: <Globe className="h-5 w-5" />,
       isPremium: true,
+      emoji: '🌐'
     },
     {
       title: 'প্রিমিয়াম থিম',
-      description: '১০০+ প্রফেশনাল থিম, রঙ কাস্টমাইজেশন',
+      description: '১০০+ রেডিমেড থিম, কালার স্কিম ও লেআউট কাস্টমাইজেশন',
       icon: <Palette className="h-5 w-5" />,
       isPremium: true,
+      emoji: '🎨'
     },
     {
       title: 'মোবাইল অ্যাপ',
-      description: 'আপনার স্টোরের জন্য ডেডিকেটেড মোবাইল অ্যাপ',
+      description: 'অ্যান্ড্রয়েড/আইওএস ডেডিকেটেড অ্যাপ',
       icon: <Smartphone className="h-5 w-5" />,
       isPremium: true,
+      emoji: '📱'
     },
     {
       title: 'ড্র্যাগ & ড্রপ এডিটর',
-      description: 'সহজ ইন্টারফেস দিয়ে পেজ ডিজাইন করুন',
+      description: 'কোড ছাড়াই সহজ ডিজাইন এডিটিং',
       icon: <Edit className="h-5 w-5" />,
+      emoji: '🧰'
     }
   ];
 
-  // এডভান্সড ফিচার
+  // ৭. এডভান্সড ফিচার
   const advancedFeatures = [
     {
       title: 'বাল্ক প্রোডাক্ট আপলোড',
-      description: 'এক্সেল ফাইল দিয়ে হাজারো পণ্য একসাথে আপলোড',
-      icon: <Upload className="h-5 w-5" />,
+      description: 'এক্সেল/CSV ফাইল দিয়ে একসাথে হাজারো প্রোডাক্ট আপলোড',
+      icon: <FileSpreadsheet className="h-5 w-5" />,
       isPremium: true,
+      emoji: '📥'
     },
     {
       title: 'মাল্টি-ভেন্ডর সাপোর্ট',
-      description: 'একাধিক বিক্রেতা, কমিশন ম্যানেজমেন্ট',
-      icon: <Users className="h-5 w-5" />,
+      description: 'একাধিক বিক্রেতা, কমিশন সেটিং ও ম্যানেজমেন্ট',
+      icon: <Store className="h-5 w-5" />,
       isPremium: true,
+      emoji: '🛒'
     },
     {
       title: 'লাইভ চ্যাট সাপোর্ট',
-      description: '২৪/৭ কাস্টমার সাপোর্ট, চ্যটবট ইন্টিগ্রেশন',
+      description: '২৪/৭ কাস্টমার সাপোর্ট, চ্যাটবট ইন্টিগ্রেশন',
       icon: <MessageSquare className="h-5 w-5" />,
       isPremium: true,
+      emoji: '💬'
     },
     {
       title: 'ব্যাকআপ ও সিকিউরিটি',
       description: 'অটো ব্যাকআপ, SSL সার্টিফিকেট, ডেটা এনক্রিপশন',
       icon: <Shield className="h-5 w-5" />,
       isPremium: true,
+      emoji: '🔐'
     }
   ];
 
@@ -248,9 +277,11 @@ export const StoreFeaturesList: React.FC = () => {
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2">
+              <span className="text-lg">{feature.emoji}</span>
               <h3 className="font-semibold text-sm">{feature.title}</h3>
               {feature.isPremium && (
-                <Badge variant="outline" className="bg-gradient-to-r from-amber-400 to-orange-500 text-white border-amber-300 text-xs px-2 py-0.5">
+                <Badge variant="outline" className="bg-gradient-to-r from-amber-400 to-orange-500 text-white border-amber-300 text-xs px-2 py-0.5 flex items-center gap-1">
+                  <Crown className="h-3 w-3" />
                   প্রিমিয়াম
                 </Badge>
               )}
@@ -266,11 +297,19 @@ export const StoreFeaturesList: React.FC = () => {
     <div className="py-6">
       <div className="text-center mb-8">
         <h2 className="text-2xl lg:text-3xl font-bold mb-4 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-          সম্পূর্ণ ডিজিটাল সলিউশন পান
+          🛍️ সম্পূর্ণ ডিজিটাল সলিউশন পান
         </h2>
         <p className="text-muted-foreground max-w-2xl mx-auto text-sm lg:text-base">
           আপনার ব্যবসার জন্য প্রয়োজনীয় সকল ফিচার একসাথে। কোনো ফিচার বাদ পড়বে না!
         </p>
+        <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border">
+          <p className="text-sm text-gray-600 flex items-center justify-center gap-2">
+            <Crown className="h-4 w-4 text-amber-500" />
+            <span className="font-medium">🔖 নোট:</span> 
+            <Badge className="bg-amber-500 text-white">প্রিমিয়াম</Badge> 
+            চিহ্নিত ফিচারগুলো প্রিমিয়াম সাবস্ক্রিপশনের আওতাভুক্ত
+          </p>
+        </div>
       </div>
       
       <Tabs defaultValue="store" className="w-full mb-8">
@@ -286,91 +325,91 @@ export const StoreFeaturesList: React.FC = () => {
         </TabsList>
         
         <TabsContent value="store" className="space-y-8">
-          {/* বেসিক ফিচার */}
+          {/* ১. বেসিক স্টোর ফিচার */}
           <div>
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <div className="p-2 bg-blue-100 rounded-full">
-                <Zap className="h-4 w-4 text-blue-600" />
+                <ShoppingCart className="h-4 w-4 text-blue-600" />
               </div>
-              বেসিক স্টোর ফিচার
+              🛍️ ১. বেসিক স্টোর ফিচার
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {basicStoreFeatures.map((feature, index) => renderFeatureCard(feature, index))}
             </div>
           </div>
 
-          {/* পেমেন্ট ফিচার */}
+          {/* ২. পেমেন্ট ও ফিন্যান্স */}
           <div>
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <div className="p-2 bg-green-100 rounded-full">
                 <CreditCard className="h-4 w-4 text-green-600" />
               </div>
-              পেমেন্ট ও ফিন্যান্স
+              💰 ২. পেমেন্ট ও ফিন্যান্স
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {paymentFeatures.map((feature, index) => renderFeatureCard(feature, index))}
             </div>
           </div>
 
-          {/* মার্কেটিং ফিচার */}
+          {/* ৩. মার্কেটিং ও প্রমোশন */}
           <div>
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <div className="p-2 bg-purple-100 rounded-full">
                 <Megaphone className="h-4 w-4 text-purple-600" />
               </div>
-              মার্কেটিং ও প্রমোশন
+              📣 ৩. মার্কেটিং ও প্রমোশন
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {marketingFeatures.map((feature, index) => renderFeatureCard(feature, index))}
             </div>
           </div>
 
-          {/* ডেলিভারি ফিচার */}
+          {/* ৪. ডেলিভারি ও লজিস্টিক */}
           <div>
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <div className="p-2 bg-orange-100 rounded-full">
                 <Truck className="h-4 w-4 text-orange-600" />
               </div>
-              ডেলিভারি ও লজিস্টিক
+              🚚 ৪. ডেলিভারি ও লজিস্টিক
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {deliveryFeatures.map((feature, index) => renderFeatureCard(feature, index))}
             </div>
           </div>
 
-          {/* অ্যানালিটিক্স ফিচার */}
+          {/* ৫. অ্যানালিটিক্স ও রিপোর্টিং */}
           <div>
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <div className="p-2 bg-indigo-100 rounded-full">
                 <BarChart3 className="h-4 w-4 text-indigo-600" />
               </div>
-              অ্যানালিটিক্স ও রিপোর্ট
+              📊 ৫. অ্যানালিটিক্স ও রিপোর্টিং
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {analyticsFeatures.map((feature, index) => renderFeatureCard(feature, index))}
             </div>
           </div>
 
-          {/* ডিজাইন ফিচার */}
+          {/* ৬. ডিজাইন ও কাস্টমাইজেশন */}
           <div>
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <div className="p-2 bg-pink-100 rounded-full">
                 <Palette className="h-4 w-4 text-pink-600" />
               </div>
-              ডিজাইন ও কাস্টমাইজেশন
+              🎨 ৬. ডিজাইন ও কাস্টমাইজেশন
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {designFeatures.map((feature, index) => renderFeatureCard(feature, index))}
             </div>
           </div>
 
-          {/* এডভান্সড ফিচার */}
+          {/* ৭. এডভান্সড ফিচার */}
           <div>
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <div className="p-2 bg-red-100 rounded-full">
                 <Settings className="h-4 w-4 text-red-600" />
               </div>
-              এডভান্সড ফিচার
+              🚀 ৭. এডভান্সড ফিচার
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {advancedFeatures.map((feature, index) => renderFeatureCard(feature, index))}
@@ -380,9 +419,27 @@ export const StoreFeaturesList: React.FC = () => {
           <div className="mt-8 text-center">
             <div className="bg-gradient-to-r from-primary/10 to-purple-100 rounded-xl p-6 mb-6">
               <h3 className="font-bold text-lg mb-2">🚀 সব ফিচার একসাথে পাবেন!</h3>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground text-sm mb-4">
                 উপরের সকল ফিচার আপনার স্টোরে স্বয়ংক্রিয়ভাবে যুক্ত হবে। কোনো অতিরিক্ত সেটআপের প্রয়োজন নেই।
               </p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-primary">৮+</div>
+                  <div className="text-xs text-gray-600">ফিচার ক্যাটাগরি</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600">২৮+</div>
+                  <div className="text-xs text-gray-600">মোট ফিচার</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-600">১৮+</div>
+                  <div className="text-xs text-gray-600">প্রিমিয়াম ফিচার</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-orange-600">১০+</div>
+                  <div className="text-xs text-gray-600">ফ্রি ফিচার</div>
+                </div>
+              </div>
             </div>
             <Link to="/create-store/new">
               <Button size="lg" className="px-8 py-3 text-base bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-600">
