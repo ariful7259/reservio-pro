@@ -42,12 +42,21 @@ import SecurePayBuyer from '@/pages/SecurePayBuyer';
 import SecurePayAdmin from '@/pages/SecurePayAdmin';
 import Wish2Earn from './pages/Wish2Earn';
 import CreateStoreNew from "@/pages/CreateStoreNew";
+import Services from './pages/Services';
+import Marketplace from './pages/Marketplace';
+import Wallet from './pages/Wallet';
 
 const RoutesConfig = () => {
   return (
     <Routes>
       {/* Home Route */}
       <Route path="/" element={<Index />} />
+      
+      {/* Main Navigation Routes */}
+      <Route path="/services" element={<Services />} />
+      <Route path="/marketplace" element={<Marketplace />} />
+      <Route path="/shopping" element={<Marketplace />} />
+      <Route path="/wallet" element={<Wallet />} />
       
       {/* SecurePay Routes */}
       <Route path="/securepay" element={<SecurePay />} />
