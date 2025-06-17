@@ -10,8 +10,12 @@ const Navbar = () => {
   const location = useLocation();
   const isAdminPage = location.pathname.includes("/admin-dashboard");
   
-  // Don't render navbar on admin pages
-  if (isAdminPage) {
+  // Authentication pages where navbar should be hidden
+  const authPages = ['/login', '/signup', '/forgot-password'];
+  const isAuthPage = authPages.includes(location.pathname);
+  
+  // Don't render navbar on admin pages or auth pages
+  if (isAdminPage || isAuthPage) {
     return null;
   }
   
