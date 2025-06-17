@@ -34,44 +34,66 @@ const Marketplace = () => {
     {
       id: 'electronics',
       name: 'ইলেকট্রনিক্স',
-      icon: <Smartphone className="h-5 w-5" />,
-      color: 'bg-blue-100 text-blue-600',
+      icon: <Smartphone className="h-7 w-7" />,
+      color: 'bg-blue-50',
+      iconColor: 'text-blue-500',
       count: 156
     },
     {
       id: 'fashion',
       name: 'ফ্যাশন',
-      icon: <Shirt className="h-5 w-5" />,
-      color: 'bg-pink-100 text-pink-600',
+      icon: <Shirt className="h-7 w-7" />,
+      color: 'bg-pink-50',
+      iconColor: 'text-pink-500',
       count: 234
     },
     {
       id: 'home',
       name: 'ঘর সাজানো',
-      icon: <Home className="h-5 w-5" />,
-      color: 'bg-green-100 text-green-600',
+      icon: <Home className="h-7 w-7" />,
+      color: 'bg-green-50',
+      iconColor: 'text-green-500',
       count: 89
     },
     {
       id: 'books',
       name: 'বই ও স্টেশনারি',
-      icon: <Book className="h-5 w-5" />,
-      color: 'bg-orange-100 text-orange-600',
+      icon: <Book className="h-7 w-7" />,
+      color: 'bg-orange-50',
+      iconColor: 'text-orange-500',
       count: 67
     },
     {
       id: 'computers',
       name: 'কম্পিউটার',
-      icon: <Laptop className="h-5 w-5" />,
-      color: 'bg-purple-100 text-purple-600',
+      icon: <Laptop className="h-7 w-7" />,
+      color: 'bg-purple-50',
+      iconColor: 'text-purple-500',
       count: 98
     },
     {
       id: 'cameras',
       name: 'ক্যামেরা',
-      icon: <Camera className="h-5 w-5" />,
-      color: 'bg-indigo-100 text-indigo-600',
+      icon: <Camera className="h-7 w-7" />,
+      color: 'bg-indigo-50',
+      iconColor: 'text-indigo-500',
       count: 42
+    },
+    {
+      id: 'gaming',
+      name: 'গেমিং',
+      icon: <Gamepad2 className="h-7 w-7" />,
+      color: 'bg-yellow-50',
+      iconColor: 'text-yellow-600',
+      count: 73
+    },
+    {
+      id: 'watches',
+      name: 'ঘড়ি ও অ্যাক্সেসরিজ',
+      icon: <Watch className="h-7 w-7" />,
+      color: 'bg-red-50',
+      iconColor: 'text-red-500',
+      count: 54
     }
   ];
 
@@ -169,22 +191,25 @@ const Marketplace = () => {
 
       <div className="mb-8">
         <h2 className="text-lg font-semibold mb-4">ক্যাটাগরি সমূহ</h2>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {categories.map((category) => (
-            <Card key={category.id} className="hover:shadow-md transition-all cursor-pointer border-0 shadow-sm">
-              <CardContent className="p-3">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${category.color} flex-shrink-0`}>
-                    {category.icon}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-xs leading-tight">{category.name}</h3>
-                    <p className="text-xs text-muted-foreground mt-1">{category.count} পণ্য</p>
-                  </div>
+            <div key={category.id} className="flex flex-col items-center text-center p-4 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+              <div className={`w-16 h-16 rounded-full ${category.color} flex items-center justify-center mb-3`}>
+                <div className={category.iconColor}>
+                  {category.icon}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+              <h3 className="font-medium text-sm mb-2">{category.name}</h3>
+              <Badge variant="success" className="text-xs">
+                {category.count} পণ্য
+              </Badge>
+            </div>
           ))}
+        </div>
+        <div className="flex justify-center mt-6">
+          <Button variant="outline" className="text-red-500 border-red-500 hover:bg-red-50">
+            ∨ আরো দেখুন
+          </Button>
         </div>
       </div>
 

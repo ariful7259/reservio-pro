@@ -22,52 +22,80 @@ import {
   Monitor,
   Laptop,
   Camera,
-  ShoppingBag
+  ShoppingBag,
+  Sofa,
+  Book,
+  School,
+  Tractor,
+  Store,
+  Business
 } from 'lucide-react';
 
 const Services = () => {
   const serviceCategories = [
     {
       id: 'home',
-      name: 'ঘর সংক্রান্ত সেবা',
-      icon: <Home className="h-5 w-5" />,
-      color: 'bg-blue-100 text-blue-600',
-      count: 45
+      name: 'বাসা বাড়ি',
+      icon: <Home className="h-7 w-7" />,
+      color: 'bg-blue-50',
+      iconColor: 'text-blue-500',
+      count: 892
     },
     {
-      id: 'auto',
-      name: 'গাড়ি সার্ভিস',
-      icon: <Car className="h-5 w-5" />,
-      color: 'bg-green-100 text-green-600',
-      count: 32
+      id: 'electronics',
+      name: 'ইলেকট্রনিক্স',
+      icon: <Monitor className="h-7 w-7" />,
+      color: 'bg-indigo-50',
+      iconColor: 'text-indigo-500',
+      count: 324
     },
     {
-      id: 'tech',
-      name: 'টেক সাপোর্ট',
-      icon: <Monitor className="h-5 w-5" />,
-      color: 'bg-purple-100 text-purple-600',
-      count: 28
+      id: 'transport',
+      name: 'পরিবহন',
+      icon: <Car className="h-7 w-7" />,
+      color: 'bg-red-50',
+      iconColor: 'text-red-500',
+      count: 178
     },
     {
-      id: 'health',
-      name: 'স্বাস্থ্য সেবা',
-      icon: <Heart className="h-5 w-5" />,
-      color: 'bg-red-100 text-red-600',
-      count: 18
+      id: 'outdoor',
+      name: 'ইভেন্ট সামগ্রী',
+      icon: <Tractor className="h-7 w-7" />,
+      color: 'bg-green-50',
+      iconColor: 'text-green-500',
+      count: 89
     },
     {
-      id: 'beauty',
-      name: 'বিউটি সেবা',
-      icon: <Scissors className="h-5 w-5" />,
-      color: 'bg-pink-100 text-pink-600',
-      count: 24
+      id: 'furniture',
+      name: 'ঘরোয়া সামগ্রী',
+      icon: <Sofa className="h-7 w-7" />,
+      color: 'bg-purple-50',
+      iconColor: 'text-purple-500',
+      count: 145
     },
     {
-      id: 'delivery',
-      name: 'ডেলিভারি সেবা',
-      icon: <Truck className="h-5 w-5" />,
-      color: 'bg-orange-100 text-orange-600',
-      count: 15
+      id: 'education',
+      name: 'শিক্ষা সামগ্রী',
+      icon: <Book className="h-7 w-7" />,
+      color: 'bg-orange-50',
+      iconColor: 'text-orange-500',
+      count: 65
+    },
+    {
+      id: 'agriculture',
+      name: 'কৃষি যন্ত্রপাতি',
+      icon: <School className="h-7 w-7" />,
+      color: 'bg-yellow-50',
+      iconColor: 'text-yellow-600',
+      count: 42
+    },
+    {
+      id: 'business',
+      name: 'ব্যবসায়িক সামগ্রী',
+      icon: <Business className="h-7 w-7" />,
+      color: 'bg-pink-50',
+      iconColor: 'text-pink-500',
+      count: 86
     }
   ];
 
@@ -132,23 +160,26 @@ const Services = () => {
       </div>
 
       <div className="mb-8">
-        <h2 className="text-lg font-semibold mb-4">সেবার ক্যাটাগরি</h2>
-        <div className="grid grid-cols-3 gap-3">
+        <h2 className="text-lg font-semibold mb-4">ক্যাটাগরি</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {serviceCategories.map((category) => (
-            <Card key={category.id} className="hover:shadow-md transition-all cursor-pointer border-0 shadow-sm">
-              <CardContent className="p-3">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${category.color} flex-shrink-0`}>
-                    {category.icon}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-xs leading-tight">{category.name}</h3>
-                    <p className="text-xs text-muted-foreground mt-1">{category.count}টি সেবা</p>
-                  </div>
+            <div key={category.id} className="flex flex-col items-center text-center p-4 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+              <div className={`w-16 h-16 rounded-full ${category.color} flex items-center justify-center mb-3`}>
+                <div className={category.iconColor}>
+                  {category.icon}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+              <h3 className="font-medium text-sm mb-2">{category.name}</h3>
+              <Badge variant="success" className="text-xs">
+                {category.count}টি
+              </Badge>
+            </div>
           ))}
+        </div>
+        <div className="flex justify-center mt-6">
+          <Button variant="outline" className="text-red-500 border-red-500 hover:bg-red-50">
+            ∨ আরো দেখুন
+          </Button>
         </div>
       </div>
 
