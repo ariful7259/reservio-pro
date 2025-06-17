@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ArrowRight, MapPin, Star, Heart, Share2, Grid2X2, List, Phone, MessageCircle, Calendar, CreditCard, ShoppingCart } from "lucide-react";
+import { ArrowRight, MapPin, Star, Heart, Share2, Grid2X2, List, Phone, MessageCircle, Calendar, CreditCard, ShoppingCart, User, Clock, CheckCircle } from "lucide-react";
 import CategoryTabs from "./CategoryTabs";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -307,7 +306,7 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({ allListings }) => {
         </Button>
       </div>
 
-      {/* Details Modal */}
+      {/* Enhanced Details Modal */}
       <Dialog open={showDetails} onOpenChange={setShowDetails}>
         <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           {selectedListing && (
@@ -326,29 +325,77 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({ allListings }) => {
                   <Badge className="absolute top-2 right-2">{selectedListing.category}</Badge>
                 </div>
 
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-5 w-5 text-primary" />
-                    <span className="text-sm">{selectedListing.location}</span>
-                  </div>
-                  
+                <div className="space-y-4">
+                  {/* Price and Rating */}
                   <div className="flex items-center justify-between">
                     <span className="text-2xl font-bold text-primary">{selectedListing.price}</span>
                     <div className="flex items-center gap-1">
                       <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm">4.8 (১২৫ রিভিউ)</span>
+                      <span className="text-sm">4.8 (২৪ রিভিউ)</span>
+                      <CheckCircle className="h-4 w-4 text-green-500 ml-2" />
                     </div>
                   </div>
 
+                  {/* Owner Information */}
                   <div className="bg-gray-50 p-3 rounded-lg">
-                    <h4 className="font-medium mb-2">বিস্তারিত তথ্য</h4>
-                    <p className="text-sm text-gray-600">
-                      এটি একটি দুর্দান্ত {selectedListing.category === "রেন্ট" ? "ভাড়ার সম্পত্তি" : 
-                      selectedListing.category === "সার্ভিস" ? "সেবা" : "পণ্য"}। 
-                      উচ্চ মানের এবং নির্ভরযোগ্য। দ্রুত বুকিং করুন।
-                    </p>
+                    <div className="flex items-center gap-3 mb-3">
+                      <User className="h-5 w-5 text-primary" />
+                      <div>
+                        <h4 className="font-medium">কামাল খাদেম</h4>
+                        <div className="flex items-center gap-1 text-sm text-gray-600">
+                          <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                          <span>4.8 (২৪ রিভিউ)</span>
+                          <CheckCircle className="h-3 w-3 text-green-500 ml-1" />
+                          <span className="text-green-600">যাচাইকৃত</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
+                  {/* Detailed Information */}
+                  <div className="bg-gray-50 p-4 rounded-lg space-y-3">
+                    <h4 className="font-semibold mb-3 border-b pb-2">বিবরণ</h4>
+                    
+                    <div className="space-y-2 text-sm">
+                      <p className="text-gray-700">
+                        এটি চট্টগ্রামের ৩ বেডরুমের অ্যাপার্টমেন্ট রয়েছে আধুনিক সুবিধা, বিশাল খেলার জায়গা এবং দক্ষিণমুখী বারান্দা।
+                        অ্যাপার্টমেন্টটি সম্পূর্ণ আসবাবযুক্ত এবং তাৎক্ষণিক ব্যবহারের জন্য প্রস্তুত, যা শিক্ষা প্রতিষ্ঠান, 
+                        শপিং মল এবং হাসপাতালের কাছাকাছি।
+                      </p>
+                    </div>
+
+                    {/* Property Details */}
+                    <div className="grid grid-cols-2 gap-3 mt-4 pt-3 border-t">
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">অবস্থা:</span>
+                          <span className="font-medium">আবহবিক</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">ভাড়ার মেয়াদ:</span>
+                          <span className="font-medium">সর্বনিম্ন ৫ মাস</span>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">আমানত:</span>
+                          <span className="font-medium">৫০,০০০</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">পোস্ট করা হয়েছে:</span>
+                          <span className="font-medium">২০২৫-০৪-০১</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Location */}
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-5 w-5 text-primary" />
+                    <span className="text-sm">{selectedListing.location}</span>
+                  </div>
+
+                  {/* Live Location Map */}
                   <div className="bg-blue-50 p-3 rounded-lg">
                     <h4 className="font-medium mb-2 flex items-center gap-2">
                       <MapPin className="h-4 w-4" />
@@ -356,6 +403,14 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({ allListings }) => {
                     </h4>
                     <div className="bg-gray-200 h-32 rounded-lg flex items-center justify-center">
                       <span className="text-sm text-gray-500">ম্যাপ লোড হচ্ছে...</span>
+                    </div>
+                  </div>
+
+                  {/* Contact Information */}
+                  <div className="bg-green-50 p-3 rounded-lg">
+                    <h4 className="font-medium mb-2 text-green-800">যোগাযোগের তথ্য</h4>
+                    <div className="space-y-1 text-sm text-green-700">
+                      <p>১২৫৬ জন দেখেছেন</p>
                     </div>
                   </div>
                 </div>
@@ -366,9 +421,8 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({ allListings }) => {
                     <>
                       <Button 
                         onClick={() => handleBooking('rent')}
-                        className="flex items-center gap-2"
+                        className="flex items-center gap-2 bg-red-500 hover:bg-red-600"
                       >
-                        <Calendar className="h-4 w-4" />
                         ভাড়া নিন
                       </Button>
                       <Button 
@@ -379,10 +433,10 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({ allListings }) => {
                             description: "মালিকের সাথে যোগাযোগ করা হচ্ছে"
                           });
                         }}
-                        className="flex items-center gap-2"
+                        className="flex items-center gap-2 border-gray-300"
                       >
                         <Phone className="h-4 w-4" />
-                        কল করুন
+                        যোগাযোগ করুন
                       </Button>
                     </>
                   )}
