@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import { 
   Wrench, 
   Car, 
@@ -17,7 +18,11 @@ import {
   Clock,
   Users,
   Search,
-  Filter
+  Filter,
+  Monitor,
+  Laptop,
+  Camera,
+  ShoppingBag
 } from 'lucide-react';
 
 const Services = () => {
@@ -39,7 +44,7 @@ const Services = () => {
     {
       id: 'tech',
       name: 'টেক সাপোর্ট',
-      icon: <Smartphone className="h-6 w-6" />,
+      icon: <Monitor className="h-6 w-6" />,
       color: 'bg-purple-100 text-purple-600',
       count: 28
     },
@@ -90,7 +95,8 @@ const Services = () => {
       price: '৳ ১,৫০০',
       location: 'ধানমন্ডি, ঢাকা',
       isVerified: true,
-      responseTime: '৩০ মিনিট'
+      responseTime: '৩০ মিনিট',
+      image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=300&fit=crop'
     },
     {
       id: 2,
@@ -101,7 +107,8 @@ const Services = () => {
       price: '৳ ৮০০',
       location: 'গুলশান, ঢাকা',
       isVerified: true,
-      responseTime: '১ ঘণ্টা'
+      responseTime: '১ ঘণ্টা',
+      image: 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=300&fit=crop'
     },
     {
       id: 3,
@@ -112,7 +119,8 @@ const Services = () => {
       price: '৳ ৫০০',
       location: 'বনানী, ঢাকা',
       isVerified: false,
-      responseTime: '৪৫ মিনিট'
+      responseTime: '৪৫ মিনিট',
+      image: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=300&fit=crop'
     }
   ];
 
@@ -126,10 +134,10 @@ const Services = () => {
       <div className="flex gap-2 mb-6">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <input 
+          <Input 
             type="text" 
             placeholder="সেবা খুঁজুন..." 
-            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            className="pl-10"
           />
         </div>
         <Button variant="outline" size="icon">
@@ -148,7 +156,9 @@ const Services = () => {
                     {category.icon}
                   </div>
                   <h3 className="font-medium text-sm mb-1">{category.name}</h3>
-                  <p className="text-xs text-muted-foreground">{category.count} সেবা</p>
+                  <Badge variant="secondary" className="text-xs">
+                    {category.count}টি
+                  </Badge>
                 </div>
               </CardContent>
             </Card>
@@ -163,8 +173,12 @@ const Services = () => {
             <Card key={service.id} className="hover:shadow-md transition-all cursor-pointer">
               <CardContent className="p-4">
                 <div className="flex items-start gap-4">
-                  <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <Wrench className="h-8 w-8 text-gray-500" />
+                  <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                    <img 
+                      src={service.image} 
+                      alt={service.title}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-start justify-between mb-2">

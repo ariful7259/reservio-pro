@@ -16,7 +16,15 @@ import {
   TrendingUp,
   Package,
   Users,
-  Clock
+  Clock,
+  Smartphone,
+  Shirt,
+  Home,
+  Book,
+  Laptop,
+  Camera,
+  Gamepad2,
+  Watch
 } from 'lucide-react';
 
 const Marketplace = () => {
@@ -27,30 +35,58 @@ const Marketplace = () => {
     {
       id: 'electronics',
       name: 'ইলেকট্রনিক্স',
-      icon: <Package className="h-6 w-6" />,
+      icon: <Smartphone className="h-6 w-6" />,
       color: 'bg-blue-100 text-blue-600',
       count: 156
     },
     {
       id: 'fashion',
       name: 'ফ্যাশন',
-      icon: <ShoppingBag className="h-6 w-6" />,
+      icon: <Shirt className="h-6 w-6" />,
       color: 'bg-pink-100 text-pink-600',
       count: 234
     },
     {
       id: 'home',
       name: 'ঘর সাজানোর জিনিস',
-      icon: <Package className="h-6 w-6" />,
+      icon: <Home className="h-6 w-6" />,
       color: 'bg-green-100 text-green-600',
       count: 89
     },
     {
       id: 'books',
       name: 'বই ও স্টেশনারি',
-      icon: <Package className="h-6 w-6" />,
+      icon: <Book className="h-6 w-6" />,
       color: 'bg-orange-100 text-orange-600',
       count: 67
+    },
+    {
+      id: 'computers',
+      name: 'কম্পিউটার ও ল্যাপটপ',
+      icon: <Laptop className="h-6 w-6" />,
+      color: 'bg-purple-100 text-purple-600',
+      count: 98
+    },
+    {
+      id: 'cameras',
+      name: 'ক্যামেরা ও ফটোগ্রাফি',
+      icon: <Camera className="h-6 w-6" />,
+      color: 'bg-indigo-100 text-indigo-600',
+      count: 42
+    },
+    {
+      id: 'gaming',
+      name: 'গেমিং',
+      icon: <Gamepad2 className="h-6 w-6" />,
+      color: 'bg-red-100 text-red-600',
+      count: 76
+    },
+    {
+      id: 'watches',
+      name: 'ঘড়ি ও এক্সেসরিজ',
+      icon: <Watch className="h-6 w-6" />,
+      color: 'bg-yellow-100 text-yellow-600',
+      count: 123
     }
   ];
 
@@ -64,7 +100,7 @@ const Marketplace = () => {
       reviews: 128,
       seller: 'টেক স্টোর',
       location: 'ঢাকা',
-      image: '/placeholder.svg',
+      image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop',
       discount: 21
     },
     {
@@ -76,7 +112,7 @@ const Marketplace = () => {
       reviews: 95,
       seller: 'অডিও হাব',
       location: 'চট্টগ্রাম',
-      image: '/placeholder.svg',
+      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
       discount: 20
     },
     {
@@ -88,7 +124,7 @@ const Marketplace = () => {
       reviews: 67,
       seller: 'ব্যাগ ওয়ার্ল্ড',
       location: 'সিলেট',
-      image: '/placeholder.svg',
+      image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop',
       discount: 33
     },
     {
@@ -100,7 +136,7 @@ const Marketplace = () => {
       reviews: 203,
       seller: 'মোবাইল এক্সেসরিজ',
       location: 'রাজশাহী',
-      image: '/placeholder.svg',
+      image: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=400&h=400&fit=crop',
       discount: 29
     }
   ];
@@ -157,7 +193,9 @@ const Marketplace = () => {
                     {category.icon}
                   </div>
                   <h3 className="font-medium text-sm mb-1">{category.name}</h3>
-                  <p className="text-xs text-muted-foreground">{category.count} পণ্য</p>
+                  <Badge variant="secondary" className="text-xs">
+                    {category.count} পণ্য
+                  </Badge>
                 </div>
               </CardContent>
             </Card>
