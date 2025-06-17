@@ -1,43 +1,29 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ChevronDown, Home, ChevronRight, Building, Search, ShoppingBag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-
 export const PropertyPostSection = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   const handlePostClick = (type: string) => {
     const routes = {
       rent: '/create-post?type=rent',
       service: '/create-post?type=service',
       marketplace: '/create-post?type=marketplace'
     };
-    
     navigate(routes[type as keyof typeof routes]);
     toast({
       title: "পোস্ট তৈরি করুন",
       description: `${type === 'rent' ? 'রেন্ট' : type === 'service' ? 'সার্ভিস' : 'মার্কেটপ্লেস'} পোস্ট তৈরি করার পেজে যাচ্ছেন`
     });
   };
-
-  return (
-    <div className="space-y-4">
+  return <div className="space-y-4">
       {/* User Profile Section */}
-      <div className="bg-gradient-to-r from-pink-400 to-red-400 rounded-lg p-4 text-white">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-              <span className="text-red-500 font-bold text-lg">AI</span>
-            </div>
-            <span className="font-semibold text-lg">Ariful Islam</span>
-          </div>
-          <ChevronRight className="h-6 w-6" />
-        </div>
-      </div>
+      
 
       {/* Post Property Section */}
       <div className="bg-white rounded-lg p-4 border shadow-sm">
@@ -96,11 +82,7 @@ export const PropertyPostSection = () => {
         </div>
         
         <div className="relative rounded-lg overflow-hidden mb-3">
-          <img 
-            src="/lovable-uploads/635ccd95-277b-4cd8-9ff0-2311c51194d7.png"
-            alt="Service"
-            className="w-full h-32 object-cover"
-          />
+          <img src="/lovable-uploads/635ccd95-277b-4cd8-9ff0-2311c51194d7.png" alt="Service" className="w-full h-32 object-cover" />
           <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 p-3">
             <div className="flex items-center justify-between text-white">
               <div className="flex items-center space-x-2">
@@ -116,6 +98,5 @@ export const PropertyPostSection = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
