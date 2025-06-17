@@ -1,9 +1,8 @@
-
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogIn, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { usePostStore, Post, PostType } from '@/store/usePostStore';
+import { usePostStore, Post } from '@/store/usePostStore';
 import { useAuth } from '@/hooks/useAuth';
 import HeroCarousel from '@/components/HeroCarousel';
 import DigitalProductsSection from '@/components/DigitalProductsSection';
@@ -69,14 +68,8 @@ const postToFeaturedListing = (post: Post) => {
 
 const Index = () => {
   const navigate = useNavigate();
-  const {
-    posts
-  } = usePostStore();
-  const {
-    isAuthenticated,
-    isSeller,
-    isAdmin
-  } = useAuth();
+  const { posts } = usePostStore();
+  const { isAuthenticated, isSeller, isAdmin } = useAuth();
 
   // Feature listings data construction
   const userPosts = useMemo(() => posts.map(postToFeaturedListing).filter(Boolean), [posts]);
