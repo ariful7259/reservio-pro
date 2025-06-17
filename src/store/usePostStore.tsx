@@ -1,51 +1,56 @@
+
 import { create } from 'zustand';
 
-export type PostType = 'rent' | 'service' | 'marketplace';
-
-export interface BasePost {
+export interface Post {
   id: string;
   title: string;
   description: string;
   category: string;
   subcategory?: string;
-  location?: string;
-  price?: string;
-  images?: string[]; // for simplicity, File[] not persisted, will be blank string until using backend
+  location: string;
+  price: string;
+  images: string[];
+  videos?: string[];
   createdAt: Date;
-}
-
-export interface RentPost extends BasePost {
-  type: 'rent';
-  period: string;
-}
-export interface ServicePost extends BasePost {
-  type: 'service';
-  duration: string;
-  timeUnit: string;
-}
-export interface MarketplacePost extends BasePost {
-  type: 'marketplace';
+  type: 'rent' | 'service' | 'marketplace';
+  
+  // Rental specific fields
+  period?: string;
+  
+  // Service specific fields
+  duration?: string;
+  timeUnit?: string;
+  
+  // Marketplace specific fields
   discountPrice?: string;
   tags?: string;
 }
-export type Post = RentPost | ServicePost | MarketplacePost;
 
 interface PostStore {
   posts: Post[];
   addPost: (post: Post) => void;
-  setPosts: (posts: Post[]) => void;
-  
-  // Helper function to get posts by type
-  getPostsByType: (type: PostType) => Post[];
+  updatePost: (id: string, updates: Partial<Post>) => void;
+  deletePost: (id: string) => void;
+  getPostsByType: (type: Post['type']) => Post[];
 }
 
-// Initial demo posts (convert your demo posts here or keep in Index for now)
 export const usePostStore = create<PostStore>((set, get) => ({
   posts: [],
-  addPost: (post) => set((state) => ({ posts: [post, ...state.posts] })),
-  setPosts: (posts) => set({ posts }),
   
-  // Helper function to get posts by type
+  addPost: (post) => set((state) => ({
+    posts: [...state.posts, post]
+  })),
+  
+  updatePost: (id, updates) => set((state) => ({
+    posts: state.posts.map(post => 
+      post.id === id ? { ...post, ...updates } : post
+    )
+  })),
+  
+  deletePost: (id) => set((state) => ({
+    posts: state.posts.filter(post => post.id !== id)
+  })),
+  
   getPostsByType: (type) => {
     return get().posts.filter(post => post.type === type);
   }
