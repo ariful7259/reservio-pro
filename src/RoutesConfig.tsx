@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 // Import pages
+import Index from './pages/Index';
 import PaymentAnalytics from './pages/PaymentAnalytics';
 import TransactionHistory from './pages/TransactionHistory';
 import Reviews from './pages/Reviews';
@@ -44,6 +46,9 @@ import CreateStoreNew from "@/pages/CreateStoreNew";
 const RoutesConfig = () => {
   return (
     <Routes>
+      {/* Home Route */}
+      <Route path="/" element={<Index />} />
+      
       {/* SecurePay Routes */}
       <Route path="/securepay" element={<SecurePay />} />
       <Route path="/securepay/creator" element={<SecurePayCreator />} />

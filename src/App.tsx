@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import RoutesConfig from "./RoutesConfig";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import Navbar from "@/components/Navbar";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ function App() {
           <Sonner />
           <BrowserRouter>
             <AuthProvider>
+              <Navbar />
               <RoutesConfig />
             </AuthProvider>
           </BrowserRouter>
