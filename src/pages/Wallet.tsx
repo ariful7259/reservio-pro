@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,7 @@ import {
   Wallet as WalletIcon, 
   CreditCard, 
   Send, 
-  Receive, 
+  ArrowDownToLine, 
   History, 
   QrCode, 
   Plus, 
@@ -58,7 +57,7 @@ const Wallet = () => {
     },
     {
       title: 'টাকা নিন',
-      icon: <Receive className="h-6 w-6" />,
+      icon: <ArrowDownToLine className="h-6 w-6" />,
       color: 'bg-green-100 text-green-600'
     },
     {
