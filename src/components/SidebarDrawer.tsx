@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, LogOut, LogIn, Plus, Store } from 'lucide-react';
@@ -12,7 +13,7 @@ import { ServiceCategoriesGrid } from './sidebar/ServiceCategoriesGrid';
 import { VideoCarousel } from './sidebar/VideoCarousel';
 import { UserProfileSection } from './sidebar/UserProfileSection';
 import { GuestSection } from './sidebar/GuestSection';
-import { PostAdSection } from './sidebar/PostAdSection';
+import { PropertyPostSection } from './sidebar/PropertyPostSection';
 import { MyServicesDropdown } from './sidebar/MyServicesDropdown';
 import { CollapsibleMenuSection } from './sidebar/CollapsibleMenuSection';
 import { ReferralSystem } from './sidebar/ReferralSystem';
@@ -69,13 +70,14 @@ export const SidebarDrawer = () => {
         </DrawerHeader>
         
         <div className="px-4 space-y-6 py-4">
-          <PostAdSection />
+          {/* Property Post Section - New section replacing PostAdSection */}
+          <PropertyPostSection />
           
           <div className="space-y-2">
             {/* Video Carousel */}
             <VideoCarousel />
             
-            {/* Service Categories Grid - পুনরায় স্থাপিত, এখন ভিডিও ক্যারোসেলের নিচে */}
+            {/* Service Categories Grid */}
             <ServiceCategoriesGrid />
 
             {/* My Services Dropdown - only shown to authenticated users */}
