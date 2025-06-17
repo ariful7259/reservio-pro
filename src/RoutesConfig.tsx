@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
@@ -47,12 +46,22 @@ import Services from './pages/Services';
 import Marketplace from './pages/Marketplace';
 import MarketplaceHub from './pages/MarketplaceHub';
 import Wallet from './pages/Wallet';
+import Profile from './pages/Profile';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import ForgotPassword from './pages/ForgotPassword';
 
 const RoutesConfig = () => {
   return (
     <Routes>
       {/* Home Route */}
       <Route path="/" element={<Index />} />
+      
+      {/* Authentication Routes */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       
       {/* Create Post Route */}
       <Route path="/create-post" element={<CreatePost />} />

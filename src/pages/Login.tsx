@@ -26,7 +26,6 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { Eye, EyeOff, Loader2, Shield, Store } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useSellerProfile } from "@/hooks/useSellerProfile";
 
 const formSchema = z.object({
   email: z.string().email("ইমেইল অবৈধ"),

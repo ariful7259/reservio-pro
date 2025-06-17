@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, Shield, LogOut, LogIn } from 'lucide-react';
+import { User, Shield, LogOut, LogIn, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { 
   DropdownMenu,
@@ -41,7 +41,7 @@ export const UserProfile: React.FC = () => {
     {
       icon: <User className="h-5 w-5" />,
       name: "প্রোফাইল",
-      path: "/profile-management"
+      path: "/profile"
     },
     {
       icon: <Shield className="h-5 w-5" />,
@@ -60,6 +60,11 @@ export const UserProfile: React.FC = () => {
       icon: <LogIn className="h-5 w-5" />,
       name: "লগইন",
       path: "/login"
+    },
+    {
+      icon: <UserPlus className="h-5 w-5" />,
+      name: "রেজিস্ট্রেশন",
+      path: "/signup"
     }
   ];
 

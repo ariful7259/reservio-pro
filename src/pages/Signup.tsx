@@ -30,7 +30,7 @@ const formSchema = z.object({
   name: z.string().min(2, "নাম কমপক্ষে ২ অক্ষর হতে হবে"),
   email: z.string().email("ইমেইল অবৈধ"),
   password: z.string().min(8, "পাসওয়ার্ড কমপক্ষে ৮ অক্ষর হতে হবে"),
-  confirmPassword: z.string().min(8, "পাসওয়ার্ড কমপক্ষে ৮ অক্ষর হতে হবে"),
+  confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "পাসওয়ার্ড মিলছে না",
   path: ["confirmPassword"],
@@ -57,17 +57,19 @@ const Signup = () => {
   
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await signup(values.email, values.password, values.name);
+      await signup(values.name, values.email, values.password);
+      
       toast({
-        title: "সাইন আপ সফল",
-        description: "আপনি সফলভাবে রেজিস্ট্রেশন করেছেন",
+        title: "রেজিস্ট্রেশন সফল",
+        description: "আপনার অ্যাকাউন্ট তৈরি হয়েছে",
       });
+      
       navigate("/profile");
     } catch (error) {
       console.error("Signup error:", error);
       toast({
-        title: "সাইন আপ ব্যর্থ",
-        description: "রেজিস্ট্রেশন করতে সমস্যা হয়েছে, আবার চেষ্টা করুন",
+        title: "রেজিস্ট্রেশন ব্যর্থ",
+        description: "দয়া করে আবার চেষ্টা করুন",
         variant: "destructive",
       });
     }
@@ -78,7 +80,7 @@ const Signup = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
           <CardTitle className="text-2xl font-bold">রেজিস্ট্রেশন</CardTitle>
-          <CardDescription>একটি নতুন অ্যাকাউন্ট তৈরি করুন</CardDescription>
+          <CardDescription>নতুন অ্যাকাউন্ট তৈরি করুন</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -88,9 +90,9 @@ const Signup = () => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>নাম</FormLabel>
+                    <FormLabel>পূর্ণ নাম</FormLabel>
                     <FormControl>
-                      <Input placeholder="আপনার নাম" {...field} />
+                      <Input placeholder="আপনার পূর্ণ নাম" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -118,7 +120,7 @@ const Signup = () => {
                     <FormControl>
                       <div className="relative">
                         <Input
-                          placeholder="পাসওয়ার্ড"
+                          placeholder="আপনার পাসওয়ার্ড"
                           type={showPassword ? "text" : "password"}
                           {...field}
                         />
@@ -146,7 +148,7 @@ const Signup = () => {
                     <FormControl>
                       <div className="relative">
                         <Input
-                          placeholder="পাসওয়ার্ড আবার দিন"
+                          placeholder="পাসওয়ার্ড আবার লিখুন"
                           type={showConfirmPassword ? "text" : "password"}
                           {...field}
                         />
@@ -177,13 +179,11 @@ const Signup = () => {
             </form>
           </Form>
         </CardContent>
-        <CardFooter>
-          <div className="text-center w-full text-sm">
-            ইতিমধ্যে অ্যাকাউন্ট আছে?{" "}
-            <Link to="/login" className="text-primary font-semibold hover:underline">
-              লগইন করুন
-            </Link>
-          </div>
+        <CardFooter className="text-center text-sm">
+          ইতিমধ্যে অ্যাকাউন্ট আছে?{" "}
+          <Link to="/login" className="text-primary font-semibold hover:underline">
+            লগইন করুন
+          </Link>
         </CardFooter>
       </Card>
     </div>
