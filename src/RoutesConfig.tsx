@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 
 // Import pages
 import Index from './pages/Index';
+import CreatePost from './pages/CreatePost';
 import PaymentAnalytics from './pages/PaymentAnalytics';
 import TransactionHistory from './pages/TransactionHistory';
 import Reviews from './pages/Reviews';
@@ -52,6 +53,9 @@ const RoutesConfig = () => {
     <Routes>
       {/* Home Route */}
       <Route path="/" element={<Index />} />
+      
+      {/* Create Post Route */}
+      <Route path="/create-post" element={<CreatePost />} />
       
       {/* Main Navigation Routes */}
       <Route path="/services" element={<Services />} />
