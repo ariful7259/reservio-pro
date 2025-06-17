@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,8 +26,7 @@ import {
   Book,
   School,
   Tractor,
-  Store,
-  Business
+  Store
 } from 'lucide-react';
 
 const Services = () => {
@@ -92,7 +90,7 @@ const Services = () => {
     {
       id: 'business',
       name: 'ব্যবসায়িক সামগ্রী',
-      icon: <Business className="h-7 w-7" />,
+      icon: <Store className="h-7 w-7" />,
       color: 'bg-pink-50',
       iconColor: 'text-pink-500',
       count: 86
