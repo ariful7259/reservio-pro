@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -19,7 +18,18 @@ import {
   Eye,
   TrendingUp,
   Package,
-  Clock
+  Clock,
+  Camera,
+  Gamepad2,
+  Music,
+  Wrench,
+  Truck,
+  Sofa,
+  Tent,
+  Laptop,
+  Smartphone,
+  Tv,
+  Utensils
 } from 'lucide-react';
 
 const Rentals = () => {
@@ -91,6 +101,102 @@ const Rentals = () => {
       color: 'bg-orange-50',
       iconColor: 'text-orange-500',
       count: 67
+    },
+    {
+      id: 'camera',
+      name: 'ক্যামেরা',
+      icon: <Camera className="h-7 w-7" />,
+      color: 'bg-cyan-50',
+      iconColor: 'text-cyan-500',
+      count: 34
+    },
+    {
+      id: 'gaming',
+      name: 'গেমিং',
+      icon: <Gamepad2 className="h-7 w-7" />,
+      color: 'bg-violet-50',
+      iconColor: 'text-violet-500',
+      count: 56
+    },
+    {
+      id: 'music',
+      name: 'মিউজিক যন্ত্র',
+      icon: <Music className="h-7 w-7" />,
+      color: 'bg-rose-50',
+      iconColor: 'text-rose-500',
+      count: 23
+    },
+    {
+      id: 'tools',
+      name: 'টুলস',
+      icon: <Wrench className="h-7 w-7" />,
+      color: 'bg-amber-50',
+      iconColor: 'text-amber-600',
+      count: 89
+    },
+    {
+      id: 'truck',
+      name: 'ট্রাক',
+      icon: <Truck className="h-7 w-7" />,
+      color: 'bg-slate-50',
+      iconColor: 'text-slate-500',
+      count: 41
+    },
+    {
+      id: 'furniture',
+      name: 'ফার্নিচার',
+      icon: <Sofa className="h-7 w-7" />,
+      color: 'bg-teal-50',
+      iconColor: 'text-teal-500',
+      count: 78
+    },
+    {
+      id: 'outdoor',
+      name: 'আউটডোর গিয়ার',
+      icon: <Tent className="h-7 w-7" />,
+      color: 'bg-emerald-50',
+      iconColor: 'text-emerald-500',
+      count: 32
+    },
+    {
+      id: 'laptop',
+      name: 'ল্যাপটপ',
+      icon: <Laptop className="h-7 w-7" />,
+      color: 'bg-sky-50',
+      iconColor: 'text-sky-500',
+      count: 65
+    },
+    {
+      id: 'mobile',
+      name: 'মোবাইল',
+      icon: <Smartphone className="h-7 w-7" />,
+      color: 'bg-lime-50',
+      iconColor: 'text-lime-600',
+      count: 87
+    },
+    {
+      id: 'tv',
+      name: 'টিভি',
+      icon: <Tv className="h-7 w-7" />,
+      color: 'bg-fuchsia-50',
+      iconColor: 'text-fuchsia-500',
+      count: 45
+    },
+    {
+      id: 'kitchen',
+      name: 'রান্নার সামগ্রী',
+      icon: <Utensils className="h-7 w-7" />,
+      color: 'bg-red-50',
+      iconColor: 'text-red-600',
+      count: 56
+    },
+    {
+      id: 'sports',
+      name: 'খেলার সামগ্রী',
+      icon: <Package className="h-7 w-7" />,
+      color: 'bg-blue-50',
+      iconColor: 'text-blue-600',
+      count: 42
     }
   ];
 
