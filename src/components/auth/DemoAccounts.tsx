@@ -2,12 +2,15 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { UseFormReturn } from "react-hook-form";
+import * as z from "zod";
+
+const formSchema = z.object({
+  email: z.string().email("ইমেইল অবৈধ"),
+  password: z.string().min(8, "পাসওয়ার্ড কমপক্ষে ৮ অক্ষর হতে হবে"),
+});
 
 interface DemoAccountsProps {
-  form: UseFormReturn<{
-    email: string;
-    password: string;
-  }>;
+  form: UseFormReturn<z.infer<typeof formSchema>>;
   setLoginType: (type: "user" | "admin" | "seller") => void;
 }
 
