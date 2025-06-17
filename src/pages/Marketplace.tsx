@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -35,58 +34,44 @@ const Marketplace = () => {
     {
       id: 'electronics',
       name: 'ইলেকট্রনিক্স',
-      icon: <Smartphone className="h-6 w-6" />,
+      icon: <Smartphone className="h-5 w-5" />,
       color: 'bg-blue-100 text-blue-600',
       count: 156
     },
     {
       id: 'fashion',
       name: 'ফ্যাশন',
-      icon: <Shirt className="h-6 w-6" />,
+      icon: <Shirt className="h-5 w-5" />,
       color: 'bg-pink-100 text-pink-600',
       count: 234
     },
     {
       id: 'home',
-      name: 'ঘর সাজানোর জিনিস',
-      icon: <Home className="h-6 w-6" />,
+      name: 'ঘর সাজানো',
+      icon: <Home className="h-5 w-5" />,
       color: 'bg-green-100 text-green-600',
       count: 89
     },
     {
       id: 'books',
       name: 'বই ও স্টেশনারি',
-      icon: <Book className="h-6 w-6" />,
+      icon: <Book className="h-5 w-5" />,
       color: 'bg-orange-100 text-orange-600',
       count: 67
     },
     {
       id: 'computers',
-      name: 'কম্পিউটার ও ল্যাপটপ',
-      icon: <Laptop className="h-6 w-6" />,
+      name: 'কম্পিউটার',
+      icon: <Laptop className="h-5 w-5" />,
       color: 'bg-purple-100 text-purple-600',
       count: 98
     },
     {
       id: 'cameras',
-      name: 'ক্যামেরা ও ফটোগ্রাফি',
-      icon: <Camera className="h-6 w-6" />,
+      name: 'ক্যামেরা',
+      icon: <Camera className="h-5 w-5" />,
       color: 'bg-indigo-100 text-indigo-600',
       count: 42
-    },
-    {
-      id: 'gaming',
-      name: 'গেমিং',
-      icon: <Gamepad2 className="h-6 w-6" />,
-      color: 'bg-red-100 text-red-600',
-      count: 76
-    },
-    {
-      id: 'watches',
-      name: 'ঘড়ি ও এক্সেসরিজ',
-      icon: <Watch className="h-6 w-6" />,
-      color: 'bg-yellow-100 text-yellow-600',
-      count: 123
     }
   ];
 
@@ -184,18 +169,18 @@ const Marketplace = () => {
 
       <div className="mb-8">
         <h2 className="text-lg font-semibold mb-4">ক্যাটাগরি সমূহ</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-3 gap-3">
           {categories.map((category) => (
-            <Card key={category.id} className="hover:shadow-md transition-all cursor-pointer">
-              <CardContent className="p-4">
-                <div className="flex flex-col items-center text-center">
-                  <div className={`p-3 rounded-full ${category.color} mb-3`}>
+            <Card key={category.id} className="hover:shadow-md transition-all cursor-pointer border-0 shadow-sm">
+              <CardContent className="p-3">
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-lg ${category.color} flex-shrink-0`}>
                     {category.icon}
                   </div>
-                  <h3 className="font-medium text-sm mb-1">{category.name}</h3>
-                  <Badge variant="secondary" className="text-xs">
-                    {category.count} পণ্য
-                  </Badge>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-medium text-xs leading-tight">{category.name}</h3>
+                    <p className="text-xs text-muted-foreground mt-1">{category.count} পণ্য</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>

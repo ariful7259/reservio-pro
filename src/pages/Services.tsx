@@ -30,58 +30,44 @@ const Services = () => {
     {
       id: 'home',
       name: 'ঘর সংক্রান্ত সেবা',
-      icon: <Home className="h-6 w-6" />,
+      icon: <Home className="h-5 w-5" />,
       color: 'bg-blue-100 text-blue-600',
       count: 45
     },
     {
       id: 'auto',
       name: 'গাড়ি সার্ভিস',
-      icon: <Car className="h-6 w-6" />,
+      icon: <Car className="h-5 w-5" />,
       color: 'bg-green-100 text-green-600',
       count: 32
     },
     {
       id: 'tech',
       name: 'টেক সাপোর্ট',
-      icon: <Monitor className="h-6 w-6" />,
+      icon: <Monitor className="h-5 w-5" />,
       color: 'bg-purple-100 text-purple-600',
       count: 28
     },
     {
       id: 'health',
       name: 'স্বাস্থ্য সেবা',
-      icon: <Heart className="h-6 w-6" />,
+      icon: <Heart className="h-5 w-5" />,
       color: 'bg-red-100 text-red-600',
       count: 18
     },
     {
       id: 'beauty',
       name: 'বিউটি সেবা',
-      icon: <Scissors className="h-6 w-6" />,
+      icon: <Scissors className="h-5 w-5" />,
       color: 'bg-pink-100 text-pink-600',
       count: 24
     },
     {
       id: 'delivery',
       name: 'ডেলিভারি সেবা',
-      icon: <Truck className="h-6 w-6" />,
+      icon: <Truck className="h-5 w-5" />,
       color: 'bg-orange-100 text-orange-600',
       count: 15
-    },
-    {
-      id: 'education',
-      name: 'শিক্ষা সেবা',
-      icon: <GraduationCap className="h-6 w-6" />,
-      color: 'bg-indigo-100 text-indigo-600',
-      count: 21
-    },
-    {
-      id: 'repair',
-      name: 'মেরামত সেবা',
-      icon: <Wrench className="h-6 w-6" />,
-      color: 'bg-gray-100 text-gray-600',
-      count: 38
     }
   ];
 
@@ -147,18 +133,18 @@ const Services = () => {
 
       <div className="mb-8">
         <h2 className="text-lg font-semibold mb-4">সেবার ক্যাটাগরি</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-3 gap-3">
           {serviceCategories.map((category) => (
-            <Card key={category.id} className="hover:shadow-md transition-all cursor-pointer">
-              <CardContent className="p-4">
-                <div className="flex flex-col items-center text-center">
-                  <div className={`p-3 rounded-full ${category.color} mb-3`}>
+            <Card key={category.id} className="hover:shadow-md transition-all cursor-pointer border-0 shadow-sm">
+              <CardContent className="p-3">
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-lg ${category.color} flex-shrink-0`}>
                     {category.icon}
                   </div>
-                  <h3 className="font-medium text-sm mb-1">{category.name}</h3>
-                  <Badge variant="secondary" className="text-xs">
-                    {category.count}টি
-                  </Badge>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-medium text-xs leading-tight">{category.name}</h3>
+                    <p className="text-xs text-muted-foreground mt-1">{category.count}টি সেবা</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
