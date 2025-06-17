@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -29,7 +28,6 @@ export const PropertyPostSection = () => {
       description: "Packers and Movers সার্ভিসের বিস্তারিত দেখুন"
     });
   };
-  
   const handleVideoServiceClick = () => {
     navigate('/service-detail?service=packers-movers');
     toast({
@@ -37,7 +35,6 @@ export const PropertyPostSection = () => {
       description: "ভিডিও থেকে সার্ভিস পেজে যাচ্ছেন"
     });
   };
-  
   return <div className="space-y-4">
       {/* Post Property Section */}
       <div className="bg-white rounded-lg p-4 border shadow-sm">
@@ -77,72 +74,6 @@ export const PropertyPostSection = () => {
       </div>
 
       {/* Service Booking Section */}
-      <div className="bg-gray-50 rounded-lg p-4">
-        <div className="mb-3">
-          <h3 className="text-lg font-medium text-gray-900">Because <span className="text-green-600">Your Home</span></h3>
-          <h3 className="text-lg font-medium text-gray-700">Deserves The Best.</h3>
-          <div className="flex items-center justify-end mt-2 text-sm text-gray-600">
-            <div className="flex items-center space-x-1">
-              <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
-                <span className="text-green-600 text-xs">👥</span>
-              </div>
-              <div>
-                <span className="font-medium">3Lacs+ Services</span>
-                <br />
-                <span className="text-xs">booked in last 3 months</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div className="relative rounded-lg overflow-hidden mb-3">
-          <img src="/lovable-uploads/635ccd95-277b-4cd8-9ff0-2311c51194d7.png" alt="Service" className="w-full h-32 object-cover" />
-          <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 p-3">
-            <div className="flex items-center justify-between text-white">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-orange-500 rounded flex items-center justify-center">
-                  <span className="text-xs">📦</span>
-                </div>
-                <span className="font-medium">Packers and Movers</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                
-                <Button size="sm" className="bg-green-600 hover:bg-green-700 text-xs px-3 py-1" onClick={handleServiceClick}>
-                  Book
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Video Service Buttons - New section below video */}
-        <div className="bg-white rounded-lg p-3 border">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 bg-orange-100 rounded flex items-center justify-center">
-                <span className="text-orange-600 text-xs">📦</span>
-              </div>
-              <span className="text-sm font-medium text-gray-800">Packers and Movers Service</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Button 
-                size="sm" 
-                variant="outline"
-                className="text-xs px-2 py-1 border-orange-200 text-orange-600 hover:bg-orange-50"
-                onClick={handleVideoServiceClick}
-              >
-                View Service
-              </Button>
-              <Button 
-                size="sm" 
-                className="bg-orange-500 hover:bg-orange-600 text-xs px-2 py-1"
-                onClick={handleVideoServiceClick}
-              >
-                Book Now
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
+      
     </div>;
 };
