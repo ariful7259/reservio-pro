@@ -1,14 +1,15 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ChevronDown, Home, ChevronRight, Building, Search, ShoppingBag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+
 export const PropertyPostSection = () => {
   const navigate = useNavigate();
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+
   const handlePostClick = (type: string) => {
     const routes = {
       rent: '/create-post?type=rent',
@@ -21,10 +22,17 @@ export const PropertyPostSection = () => {
       description: `${type === 'rent' ? 'রেন্ট' : type === 'service' ? 'সার্ভিস' : 'মার্কেটপ্লেস'} পোস্ট তৈরি করার পেজে যাচ্ছেন`
     });
   };
-  return <div className="space-y-4">
-      {/* User Profile Section */}
-      
 
+  const handleServiceClick = () => {
+    navigate('/service-detail?service=packers-movers');
+    toast({
+      title: "সার্ভিস পেজে যাচ্ছেন",
+      description: "Packers and Movers সার্ভিসের বিস্তারিত দেখুন"
+    });
+  };
+
+  return (
+    <div className="space-y-4">
       {/* Post Property Section */}
       <div className="bg-white rounded-lg p-4 border shadow-sm">
         <div className="flex items-center justify-between">
@@ -91,12 +99,27 @@ export const PropertyPostSection = () => {
                 </div>
                 <span className="font-medium">Packers and Movers</span>
               </div>
-              <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                Book
-              </Button>
+              <div className="flex items-center space-x-2">
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  className="bg-white text-black hover:bg-gray-100 text-xs px-2 py-1"
+                  onClick={handleServiceClick}
+                >
+                  View Service
+                </Button>
+                <Button 
+                  size="sm" 
+                  className="bg-green-600 hover:bg-green-700 text-xs px-3 py-1"
+                  onClick={handleServiceClick}
+                >
+                  Book
+                </Button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
