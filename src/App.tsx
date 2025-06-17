@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import RoutesConfig from "./RoutesConfig";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { AppProvider } from "@/context/AppContext";
 import Navbar from "@/components/Navbar";
 
 const queryClient = new QueryClient();
@@ -19,10 +20,12 @@ function App() {
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <AuthProvider>
-              <Navbar />
-              <RoutesConfig />
-            </AuthProvider>
+            <AppProvider>
+              <AuthProvider>
+                <Navbar />
+                <RoutesConfig />
+              </AuthProvider>
+            </AppProvider>
           </BrowserRouter>
         </TooltipProvider>
       </ThemeProvider>
