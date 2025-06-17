@@ -44,6 +44,7 @@ import Wish2Earn from './pages/Wish2Earn';
 import CreateStoreNew from "@/pages/CreateStoreNew";
 import Services from './pages/Services';
 import Marketplace from './pages/Marketplace';
+import MarketplaceHub from './pages/MarketplaceHub';
 import Wallet from './pages/Wallet';
 
 const RoutesConfig = () => {
@@ -55,6 +56,7 @@ const RoutesConfig = () => {
       {/* Main Navigation Routes */}
       <Route path="/services" element={<Services />} />
       <Route path="/marketplace" element={<Marketplace />} />
+      <Route path="/marketplace-hub" element={<MarketplaceHub />} />
       <Route path="/shopping" element={<Marketplace />} />
       <Route path="/wallet" element={<Wallet />} />
       

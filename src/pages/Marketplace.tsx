@@ -1,9 +1,308 @@
 
-import React from 'react';
-import MarketplaceHub from './MarketplaceHub';
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { 
+  ShoppingBag, 
+  Search, 
+  Filter, 
+  Grid, 
+  List, 
+  Heart,
+  Star,
+  MapPin,
+  TrendingUp,
+  Package,
+  Users,
+  Clock
+} from 'lucide-react';
 
 const Marketplace = () => {
-  return <MarketplaceHub />;
+  const [searchTerm, setSearchTerm] = useState('');
+  const [viewMode, setViewMode] = useState('grid');
+
+  const categories = [
+    {
+      id: 'electronics',
+      name: 'ইলেকট্রনিক্স',
+      icon: <Package className="h-6 w-6" />,
+      color: 'bg-blue-100 text-blue-600',
+      count: 156
+    },
+    {
+      id: 'fashion',
+      name: 'ফ্যাশন',
+      icon: <ShoppingBag className="h-6 w-6" />,
+      color: 'bg-pink-100 text-pink-600',
+      count: 234
+    },
+    {
+      id: 'home',
+      name: 'ঘর সাজানোর জিনিস',
+      icon: <Package className="h-6 w-6" />,
+      color: 'bg-green-100 text-green-600',
+      count: 89
+    },
+    {
+      id: 'books',
+      name: 'বই ও স্টেশনারি',
+      icon: <Package className="h-6 w-6" />,
+      color: 'bg-orange-100 text-orange-600',
+      count: 67
+    }
+  ];
+
+  const featuredProducts = [
+    {
+      id: 1,
+      title: 'স্মার্ট ওয়াচ',
+      price: '৳ ৫,৫০০',
+      originalPrice: '৳ ৭,০০০',
+      rating: 4.5,
+      reviews: 128,
+      seller: 'টেক স্টোর',
+      location: 'ঢাকা',
+      image: '/placeholder.svg',
+      discount: 21
+    },
+    {
+      id: 2,
+      title: 'ব্লুটুথ হেডফোন',
+      price: '৳ ২,৮০০',
+      originalPrice: '৳ ৩,৫০০',
+      rating: 4.7,
+      reviews: 95,
+      seller: 'অডিও হাব',
+      location: 'চট্টগ্রাম',
+      image: '/placeholder.svg',
+      discount: 20
+    },
+    {
+      id: 3,
+      title: 'ল্যাপটপ ব্যাগ',
+      price: '৳ ১,২০০',
+      originalPrice: '৳ ১,৮০০',
+      rating: 4.3,
+      reviews: 67,
+      seller: 'ব্যাগ ওয়ার্ল্ড',
+      location: 'সিলেট',
+      image: '/placeholder.svg',
+      discount: 33
+    },
+    {
+      id: 4,
+      title: 'মোবাইল চার্জার',
+      price: '৳ ৮৫০',
+      originalPrice: '৳ ১,২০০',
+      rating: 4.6,
+      reviews: 203,
+      seller: 'মোবাইল এক্সেসরিজ',
+      location: 'রাজশাহী',
+      image: '/placeholder.svg',
+      discount: 29
+    }
+  ];
+
+  return (
+    <div className="container px-4 pt-20 pb-20">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold mb-2">মার্কেটপ্লেস</h1>
+        <p className="text-muted-foreground">আপনার পছন্দের পণ্য খুঁজে নিন</p>
+      </div>
+
+      <div className="flex gap-2 mb-6">
+        <div className="flex-1 relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input 
+            type="text" 
+            placeholder="পণ্য খুঁজুন..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+        <Button variant="outline" size="icon">
+          <Filter className="h-4 w-4" />
+        </Button>
+        <div className="flex border rounded-lg">
+          <Button
+            variant={viewMode === 'grid' ? 'default' : 'ghost'}
+            size="icon"
+            onClick={() => setViewMode('grid')}
+            className="rounded-r-none"
+          >
+            <Grid className="h-4 w-4" />
+          </Button>
+          <Button
+            variant={viewMode === 'list' ? 'default' : 'ghost'}
+            size="icon"
+            onClick={() => setViewMode('list')}
+            className="rounded-l-none"
+          >
+            <List className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      <div className="mb-8">
+        <h2 className="text-lg font-semibold mb-4">ক্যাটাগরি সমূহ</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {categories.map((category) => (
+            <Card key={category.id} className="hover:shadow-md transition-all cursor-pointer">
+              <CardContent className="p-4">
+                <div className="flex flex-col items-center text-center">
+                  <div className={`p-3 rounded-full ${category.color} mb-3`}>
+                    {category.icon}
+                  </div>
+                  <h3 className="font-medium text-sm mb-1">{category.name}</h3>
+                  <p className="text-xs text-muted-foreground">{category.count} পণ্য</p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold">ফিচার্ড প্রোডাক্ট</h2>
+          <Button variant="outline" size="sm">
+            সব দেখুন
+          </Button>
+        </div>
+        <div className={viewMode === 'grid' ? 'grid grid-cols-2 md:grid-cols-4 gap-4' : 'space-y-4'}>
+          {featuredProducts.map((product) => (
+            <Card key={product.id} className="hover:shadow-md transition-all cursor-pointer overflow-hidden">
+              {viewMode === 'grid' ? (
+                <CardContent className="p-0">
+                  <div className="relative">
+                    <img 
+                      src={product.image} 
+                      alt={product.title} 
+                      className="w-full h-48 object-cover"
+                    />
+                    <div className="absolute top-2 left-2">
+                      <Badge variant="destructive" className="text-xs">
+                        -{product.discount}%
+                      </Badge>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="absolute top-2 right-2 bg-white h-8 w-8 rounded-full"
+                    >
+                      <Heart className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="p-3">
+                    <h3 className="font-medium text-sm line-clamp-2 mb-2">{product.title}</h3>
+                    <div className="flex items-center gap-1 mb-2">
+                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                      <span className="text-xs">{product.rating}</span>
+                      <span className="text-xs text-muted-foreground">({product.reviews})</span>
+                    </div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="font-bold text-primary">{product.price}</span>
+                      <span className="text-xs text-muted-foreground line-through">{product.originalPrice}</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <MapPin className="h-3 w-3" />
+                      <span>{product.location}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              ) : (
+                <CardContent className="p-4">
+                  <div className="flex gap-4">
+                    <div className="relative w-24 h-24 flex-shrink-0">
+                      <img 
+                        src={product.image} 
+                        alt={product.title} 
+                        className="w-full h-full object-cover rounded"
+                      />
+                      <Badge variant="destructive" className="absolute -top-1 -left-1 text-xs">
+                        -{product.discount}%
+                      </Badge>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-medium mb-1">{product.title}</h3>
+                      <div className="flex items-center gap-1 mb-2">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                        <span className="text-xs">{product.rating}</span>
+                        <span className="text-xs text-muted-foreground">({product.reviews})</span>
+                      </div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="font-bold text-primary">{product.price}</span>
+                        <span className="text-xs text-muted-foreground line-through">{product.originalPrice}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <MapPin className="h-3 w-3" />
+                          <span>{product.location}</span>
+                        </div>
+                        <Button variant="outline" size="icon" className="h-8 w-8">
+                          <Heart className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">মোট বিক্রেতা</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2">
+              <span className="text-2xl font-bold">১,২৫০+</span>
+              <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50">
+                <TrendingUp className="h-3 w-3 mr-1" />
+                +১৫%
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">মোট প্রোডাক্ট</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2">
+              <span className="text-2xl font-bold">৮,৫৪৬</span>
+              <Badge variant="outline" className="text-blue-600 border-blue-200 bg-blue-50">
+                <Package className="h-3 w-3 mr-1" />
+                নতুন
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">সক্রিয় ক্রেতা</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2">
+              <span className="text-2xl font-bold">৩,৪২১</span>
+              <Badge variant="outline" className="text-purple-600 border-purple-200 bg-purple-50">
+                <Users className="h-3 w-3 mr-1" />
+                অনলাইন
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
 };
 
 export default Marketplace;
