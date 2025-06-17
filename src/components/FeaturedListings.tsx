@@ -261,7 +261,7 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({ allListings }) => {
               ? "grid-cols-1" 
               : isMobile 
                 ? 'grid-cols-1' 
-                : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
+                : 'grid-cols-2'
           }`}>
             {Array.from({ length: isMobile ? 3 : 4 }).map((_, i) => (
               <div key={i} className="rounded-lg overflow-hidden bg-gray-100">
@@ -281,7 +281,7 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({ allListings }) => {
               ? "grid-cols-1" 
               : isMobile 
                 ? 'grid-cols-1' 
-                : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
+                : 'grid-cols-2'
           }`}>
             {getListings(activeTab).map((listing, index) => renderListingCard(listing, index))}
           </div>
