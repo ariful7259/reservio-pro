@@ -269,7 +269,7 @@ const SellerDashboard = () => {
                     </div>
                   </CardHeader>
                   <CardContent className="px-2">
-                    <RevenueChart />
+                    <RevenueChart selectedBusinessType={activeBusinessType} />
                   </CardContent>
                 </Card>
               </div>
