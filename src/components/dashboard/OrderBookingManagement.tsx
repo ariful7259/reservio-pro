@@ -1,223 +1,241 @@
 
-import React, { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Package, ArrowUpRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { 
+  ShoppingBag, 
+  Building, 
+  Wrench, 
+  Pencil,
+  Calendar,
+  Clock,
+  User,
+  MapPin,
+  Package,
+  CheckCircle,
+  AlertCircle
+} from 'lucide-react';
 
-const OrderBookingManagement = () => {
-  const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('orders');
-  
-  // মক অর্ডার ডেটা
-  const orders = [
-    {
-      id: 'ORD-12345',
-      customer: 'রাহিম আহমেদ',
-      product: 'বিজনেস স্টার্টাপ গাইড',
-      date: '২৭ এপ্রিল, ২০২৫',
-      amount: '৳৯৯৯',
-      status: 'delivered',
-      type: 'marketplace'
-    },
-    {
-      id: 'ORD-12344',
-      customer: 'সাবিনা খাতুন',
-      product: 'প্রিমিয়াম ওয়েবসাইট টেমপ্লেট',
-      date: '২৫ এপ্রিল, ২০২৫',
-      amount: '৳২,৫০০',
-      status: 'delivered',
-      type: 'marketplace'
-    },
-    {
-      id: 'ORD-12343',
-      customer: 'তানভীর হোসেন',
-      product: 'ডিজিটাল মার্কেটিং মাস্টার কোর্স',
-      date: '২৩ এপ্রিল, ২০২৫',
-      amount: '৳৫,৯৯৯',
-      status: 'processing',
-      type: 'content'
-    },
-    {
-      id: 'ORD-12342',
-      customer: 'ফারিয়া ইসলাম',
-      product: 'মেডিটেশন অডিও সিরিজ',
-      date: '২১ এপ্রিল, ২০২৫',
-      amount: '৳৮৯৯',
-      status: 'delivered',
-      type: 'content'
-    }
-  ];
-  
-  // মক বুকিং ডেটা
-  const bookings = [
-    {
-      id: 'BK-3456',
-      customer: 'কামাল হাসান',
-      service: 'হোম ক্লিনিং',
-      date: '২৮ এপ্রিল, ২০২৫',
-      amount: '৳১,২০০',
-      status: 'upcoming',
-      type: 'service'
-    },
-    {
-      id: 'BK-3455',
-      customer: 'আসিফ আহমেদ',
-      property: 'গুলশান অ্যাপার্টমেন্ট',
-      date: '২৬ এপ্রিল, ২০২৫',
-      amount: '৳১৫,০০০/মাস',
-      status: 'confirmed',
-      type: 'rental'
-    },
-    {
-      id: 'BK-3454',
-      customer: 'সামিরা খান',
-      service: 'ওয়েব ডিজাইন কনসালটেশন',
-      date: '২৪ এপ্রিল, ২০২৫',
-      amount: '৳২,০০০',
-      status: 'completed',
-      type: 'service'
-    },
-    {
-      id: 'BK-3453',
-      customer: 'জাহিদ হোসেন',
-      property: 'বনানী অ্যাপার্টমেন্ট',
-      date: '২২ এপ্রিল, ২০২৫',
-      amount: '৳১৮,০০০/মাস',
-      status: 'confirmed',
-      type: 'rental'
-    }
-  ];
-  
-  // স্টেটাস অনুযায়ী ব্যাজের রঙ নির্ধারণ
-  const getStatusBadgeVariant = (status: string) => {
-    switch(status) {
-      case 'delivered':
-      case 'completed':
-        return 'outline';
-      case 'processing':
-        return 'secondary';
-      case 'upcoming':
-      case 'confirmed':
-        return 'default';
+interface OrderBookingManagementProps {
+  businessType?: string | null;
+}
+
+const OrderBookingManagement: React.FC<OrderBookingManagementProps> = ({ businessType }) => {
+  // Different data based on business type
+  const getBusinessData = () => {
+    switch (businessType) {
+      case 'marketplace':
+        return {
+          title: 'সাম্প্রতিক অর্ডার',
+          items: [
+            {
+              id: 'ORD-001',
+              type: 'প্রোডাক্ট অর্ডার',
+              customer: 'রহিম আহমেদ',
+              amount: '৳ ২,৫০০',
+              status: 'প্রসেসিং',
+              time: '২ ঘন্টা আগে',
+              icon: <Package className="h-4 w-4" />,
+              statusColor: 'bg-yellow-100 text-yellow-800'
+            },
+            {
+              id: 'ORD-002',
+              type: 'ইলেকট্রনিক্স',
+              customer: 'নাদিয়া খান',
+              amount: '৳ ৫,৮০০',
+              status: 'ডেলিভারি',
+              time: '৪ ঘন্টা আগে',
+              icon: <Package className="h-4 w-4" />,
+              statusColor: 'bg-blue-100 text-blue-800'
+            },
+            {
+              id: 'ORD-003',
+              type: 'ফ্যাশন',
+              customer: 'করিম উদ্দিন',
+              amount: '৳ ১,২০০',
+              status: 'সম্পন্ন',
+              time: '১ দিন আগে',
+              icon: <CheckCircle className="h-4 w-4" />,
+              statusColor: 'bg-green-100 text-green-800'
+            }
+          ]
+        };
+      case 'rental':
+        return {
+          title: 'সাম্প্রতিক বুকিং',
+          items: [
+            {
+              id: 'RENT-001',
+              type: 'বাসা ভাড়া',
+              customer: 'তানিয়া আক্তার',
+              amount: '৳ ১৫,০০০/মাস',
+              status: 'নিশ্চিত',
+              time: '১ ঘন্টা আগে',
+              icon: <Building className="h-4 w-4" />,
+              statusColor: 'bg-green-100 text-green-800'
+            },
+            {
+              id: 'RENT-002',
+              type: 'গাড়ি ভাড়া',
+              customer: 'সাকিব হাসান',
+              amount: '৳ ২,০০০/দিন',
+              status: 'পেন্ডিং',
+              time: '৩ ঘন্টা আগে',
+              icon: <MapPin className="h-4 w-4" />,
+              statusColor: 'bg-yellow-100 text-yellow-800'
+            },
+            {
+              id: 'RENT-003',
+              type: 'অফিস স্পেস',
+              customer: 'মারিয়া রহমান',
+              amount: '৳ ২৫,০০০/মাস',
+              status: 'সম্পন্ন',
+              time: '২ দিন আগে',
+              icon: <CheckCircle className="h-4 w-4" />,
+              statusColor: 'bg-green-100 text-green-800'
+            }
+          ]
+        };
+      case 'service':
+        return {
+          title: 'সাম্প্রতিক সার্ভিস বুকিং',
+          items: [
+            {
+              id: 'SRV-001',
+              type: 'হোম সার্ভিস',
+              customer: 'ফাতেমা বেগম',
+              amount: '৳ ৮০০',
+              status: 'চলমান',
+              time: '৩০ মিনিট আগে',
+              icon: <Wrench className="h-4 w-4" />,
+              statusColor: 'bg-blue-100 text-blue-800'
+            },
+            {
+              id: 'SRV-002',
+              type: 'রিপেয়ার সার্ভিস',
+              customer: 'আলমগীর হোসেন',
+              amount: '৳ ১,৫০০',
+              status: 'নিশ্চিত',
+              time: '১ ঘন্টা আগে',
+              icon: <AlertCircle className="h-4 w-4" />,
+              statusColor: 'bg-green-100 text-green-800'
+            },
+            {
+              id: 'SRV-003',
+              type: 'ক্লিনিং সার্ভিস',
+              customer: 'রোকেয়া খাতুন',
+              amount: '৳ ৬০০',
+              status: 'সম্পন্ন',
+              time: '৫ ঘন্টা আগে',
+              icon: <CheckCircle className="h-4 w-4" />,
+              statusColor: 'bg-green-100 text-green-800'
+            }
+          ]
+        };
+      case 'content':
+        return {
+          title: 'ডিজিটাল কন্টেন্ট অর্ডার',
+          items: [
+            {
+              id: 'DIG-001',
+              type: 'ই-বুক',
+              customer: 'মোহাম্মদ আলী',
+              amount: '৳ ৩০০',
+              status: 'ডাউনলোড',
+              time: '১৫ মিনিট আগে',
+              icon: <Pencil className="h-4 w-4" />,
+              statusColor: 'bg-green-100 text-green-800'
+            },
+            {
+              id: 'DIG-002',
+              type: 'অনলাইন কোর্স',
+              customer: 'সুমাইয়া আক্তার',
+              amount: '৳ ২,৫০০',
+              status: 'এক্সেস দেওয়া',
+              time: '২ ঘন্টা আগে',
+              icon: <User className="h-4 w-4" />,
+              statusColor: 'bg-blue-100 text-blue-800'
+            },
+            {
+              id: 'DIG-003',
+              type: 'গ্রাফিক ডিজাইন',
+              customer: 'জামিল উদ্দিন',
+              amount: '৳ ১,০০০',
+              status: 'সম্পন্ন',
+              time: '১ দিন আগে',
+              icon: <CheckCircle className="h-4 w-4" />,
+              statusColor: 'bg-green-100 text-green-800'
+            }
+          ]
+        };
       default:
-        return 'outline';
+        return {
+          title: 'সাম্প্রতিক অর্ডার ও বুকিং',
+          items: [
+            {
+              id: 'MIX-001',
+              type: 'মিশ্র অর্ডার',
+              customer: 'সাধারণ গ্রাহক',
+              amount: '৳ ১,৫০০',
+              status: 'প্রসেসিং',
+              time: '১ ঘন্টা আগে',
+              icon: <Package className="h-4 w-4" />,
+              statusColor: 'bg-yellow-100 text-yellow-800'
+            }
+          ]
+        };
     }
   };
-  
-  // স্টেটাস টেক্সট - বাংলা টেক্সট দেখানোর জন্য
-  const getStatusText = (status: string) => {
-    switch(status) {
-      case 'delivered':
-        return 'ডেলিভারড';
-      case 'processing':
-        return 'প্রসেসিং';
-      case 'upcoming':
-        return 'আসন্ন';
-      case 'confirmed':
-        return 'কনফার্মড';
-      case 'completed':
-        return 'সম্পূর্ণ';
-      default:
-        return status;
-    }
-  };
+
+  const businessData = getBusinessData();
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>অর্ডার এবং বুকিং</CardTitle>
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-[300px]">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="orders" className="flex items-center gap-1">
-              <Package className="h-4 w-4" />
-              অর্ডার
-            </TabsTrigger>
-            <TabsTrigger value="bookings" className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
-              বুকিং
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          {businessType === 'marketplace' && <ShoppingBag className="h-5 w-5" />}
+          {businessType === 'rental' && <Building className="h-5 w-5" />}
+          {businessType === 'service' && <Wrench className="h-5 w-5" />}
+          {businessType === 'content' && <Pencil className="h-5 w-5" />}
+          {!businessType && <Package className="h-5 w-5" />}
+          {businessData.title}
+        </CardTitle>
       </CardHeader>
-      <CardContent className="px-2">
-        <ScrollArea className="h-[350px] pr-4">
-          <TabsContent value="orders" className="m-0">
-            <div className="space-y-4 pr-3">
-              {orders.map(order => (
-                <div key={order.id} className="flex items-center justify-between p-2 border rounded-md">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 bg-gray-100 rounded flex items-center justify-center">
-                      <Package className="h-5 w-5 text-gray-500" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium">{order.customer}</p>
-                        <Badge variant="outline" className="text-xs">
-                          {order.id}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground">{order.product}</p>
-                      <p className="text-xs text-muted-foreground">{order.date}</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-primary">{order.amount}</p>
-                    <Badge variant={getStatusBadgeVariant(order.status)} className="mt-1">
-                      {getStatusText(order.status)}
-                    </Badge>
-                  </div>
-                </div>
-              ))}
+      <CardContent className="space-y-4">
+        {businessData.items.map((item) => (
+          <div key={item.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-white rounded-full">
+                {item.icon}
+              </div>
+              <div>
+                <p className="font-medium text-sm">{item.type}</p>
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <User className="h-3 w-3" />
+                  {item.customer}
+                </p>
+              </div>
             </div>
-          </TabsContent>
-          
-          <TabsContent value="bookings" className="m-0">
-            <div className="space-y-4 pr-3">
-              {bookings.map(booking => (
-                <div key={booking.id} className="flex items-center justify-between p-2 border rounded-md">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 bg-gray-100 rounded flex items-center justify-center">
-                      <Calendar className="h-5 w-5 text-gray-500" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium">{booking.customer}</p>
-                        <Badge variant="outline" className="text-xs">
-                          {booking.id}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        {booking.service || booking.property}
-                      </p>
-                      <p className="text-xs text-muted-foreground">{booking.date}</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-primary">{booking.amount}</p>
-                    <Badge variant={getStatusBadgeVariant(booking.status)} className="mt-1">
-                      {getStatusText(booking.status)}
-                    </Badge>
-                  </div>
-                </div>
-              ))}
+            <div className="text-right">
+              <p className="font-semibold text-sm">{item.amount}</p>
+              <div className="flex items-center gap-2 mt-1">
+                <Badge variant="secondary" className={`text-xs ${item.statusColor}`}>
+                  {item.status}
+                </Badge>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                <Clock className="h-3 w-3 inline mr-1" />
+                {item.time}
+              </p>
             </div>
-          </TabsContent>
-        </ScrollArea>
-      </CardContent>
-      <CardFooter className="flex justify-center p-4">
-        <Button 
-          variant="outline" 
-          className="w-full" 
-          onClick={() => navigate(activeTab === 'orders' ? '/orders' : '/bookings')}
-        >
-          {activeTab === 'orders' ? 'সব অর্ডার দেখুন' : 'সব বুকিং দেখুন'} 
-          <ArrowUpRight className="h-4 w-4 ml-1" />
+          </div>
+        ))}
+        
+        <Button variant="outline" className="w-full mt-4">
+          সব {businessData.title.toLowerCase()} দেখুন
         </Button>
-      </CardFooter>
+      </CardContent>
     </Card>
   );
 };

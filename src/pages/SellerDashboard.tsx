@@ -164,6 +164,14 @@ const SellerDashboard = () => {
       {/* কন্ডিশনাল ট্যাব রেন্ডার */}
       {activeBusinessType ? (
         <Tabs defaultValue="overview" className="mt-6">
+          <TabsList className="grid w-full grid-cols-5">
+            <TabsTrigger value="overview">ওভারভিউ</TabsTrigger>
+            <TabsTrigger value="analytics">অ্যানালিটিক্স</TabsTrigger>
+            <TabsTrigger value="orders">অর্ডার ও বুকিং</TabsTrigger>
+            <TabsTrigger value="customers">গ্রাহক</TabsTrigger>
+            <TabsTrigger value="products">প্রোডাক্ট ও সার্ভিস</TabsTrigger>
+          </TabsList>
+
           {/* Overview tab */}
           <TabsContent value="overview" className="space-y-6">
             {/* Alert notifications system */}
@@ -290,12 +298,10 @@ const SellerDashboard = () => {
               </div>
             </div>
             
-            {/* Orders and products summary */}
+            {/* Orders and products summary - Updated to pass businessType */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <OrderBookingManagement />
-              
-              {/* Integrated booking calendar */}
-              <IntegratedBookingCalendar />
+              <OrderBookingManagement businessType={activeBusinessType} />
+              <IntegratedBookingCalendar businessType={activeBusinessType} />
             </div>
 
             {/* Marketing tools and cross-promotion */}
