@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
@@ -50,6 +51,7 @@ import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ForgotPassword from './pages/ForgotPassword';
+import AdminDashboard from './pages/AdminDashboard';
 
 const RoutesConfig = () => {
   return (
@@ -62,6 +64,10 @@ const RoutesConfig = () => {
       <Route path="/signup" element={<Signup />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      
+      {/* Admin Dashboard Route */}
+      <Route path="/admin-dashboard" element={<AdminDashboard />} />
+      <Route path="/admin-dashboard/:section" element={<AdminDashboard />} />
       
       {/* Create Post Route */}
       <Route path="/create-post" element={<CreatePost />} />
