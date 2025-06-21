@@ -25,6 +25,7 @@ import {
   Gamepad2,
   Watch
 } from 'lucide-react';
+import AIAssistant from '@/components/marketplace/AIAssistant';
 
 const Marketplace = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -148,8 +149,16 @@ const Marketplace = () => {
     }
   ];
 
+  const handleProductHelp = (suggestion: string) => {
+    console.log('AI Product Help:', suggestion);
+    // Handle AI product suggestions here
+  };
+
   return (
     <div className="container px-4 pt-20 pb-20">
+      {/* AI Assistant Component */}
+      <AIAssistant onProductHelp={handleProductHelp} />
+      
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">মার্কেটপ্লেস</h1>
         <p className="text-muted-foreground">আপনার পছন্দের পণ্য খুঁজে নিন</p>
@@ -200,7 +209,7 @@ const Marketplace = () => {
                 </div>
               </div>
               <h3 className="font-medium text-sm mb-2">{category.name}</h3>
-              <Badge variant="success" className="text-xs">
+              <Badge variant="secondary" className="text-xs">
                 {category.count} পণ্য
               </Badge>
             </div>
