@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -26,7 +27,8 @@ import {
   Book,
   School,
   Tractor,
-  Store
+  Store,
+  Share2
 } from 'lucide-react';
 
 const Services = () => {
@@ -136,6 +138,20 @@ const Services = () => {
     }
   ];
 
+  const handleBookmark = (e: React.MouseEvent, id: number) => {
+    e.stopPropagation();
+    console.log('Bookmarked service:', id);
+  };
+
+  const handleShare = (e: React.MouseEvent, service: any) => {
+    e.stopPropagation();
+    console.log('Shared service:', service);
+  };
+
+  const handleServiceClick = (id: number) => {
+    console.log('Clicked service:', id);
+  };
+
   return (
     <div className="container px-4 pt-20 pb-20">
       <div className="mb-6">
@@ -159,7 +175,7 @@ const Services = () => {
 
       <div className="mb-8">
         <h2 className="text-lg font-semibold mb-4">ক্যাটাগরি</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           {serviceCategories.map((category) => (
             <div key={category.id} className="flex flex-col items-center text-center p-4 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
               <div className={`w-16 h-16 rounded-full ${category.color} flex items-center justify-center mb-3`}>
@@ -178,6 +194,51 @@ const Services = () => {
           <Button variant="outline" className="text-red-500 border-red-500 hover:bg-red-50">
             ∨ আরো দেখুন
           </Button>
+        </div>
+      </div>
+
+      <div className="mb-8">
+        <h2 className="text-lg font-semibold mb-4">ফিচার্ড সার্ভিস</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {featuredServices.map((service) => (
+            <Card key={service.id} className="overflow-hidden cursor-pointer hover:shadow-md transition-all hover:scale-105" onClick={() => handleServiceClick(service.id)}>
+              <CardContent className="p-0">
+                <div className="relative aspect-square">
+                  <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
+                  <Badge className="absolute top-2 left-2">সার্ভিস</Badge>
+                  <div className="absolute top-2 right-2 flex flex-col gap-2">
+                    <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={e => handleBookmark(e, service.id)}>
+                      <Heart className="h-4 w-4 text-gray-600" />
+                    </Button>
+                    <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={e => handleShare(e, service)}>
+                      <Share2 className="h-4 w-4 text-gray-600" />
+                    </Button>
+                  </div>
+                </div>
+                <div className="p-3">
+                  <h3 className="font-medium text-sm line-clamp-1">{service.title}</h3>
+                  <p className="text-xs text-muted-foreground mb-1">{service.provider}</p>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center">
+                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
+                      <span className="text-xs">{service.rating}</span>
+                    </div>
+                    <span className="text-xs text-muted-foreground">({service.reviews})</span>
+                    {service.isVerified && (
+                      <Badge variant="outline" className="h-4 text-[10px] bg-green-50 text-green-600 border-green-200">
+                        ভেরিফাইড
+                      </Badge>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-bold text-primary">{service.price}</p>
+                    <span className="text-xs text-muted-foreground">{service.responseTime}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">{service.location}</p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
 
