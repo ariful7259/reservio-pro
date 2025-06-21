@@ -1,36 +1,32 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
+import { ThemeProvider } from "next-themes";
 import RoutesConfig from "./RoutesConfig";
-import { AuthProvider } from "@/hooks/useAuth";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import { AppProvider } from "@/context/AppContext";
-import Navbar from "@/components/Navbar";
+import { AppContextProvider } from "./context/AppContext";
+import GlobalAIAssistant from "@/components/GlobalAIAssistant";
 
 const queryClient = new QueryClient();
 
-function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <AppProvider>
-              <AuthProvider>
-                <Navbar />
-                <RoutesConfig />
-              </AuthProvider>
-            </AppProvider>
-          </BrowserRouter>
-        </TooltipProvider>
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AppContextProvider>
+            <div className="min-h-screen bg-background font-sans antialiased">
+              <RoutesConfig />
+              <GlobalAIAssistant />
+            </div>
+          </AppContextProvider>
+        </BrowserRouter>
       </ThemeProvider>
-    </QueryClientProvider>
-  );
-}
+    </TooltipProvider>
+  </QueryClientProvider>
+);
 
 export default App;
