@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,9 +15,10 @@ import {
   Volume2,
   MicOff,
   Lightbulb,
-  HelpCircle
+  HelpCircle,
+  X
 } from 'lucide-react';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/hooks/use-toast';
 
 interface Message {
   id: number;
@@ -47,7 +47,10 @@ const GlobalAIAssistant: React.FC = () => {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  const [position, setPosition] = useState<Position>({ x: window.innerWidth - 420, y: 80 });
+  const [position, setPosition] = useState<Position>({ 
+    x: typeof window !== 'undefined' ? window.innerWidth - 80 : 300, 
+    y: typeof window !== 'undefined' ? window.innerHeight - 150 : 100 
+  });
   const [dragOffset, setDragOffset] = useState<Position>({ x: 0, y: 0 });
   
   const assistantRef = useRef<HTMLDivElement>(null);
@@ -111,7 +114,7 @@ const GlobalAIAssistant: React.FC = () => {
 
   // Handle dragging
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget || (e.target as HTMLElement).closest('.drag-handle')) {
+    if (!isOpen && (e.target === e.currentTarget || (e.target as HTMLElement).closest('.drag-handle'))) {
       setIsDragging(true);
       const rect = assistantRef.current?.getBoundingClientRect();
       if (rect) {
@@ -124,9 +127,11 @@ const GlobalAIAssistant: React.FC = () => {
   };
 
   const handleMouseMove = (e: MouseEvent) => {
-    if (isDragging) {
-      const newX = Math.max(0, Math.min(window.innerWidth - 400, e.clientX - dragOffset.x));
-      const newY = Math.max(0, Math.min(window.innerHeight - 600, e.clientY - dragOffset.y));
+    if (isDragging && !isOpen) {
+      const maxX = window.innerWidth - 64;
+      const maxY = window.innerHeight - 64;
+      const newX = Math.max(0, Math.min(maxX, e.clientX - dragOffset.x));
+      const newY = Math.max(0, Math.min(maxY, e.clientY - dragOffset.y));
       setPosition({ x: newX, y: newY });
     }
   };
@@ -199,7 +204,7 @@ const GlobalAIAssistant: React.FC = () => {
 
   const speakText = (text: string) => {
     if (synthesis.current && 'speechSynthesis' in window) {
-      synthesis.current.cancel(); // Cancel any ongoing speech
+      synthesis.current.cancel();
       
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'bn-BD';
@@ -253,50 +258,61 @@ const GlobalAIAssistant: React.FC = () => {
     }
   };
 
+  if (!isOpen) {
+    // Floating AI Assistant Icon
+    return (
+      <div 
+        ref={assistantRef}
+        className={`fixed z-50 transition-all duration-300 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+        style={{ 
+          left: position.x, 
+          top: position.y,
+        }}
+        onMouseDown={handleMouseDown}
+      >
+        <Button
+          onClick={() => setIsOpen(true)}
+          className="bg-primary hover:bg-primary/90 text-white rounded-full h-12 w-12 md:h-14 md:w-14 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 drag-handle"
+          size="icon"
+        >
+          <Bot className="h-5 w-5 md:h-6 md:w-6" />
+          {isSpeaking && (
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+          )}
+        </Button>
+      </div>
+    );
+  }
+
+  // Full AI Assistant Panel
   return (
     <div 
       ref={assistantRef}
-      className={`fixed z-50 transition-all duration-300 ${isDragging ? 'cursor-grabbing' : 'cursor-auto'}`}
+      className="fixed inset-0 z-50 bg-black/50 md:bg-transparent md:inset-auto md:top-4 md:right-4"
       style={{ 
-        left: position.x, 
-        top: position.y,
-        transform: isOpen ? 'translateX(0)' : 'translateX(calc(100% - 50px))'
+        left: typeof window !== 'undefined' && window.innerWidth >= 768 ? position.x - 320 : 0, 
+        top: typeof window !== 'undefined' && window.innerWidth >= 768 ? position.y : 0,
       }}
-      onMouseDown={handleMouseDown}
     >
-      {/* Toggle Button */}
-      <Button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`absolute left-[-50px] top-4 bg-primary hover:bg-primary/90 text-white rounded-l-lg rounded-r-none h-12 w-12 flex items-center justify-center transition-all duration-300 ${isOpen ? 'shadow-lg z-10' : ''}`}
-        size="icon"
-      >
-        {isOpen ? (
-          <ChevronRight className="h-5 w-5" />
-        ) : (
-          <>
-            <ChevronLeft className="h-4 w-4 mr-1" />
-            <Bot className="h-4 w-4" />
-          </>
-        )}
-      </Button>
-
-      {/* Drag Handle */}
-      <div className="drag-handle absolute -top-2 left-1/2 transform -translate-x-1/2 bg-gray-300 hover:bg-gray-400 rounded-full p-1 cursor-grab active:cursor-grabbing opacity-50 hover:opacity-100 transition-opacity">
-        <Move className="h-4 w-4 text-gray-600" />
-      </div>
-
-      {/* AI Assistant Panel */}
-      <Card className="w-96 h-[600px] shadow-xl border-l-4 border-primary">
+      <Card className="w-full h-full md:w-96 md:h-[600px] shadow-xl border-l-4 border-primary bg-white">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
             <Bot className="h-6 w-6 text-primary" />
             AI সহায়ক
+            <Button
+              onClick={() => setIsOpen(false)}
+              size="sm"
+              variant="ghost"
+              className="ml-auto h-8 w-8 p-0"
+            >
+              <X className="h-4 w-4" />
+            </Button>
             {isSpeaking && (
               <Button 
                 onClick={stopSpeaking}
                 size="sm" 
                 variant="outline" 
-                className="ml-auto"
+                className="h-8 w-8 p-0"
               >
                 <Volume2 className="h-4 w-4 animate-pulse text-red-500" />
               </Button>
@@ -318,7 +334,7 @@ const GlobalAIAssistant: React.FC = () => {
           </Select>
         </CardHeader>
 
-        <CardContent className="p-0 flex flex-col h-[500px]">
+        <CardContent className="p-0 flex flex-col h-[calc(100%-120px)] md:h-[500px]">
           {/* Messages Area */}
           <ScrollArea className="flex-1 p-4">
             <div className="space-y-4">

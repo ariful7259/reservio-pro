@@ -8,6 +8,7 @@ import { ThemeProvider } from "next-themes";
 import RoutesConfig from "./RoutesConfig";
 import { AppProvider } from "./context/AppContext";
 import GlobalAIAssistant from "@/components/GlobalAIAssistant";
+import Navbar from "@/components/Navbar";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
         <BrowserRouter>
           <AppProvider>
             <div className="min-h-screen bg-background font-sans antialiased">
+              <Navbar />
               <RoutesConfig />
               <GlobalAIAssistant />
             </div>
