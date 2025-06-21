@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import RoutesConfig from "./RoutesConfig";
 import { AppProvider } from "./context/AppContext";
+import { AuthProvider } from "./hooks/useAuth";
 import GlobalAIAssistant from "@/components/GlobalAIAssistant";
 import Navbar from "@/components/Navbar";
 
@@ -19,13 +20,15 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <AppProvider>
-            <div className="min-h-screen bg-background font-sans antialiased">
-              <Navbar />
-              <RoutesConfig />
-              <GlobalAIAssistant />
-            </div>
-          </AppProvider>
+          <AuthProvider>
+            <AppProvider>
+              <div className="min-h-screen bg-background font-sans antialiased">
+                <Navbar />
+                <RoutesConfig />
+                <GlobalAIAssistant />
+              </div>
+            </AppProvider>
+          </AuthProvider>
         </BrowserRouter>
       </ThemeProvider>
     </TooltipProvider>
