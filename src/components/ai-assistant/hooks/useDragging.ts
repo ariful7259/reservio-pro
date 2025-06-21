@@ -8,22 +8,25 @@ export const useDragging = (initialPosition: Position) => {
   const [dragOffset, setDragOffset] = useState<Position>({ x: 0, y: 0 });
 
   const handleMouseDown = useCallback((e: React.MouseEvent, assistantRef: React.RefObject<HTMLDivElement>) => {
-    if (!assistantRef.current) return;
+    e.preventDefault();
+    e.stopPropagation();
     
     setIsDragging(true);
-    const rect = assistantRef.current.getBoundingClientRect();
     setDragOffset({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
+      x: e.clientX - position.x,
+      y: e.clientY - position.y
     });
-  }, []);
+  }, [position]);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (isDragging) {
-      const maxX = window.innerWidth - 64;
-      const maxY = window.innerHeight - 64;
+      const iconSize = 64; // Size of the floating icon
+      const maxX = window.innerWidth - iconSize;
+      const maxY = window.innerHeight - iconSize;
+      
       const newX = Math.max(0, Math.min(maxX, e.clientX - dragOffset.x));
       const newY = Math.max(0, Math.min(maxY, e.clientY - dragOffset.y));
+      
       setPosition({ x: newX, y: newY });
     }
   }, [isDragging, dragOffset]);
@@ -36,9 +39,12 @@ export const useDragging = (initialPosition: Position) => {
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
+      document.body.style.userSelect = 'none'; // Prevent text selection while dragging
+      
       return () => {
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
+        document.body.style.userSelect = '';
       };
     }
   }, [isDragging, handleMouseMove, handleMouseUp]);

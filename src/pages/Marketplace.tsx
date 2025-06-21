@@ -191,7 +191,7 @@ const Marketplace = () => {
 
       <div className="mb-8">
         <h2 className="text-lg font-semibold mb-4">ক্যাটাগরি সমূহ</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           {categories.map((category) => (
             <div key={category.id} className="flex flex-col items-center text-center p-4 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
               <div className={`w-16 h-16 rounded-full ${category.color} flex items-center justify-center mb-3`}>

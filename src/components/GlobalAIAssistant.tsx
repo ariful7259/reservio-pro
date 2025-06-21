@@ -21,7 +21,7 @@ const GlobalAIAssistant: React.FC = () => {
   
   const initialPosition = { 
     x: typeof window !== 'undefined' ? window.innerWidth - 80 : 300, 
-    y: typeof window !== 'undefined' ? window.innerHeight - 150 : 100 
+    y: typeof window !== 'undefined' ? window.innerHeight / 2 - 50 : 100 
   };
   
   const { isDragging, position, handleMouseDown } = useDragging(initialPosition);
@@ -97,6 +97,36 @@ const GlobalAIAssistant: React.FC = () => {
     }
   };
 
+  // Calculate panel position based on floating icon position
+  const getPanelPosition = () => {
+    const panelWidth = 384; // w-96 = 384px
+    const panelHeight = 600;
+    const margin = 20;
+    
+    let panelX = position.x;
+    let panelY = position.y;
+    
+    // Adjust horizontal position if panel would go off screen
+    if (position.x + panelWidth > window.innerWidth) {
+      panelX = position.x - panelWidth - 70; // Move to left of icon
+    } else {
+      panelX = position.x + 70; // Move to right of icon
+    }
+    
+    // Adjust vertical position if panel would go off screen
+    if (position.y + panelHeight > window.innerHeight) {
+      panelY = window.innerHeight - panelHeight - margin;
+    }
+    
+    if (panelY < margin) {
+      panelY = margin;
+    }
+    
+    return { x: panelX, y: panelY };
+  };
+
+  const panelPosition = isOpen ? getPanelPosition() : position;
+
   if (!isOpen) {
     return (
       <FloatingIcon
@@ -112,7 +142,7 @@ const GlobalAIAssistant: React.FC = () => {
   return (
     <div ref={assistantRef}>
       <AssistantPanel
-        position={position}
+        position={panelPosition}
         messages={messages}
         selectedModel={selectedModel}
         inputMessage={inputMessage}
