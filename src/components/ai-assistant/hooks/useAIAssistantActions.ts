@@ -1,0 +1,291 @@
+
+import { generateAIResponse } from '../utils/aiResponseGenerator';
+import { Message } from '../types';
+import { INITIAL_MESSAGE } from '../constants';
+
+// Mock data for demonstration
+const mockSearchResults = [
+  {
+    id: 1,
+    title: 'iPhone 14 Pro Max',
+    description: 'নতুন iPhone 14 Pro Max, ১২৮GB স্টোরেজ, অরিজিনাল',
+    price: '৮৫,০০০ টাকা',
+    image: '/placeholder.svg',
+    category: 'মোবাইল',
+    location: 'ঢাকা',
+    rating: 4.8,
+    type: 'product' as const
+  },
+  {
+    id: 2,
+    title: 'হোম ক্লিনিং সার্ভিস',
+    description: 'প্রফেশনাল হোম ক্লিনিং সার্ভিস, দক্ষ কর্মী',
+    price: '১,৫০০ টাকা',
+    category: 'ক্লিনিং',
+    location: 'ঢাকা',
+    rating: 4.5,
+    type: 'service' as const
+  }
+];
+
+const mockRelatedItems = [
+  {
+    id: 3,
+    title: 'Samsung Galaxy S23',
+    description: 'Samsung Galaxy S23, ২৫৬GB',
+    price: '৭৫,০০০ টাকা',
+    image: '/placeholder.svg',
+    category: 'মোবাইল',
+    type: 'product' as const
+  },
+  {
+    id: 4,
+    title: 'OnePlus 11',
+    description: 'OnePlus 11, ২৫৬GB স্টোরেজ',
+    price: '৬৫,০০০ টাকা',
+    image: '/placeholder.svg',
+    category: 'মোবাইল',
+    type: 'product' as const
+  }
+];
+
+interface UseAIAssistantActionsProps {
+  messages: Message[];
+  setMessages: (messages: Message[] | ((prev: Message[]) => Message[])) => void;
+  inputMessage: string;
+  setInputMessage: (message: string) => void;
+  uploadedFiles: File[];
+  setUploadedFiles: (files: File[] | ((prev: File[]) => File[])) => void;
+  isGenerating: boolean;
+  setIsGenerating: (generating: boolean) => void;
+  selectedModel: string;
+  setSearchQuery: (query: string) => void;
+  setSearchResults: (results: any[]) => void;
+  setRelatedItems: (items: any[]) => void;
+  setListingPreviewData: (data: any) => void;
+  setShowListingPreview: (show: boolean) => void;
+  isSpeaking: boolean;
+  setIsSpeaking: (speaking: boolean) => void;
+  toast: any;
+  navigate: any;
+  addToRecentlyViewed: (item: any) => void;
+  speak: (text: string, onStart?: () => void, onEnd?: () => void, onError?: () => void) => void;
+}
+
+export const useAIAssistantActions = ({
+  messages,
+  setMessages,
+  inputMessage,
+  setInputMessage,
+  uploadedFiles,
+  setUploadedFiles,
+  isGenerating,
+  setIsGenerating,
+  selectedModel,
+  setSearchQuery,
+  setSearchResults,
+  setRelatedItems,
+  setListingPreviewData,
+  setShowListingPreview,
+  isSpeaking,
+  setIsSpeaking,
+  toast,
+  navigate,
+  addToRecentlyViewed,
+  speak
+}: UseAIAssistantActionsProps) => {
+
+  const analyzeUploadedFiles = async (files: File[]): Promise<any> => {
+    // Mock AI analysis for uploaded images/videos
+    const imageFile = files.find(f => f.type.startsWith('image/'));
+    if (imageFile) {
+      return {
+        title: 'স্মার্টফোন - প্রিমিয়াম মডেল',
+        description: 'উন্নত ক্যামেরা এবং দ্রুত প্রসেসর সহ স্মার্টফোন। অরিজিনাল প্যাকেজিং এবং ওয়ারেন্টি সহ।',
+        category: 'ইলেকট্রনিক্স',
+        subcategory: 'মোবাইল ফোন',
+        price: '৮৫,০০০ টাকা',
+        features: ['৬.৭" ডিসপ্লে', '১২৮GB স্টোরেজ', '৪৮MP ক্যামেরা', '৫G সাপোর্ট'],
+        location: 'ঢাকা',
+        images: files.map(f => URL.createObjectURL(f)),
+        type: 'product' as const
+      };
+    }
+    return null;
+  };
+
+  const handleSendMessage = async (messageText?: string) => {
+    const text = messageText || inputMessage;
+    const hasFiles = uploadedFiles.length > 0;
+    
+    if ((!text || typeof text !== 'string' || !text.trim()) && !hasFiles) return;
+    if (isGenerating) return;
+
+    let newMessage: Message;
+    
+    if (hasFiles) {
+      // Handle file upload with AI analysis
+      const analysisData = await analyzeUploadedFiles(uploadedFiles);
+      if (analysisData) {
+        setListingPreviewData(analysisData);
+        setShowListingPreview(true);
+        
+        newMessage = {
+          id: messages.length + 1,
+          text: text.trim() || 'ফাইল আপলোড করেছি',
+          sender: 'user',
+          timestamp: new Date()
+        };
+      } else {
+        newMessage = {
+          id: messages.length + 1,
+          text: text.trim() || 'ফাইল আপলোড করেছি',
+          sender: 'user',
+          timestamp: new Date()
+        };
+      }
+    } else {
+      newMessage = {
+        id: messages.length + 1,
+        text: text.trim(),
+        sender: 'user',
+        timestamp: new Date()
+      };
+    }
+
+    setMessages(prev => [...prev, newMessage]);
+    setInputMessage('');
+    setUploadedFiles([]);
+    setIsGenerating(true);
+
+    // Check if it's a search query
+    const searchKeywords = ['খুঁজছি', 'চাই', 'কিনতে', 'ভাড়া', 'সার্ভিস', 'দরকার'];
+    const isSearchQuery = searchKeywords.some(keyword => text.toLowerCase().includes(keyword));
+    
+    if (isSearchQuery) {
+      setSearchQuery(text);
+      setSearchResults(mockSearchResults);
+      setRelatedItems(mockRelatedItems);
+    }
+
+    try {
+      // Generate AI response using Gemini API
+      const aiResponseText = await generateAIResponse(text.trim(), selectedModel);
+      
+      const aiResponse: Message = {
+        id: messages.length + 2,
+        text: aiResponseText,
+        sender: 'assistant',
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, aiResponse]);
+      
+      // Speak the response (only first 100 characters to avoid long speech)
+      const shortResponse = aiResponseText.length > 100 ? 
+        aiResponseText.substring(0, 100) + '...' : aiResponseText;
+      
+      speak(
+        shortResponse,
+        () => setIsSpeaking(true),
+        () => setIsSpeaking(false),
+        () => setIsSpeaking(false)
+      );
+    } catch (error) {
+      console.error('Error generating AI response:', error);
+      
+      // Fallback response
+      const fallbackResponse: Message = {
+        id: messages.length + 2,
+        text: 'দুঃখিত, এই মুহূর্তে আমি সাহায্য করতে পারছি না। অনুগ্রহ করে পরে আবার চেষ্টা করুন।',
+        sender: 'assistant',
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, fallbackResponse]);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleClearMessages = () => {
+    setMessages([INITIAL_MESSAGE]);
+    setSearchResults([]);
+    setRelatedItems([]);
+    setSearchQuery('');
+    setShowListingPreview(false);
+    setListingPreviewData(null);
+    toast({
+      title: "মেসেজ ক্লিয়ার",
+      description: "সব মেসেজ ক্লিয়ার করা হয়েছে",
+    });
+  };
+
+  const handleSearchItemClick = (item: any) => {
+    addToRecentlyViewed(item);
+    if (item.type === 'product') {
+      navigate(`/product-detail/${item.id}`);
+    } else if (item.type === 'service') {
+      navigate(`/service-detail/${item.id}`);
+    } else if (item.type === 'rental') {
+      navigate(`/rent-detail/${item.id}`);
+    }
+  };
+
+  const handleBookmark = (item: any) => {
+    toast({
+      title: "সংরক্ষিত",
+      description: `${item.title} আপনার পছন্দের তালিকায় যোগ করা হয়েছে`,
+    });
+  };
+
+  const handleShare = (item: any) => {
+    if (navigator.share) {
+      navigator.share({
+        title: item.title,
+        text: item.description,
+        url: window.location.origin
+      });
+    } else {
+      toast({
+        title: "শেয়ার",
+        description: "শেয়ার লিংক কপি করা হয়েছে",
+      });
+    }
+  };
+
+  const handleConfirmListing = (data: any) => {
+    // Navigate to create post with pre-filled data
+    navigate('/create-post', { state: { prefilledData: data } });
+    setShowListingPreview(false);
+    setListingPreviewData(null);
+    toast({
+      title: "পোস্ট তৈরি",
+      description: "আপনার লিস্টিং তৈরি করা হচ্ছে",
+    });
+  };
+
+  const handleEditListing = (data: any) => {
+    // Allow editing - could open a form or modify current data
+    toast({
+      title: "এডিট মোড",
+      description: "লিস্টিং এডিট করার জন্য প্রস্তুত",
+    });
+  };
+
+  const handleCancelListing = () => {
+    setShowListingPreview(false);
+    setListingPreviewData(null);
+  };
+
+  return {
+    handleSendMessage,
+    handleClearMessages,
+    handleSearchItemClick,
+    handleBookmark,
+    handleShare,
+    handleConfirmListing,
+    handleEditListing,
+    handleCancelListing
+  };
+};
