@@ -1,32 +1,34 @@
 
+import React from 'react';
+
 export const rentCategories = [
   {
-    icon: <div className="text-2xl">🏠</div>,
+    icon: React.createElement('div', { className: 'text-2xl' }, '🏠'),
     name: "বাসা বাড়ি",
     path: "/rental-category/housing",
     count: 892,
     isMainCategory: true,
     subcategories: [
       {
-        icon: <div className="text-xl">🏢</div>,
+        icon: React.createElement('div', { className: 'text-xl' }, '🏢'),
         name: "অ্যাপার্টমেন্ট/ফ্ল্যাট",
         path: "/rental-category/apartment",
         count: 187
       },
       {
-        icon: <div className="text-xl">🏡</div>,
+        icon: React.createElement('div', { className: 'text-xl' }, '🏡'),
         name: "বাসা/বাড়ি",
         path: "/rental-category/house",
         count: 156
       },
       {
-        icon: <div className="text-xl">🏨</div>,
+        icon: React.createElement('div', { className: 'text-xl' }, '🏨'),
         name: "মেস/হোস্টেল",
         path: "/rental-category/hostel",
         count: 83
       },
       {
-        icon: <div className="text-xl">🛏️</div>,
+        icon: React.createElement('div', { className: 'text-xl' }, '🛏️'),
         name: "সিঙ্গেল রুম/শেয়ারড",
         path: "/rental-category/room",
         count: 119
@@ -34,7 +36,7 @@ export const rentCategories = [
     ]
   },
   {
-    icon: <div className="text-2xl">💻</div>,
+    icon: React.createElement('div', { className: 'text-2xl' }, '💻'),
     name: "ইলেকট্রনিক্স",
     path: "/rental-category/electronics",
     count: 324,
@@ -50,7 +52,7 @@ export const rentCategories = [
     ]
   },
   {
-    icon: <div className="text-2xl">🚗</div>,
+    icon: React.createElement('div', { className: 'text-2xl' }, '🚗'),
     name: "পরিবহন",
     path: "/rental-category/transport",
     count: 178,
@@ -65,7 +67,7 @@ export const rentCategories = [
     ]
   },
   {
-    icon: <div className="text-2xl">🎪</div>,
+    icon: React.createElement('div', { className: 'text-2xl' }, '🎪'),
     name: "ইভেন্ট সামগ্রী",
     path: "/rental-category/event",
     count: 89,
@@ -80,7 +82,7 @@ export const rentCategories = [
     ]
   },
   {
-    icon: <div className="text-2xl">🪑</div>,
+    icon: React.createElement('div', { className: 'text-2xl' }, '🪑'),
     name: "ঘরোয়া সামগ্রী",
     path: "/rental-category/home",
     count: 145,
@@ -95,7 +97,7 @@ export const rentCategories = [
     ]
   },
   {
-    icon: <div className="text-2xl">📚</div>,
+    icon: React.createElement('div', { className: 'text-2xl' }, '📚'),
     name: "শিক্ষা সামগ্রী",
     path: "/rental-category/education",
     count: 65,
@@ -108,7 +110,7 @@ export const rentCategories = [
     ]
   },
   {
-    icon: <div className="text-2xl">🚜</div>,
+    icon: React.createElement('div', { className: 'text-2xl' }, '🚜'),
     name: "কৃষি যন্ত্রপাতি",
     path: "/rental-category/agriculture",
     count: 42,
@@ -122,7 +124,7 @@ export const rentCategories = [
     ]
   },
   {
-    icon: <div className="text-2xl">🏪</div>,
+    icon: React.createElement('div', { className: 'text-2xl' }, '🏪'),
     name: "ব্যবসায়িক সামগ্রী",
     path: "/rental-category/business",
     count: 86,
@@ -136,7 +138,7 @@ export const rentCategories = [
     ]
   },
   {
-    icon: <div className="text-2xl">🔨</div>,
+    icon: React.createElement('div', { className: 'text-2xl' }, '🔨'),
     name: "কারিগরি টুলস",
     path: "/rental-category/tools",
     count: 96,
@@ -151,7 +153,7 @@ export const rentCategories = [
     ]
   },
   {
-    icon: <div className="text-2xl">💼</div>,
+    icon: React.createElement('div', { className: 'text-2xl' }, '💼'),
     name: "কমার্শিয়াল স্পেস",
     path: "/rental-category/commercial",
     count: 76,
@@ -163,7 +165,7 @@ export const rentCategories = [
     ]
   },
   {
-    icon: <div className="text-2xl">🏨</div>,
+    icon: React.createElement('div', { className: 'text-2xl' }, '🏨'),
     name: "গেস্ট হাউস/স্বল্পমেয়াদী",
     path: "/rental-category/guesthouse",
     count: 59,
@@ -175,7 +177,7 @@ export const rentCategories = [
     ]
   },
   {
-    icon: <div className="text-2xl">🏡</div>,
+    icon: React.createElement('div', { className: 'text-2xl' }, '🏡'),
     name: "গ্রামীণ বাসস্থান",
     path: "/rental-category/rural",
     count: 47,
@@ -187,7 +189,7 @@ export const rentCategories = [
     ]
   },
   {
-    icon: <div className="text-2xl">📷</div>,
+    icon: React.createElement('div', { className: 'text-2xl' }, '📷'),
     name: "স্টুডিও/স্পেশাল স্পেস",
     path: "/rental-category/studio",
     count: 35,
