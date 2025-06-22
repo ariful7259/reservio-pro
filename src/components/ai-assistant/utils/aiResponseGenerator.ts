@@ -4,7 +4,16 @@ import { supabase } from '@/integrations/supabase/client';
 export const generateAIResponse = async (userMessage: string, selectedModel: string): Promise<string> => {
   const currentPage = window.location.pathname;
   
-  // Quick responses for common keywords
+  // Product/Service recommendation logic
+  const productKeywords = ['প্রোডাক্ট', 'পণ্য', 'কিনতে', 'বিক্রি', 'দাম', 'product', 'buy', 'sell', 'price'];
+  const serviceKeywords = ['সেবা', 'সার্ভিস', 'বুকিং', 'অ্যাপয়েন্টমেন্ট', 'service', 'booking', 'appointment'];
+  const rentalKeywords = ['ভাড়া', 'রেন্ট', 'ভাড়ায়', 'rent', 'rental', 'lease'];
+  
+  const isProductQuery = productKeywords.some(keyword => userMessage.toLowerCase().includes(keyword));
+  const isServiceQuery = serviceKeywords.some(keyword => userMessage.toLowerCase().includes(keyword));
+  const isRentalQuery = rentalKeywords.some(keyword => userMessage.toLowerCase().includes(keyword));
+
+  // Quick responses for common keywords with recommendations
   const quickResponses = {
     'ছবি': `প্রোডাক্টের ছবি তোলার জন্য: ১) ভাল আলোতে তুলুন ২) সাদা ব্যাকগ্রাউন্ড ব্যবহার করুন ৩) বিভিন্ন অ্যাঙ্গেল থেকে তুলুন ৪) ছবির মান ভাল রাখুন। ${currentPage === '/marketplace' ? 'আপনি এখানেই নতুন প্রোডাক্ট যোগ করতে পারেন!' : ''}`,
     'বিক্রয়': `বিক্রয় বাড়ানোর জন্য: ১) প্রতিযোগিতামূলক দাম রাখুন ২) নিয়মিত স্টক আপডেট করুন ৩) গ্রাহকদের দ্রুত রিপ্লাই দিন ৪) ভাল রিভিউ নিন ৫) প্রোমো অফার করুন। ${currentPage === '/seller-dashboard' ? 'আপনার ড্যাশবোর্ডে বিক্রয় ডেটা দেখুন!' : ''}`,
@@ -15,7 +24,7 @@ export const generateAIResponse = async (userMessage: string, selectedModel: str
   // Check for quick responses first
   for (const [key, response] of Object.entries(quickResponses)) {
     if (userMessage.includes(key)) {
-      return response;
+      return response + getRecommendations(isProductQuery, isServiceQuery, isRentalQuery, currentPage);
     }
   }
 
@@ -34,14 +43,15 @@ export const generateAIResponse = async (userMessage: string, selectedModel: str
 
     if (error) {
       console.error('Error calling Gemini API:', error);
-      return getFallbackResponse(userMessage, selectedModel, currentPage);
+      return getFallbackResponse(userMessage, selectedModel, currentPage) + getRecommendations(isProductQuery, isServiceQuery, isRentalQuery, currentPage);
     }
 
-    return data.response || getFallbackResponse(userMessage, selectedModel, currentPage);
+    const aiResponse = data.response || getFallbackResponse(userMessage, selectedModel, currentPage);
+    return aiResponse + getRecommendations(isProductQuery, isServiceQuery, isRentalQuery, currentPage);
 
   } catch (error) {
     console.error('Error generating AI response:', error);
-    return getFallbackResponse(userMessage, selectedModel, currentPage);
+    return getFallbackResponse(userMessage, selectedModel, currentPage) + getRecommendations(isProductQuery, isServiceQuery, isRentalQuery, currentPage);
   }
 };
 
@@ -66,4 +76,31 @@ const getFallbackResponse = (userMessage: string, selectedModel: string, current
                      currentPage === '/rentals' ? 'রেন্টাল সেকশনে' : 'এই পেজে';
 
   return `আপনার প্রশ্নটি খুবই ভাল! আপনি এখন ${pageContext} আছেন। ${selectedModel} মডেল ব্যবহার করে আমি আরও বিস্তারিত সাহায্য করতে পারি। অনুগ্রহ করে আরও নির্দিষ্ট প্রশ্ন করুন।`;
+};
+
+const getRecommendations = (isProductQuery: boolean, isServiceQuery: boolean, isRentalQuery: boolean, currentPage: string): string => {
+  let recommendations = '\n\n📍 সুপারিশ:\n';
+  
+  if (isProductQuery) {
+    recommendations += `• মার্কেটপ্লেসে জনপ্রিয় পণ্য: মোবাইল, ল্যাপটপ, কাপড়-চোপড়, বই\n`;
+    recommendations += `• ট্রেন্ডিং ক্যাটাগরি: ইলেকট্রনিক্স, ফ্যাশন, হোম ডেকর\n`;
+  }
+  
+  if (isServiceQuery) {
+    recommendations += `• জনপ্রিয় সেবা: হোম ক্লিনিং, টিউশন, রিপেয়ার সার্ভিস\n`;
+    recommendations += `• দ্রুত বুকিং: এসি সার্ভিস, ইলেকট্রিশিয়ান, প্লাম্বার\n`;
+  }
+  
+  if (isRentalQuery) {
+    recommendations += `• জনপ্রিয় ভাড়া: বাইক, গাড়ি, ইভেন্ট আইটেম\n`;
+    recommendations += `• সাশ্রয়ী অপশন: ক্যামেরা, সাউন্ড সিস্টেম, ফার্নিচার\n`;
+  }
+  
+  // Page-specific recommendations
+  if (currentPage === '/securepay') {
+    recommendations += `• সিকিউর পেমেন্ট: নিরাপদ লেনদেন, ডিজিটাল পেমেন্ট\n`;
+    recommendations += `• পেমেন্ট লিংক তৈরি করুন সহজেই\n`;
+  }
+  
+  return recommendations;
 };

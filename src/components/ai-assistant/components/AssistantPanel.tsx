@@ -17,6 +17,7 @@ interface AssistantPanelProps {
   inputMessage: string;
   isListening: boolean;
   isSpeaking: boolean;
+  isGenerating?: boolean;
   onClose: () => void;
   onModelChange: (model: string) => void;
   onInputChange: (value: string) => void;
@@ -34,6 +35,7 @@ export const AssistantPanel: React.FC<AssistantPanelProps> = ({
   inputMessage,
   isListening,
   isSpeaking,
+  isGenerating = false,
   onClose,
   onModelChange,
   onInputChange,
@@ -52,37 +54,37 @@ export const AssistantPanel: React.FC<AssistantPanelProps> = ({
       }}
     >
       <Card className="w-full h-full md:w-96 md:h-[600px] shadow-xl border-l-4 border-primary bg-white">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Bot className="h-6 w-6 text-primary" />
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Bot className="h-5 w-5 text-primary" />
             AI সহায়ক
             <Button
               onClick={onClose}
               size="sm"
               variant="ghost"
-              className="ml-auto h-8 w-8 p-0"
+              className="ml-auto h-7 w-7 p-0"
             >
-              <X className="h-4 w-4" />
+              <X className="h-3 w-3" />
             </Button>
             {isSpeaking && (
               <Button 
                 onClick={onStopSpeaking}
                 size="sm" 
                 variant="outline" 
-                className="h-8 w-8 p-0"
+                className="h-7 w-7 p-0"
               >
-                <Volume2 className="h-4 w-4 animate-pulse text-red-500" />
+                <Volume2 className="h-3 w-3 animate-pulse text-red-500" />
               </Button>
             )}
           </CardTitle>
           
           <Select value={selectedModel} onValueChange={onModelChange}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full h-8 text-xs">
               <SelectValue placeholder="AI মডেল নির্বাচন করুন" />
             </SelectTrigger>
             <SelectContent>
               {AI_MODELS.map((model) => (
-                <SelectItem key={model.value} value={model.value}>
+                <SelectItem key={model.value} value={model.value} className="text-xs">
                   {model.label}
                 </SelectItem>
               ))}
@@ -90,12 +92,13 @@ export const AssistantPanel: React.FC<AssistantPanelProps> = ({
           </Select>
         </CardHeader>
 
-        <CardContent className="p-0 flex flex-col h-[calc(100%-120px)] md:h-[500px]">
+        <CardContent className="p-0 flex flex-col h-[calc(100%-100px)] md:h-[500px]">
           <MessageList messages={messages} />
           <QuickSuggestions onSuggestionClick={onSuggestionClick} />
           <InputArea
             inputMessage={inputMessage}
             isListening={isListening}
+            isGenerating={isGenerating}
             onInputChange={onInputChange}
             onSendMessage={onSendMessage}
             onToggleListening={onToggleListening}

@@ -1,10 +1,12 @@
-import React, { useState, useRef } from 'react';
+
+import React, { useState, useRef, useEffect } from 'react';
 import { FloatingIcon } from './ai-assistant/components/FloatingIcon';
 import { AssistantPanel } from './ai-assistant/components/AssistantPanel';
 import { useSpeechRecognition } from './ai-assistant/hooks/useSpeechRecognition';
 import { useSpeechSynthesis } from './ai-assistant/hooks/useSpeechSynthesis';
 import { useDragging } from './ai-assistant/hooks/useDragging';
 import { generateAIResponse } from './ai-assistant/utils/aiResponseGenerator';
+import { useShoppingStateWithToast } from '@/hooks/useShoppingState';
 import { Message } from './ai-assistant/types';
 import { INITIAL_MESSAGE } from './ai-assistant/constants';
 
@@ -18,6 +20,7 @@ const GlobalAIAssistant: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   
   const assistantRef = useRef<HTMLDivElement>(null);
+  const { addToRecentlyViewed, addToSearchHistory } = useShoppingStateWithToast();
   
   const initialPosition = { 
     x: typeof window !== 'undefined' ? window.innerWidth - 80 : 300, 
@@ -28,24 +31,34 @@ const GlobalAIAssistant: React.FC = () => {
   const { startListening, stopListening } = useSpeechRecognition();
   const { speak, stop: stopSpeaking } = useSpeechSynthesis();
 
+  // Add search functionality after AI response
+  useEffect(() => {
+    if (messages.length > 1) {
+      const lastUserMessage = messages.filter(m => m.sender === 'user').slice(-1)[0];
+      if (lastUserMessage) {
+        addToSearchHistory(lastUserMessage.text);
+      }
+    }
+  }, [messages, addToSearchHistory]);
+
   const handleSendMessage = async (messageText?: string) => {
     const text = messageText || inputMessage;
-    if (!text.trim() || isGenerating) return;
+    if (!text || typeof text !== 'string' || !text.trim() || isGenerating) return;
 
     const newMessage: Message = {
       id: messages.length + 1,
-      text,
+      text: text.trim(),
       sender: 'user',
       timestamp: new Date()
     };
 
-    setMessages([...messages, newMessage]);
+    setMessages(prev => [...prev, newMessage]);
     setInputMessage('');
     setIsGenerating(true);
 
     try {
       // Generate AI response using Gemini API
-      const aiResponseText = await generateAIResponse(text, selectedModel);
+      const aiResponseText = await generateAIResponse(text.trim(), selectedModel);
       
       const aiResponse: Message = {
         id: messages.length + 2,
@@ -56,9 +69,12 @@ const GlobalAIAssistant: React.FC = () => {
       
       setMessages(prev => [...prev, aiResponse]);
       
-      // Speak the response
+      // Speak the response (only first 100 characters to avoid long speech)
+      const shortResponse = aiResponseText.length > 100 ? 
+        aiResponseText.substring(0, 100) + '...' : aiResponseText;
+      
       speak(
-        aiResponseText,
+        shortResponse,
         () => setIsSpeaking(true),
         () => setIsSpeaking(false),
         () => setIsSpeaking(false)
@@ -102,6 +118,7 @@ const GlobalAIAssistant: React.FC = () => {
 
   const handleQuickSuggestion = (suggestion: string) => {
     setInputMessage(suggestion);
+    handleSendMessage(suggestion);
   };
 
   const handleStopSpeaking = () => {
@@ -110,7 +127,8 @@ const GlobalAIAssistant: React.FC = () => {
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
       handleSendMessage();
     }
   };
@@ -166,6 +184,7 @@ const GlobalAIAssistant: React.FC = () => {
         inputMessage={inputMessage}
         isListening={isListening}
         isSpeaking={isSpeaking}
+        isGenerating={isGenerating}
         onClose={() => setIsOpen(false)}
         onModelChange={setSelectedModel}
         onInputChange={setInputMessage}
