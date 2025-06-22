@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { FloatingIcon } from './ai-assistant/components/FloatingIcon';
 import { AssistantPanel } from './ai-assistant/components/AssistantPanel';
@@ -11,11 +10,12 @@ import { INITIAL_MESSAGE } from './ai-assistant/constants';
 
 const GlobalAIAssistant: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedModel, setSelectedModel] = useState('gpt-4');
+  const [selectedModel, setSelectedModel] = useState('gemini-pro');
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [inputMessage, setInputMessage] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   
   const assistantRef = useRef<HTMLDivElement>(null);
   
@@ -28,9 +28,9 @@ const GlobalAIAssistant: React.FC = () => {
   const { startListening, stopListening } = useSpeechRecognition();
   const { speak, stop: stopSpeaking } = useSpeechSynthesis();
 
-  const handleSendMessage = (messageText?: string) => {
+  const handleSendMessage = async (messageText?: string) => {
     const text = messageText || inputMessage;
-    if (!text.trim()) return;
+    if (!text.trim() || isGenerating) return;
 
     const newMessage: Message = {
       id: messages.length + 1,
@@ -41,25 +41,43 @@ const GlobalAIAssistant: React.FC = () => {
 
     setMessages([...messages, newMessage]);
     setInputMessage('');
+    setIsGenerating(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      // Generate AI response using Gemini API
+      const aiResponseText = await generateAIResponse(text, selectedModel);
+      
       const aiResponse: Message = {
         id: messages.length + 2,
-        text: generateAIResponse(text, selectedModel),
+        text: aiResponseText,
         sender: 'assistant',
         timestamp: new Date()
       };
+      
       setMessages(prev => [...prev, aiResponse]);
       
       // Speak the response
       speak(
-        aiResponse.text,
+        aiResponseText,
         () => setIsSpeaking(true),
         () => setIsSpeaking(false),
         () => setIsSpeaking(false)
       );
-    }, 1000);
+    } catch (error) {
+      console.error('Error generating AI response:', error);
+      
+      // Fallback response
+      const fallbackResponse: Message = {
+        id: messages.length + 2,
+        text: 'দুঃখিত, এই মুহূর্তে আমি সাহায্য করতে পারছি না। অনুগ্রহ করে পরে আবার চেষ্টা করুন।',
+        sender: 'assistant',
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, fallbackResponse]);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const toggleListening = () => {

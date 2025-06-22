@@ -1,23 +1,26 @@
 
-import { AIModel } from './types';
+import { Message } from './types';
 
-export const AI_MODELS: AIModel[] = [
-  { value: 'gpt-4', label: 'GPT-4 (সবচেয়ে বুদ্ধিমান)' },
+export const AI_MODELS = [
+  { value: 'gemini-pro', label: 'Gemini Pro (সবচেয়ে বুদ্ধিমান)' },
+  { value: 'gemini-flash', label: 'Gemini Flash (দ্রুত ও দক্ষ)' },
+  { value: 'gpt-4', label: 'GPT-4 (বুদ্ধিমান)' },
   { value: 'gpt-3.5', label: 'GPT-3.5 (দ্রুত)' },
-  { value: 'claude', label: 'Claude (সৃজনশীল)' },
-  { value: 'gemini', label: 'Gemini (বিশ্লেষণধর্মী)' }
+  { value: 'claude', label: 'Claude (সৃজনশীল)' }
 ];
 
 export const QUICK_SUGGESTIONS = [
   'কিভাবে ভাল প্রোডাক্ট ছবি তুলব?',
   'বিক্রয় বাড়ানোর টিপস দিন',
   'গ্রাহকদের সাথে কিভাবে কথা বলব?',
-  'প্রোডাক্ট ডিসক্রিপশন লিখতে সাহায্য করুন'
+  'প্রোডাক্ট ডিসক্রিপশন লিখতে সাহায্য করুন',
+  'রেন্টাল বিজনেস কিভাবে শুরু করব?',
+  'অনলাইনে কিভাবে বেশি বিক্রি করব?'
 ];
 
-export const INITIAL_MESSAGE = {
+export const INITIAL_MESSAGE: Message = {
   id: 1,
-  text: 'হ্যালো! আমি আপনার AI সহায়ক। আপনার অ্যাপ ব্যবহার, প্রোডাক্ট লিস্টিং, বিক্রয় বৃদ্ধি - যেকোনো বিষয়ে সাহায্য করতে পারি। কিভাবে সাহায্য করতে পারি?',
-  sender: 'assistant' as const,
+  text: 'আস্সালামু আলাইকুম! আমি আপনার AI সহায়ক। মার্কেটপ্লেস, রেন্টাল, সার্ভিস - যেকোনো বিষয়ে সাহায্য করতে পারি। এখন Gemini AI ব্যবহার করে আরও উন্নত সেবা দিতে পারছি। কিভাবে সাহায্য করতে পারি?',
+  sender: 'assistant',
   timestamp: new Date()
 };
