@@ -63,7 +63,7 @@ const Rentals = () => {
     e.stopPropagation();
     setShareItem({
       ...rental,
-      type: ''}
+      type: 'rental'
     });
     setShowShareModal(true);
   };
