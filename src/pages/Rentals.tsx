@@ -22,6 +22,8 @@ import BannerCarousel from '@/components/rentals/BannerCarousel';
 import FeaturedListings from '@/components/rentals/FeaturedListings';
 import FilterSection from '@/components/rentals/FilterSection';
 import SectionToggle from '@/components/rentals/SectionToggle';
+import CategoryModal from '@/components/rentals/CategoryModal';
+import SubcategoryResults from '@/components/rentals/SubcategoryResults';
 
 const Rentals = () => {
   const navigate = useNavigate();
@@ -35,8 +37,12 @@ const Rentals = () => {
   const [shareItem, setShareItem] = useState<any | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
   const [activeSection, setActiveSection] = useState<'categories' | 'housing'>('categories');
+  const [selectedCategory, setSelectedCategory] = useState<any | null>(null);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [selectedSubcategory, setSelectedSubcategory] = useState<any | null>(null);
+  const [subcategoryResults, setSubcategoryResults] = useState<any[]>([]);
 
-  // Updated rent categories with subcategories
+  // rentCategories array and other data
   const rentCategories = [
     {
       icon: <div className="text-2xl">🏠</div>,
@@ -283,6 +289,8 @@ const Rentals = () => {
       longitude: 90.3751
     }
   ];
+
+  // featuredServices, bannerImages
   const featuredServices = [
     {
       id: 1,
@@ -322,7 +330,6 @@ const Rentals = () => {
     }
   ];
 
-  // Moved bannerImages inside for prop passing
   const bannerImages = [
     'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=1000&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1000&auto=format&fit=crop',
@@ -330,7 +337,7 @@ const Rentals = () => {
     'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1000&auto=format&fit=crop'
   ];
 
-  // Moved handler functions inside for prop passing
+  // Handler functions
   const toggleFilter = () => {
     setFilterVisible(!filterVisible);
   };
@@ -365,25 +372,47 @@ const Rentals = () => {
       });
       return;
     }
-    navigate(category.path);
+    
+    // Open category modal for other categories
+    setSelectedCategory(category);
+    setShowCategoryModal(true);
+    setSelectedSubcategory(null);
   };
 
   const handleSubcategoryClick = (subcategory: any) => {
-    navigate(subcategory.path);
+    setSelectedSubcategory(subcategory);
+    setShowCategoryModal(false);
+    
+    // Generate mock results based on subcategory
+    const mockResults = Array.from({ length: Math.floor(Math.random() * 10) + 5 }, (_, i) => ({
+      id: i + 1,
+      title: `${subcategory.name} - আইটেম ${i + 1}`,
+      location: `ঢাকা, চট্টগ্রাম, সিলেট`.split(', ')[Math.floor(Math.random() * 3)],
+      price: `৳${(Math.random() * 50000 + 5000).toFixed(0)}/${Math.random() > 0.5 ? 'মাস' : 'দিন'}`,
+      rating: (Math.random() * 2 + 3).toFixed(1),
+      reviews: Math.floor(Math.random() * 200) + 10,
+      availability: Math.random() > 0.3,
+      featured: Math.random() > 0.7
+    }));
+    
+    setSubcategoryResults(mockResults);
+    
     toast({
       title: subcategory.name,
-      description: `${subcategory.count}টি আইটেম উপলব্ধ`
+      description: `${mockResults.length}টি আইটেম পাওয়া গেছে`
     });
   };
 
-  // Updated renderCategoryItem function with subcategories
   const renderCategoryItem = (category: any, index: number) => {
     if (category.isMainCategory && category.subcategories) {
       return (
         <div key={index}>
           <Collapsible>
             <CollapsibleTrigger asChild>
-              <div className="flex flex-col items-center justify-center transition-all hover:scale-105 cursor-pointer" onClick={() => handleCategoryClick(category)}>
+              <div 
+                className="flex flex-col items-center justify-center transition-all hover:scale-105 cursor-pointer" 
+                onClick={() => handleCategoryClick(category)}
+              >
                 <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
                   {category.icon}
                 </div>
@@ -418,35 +447,18 @@ const Rentals = () => {
     if (category.subcategories) {
       return (
         <div key={index}>
-          <Collapsible>
-            <CollapsibleTrigger asChild>
-              <div className="flex flex-col items-center justify-center transition-all hover:scale-105 cursor-pointer">
-                <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
-                  {category.icon}
-                </div>
-                <span className="text-xs text-center mb-1">{category.name}</span>
-                <Badge variant="secondary" className="text-xs">
-                  {category.count}টি
-                </Badge>
-              </div>
-            </CollapsibleTrigger>
-            <CollapsibleContent className="mt-3">
-              <div className="grid grid-cols-1 gap-1 text-xs">
-                {category.subcategories.map((sub: any, subIndex: number) => (
-                  <div 
-                    key={subIndex} 
-                    className="p-2 hover:bg-gray-50 rounded cursor-pointer flex justify-between items-center"
-                    onClick={() => handleSubcategoryClick(sub)}
-                  >
-                    <span className="text-xs">{sub.name}</span>
-                    <Badge variant="outline" className="text-xs">
-                      {sub.count}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
+          <div 
+            className="flex flex-col items-center justify-center transition-all hover:scale-105 cursor-pointer"
+            onClick={() => handleCategoryClick(category)}
+          >
+            <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+              {category.icon}
+            </div>
+            <span className="text-xs text-center mb-1">{category.name}</span>
+            <Badge variant="secondary" className="text-xs">
+              {category.count}টি
+            </Badge>
+          </div>
         </div>
       );
     }
@@ -491,6 +503,23 @@ const Rentals = () => {
 
       {activeSection === 'housing' ? (
         <EnhancedHousingSection language={language || 'bn'} />
+      ) : selectedSubcategory ? (
+        <>
+          <Button 
+            variant="outline" 
+            onClick={() => setSelectedSubcategory(null)}
+            className="mb-4"
+          >
+            ← ক্যাটাগরিতে ফিরে যান
+          </Button>
+          <SubcategoryResults
+            subcategory={selectedSubcategory}
+            results={subcategoryResults}
+            onItemClick={(item) => navigate(`/rent-details/${item.id}`)}
+            onBookmark={handleBookmark}
+            onShare={handleShare}
+          />
+        </>
       ) : (
         <>
           <FilterSection filterVisible={filterVisible} toggleFilter={toggleFilter} />
@@ -519,6 +548,15 @@ const Rentals = () => {
           </div>
         </>
       )}
+
+      {/* Category Modal */}
+      <CategoryModal
+        isOpen={showCategoryModal}
+        onClose={() => setShowCategoryModal(false)}
+        category={selectedCategory}
+        onSubcategoryClick={handleSubcategoryClick}
+      />
+
       {shareItem && (
         <SocialShareModal 
           open={showShareModal} 
