@@ -23,23 +23,12 @@ import {
   Laptop,
   Camera,
   Gamepad2,
-  Watch,
-  Car,
-  Hammer,
-  Baby,
-  Dumbbell,
-  Sofa,
-  Utensils,
-  Music,
-  PaintBucket,
-  ShoppingCart,
-  Headphones
+  Watch
 } from 'lucide-react';
 
 const Marketplace = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState('grid');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const categories = [
     {
@@ -48,26 +37,15 @@ const Marketplace = () => {
       icon: <Smartphone className="h-7 w-7" />,
       color: 'bg-blue-50',
       iconColor: 'text-blue-500',
-      count: 156,
-      subCategories: [
-        { name: 'মোবাইল ফোন', icon: <Smartphone className="h-5 w-5" />, count: 45 },
-        { name: 'ল্যাপটপ', icon: <Laptop className="h-5 w-5" />, count: 32 },
-        { name: 'হেডফোন', icon: <Headphones className="h-5 w-5" />, count: 28 },
-        { name: 'ক্যামেরা', icon: <Camera className="h-5 w-5" />, count: 19 }
-      ]
+      count: 156
     },
     {
       id: 'fashion',
-      name: 'ফ্যাশন ও পোশাক',
+      name: 'ফ্যাশন',
       icon: <Shirt className="h-7 w-7" />,
       color: 'bg-pink-50',
       iconColor: 'text-pink-500',
-      count: 234,
-      subCategories: [
-        { name: 'পুরুষের পোশাক', icon: <Shirt className="h-5 w-5" />, count: 89 },
-        { name: 'মহিলাদের পোশাক', icon: <Shirt className="h-5 w-5" />, count: 102 },
-        { name: 'জুতা', icon: <Package className="h-5 w-5" />, count: 43 }
-      ]
+      count: 234
     },
     {
       id: 'home',
@@ -75,12 +53,7 @@ const Marketplace = () => {
       icon: <Home className="h-7 w-7" />,
       color: 'bg-green-50',
       iconColor: 'text-green-500',
-      count: 89,
-      subCategories: [
-        { name: 'আসবাবপত্র', icon: <Sofa className="h-5 w-5" />, count: 34 },
-        { name: 'রান্নাঘর', icon: <Utensils className="h-5 w-5" />, count: 29 },
-        { name: 'সাজসজ্জা', icon: <PaintBucket className="h-5 w-5" />, count: 26 }
-      ]
+      count: 89
     },
     {
       id: 'books',
@@ -88,61 +61,39 @@ const Marketplace = () => {
       icon: <Book className="h-7 w-7" />,
       color: 'bg-orange-50',
       iconColor: 'text-orange-500',
-      count: 67,
-      subCategories: [
-        { name: 'একাডেমিক বই', icon: <Book className="h-5 w-5" />, count: 35 },
-        { name: 'উপন্যাস', icon: <Book className="h-5 w-5" />, count: 22 },
-        { name: 'স্টেশনারি', icon: <Package className="h-5 w-5" />, count: 10 }
-      ]
+      count: 67
     },
     {
-      id: 'vehicles',
-      name: 'যানবাহন',
-      icon: <Car className="h-7 w-7" />,
-      color: 'bg-red-50',
-      iconColor: 'text-red-500',
-      count: 73,
-      subCategories: [
-        { name: 'গাড়ি', icon: <Car className="h-5 w-5" />, count: 28 },
-        { name: 'মোটরসাইকেল', icon: <Car className="h-5 w-5" />, count: 35 },
-        { name: 'যন্ত্রাংশ', icon: <Hammer className="h-5 w-5" />, count: 10 }
-      ]
-    },
-    {
-      id: 'sports',
-      name: 'খেলাধুলা ও ফিটনেস',
-      icon: <Dumbbell className="h-7 w-7" />,
+      id: 'computers',
+      name: 'কম্পিউটার',
+      icon: <Laptop className="h-7 w-7" />,
       color: 'bg-purple-50',
       iconColor: 'text-purple-500',
-      count: 54,
-      subCategories: [
-        { name: 'জিম ইকুপমেন্ট', icon: <Dumbbell className="h-5 w-5" />, count: 23 },
-        { name: 'খেলার সামগ্রী', icon: <Package className="h-5 w-5" />, count: 31 }
-      ]
+      count: 98
     },
     {
-      id: 'baby',
-      name: 'শিশু পণ্য',
-      icon: <Baby className="h-7 w-7" />,
-      color: 'bg-yellow-50',
-      iconColor: 'text-yellow-600',
-      count: 42,
-      subCategories: [
-        { name: 'খেলনা', icon: <Gamepad2 className="h-5 w-5" />, count: 25 },
-        { name: 'শিশুর পোশাক', icon: <Shirt className="h-5 w-5" />, count: 17 }
-      ]
-    },
-    {
-      id: 'music',
-      name: 'সঙ্গীত ও যন্ত্র',
-      icon: <Music className="h-7 w-7" />,
+      id: 'cameras',
+      name: 'ক্যামেরা',
+      icon: <Camera className="h-7 w-7" />,
       color: 'bg-indigo-50',
       iconColor: 'text-indigo-500',
-      count: 38,
-      subCategories: [
-        { name: 'বাদ্যযন্ত্র', icon: <Music className="h-5 w-5" />, count: 22 },
-        { name: 'অডিও সিস্টেম', icon: <Headphones className="h-5 w-5" />, count: 16 }
-      ]
+      count: 42
+    },
+    {
+      id: 'gaming',
+      name: 'গেমিং',
+      icon: <Gamepad2 className="h-7 w-7" />,
+      color: 'bg-yellow-50',
+      iconColor: 'text-yellow-600',
+      count: 73
+    },
+    {
+      id: 'watches',
+      name: 'ঘড়ি ও অ্যাক্সেসরিজ',
+      icon: <Watch className="h-7 w-7" />,
+      color: 'bg-red-50',
+      iconColor: 'text-red-500',
+      count: 54
     }
   ];
 
@@ -197,12 +148,6 @@ const Marketplace = () => {
     }
   ];
 
-  const handleCategoryClick = (categoryId: string) => {
-    setSelectedCategory(selectedCategory === categoryId ? null : categoryId);
-  };
-
-  const selectedCategoryData = categories.find(cat => cat.id === selectedCategory);
-
   return (
     <div className="container px-4 pt-20 pb-20">
       <div className="mb-6">
@@ -221,7 +166,7 @@ const Marketplace = () => {
             className="pl-10"
           />
         </div>
-        <Button variant="outline" size="icon" className="shrink-0">
+        <Button variant="outline" size="icon">
           <Filter className="h-4 w-4" />
         </Button>
         <div className="flex border rounded-lg">
@@ -246,46 +191,18 @@ const Marketplace = () => {
 
       <div className="mb-8">
         <h2 className="text-lg font-semibold mb-4">ক্যাটাগরি সমূহ</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           {categories.map((category) => (
-            <div key={category.id}>
-              <div 
-                className={`flex flex-col items-center text-center p-4 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer ${
-                  selectedCategory === category.id ? 'bg-primary/10 border-2 border-primary' : 'border border-transparent'
-                }`}
-                onClick={() => handleCategoryClick(category.id)}
-              >
-                <div className={`w-16 h-16 rounded-full ${category.color} flex items-center justify-center mb-3`}>
-                  <div className={category.iconColor}>
-                    {category.icon}
-                  </div>
+            <div key={category.id} className="flex flex-col items-center text-center p-4 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+              <div className={`w-16 h-16 rounded-full ${category.color} flex items-center justify-center mb-3`}>
+                <div className={category.iconColor}>
+                  {category.icon}
                 </div>
-                <h3 className="font-medium text-sm mb-2">{category.name}</h3>
-                <Badge variant="secondary" className="text-xs">
-                  {category.count} পণ্য
-                </Badge>
               </div>
-              
-              {selectedCategory === category.id && selectedCategoryData?.subCategories && (
-                <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-medium text-sm mb-3">সাব-ক্যাটাগরি</h4>
-                  <div className="grid grid-cols-1 gap-2">
-                    {selectedCategoryData.subCategories.map((subCat, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 hover:bg-white rounded cursor-pointer transition-colors">
-                        <div className="flex items-center gap-2">
-                          <div className="text-gray-600">
-                            {subCat.icon}
-                          </div>
-                          <span className="text-sm">{subCat.name}</span>
-                        </div>
-                        <Badge variant="outline" className="text-xs">
-                          {subCat.count}
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              <h3 className="font-medium text-sm mb-2">{category.name}</h3>
+              <Badge variant="secondary" className="text-xs">
+                {category.count} পণ্য
+              </Badge>
             </div>
           ))}
         </div>
