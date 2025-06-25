@@ -1,230 +1,311 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Wallet as WalletIcon, 
   CreditCard, 
-  Send, 
-  ArrowDownToLine, 
-  History, 
-  QrCode, 
-  Plus, 
-  TrendingUp, 
-  TrendingDown,
-  Eye,
-  EyeOff,
-  Shield,
-  Settings
+  ArrowUpRight, 
+  ArrowDownLeft,
+  Plus,
+  Minus,
+  Download,
+  Filter,
+  Search
 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const Wallet = () => {
-  const [balanceVisible, setBalanceVisible] = useState(true);
-  
-  const walletBalance = 15750;
+  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState('balance');
+
+  const walletBalance = {
+    total: '৮৫,৪৫০',
+    available: '৭২,৩২০',
+    pending: '১৩,১৩০'
+  };
+
   const transactions = [
     {
-      id: 1,
-      type: 'received',
-      amount: 2500,
-      description: 'ডিজিটাল প্রোডাক্ট বিক্রয়',
-      date: '২ ঘন্টা আগে',
+      id: 'TXN001',
+      type: 'credit',
+      amount: '৫,৫০০',
+      description: 'পণ্য বিক্রয় - ORD-1001',
+      date: '২৫ এপ্রিল ২০২৩',
       status: 'completed'
     },
     {
-      id: 2,
-      type: 'sent',
-      amount: 800,
-      description: 'রেন্ট পেমেন্ট',
-      date: '৫ ঘন্টা আগে',
+      id: 'TXN002',
+      type: 'debit',
+      amount: '২,৩০০',
+      description: 'উইথড্র - bKash',
+      date: '২৪ এপ্রিল ২০২৩',
       status: 'completed'
     },
     {
-      id: 3,
-      type: 'received',
-      amount: 1200,
-      description: 'সার্ভিস ফি',
-      date: '১ দিন আগে',
+      id: 'TXN003',
+      type: 'credit',
+      amount: '৩,২০০',
+      description: 'সার্ভিস ফি - Creative Work',
+      date: '২৩ এপ্রিল ২০২৩',
       status: 'pending'
     }
   ];
 
-  const quickActions = [
+  const paymentMethods = [
     {
-      title: 'টাকা পাঠান',
-      icon: <Send className="h-6 w-6" />,
-      color: 'bg-blue-100 text-blue-600'
+      id: 1,
+      type: 'bKash',
+      number: '০১৭১২-৩৪৫৬৭৮',
+      isDefault: true
     },
     {
-      title: 'টাকা নিন',
-      icon: <ArrowDownToLine className="h-6 w-6" />,
-      color: 'bg-green-100 text-green-600'
+      id: 2,
+      type: 'Nagad',
+      number: '০১৮১৫-৯৮৭৬৫৪',
+      isDefault: false
     },
     {
-      title: 'QR কোড',
-      icon: <QrCode className="h-6 w-6" />,
-      color: 'bg-purple-100 text-purple-600'
-    },
-    {
-      title: 'টাকা যোগ করুন',
-      icon: <Plus className="h-6 w-6" />,
-      color: 'bg-orange-100 text-orange-600'
+      id: 3,
+      type: 'Bank Account',
+      number: 'DBBL - ****5678',
+      isDefault: false
     }
   ];
 
-  return (
-    <div className="container px-4 pt-20 pb-20">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">আমার ওয়ালেট</h1>
-        <Button variant="outline" size="icon">
-          <Settings className="h-4 w-4" />
-        </Button>
-      </div>
+  const handleAddMoney = () => {
+    toast({
+      title: "টাকা যোগ করা হয়েছে",
+      description: "আপনার ওয়ালেটে টাকা সফলভাবে যোগ হয়েছে"
+    });
+  };
 
-      <Card className="mb-6 bg-gradient-to-r from-primary to-purple-600 text-white">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <WalletIcon className="h-6 w-6" />
-              <span className="text-sm opacity-90">মোট ব্যালেন্স</span>
-            </div>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="text-white hover:bg-white/20"
-              onClick={() => setBalanceVisible(!balanceVisible)}
-            >
-              {balanceVisible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+  const handleWithdraw = () => {
+    toast({
+      title: "উইথড্র অনুরোধ",
+      description: "আপনার উইথড্র অনুরোধ প্রসেস করা হচ্ছে"
+    });
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-8 pt-24">
+      <div className="max-w-6xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          <div>
+            <h1 className="text-3xl font-bold flex items-center gap-3">
+              <WalletIcon className="h-8 w-8 text-green-600" />
+              ওয়ালেট ও ট্রানজেকশন
+            </h1>
+            <p className="text-muted-foreground">আপনার ব্যালেন্স ও লেনদেনের ইতিহাস দেখুন</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              স্টেটমেন্ট ডাউনলোড
             </Button>
           </div>
-          <div className="mb-4">
-            <h2 className="text-3xl font-bold">
-              {balanceVisible ? `৳ ${walletBalance.toLocaleString()}` : '৳ ••••••'}
-            </h2>
-            <p className="text-sm opacity-75">বাংলাদেশী টাকা</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
-              <Shield className="h-3 w-3 mr-1" />
-              সুরক্ষিত
-            </Badge>
-            <span className="text-xs opacity-75">শেষ আপডেট: এখনই</span>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-4">দ্রুত কাজ</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {quickActions.map((action, index) => (
-            <Card key={index} className="hover:shadow-md transition-all cursor-pointer">
-              <CardContent className="p-4">
-                <div className="flex flex-col items-center text-center">
-                  <div className={`p-3 rounded-full ${action.color} mb-3`}>
-                    {action.icon}
+        {/* Balance Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-green-100 text-sm">মোট ব্যালেন্স</p>
+                  <p className="text-2xl font-bold">৳{walletBalance.total}</p>
+                </div>
+                <WalletIcon className="h-8 w-8 text-green-200" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-blue-100 text-sm">উপলব্ধ ব্যালেন্স</p>
+                  <p className="text-2xl font-bold">৳{walletBalance.available}</p>
+                </div>
+                <ArrowDownLeft className="h-8 w-8 text-blue-200" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-orange-100 text-sm">পেন্ডিং ব্যালেন্স</p>
+                  <p className="text-2xl font-bold">৳{walletBalance.pending}</p>
+                </div>
+                <ArrowUpRight className="h-8 w-8 text-orange-200" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="balance">ব্যালেন্স</TabsTrigger>
+            <TabsTrigger value="transactions">ট্রানজেকশন</TabsTrigger>
+            <TabsTrigger value="payment-methods">পেমেন্ট মেথড</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="balance" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Plus className="h-5 w-5 text-green-600" />
+                    টাকা যোগ করুন
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">পরিমাণ</label>
+                    <Input placeholder="৳ পরিমাণ লিখুন" />
                   </div>
-                  <span className="text-sm font-medium">{action.title}</span>
+                  <div>
+                    <label className="text-sm font-medium">পেমেন্ট মেথড</label>
+                    <select className="w-full p-2 border rounded-lg">
+                      <option>bKash - ০১৭১২-৩৪৫৬৭৮</option>
+                      <option>Nagad - ০১৮১৫-৯৮৭৬৫৪</option>
+                      <option>Bank Account</option>
+                    </select>
+                  </div>
+                  <Button onClick={handleAddMoney} className="w-full">
+                    <Plus className="h-4 w-4 mr-2" />
+                    টাকা যোগ করুন
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Minus className="h-5 w-5 text-red-600" />
+                    টাকা উত্তোলন
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">পরিমাণ</label>
+                    <Input placeholder="৳ পরিমাণ লিখুন" />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">উত্তোলন মেথড</label>
+                    <select className="w-full p-2 border rounded-lg">
+                      <option>bKash - ০১৭১২-৩৪৫৬৭৮</option>
+                      <option>Nagad - ০১৮১৫-৯৮৭৬৫৪</option>
+                      <option>Bank Account</option>
+                    </select>
+                  </div>
+                  <Button onClick={handleWithdraw} variant="outline" className="w-full">
+                    <Minus className="h-4 w-4 mr-2" />
+                    টাকা উত্তোলন
+                  </Button>
+                  <p className="text-xs text-muted-foreground">
+                    * ন্যূনতম উত্তোলন ৫০০ টাকা
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="transactions" className="space-y-6">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>ট্রানজেকশন ইতিহাস</CardTitle>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm">
+                    <Search className="h-4 w-4 mr-2" />
+                    খুঁজুন
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <Filter className="h-4 w-4 mr-2" />
+                    ফিল্টার
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {transactions.map((transaction) => (
+                    <div key={transaction.id} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                          transaction.type === 'credit' ? 'bg-green-100' : 'bg-red-100'
+                        }`}>
+                          {transaction.type === 'credit' ? (
+                            <ArrowDownLeft className="h-5 w-5 text-green-600" />
+                          ) : (
+                            <ArrowUpRight className="h-5 w-5 text-red-600" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-medium">{transaction.description}</p>
+                          <p className="text-sm text-muted-foreground">{transaction.date}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className={`font-bold ${
+                          transaction.type === 'credit' ? 'text-green-600' : 'text-red-600'
+                        }`}>
+                          {transaction.type === 'credit' ? '+' : '-'}৳{transaction.amount}
+                        </p>
+                        <Badge variant={transaction.status === 'completed' ? 'default' : 'secondary'}>
+                          {transaction.status === 'completed' ? 'সম্পন্ন' : 'অপেক্ষমাণ'}
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
-          ))}
-        </div>
-      </div>
+          </TabsContent>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">আজকের আয়</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold">৳ ৩,৭০০</span>
-              <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50">
-                <TrendingUp className="h-3 w-3 mr-1" />
-                +১২%
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">এই মাসের খরচ</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold">৳ ১২,৪০০</span>
-              <Badge variant="outline" className="text-red-600 border-red-200 bg-red-50">
-                <TrendingDown className="h-3 w-3 mr-1" />
-                +৮%
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">পেন্ডিং</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold">৳ ১,২০০</span>
-              <Badge variant="outline" className="text-yellow-600 border-yellow-200 bg-yellow-50">
-                ৩ টি
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>সাম্প্রতিক লেনদেন</CardTitle>
-            <Button variant="outline" size="sm">
-              <History className="h-4 w-4 mr-2" />
-              সব দেখুন
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {transactions.map((transaction) => (
-              <div key={transaction.id} className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-full ${
-                    transaction.type === 'received' 
-                      ? 'bg-green-100 text-green-600' 
-                      : 'bg-blue-100 text-blue-600'
-                  }`}>
-                    {transaction.type === 'received' 
-                      ? <TrendingUp className="h-4 w-4" />
-                      : <TrendingDown className="h-4 w-4" />
-                    }
-                  </div>
-                  <div>
-                    <p className="font-medium">{transaction.description}</p>
-                    <p className="text-sm text-muted-foreground">{transaction.date}</p>
-                  </div>
+          <TabsContent value="payment-methods" className="space-y-6">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>পেমেন্ট মেথড</CardTitle>
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  নতুন মেথড যোগ করুন
+                </Button>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {paymentMethods.map((method) => (
+                    <div key={method.id} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <CreditCard className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <p className="font-medium">{method.type}</p>
+                          <p className="text-sm text-muted-foreground">{method.number}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {method.isDefault && (
+                          <Badge variant="default">ডিফল্ট</Badge>
+                        )}
+                        <Button variant="outline" size="sm">
+                          এডিট
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="text-right">
-                  <p className={`font-semibold ${
-                    transaction.type === 'received' ? 'text-green-600' : 'text-red-600'
-                  }`}>
-                    {transaction.type === 'received' ? '+' : '-'}৳ {transaction.amount.toLocaleString()}
-                  </p>
-                  <Badge 
-                    variant={transaction.status === 'completed' ? 'default' : 'secondary'}
-                    className="text-xs"
-                  >
-                    {transaction.status === 'completed' ? 'সম্পন্ন' : 'অপেক্ষমাণ'}
-                  </Badge>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 };

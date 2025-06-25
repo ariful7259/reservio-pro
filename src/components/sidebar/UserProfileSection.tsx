@@ -62,7 +62,7 @@ export const UserProfileSection = () => {
           </DropdownMenuItem>
           {isSeller ? (
             <DropdownMenuItem asChild>
-              <Link to="/seller-dashboard" className="flex items-center gap-2 w-full">
+              <Link to="/dashboard" className="flex items-center gap-2 w-full">
                 <Store className="h-4 w-4" /> <span>Seller Dashboard</span>
               </Link>
             </DropdownMenuItem>
@@ -114,4 +114,3 @@ export const UserProfileSection = () => {
     </div>
   );
 };
-
