@@ -26,7 +26,7 @@ import BecomeSeller from "./pages/BecomeSeller";
 import Orders from "./pages/Orders";
 import Wallet from "./pages/Wallet";
 import Settings from "./pages/Settings";
-import KYCVerification from "./pages/KYCVerification";
+import KycVerification from "./pages/KycVerification";
 
 const queryClient = new QueryClient();
 
@@ -59,7 +59,7 @@ function App() {
                   <Route path="/orders" element={<Orders />} />
                   <Route path="/wallet" element={<Wallet />} />
                   <Route path="/settings" element={<Settings />} />
-                  <Route path="/kyc-verification" element={<KYCVerification />} />
+                  <Route path="/kyc-verification" element={<KycVerification />} />
                 </Routes>
                 <Footer />
                 <GlobalAIAssistant />
