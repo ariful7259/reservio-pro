@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -235,7 +234,7 @@ const BecomeSeller = () => {
               <Checkbox 
                 id="terms" 
                 checked={formData.agreeTerms}
-                onCheckedChange={(checked) => setFormData({...formData, agreeTerms: checked})}
+                onCheckedChange={(checked) => setFormData({...formData, agreeTerms: Boolean(checked)})}
               />
               <Label htmlFor="terms" className="text-sm">
                 আমি <a href="#" className="text-primary">শর্তাবলী ও নীতিমালা</a> সম্মত আছি
