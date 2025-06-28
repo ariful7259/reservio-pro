@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -78,15 +77,14 @@ const Rentals = () => {
       return;
     }
     
-    // Open category modal for other categories
+    // Set selected category and show modal
     setSelectedCategory(category);
     setShowCategoryModal(true);
     setSelectedSubcategory(null);
   };
 
-  const handleSubcategoryClick = (subcategory: any) => {
+  const handleSubcategorySelect = (subcategory: any) => {
     setSelectedSubcategory(subcategory);
-    setShowCategoryModal(false);
     
     // Generate mock results based on subcategory
     const mockResults = generateMockResults(subcategory);
@@ -142,7 +140,12 @@ const Rentals = () => {
         </>
       ) : (
         <>
-          <FilterSection filterVisible={filterVisible} toggleFilter={toggleFilter} />
+          <FilterSection 
+            filterVisible={filterVisible} 
+            toggleFilter={toggleFilter}
+            selectedCategory={selectedCategory}
+            onSubcategorySelect={handleSubcategorySelect}
+          />
           <CategoryGrid 
             rentCategories={rentCategories} 
             isExpanded={isExpanded} 

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
@@ -15,6 +14,8 @@ const Housing = () => {
   const { addToFavorites, removeFromFavorites, isFavorite, language, isOnline } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('all');
+  const [filterVisible, setFilterVisible] = useState(false);
+  const [selectedSubcategory, setSelectedSubcategory] = useState('');
 
   // Sample housing listing data
   const housingListings = [
@@ -134,8 +135,19 @@ const Housing = () => {
   };
 
   const handleFilterClick = () => {
-    // TODO: Implement filter modal for mobile
-    console.log("Open filter modal");
+    setFilterVisible(!filterVisible);
+  };
+
+  const handleSubcategorySelect = (subcategory: string) => {
+    setSelectedSubcategory(subcategory);
+    setActiveTab(subcategory || 'all');
+  };
+
+  const getFilteredListings = () => {
+    if (selectedSubcategory && selectedSubcategory !== 'all') {
+      return housingListings.filter(listing => listing.type === selectedSubcategory);
+    }
+    return housingListings;
   };
 
   return (
@@ -159,6 +171,8 @@ const Housing = () => {
         onSearchChange={setSearchTerm}
         onFilterClick={handleFilterClick}
         language={language}
+        filterVisible={filterVisible}
+        onSubcategorySelect={handleSubcategorySelect}
       />
 
       <HousingTabs 
@@ -168,7 +182,7 @@ const Housing = () => {
       >
         <TabsContent value="all">
           <HousingList 
-            listings={housingListings} 
+            listings={getFilteredListings()} 
             handleToggleFavorite={handleToggleFavorite}
             isFavorite={isFavorite}
             language={language}
