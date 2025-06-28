@@ -78,14 +78,15 @@ const Rentals = () => {
       return;
     }
     
-    // Set selected category and show modal
+    // Open category modal for other categories
     setSelectedCategory(category);
     setShowCategoryModal(true);
     setSelectedSubcategory(null);
   };
 
-  const handleSubcategorySelect = (subcategory: any) => {
+  const handleSubcategoryClick = (subcategory: any) => {
     setSelectedSubcategory(subcategory);
+    setShowCategoryModal(false);
     
     // Generate mock results based on subcategory
     const mockResults = generateMockResults(subcategory);
@@ -104,7 +105,7 @@ const Rentals = () => {
         category={category}
         index={index}
         onCategoryClick={handleCategoryClick}
-        onSubcategoryClick={handleSubcategorySelect}
+        onSubcategoryClick={handleSubcategoryClick}
       />
     );
   };
@@ -141,12 +142,7 @@ const Rentals = () => {
         </>
       ) : (
         <>
-          <FilterSection 
-            filterVisible={filterVisible} 
-            toggleFilter={toggleFilter}
-            selectedCategory={selectedCategory}
-            onSubcategorySelect={handleSubcategorySelect}
-          />
+          <FilterSection filterVisible={filterVisible} toggleFilter={toggleFilter} />
           <CategoryGrid 
             rentCategories={rentCategories} 
             isExpanded={isExpanded} 
@@ -178,7 +174,7 @@ const Rentals = () => {
         isOpen={showCategoryModal}
         onClose={() => setShowCategoryModal(false)}
         category={selectedCategory}
-        onSubcategoryClick={handleSubcategorySelect}
+        onSubcategoryClick={handleSubcategoryClick}
       />
 
       {shareItem && (
