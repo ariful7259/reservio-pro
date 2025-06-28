@@ -52,6 +52,11 @@ import Signup from './pages/Signup';
 import ForgotPassword from './pages/ForgotPassword';
 import AdminDashboard from './pages/AdminDashboard';
 import MyServices from './pages/MyServices';
+import ProfileManagement from './pages/ProfileManagement';
+import BecomeSeller from './pages/BecomeSeller';
+import Orders from './pages/Orders';
+import Settings from './pages/Settings';
+import KycVerification from './pages/KycVerification';
 
 const RoutesConfig = () => {
   return (
@@ -64,6 +69,13 @@ const RoutesConfig = () => {
       <Route path="/signup" element={<Signup />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      
+      {/* Profile Management Routes */}
+      <Route path="/profile-management" element={<ProfileManagement />} />
+      <Route path="/become-seller" element={<BecomeSeller />} />
+      <Route path="/orders" element={<Orders />} />
+      <Route path="/settings" element={<Settings />} />
+      <Route path="/kyc-verification" element={<KycVerification />} />
       
       {/* Admin Dashboard Route */}
       <Route path="/admin-dashboard" element={<AdminDashboard />} />
