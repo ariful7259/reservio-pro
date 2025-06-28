@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -103,7 +104,7 @@ const Rentals = () => {
         category={category}
         index={index}
         onCategoryClick={handleCategoryClick}
-        onSubcategoryClick={handleSubcategoryClick}
+        onSubcategoryClick={handleSubcategorySelect}
       />
     );
   };
@@ -177,7 +178,7 @@ const Rentals = () => {
         isOpen={showCategoryModal}
         onClose={() => setShowCategoryModal(false)}
         category={selectedCategory}
-        onSubcategoryClick={handleSubcategoryClick}
+        onSubcategoryClick={handleSubcategorySelect}
       />
 
       {shareItem && (
