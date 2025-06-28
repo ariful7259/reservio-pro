@@ -1,9 +1,8 @@
-
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { 
   ShoppingBag, 
   Calendar, 
@@ -31,6 +30,12 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
 import MyServicesDropdown from '@/components/MyServicesDropdown';
+
+// Import section components
+import BookingsSection from '@/components/my-services/BookingsSection';
+import AppointmentsSection from '@/components/my-services/AppointmentsSection';
+import ShortlistSection from '@/components/my-services/ShortlistSection';
+import ContactedPropertiesSection from '@/components/my-services/ContactedPropertiesSection';
 
 const MyServices = () => {
   const [searchParams] = useSearchParams();
@@ -180,51 +185,24 @@ const MyServices = () => {
     );
   }
 
+  // Empty states for remaining tabs
   const emptyStates = {
-    bookings: {
-      icon: <Calendar className="h-10 w-10 text-muted-foreground" />,
-      message: "আপনি এখনো কোন বুকিং করেননি",
-      action: "বুকিং করুন",
-      path: "/rentals"
-    },
-    appointments: {
-      icon: <Calendar className="h-10 w-10 text-muted-foreground" />,
-      message: "আপনি এখনো কোন অ্যাপয়েন্টমেন্ট নিন নি",
-      action: "অ্যাপয়েন্টমেন্ট নিন",
-      path: "/services"
-    },
-    shortlists: {
-      icon: <Bookmark className="h-10 w-10 text-muted-foreground" />,
-      message: "আপনি এখনো কোন শর্টলিস্ট করেননি",
-      action: "সার্ভিস খুঁজুন",
-      path: "/services"
-    },
-    contactedProperties: {
-      icon: <MessageSquare className="h-10 w-10 text-muted-foreground" />,
-      message: "আপনি এখনো কোন প্রোপার্টির সাথে যোগাযোগ করেননি",
-      action: "প্রোপার্টি খুঁজুন",
-      path: "/rentals"
-    },
     listings: {
-      icon: <ListCheck className="h-10 w-10 text-muted-foreground" />,
       message: "আপনি এখনো কোন লিস্টিং করেননি",
       action: "লিস্টিং করুন",
       path: "/create-post"
     },
     shop: {
-      icon: <Store className="h-10 w-10 text-muted-foreground" />,
       message: "আপনি এখনো কোন প্রোডাক্ট কিনেননি",
       action: "শপিং করুন",
       path: "/shopping"
     },
     recommendations: {
-      icon: <BookmarkCheck className="h-10 w-10 text-muted-foreground" />,
       message: "আপনার জন্য এখনও কোন রেকমেন্ডেশন নেই",
       action: "সার্ভিস ব্রাউজ করুন",
       path: "/services"
     },
     sellerDashboard: {
-      icon: <Store className="h-10 w-10 text-muted-foreground" />,
       message: isSeller 
         ? "আপনার বিক্রেতা ড্যাশবোর্ডে যান"
         : "আপনি এখনো কোন বিক্রেতা অ্যাকাউন্ট তৈরি করেননি",
@@ -260,11 +238,29 @@ const MyServices = () => {
           </TabsList>
         </div>
 
+        {/* Functional Sections */}
+        <TabsContent value="bookings" className="mt-0">
+          <BookingsSection />
+        </TabsContent>
+
+        <TabsContent value="appointments" className="mt-0">
+          <AppointmentsSection />
+        </TabsContent>
+
+        <TabsContent value="shortlists" className="mt-0">
+          <ShortlistSection />
+        </TabsContent>
+
+        <TabsContent value="contactedProperties" className="mt-0">
+          <ContactedPropertiesSection />
+        </TabsContent>
+
+        {/* Empty state sections for remaining tabs */}
         {Object.entries(emptyStates).map(([key, state]) => (
           <TabsContent key={key} value={key} className="mt-0">
             <div className="text-center py-10 flex flex-col items-center gap-4">
               <div className="h-20 w-20 rounded-full bg-gray-100 flex items-center justify-center">
-                {state.icon}
+                <Briefcase className="h-10 w-10 text-muted-foreground" />
               </div>
               <p className="text-muted-foreground">{state.message}</p>
               <Button onClick={() => navigate(state.path)}>{state.action}</Button>
