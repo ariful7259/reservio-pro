@@ -1,9 +1,10 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
+import { rentCategories } from '@/data/rentalCategoriesData';
 
 interface FilterSectionProps {
   filterVisible: boolean;
@@ -11,7 +12,21 @@ interface FilterSectionProps {
 }
 
 const FilterSection: React.FC<FilterSectionProps> = ({ filterVisible, toggleFilter }) => {
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedSubcategory, setSelectedSubcategory] = useState('');
+
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategory(value);
+    setSelectedSubcategory(''); // Reset subcategory when category changes
+  };
+
+  const getSubcategories = () => {
+    const category = rentCategories.find(cat => cat.name === selectedCategory);
+    return category?.subcategories || [];
+  };
+
   if (!filterVisible) return null;
+  
   return (
     <div className="mb-6 p-4 border rounded-lg bg-gray-50">
       <h2 className="font-medium mb-3">ফিল্টার</h2>
@@ -34,20 +49,48 @@ const FilterSection: React.FC<FilterSectionProps> = ({ filterVisible, toggleFilt
             </Select>
           </div>
         </div>
+        
         <div>
           <label className="text-sm font-medium mb-1 block">ক্যাটাগরি</label>
-          <Select>
+          <Select value={selectedCategory} onValueChange={handleCategoryChange}>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="ক্যাটাগরি" />
+              <SelectValue placeholder="ক্যাটাগরি নির্বাচন করুন" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="apartment">অ্যাপার্টমেন্ট</SelectItem>
-              <SelectItem value="house">বাসা</SelectItem>
-              <SelectItem value="car">গাড়ি</SelectItem>
-              <SelectItem value="office">অফিস</SelectItem>
+              {rentCategories.map((category, index) => (
+                <SelectItem key={index} value={category.name}>
+                  <div className="flex items-center gap-2">
+                    {category.icon}
+                    <span>{category.name}</span>
+                  </div>
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
+
+        {selectedCategory && getSubcategories().length > 0 && (
+          <div>
+            <label className="text-sm font-medium mb-1 block">সাব-ক্যাটাগরি</label>
+            <Select value={selectedSubcategory} onValueChange={setSelectedSubcategory}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="সাব-ক্যাটাগরি নির্বাচন করুন" />
+              </SelectTrigger>
+              <SelectContent>
+                {getSubcategories().map((subcategory: any, index: number) => (
+                  <SelectItem key={index} value={subcategory.name}>
+                    <div className="flex items-center gap-2">
+                      {subcategory.icon && <span>{subcategory.icon}</span>}
+                      <span>{subcategory.name}</span>
+                      <span className="text-xs text-muted-foreground ml-auto">({subcategory.count}টি)</span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+
         <div>
           <label className="text-sm font-medium mb-1 block">মূল্য সীমা</label>
           <div className="px-2">

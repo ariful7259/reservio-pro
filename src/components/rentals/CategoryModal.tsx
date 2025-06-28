@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Navigation, Filter, Search } from 'lucide-react';
+import { MapPin, Navigation, Filter } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface CategoryModalProps {
@@ -24,7 +24,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
   const { toast } = useToast();
   const [selectedLocation, setSelectedLocation] = useState('');
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
-  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedSubcategory, setSelectedSubcategory] = useState('');
   const [isGettingLocation, setIsGettingLocation] = useState(false);
 
   const getCurrentLocation = () => {
@@ -52,19 +52,19 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
     }
   };
 
-  const handleSubcategoryClick = (subcategory: any) => {
-    const filterData = {
-      location: selectedLocation,
-      priceRange,
-      searchTerm
-    };
-    onSubcategoryClick({ ...subcategory, filters: filterData });
-    onClose();
+  const handleSubcategorySelect = (value: string) => {
+    setSelectedSubcategory(value);
+    const subcategory = category?.subcategories?.find((sub: any) => sub.name === value);
+    if (subcategory) {
+      const filterData = {
+        location: selectedLocation,
+        priceRange,
+        selectedSubcategory: value
+      };
+      onSubcategoryClick({ ...subcategory, filters: filterData });
+      onClose();
+    }
   };
-
-  const filteredSubcategories = category?.subcategories?.filter((sub: any) =>
-    sub.name.toLowerCase().includes(searchTerm.toLowerCase())
-  ) || [];
 
   if (!category) return null;
 
@@ -84,14 +84,24 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
             <div>
               <label className="text-sm font-medium mb-2 block">
-                <Search className="h-4 w-4 inline mr-1" />
-                খুঁজুন
+                সাব-ক্যাটাগরি নির্বাচন করুন
               </label>
-              <Input
-                placeholder="সাব-ক্যাটাগরি খুঁজুন..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+              <Select value={selectedSubcategory} onValueChange={handleSubcategorySelect}>
+                <SelectTrigger>
+                  <SelectValue placeholder="সাব-ক্যাটাগরি নির্বাচন করুন" />
+                </SelectTrigger>
+                <SelectContent>
+                  {category?.subcategories?.map((subcategory: any, index: number) => (
+                    <SelectItem key={index} value={subcategory.name}>
+                      <div className="flex items-center gap-2">
+                        {subcategory.icon && <span>{subcategory.icon}</span>}
+                        <span>{subcategory.name}</span>
+                        <Badge variant="outline" className="ml-auto">{subcategory.count}টি</Badge>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
@@ -155,7 +165,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
                 onClick={() => {
                   toast({
                     title: "ফিল্টার প্রয়োগ করা হয়েছে",
-                    description: `${filteredSubcategories.length}টি ফলাফল পাওয়া গেছে`
+                    description: selectedSubcategory ? `${selectedSubcategory} নির্বাচিত` : "ফিল্টার প্রয়োগ করা হয়েছে"
                   });
                 }}
               >
@@ -164,45 +174,18 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
             </div>
           </div>
 
-          {/* Subcategories Grid */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">সাব-ক্যাটাগরি সমূহ</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredSubcategories.map((subcategory: any, index: number) => (
-                <div
-                  key={index}
-                  className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-all hover:scale-105"
-                  onClick={() => handleSubcategoryClick(subcategory)}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      {subcategory.icon && <span className="text-lg">{subcategory.icon}</span>}
-                      <h4 className="font-medium">{subcategory.name}</h4>
-                    </div>
-                    <Badge variant="outline">{subcategory.count}টি</Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    এই ক্যাটাগরিতে {subcategory.count}টি আইটেম রয়েছে
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {filteredSubcategories.length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
-                <p>কোন সাব-ক্যাটাগরি পাওয়া যায়নি</p>
-                {searchTerm && (
-                  <Button 
-                    variant="outline" 
-                    className="mt-2"
-                    onClick={() => setSearchTerm('')}
-                  >
-                    সব দেখুন
-                  </Button>
-                )}
+          {/* Show selected subcategory details */}
+          {selectedSubcategory && (
+            <div className="p-4 border rounded-lg bg-blue-50">
+              <h3 className="text-lg font-semibold mb-2">নির্বাচিত সাব-ক্যাটাগরি</h3>
+              <div className="flex items-center gap-2">
+                <span className="font-medium">{selectedSubcategory}</span>
+                <Badge variant="secondary">
+                  {category?.subcategories?.find((sub: any) => sub.name === selectedSubcategory)?.count}টি আইটেম
+                </Badge>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

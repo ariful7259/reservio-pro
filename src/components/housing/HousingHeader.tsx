@@ -1,8 +1,9 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Search, Filter } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface HousingHeaderProps {
@@ -19,6 +20,17 @@ const HousingHeader: React.FC<HousingHeaderProps> = ({
   language
 }) => {
   const isMobile = useIsMobile();
+  const [selectedHousingType, setSelectedHousingType] = useState('');
+
+  const housingTypes = [
+    { value: 'apartment', label: language === 'bn' ? 'অ্যাপার্টমেন্ট/ফ্ল্যাট' : 'Apartment/Flat' },
+    { value: 'house', label: language === 'bn' ? 'বাসা/বাড়ি' : 'House' },
+    { value: 'mess', label: language === 'bn' ? 'মেস/হোস্টেল' : 'Mess/Hostel' },
+    { value: 'single', label: language === 'bn' ? 'সিঙ্গেল রুম' : 'Single Room' },
+    { value: 'shared', label: language === 'bn' ? 'শেয়ারড রুম' : 'Shared Room' },
+    { value: 'flat', label: language === 'bn' ? 'ফ্ল্যাট' : 'Flat' },
+    { value: 'hostel', label: language === 'bn' ? 'হোস্টেল' : 'Hostel' }
+  ];
 
   return (
     <>
@@ -43,6 +55,22 @@ const HousingHeader: React.FC<HousingHeaderProps> = ({
             onChange={(e) => onSearchChange(e.target.value)}
           />
         </div>
+        
+        <div className={isMobile ? "w-full" : "min-w-[200px]"}>
+          <Select value={selectedHousingType} onValueChange={setSelectedHousingType}>
+            <SelectTrigger>
+              <SelectValue placeholder={language === 'bn' ? "হাউজিং টাইপ" : "Housing Type"} />
+            </SelectTrigger>
+            <SelectContent>
+              {housingTypes.map((type) => (
+                <SelectItem key={type.value} value={type.value}>
+                  {type.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        
         <Button 
           size="icon" 
           variant="outline"
