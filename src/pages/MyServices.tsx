@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -29,13 +30,16 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
-import MyServicesDropdown from '@/components/MyServicesDropdown';
 
 // Import section components
 import BookingsSection from '@/components/my-services/BookingsSection';
 import AppointmentsSection from '@/components/my-services/AppointmentsSection';
 import ShortlistSection from '@/components/my-services/ShortlistSection';
 import ContactedPropertiesSection from '@/components/my-services/ContactedPropertiesSection';
+import ListingsSection from '@/components/my-services/ListingsSection';
+import ShopSection from '@/components/my-services/ShopSection';
+import RecommendationsSection from '@/components/my-services/RecommendationsSection';
+import SellerDashboardSection from '@/components/my-services/SellerDashboardSection';
 
 const MyServices = () => {
   const [searchParams] = useSearchParams();
@@ -185,43 +189,10 @@ const MyServices = () => {
     );
   }
 
-  // Empty states for remaining tabs
-  const emptyStates = {
-    listings: {
-      message: "আপনি এখনো কোন লিস্টিং করেননি",
-      action: "লিস্টিং করুন",
-      path: "/create-post"
-    },
-    shop: {
-      message: "আপনি এখনো কোন প্রোডাক্ট কিনেননি",
-      action: "শপিং করুন",
-      path: "/shopping"
-    },
-    recommendations: {
-      message: "আপনার জন্য এখনও কোন রেকমেন্ডেশন নেই",
-      action: "সার্ভিস ব্রাউজ করুন",
-      path: "/services"
-    },
-    sellerDashboard: {
-      message: isSeller 
-        ? "আপনার বিক্রেতা ড্যাশবোর্ডে যান"
-        : "আপনি এখনো কোন বিক্রেতা অ্যাকাউন্ট তৈরি করেননি",
-      action: isSeller 
-        ? "ড্যাশবোর্ডে যান" 
-        : "বিক্রেতা অ্যাকাউন্ট তৈরি করুন",
-      path: isSeller 
-        ? (user?.sellerType 
-            ? `/dashboard/${user.sellerType}` 
-            : "/seller-dashboard")
-        : "/create-store"
-    }
-  };
-
   return (
     <div className="container px-4 pt-20 pb-20">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">আমার সার্ভিস</h1>
-        <MyServicesDropdown />
       </div>
       
       <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -238,7 +209,7 @@ const MyServices = () => {
           </TabsList>
         </div>
 
-        {/* Functional Sections */}
+        {/* All Functional Sections */}
         <TabsContent value="bookings" className="mt-0">
           <BookingsSection />
         </TabsContent>
@@ -255,18 +226,21 @@ const MyServices = () => {
           <ContactedPropertiesSection />
         </TabsContent>
 
-        {/* Empty state sections for remaining tabs */}
-        {Object.entries(emptyStates).map(([key, state]) => (
-          <TabsContent key={key} value={key} className="mt-0">
-            <div className="text-center py-10 flex flex-col items-center gap-4">
-              <div className="h-20 w-20 rounded-full bg-gray-100 flex items-center justify-center">
-                <Briefcase className="h-10 w-10 text-muted-foreground" />
-              </div>
-              <p className="text-muted-foreground">{state.message}</p>
-              <Button onClick={() => navigate(state.path)}>{state.action}</Button>
-            </div>
-          </TabsContent>
-        ))}
+        <TabsContent value="listings" className="mt-0">
+          <ListingsSection />
+        </TabsContent>
+
+        <TabsContent value="shop" className="mt-0">
+          <ShopSection />
+        </TabsContent>
+
+        <TabsContent value="recommendations" className="mt-0">
+          <RecommendationsSection />
+        </TabsContent>
+
+        <TabsContent value="sellerDashboard" className="mt-0">
+          <SellerDashboardSection />
+        </TabsContent>
       </Tabs>
 
       <div className="mt-12 space-y-8">
