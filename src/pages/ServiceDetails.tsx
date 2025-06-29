@@ -1,230 +1,328 @@
 
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Star, MapPin, Clock, Calendar, User, Phone, Shield, AlertTriangle } from 'lucide-react';
-import P2PPaymentModal from '@/components/P2PPaymentModal';
-import { useToast } from "@/components/ui/use-toast";
-import OfflineIndicator from '@/components/housing/OfflineIndicator';
-import { useAuth } from '@/hooks/useAuth';
+import { Separator } from '@/components/ui/separator';
+import { 
+  ArrowLeft, Star, MapPin, Clock, Phone, CheckCircle, 
+  Shield, Award, Users, Calendar, MessageSquare, Share2,
+  Heart, Home, Video, Truck, CreditCard
+} from 'lucide-react';
+import ServiceBookingModal from '@/components/booking/ServiceBookingModal';
+import { useToast } from '@/hooks/use-toast';
 
 const ServiceDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user, isAuthenticated } = useAuth();
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
-  // ইন্টারনেট সংযোগ ট্র্যাক করুন
-  React.useEffect(() => {
-    function handleOnline() {
-      setIsOnline(true);
-    }
-
-    function handleOffline() {
-      setIsOnline(false);
-    }
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
-
-  // Mock service data - In a real app, this would come from an API
-  const serviceData = {
-    id: Number(id),
-    title: "সার্ভিস নাম",
-    description: "সার্ভিস বিস্তারিত বর্ণনা। এটি একটি দীর্ঘ বর্ণনা যাতে সেবা সম্পর্কে সবিস্তার জানানো হয়েছে। এই সেবাটি দক্ষ প্রফেশনালদের দ্বারা প্রদান করা হয় এবং সর্বোচ্চ মানের সেবা নিশ্চিত করা হয়। সার্ভিসটি সময়মত, পরিষ্কার-পরিচ্ছন্ন এবং ব্যবহারকারীর সন্তুষ্টি নিশ্চিত করে প্রদান করা হয়।",
-    image: "https://images.unsplash.com/photo-1588964895597-cfccd6e2dbf9?q=80&w=1000&auto=format&fit=crop",
-    price: 800,
-    priceUnit: "ঘণ্টা",
-    location: "ঢাকা",
+  // Mock service data - in real app, fetch from API
+  const service = {
+    id: parseInt(id || '1'),
+    title: 'হোম ভিজিট ডাক্তার',
+    provider: 'ডা. আহমেদ হাসান',
+    category: 'medical',
+    subcategory: 'জেনারেল ডাক্তার',
+    location: 'গুলশান, ঢাকা',
+    price: '৳১,৫০০',
     rating: 4.8,
-    category: "মেরামত",
-    provider: "জন ডো",
-    experience: "৫ বছর",
-    completedJobs: "১২০+",
-    availability: "সকাল ৯টা - রাত ৮টা",
-    contact: "০১৭৪৯-০০০০০০",
-    disputeRate: "১%", // বিবাদের হার যোগ করা হয়েছে
-    avgResolutionTime: "৪৮ ঘন্টা", // বিবাদ সমাধানের গড় সময়
-    verifiedProvider: true, // প্রোভাইডার ভেরিফাইড কিনা
-    insuranceAvailable: true, // সার্ভিসে ইনস্যুরেন্স কভারেজ আছে কিনা
+    reviews: 256,
+    image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400&q=80',
+    isVerified: true,
+    bookingTypes: ['হোম ভিজিট', 'ভিডিও কনসালটেশন', 'চেম্বার ভিজিট'],
+    responseTime: '৩০ মিনিট',
+    description: 'অভিজ্ঞ জেনারেল ফিজিশিয়ান। ১৫+ বছরের অভিজ্ঞতা সহ সাধারণ রোগের চিকিৎসা, স্বাস্থ্য পরামর্শ এবং প্রতিরোধমূলক স্বাস্থ্যসেবা প্রদান করেন। হোম ভিজিট এবং অনলাইন কনসালটেশন উভয়ই উপলব্ধ।',
+    features: [
+      'হোম ভিজিট সুবিধা',
+      'ভিডিও কনসালটেশন',
+      'ফ্রি ফলো-আপ',
+      '২৪/৭ জরুরি সেবা',
+      'প্রেসক্রিপশন ডেলিভারি'
+    ],
+    qualifications: [
+      'MBBS - ঢাকা মেডিকেল কলেজ',
+      'MD - বঙ্গবন্ধু শেখ মুজিব মেডিকেল বিশ্ববিদ্যালয়',
+      'BMA রেজিস্ট্রেশন সহ',
+      '১৫+ বছরের অভিজ্ঞতা'
+    ],
+    availableHours: 'সকাল ৮টা - রাত ১০টা',
+    languages: ['বাংলা', 'English', 'हिंदी']
   };
 
-  const handleBooking = () => {
-    if (!isAuthenticated) {
-      toast({
-        title: "দয়া করে লগইন করুন",
-        description: "পেমেন্ট করার জন্য আপনাকে প্রথমে লগইন করতে হবে",
-        variant: "destructive",
-      });
-      navigate('/login?redirect=service/' + id);
-      return;
-    }
-    
-    if (!isOnline) {
-      toast({
-        title: "অফলাইন মোড",
-        description: "পেমেন্ট করার জন্য ইন্টারনেট সংযোগ প্রয়োজন।",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    setIsPaymentModalOpen(true);
+  const bookingTypeIcons = {
+    'হোম ভিজিট': <Home className="h-4 w-4" />,
+    'ভিডিও কনসালটেশন': <Video className="h-4 w-4" />,
+    'চেম্বার ভিজিট': <MapPin className="h-4 w-4" />,
+    'পিক-আপ সার্ভিস': <Truck className="h-4 w-4" />
   };
 
-  const handlePaymentComplete = () => {
-    setIsPaymentModalOpen(false);
+  const reviews = [
+    {
+      id: 1,
+      name: 'রহিম উদ্দিন',
+      rating: 5,
+      comment: 'খুবই ভালো সেবা পেয়েছি। ডাক্তার সাহেব খুব ধৈর্য সহকারে সমস্যা শুনেছেন এবং সঠিক চিকিৎসা দিয়েছেন।',
+      date: '২ দিন আগে'
+    },
+    {
+      id: 2,
+      name: 'সালমা খাতুন',
+      rating: 5,
+      comment: 'হোম ভিজিট সার্ভিস অসাধারণ। সময়মতো এসেছেন এবং পরিবারের সবার দেখাশোনা করেছেন।',
+      date: '১ সপ্তাহ আগে'
+    },
+    {
+      id: 3,
+      name: 'করিম মিয়া',
+      rating: 4,
+      comment: 'ভিডিও কল এর মাধ্যমে খুব ভালো পরামর্শ পেয়েছি। দামও যুক্তিসঙ্গত।',
+      date: '২ সপ্তাহ আগে'
+    }
+  ];
+
+  const handleBookNow = () => {
+    setIsBookingModalOpen(true);
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: service.title,
+        text: `${service.provider} - ${service.description}`,
+        url: window.location.href
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      toast({
+        title: "লিংক কপি করা হয়েছে",
+        description: "সার্ভিসের লিংক ক্লিপবোর্ডে কপি করা হয়েছে"
+      });
+    }
+  };
+
+  const handleSaveToWishlist = () => {
     toast({
-      title: "বুকিং সফল",
-      description: "আপনার পেমেন্ট সফলভাবে কমপ্লিট হয়েছে।",
+      title: "সংরক্ষিত হয়েছে",
+      description: "সার্ভিসটি আপনার পছন্দের তালিকায় যোগ করা হয়েছে"
     });
   };
 
   return (
     <div className="container px-4 pt-20 pb-20">
-      <OfflineIndicator isOnline={isOnline} language="bn" />
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          <div className="overflow-hidden rounded-lg">
-            <img 
-              src={serviceData.image} 
-              alt={serviceData.title}
-              className="w-full h-[300px] object-cover"
-            />
-          </div>
-          
-          <Card>
-            <CardContent className="p-4">
-              <h1 className="text-2xl font-bold mb-2">
-                {serviceData.title}
-                {serviceData.verifiedProvider && 
-                  <Badge variant="outline" className="ml-2 text-blue-600 bg-blue-50 border-blue-200">
-                    <Shield className="h-3 w-3 mr-1" /> ভেরিফাইড প্রোভাইডার
-                  </Badge>
-                }
-              </h1>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-                <MapPin className="h-4 w-4" />
-                <span>{serviceData.location}</span>
-                <span className="mx-2">•</span>
-                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                <span>{serviceData.rating}</span>
+      {/* Header */}
+      <div className="flex items-center gap-2 mb-6">
+        <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <h1 className="text-xl font-bold">সার্ভিস বিস্তারিত</h1>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Content */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Service Image */}
+          <Card className="overflow-hidden">
+            <div className="relative aspect-video">
+              <img 
+                src={service.image} 
+                alt={service.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute top-4 left-4">
+                <Badge className="bg-green-600">উপলব্ধ</Badge>
               </div>
-              <Badge className="mb-4">{serviceData.category}</Badge>
-              <p className="text-lg font-bold text-primary mb-4">
-                ৳ {serviceData.price}/{serviceData.priceUnit}
-              </p>
-              <p className="text-gray-600 mb-4">
-                {serviceData.description}
-              </p>
+              <div className="absolute top-4 right-4 flex gap-2">
+                <Button variant="outline" size="icon" className="bg-white" onClick={handleShare}>
+                  <Share2 className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="icon" className="bg-white" onClick={handleSaveToWishlist}>
+                  <Heart className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </Card>
+
+          {/* Service Info */}
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h2 className="text-2xl font-bold mb-2">{service.title}</h2>
+                  <p className="text-lg text-muted-foreground mb-2">{service.provider}</p>
+                  <div className="flex items-center gap-4 mb-2">
+                    <div className="flex items-center">
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
+                      <span className="font-medium">{service.rating}</span>
+                      <span className="text-muted-foreground ml-1">({service.reviews} রিভিউ)</span>
+                    </div>
+                    {service.isVerified && (
+                      <Badge variant="secondary" className="flex items-center gap-1">
+                        <CheckCircle className="h-3 w-3" /> ভেরিফায়েড
+                      </Badge>
+                    )}
+                  </div>
+                  <div className="flex items-center text-muted-foreground mb-4">
+                    <MapPin className="h-4 w-4 mr-1" />
+                    <span>{service.location}</span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-3xl font-bold text-primary mb-1">{service.price}</div>
+                  <div className="text-sm text-muted-foreground">প্রতি সেশন</div>
+                </div>
+              </div>
+
+              <p className="text-muted-foreground mb-6 leading-relaxed">{service.description}</p>
+
+              {/* Booking Types */}
+              <div className="mb-6">
+                <h3 className="font-semibold mb-3">উপলব্ধ সেবা</h3>
+                <div className="flex flex-wrap gap-2">
+                  {service.bookingTypes.map((type, index) => (
+                    <Badge key={index} variant="outline" className="flex items-center gap-1">
+                      {bookingTypeIcons[type as keyof typeof bookingTypeIcons]}
+                      {type}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              {/* Features */}
+              <div className="mb-6">
+                <h3 className="font-semibold mb-3">বিশেষ সুবিধা</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {service.features.map((feature, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-500" />
+                      <span className="text-sm">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Qualifications */}
+              <div>
+                <h3 className="font-semibold mb-3">যোগ্যতা ও অভিজ্ঞতা</h3>
+                <div className="space-y-2">
+                  {service.qualifications.map((qualification, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <Award className="h-4 w-4 text-blue-500" />
+                      <span className="text-sm">{qualification}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Reviews */}
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="font-semibold mb-4">গ্রাহক পর্যালোচনা ({service.reviews})</h3>
+              <div className="space-y-4">
+                {reviews.map((review) => (
+                  <div key={review.id} className="border-b pb-4 last:border-b-0 last:pb-0">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                          <Users className="h-4 w-4" />
+                        </div>
+                        <span className="font-medium">{review.name}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex">
+                          {[1,2,3,4,5].map((star) => (
+                            <Star 
+                              key={star} 
+                              className={`h-4 w-4 ${star <= review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
+                            />
+                          ))}
+                        </div>
+                        <span className="text-sm text-muted-foreground">{review.date}</span>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{review.comment}</p>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </div>
 
-        <div className="space-y-4">
-          <Card>
-            <CardContent className="p-4">
-              <h2 className="text-xl font-semibold mb-4">সার্ভিস প্রোভাইডার</h2>
+        {/* Sidebar */}
+        <div className="space-y-6">
+          {/* Quick Info */}
+          <Card className="sticky top-24">
+            <CardContent className="p-6">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">রেসপন্স টাইম: {service.responseTime}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">উপলব্ধ: {service.availableHours}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">ভাষা: {service.languages.join(', ')}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-green-500" />
+                  <span className="text-sm text-green-600">নিরাপত্তা যাচাইকৃত</span>
+                </div>
+              </div>
+
+              <Separator className="my-4" />
+
               <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <User className="h-5 w-5 text-primary" />
-                  <span>{serviceData.provider}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-primary" />
-                  <span>অভিজ্ঞতা: {serviceData.experience}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-5 w-5 text-primary" />
-                  <span>সময়: {serviceData.availability}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Phone className="h-5 w-5 text-primary" />
-                  <span>{serviceData.contact}</span>
-                </div>
-                
-                {/* বিবাদের হার এবং গড় সমাধান সময় (যোগ করা হয়েছে) */}
-                <div className="flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-amber-500" />
-                  <span>বিবাদের হার: {serviceData.disputeRate} (গড় সমাধান সময়: {serviceData.avgResolutionTime})</span>
-                </div>
+                <Button className="w-full" size="lg" onClick={handleBookNow}>
+                  <Calendar className="h-4 w-4 mr-2" />
+                  এখনই বুক করুন
+                </Button>
+                <Button variant="outline" className="w-full" size="lg">
+                  <Phone className="h-4 w-4 mr-2" />
+                  কল করুন
+                </Button>
+                <Button variant="outline" className="w-full" size="lg">
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  মেসেজ করুন
+                </Button>
               </div>
             </CardContent>
           </Card>
 
-          <Button 
-            onClick={handleBooking}
-            className="w-full text-lg py-6"
-          >
-            নিরাপদ P2P পেমেন্ট এর মাধ্যমে বুক করুন
-          </Button>
-          
-          <Card className="bg-blue-50 border border-blue-100">
-            <CardContent className="p-4">
-              <h3 className="text-lg font-semibold text-blue-800 mb-2">নিরাপদ পেমেন্ট ব্যবস্থা</h3>
-              <p className="text-sm text-blue-700 mb-2">
-                আমাদের এসক্রো সিস্টেমের মাধ্যমে আপনার অর্থ সম্পূর্ণ নিরাপদ থাকবে। সার্ভিস গ্রহণের পরে আপনি কনফার্ম করলে তবেই বিক্রেতা পেমেন্ট পাবেন।
-              </p>
-              <ul className="list-disc list-inside text-sm text-blue-700 space-y-1">
-                <li>১০০% নিরাপদ পেমেন্ট</li>
-                <li>ভেরিফাইড সার্ভিস প্রোভাইডার</li>
-                <li>২৪/৭ কাস্টমার সাপোর্ট</li>
-                {serviceData.insuranceAvailable && (
-                  <li className="font-semibold">সার্ভিস ইনস্যুরেন্স কভারড</li>
-                )}
-              </ul>
-            </CardContent>
-          </Card>
-
-          {/* উন্নত নিরাপত্তা ফিচার তথ্য কার্ড (নতুন যোগ করা হয়েছে) */}
-          <Card className="bg-green-50 border border-green-100">
-            <CardContent className="p-4">
-              <h3 className="text-lg font-semibold text-green-800 mb-2">উন্নত নিরাপত্তা ফিচার</h3>
-              <ul className="list-disc list-inside text-sm text-green-700 space-y-2">
-                <li>
-                  <span className="font-medium">মাল্টিফ্যাক্টর ভেরিফিকেশন:</span> 
-                  <p className="ml-5 mt-1">ফোন এবং ইমেল ভেরিফিকেশন দ্বারা উচ্চ নিরাপত্তা নিশ্চিত করা হয়</p>
-                </li>
-                <li>
-                  <span className="font-medium">ডিসপিউট রেজোলিউশন:</span> 
-                  <p className="ml-5 mt-1">যেকোনো বিবাদ ৪৮ ঘন্টার মধ্যে সমাধান করা হয়</p>
-                </li>
-                <li>
-                  <span className="font-medium">রিয়েল-টাইম মনিটরিং:</span> 
-                  <p className="ml-5 mt-1">সকল লেনদেন রিয়েল-টাইমে মনিটর করা হয়</p>
-                </li>
-                <li>
-                  <span className="font-medium">ট্র্যাকেবল ট্রানজেকশন:</span> 
-                  <p className="ml-5 mt-1">প্রতিটি লেনদেন পূর্ণরূপে ট্র্যাক করা যায়</p>
-                </li>
-              </ul>
+          {/* Payment Options */}
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="font-semibold mb-3">পেমেন্ট সুবিধা</h3>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <CreditCard className="h-4 w-4 text-blue-500" />
+                  <span className="text-sm">ভিসা/মাস্টার কার্ড</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-green-500" />
+                  <span className="text-sm">বিকাশ/নগদ</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CreditCard className="h-4 w-4 text-orange-500" />
+                  <span className="text-sm">ক্যাশ অন ডেলিভারি</span>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
       </div>
 
-      <P2PPaymentModal 
-        open={isPaymentModalOpen} 
-        onOpenChange={setIsPaymentModalOpen}
-        item={{
-          id: id || "0",
-          title: serviceData.title,
-          price: serviceData.price,
-          priceUnit: serviceData.priceUnit,
-          owner: serviceData.provider
-        }}
-        onPaymentComplete={handlePaymentComplete}
+      {/* Booking Modal */}
+      <ServiceBookingModal
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+        service={service}
       />
     </div>
   );
