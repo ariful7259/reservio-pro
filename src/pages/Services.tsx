@@ -28,7 +28,8 @@ const Services = () => {
       iconColor: 'text-red-500',
       count: 156,
       subcategories: ['জেনারেল ডাক্তার', 'শিশু চিকিৎসক', 'গাইনী', 'চক্ষু চিকিৎসক', 'মানসিক স্বাস্থ্য'],
-      bookingTypes: ['হোম ভিজিট', 'ভিডিও কনসালটেশন', 'চেম্বার ভিজিট']
+      bookingTypes: ['হোম ভিজিট', 'ভিডিও কনসালটেশন', 'চেম্বার ভিজিট'],
+      monetization: '২০-৩০% কমিশন + প্রাইমারি কনসালটেশন চার্জ'
     },
     {
       id: 'dental',
@@ -38,7 +39,8 @@ const Services = () => {
       iconColor: 'text-blue-500',
       count: 89,
       subcategories: ['দাঁত ফিলিং', 'ব্রেসিং', 'স্কেলিং ও ক্লিনিং', 'রুট ক্যানাল'],
-      bookingTypes: ['চেম্বার ভিজিট', 'হোম সার্ভিস', 'ভিডিও কনসাল্ট']
+      bookingTypes: ['চেম্বার ভিজিট', 'হোম সার্ভিস', 'ভিডিও কনসাল্ট'],
+      monetization: '১৫-২০% কমিশন + বুকিং ফি'
     },
     {
       id: 'salon',
@@ -48,7 +50,8 @@ const Services = () => {
       iconColor: 'text-pink-500',
       count: 234,
       subcategories: ['পুরুষ হেয়ার কাট', 'মহিলা হেয়ার কাট', 'ফেসিয়াল ও স্কিন কেয়ার', 'ওয়েডিং মেকআপ'],
-      bookingTypes: ['হোম সার্ভিস', 'পার্লার ভিজিট']
+      bookingTypes: ['হোম সার্ভিস', 'পার্লার ভিজিট'],
+      monetization: '১৫% কমিশন + "Fast Booking" চার্জ'
     },
     {
       id: 'electronics',
@@ -58,7 +61,8 @@ const Services = () => {
       iconColor: 'text-yellow-600',
       count: 178,
       subcategories: ['ফ্রিজ', 'এসি', 'টিভি', 'ওভেন'],
-      bookingTypes: ['হোম ভিজিট', 'ডেলিভারি রিপেয়ার']
+      bookingTypes: ['হোম ভিজিট', 'ডেলিভারি রিপেয়ার'],
+      monetization: 'Flat ফিক্সড সার্ভিস চার্জ + পার্টস চার্জ থেকে কমিশন'
     },
     {
       id: 'mobile',
@@ -68,7 +72,8 @@ const Services = () => {
       iconColor: 'text-purple-500',
       count: 145,
       subcategories: ['মোবাইল রিপেয়ার', 'ল্যাপটপ সার্ভিস', 'ডিসপ্লে রিপ্লেস', 'সফটওয়্যার ইনস্টল'],
-      bookingTypes: ['পিক-আপ সার্ভিস', 'হোম সার্ভিস', 'ভিডিও ডায়াগনসিস']
+      bookingTypes: ['পিক-আপ সার্ভিস', 'হোম সার্ভিস', 'ভিডিও ডায়াগনসিস'],
+      monetization: 'প্যাকেজ অফার + রিপেয়ার কমিশন'
     },
     {
       id: 'cooking',
@@ -78,7 +83,8 @@ const Services = () => {
       iconColor: 'text-orange-500',
       count: 67,
       subcategories: ['হোম কুক', 'ক্যাটারিং', 'রান্নার সহকারী', 'হেলদি ফুড প্রিপারেশন'],
-      bookingTypes: ['সাপ্তাহিক সাবস্ক্রিপশন', 'নির্দিষ্ট তারিখে বুকিং']
+      bookingTypes: ['সাপ্তাহিক সাবস্ক্রিপশন', 'নির্দিষ্ট তারিখে বুকিং'],
+      monetization: 'সাবস্ক্রিপশন মডেল + % কমিশন'
     },
     {
       id: 'cleaning',
@@ -88,7 +94,8 @@ const Services = () => {
       iconColor: 'text-green-500',
       count: 198,
       subcategories: ['ঘর ঝাড়ু ও মপিং', 'বাথরুম ক্লিন', 'সোফা/কার্পেট ওয়াশ', 'অফিস ক্লিনিং'],
-      bookingTypes: ['One-Time', 'Weekly/Monthly Plan']
+      bookingTypes: ['One-Time', 'Weekly/Monthly Plan'],
+      monetization: 'প্যাকেজ চার্জ + টাইム বেইজড চার্জ'
     },
     {
       id: 'furniture',
@@ -97,8 +104,97 @@ const Services = () => {
       color: 'bg-amber-50',
       iconColor: 'text-amber-600',
       count: 76,
-      subcategories: ['কাঠের বিছানা তৈরি', 'সোফা ফোম চেঞ্জ', 'কাঠ মেরামত', 'ইন্টেরিয়র কাঠ কাজ'],
-      bookingTypes: ['কাস্টম কোট', 'ভিডিও কল কনসাল্ট']
+      subcategories: ['কাঠের বিছানা তৈরি', 'সোফা ফোম চেঞ্জ', 'কাঠ মেরামত', 'ইন্টেرিয়র কাঠ কাজ'],
+      bookingTypes: ['কাস্টম কোট', 'ভিডিও কল কনসাল্ট'],
+      monetization: 'কাস্টম বিলিং + % কমিশন'
+    },
+    {
+      id: 'pest-control',
+      name: 'পেস্ট কন্ট্রোল সার্ভিস',
+      icon: <Bug className="h-7 w-7" />,
+      color: 'bg-red-50',
+      iconColor: 'text-red-600',
+      count: 54,
+      subcategories: ['মশা/তেলাপোকা', 'ইঁদুর/পিপঁড়ে', 'বেডবাগ', 'টার্মাইট/দেয়ালের পোকা'],
+      bookingTypes: ['হোম ভিজিট', 'মাসিক কন্ট্রাক্ট'],
+      monetization: 'Flat Service Charge + ১০% কমিশন'
+    },
+    {
+      id: 'education',
+      name: 'শিক্ষা ও টিউটর সার্ভিস',
+      icon: <GraduationCap className="h-7 w-7" />,
+      color: 'bg-indigo-50',
+      iconColor: 'text-indigo-500',
+      count: 142,
+      subcategories: ['স্কুল টিউটর', 'কোচিং হেল্প', 'অনলাইন IELTS/Spoken', 'কোর্স মডিউল'],
+      bookingTypes: ['ভিডিও কল ক্লাস', 'হোম টিউশন'],
+      monetization: 'সাবস্ক্রিপশন প্ল্যান/পার ক্লাস কমিশন'
+    },
+    {
+      id: 'photography',
+      name: 'ফটোগ্রাফি সার্ভিস',
+      icon: <Camera className="h-7 w-7" />,
+      color: 'bg-gray-50',
+      iconColor: 'text-gray-600',
+      count: 87,
+      subcategories: ['ওয়েডিং শুট', 'ইভেন্ট শুট', 'পাসপোর্ট/প্রফাইল', 'ইনডোর স্টুডিও'],
+      bookingTypes: ['টাইম স্লট', 'প্যাকেজ ভিত্তিক'],
+      monetization: '% কমিশন + Top Photographer listing'
+    },
+    {
+      id: 'delivery',
+      name: 'ডেলিভারি সার্ভিস',
+      icon: <Package className="h-7 w-7" />,
+      color: 'bg-blue-50',
+      iconColor: 'text-blue-600',
+      count: 203,
+      subcategories: ['কুরিয়ার', 'পার্সেল', 'ফুড/গ্রোসারি'],
+      bookingTypes: ['ইনস্ট্যান্ট ডেলিভারি', 'সিডিউলড'],
+      monetization: 'প্রতি ডেলিভারির ফি + সাবস্ক্রিপশন'
+    },
+    {
+      id: 'it-services',
+      name: 'আইটি ও ডিজিটাল সার্ভিস',
+      icon: <Laptop className="h-7 w-7" />,
+      color: 'bg-purple-50',
+      iconColor: 'text-purple-600',
+      count: 95,
+      subcategories: ['ওয়েবসাইট/অ্যাপ ডেভেলপ', 'ডিজিটাল মার্কেটিং', 'SEO', 'গ্রাফিক ডিজাইন'],
+      bookingTypes: ['Remote Booking', 'Project Contract'],
+      monetization: 'Commission + Freelancer Profit Share মডেল'
+    },
+    {
+      id: 'event-management',
+      name: 'ইভেন্ট ম্যানেজমেন্ট',
+      icon: <PartyPopper className="h-7 w-7" />,
+      color: 'bg-pink-50',
+      iconColor: 'text-pink-600',
+      count: 73,
+      subcategories: ['বিয়ে আয়োজন', 'জন্মদিন', 'কর্পোরেট ইভেন্ট', 'পার্টি ডেকোরেশন'],
+      bookingTypes: ['কাস্টম কোটেশন', 'প্যাকেজ ভিত্তিক'],
+      monetization: '২০% কমিশন বা Flat Contract Fee'
+    },
+    {
+      id: 'construction',
+      name: 'কনস্ট্রাকশন ও হোম সার্ভিস',
+      icon: <Building className="h-7 w-7" />,
+      color: 'bg-gray-50',
+      iconColor: 'text-gray-700',
+      count: 126,
+      subcategories: ['ঘর বানানো', 'প্ল্যানিং/ম্যাপ', 'ইন্টেرিয়র ডিজাইন', 'টাইলস/পেইন্ট/স্যানিটারি'],
+      bookingTypes: ['সাইট ভিজিট বুকিং', 'কাস্টম কোট'],
+      monetization: 'Commission + Project Management Fee'
+    },
+    {
+      id: 'transport',
+      name: 'ট্রান্সপোর্ট/রেন্টাল সার্ভিস',
+      icon: <Car className="h-7 w-7" />,
+      color: 'bg-green-50',
+      iconColor: 'text-green-600',
+      count: 164,
+      subcategories: ['বাইক/প্রাইভেট কার রেন্ট', 'এম্বুলেন্স বুকিং', 'লোকাল রাইড শেয়ার'],
+      bookingTypes: ['টাইম স্লট', 'সিডিউলড ট্রিপ'],
+      monetization: 'ভাড়া থেকে কমিশন + রাইড চার্জ'
     }
   ];
 
@@ -252,10 +348,10 @@ const Services = () => {
         </Button>
       </div>
 
-      {/* Service Categories */}
+      {/* Service Categories - Grid Layout like Rent section */}
       <div className="mb-8">
-        <h2 className="text-lg font-semibold mb-4">ক্যাটাগরি</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <h2 className="text-lg font-semibold mb-4">ক্যাটাগরি সমূহ</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
           <div 
             className={`flex flex-col items-center text-center p-4 rounded-lg transition-colors cursor-pointer ${
               selectedCategory === 'all' ? 'bg-primary/10 border-2 border-primary' : 'hover:bg-gray-50'
@@ -271,7 +367,7 @@ const Services = () => {
             </Badge>
           </div>
           
-          {serviceCategories.slice(0, 7).map(category => (
+          {serviceCategories.map(category => (
             <div 
               key={category.id} 
               className={`flex flex-col items-center text-center p-4 rounded-lg transition-colors cursor-pointer ${
@@ -288,10 +384,60 @@ const Services = () => {
               <Badge variant="secondary" className="text-xs">
                 {category.count}টি
               </Badge>
+              {/* Show subcategories count */}
+              <div className="mt-2 text-xs text-muted-foreground">
+                {category.subcategories.length} সাব-ক্যাটাগরি
+              </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Selected Category Details */}
+      {selectedCategory !== 'all' && (
+        <div className="mb-8">
+          {(() => {
+            const category = serviceCategories.find(c => c.id === selectedCategory);
+            if (!category) return null;
+            
+            return (
+              <Card className="p-6">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className={`w-12 h-12 rounded-full ${category.color} flex items-center justify-center`}>
+                    <div className={category.iconColor}>
+                      {category.icon}
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold">{category.name}</h3>
+                    <p className="text-sm text-muted-foreground">{category.monetization}</p>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-medium mb-2">সাব-ক্যাটাগরি:</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {category.subcategories.map((sub, index) => (
+                        <Badge key={index} variant="outline">{sub}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-medium mb-2">বুকিং টাইপ:</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {category.bookingTypes.map((type, index) => (
+                        <Badge key={index} variant="secondary">{type}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            );
+          })()}
+        </div>
+      )}
 
       {/* Services Grid */}
       <div className="mb-8">
