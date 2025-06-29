@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { 
   Search, Filter, Star, MapPin, Clock, Users, Share2, Bookmark, 
   Heart, ArrowUpRight, Stethoscope, Scissors, Wrench, Smartphone, 
-  UtensilsCrossed, Broom, Hammer, Bug, GraduationCap, Camera, 
+  UtensilsCrossed, Brush, Hammer, Bug, GraduationCap, Camera, 
   Package, Laptop, PartyPopper, Building, Car, Phone, Video, 
   Home, Truck, CheckCircle
 } from 'lucide-react';
@@ -84,7 +83,7 @@ const Services = () => {
     {
       id: 'cleaning',
       name: 'হাউজ ক্লিনিং সার্ভিস',
-      icon: <Broom className="h-7 w-7" />,
+      icon: <Brush className="h-7 w-7" />,
       color: 'bg-green-50',
       iconColor: 'text-green-500',
       count: 198,
