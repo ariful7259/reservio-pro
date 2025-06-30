@@ -76,7 +76,8 @@ export const ServiceCategoriesGrid = () => {
       <h3 className="font-medium text-lg">
         {language === 'bn' ? 'সার্ভিস ক্যাটাগরি' : 'Service Categories'}
       </h3>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      {/* Mobile: 4 columns, Desktop: 4 columns */}
+      <div className="grid grid-cols-4 gap-2 md:gap-3">
         {/* Display service categories */}
         {displayedCategories.map((category, index) => (
           <ServiceCategoryItem 
@@ -102,7 +103,7 @@ export const ServiceCategoriesGrid = () => {
             onClick={() => setShowModal(true)}
             className="flex flex-col items-center justify-center p-2 border border-dashed rounded-lg hover:bg-blue-50 hover:border-blue-200 transition-colors h-full min-h-[90px]"
           >
-            <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mb-2">
+            <div className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-blue-100 flex items-center justify-center mb-2">
               +
             </div>
             <span className="text-xs font-medium text-center text-primary">

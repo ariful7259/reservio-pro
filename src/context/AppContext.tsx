@@ -203,6 +203,27 @@ const translations = {
     'booking_types': 'Booking Types',
     'services_found': 'services found',
     'all_services': 'All Services',
+    
+    // Marketplace specific
+    'flash_deals': 'Flash Deals',
+    'used_products': 'Used Products',
+    'local_brands': 'Local Brands',
+    'post_item': 'Post Item',
+    'buy_now': 'Buy Now',
+    'add_to_cart': 'Add to Cart',
+    'chat': 'Chat',
+    'register_brand': 'Register Brand',
+    'support_local': 'Support Local',
+    'condition_excellent': 'Excellent',
+    'condition_good': 'Good',
+    'condition_fair': 'Fair',
+    'posted_days_ago': 'days ago',
+    'posted_week_ago': 'week ago',
+    'sold': 'sold',
+    'stock': 'stock',
+    'discount': 'discount',
+    'featured_products': 'Featured Products',
+    'view_all': 'View All',
   },
   bn: {
     // Navigation
@@ -340,6 +361,27 @@ const translations = {
     'booking_types': 'বুকিং টাইপ',
     'services_found': 'টি সেবা পাওয়া গেছে',
     'all_services': 'সকল সেবা',
+    
+    // Marketplace specific
+    'flash_deals': 'ফ্ল্যাশ ডিল',
+    'used_products': 'পুরাতন পণ্য',
+    'local_brands': 'লোকাল ব্র্যান্ড',
+    'post_item': 'পোস্ট করুন',
+    'buy_now': 'এখনই কিনুন',
+    'add_to_cart': 'কার্টে যোগ করুন',
+    'chat': 'চ্যাট',
+    'register_brand': 'ব্র্যান্ড রেজিস্টার',
+    'support_local': 'স্থানীয় সাপোর্ট',
+    'condition_excellent': 'চমৎকার',
+    'condition_good': 'ভালো',
+    'condition_fair': 'মোটামুটি',
+    'posted_days_ago': 'দিন আগে',
+    'posted_week_ago': 'সপ্তাহ আগে',
+    'sold': 'বিক্রিত',
+    'stock': 'স্টক',
+    'discount': 'ছাড়',
+    'featured_products': 'ফিচার্ড প্রোডাক্ট',
+    'view_all': 'সব দেখুন',
   }
 };
 
