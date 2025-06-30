@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Search, Filter, Star, MapPin, Clock, Users, Share2, Bookmark, Heart, ArrowUpRight, Stethoscope, Scissors, Wrench, Smartphone, UtensilsCrossed, Brush, Hammer, Bug, GraduationCap, Camera, Package, Laptop, PartyPopper, Building, Car, Phone, Video, Home, Truck, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import ServiceCategoryFilterForm from '@/components/services/ServiceCategoryFilterForm';
+
 const Services = () => {
   const navigate = useNavigate();
   const {
@@ -13,6 +15,10 @@ const Services = () => {
   } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedSubcategory, setSelectedSubcategory] = useState('all');
+  const [selectedLocation, setSelectedLocation] = useState('all');
+  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+
   const serviceCategories = [{
     id: 'medical',
     name: 'ডাক্তার ও স্বাস্থ্য সেবা',
@@ -121,7 +127,7 @@ const Services = () => {
     iconColor: 'text-gray-600',
     count: 87,
     subcategories: ['ওয়েডিং শুট', 'ইভেন্ট শুট', 'পাসপোর্ট/প্রফাইল', 'ইনডোর স্টুডিও'],
-    bookingTypes: ['টাইম স্লট', 'প্যাকেজ ভিত্তিক'],
+    bookingTypes: ['টাইム স্লট', 'প্যাকেজ ভিত্তিক'],
     monetization: '% কমিশন + Top Photographer listing'
   }, {
     id: 'delivery',
@@ -260,9 +266,14 @@ const Services = () => {
     responseTime: '৩ ঘণ্টা'
   }];
   const filteredServices = allServices.filter(service => {
-    const matchesSearch = service.title.toLowerCase().includes(searchTerm.toLowerCase()) || service.provider.toLowerCase().includes(searchTerm.toLowerCase()) || service.subcategory.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = service.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                         service.provider.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                         service.subcategory.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || service.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const matchesSubcategory = selectedSubcategory === 'all' || service.subcategory === selectedSubcategory;
+    const matchesLocation = selectedLocation === 'all' || service.location.toLowerCase().includes(selectedLocation.toLowerCase());
+    
+    return matchesSearch && matchesCategory && matchesSubcategory && matchesLocation;
   });
   const handleBookmark = (e: React.MouseEvent, serviceId: number) => {
     e.stopPropagation();
@@ -285,7 +296,8 @@ const Services = () => {
     e.stopPropagation();
     navigate(`/services/${serviceId}/book`);
   };
-  return <div className="container px-4 pt-20 pb-20">
+  return (
+    <div className="container px-4 pt-20 pb-20">
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">সার্ভিস সমূহ</h1>
         <p className="text-muted-foreground">আপনার প্রয়োজনীয় সেবা খুঁজে নিন</p>
@@ -302,13 +314,20 @@ const Services = () => {
         </Button>
       </div>
 
-      {/* Service Categories - Grid Layout like Rent section */}
+      {/* Service Categories - Grid Layout */}
       <div className="mb-8">
         <h2 className="text-lg font-semibold mb-4">ক্যাটাগরি সমূহ</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
-          
-          
-          {serviceCategories.map(category => <div key={category.id} className={`flex flex-col items-center text-center p-4 rounded-lg transition-colors cursor-pointer ${selectedCategory === category.id ? 'bg-primary/10 border-2 border-primary' : 'hover:bg-gray-50'}`} onClick={() => setSelectedCategory(category.id)}>
+          {serviceCategories.map((category) => (
+            <div
+              key={category.id}
+              className={`flex flex-col items-center text-center p-4 rounded-lg transition-colors cursor-pointer ${
+                selectedCategory === category.id
+                  ? 'bg-primary/10 border-2 border-primary'
+                  : 'hover:bg-gray-50'
+              }`}
+              onClick={() => setSelectedCategory(category.id)}
+            >
               <div className={`w-16 h-16 rounded-full ${category.color} flex items-center justify-center mb-3`}>
                 <div className={category.iconColor}>
                   {category.icon}
@@ -322,46 +341,68 @@ const Services = () => {
               <div className="mt-2 text-xs text-muted-foreground">
                 {category.subcategories.length} সাব-ক্যাটাগরি
               </div>
-            </div>)}
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Selected Category Details */}
-      {selectedCategory !== 'all' && <div className="mb-8">
+      {/* Selected Category Filter Form */}
+      {selectedCategory !== 'all' && (
+        <div className="mb-8">
           {(() => {
-        const category = serviceCategories.find(c => c.id === selectedCategory);
-        if (!category) return null;
-        return <Card className="p-6">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className={`w-12 h-12 rounded-full ${category.color} flex items-center justify-center`}>
-                    <div className={category.iconColor}>
-                      {category.icon}
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold">{category.name}</h3>
-                    <p className="text-sm text-muted-foreground">{category.monetization}</p>
-                  </div>
-                </div>
+            const category = serviceCategories.find(c => c.id === selectedCategory);
+            if (!category) return null;
+            
+            return (
+              <div className="space-y-4">
+                <ServiceCategoryFilterForm
+                  category={category}
+                  selectedSubcategory={selectedSubcategory}
+                  selectedLocation={selectedLocation}
+                  priceRange={priceRange}
+                  onSubcategoryChange={setSelectedSubcategory}
+                  onLocationChange={setSelectedLocation}
+                  onPriceRangeChange={setPriceRange}
+                />
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-medium mb-2">সাব-ক্যাটাগরি:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {category.subcategories.map((sub, index) => <Badge key={index} variant="outline">{sub}</Badge>)}
+                <Card className="p-6">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className={`w-12 h-12 rounded-full ${category.color} flex items-center justify-center`}>
+                      <div className={category.iconColor}>
+                        {category.icon}
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold">{category.name}</h3>
+                      <p className="text-sm text-muted-foreground">{category.monetization}</p>
                     </div>
                   </div>
                   
-                  <div>
-                    <h4 className="font-medium mb-2">বুকিং টাইপ:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {category.bookingTypes.map((type, index) => <Badge key={index} variant="secondary">{type}</Badge>)}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="font-medium mb-2">সাব-ক্যাটাগরি:</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {category.subcategories.map((sub, index) => (
+                          <Badge key={index} variant="outline">{sub}</Badge>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-medium mb-2">বুকিং টাইপ:</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {category.bookingTypes.map((type, index) => (
+                          <Badge key={index} variant="secondary">{type}</Badge>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Card>;
-      })()}
-        </div>}
+                </Card>
+              </div>
+            );
+          })()}
+        </div>
+      )}
 
       {/* Services Grid */}
       <div className="mb-8">
@@ -374,7 +415,7 @@ const Services = () => {
           </span>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {filteredServices.map(service => <Card key={service.id} className="overflow-hidden cursor-pointer hover:shadow-md transition-all hover:scale-105" onClick={() => handleServiceClick(service.id)}>
               <CardContent className="p-0">
                 <div className="relative aspect-video">
@@ -446,6 +487,8 @@ const Services = () => {
           আরো সেবা দেখুন
         </Button>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Services;

@@ -4,9 +4,18 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { ShoppingBag, Search, Filter, Grid, List, Heart, Star, MapPin, TrendingUp, Package, Users, Clock, Smartphone, Shirt, Home, Book, Laptop, Camera, Gamepad2, Watch } from 'lucide-react';
+import MarketplaceCategoryFilterForm from '@/components/marketplace/MarketplaceCategoryFilterForm';
+
 const Marketplace = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState('grid');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  
+  // Add filter states
+  const [selectedSubcategory, setSelectedSubcategory] = useState('all');
+  const [selectedLocation, setSelectedLocation] = useState('all');
+  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+
   const categories = [{
     id: 'electronics',
     name: 'ইলেকট্রনিক্স',
@@ -109,7 +118,17 @@ const Marketplace = () => {
     image: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=400&h=400&fit=crop',
     discount: 29
   }];
-  return <div className="container px-4 pt-20 pb-20">
+
+  const filteredProducts = featuredProducts.filter(product => {
+    const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                         product.seller.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesLocation = selectedLocation === 'all' || product.location.toLowerCase().includes(selectedLocation.toLowerCase());
+    
+    return matchesSearch && matchesLocation;
+  });
+
+  return (
+    <div className="container px-4 pt-20 pb-20">
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">মার্কেটপ্লেস</h1>
         <p className="text-muted-foreground">আপনার পছন্দের পণ্য খুঁজে নিন</p>
@@ -135,8 +154,17 @@ const Marketplace = () => {
 
       <div className="mb-8">
         <h2 className="text-lg font-semibold mb-4">ক্যাটাগরি সমূহ</h2>
-        <div className="grid grid-cols-4 gap-4">
-          {categories.map(category => <div key={category.id} className="flex flex-col items-center text-center p-4 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
+          {categories.map((category) => (
+            <div
+              key={category.id}
+              className={`flex flex-col items-center text-center p-4 rounded-lg transition-colors cursor-pointer ${
+                selectedCategory === category.id
+                  ? 'bg-primary/10 border-2 border-primary'
+                  : 'hover:bg-gray-50'
+              }`}
+              onClick={() => setSelectedCategory(category.id)}
+            >
               <div className={`w-16 h-16 rounded-full ${category.color} flex items-center justify-center mb-3`}>
                 <div className={category.iconColor}>
                   {category.icon}
@@ -146,14 +174,54 @@ const Marketplace = () => {
               <Badge variant="secondary" className="text-xs">
                 {category.count} পণ্য
               </Badge>
-            </div>)}
+            </div>
+          ))}
         </div>
+        
         <div className="flex justify-center mt-6">
           <Button variant="outline" className="text-red-500 border-red-500 hover:bg-red-50">
             ∨ আরো দেখুন
           </Button>
         </div>
       </div>
+
+      {/* Selected Category Filter Form */}
+      {selectedCategory !== 'all' && (
+        <div className="mb-8">
+          {(() => {
+            const category = categories.find(c => c.id === selectedCategory);
+            if (!category) return null;
+            
+            return (
+              <div className="space-y-4">
+                <MarketplaceCategoryFilterForm
+                  category={category}
+                  selectedSubcategory={selectedSubcategory}
+                  selectedLocation={selectedLocation}
+                  priceRange={priceRange}
+                  onSubcategoryChange={setSelectedSubcategory}
+                  onLocationChange={setSelectedLocation}
+                  onPriceRangeChange={setPriceRange}
+                />
+                
+                <Card className="p-6">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className={`w-12 h-12 rounded-full ${category.color} flex items-center justify-center`}>
+                      <div className={category.iconColor}>
+                        {category.icon}
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold">{category.name}</h3>
+                      <p className="text-sm text-muted-foreground">{category.count} পণ্য</p>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+            );
+          })()}
+        </div>
+      )}
 
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
@@ -162,8 +230,9 @@ const Marketplace = () => {
             সব দেখুন
           </Button>
         </div>
-        <div className={viewMode === 'grid' ? 'grid grid-cols-2 md:grid-cols-4 gap-4' : 'space-y-4'}>
-          {featuredProducts.map(product => <Card key={product.id} className="hover:shadow-md transition-all cursor-pointer overflow-hidden">
+        
+        <div className={viewMode === 'grid' ? 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4' : 'space-y-4'}>
+          {filteredProducts.map(product => <Card key={product.id} className="hover:shadow-md transition-all cursor-pointer overflow-hidden">
               {viewMode === 'grid' ? <CardContent className="p-0">
                   <div className="relative">
                     <img src={product.image} alt={product.title} className="w-full h-48 object-cover" />
@@ -226,8 +295,8 @@ const Marketplace = () => {
             </Card>)}
         </div>
       </div>
-
-      
-    </div>;
+    </div>
+  );
 };
+
 export default Marketplace;
