@@ -58,6 +58,7 @@ import Orders from './pages/Orders';
 import Settings from './pages/Settings';
 import KycVerification from './pages/KycVerification';
 import ServiceCategoryPage from "./pages/ServiceCategoryPage";
+import RentalCategoryPage from "./pages/RentalCategoryPage";
 
 const RoutesConfig = () => {
   return (
@@ -126,6 +127,7 @@ const RoutesConfig = () => {
       <Route path="/rentals" element={<Rentals />} />
       <Route path="/rent-anything" element={<RentAnything />} />
       <Route path="/rental-category/:category" element={<BasaBari />} />
+      <Route path="/rental-category/:categoryId" element={<RentalCategoryPage />} />
       <Route path="/basa-bari" element={<BasaBari />} />
       
       {/* Support and Dispute */}

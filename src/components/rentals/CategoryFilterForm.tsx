@@ -40,11 +40,13 @@ const CategoryFilterForm: React.FC<CategoryFilterFormProps> = ({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
-      <SubcategorySelector
-        category={category}
-        selectedSubcategory={selectedSubcategory}
-        onSubcategoryChange={onSubcategoryChange}
-      />
+      {category && (
+        <SubcategorySelector
+          category={category}
+          selectedSubcategory={selectedSubcategory}
+          onSubcategoryChange={onSubcategoryChange}
+        />
+      )}
 
       <LocationSelector
         selectedLocation={selectedLocation}
