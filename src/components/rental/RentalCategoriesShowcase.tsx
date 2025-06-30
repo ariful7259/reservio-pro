@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -99,17 +100,17 @@ const RentalCategoriesShowcase = () => {
                     <div className="grid grid-cols-1 gap-1">
                       {category.subcategories.slice(0, 4).map((sub, index) => (
                         <Button
-                          key={sub.id}
+                          key={sub}
                           variant="ghost"
                           size="sm"
                           className="justify-start h-8 px-2 text-xs hover:bg-primary/10"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleCategoryClick(category.id, sub.name);
+                            handleCategoryClick(category.id, sub);
                           }}
                         >
                           <ArrowRight className="h-3 w-3 mr-2" />
-                          {sub.name}
+                          {sub}
                         </Button>
                       ))}
                       {category.subcategories.length > 4 && (

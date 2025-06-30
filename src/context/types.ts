@@ -55,14 +55,6 @@ export type AppContextType = {
   setLanguage: (Language: Language) => void;
   t: (key: string) => string;
   
-  // Currency Support
-  currency: string;
-  setCurrency: (currency: string) => void;
-  
-  // User Management
-  user: any;
-  setUser: (user: any) => void;
-  
   // Offline Support
   isOnline: boolean;
   
