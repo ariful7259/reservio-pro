@@ -30,6 +30,7 @@ import RentalCategoriesPage from './pages/RentalCategoriesPage';
 import RentalBookingDynamic from './pages/RentalBookingDynamic';
 import RentalCategoryPage from './pages/RentalCategoryPage';
 import RentDetail from './pages/RentDetail';
+import BasaBari from './pages/BasaBari';
 
 function App() {
   return (
@@ -66,6 +67,7 @@ function App() {
               <Route path="/rental-booking/:categoryId" element={<RentalBookingDynamic />} />
               <Route path="/rental-category/:categoryId" element={<RentalCategoryPage />} />
               <Route path="/rent-details/:id" element={<RentDetail />} />
+              <Route path="/basa-bari" element={<BasaBari />} />
             </Routes>
             <Toaster />
           </div>

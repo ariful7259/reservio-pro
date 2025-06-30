@@ -19,6 +19,8 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import SocialShareModal from '@/components/SocialShareModal';
 import RentalCategoryFilterForm from '@/components/rentals/RentalCategoryFilterForm';
+import EnhancedHousingSection from '@/components/housing/EnhancedHousingSection';
+import { useApp } from '@/context/AppContext';
 
 // ক্যাটাগরি-ভিত্তিক ডেটা ম্যাপিং
 const categoryData = {
@@ -327,6 +329,20 @@ const categoryData = {
         rating: 4.7
       }
     ]
+  },
+  // Housing categories data
+  'housing': {
+    title: 'বাসা বাড়ি',
+    subcategories: [
+      { id: 'apartment', name: 'অ্যাপার্টমেন্ট/ফ্ল্যাট', count: 120 },
+      { id: 'house', name: 'বাসা/বাড়ি', count: 85 },
+      { id: 'hostel', name: 'মেস/হোস্টেল', count: 45 },
+      { id: 'room', name: 'সিঙ্গেল রুম/শেয়ারড', count: 90 },
+      { id: 'commercial', name: 'কমার্শিয়াল স্পেস', count: 30 },
+      { id: 'guesthouse', name: 'গেস্ট হাউস/স্বল্পমেয়াদী', count: 25 },
+      { id: 'rural', name: 'গ্রামীণ বাসস্থান', count: 15 },
+      { id: 'studio', name: 'স্টুডিও/স্পেশাল স্পেস', count: 20 }
+    ]
   }
 };
 
@@ -334,6 +350,7 @@ const RentalCategoryPage = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { language } = useApp();
   const [sortBy, setSortBy] = useState('recommended');
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>('all');
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
@@ -376,8 +393,27 @@ const RentalCategoryPage = () => {
     return null;
   }
 
-  // Check if this is a housing category (বাসা বাড়ি related)
-  const isHousingCategory = categoryId && ['apartment', 'house', 'hostel', 'room', 'commercial', 'guesthouse', 'rural', 'studio'].includes(categoryId);
+  // Check if this is a housing category
+  const isHousingCategory = categoryId && ['apartment', 'house', 'hostel', 'room', 'commercial', 'guesthouse', 'rural', 'studio', 'housing', 'বাসা-বাড়ি'].includes(categoryId);
+
+  // If it's housing category, show enhanced housing section
+  if (isHousingCategory) {
+    return (
+      <div className="container px-4 pt-20 pb-20">
+        <div className="flex items-center gap-2 mb-6">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => navigate('/rentals')}
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <h1 className="text-2xl font-bold">বাসা বাড়ি</h1>
+        </div>
+        <EnhancedHousingSection language={language} />
+      </div>
+    );
+  }
 
   // Filter items based on selected subcategory
   const filteredItems = selectedSubcategory === 'all' 
@@ -433,17 +469,15 @@ const RentalCategoryPage = () => {
       </div>
       
       {/* Rental Category Filter Form - Only show for non-housing categories */}
-      {!isHousingCategory && (
-        <RentalCategoryFilterForm
-          category={category}
-          selectedSubcategory={selectedSubcategory}
-          selectedLocation={selectedLocation}
-          priceRange={priceRange}
-          onSubcategoryChange={setSelectedSubcategory}
-          onLocationChange={setSelectedLocation}
-          onPriceRangeChange={setPriceRange}
-        />
-      )}
+      <RentalCategoryFilterForm
+        category={category}
+        selectedSubcategory={selectedSubcategory}
+        selectedLocation={selectedLocation}
+        priceRange={priceRange}
+        onSubcategoryChange={setSelectedSubcategory}
+        onLocationChange={setSelectedLocation}
+        onPriceRangeChange={setPriceRange}
+      />
       
       {/* Subcategory Filter */}
       <div className="mb-6">

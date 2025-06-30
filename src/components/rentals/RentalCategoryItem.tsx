@@ -28,7 +28,8 @@ const categoryNameToId: { [key: string]: string } = {
   'কমার্শিয়াল স্পেস': 'commercial',
   'গেস্ট হাউস/স্বল্পমেয়াদী': 'guesthouse',
   'গ্রামীণ বাসস্থান': 'rural',
-  'স্টুডিও/স্পেশাল স্পেস': 'studio'
+  'স্টুডিও/স্পেশাল স্পেস': 'studio',
+  'বাসা বাড়ি': 'housing'
 };
 
 const RentalCategoryItem: React.FC<RentalCategoryItemProps> = ({
@@ -43,7 +44,13 @@ const RentalCategoryItem: React.FC<RentalCategoryItemProps> = ({
     // Generate proper category ID
     const categoryId = category.id || categoryNameToId[category.name] || category.name.toLowerCase().replace(/\s+/g, '-');
     console.log(`Navigating to category: ${category.name} -> ${categoryId}`);
-    navigate(`/rental-category/${categoryId}`);
+    
+    // Special handling for housing category
+    if (category.name === 'বাসা বাড়ি' || categoryId === 'housing') {
+      navigate(`/rental-category/housing`);
+    } else {
+      navigate(`/rental-category/${categoryId}`);
+    }
   };
 
   if (category.isMainCategory && category.subcategories) {
