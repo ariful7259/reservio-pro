@@ -1,7 +1,10 @@
+
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
 import { Toaster } from '@/components/ui/toaster';
+import Navbar from './components/Navbar';
+import Index from './pages/Index';
 import HomePage from './pages/HomePage';
 import ServicesPage from './pages/ServicesPage';
 import RentalsPage from './pages/RentalsPage';
@@ -31,8 +34,10 @@ function App() {
     <BrowserRouter>
       <AppProvider>
         <div className="min-h-screen bg-background">
+          <Navbar />
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<Index />} />
+            <Route path="/home" element={<HomePage />} />
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/rentals" element={<RentalsPage />} />
             <Route path="/shopping" element={<ShoppingPage />} />
