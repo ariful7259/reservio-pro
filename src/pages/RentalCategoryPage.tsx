@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -19,6 +18,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import SocialShareModal from '@/components/SocialShareModal';
+import RentalCategoryFilterForm from '@/components/rentals/RentalCategoryFilterForm';
 
 // ক্যাটাগরি-ভিত্তিক ডেটা ম্যাপিং
 const categoryData = {
@@ -160,6 +160,8 @@ const RentalCategoryPage = () => {
   const { toast } = useToast();
   const [sortBy, setSortBy] = useState('recommended');
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>('all');
+  const [selectedLocation, setSelectedLocation] = useState<string>('all');
+  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
   const [shareItem, setShareItem] = useState<any | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
 
@@ -198,11 +200,13 @@ const RentalCategoryPage = () => {
     return null;
   }
 
+  // Check if this is a housing category (বাসা বাড়ি related)
+  const isHousingCategory = categoryId && ['apartment', 'house', 'hostel', 'room', 'commercial', 'guesthouse', 'rural', 'studio'].includes(categoryId);
+
   // Filter items based on selected subcategory
   const filteredItems = selectedSubcategory === 'all' 
     ? category.items 
     : category.items.filter(item => {
-        // Simple filtering logic - in real app this would be more sophisticated
         const subcategoryName = category.subcategories.find(sub => sub.id === selectedSubcategory)?.name;
         return subcategoryName && item.title.includes(subcategoryName);
       });
@@ -251,6 +255,19 @@ const RentalCategoryPage = () => {
         </Button>
         <h1 className="text-2xl font-bold">{category.title}</h1>
       </div>
+      
+      {/* Rental Category Filter Form - Only show for non-housing categories */}
+      {!isHousingCategory && (
+        <RentalCategoryFilterForm
+          category={category}
+          selectedSubcategory={selectedSubcategory}
+          selectedLocation={selectedLocation}
+          priceRange={priceRange}
+          onSubcategoryChange={setSelectedSubcategory}
+          onLocationChange={setSelectedLocation}
+          onPriceRangeChange={setPriceRange}
+        />
+      )}
       
       {/* Subcategory Filter */}
       <div className="mb-6">
