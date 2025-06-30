@@ -54,7 +54,7 @@ type AppContextType = {
   
   // Multilingual Support
   language: Language;
-  setLanguage: (lang: Language) => void;
+  setLanguage: (Language: Language) => void;
   t: (key: string) => string;
   
   // Offline Support
@@ -210,7 +210,6 @@ const translations = {
     'local_brands': 'Local Brands',
     'post_item': 'Post Item',
     'buy_now': 'Buy Now',
-    'add_to_cart': 'Add to Cart',
     'chat': 'Chat',
     'register_brand': 'Register Brand',
     'support_local': 'Support Local',
@@ -368,7 +367,6 @@ const translations = {
     'local_brands': 'লোকাল ব্র্যান্ড',
     'post_item': 'পোস্ট করুন',
     'buy_now': 'এখনই কিনুন',
-    'add_to_cart': 'কার্টে যোগ করুন',
     'chat': 'চ্যাট',
     'register_brand': 'ব্র্যান্ড রেজিস্টার',
     'support_local': 'স্থানীয় সাপোর্ট',
