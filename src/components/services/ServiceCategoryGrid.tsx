@@ -3,6 +3,7 @@ import React from 'react';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useApp } from '@/context/AppContext';
 
 interface ServiceCategoryGridProps {
   serviceCategories: any[];
@@ -19,9 +20,13 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
   isExpanded,
   setIsExpanded
 }) => {
+  const { language, t } = useApp();
+
   return (
     <div className="mb-8">
-      <h2 className="text-lg font-semibold mb-4">ক্যাটাগরি সমূহ</h2>
+      <h2 className="text-lg font-semibold mb-4">
+        {language === 'bn' ? 'ক্যাটাগরি সমূহ' : 'Categories'}
+      </h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {serviceCategories.slice(0, 8).map((category) => (
           <div
@@ -38,12 +43,14 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
                 {category.icon}
               </div>
             </div>
-            <h3 className="font-medium text-sm mb-2">{category.name}</h3>
+            <h3 className="font-medium text-sm mb-2">
+              {language === 'bn' ? category.name : category.nameEn || category.name}
+            </h3>
             <Badge variant="secondary" className="text-xs">
-              {category.count}টি
+              {category.count}{language === 'bn' ? 'টি' : ''}
             </Badge>
             <div className="mt-2 text-xs text-muted-foreground">
-              {category.subcategories.length} সাব-ক্যাটাগরি
+              {category.subcategories.length} {language === 'bn' ? 'সাব-ক্যাটাগরি' : 'subcategories'}
             </div>
           </div>
         ))}
@@ -67,12 +74,14 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
                     {category.icon}
                   </div>
                 </div>
-                <h3 className="font-medium text-sm mb-2">{category.name}</h3>
+                <h3 className="font-medium text-sm mb-2">
+                  {language === 'bn' ? category.name : category.nameEn || category.name}
+                </h3>
                 <Badge variant="secondary" className="text-xs">
-                  {category.count}টি
+                  {category.count}{language === 'bn' ? 'টি' : ''}
                 </Badge>
                 <div className="mt-2 text-xs text-muted-foreground">
-                  {category.subcategories.length} সাব-ক্যাটাগরি
+                  {category.subcategories.length} {language === 'bn' ? 'সাব-ক্যাটাগরি' : 'subcategories'}
                 </div>
               </div>
             ))}
@@ -83,9 +92,9 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
           <CollapsibleTrigger asChild>
             <Button variant="outline" className="text-red-500 border-red-500 hover:bg-red-50">
               {isExpanded ? (
-                <>∧ কম দেখুন</>
+                <>{language === 'bn' ? '∧ কম দেখুন' : '∧ Show Less'}</>
               ) : (
-                <>∨ আরো দেখুন</>
+                <>{language === 'bn' ? '∨ আরো দেখুন' : '∨ Show More'}</>
               )}
             </Button>
           </CollapsibleTrigger>
