@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -415,11 +416,15 @@ const RentalCategoryPage = () => {
     );
   }
 
+  // Check if category has items property
+  const hasItems = 'items' in category;
+  const categoryItems = hasItems ? category.items : [];
+
   // Filter items based on selected subcategory
   const filteredItems = selectedSubcategory === 'all' 
-    ? category.items 
-    : category.items.filter(item => {
-        const subcategoryName = category.subcategories.find(sub => sub.id === selectedSubcategory)?.name;
+    ? categoryItems 
+    : categoryItems.filter(item => {
+        const subcategoryName = category.subcategories?.find(sub => sub.id === selectedSubcategory)?.name;
         return subcategoryName && item.title.includes(subcategoryName);
       });
 
