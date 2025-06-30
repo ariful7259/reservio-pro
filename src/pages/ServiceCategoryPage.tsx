@@ -54,6 +54,51 @@ const serviceCategoryData = {
       }
     ]
   },
+  'dental': {
+    title: 'ডেন্টাল কেয়ার',
+    titleEn: 'Dental Care',
+    services: [
+      {
+        id: 30,
+        title: 'দাঁত পরিষ্কার ও চেকআপ',
+        provider: 'ডা. রহিম উদ্দিন',
+        location: 'গুলশান, ঢাকা',
+        price: '৳১,২০০',
+        rating: 4.7,
+        reviews: 134,
+        image: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+        isVerified: true,
+        responseTime: '১ ঘণ্টা',
+        subcategory: 'দাঁত পরিষ্কার'
+      },
+      {
+        id: 31,
+        title: 'দাঁতের ব্রেসেস',
+        provider: 'স্মাইল ডেন্টাল কেয়ার',
+        location: 'ধানমন্ডি, ঢাকা',
+        price: '৳২৫,০০০',
+        rating: 4.8,
+        reviews: 89,
+        image: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+        isVerified: true,
+        responseTime: '২৪ ঘণ্টা',
+        subcategory: 'অর্থোডন্টিক্স'
+      },
+      {
+        id: 32,
+        title: 'দাঁত ব্যথার চিকিৎসা',
+        provider: 'ডা. ফাতেমা আক্তার',
+        location: 'বনানী, ঢাকা',
+        price: '৳৮০০',
+        rating: 4.6,
+        reviews: 167,
+        image: 'https://images.unsplash.com/photo-1609840114035-3c981b782dfe?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+        isVerified: true,
+        responseTime: '৩০ মিনিট',
+        subcategory: 'দাঁতের চিকিৎসা'
+      }
+    ]
+  },
   'salon': {
     title: 'সেলুন ও বিউটি সার্ভিস',
     titleEn: 'Salon & Beauty Services',
@@ -172,6 +217,32 @@ const serviceCategoryData = {
         isVerified: true,
         responseTime: '২৪ ঘণ্টা',
         subcategory: 'ইভেন্ট ক্যাটারিং'
+      },
+      {
+        id: 33,
+        title: 'পারিবারিক রান্নার সেবা',
+        provider: 'ঘরের খাবার',
+        location: 'ধানমন্ডি, ঢাকা',
+        price: '৳১,৫০০/দিন',
+        rating: 4.6,
+        reviews: 178,
+        image: 'https://images.unsplash.com/photo-1547592180-85f173990554?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '২ ঘণ্টা',
+        subcategory: 'ঘরোয়া রান্না'
+      },
+      {
+        id: 34,
+        title: 'বেকারি ও কেক সেবা',
+        provider: 'সুইট ডিলাইট',
+        location: 'গুলশান, ঢাকা',
+        price: '৳৮০০/কেজি',
+        rating: 4.8,
+        reviews: 267,
+        image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '২৪ ঘণ্টা',
+        subcategory: 'বেকারি'
       }
     ]
   },
@@ -364,6 +435,276 @@ const serviceCategoryData = {
         isVerified: true,
         responseTime: '২৪ ঘণ্টা',
         subcategory: 'ইভেন্ট ডেকোরেশন'
+      }
+    ]
+  },
+  'furniture': {
+    title: 'ফার্নিচার তৈরি ও মেরামত',
+    titleEn: 'Furniture Making & Repair',
+    services: [
+      {
+        id: 35,
+        title: 'কাস্টম ফার্নিচার তৈরি',
+        provider: 'উড ক্রাফট',
+        location: 'ধানমন্ডি, ঢাকা',
+        price: '৳১৫,০০০+',
+        rating: 4.8,
+        reviews: 123,
+        image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '৭ দিন',
+        subcategory: 'কাস্টম ফার্নিচার'
+      },
+      {
+        id: 36,
+        title: 'ফার্নিচার মেরামত',
+        provider: 'ফিক্স ইট ফার্নিচার',
+        location: 'গুলশান, ঢাকা',
+        price: '৳৮০০+',
+        rating: 4.6,
+        reviews: 198,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '২৪ ঘণ্টা',
+        subcategory: 'ফার্নিচার মেরামত'
+      },
+      {
+        id: 37,
+        title: 'সোফা কভার ও রিনিউ',
+        provider: 'কমফোর্ট সোফা',
+        location: 'বনানী, ঢাকা',
+        price: '৳৩,৫০০',
+        rating: 4.4,
+        reviews: 87,
+        image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '৩ দিন',
+        subcategory: 'সোফা সার্ভিস'
+      }
+    ]
+  },
+  'pest-control': {
+    title: 'পেস্ট কন্ট্রোল সার্ভিস',
+    titleEn: 'Pest Control Services',
+    services: [
+      {
+        id: 38,
+        title: 'তেলাপোকা নির্মূল',
+        provider: 'পেস্ট ফ্রি হোম',
+        location: 'উত্তরা, ঢাকা',
+        price: '৳২,৫০০',
+        rating: 4.7,
+        reviews: 156,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '২৪ ঘণ্টা',
+        subcategory: 'তেলাপোকা নিয়ন্ত্রণ'
+      },
+      {
+        id: 39,
+        title: 'টার্মাইট কন্ট্রোল',
+        provider: 'প্রো পেস্ট সলিউশন',
+        location: 'ধানমন্ডি, ঢাকা',
+        price: '৳৫,০০০',
+        rating: 4.9,
+        reviews: 234,
+        image: 'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '৪৮ ঘণ্টা',
+        subcategory: 'টার্মাইট নিয়ন্ত্রণ'
+      },
+      {
+        id: 40,
+        title: 'মশা নিয়ন্ত্রণ',
+        provider: 'ক্লিন এনভায়রনমেন্ট',
+        location: 'গুলশান, ঢাকা',
+        price: '৳১,৮০০',
+        rating: 4.5,
+        reviews: 189,
+        image: 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '১২ ঘণ্টা',
+        subcategory: 'মশা নিয়ন্ত্রণ'
+      }
+    ]
+  },
+  'delivery': {
+    title: 'ডেলিভারি সার্ভিস',
+    titleEn: 'Delivery Services',
+    services: [
+      {
+        id: 41,
+        title: 'ফুড ডেলিভারি',
+        provider: 'ফাস্ট ডেলিভারি',
+        location: 'সর্বত্র, ঢাকা',
+        price: '৳৫০+',
+        rating: 4.3,
+        reviews: 345,
+        image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '৩০ মিনিট',
+        subcategory: 'খাবার ডেলিভারি'
+      },
+      {
+        id: 42,
+        title: 'প্যাকেজ ডেলিভারি',
+        provider: 'কুরিয়ার এক্সপ্রেস',
+        location: 'সর্বত্র, ঢাকা',
+        price: '৳১০০+',
+        rating: 4.6,
+        reviews: 278,
+        image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '২ ঘণ্টা',
+        subcategory: 'কুরিয়ার সেবা'
+      },
+      {
+        id: 43,
+        title: 'গ্রোসারি ডেলিভারি',
+        provider: 'কুইক শপ',
+        location: 'সর্বত্র, ঢাকা',
+        price: '৳৮০+',
+        rating: 4.4,
+        reviews: 198,
+        image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '১ ঘণ্টা',
+        subcategory: 'গ্রোসারি ডেলিভারি'
+      }
+    ]
+  },
+  'it-digital': {
+    title: 'আইটি ও ডিজিটাল সার্ভিস',
+    titleEn: 'IT & Digital Services',
+    services: [
+      {
+        id: 44,
+        title: 'ওয়েবসাইট ডেভেলপমেন্ট',
+        provider: 'ডিজিটাল সলিউশন',
+        location: 'গুলশান, ঢাকা',
+        price: '৳২৫,০০০+',
+        rating: 4.8,
+        reviews: 123,
+        image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '১৫ দিন',
+        subcategory: 'ওয়েব ডেভেলপমেন্ট'
+      },
+      {
+        id: 45,
+        title: 'গ্রাফিক ডিজাইন',
+        provider: 'ক্রিয়েটিভ ডিজাইন',
+        location: 'ধানমন্ডি, ঢাকা',
+        price: '৳৫,০০০+',
+        rating: 4.7,
+        reviews: 167,
+        image: 'https://images.unsplash.com/photo-1561736778-92e52a7769ef?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '৩ দিন',
+        subcategory: 'গ্রাফিক ডিজাইন'
+      },
+      {
+        id: 46,
+        title: 'ডিজিটাল মার্কেটিং',
+        provider: 'মার্কেট প্রো',
+        location: 'বনানী, ঢাকা',
+        price: '৳১৫,০০০/মাস',
+        rating: 4.6,
+        reviews: 89,
+        image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '২৪ ঘণ্টা',
+        subcategory: 'ডিজিটাল মার্কেটিং'
+      }
+    ]
+  },
+  'event-management': {
+    title: 'ইভেন্ট ম্যানেজমেন্ট',
+    titleEn: 'Event Management',
+    services: [
+      {
+        id: 47,
+        title: 'কর্পোরেট ইভেন্ট',
+        provider: 'প্রফেশনাল ইভেন্টস',
+        location: 'গুলশান, ঢাকা',
+        price: '৳৫০,০০০+',
+        rating: 4.9,
+        reviews: 78,
+        image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '১ সপ্তাহ',
+        subcategory: 'কর্পোরেট ইভেন্ট'
+      },
+      {
+        id: 48,
+        title: 'জন্মদিনের অনুষ্ঠান',
+        provider: 'হ্যাপি সেলিব্রেশন',
+        location: 'ধানমন্ডি, ঢাকা',
+        price: '৳১৫,০০০+',
+        rating: 4.7,
+        reviews: 156,
+        image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '৩ দিন',
+        subcategory: 'জন্মদিনের পার্টি'
+      },
+      {
+        id: 49,
+        title: 'বিয়ের অনুষ্ঠান',
+        provider: 'ড্রিম ওয়েডিং',
+        location: 'বনানী, ঢাকা',
+        price: '৳১,০০,০০০+',
+        rating: 4.8,
+        reviews: 234,
+        image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '১ মাস',
+        subcategory: 'বিয়ের অনুষ্ঠান'
+      }
+    ]
+  },
+  'construction': {
+    title: 'কনস্ট্রাকশন ও হোম সার্ভিস',
+    titleEn: 'Construction & Home Services',
+    services: [
+      {
+        id: 50,
+        title: 'বাড়ি নির্মাণ',
+        provider: 'এক্সপার্ট কনস্ট্রাকশন',
+        location: 'সর্বত্র, ঢাকা',
+        price: '৳২,০০,০০০+',
+        rating: 4.8,
+        reviews: 89,
+        image: 'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '৩ মাস',
+        subcategory: 'বাড়ি নির্মাণ'
+      },
+      {
+        id: 51,
+        title: 'ছাদ মেরামত',
+        provider: 'রুফ এক্সপার্ট',
+        location: 'ঢাকা',
+        price: '৳১৫,০০০+',
+        rating: 4.6,
+        reviews: 167,
+        image: 'https://images.unsplash.com/photo-1621905252472-e8ace8dc23f9?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '৫ দিন',
+        subcategory: 'ছাদ মেরামত'
+      },
+      {
+        id: 52,
+        title: 'টাইলস ও ফ্লোরিং',
+        provider: 'ফ্লোর মাস্টার',
+        location: 'ঢাকা',
+        price: '৳৮০০/বর্গফুট',
+        rating: 4.7,
+        reviews: 145,
+        image: 'https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '৩ দিন',
+        subcategory: 'টাইলস ও ফ্লোরিং'
       }
     ]
   }
