@@ -1,122 +1,55 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface User {
   id: string;
-  name: string;
   email: string;
-  avatar?: string;
-  role: 'user' | 'admin' | 'seller';
-  verified: boolean;
-  sellerVerified?: boolean;
-  sellerType?: 'marketplace' | 'rental' | 'service' | 'content'; // Added sellerType property
-  phone?: string; // Added phone property
-  address?: string; // Added address property
+  name: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  isAuthenticated: boolean;
-  isAdmin: boolean;
-  isSeller: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  signup: (name: string, email: string, password: string) => Promise<void>;
-  updateUserProfile: (data: Partial<User>) => void; // Added updateUserProfile method
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  
-  // Mock login function (would use Supabase or other auth in real app)
-  const login = async (email: string, password: string) => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Mock user data with fixed seller type if seller
-    const userData: User = {
-      id: '1',
-      name: 'আহমেদ হাসান',
-      email: email,
-      avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
-      role: email.includes('admin') ? 'admin' : email.includes('seller') ? 'seller' : 'user',
-      verified: true,
-      sellerVerified: email.includes('seller') ? true : false,
-      sellerType: email.includes('seller') ? 'marketplace' : undefined,
-      phone: '+8801712345678', // Mock phone
-      address: 'ঢাকা, বাংলাদেশ' // Mock address
-    };
-    
-    setUser(userData);
-    setIsAuthenticated(true);
-    
-    // Save to localStorage
-    localStorage.setItem('user', JSON.stringify(userData));
-  };
-  
-  const signup = async (name: string, email: string, password: string) => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Similar to login but would actually create the user in a real app
-    const userData: User = {
-      id: '1',
-      name: name,
-      email: email,
-      role: 'user',
-      verified: false
-    };
-    
-    setUser(userData);
-    setIsAuthenticated(true);
-    
-    // Save to localStorage
-    localStorage.setItem('user', JSON.stringify(userData));
-  };
-  
-  const logout = () => {
-    setUser(null);
-    setIsAuthenticated(false);
-    localStorage.removeItem('user');
-  };
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Add updateUserProfile function
-  const updateUserProfile = (data: Partial<User>) => {
-    if (user) {
-      const updatedUser = { ...user, ...data };
-      setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-    }
-  };
-  
-  // Check for saved user on mount
   useEffect(() => {
+    // Check if user is already logged in (from localStorage)
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       setUser(JSON.parse(savedUser));
-      setIsAuthenticated(true);
     }
+    setIsLoading(false);
   }, []);
-  
-  // Compute isAdmin based on user role
-  const isAdmin = user?.role === 'admin';
-  
-  // Compute isSeller based on user role
-  const isSeller = user?.role === 'seller';
-  
+
+  const login = async (email: string, password: string) => {
+    setIsLoading(true);
+    try {
+      // Simulate login - in real app, this would call an API
+      const mockUser = { id: '1', email, name: 'Demo User' };
+      setUser(mockUser);
+      localStorage.setItem('user', JSON.stringify(mockUser));
+    } catch (error) {
+      console.error('Login failed:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+  };
+
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      isAuthenticated, 
-      isAdmin,
-      isSeller,
-      login, 
-      logout, 
-      signup,
-      updateUserProfile 
-    }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
@@ -125,7 +58,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    // Return a default value instead of throwing an error
+    return {
+      user: null,
+      login: async (email: string, password: string) => {
+        console.warn('useAuth called outside of AuthProvider');
+      },
+      logout: () => {
+        console.warn('useAuth called outside of AuthProvider');
+      },
+      isLoading: false
+    };
   }
   return context;
 };
