@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -140,7 +141,7 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({ allListings }) => {
       );
     }
 
-    // Grid view - uniform layout for both mobile and desktop
+    // Grid view - 4 columns on PC, 2 on mobile
     return (
       <Card
         key={`${activeTab}-${listing.id}-${listing.category}-${index}`}
@@ -212,9 +213,9 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({ allListings }) => {
           <div className={`grid gap-3 ${
             viewMode === "list" 
               ? "grid-cols-1" 
-              : 'grid-cols-2'
+              : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
           }`}>
-            {Array.from({ length: 4 }).map((_, i) => (
+            {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="rounded-lg overflow-hidden bg-gray-100">
                 <Skeleton className={`w-full mb-3 ${
                   viewMode === "list" ? 'h-24' : 'h-40'
@@ -230,7 +231,7 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({ allListings }) => {
           <div className={`grid gap-3 ${
             viewMode === "list" 
               ? "grid-cols-1" 
-              : 'grid-cols-2'
+              : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
           }`}>
             {getListings(activeTab).map((listing, index) => renderListingCard(listing, index))}
           </div>
