@@ -6,37 +6,25 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 
 interface RentalCategoryItemProps {
   category: any;
-  index?: number;
-  onClick?: () => void;
-  isSelected?: boolean;
-  onCategoryClick?: (category: any) => void;
-  onSubcategoryClick?: (subcategory: any) => void;
+  index: number;
+  onCategoryClick: (category: any) => void;
+  onSubcategoryClick: (subcategory: any) => void;
 }
 
 const RentalCategoryItem: React.FC<RentalCategoryItemProps> = ({
   category,
   index,
-  onClick,
-  isSelected = false,
   onCategoryClick,
   onSubcategoryClick
 }) => {
-  const handleClick = () => {
-    if (onClick) {
-      onClick();
-    } else if (onCategoryClick) {
-      onCategoryClick(category);
-    }
-  };
-
   if (category.isMainCategory && category.subcategories) {
     return (
       <div key={index}>
         <Collapsible>
           <CollapsibleTrigger asChild>
             <div 
-              className={`flex flex-col items-center justify-center transition-all hover:scale-105 cursor-pointer ${isSelected ? 'ring-2 ring-primary bg-primary/5' : ''}`}
-              onClick={handleClick}
+              className="flex flex-col items-center justify-center transition-all hover:scale-105 cursor-pointer" 
+              onClick={() => onCategoryClick(category)}
             >
               <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
                 {category.icon}
@@ -53,7 +41,7 @@ const RentalCategoryItem: React.FC<RentalCategoryItemProps> = ({
                 <div 
                   key={subIndex} 
                   className="p-2 hover:bg-gray-50 rounded cursor-pointer text-center"
-                  onClick={() => onSubcategoryClick && onSubcategoryClick(sub)}
+                  onClick={() => onSubcategoryClick(sub)}
                 >
                   <div className="mb-1">{sub.icon}</div>
                   <span className="text-xs">{sub.name}</span>
@@ -73,8 +61,8 @@ const RentalCategoryItem: React.FC<RentalCategoryItemProps> = ({
     return (
       <div key={index}>
         <div 
-          className={`flex flex-col items-center justify-center transition-all hover:scale-105 cursor-pointer ${isSelected ? 'ring-2 ring-primary bg-primary/5' : ''}`}
-          onClick={handleClick}
+          className="flex flex-col items-center justify-center transition-all hover:scale-105 cursor-pointer"
+          onClick={() => onCategoryClick(category)}
         >
           <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
             {category.icon}
@@ -89,7 +77,7 @@ const RentalCategoryItem: React.FC<RentalCategoryItemProps> = ({
   }
 
   return (
-    <Link key={index} to={category.path} className={`flex flex-col items-center justify-center transition-all hover:scale-105 ${isSelected ? 'ring-2 ring-primary bg-primary/5' : ''}`}>
+    <Link key={index} to={category.path} className="flex flex-col items-center justify-center transition-all hover:scale-105">
       <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
         {category.icon}
       </div>

@@ -37,7 +37,7 @@ const Rentals = () => {
   const [shareItem, setShareItem] = useState<any | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
   const [activeSection, setActiveSection] = useState<'categories' | 'housing'>('categories');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<any | null>(null);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [selectedSubcategory, setSelectedSubcategory] = useState<any | null>(null);
   const [subcategoryResults, setSubcategoryResults] = useState<any[]>([]);
@@ -110,19 +110,6 @@ const Rentals = () => {
     );
   };
 
-  // Create a simple CategoryGrid wrapper component for this page that handles the old interface
-  const LegacyCategoryGrid = () => (
-    <div className="mb-8">
-      <h2 className="text-lg font-medium mb-4">ক্যাটাগরি</h2>
-      <div className="grid grid-cols-4 gap-3">
-        {rentCategories.slice(0, 8).map((category, index) =>
-          renderCategoryItem(category, index)
-        )}
-      </div>
-      {/* Show more functionality can be added here if needed */}
-    </div>
-  );
-
   return (
     <div className="container px-4 pt-20 pb-20">
       <RentalsHeader 
@@ -156,7 +143,12 @@ const Rentals = () => {
       ) : (
         <>
           <FilterSection filterVisible={filterVisible} toggleFilter={toggleFilter} />
-          <LegacyCategoryGrid />
+          <CategoryGrid 
+            rentCategories={rentCategories} 
+            isExpanded={isExpanded} 
+            setIsExpanded={setIsExpanded} 
+            renderCategoryItem={renderCategoryItem} 
+          />
           <BannerCarousel bannerImages={bannerImages} />
           <Separator className="my-6" />
           <FeaturedListings 
