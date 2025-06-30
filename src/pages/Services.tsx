@@ -7,7 +7,7 @@ import { Search, Filter, Star, MapPin, Clock, Users, Share2, Bookmark, Heart, Ar
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useApp } from '@/context/AppContext';
-import ServiceCategoryFilterForm from '@/components/services/ServiceCategoryFilterForm';
+import CategorySpecificFilter from '@/components/services/CategorySpecificFilter';
 import ServiceCategoryGrid from '@/components/services/ServiceCategoryGrid';
 
 const Services = () => {
@@ -87,116 +87,6 @@ const Services = () => {
     subcategories: language === 'bn' ? ['হোম কুক', 'ক্যাটারিং', 'রান্নার সহকারী', 'হেলদি ফুড প্রিপারেশন'] : ['Home Cook', 'Catering', 'Cooking Assistant', 'Healthy Food Preparation'],
     bookingTypes: language === 'bn' ? ['সাপ্তাহিক সাবস্ক্রিপশন', 'নির্দিষ্ট তারিখে বুকিং'] : ['Weekly Subscription', 'Specific Date Booking'],
     monetization: language === 'bn' ? 'সাবস্ক্রিপশন মডেল + % কমিশন' : 'Subscription model + % commission'
-  }, {
-    id: 'cleaning',
-    name: 'হাউজ ক্লিনিং সার্ভিস',
-    nameEn: 'House Cleaning Services',
-    icon: <Brush className="h-7 w-7" />,
-    color: 'bg-green-50',
-    iconColor: 'text-green-500',
-    count: 198,
-    subcategories: language === 'bn' ? ['ঘর ঝাড়ু ও মপিং', 'বাথরুম ক্লিন', 'সোফা/কার্পেট ওয়াশ', 'অফিস ক্লিনিং'] : ['Room Sweeping & Mopping', 'Bathroom Clean', 'Sofa/Carpet Wash', 'Office Cleaning'],
-    bookingTypes: language === 'bn' ? ['One-Time', 'Weekly/Monthly Plan'] : ['One-Time', 'Weekly/Monthly Plan'],
-    monetization: language === 'bn' ? 'প্যাকেজ চার্জ + টাইম বেইজড চার্জ' : 'Package charge + Time based charge'
-  }, {
-    id: 'furniture',
-    name: 'ফার্নিচার মেকিং/রিপেয়ার',
-    nameEn: 'Furniture Making/Repair',
-    icon: <Hammer className="h-7 w-7" />,
-    color: 'bg-amber-50',
-    iconColor: 'text-amber-600',
-    count: 76,
-    subcategories: language === 'bn' ? ['কাঠের বিছানা তৈরি', 'সোফা ফোম চেঞ্জ', 'কাঠ মেরামত', 'ইন্টেরিয়র কাঠ কাজ'] : ['Wooden Bed Making', 'Sofa Foam Change', 'Wood Repair', 'Interior Wood Work'],
-    bookingTypes: language === 'bn' ? ['কাস্টম কোট', 'ভিডিও কল কনসাল্ট'] : ['Custom Quote', 'Video Call Consult'],
-    monetization: language === 'bn' ? 'কাস্টম বিলিং + % কমিশন' : 'Custom billing + % commission'
-  }, {
-    id: 'pest-control',
-    name: 'পেস্ট কন্ট্রোল সার্ভিস',
-    nameEn: 'Pest Control Services',
-    icon: <Bug className="h-7 w-7" />,
-    color: 'bg-red-50',
-    iconColor: 'text-red-600',
-    count: 54,
-    subcategories: language === 'bn' ? ['মশা/তেলাপোকা', 'ইঁদুর/পিপঁড়ে', 'বেডবাগ', 'টার্মাইট/দেয়ালের পোকা'] : ['Mosquito/Cockroach', 'Rat/Ant', 'Bed Bug', 'Termite/Wall Insects'],
-    bookingTypes: language === 'bn' ? ['হোম ভিজিট', 'মাসিক কন্ট্রাক্ট'] : ['Home Visit', 'Monthly Contract'],
-    monetization: language === 'bn' ? 'Flat Service Charge + ১০% কমিশন' : 'Flat Service Charge + 10% commission'
-  }, {
-    id: 'education',
-    name: 'শিক্ষা ও টিউটর সার্ভিস',
-    nameEn: 'Education & Tutor Services',
-    icon: <GraduationCap className="h-7 w-7" />,
-    color: 'bg-indigo-50',
-    iconColor: 'text-indigo-500',
-    count: 142,
-    subcategories: language === 'bn' ? ['স্কুল টিউটর', 'কোচিং হেল্প', 'অনলাইন IELTS/Spoken', 'কোর্স মডিউল'] : ['School Tutor', 'Coaching Help', 'Online IELTS/Spoken', 'Course Module'],
-    bookingTypes: language === 'bn' ? ['ভিডিও কল ক্লাস', 'হোম টিউশন'] : ['Video Call Class', 'Home Tuition'],
-    monetization: language === 'bn' ? 'সাবস্ক্রিপশন প্ল্যান/পার ক্লাস কমিশন' : 'Subscription plan/Per class commission'
-  }, {
-    id: 'photography',
-    name: 'ফটোগ্রাফি সার্ভিস',
-    nameEn: 'Photography Services',
-    icon: <Camera className="h-7 w-7" />,
-    color: 'bg-gray-50',
-    iconColor: 'text-gray-600',
-    count: 87,
-    subcategories: language === 'bn' ? ['ওয়েডিং শুট', 'ইভেন্ট শুট', 'পাসপোর্ট/প্রফাইল', 'ইনডোর স্টুডিও'] : ['Wedding Shoot', 'Event Shoot', 'Passport/Profile', 'Indoor Studio'],
-    bookingTypes: language === 'bn' ? ['টাইম স্লট', 'প্যাকেজ ভিত্তিক'] : ['Time Slot', 'Package Based'],
-    monetization: language === 'bn' ? '% কমিশন + Top Photographer listing' : '% commission + Top Photographer listing'
-  }, {
-    id: 'delivery',
-    name: 'ডেলিভারি সার্ভিস',
-    nameEn: 'Delivery Services',
-    icon: <Package className="h-7 w-7" />,
-    color: 'bg-blue-50',
-    iconColor: 'text-blue-600',
-    count: 203,
-    subcategories: language === 'bn' ? ['কুরিয়ার', 'পার্সেল', 'ফুড/গ্রোসারি'] : ['Courier', 'Parcel', 'Food/Grocery'],
-    bookingTypes: language === 'bn' ? ['ইনস্ট্যান্ট ডেলিভারি', 'সিডিউলড'] : ['Instant Delivery', 'Scheduled'],
-    monetization: language === 'bn' ? 'প্রতি ডেলিভারির ফি + সাবস্ক্রিপশন' : 'Per delivery fee + Subscription'
-  }, {
-    id: 'it-services',
-    name: 'আইটি ও ডিজিটাল সার্ভিস',
-    nameEn: 'IT & Digital Services',
-    icon: <Laptop className="h-7 w-7" />,
-    color: 'bg-purple-50',
-    iconColor: 'text-purple-600',
-    count: 95,
-    subcategories: language === 'bn' ? ['ওয়েবসাইট/অ্যাপ ডেভেলপ', 'ডিজিটাল মার্কেটিং', 'SEO', 'গ্রাফিক ডিজাইন'] : ['Website/App Development', 'Digital Marketing', 'SEO', 'Graphic Design'],
-    bookingTypes: language === 'bn' ? ['Remote Booking', 'Project Contract'] : ['Remote Booking', 'Project Contract'],
-    monetization: language === 'bn' ? 'Commission + Freelancer Profit Share মডেল' : 'Commission + Freelancer Profit Share model'
-  }, {
-    id: 'event-management',
-    name: 'ইভেন্ট ম্যানেজমেন্ট',
-    nameEn: 'Event Management',
-    icon: <PartyPopper className="h-7 w-7" />,
-    color: 'bg-pink-50',
-    iconColor: 'text-pink-600',
-    count: 73,
-    subcategories: language === 'bn' ? ['বিয়ে আয়োজন', 'জন্মদিন', 'কর্পোরেট ইভেন্ট', 'পার্টি ডেকোরেশন'] : ['Wedding Planning', 'Birthday', 'Corporate Event', 'Party Decoration'],
-    bookingTypes: language === 'bn' ? ['কাস্টম কোটেশন', 'প্যাকেজ ভিত্তিক'] : ['Custom Quotation', 'Package Based'],
-    monetization: language === 'bn' ? '২০% কমিশন বা Flat Contract Fee' : '20% commission or Flat Contract Fee'
-  }, {
-    id: 'construction',
-    name: 'কনস্ট্রাকশন ও হোম সার্ভিস',
-    nameEn: 'Construction & Home Services',
-    icon: <Building className="h-7 w-7" />,
-    color: 'bg-gray-50',
-    iconColor: 'text-gray-700',
-    count: 126,
-    subcategories: language === 'bn' ? ['ঘর বানানো', 'প্ল্যানিং/ম্যাপ', 'ইন্টেরিয়র ডিজাইন', 'টাইলস/পেইন্ট/স্যানিটারি'] : ['House Building', 'Planning/Map', 'Interior Design', 'Tiles/Paint/Sanitary'],
-    bookingTypes: language === 'bn' ? ['সাইট ভিজিট বুকিং', 'কাস্টম কোট'] : ['Site Visit Booking', 'Custom Quote'],
-    monetization: language === 'bn' ? 'Commission + Project Management Fee' : 'Commission + Project Management Fee'
-  }, {
-    id: 'transport',
-    name: 'ট্রান্সপোর্ট/রেন্টাল সার্ভিস',
-    nameEn: 'Transport/Rental Services',
-    icon: <Car className="h-7 w-7" />,
-    color: 'bg-green-50',
-    iconColor: 'text-green-600',
-    count: 164,
-    subcategories: language === 'bn' ? ['বাইক/প্রাইভেট কার রেন্ট', 'এম্বুলেন্স বুকিং', 'লোকাল রাইড শেয়ার'] : ['Bike/Private Car Rent', 'Ambulance Booking', 'Local Ride Share'],
-    bookingTypes: language === 'bn' ? ['টাইম স্লট', 'সিডিউলড ট্রিপ'] : ['Time Slot', 'Scheduled Trip'],
-    monetization: language === 'bn' ? 'ভাড়া থেকে কমিশন + রাইড চার্জ' : 'Commission from rent + Ride charge'
   }];
 
   const allServices = [{
@@ -227,62 +117,6 @@ const Services = () => {
     isVerified: true,
     bookingTypes: language === 'bn' ? ['চেম্বার ভিজিট', 'হোম সার্ভিস'] : ['Chamber Visit', 'Home Service'],
     responseTime: language === 'bn' ? '১ ঘণ্টা' : '1 hour' 
-  }, {
-    id: 3,
-    title: language === 'bn' ? 'প্রিমিয়াম হেয়ার কাট' : 'Premium Hair Cut',
-    provider: language === 'bn' ? 'স্টাইল সেলুন' : 'Style Salon',
-    category: 'salon',
-    subcategory: language === 'bn' ? 'পুরুষ হেয়ার কাট' : 'Men\'s Hair Cut',
-    location: language === 'bn' ? 'ধানমন্ডি, ঢাকা' : 'Dhanmondi, Dhaka',
-    price: '৳৮০০',
-    rating: 4.5,
-    reviews: 127,
-    image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-    isVerified: false,
-    bookingTypes: language === 'bn' ? ['হোম সার্ভিস', 'পার্লার ভিজিট'] : ['Home Service', 'Parlor Visit'],
-    responseTime: language === 'bn' ? '৪৫ মিনিট' : '45 minutes'
-  }, {
-    id: 4,
-    title: language === 'bn' ? 'এসি সার্ভিসিং' : 'AC Servicing',
-    provider: language === 'bn' ? 'কুল টেক সার্ভিস' : 'Cool Tech Service',
-    category: 'electronics',
-    subcategory: language === 'bn' ? 'এসি' : 'AC',
-    location: language === 'bn' ? 'মোহাম্মদপুর, ঢাকা' : 'Mohammadpur, Dhaka',
-    price: '৳১,৮০০',
-    rating: 4.6,
-    reviews: 154,
-    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=300&fit=crop',
-    isVerified: true,
-    bookingTypes: language === 'bn' ? ['হোম ভিজিট'] : ['Home Visit'],
-    responseTime: language === 'bn' ? '২ ঘণ্টা' : '2 hours'
-  }, {
-    id: 5,
-    title: language === 'bn' ? 'মোবাইল স্ক্রিন রিপেয়ার' : 'Mobile Screen Repair',
-    provider: language === 'bn' ? 'টেক ফিক্স' : 'Tech Fix',
-    category: 'mobile',
-    subcategory: language === 'bn' ? 'মোবাইল রিপেয়ার' : 'Mobile Repair',
-    location: language === 'bn' ? 'উত্তরা, ঢাকা' : 'Uttara, Dhaka',
-    price: '৳২,৫০০',
-    rating: 4.4,
-    reviews: 98,
-    image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-    isVerified: true,
-    bookingTypes: language === 'bn' ? ['পিক-আপ সার্ভিস', 'হোম সার্ভিস'] : ['Pick-up Service', 'Home Service'],
-    responseTime: language === 'bn' ? '১ দিন' : '1 day'
-  }, {
-    id: 6,
-    title: language === 'bn' ? 'হোম ক্লিনিং সার্ভিস' : 'Home Cleaning Service',
-    provider: language === 'bn' ? 'ক্লিন হোম' : 'Clean Home',
-    category: 'cleaning',
-    subcategory: language === 'bn' ? 'ঘর ঝাড়ু ও মপিং' : 'Room Sweeping & Mopping',
-    location: language === 'bn' ? 'গুলশান, ঢাকা' : 'Gulshan, Dhaka',
-    price: '৳১,২০০',
-    rating: 4.8,
-    reviews: 203,
-    image: 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=300&fit=crop',
-    isVerified: true,
-    bookingTypes: language === 'bn' ? ['One-Time', 'Weekly Plan'] : ['One-Time', 'Weekly Plan'],
-    responseTime: language === 'bn' ? '৩ ঘণ্টা' : '3 hours'
   }];
 
   const filteredServices = allServices.filter(service => {
@@ -356,7 +190,7 @@ const Services = () => {
         setIsExpanded={setIsExpanded}
       />
 
-      {/* Selected Category Filter Form */}
+      {/* Category-Specific Filter - Only show when a category is selected */}
       {selectedCategory !== 'all' && (
         <div className="mb-8">
           {(() => {
@@ -364,57 +198,16 @@ const Services = () => {
             if (!category) return null;
             
             return (
-              <div className="space-y-4">
-                <ServiceCategoryFilterForm
-                  category={category}
-                  selectedSubcategory={selectedSubcategory}
-                  selectedLocation={selectedLocation}
-                  priceRange={priceRange}
-                  onSubcategoryChange={setSelectedSubcategory}
-                  onLocationChange={setSelectedLocation}
-                  onPriceRangeChange={setPriceRange}
-                />
-                
-                <Card className="p-6">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className={`w-12 h-12 rounded-full ${category.color} flex items-center justify-center`}>
-                      <div className={category.iconColor}>
-                        {category.icon}
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold">
-                        {language === 'bn' ? category.name : category.nameEn || category.name}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">{category.monetization}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <h4 className="font-medium mb-2">
-                        {language === 'bn' ? 'সাব-ক্যাটাগরি:' : 'Subcategories:'}
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {category.subcategories.map((sub, index) => (
-                          <Badge key={index} variant="outline">{sub}</Badge>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <h4 className="font-medium mb-2">
-                        {language === 'bn' ? 'বুকিং টাইপ:' : 'Booking Types:'}
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {category.bookingTypes.map((type, index) => (
-                          <Badge key={index} variant="secondary">{type}</Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              </div>
+              <CategorySpecificFilter
+                category={category}
+                selectedSubcategory={selectedSubcategory}
+                selectedLocation={selectedLocation}
+                priceRange={priceRange}
+                onSubcategoryChange={setSelectedSubcategory}
+                onLocationChange={setSelectedLocation}
+                onPriceRangeChange={setPriceRange}
+                language={language}
+              />
             );
           })()}
         </div>
