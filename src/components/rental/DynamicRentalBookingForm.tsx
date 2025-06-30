@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { CalendarIcon } from '@radix-ui/react-icons';
+import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { bn } from 'date-fns/locale';
 import { Calendar } from '@/components/ui/calendar';
@@ -22,9 +23,10 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 interface DynamicRentalBookingFormProps {
-  category: any;
-  onSubmit: (values: any) => void;
-  onCancel: () => void;
+  categoryId: string;
+  subcategory?: any;
+  itemData?: any;
+  onBookingSubmit: (values: any) => void;
 }
 
 const formSchema = z.object({
@@ -48,7 +50,7 @@ const formSchema = z.object({
   notes: z.string().optional(),
 })
 
-const DynamicRentalBookingForm = ({ category, onSubmit, onCancel }: DynamicRentalBookingFormProps) => {
+const DynamicRentalBookingForm = ({ categoryId, subcategory, itemData, onBookingSubmit }: DynamicRentalBookingFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -64,7 +66,7 @@ const DynamicRentalBookingForm = ({ category, onSubmit, onCancel }: DynamicRenta
   })
 
   function handleSubmit(values: z.infer<typeof formSchema>) {
-    onSubmit(values);
+    onBookingSubmit(values);
   }
 
   const paymentMethods = [
@@ -82,17 +84,47 @@ const DynamicRentalBookingForm = ({ category, onSubmit, onCancel }: DynamicRenta
   };
 
   return (
-    <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-      {/* Personal Information */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+        {/* Personal Information */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>নাম</FormLabel>
+                <FormControl>
+                  <Input placeholder="আপনার নাম লিখুন" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>ফোন নম্বর</FormLabel>
+                <FormControl>
+                  <Input placeholder="আপনার ফোন নম্বর" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
         <FormField
           control={form.control}
-          name="name"
+          name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>নাম</FormLabel>
+              <FormLabel>ইমেইল</FormLabel>
               <FormControl>
-                <Input placeholder="আপনার নাম লিখুন" {...field} />
+                <Input placeholder="আপনার ইমেইল" type="email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -101,188 +133,157 @@ const DynamicRentalBookingForm = ({ category, onSubmit, onCancel }: DynamicRenta
 
         <FormField
           control={form.control}
-          name="phone"
+          name="address"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>ফোন নম্বর</FormLabel>
+              <FormLabel>পূর্ণ ঠিকানা</FormLabel>
               <FormControl>
-                <Input placeholder="আপনার ফোন নম্বর" {...field} />
+                <Textarea
+                  placeholder="আপনার ঠিকানা লিখুন"
+                  className="resize-none"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-      </div>
 
-      <FormField
-        control={form.control}
-        name="email"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>ইমেইল</FormLabel>
-            <FormControl>
-              <Input placeholder="আপনার ইমেইল" type="email" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+        {/* Date Selection */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="startDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>শুরুর তারিখ</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP", { locale: bn })
+                        ) : (
+                          <span>তারিখ নির্বাচন করুন</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={getDisabledDates()}
+                      initialFocus
+                      className="pointer-events-auto"
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-      <FormField
-        control={form.control}
-        name="address"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>পূর্ণ ঠিকানা</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="আপনার ঠিকানা লিখুন"
-                className="resize-none"
-                {...field}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+          <FormField
+            control={form.control}
+            name="endDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>শেষের তারিখ</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP", { locale: bn })
+                        ) : (
+                          <span>তারিখ নির্বাচন করুন</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={getDisabledDates()}
+                      initialFocus
+                      className="pointer-events-auto"
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-      {/* Date Selection */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Payment Method */}
         <FormField
           control={form.control}
-          name="startDate"
+          name="paymentMethod"
           render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>শুরুর তারিখ</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-full pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "PPP", { locale: bn })
-                      ) : (
-                        <span>তারিখ নির্বাচন করুন</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    disabled={getDisabledDates()}
-                    initialFocus
-                    className="pointer-events-auto"
-                  />
-                </PopoverContent>
-              </Popover>
+            <FormItem>
+              <FormLabel>পেমেন্ট পদ্ধতি</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="পেমেন্ট পদ্ধতি নির্বাচন করুন" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {paymentMethods.map((method) => (
+                    <SelectItem key={method.value} value={method.value}>
+                      {method.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
         />
 
+        {/* Notes */}
         <FormField
           control={form.control}
-          name="endDate"
+          name="notes"
           render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>শেষের তারিখ</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-full pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "PPP", { locale: bn })
-                      ) : (
-                        <span>তারিখ নির্বাচন করুন</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    disabled={getDisabledDates()}
-                    initialFocus
-                    className="pointer-events-auto"
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-
-      {/* Payment Method */}
-      <FormField
-        control={form.control}
-        name="paymentMethod"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>পেমেন্ট পদ্ধতি</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <FormItem>
+              <FormLabel>নোট (যদি থাকে)</FormLabel>
               <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="পেমেন্ট পদ্ধতি নির্বাচন করুন" />
-                </SelectTrigger>
+                <Textarea
+                  placeholder="বিশেষ কোন তথ্য থাকলে লিখুন"
+                  className="resize-none"
+                  {...field}
+                />
               </FormControl>
-              <SelectContent>
-                {paymentMethods.map((method) => (
-                  <SelectItem key={method.value} value={method.value}>
-                    {method.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      {/* Notes */}
-      <FormField
-        control={form.control}
-        name="notes"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>নোট (যদি থাকে)</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="বিশেষ কোন তথ্য থাকলে লিখুন"
-                className="resize-none"
-                {...field}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <div className="flex justify-end gap-4">
-        <Button variant="outline" onClick={onCancel}>
-          বাতিল
-        </Button>
-        <Button type="submit">সাবমিট</Button>
-      </div>
-    </form>
+        <div className="flex justify-end gap-4">
+          <Button type="submit">সাবমিট</Button>
+        </div>
+      </form>
+    </Form>
   );
 };
 
