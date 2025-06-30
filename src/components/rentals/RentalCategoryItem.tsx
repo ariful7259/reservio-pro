@@ -11,6 +11,26 @@ interface RentalCategoryItemProps {
   onSubcategoryClick: (subcategory: any) => void;
 }
 
+// Category name mapping from Bengali to English IDs
+const categoryNameToId: { [key: string]: string } = {
+  'ইলেকট্রনিক্স': 'electronics',
+  'পরিবহন': 'transport',
+  'ইভেন্ট সামগ্রী': 'event',
+  'ঘরোয়া সামগ্রী': 'home',
+  'শিক্ষা সামগ্রী': 'education',
+  'কৃষি যন্ত্রপাতি': 'agriculture',
+  'ব্যবসায়িক সামগ্রী': 'business',
+  'কারিগরি টুলস': 'tools',
+  'অ্যাপার্টমেন্ট/ফ্ল্যাট': 'apartment',
+  'বাসা/বাড়ি': 'house',
+  'মেস/হোস্টেল': 'hostel',
+  'সিঙ্গেল রুম/শেয়ারড': 'room',
+  'কমার্শিয়াল স্পেস': 'commercial',
+  'গেস্ট হাউস/স্বল্পমেয়াদী': 'guesthouse',
+  'গ্রামীণ বাসস্থান': 'rural',
+  'স্টুডিও/স্পেশাল স্পেস': 'studio'
+};
+
 const RentalCategoryItem: React.FC<RentalCategoryItemProps> = ({
   category,
   index,
@@ -20,8 +40,9 @@ const RentalCategoryItem: React.FC<RentalCategoryItemProps> = ({
   const navigate = useNavigate();
 
   const handleCategoryClick = () => {
-    // Navigate to category-specific page with filters
-    const categoryId = category.id || category.name.toLowerCase().replace(/\s+/g, '-');
+    // Generate proper category ID
+    const categoryId = category.id || categoryNameToId[category.name] || category.name.toLowerCase().replace(/\s+/g, '-');
+    console.log(`Navigating to category: ${category.name} -> ${categoryId}`);
     navigate(`/rental-category/${categoryId}`);
   };
 

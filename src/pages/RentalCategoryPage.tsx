@@ -24,6 +24,12 @@ import SocialShareModal from '@/components/SocialShareModal';
 const categoryData = {
   'electronics': {
     title: 'ইলেকট্রনিক্স',
+    subcategories: [
+      { id: 'camera', name: 'ক্যামেরা', count: 25 },
+      { id: 'tv', name: 'টিভি', count: 18 },
+      { id: 'laptop', name: 'ল্যাপটপ', count: 32 },
+      { id: 'speaker', name: 'স্পিকার', count: 15 }
+    ],
     items: [
       {
         id: 1,
@@ -65,6 +71,11 @@ const categoryData = {
   },
   'transport': {
     title: 'পরিবহন',
+    subcategories: [
+      { id: 'car', name: 'গাড়ি', count: 45 },
+      { id: 'bike', name: 'বাইক', count: 38 },
+      { id: 'bus', name: 'বাস/মাইক্রো', count: 12 }
+    ],
     items: [
       {
         id: 5,
@@ -83,20 +94,16 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=1000&auto=format&fit=crop',
         category: 'পরিবহন',
         rating: 4.7
-      },
-      {
-        id: 7,
-        title: 'মাইক্রোবাস (১৪ সিট)',
-        location: 'বসুন্ধরা, ঢাকা',
-        price: '৳৮,০০০/দিন',
-        image: 'https://images.unsplash.com/photo-1556122071-de6e3e1cca50?q=80&w=1000&auto=format&fit=crop',
-        category: 'পরিবহন',
-        rating: 4.5
       }
     ]
   },
   'event': {
     title: 'ইভেন্ট সামগ্রী',
+    subcategories: [
+      { id: 'sound', name: 'সাউন্ড সিস্টেম', count: 20 },
+      { id: 'tent', name: 'টেন্ট', count: 15 },
+      { id: 'lighting', name: 'লাইটিং', count: 18 }
+    ],
     items: [
       {
         id: 8,
@@ -106,20 +113,15 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=1000&auto=format&fit=crop',
         category: 'ইভেন্ট সামগ্রী',
         rating: 4.9
-      },
-      {
-        id: 9,
-        title: 'ইভেন্ট টেন্ট (১০০ জন)',
-        location: 'ধানমন্ডি, ঢাকা',
-        price: '৳৮,০০০/দিন',
-        image: 'https://images.unsplash.com/photo-1478827536114-da961b7f86d2?q=80&w=1000&auto=format&fit=crop',
-        category: 'ইভেন্ট সামগ্রী',
-        rating: 4.7
       }
     ]
   },
   'home': {
     title: 'ঘরোয়া সামগ্রী',
+    subcategories: [
+      { id: 'ac', name: 'এসি', count: 30 },
+      { id: 'furniture', name: 'আসবাবপত্র', count: 25 }
+    ],
     items: [
       {
         id: 10,
@@ -129,20 +131,15 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1493018772444-f6db32ea789e?q=80&w=1000&auto=format&fit=crop',
         category: 'ঘরোয়া সামগ্রী',
         rating: 4.5
-      },
-      {
-        id: 11,
-        title: 'সোফা সেট',
-        location: 'মিরপুর, ঢাকা',
-        price: '৳৫০০/দিন',
-        image: 'https://images.unsplash.com/photo-1540574163026-643ea20ade25?q=80&w=1000&auto=format&fit=crop',
-        category: 'ঘরোয়া সামগ্রী',
-        rating: 4.4
       }
     ]
   },
   'education': {
     title: 'শিক্ষা সামগ্রী',
+    subcategories: [
+      { id: 'books', name: 'বই', count: 50 },
+      { id: 'equipment', name: 'যন্ত্রপাতি', count: 15 }
+    ],
     items: [
       {
         id: 12,
@@ -154,161 +151,7 @@ const categoryData = {
         rating: 4.6
       }
     ]
-  },
-  'agriculture': {
-    title: 'কৃষি যন্ত্রপাতি',
-    items: [
-      {
-        id: 13,
-        title: 'পাওয়ার টিলার',
-        location: 'সাভার, ঢাকা',
-        price: '৳১,২০০/দিন',
-        image: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=1000&auto=format&fit=crop',
-        category: 'কৃষি যন্ত্রপাতি',
-        rating: 4.5
-      }
-    ]
-  },
-  'business': {
-    title: 'ব্যবসায়িক সামগ্রী',
-    items: [
-      {
-        id: 14,
-        title: 'প্রজেক্টর',
-        location: 'মতিঝিল, ঢাকা',
-        price: '৳১,০০০/দিন',
-        image: 'https://images.unsplash.com/photo-1525913984309-0d4086099e69?q=80&w=1000&auto=format&fit=crop',
-        category: 'ব্যবসায়িক সামগ্রী',
-        rating: 4.8
-      }
-    ]
-  },
-  'tools': {
-    title: 'কারিগরি টুলস',
-    items: [
-      {
-        id: 15,
-        title: 'ড্রিল মেশিন',
-        location: 'মিরপুর, ঢাকা',
-        price: '৳৩০০/দিন',
-        image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=1000&auto=format&fit=crop',
-        category: 'কারিগরি টুলস',
-        rating: 4.7
-      }
-    ]
-  },
-  'apartment': {
-    title: 'অ্যাপার্টমেন্ট/ফ্ল্যাট',
-    items: [
-      {
-        id: 16,
-        title: '৩ বেডরুম অ্যাপার্টমেন্ট',
-        location: 'গুলশান, ঢাকা',
-        price: '৳২৫,০০০/মাস',
-        image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1000&auto=format&fit=crop',
-        category: 'অ্যাপার্টমেন্ট/ফ্ল্যাট',
-        rating: 4.9
-      }
-    ]
-  },
-  'house': {
-    title: 'বাসা/বাড়ি',
-    items: [
-      {
-        id: 17,
-        title: '৪ বেডরুম বাড়ি',
-        location: 'উত্তরা, ঢাকা',
-        price: '৳৪০,০০০/মাস',
-        image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1000&auto=format&fit=crop',
-        category: 'বাসা/বাড়ি',
-        rating: 4.8
-      }
-    ]
-  },
-  'hostel': {
-    title: 'মেস/হোস্টেল',
-    items: [
-      {
-        id: 18,
-        title: 'ছাত্র মেস (শেয়ার্ড)',
-        location: 'ফার্মগেট, ঢাকা',
-        price: '৳৫,০০০/মাস',
-        image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=1000&auto=format&fit=crop',
-        category: 'মেস/হোস্টেল',
-        rating: 4.4
-      }
-    ]
-  },
-  'room': {
-    title: 'সিঙ্গেল রুম/শেয়ারড',
-    items: [
-      {
-        id: 19,
-        title: 'সিঙ্গেল রুম (আসবাবপত্র সহ)',
-        location: 'মিরপুর, ঢাকা',
-        price: '৳৮,০০০/মাস',
-        image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=1000&auto=format&fit=crop',
-        category: 'সিঙ্গেল রুম/শেয়ারড',
-        rating: 4.5
-      }
-    ]
-  },
-  'commercial': {
-    title: 'কমার্শিয়াল স্পেস',
-    items: [
-      {
-        id: 20,
-        title: 'অফিস স্পেস',
-        location: 'বনানী, ঢাকা',
-        price: '৳৫০,০০০/মাস',
-        image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1000&auto=format&fit=crop',
-        category: 'কমার্শিয়াল স্পেস',
-        rating: 4.7
-      }
-    ]
-  },
-  'guesthouse': {
-    title: 'গেস্ট হাউস/স্বল্পমেয়াদী',
-    items: [
-      {
-        id: 21,
-        title: 'গেস্ট হাউস (২ বেডরুম)',
-        location: 'বারিধারা, ঢাকা',
-        price: '৳২,৫০০/দিন',
-        image: 'https://images.unsplash.com/photo-1586105251261-72a756497a11?q=80&w=1000&auto=format&fit=crop',
-        category: 'গেস্ট হাউস/স্বল্পমেয়াদী',
-        rating: 4.6
-      }
-    ]
-  },
-  'rural': {
-    title: 'গ্রামীণ বাসস্থান',
-    items: [
-      {
-        id: 22,
-        title: 'গ্রামীণ বাড়ি',
-        location: 'কেরানীগঞ্জ, ঢাকা',
-        price: '৳১৫,০০০/মাস',
-        image: 'https://images.unsplash.com/photo-1572547736089-b3dd93c9ac2e?q=80&w=1000&auto=format&fit=crop',
-        category: 'গ্রামীণ বাসস্থান',
-        rating: 4.5
-      }
-    ]
-  },
-  'studio': {
-    title: 'স্টুডিও/স্পেশাল স্পেস',
-    items: [
-      {
-        id: 23,
-        title: 'ফটোগ্রাফি স্টুডিও',
-        location: 'গুলশান, ঢাকা',
-        price: '৳১০,০০০/দিন',
-        image: 'https://images.unsplash.com/photo-1558449028-b53a39d100fc?q=80&w=1000&auto=format&fit=crop',
-        category: 'স্টুডিও/স্পেশাল স্পেস',
-        rating: 4.8
-      }
-    ]
-  },
+  }
 };
 
 const RentalCategoryPage = () => {
@@ -316,6 +159,7 @@ const RentalCategoryPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [sortBy, setSortBy] = useState('recommended');
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string>('all');
   const [shareItem, setShareItem] = useState<any | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
 
@@ -353,6 +197,15 @@ const RentalCategoryPage = () => {
   if (!category) {
     return null;
   }
+
+  // Filter items based on selected subcategory
+  const filteredItems = selectedSubcategory === 'all' 
+    ? category.items 
+    : category.items.filter(item => {
+        // Simple filtering logic - in real app this would be more sophisticated
+        const subcategoryName = category.subcategories.find(sub => sub.id === selectedSubcategory)?.name;
+        return subcategoryName && item.title.includes(subcategoryName);
+      });
 
   const handleListingClick = (id: number) => {
     console.log(`Navigating to rent details for item ID: ${id}`);
@@ -399,9 +252,32 @@ const RentalCategoryPage = () => {
         <h1 className="text-2xl font-bold">{category.title}</h1>
       </div>
       
+      {/* Subcategory Filter */}
+      <div className="mb-6">
+        <div className="flex gap-2 flex-wrap">
+          <Button
+            variant={selectedSubcategory === 'all' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setSelectedSubcategory('all')}
+          >
+            সব দেখুন
+          </Button>
+          {category.subcategories?.map((sub) => (
+            <Button
+              key={sub.id}
+              variant={selectedSubcategory === sub.id ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setSelectedSubcategory(sub.id)}
+            >
+              {sub.name} ({sub.count})
+            </Button>
+          ))}
+        </div>
+      </div>
+      
       <div className="flex items-center justify-between mb-6">
         <div className="text-sm text-muted-foreground">
-          <span>{category.items.length} আইটেম পাওয়া গেছে</span>
+          <span>{filteredItems.length} আইটেম পাওয়া গেছে</span>
         </div>
         <div className="flex gap-2">
           <Select value={sortBy} onValueChange={handleSortChange}>
@@ -422,7 +298,7 @@ const RentalCategoryPage = () => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {category.items.map((listing) => (
+        {filteredItems.map((listing) => (
           <Card 
             key={listing.id} 
             className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
