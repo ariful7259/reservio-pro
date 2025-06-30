@@ -22,7 +22,6 @@ import Signup from './pages/Signup';
 import DashboardPage from './pages/dashboard/DashboardLayout';
 import ServiceManagement from './pages/dashboard/service/ServiceManagement';
 import ProductManagement from './pages/dashboard/marketplace/ProductManagement';
-import RentalManagement from './pages/dashboard/rental/RentalManagement';
 import PropertyManagement from './pages/dashboard/rental/PropertyManagement';
 import RentalCategoriesPage from './pages/RentalCategoriesPage';
 import RentalBookingDynamic from './pages/RentalBookingDynamic';
@@ -54,7 +53,6 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/dashboard/services" element={<ServiceManagement />} />
             <Route path="/dashboard/products" element={<ProductManagement />} />
-            <Route path="/dashboard/rentals" element={<RentalManagement />} />
             <Route path="/dashboard/property" element={<PropertyManagement />} />
             <Route path="/rental-categories" element={<RentalCategoriesPage />} />
             <Route path="/rental-booking/:categoryId" element={<RentalBookingDynamic />} />
