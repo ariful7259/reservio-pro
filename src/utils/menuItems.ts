@@ -1,89 +1,92 @@
 
-export const getMenuItems = (language: 'en' | 'bn') => {
+// This file now uses the translation system from AppContext
+// Import useApp hook in components that use these functions
+
+export const getMenuItems = (language: 'en' | 'bn', t: (key: string) => string) => {
   return [
     {
-      title: language === 'bn' ? 'হোম' : 'Home',
+      title: t('home'),
       href: '/',
     },
     {
-      title: language === 'bn' ? 'সার্ভিস' : 'Services',
+      title: t('services'),
       href: '/services',
     },
     {
-      title: language === 'bn' ? 'শপিং' : 'Shopping',
+      title: t('shopping'),
       href: '/shopping',
     },
     {
-      title: language === 'bn' ? 'ভাড়া' : 'Rentals',
+      title: t('rentals'),
       href: '/rentals',
     },
     {
-      title: language === 'bn' ? 'আমার পছন্দ' : 'My Favorites',
+      title: t('favorites'),
       href: '/favorites',
     },
     {
-      title: language === 'bn' ? 'রিভিউ' : 'Reviews',
+      title: t('my_reviews'),
       href: '/reviews',
     },
     {
-      title: language === 'bn' ? 'লয়ালটি রিওয়ার্ড' : 'Loyalty Rewards',
+      title: t('loyalty_points'),
       href: '/rewards',
     },
     {
-      title: language === 'bn' ? 'ফিডব্যাক' : 'Feedback',
+      title: 'ফিডব্যাক',
       href: '/feedback',
     },
     {
-      title: language === 'bn' ? 'QR স্ক্যান' : 'QR Scan',
+      title: 'QR স্ক্যান',
       href: '/qr-scanner',
     },
     {
-      title: language === 'bn' ? 'অ্যাপয়েন্টমেন্ট' : 'Appointments',
+      title: 'অ্যাপয়েন্টমেন্ট',
       href: '/appointment-booking',
     },
     {
-      title: language === 'bn' ? 'ভাষা' : 'Language',
+      title: t('language'),
       href: '/language-settings',
     },
     {
-      title: language === 'bn' ? 'অফলাইন মোড' : 'Offline Mode',
+      title: t('offline_mode'),
       href: '/offline-mode',
     },
   ];
 };
 
-export const getSettingsItems = (language: 'en' | 'bn') => {
+export const getSettingsItems = (language: 'en' | 'bn', t: (key: string) => string) => {
   return [
     {
-      title: language === 'bn' ? 'প্রোফাইল' : 'Profile',
+      title: t('profile'),
       href: '/profile',
     },
     {
-      title: language === 'bn' ? 'ওয়ালেট' : 'Wallet',
+      title: t('wallet'),
       href: '/wallet',
     },
     {
-      title: language === 'bn' ? 'আমার পছন্দ' : 'My Favorites',
+      title: t('favorites'),
       href: '/favorites',
     },
     {
-      title: language === 'bn' ? 'রিভিউ' : 'Reviews',
+      title: t('my_reviews'),
       href: '/reviews',
     },
     {
-      title: language === 'bn' ? 'লয়ালটি রিওয়ার্ড' : 'Loyalty Rewards',
+      title: t('loyalty_points'),
       href: '/rewards',
     },
     {
-      title: language === 'bn' ? 'ফিডব্যাক' : 'Feedback',
+      title: 'ফিডব্যাক',
       href: '/feedback',
     },
     {
-      title: language === 'bn' ? 'QR স্ক্যান' : 'QR Scan',
+      title: 'QR স্ক্যান',
       href: '/qr-scanner',
     },
     {
-      title: language === 'bn' ? 'অ্যাপয়েন্টমেন্ট' : 'Appointments',
+      title: 'অ্যাপয়েন্টমেন্ট',
       href: '/appointment-booking',
     },
     {
@@ -91,11 +94,11 @@ export const getSettingsItems = (language: 'en' | 'bn') => {
       href: '/language-settings',
     },
     {
-      title: language === 'bn' ? 'অফলাইন মোড' : 'Offline Mode',
+      title: t('offline_mode'),
       href: '/offline-mode',
     },
     {
-      title: language === 'bn' ? 'সাহায্য' : 'Help',
+      title: 'সাহায্য',
       href: '/help',
     },
   ];

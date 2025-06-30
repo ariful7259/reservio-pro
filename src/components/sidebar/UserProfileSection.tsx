@@ -3,32 +3,34 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ChevronDown, LogOut, User as UserIcon, ShoppingBag, Wallet, Settings, ShieldCheck, Languages, SunMoon, Store } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DrawerTitle } from '@/components/ui/drawer';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { useApp } from '@/context/AppContext';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
 export const UserProfileSection = () => {
   const { user, isSeller, logout } = useAuth();
+  const { language, setLanguage, t } = useApp();
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Mock language switcher (replace with actual logic as needed)
-  const handleLanguageSwitch = () => {
+  const handleLanguageChange = (newLanguage: 'bn' | 'en') => {
+    setLanguage(newLanguage);
     toast({
-      title: "ভাষা পরিবর্তন",
-      description: "ল্যাঙ্গুয়েজ সুইচার কাজ করছে (ডেমো)"
+      title: newLanguage === 'bn' ? "ভাষা পরিবর্তিত হয়েছে" : "Language Changed",
+      description: newLanguage === 'bn' ? "বাংলা ভাষায় সেট করা হয়েছে" : "Set to English language"
     });
   };
 
   const handleLogout = () => {
     logout();
     toast({
-      title: "লগআউট সফল",
-      description: "আপনি সফলভাবে লগআউট হয়েছেন"
+      title: language === 'bn' ? "লগআউট সফল" : "Logout Successful",
+      description: language === 'bn' ? "আপনি সফলভাবে লগআউট হয়েছেন" : "You have been logged out successfully"
     });
     navigate("/login");
   };
@@ -57,19 +59,22 @@ export const UserProfileSection = () => {
           {/* দুইটা বাটন drop down menu-র একদম উপরে */}
           <DropdownMenuItem asChild>
             <Link to="/profile-management" className="flex items-center gap-2 w-full">
-              <UserIcon className="h-4 w-4" /> <span>প্রোফাইল দেখুন</span>
+              <UserIcon className="h-4 w-4" /> 
+              <span>{language === 'bn' ? 'প্রোফাইল দেখুন' : 'View Profile'}</span>
             </Link>
           </DropdownMenuItem>
           {isSeller ? (
             <DropdownMenuItem asChild>
               <Link to="/seller-dashboard" className="flex items-center gap-2 w-full">
-                <Store className="h-4 w-4" /> <span>Seller Dashboard</span>
+                <Store className="h-4 w-4" /> 
+                <span>{language === 'bn' ? 'সেলার ড্যাশবোর্ড' : 'Seller Dashboard'}</span>
               </Link>
             </DropdownMenuItem>
           ) : (
             <DropdownMenuItem asChild>
               <Link to="/become-seller" className="flex items-center gap-2 w-full">
-                <Store className="h-4 w-4" /> <span>Become a Seller</span>
+                <Store className="h-4 w-4" /> 
+                <span>{language === 'bn' ? 'সেলার হন' : 'Become a Seller'}</span>
               </Link>
             </DropdownMenuItem>
           )}
@@ -78,28 +83,54 @@ export const UserProfileSection = () => {
           {/* আগে থেকে থাকা অপশনগুলো নিচে */}
           <DropdownMenuItem asChild>
             <Link to="/orders" className="flex items-center gap-2 w-full">
-              <ShoppingBag className="h-4 w-4" /> <span>অর্ডারসমূহ</span>
+              <ShoppingBag className="h-4 w-4" /> 
+              <span>{language === 'bn' ? 'অর্ডারসমূহ' : 'Orders'}</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link to="/wallet" className="flex items-center gap-2 w-full">
-              <Wallet className="h-4 w-4" /> <span>Wallet / Transaction History</span>
+              <Wallet className="h-4 w-4" /> 
+              <span>{language === 'bn' ? 'ওয়ালেট / লেনদেনের ইতিহাস' : 'Wallet / Transaction History'}</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link to="/settings" className="flex items-center gap-2 w-full">
-              <Settings className="h-4 w-4" /> <span>Settings</span>
+              <Settings className="h-4 w-4" /> 
+              <span>{language === 'bn' ? 'সেটিংস' : 'Settings'}</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link to="/kyc-verification" className="flex items-center gap-2 w-full">
-              <ShieldCheck className="h-4 w-4" /> <span>KYC / Security</span>
+              <ShieldCheck className="h-4 w-4" /> 
+              <span>{language === 'bn' ? 'KYC / নিরাপত্তা' : 'KYC / Security'}</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleLanguageSwitch}>
-            <Languages className="h-4 w-4 mr-2" /> ভাষা পরিবর্তন
-          </DropdownMenuItem>
+          
+          {/* Language Submenu */}
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>
+              <Languages className="h-4 w-4 mr-2" /> 
+              {language === 'bn' ? 'ভাষা পরিবর্তন' : 'Change Language'}
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem 
+                onClick={() => handleLanguageChange('bn')}
+                className={language === 'bn' ? 'bg-accent' : ''}
+              >
+                🇧🇩 বাংলা
+                {language === 'bn' && <span className="ml-auto">✓</span>}
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={() => handleLanguageChange('en')}
+                className={language === 'en' ? 'bg-accent' : ''}
+              >
+                🇺🇸 English
+                {language === 'en' && <span className="ml-auto">✓</span>}
+              </DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+          
           <DropdownMenuItem>
             <span className="flex items-center gap-2 w-full">
               <SunMoon className="h-4 w-4 mr-2" /> <ThemeToggle />
@@ -107,11 +138,11 @@ export const UserProfileSection = () => {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleLogout} className="text-red-500">
-            <LogOut className="h-4 w-4 mr-2" /> লগআউট
+            <LogOut className="h-4 w-4 mr-2" /> 
+            {language === 'bn' ? 'লগআউট' : 'Logout'}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
   );
 };
-
