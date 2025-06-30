@@ -1,26 +1,27 @@
+
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
 import { Toaster } from '@/components/ui/toaster';
-import HomePage from './pages/HomePage';
-import ServicesPage from './pages/ServicesPage';
-import RentalsPage from './pages/RentalsPage';
-import ShoppingPage from './pages/ShoppingPage';
-import MarketplacePage from './pages/MarketplacePage';
-import WalletPage from './pages/WalletPage';
-import ProfilePage from './pages/ProfilePage';
-import FavoritesPage from './pages/FavoritesPage';
-import SettingsPage from './pages/SettingsPage';
+import Index from './pages/Index';
+import Services from './pages/Services';
+import Rentals from './pages/Rentals';
+import Shopping from './pages/Shopping';
+import Marketplace from './pages/Marketplace';
+import Wallet from './pages/Wallet';
+import Profile from './pages/Profile';
+import Favorites from './pages/Favorites';
+import Settings from './pages/Settings';
 import ServiceBooking from './pages/ServiceBooking';
 import ProductOrder from './pages/ProductOrder';
 import RentalBooking from './pages/RentalBooking';
 import RentalConfirmation from './pages/RentalConfirmation';
 import CreatePost from './pages/CreatePost';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import DashboardPage from './pages/dashboard/DashboardPage';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import DashboardPage from './pages/dashboard/DashboardLayout';
 import ServiceManagement from './pages/dashboard/service/ServiceManagement';
-import ProductManagement from './pages/dashboard/product/ProductManagement';
+import ProductManagement from './pages/dashboard/marketplace/ProductManagement';
 import RentalManagement from './pages/dashboard/rental/RentalManagement';
 import PropertyManagement from './pages/dashboard/rental/PropertyManagement';
 import RentalCategoriesPage from './pages/RentalCategoriesPage';
@@ -32,22 +33,22 @@ function App() {
       <AppProvider>
         <div className="min-h-screen bg-background">
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/services" element={<ServicesPage />} />
-            <Route path="/rentals" element={<RentalsPage />} />
-            <Route path="/shopping" element={<ShoppingPage />} />
-            <Route path="/marketplace" element={<MarketplacePage />} />
-            <Route path="/wallet" element={<WalletPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/favorites" element={<FavoritesPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/" element={<Index />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/rentals" element={<Rentals />} />
+            <Route path="/shopping" element={<Shopping />} />
+            <Route path="/marketplace" element={<Marketplace />} />
+            <Route path="/wallet" element={<Wallet />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/favorites" element={<Favorites />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="/service-booking" element={<ServiceBooking />} />
             <Route path="/product-order" element={<ProductOrder />} />
             <Route path="/rental-booking" element={<RentalBooking />} />
             <Route path="/rental-confirmation" element={<RentalConfirmation />} />
             <Route path="/create-post" element={<CreatePost />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Signup />} />
             
             {/* Dashboard Routes */}
             <Route path="/dashboard" element={<DashboardPage />} />

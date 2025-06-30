@@ -17,6 +17,7 @@ import { format, addDays } from 'date-fns';
 import { bn } from 'date-fns/locale';
 import { useToast } from '@/hooks/use-toast';
 import { getRentalCategoryById, RentalCategory, RentalBookingField } from '@/utils/rentalCategoriesData';
+import type { DateRange } from 'react-day-picker';
 
 interface DynamicRentalBookingFormProps {
   categoryId: string;
@@ -41,7 +42,7 @@ const DynamicRentalBookingForm: React.FC<DynamicRentalBookingFormProps> = ({
   const { toast } = useToast();
   const [category, setCategory] = useState<RentalCategory | null>(null);
   const [formData, setFormData] = useState<Record<string, any>>({});
-  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({});
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -195,7 +196,7 @@ const DynamicRentalBookingForm: React.FC<DynamicRentalBookingFormProps> = ({
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-full justify-start text-left font-normal">
                 <CalendarIcon className="mr-2 h-4 w-4" />
-                {dateRange.from ? (
+                {dateRange?.from ? (
                   dateRange.to ? (
                     <>
                       {format(dateRange.from, 'LLL dd, y', { locale: bn })} -{' '}
@@ -212,10 +213,10 @@ const DynamicRentalBookingForm: React.FC<DynamicRentalBookingFormProps> = ({
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="range"
-                defaultMonth={dateRange.from}
+                defaultMonth={dateRange?.from}
                 selected={dateRange}
                 onSelect={(range) => {
-                  setDateRange(range || {});
+                  setDateRange(range);
                   handleFieldChange(field.id, range);
                 }}
                 numberOfMonths={2}
