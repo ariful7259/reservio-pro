@@ -213,7 +213,7 @@ const DynamicRentalBookingForm: React.FC<DynamicRentalBookingFormProps> = ({
               <Calendar
                 mode="range"
                 defaultMonth={dateRange.from}
-                selected={dateRange}
+                selected={dateRange.from && dateRange.to ? { from: dateRange.from, to: dateRange.to } : undefined}
                 onSelect={(range) => {
                   setDateRange(range || {});
                   handleFieldChange(field.id, range);
