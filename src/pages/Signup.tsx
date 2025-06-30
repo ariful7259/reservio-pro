@@ -57,7 +57,16 @@ const Signup = () => {
   
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await signup(values.name, values.email, values.password);
+      const { data, error } = await signup(values.email, values.password);
+      
+      if (error) {
+        toast({
+          title: "রেজিস্ট্রেশন ব্যর্থ",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
       
       toast({
         title: "রেজিস্ট্রেশন সফল",
