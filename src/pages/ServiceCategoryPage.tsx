@@ -22,7 +22,12 @@ const ServiceCategoryPage = () => {
   const [selectedLocation, setSelectedLocation] = useState('all');
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
 
+  console.log('ServiceCategoryPage categoryId:', categoryId);
+  console.log('Available categories:', Object.keys(serviceCategoryData));
+
   const category = categoryId && serviceCategoryData[categoryId as keyof typeof serviceCategoryData];
+  
+  console.log('Selected category:', category);
   
   useEffect(() => {
     if (!categoryId) {
@@ -36,6 +41,7 @@ const ServiceCategoryPage = () => {
     }
     
     if (!category) {
+      console.log('Category not found for categoryId:', categoryId);
       toast({
         title: "ক্যাটাগরি পাওয়া যায়নি",
         description: `দুঃখিত, "${categoryId}" ক্যাটাগরি পাওয়া যায়নি। মূল পৃষ্ঠায় ফিরে যাচ্ছি।`,
@@ -55,8 +61,16 @@ const ServiceCategoryPage = () => {
   };
 
   if (!category) {
-    return null;
+    return (
+      <div className="container px-4 pt-20 pb-20">
+        <div className="text-center">
+          <p>ক্যাটাগরি লোড হচ্ছে...</p>
+        </div>
+      </div>
+    );
   }
+
+  console.log('Rendering category items:', category.items);
 
   return (
     <div className="container px-4 pt-20 pb-20">

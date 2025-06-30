@@ -23,6 +23,7 @@ interface ServiceItem {
   category: string;
   rating: number;
   reviews: number;
+  subcategory?: string;
 }
 
 interface ServiceCategoryListProps {
@@ -36,6 +37,8 @@ const ServiceCategoryList: React.FC<ServiceCategoryListProps> = ({
 }) => {
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  console.log('ServiceCategoryList rendering with services:', services);
 
   const handleServiceClick = (id: number) => {
     navigate(`/service-details/${id}`);
@@ -54,6 +57,14 @@ const ServiceCategoryList: React.FC<ServiceCategoryListProps> = ({
     navigate(`/service-booking/${serviceId}`);
   };
 
+  if (!services || services.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-muted-foreground">এই ক্যাটাগরিতে কোন সেবা পাওয়া যায়নি</p>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       {services.map((service) => (
@@ -68,7 +79,7 @@ const ServiceCategoryList: React.FC<ServiceCategoryListProps> = ({
               alt={service.title} 
               className="w-full h-full object-cover"
             />
-            <Badge className="absolute top-2 left-2">{service.category}</Badge>
+            <Badge className="absolute top-2 left-2">{service.subcategory || service.category}</Badge>
             <div className="absolute top-2 right-2 flex flex-col gap-2">
               <Button 
                 variant="outline" 
