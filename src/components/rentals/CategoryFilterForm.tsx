@@ -16,6 +16,7 @@ interface CategoryFilterFormProps {
   onLocationChange: (value: string) => void;
   onPriceRangeChange: (range: { min: string; max: string }) => void;
   onGetCurrentLocation: () => void;
+  onApplyFilter?: () => void;
 }
 
 const CategoryFilterForm: React.FC<CategoryFilterFormProps> = ({
@@ -27,15 +28,20 @@ const CategoryFilterForm: React.FC<CategoryFilterFormProps> = ({
   onSubcategoryChange,
   onLocationChange,
   onPriceRangeChange,
-  onGetCurrentLocation
+  onGetCurrentLocation,
+  onApplyFilter
 }) => {
   const { toast } = useToast();
 
   const handleApplyFilter = () => {
-    toast({
-      title: "ফিল্টার প্রয়োগ করা হয়েছে",
-      description: selectedSubcategory ? `${selectedSubcategory} নির্বাচিত` : "ফিল্টার প্রয়োগ করা হয়েছে"
-    });
+    if (onApplyFilter) {
+      onApplyFilter();
+    } else {
+      toast({
+        title: "ফিল্টার প্রয়োগ করা হয়েছে",
+        description: selectedSubcategory ? `${selectedSubcategory} নির্বাচিত` : "ফিল্টার প্রয়োগ করা হয়েছে"
+      });
+    }
   };
 
   return (

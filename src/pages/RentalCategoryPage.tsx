@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -16,6 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import SocialShareModal from '@/components/SocialShareModal';
+import CategoryFilterForm from '@/components/rentals/CategoryFilterForm';
 
 const categoryData = {
   'electronics': {
@@ -312,6 +312,13 @@ const RentalCategoryPage = () => {
   const [sortBy, setSortBy] = useState('recommended');
   const [shareItem, setShareItem] = useState<any | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  
+  // Filter states
+  const [selectedSubcategory, setSelectedSubcategory] = useState('all');
+  const [selectedLocation, setSelectedLocation] = useState('all');
+  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
 
   const category = categoryId && categoryData[categoryId as keyof typeof categoryData];
   
@@ -335,6 +342,37 @@ const RentalCategoryPage = () => {
       navigate('/rentals');
     }
   }, [category, categoryId, navigate, toast]);
+
+  const handleGetCurrentLocation = () => {
+    setIsGettingLocation(true);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setSelectedLocation('current');
+          setIsGettingLocation(false);
+          toast({
+            title: "অবস্থান পাওয়া গেছে",
+            description: "আপনার বর্তমান অবস্থান ব্যবহার করা হচ্ছে"
+          });
+        },
+        () => {
+          setIsGettingLocation(false);
+          toast({
+            title: "অবস্থান পাওয়া যায়নি",
+            description: "অনুগ্রহ করে ম্যানুয়ালি এলাকা নির্বাচন করুন",
+            variant: "destructive"
+          });
+        }
+      );
+    }
+  };
+
+  const handleApplyFilter = () => {
+    toast({
+      title: "ফিল্টার প্রয়োগ করা হয়েছে",
+      description: `${category?.title} এর জন্য ফিল্টার আপডেট হয়েছে`
+    });
+  };
 
   if (!category) {
     return null;
@@ -382,13 +420,40 @@ const RentalCategoryPage = () => {
         </Button>
         <h1 className="text-2xl font-bold">{category.title}</h1>
       </div>
+
+      {/* Filter Section */}
+      <div className="mb-6">
+        <Button
+          variant="outline"
+          onClick={() => setShowFilters(!showFilters)}
+          className="mb-4"
+        >
+          <Filter className="h-4 w-4 mr-2" />
+          ফিল্টার {showFilters ? 'লুকান' : 'দেখান'}
+        </Button>
+        
+        {showFilters && (
+          <CategoryFilterForm
+            category={{ title: category.title, id: categoryId }}
+            selectedSubcategory={selectedSubcategory}
+            selectedLocation={selectedLocation}
+            priceRange={priceRange}
+            isGettingLocation={isGettingLocation}
+            onSubcategoryChange={setSelectedSubcategory}
+            onLocationChange={setSelectedLocation}
+            onPriceRangeChange={setPriceRange}
+            onGetCurrentLocation={handleGetCurrentLocation}
+            onApplyFilter={handleApplyFilter}
+          />
+        )}
+      </div>
       
       <div className="flex items-center justify-between mb-6">
         <div className="text-sm text-muted-foreground">
           <span>{category.items.length} আইটেম পাওয়া গেছে</span>
         </div>
         <div className="flex gap-2">
-          <Select value={sortBy} onValueChange={handleSortChange}>
+          <Select value={sortBy} onValueChange={setSortBy}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="সর্ট করুন" />
             </SelectTrigger>
@@ -399,9 +464,6 @@ const RentalCategoryPage = () => {
               <SelectItem value="rating">রেটিং</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" size="icon">
-            <Filter className="h-4 w-4" />
-          </Button>
         </div>
       </div>
       
