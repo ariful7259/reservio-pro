@@ -57,6 +57,7 @@ import BecomeSeller from './pages/BecomeSeller';
 import Orders from './pages/Orders';
 import Settings from './pages/Settings';
 import KycVerification from './pages/KycVerification';
+import ServiceCategoryPage from "./pages/ServiceCategoryPage";
 
 const RoutesConfig = () => {
   return (
@@ -153,7 +154,10 @@ const RoutesConfig = () => {
       
       {/* Seller Dashboard Sections */}
       <Route path="/dashboard/*" element={<DashboardLayout />} />
-
+      
+      {/* Service Category Page */}
+      <Route path="/services/category/:categoryId" element={<ServiceCategoryPage />} />
+      
       {/* 404 Page */}
       <Route path="*" element={<NotFound />} />
     </Routes>

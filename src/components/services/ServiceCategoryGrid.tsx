@@ -3,7 +3,10 @@ import React from 'react';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { ChevronRight, Flame, Sparkles } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { useNavigate } from 'react-router-dom';
 
 interface ServiceCategoryGridProps {
   serviceCategories: any[];
@@ -21,76 +24,96 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
   setIsExpanded
 }) => {
   const { language, t } = useApp();
+  const navigate = useNavigate();
+
+  const displayedCategories = isExpanded 
+    ? serviceCategories 
+    : serviceCategories.slice(0, 8);
+
+  const handleCategoryClick = (categoryId: string) => {
+    // Navigate to category page instead of just setting selected category
+    navigate(`/services/category/${categoryId}`);
+  };
+
+  const CategoryCard = ({ category }: { category: any }) => (
+    <Card
+      className={`relative overflow-hidden hover:shadow-md transition-all cursor-pointer ${
+        selectedCategory === category.id
+          ? 'ring-2 ring-primary bg-primary/5'
+          : 'hover:bg-gray-50'
+      }`}
+      onClick={() => handleCategoryClick(category.id)}
+    >
+      <CardContent className="p-3 flex flex-col items-center text-center">
+        {/* New/Hot Badges */}
+        {(category.isNew || category.isHot) && (
+          <div className="absolute top-1 right-1 flex gap-1">
+            {category.isNew && (
+              <Badge variant="secondary" className="text-xs px-1 py-0 bg-blue-100 text-blue-600">
+                <Sparkles className="h-2 w-2 mr-1" />
+                নতুন
+              </Badge>
+            )}
+            {category.isHot && (
+              <Badge variant="secondary" className="text-xs px-1 py-0 bg-red-100 text-red-600">
+                <Flame className="h-2 w-2 mr-1" />
+                হট
+              </Badge>
+            )}
+          </div>
+        )}
+        
+        <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full ${category.color} flex items-center justify-center mb-2`}>
+          <div className={category.iconColor}>
+            {category.icon}
+          </div>
+        </div>
+        
+        <h3 className="font-medium text-xs md:text-sm mb-1 line-clamp-2">
+          {language === 'bn' ? category.name : category.nameEn}
+        </h3>
+        
+        <Badge variant="secondary" className="text-xs">
+          {category.count} {language === 'bn' ? 'সার্ভিস' : 'services'}
+        </Badge>
+        
+        <div className="mt-1 text-xs text-muted-foreground">
+          {category.subcategories.length} {language === 'bn' ? 'সাব-ক্যাটাগরি' : 'subcategories'}
+        </div>
+      </CardContent>
+    </Card>
+  );
 
   return (
-    <div className="mb-8">
-      <h2 className="text-lg font-semibold mb-4">
-        {language === 'bn' ? 'ক্যাটাগরি সমূহ' : 'Categories'}
-      </h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {serviceCategories.slice(0, 8).map((category) => (
-          <div
-            key={category.id}
-            className={`flex flex-col items-center text-center p-4 rounded-lg transition-colors cursor-pointer ${
-              selectedCategory === category.id
-                ? 'bg-primary/10 border-2 border-primary'
-                : 'hover:bg-gray-50'
-            }`}
-            onClick={() => setSelectedCategory(category.id)}
-          >
-            <div className={`w-16 h-16 rounded-full ${category.color} flex items-center justify-center mb-3`}>
-              <div className={category.iconColor}>
-                {category.icon}
-              </div>
-            </div>
-            <h3 className="font-medium text-sm mb-2">
-              {language === 'bn' ? category.name : category.nameEn || category.name}
-            </h3>
-            <Badge variant="secondary" className="text-xs">
-              {category.count}{language === 'bn' ? 'টি' : ''}
-            </Badge>
-            <div className="mt-2 text-xs text-muted-foreground">
-              {category.subcategories.length} {language === 'bn' ? 'সাব-ক্যাটাগরি' : 'subcategories'}
-            </div>
-          </div>
-        ))}
+    <div className="space-y-4">
+      <div className="mb-8">
+        <h2 className="text-lg font-semibold mb-4">
+          {language === 'bn' ? 'ক্যাটাগরি সমূহ' : 'Categories'}
+        </h2>
+        
+        {/* Mobile: 4 columns, Desktop: 4 columns */}
+        <div className="grid grid-cols-4 gap-2 md:gap-4">
+          {displayedCategories.map((category) => (
+            <CategoryCard key={category.id} category={category} />
+          ))}
+        </div>
       </div>
       
-      <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className="w-full mt-4">
+      <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className="w-full">
         <CollapsibleContent className="mt-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-4 gap-2 md:gap-4">
             {serviceCategories.slice(8).map((category) => (
-              <div
-                key={category.id}
-                className={`flex flex-col items-center text-center p-4 rounded-lg transition-colors cursor-pointer ${
-                  selectedCategory === category.id
-                    ? 'bg-primary/10 border-2 border-primary'
-                    : 'hover:bg-gray-50'
-                }`}
-                onClick={() => setSelectedCategory(category.id)}
-              >
-                <div className={`w-16 h-16 rounded-full ${category.color} flex items-center justify-center mb-3`}>
-                  <div className={category.iconColor}>
-                    {category.icon}
-                  </div>
-                </div>
-                <h3 className="font-medium text-sm mb-2">
-                  {language === 'bn' ? category.name : category.nameEn || category.name}
-                </h3>
-                <Badge variant="secondary" className="text-xs">
-                  {category.count}{language === 'bn' ? 'টি' : ''}
-                </Badge>
-                <div className="mt-2 text-xs text-muted-foreground">
-                  {category.subcategories.length} {language === 'bn' ? 'সাব-ক্যাটাগরি' : 'subcategories'}
-                </div>
-              </div>
+              <CategoryCard key={category.id} category={category} />
             ))}
           </div>
         </CollapsibleContent>
         
         <div className="flex justify-center mt-6">
           <CollapsibleTrigger asChild>
-            <Button variant="outline" className="text-red-500 border-red-500 hover:bg-red-50">
+            <Button 
+              variant="outline" 
+              className="text-red-500 border-red-500 hover:bg-red-50"
+            >
               {isExpanded ? (
                 <>{language === 'bn' ? '∧ কম দেখুন' : '∧ Show Less'}</>
               ) : (
