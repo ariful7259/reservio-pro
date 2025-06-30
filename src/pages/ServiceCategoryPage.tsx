@@ -142,6 +142,230 @@ const serviceCategoryData = {
         subcategory: 'ঘর ঝাড়ু ও মপিং'
       }
     ]
+  },
+  'food': {
+    title: 'খাবার ও রান্না সেবা',
+    titleEn: 'Food & Cooking Services',
+    services: [
+      {
+        id: 8,
+        title: 'হোম শেফ সার্ভিস',
+        provider: 'রান্নাঘর এক্সপার্ট',
+        location: 'বনানী, ঢাকা',
+        price: '৳২,০০০',
+        rating: 4.7,
+        reviews: 145,
+        image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '১ ঘণ্টা',
+        subcategory: 'পার্সোনাল শেফ'
+      },
+      {
+        id: 9,
+        title: 'ক্যাটারিং সার্ভিস',
+        provider: 'বেস্ট ক্যাটারিং',
+        location: 'মিরপুর, ঢাকা',
+        price: '৳৫০০/প্লেট',
+        rating: 4.5,
+        reviews: 234,
+        image: 'https://images.unsplash.com/photo-1555244162-803834f70033?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '২৪ ঘণ্টা',
+        subcategory: 'ইভেন্ট ক্যাটারিং'
+      }
+    ]
+  },
+  'transport': {
+    title: 'পরিবহন সেবা',
+    titleEn: 'Transportation Services',
+    services: [
+      {
+        id: 10,
+        title: 'কার রেন্টাল সার্ভিস',
+        provider: 'ঢাকা কার রেন্ট',
+        location: 'ধানমন্ডি, ঢাকা',
+        price: '৳৩,০০০/দিন',
+        rating: 4.3,
+        reviews: 167,
+        image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '৩০ মিনিট',
+        subcategory: 'প্রাইভেট কার'
+      },
+      {
+        id: 11,
+        title: 'বাইক রাইড শেয়ার',
+        provider: 'স্পিড রাইড',
+        location: 'গুলশান, ঢাকা',
+        price: '৳১৫০/ট্রিপ',
+        rating: 4.1,
+        reviews: 289,
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
+        isVerified: false,
+        responseTime: '১০ মিনিট',
+        subcategory: 'বাইক শেয়ার'
+      }
+    ]
+  },
+  'education': {
+    title: 'শিক্ষা ও প্রশিক্ষণ',
+    titleEn: 'Education & Training',
+    services: [
+      {
+        id: 12,
+        title: 'হোম টিউটরিং',
+        provider: 'এডুকেশন হাব',
+        location: 'উত্তরা, ঢাকা',
+        price: '৳১,৫০০/মাস',
+        rating: 4.6,
+        reviews: 178,
+        image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '১ ঘণ্টা',
+        subcategory: 'একাডেমিক টিউটরিং'
+      },
+      {
+        id: 13,
+        title: 'কম্পিউটার প্রশিক্ষণ',
+        provider: 'টেক ট্রেইনিং সেন্টার',
+        location: 'বনানী, ঢাকা',
+        price: '৳৮,০০০/কোর্স',
+        rating: 4.4,
+        reviews: 95,
+        image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '২৪ ঘণ্টা',
+        subcategory: 'আইটি ট্রেইনিং'
+      }
+    ]
+  },
+  'fitness': {
+    title: 'ফিটনেস ও স্বাস্থ্য',
+    titleEn: 'Fitness & Health',
+    services: [
+      {
+        id: 14,
+        title: 'পার্সোনাল ট্রেইনার',
+        provider: 'ফিট লাইফ জিম',
+        location: 'গুলশান, ঢাকা',
+        price: '৳২,৫০০/সেশন',
+        rating: 4.8,
+        reviews: 134,
+        image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '১ ঘণ্টা',
+        subcategory: 'জিম ট্রেইনিং'
+      },
+      {
+        id: 15,
+        title: 'যোগ ক্লাস',
+        provider: 'সেরেনিটি যোগ',
+        location: 'ধানমন্ডি, ঢাকা',
+        price: '৳১,২০০/ক্লাস',
+        rating: 4.7,
+        reviews: 87,
+        image: 'https://images.unsplash.com/photo-1506629905607-d24a2c7bdc40?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '২ ঘণ্টা',
+        subcategory: 'যোগ ব্যায়াম'
+      }
+    ]
+  },
+  'photography': {
+    title: 'ফটোগ্রাফি ও ভিডিও',
+    titleEn: 'Photography & Video',
+    services: [
+      {
+        id: 16,
+        title: 'ওয়েডিং ফটোগ্রাফি',
+        provider: 'ড্রিম ফটো স্টুডিও',
+        location: 'গুলশান, ঢাকা',
+        price: '৳২৫,০০০/ইভেন্ট',
+        rating: 4.9,
+        reviews: 156,
+        image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '৪৮ ঘণ্টা',
+        subcategory: 'বিয়ের ফটোগ্রাফি'
+      },
+      {
+        id: 17,
+        title: 'পোর্ট্রেট ফটোশুট',
+        provider: 'আর্ট ফটোগ্রাফি',
+        location: 'ধানমন্ডি, ঢাকা',
+        price: '৳৩,৫০০/সেশন',
+        rating: 4.6,
+        reviews: 78,
+        image: 'https://images.unsplash.com/photo-1554080353-a576cf803bda?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '২৪ ঘণ্টা',
+        subcategory: 'পোর্ট্রেট'
+      }
+    ]
+  },
+  'repair': {
+    title: 'মেরামত ও রক্ষণাবেক্ষণ',
+    titleEn: 'Repair & Maintenance',
+    services: [
+      {
+        id: 18,
+        title: 'প্লাম্বিং সার্ভিস',
+        provider: 'কুইক ফিক্স প্লাম্বার',
+        location: 'মিরপুর, ঢাকা',
+        price: '৳১,২০০',
+        rating: 4.4,
+        reviews: 203,
+        image: 'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '১ ঘণ্টা',
+        subcategory: 'পাইপ মেরামত'
+      },
+      {
+        id: 19,
+        title: 'ইলেকট্রিক্যাল রিপেয়ার',
+        provider: 'পাওয়ার ইলেকট্রিক',
+        location: 'উত্তরা, ঢাকা',
+        price: '৳৮০০',
+        rating: 4.3,
+        reviews: 167,
+        image: 'https://images.unsplash.com/photo-1621905252472-e8ace8dc23f9?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '৪৫ মিনিট',
+        subcategory: 'বৈদ্যুতিক মেরামত'
+      }
+    ]
+  },
+  'events': {
+    title: 'ইভেন্ট ও অনুষ্ঠান',
+    titleEn: 'Events & Occasions',
+    services: [
+      {
+        id: 20,
+        title: 'ইভেন্ট প্ল্যানিং',
+        provider: 'সেলিব্রেশন ইভেন্টস',
+        location: 'বনানী, ঢাকা',
+        price: '৳১৫,০০০/ইভেন্ট',
+        rating: 4.7,
+        reviews: 89,
+        image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '৭২ ঘণ্টা',
+        subcategory: 'পার্টি প্ল্যানিং'
+      },
+      {
+        id: 21,
+        title: 'ডেকোরেশন সার্ভিস',
+        provider: 'ক্রিয়েটিভ ডেকোর',
+        location: 'গুলশান, ঢাকা',
+        price: '৳৮,০০০/সেটআপ',
+        rating: 4.5,
+        reviews: 112,
+        image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=400&h=300&fit=crop',
+        isVerified: true,
+        responseTime: '২৪ ঘণ্টা',
+        subcategory: 'ইভেন্ট ডেকোরেশন'
+      }
+    ]
   }
 };
 
