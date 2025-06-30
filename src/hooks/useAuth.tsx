@@ -22,7 +22,15 @@ export const useAuth = () => {
 
   const login = async (email: string, password: string) => {
     // Mock login
-    setUser({ email, name: 'Test User' });
+    const mockUser = { 
+      id: '1',
+      email, 
+      name: 'Test User',
+      avatar: null,
+      phone: null,
+      role: 'user' // Default role
+    };
+    setUser(mockUser);
     return { success: true };
   };
 
@@ -30,10 +38,18 @@ export const useAuth = () => {
     setUser(null);
   };
 
+  // Computed properties based on user
+  const isAuthenticated = !!user;
+  const isAdmin = user?.role === 'admin';
+  const isSeller = user?.role === 'seller' || user?.role === 'admin';
+
   return {
     user,
     loading,
     login,
-    logout
+    logout,
+    isAuthenticated,
+    isAdmin,
+    isSeller
   };
 };
