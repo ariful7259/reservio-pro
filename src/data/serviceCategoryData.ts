@@ -1,3 +1,4 @@
+
 export const serviceCategoryData = {
   'doctors-health': {
     title: 'ডাক্তার ও স্বাস্থ্য সেবা',
@@ -49,6 +50,18 @@ export const serviceCategoryData = {
         rating: 4.5,
         reviews: 98,
         subcategory: 'ডায়াগনস্টিক সেবা'
+      },
+      {
+        id: 105,
+        title: 'হৃদরোগ বিশেষজ্ঞ',
+        provider: 'ডাঃ মোহাম্মদ হাসান',
+        location: 'শাহবাগ, ঢাকা',
+        price: '৳১,৫০০ - ৩,০০০',
+        image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=1000&auto=format&fit=crop',
+        category: 'ডাক্তার ও স্বাস্থ্য সেবা',
+        rating: 4.9,
+        reviews: 245,
+        subcategory: 'বিশেষজ্ঞ ডাক্তার'
       }
     ]
   },
@@ -90,6 +103,18 @@ export const serviceCategoryData = {
         rating: 4.9,
         reviews: 89,
         subcategory: 'ইমপ্ল্যান্ট সার্জারি'
+      },
+      {
+        id: 204,
+        title: 'দাঁত সাদা করার সেবা',
+        provider: 'হোয়াইট স্মাইল ক্লিনিক',
+        location: 'উত্তরা, ঢাকা',
+        price: '৳৮,০০০ - ১৫,০০০',
+        image: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=1000&auto=format&fit=crop',
+        category: 'ডেন্টাল কেয়ার',
+        rating: 4.6,
+        reviews: 112,
+        subcategory: 'কসমেটিক ডেন্টিস্ট্রি'
       }
     ]
   },
@@ -131,6 +156,18 @@ export const serviceCategoryData = {
         rating: 4.7,
         reviews: 145,
         subcategory: 'স্কিন কেয়ার'
+      },
+      {
+        id: 304,
+        title: 'ম্যানিকিউর ও পেডিকিউর',
+        provider: 'নেইল আর্ট স্টুডিও',
+        location: 'মিরপুর, ঢাকা',
+        price: '৳৮০০ - ২,৫০০',
+        image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=1000&auto=format&fit=crop',
+        category: 'সেলুন ও বিউটি সার্ভিস',
+        rating: 4.5,
+        reviews: 167,
+        subcategory: 'নেইল কেয়ার'
       }
     ]
   },
@@ -172,6 +209,18 @@ export const serviceCategoryData = {
         rating: 4.4,
         reviews: 98,
         subcategory: 'ওয়াশিং মেশিন'
+      },
+      {
+        id: 404,
+        title: 'এসি সার্ভিসিং ও রিপেয়ার',
+        provider: 'কুল এয়ার সার্ভিস',
+        location: 'বনানী, ঢাকা',
+        price: '৳১,২০০ - ৪,০০০',
+        image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=1000&auto=format&fit=crop',
+        category: 'ইলেকট্রনিক্স রিপেয়ার',
+        rating: 4.7,
+        reviews: 201,
+        subcategory: 'এসি সার্ভিস'
       }
     ]
   },
@@ -213,6 +262,18 @@ export const serviceCategoryData = {
         rating: 4.8,
         reviews: 76,
         subcategory: 'ডেটা রিকভারি'
+      },
+      {
+        id: 504,
+        title: 'ট্যাবলেট ও আইপ্যাড রিপেয়ার',
+        provider: 'গ্যাজেট ফিক্স',
+        location: 'মিরপুর, ঢাকা',
+        price: '৳১,০০০ - ৬,০০০',
+        image: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?q=80&w=1000&auto=format&fit=crop',
+        category: 'মোবাইল ও গ্যাজেট সার্ভিস',
+        rating: 4.5,
+        reviews: 123,
+        subcategory: 'ট্যাবলেট রিপেয়ার'
       }
     ]
   },
@@ -254,6 +315,18 @@ export const serviceCategoryData = {
         rating: 4.9,
         reviews: 189,
         subcategory: 'বেকারি সার্ভিস'
+      },
+      {
+        id: 604,
+        title: 'ঐতিহ্যবাহী বাংলা রান্না',
+        provider: 'দেশী খাবার ঘর',
+        location: 'পুরাণ ঢাকা',
+        price: '৳১,৫০০ - ৩,৫০০',
+        image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?q=80&w=1000&auto=format&fit=crop',
+        category: 'খাবার ও কুকিং সার্ভিস',
+        rating: 4.6,
+        reviews: 156,
+        subcategory: 'ট্র্যাডিশনাল কুকিং'
       }
     ]
   },
@@ -295,6 +368,18 @@ export const serviceCategoryData = {
         rating: 4.7,
         reviews: 167,
         subcategory: 'ফার্নিচার ক্লিনিং'
+      },
+      {
+        id: 704,
+        title: 'অফিস ক্লিনিং সার্ভিস',
+        provider: 'বিজনেস ক্লিন',
+        location: 'মতিঝিল, ঢাকা',
+        price: '৳১,৫০০ - ৪,০০০',
+        image: 'https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?q=80&w=1000&auto=format&fit=crop',
+        category: 'হাউজ ক্লিনিং সার্ভিস',
+        rating: 4.5,
+        reviews: 132,
+        subcategory: 'কমার্শিয়াল ক্লিনিং'
       }
     ]
   },
@@ -336,6 +421,18 @@ export const serviceCategoryData = {
         rating: 4.7,
         reviews: 89,
         subcategory: 'আপহলস্টারি'
+      },
+      {
+        id: 804,
+        title: 'অ্যান্টিক ফার্নিচার রিস্টোরেশন',
+        provider: 'হেরিটেজ ফার্নিচার',
+        location: 'বনানী, ঢাকা',
+        price: '৳৩,০০০ - ১৫,০০০',
+        image: 'https://images.unsplash.com/photo-1549497538-303791108f95?q=80&w=1000&auto=format&fit=crop',
+        category: 'ফার্নিচার মেকিং/রিপেয়ার',
+        rating: 4.9,
+        reviews: 67,
+        subcategory: 'রিস্টোরেশন'
       }
     ]
   },
@@ -377,6 +474,18 @@ export const serviceCategoryData = {
         rating: 4.4,
         reviews: 67,
         subcategory: 'ইঁদুর নিয়ন্ত্রণ'
+      },
+      {
+        id: 904,
+        title: 'পিঁপড়া নিয়ন্ত্রণ',
+        provider: 'অ্যান্ট স্টপ',
+        location: 'মিরপুর, ঢাকা',
+        price: '৳৮০০ - ২,০০০',
+        image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=1000&auto=format&fit=crop',
+        category: 'পেস্ট কন্ট্রোল সার্ভিস',
+        rating: 4.3,
+        reviews: 89,
+        subcategory: 'পিঁপড়া নিয়ন্ত্রণ'
       }
     ]
   },
@@ -398,7 +507,7 @@ export const serviceCategoryData = {
       {
         id: 1002,
         title: 'ইংরেজি ভাষা শেখানো',
-        provider: 'ইংলিশ স্পিকিং ক্লাব',
+        provider: 'ইংলিশ স্পিকিং ক্লাب',
         location: 'গুলশান, ঢাকা',
         price: '৳১,৮০০ - ৪,০০০/মাস',
         image: 'https://images.unsplash.com/photo-1544717297-fa95b6ee9643?q=80&w=1000&auto=format&fit=crop',
@@ -418,6 +527,18 @@ export const serviceCategoryData = {
         rating: 4.7,
         reviews: 134,
         subcategory: 'প্রোগ্রামিং'
+      },
+      {
+        id: 1004,
+        title: 'বিজ্ঞান টিউটরিং',
+        provider: 'সায়েন্স গুরু',
+        location: 'উত্তরা, ঢাকা',
+        price: '৳২,২০০ - ৪,৫০০/মাস',
+        image: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=1000&auto=format&fit=crop',
+        category: 'শিক্ষা ও টিউটর সার্ভিস',
+        rating: 4.6,
+        reviews: 176,
+        subcategory: 'বিজ্ঞান'
       }
     ]
   },
@@ -459,6 +580,18 @@ export const serviceCategoryData = {
         rating: 4.8,
         reviews: 98,
         subcategory: 'ইভেন্ট ফটোগ্রাফি'
+      },
+      {
+        id: 1104,
+        title: 'পণ্য ফটোগ্রাফি',
+        provider: 'প্রোডাক্ট শুট',
+        location: 'বনানী, ঢাকা',
+        price: '৳১,৫০০ - ৫,০০০',
+        image: 'https://images.unsplash.com/photo-1607462109225-6b64ae2dd3cb?q=80&w=1000&auto=format&fit=crop',
+        category: 'ফটোগ্রাফি সার্ভিস',
+        rating: 4.6,
+        reviews: 123,
+        subcategory: 'প্রোডাক্ট ফটোগ্রাফি'
       }
     ]
   },
@@ -541,6 +674,18 @@ export const serviceCategoryData = {
         rating: 4.6,
         reviews: 89,
         subcategory: 'ডিজিটাল মার্কেটিং'
+      },
+      {
+        id: 1304,
+        title: 'সাইবার সিকিউরিটি',
+        provider: 'সিকিউর টেক',
+        location: 'উত্তরা, ঢাকা',
+        price: '৳১০,০০০ - ৩০,০০০',
+        image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?q=80&w=1000&auto=format&fit=crop',
+        category: 'আইটি ও ডিজিটাল সার্ভিস',
+        rating: 4.9,
+        reviews: 67,
+        subcategory: 'সাইবার সিকিউরিটি'
       }
     ]
   },
@@ -582,6 +727,18 @@ export const serviceCategoryData = {
         rating: 4.8,
         reviews: 156,
         subcategory: 'জন্মদিনের পার্টি'
+      },
+      {
+        id: 1404,
+        title: 'কনসার্ট ও সাংস্কৃতিক অনুষ্ঠান',
+        provider: 'কালচারাল ইভেন্টস',
+        location: 'বনানী, ঢাকা',
+        price: '৳৩০,০০০ - ১,৫০,০০০',
+        image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1000&auto=format&fit=crop',
+        category: 'ইভেন্ট ম্যানেজমেন্ট',
+        rating: 4.6,
+        reviews: 89,
+        subcategory: 'সাংস্কৃতিক অনুষ্ঠান'
       }
     ]
   },
@@ -623,6 +780,18 @@ export const serviceCategoryData = {
         rating: 4.8,
         reviews: 145,
         subcategory: 'ফ্লোরিং'
+      },
+      {
+        id: 1504,
+        title: 'প্লাম্বিং ও ইলেকট্রিক্যাল',
+        provider: 'হোম টেক সার্ভিস',
+        location: 'বনানী, ঢাকা',
+        price: '৳৮০০ - ৫,০০০',
+        image: 'https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?q=80&w=1000&auto=format&fit=crop',
+        category: 'কনস্ট্রাকশন ও হোম সার্ভিস',
+        rating: 4.5,
+        reviews: 167,
+        subcategory: 'প্লাম্বিং ও ইলেকট্রিক্যাল'
       }
     ]
   },
