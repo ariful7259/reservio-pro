@@ -34,6 +34,26 @@ export const useAuth = () => {
     return { success: true };
   };
 
+  const signup = async (name: string, email: string, password: string) => {
+    // Mock signup
+    const mockUser = { 
+      id: '1',
+      email, 
+      name,
+      avatar: null,
+      phone: null,
+      role: 'user' // Default role
+    };
+    setUser(mockUser);
+    return { success: true };
+  };
+
+  const updateUserProfile = (profileData: any) => {
+    if (user) {
+      setUser({ ...user, ...profileData });
+    }
+  };
+
   const logout = () => {
     setUser(null);
   };
@@ -47,6 +67,8 @@ export const useAuth = () => {
     user,
     loading,
     login,
+    signup,
+    updateUserProfile,
     logout,
     isAuthenticated,
     isAdmin,

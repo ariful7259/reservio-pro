@@ -98,7 +98,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       language,
       setLanguage,
       currency,
-      setCurrency: () => {}, // Placeholder
+      setCurrency,
       user,
       setUser,
       favorites,
