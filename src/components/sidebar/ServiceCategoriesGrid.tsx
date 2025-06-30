@@ -3,15 +3,16 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import { useApp } from '@/context/AppContext';
 
 import { serviceCategories } from './services/serviceData';
 import { ServiceCategoryItem } from './services/ServiceCategoryItem';
 import { CustomServiceItem } from './services/CustomServiceItem';
-// import { AddServiceButton } from './services/AddServiceButton';
 import { CustomService } from './services/serviceTypes';
 import { ServiceSelectionModal } from './services/ServiceSelectionModal';
 
 export const ServiceCategoriesGrid = () => {
+  const { language, t } = useApp();
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [customServices, setCustomServices] = useState<CustomService[]>([]);
@@ -46,23 +47,23 @@ export const ServiceCategoriesGrid = () => {
   const handleRemoveCustomService = (id: string) => {
     const updatedServices = customServices.filter(service => service.id !== id);
     saveCustomServices(updatedServices);
-    toast.info("সার্ভিস মুছে ফেলা হয়েছে");
+    toast.info(language === 'bn' ? "সার্ভিস মুছে ফেলা হয়েছে" : "Service removed");
   };
 
   // Add a custom service (avoid duplicates, limit to 12 max)
   const handleAddCustomService = (service: CustomService) => {
     const exists = customServices.some(s => s.id === service.id);
     if (exists) {
-      toast.error("এই সার্ভিস ইতিমধ্যে যোগ করা হয়েছে");
+      toast.error(language === 'bn' ? "এই সার্ভিস ইতিমধ্যে যোগ করা হয়েছে" : "This service has already been added");
       return;
     }
     if (customServices.length >= 12) {
-      toast.error("সর্বাধিক ১২টি সার্ভিস যোগ করা যাবে");
+      toast.error(language === 'bn' ? "সর্বাধিক ১২টি সার্ভিস যোগ করা যাবে" : "Maximum 12 services can be added");
       return;
     }
     const updated = [...customServices, service];
     saveCustomServices(updated);
-    toast.success("নতুন সার্ভিস যোগ হয়েছে");
+    toast.success(language === 'bn' ? "নতুন সার্ভিস যোগ হয়েছে" : "New service added");
   };
 
   // Display limited number of categories based on showAllCategories state
@@ -72,7 +73,9 @@ export const ServiceCategoriesGrid = () => {
   
   return (
     <div className="space-y-4">
-      <h3 className="font-medium text-lg">সার্ভিস ক্যাটাগরি</h3>
+      <h3 className="font-medium text-lg">
+        {language === 'bn' ? 'সার্ভিস ক্যাটাগরি' : 'Service Categories'}
+      </h3>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {/* Display service categories */}
         {displayedCategories.map((category, index) => (
@@ -102,7 +105,9 @@ export const ServiceCategoriesGrid = () => {
             <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mb-2">
               +
             </div>
-            <span className="text-xs font-medium text-center text-primary">সার্ভিস যোগ করুন</span>
+            <span className="text-xs font-medium text-center text-primary">
+              {language === 'bn' ? 'সার্ভিস যোগ করুন' : 'Add Service'}
+            </span>
           </button>
         </div>
       </div>
@@ -113,7 +118,10 @@ export const ServiceCategoriesGrid = () => {
         className="w-full flex items-center justify-center gap-1 text-primary hover:bg-blue-50"
         onClick={() => setShowAllCategories(!showAllCategories)}
       >
-        {showAllCategories ? "কম দেখুন" : "আরও দেখুন"}
+        {showAllCategories 
+          ? (language === 'bn' ? "কম দেখুন" : "Show Less")
+          : (language === 'bn' ? "আরও দেখুন" : "Show More")
+        }
         <ChevronRight className={`h-4 w-4 transition-transform duration-200 ${showAllCategories ? 'rotate-90' : ''}`} />
       </Button>
       {/* Service select modal */}

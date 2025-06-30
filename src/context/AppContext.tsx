@@ -167,6 +167,11 @@ const translations = {
     'english': 'English',
     'bengali': 'Bengali',
     'change_language': 'Change Language',
+    'language_settings': 'Language Settings',
+    'select_language': 'Select Language',
+    'translation_status': 'Translation Status',
+    'overall_completeness': 'Overall Completeness',
+    'give_translation_feedback': 'Give feedback on translations',
     
     // Offline
     'offline_mode': 'Offline Mode',
@@ -189,6 +194,15 @@ const translations = {
     'booking_confirmed': 'Booking Confirmed',
     'payment_successful': 'Payment Successful',
     'payment_failed': 'Payment Failed',
+    
+    // Service Categories Grid
+    'service_categories': 'Service Categories',
+    'add_service': 'Add Service',
+    'categories': 'Categories',
+    'subcategories': 'subcategories',
+    'booking_types': 'Booking Types',
+    'services_found': 'services found',
+    'all_services': 'All Services',
   },
   bn: {
     // Navigation
@@ -290,6 +304,11 @@ const translations = {
     'english': 'ইংরেজি',
     'bengali': 'বাংলা',
     'change_language': 'ভাষা পরিবর্তন',
+    'language_settings': 'ভাষা সেটিংস',
+    'select_language': 'ভাষা নির্বাচন করুন',
+    'translation_status': 'অনুবাদ স্ট্যাটাস',
+    'overall_completeness': 'সামগ্রিক সম্পূর্ণতা',
+    'give_translation_feedback': 'অনুবাদ সম্পর্কে প্রতিক্রিয়া দিন',
     
     // Offline
     'offline_mode': 'অফলাইন মোড',
@@ -312,6 +331,15 @@ const translations = {
     'booking_confirmed': 'বুকিং নিশ্চিত',
     'payment_successful': 'পেমেন্ট সফল',
     'payment_failed': 'পেমেন্ট ব্যর্থ',
+    
+    // Service Categories Grid
+    'service_categories': 'সেবা ক্যাটাগরি',
+    'add_service': 'সেবা যোগ করুন',
+    'categories': 'ক্যাটাগরি সমূহ',
+    'subcategories': 'সাব-ক্যাটাগরি',
+    'booking_types': 'বুকিং টাইপ',
+    'services_found': 'টি সেবা পাওয়া গেছে',
+    'all_services': 'সকল সেবা',
   }
 };
 

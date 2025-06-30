@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator';
 
 const LanguageSettings = () => {
   const navigate = useNavigate();
-  const { language, setLanguage } = useApp();
+  const { language, setLanguage, t } = useApp();
 
   const handleLanguageChange = (value: string) => {
     setLanguage(value as 'bn' | 'en');
@@ -33,7 +33,7 @@ const LanguageSettings = () => {
         <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <h1 className="text-2xl font-bold">{language === 'bn' ? 'ভাষা সেটিংস' : 'Language Settings'}</h1>
+        <h1 className="text-2xl font-bold">{t('language_settings')}</h1>
       </div>
 
       <Card className="mb-6">
@@ -41,7 +41,7 @@ const LanguageSettings = () => {
           <div className="flex items-center gap-3 mb-4">
             <Globe className="h-5 w-5 text-primary" />
             <h2 className="text-lg font-medium">
-              {language === 'bn' ? 'ভাষা নির্বাচন করুন' : 'Select Language'}
+              {t('select_language')}
             </h2>
           </div>
 
@@ -54,8 +54,10 @@ const LanguageSettings = () => {
               <RadioGroupItem value="bn" id="bn" />
               <Label htmlFor="bn" className="flex items-center justify-between flex-1">
                 <div>
-                  <span className="font-medium">বাংলা</span>
-                  <p className="text-sm text-muted-foreground">বাংলা ভাষায় অ্যাপ দেখুন</p>
+                  <span className="font-medium">{t('bengali')}</span>
+                  <p className="text-sm text-muted-foreground">
+                    {language === 'bn' ? 'বাংলা ভাষায় অ্যাপ দেখুন' : 'View app in Bengali language'}
+                  </p>
                 </div>
                 {language === 'bn' && <Check className="h-4 w-4 text-primary" />}
               </Label>
@@ -65,8 +67,10 @@ const LanguageSettings = () => {
               <RadioGroupItem value="en" id="en" />
               <Label htmlFor="en" className="flex items-center justify-between flex-1">
                 <div>
-                  <span className="font-medium">English</span>
-                  <p className="text-sm text-muted-foreground">View app in English language</p>
+                  <span className="font-medium">{t('english')}</span>
+                  <p className="text-sm text-muted-foreground">
+                    {language === 'bn' ? 'ইংরেজি ভাষায় অ্যাপ দেখুন' : 'View app in English language'}
+                  </p>
                 </div>
                 {language === 'en' && <Check className="h-4 w-4 text-primary" />}
               </Label>
@@ -76,7 +80,7 @@ const LanguageSettings = () => {
       </Card>
 
       <h2 className="text-lg font-semibold mb-4">
-        {language === 'bn' ? 'অনুবাদ স্ট্যাটাস' : 'Translation Status'}
+        {t('translation_status')}
       </h2>
       
       <Card>
@@ -114,7 +118,7 @@ const LanguageSettings = () => {
           
           <div className="flex justify-between items-center">
             <span className="font-medium">
-              {language === 'bn' ? 'সামগ্রিক সম্পূর্ণতা' : 'Overall completeness'}
+              {t('overall_completeness')}
             </span>
             <span>98%</span>
           </div>
@@ -127,7 +131,7 @@ const LanguageSettings = () => {
           
           <div className="mt-6">
             <Button variant="outline" className="w-full">
-              {language === 'bn' ? 'অনুবাদ সম্পর্কে প্রতিক্রিয়া দিন' : 'Give feedback on translations'}
+              {t('give_translation_feedback')}
             </Button>
           </div>
         </CardContent>
