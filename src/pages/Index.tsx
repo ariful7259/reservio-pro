@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogIn, Briefcase } from 'lucide-react';
@@ -77,47 +76,32 @@ const Index = () => {
   const allListings = useMemo(() => [...userPosts, ...defaultFeaturedListings], [userPosts]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 pt-20 pb-20">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            স্বাগতম Reservio-তে
-          </h1>
-          <p className="text-lg text-gray-600 mb-6">
-            আপনার সব প্রয়োজনের জন্য এক প্ল্যাটফর্ম
-          </p>
-        </div>
+    <div className="container px-4 pt-20 pb-20">
+      <div className="flex flex-wrap justify-center gap-2 mb-6">
+        {!isAuthenticated ? (
+          <Button onClick={() => navigate('/login')} variant="outline" className="flex items-center gap-1">
+            <LogIn className="h-4 w-4" /> লগইন
+          </Button>
+        ) : (
+          <>
+            {isSeller}
+            {isAdmin && (
+              <Button onClick={() => navigate('/admin-dashboard')} variant="outline" className="flex items-center gap-1">
+                <Briefcase className="h-4 w-4" /> অ্যাডমিন প্যানেল
+              </Button>
+            )}
+          </>
+        )}
+      </div>
+      
+      <HeroCarousel bannerImages={bannerImages} />
 
-        <div className="flex flex-wrap justify-center gap-2 mb-6">
-          {!isAuthenticated ? (
-            <Button onClick={() => navigate('/login')} variant="outline" className="flex items-center gap-1">
-              <LogIn className="h-4 w-4" /> লগইন
-            </Button>
-          ) : (
-            <>
-              {isSeller && (
-                <Button onClick={() => navigate('/dashboard')} variant="outline" className="flex items-center gap-1">
-                  <Briefcase className="h-4 w-4" /> ড্যাশবোর্ড
-                </Button>
-              )}
-              {isAdmin && (
-                <Button onClick={() => navigate('/admin-dashboard')} variant="outline" className="flex items-center gap-1">
-                  <Briefcase className="h-4 w-4" /> অ্যাডমিন প্যানেল
-                </Button>
-              )}
-            </>
-          )}
-        </div>
-        
-        <HeroCarousel bannerImages={bannerImages} />
+      <div className="my-8">
+        <DigitalProductsSection />
+      </div>
 
-        <div className="my-8">
-          <DigitalProductsSection />
-        </div>
-
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg my-8">
-          <FeaturedListings allListings={allListings as any[]} />
-        </div>
+      <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg my-8">
+        <FeaturedListings allListings={allListings as any[]} />
       </div>
     </div>
   );
