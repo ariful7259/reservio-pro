@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { MapPin, Navigation } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { MapPin, Loader2 } from 'lucide-react';
 
 interface LocationSelectorProps {
   selectedLocation: string;
@@ -20,8 +20,7 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
   return (
     <div>
       <label className="text-sm font-medium mb-2 block">
-        <MapPin className="h-4 w-4 inline mr-1" />
-        এলাকা
+        এলাকা নির্বাচন করুন
       </label>
       <div className="flex gap-2">
         <Select value={selectedLocation} onValueChange={onLocationChange}>
@@ -29,25 +28,40 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
             <SelectValue placeholder="এলাকা নির্বাচন করুন" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="dhaka">ঢাকা</SelectItem>
-            <SelectItem value="chittagong">চট্টগ্রাম</SelectItem>
-            <SelectItem value="khulna">খুলনা</SelectItem>
-            <SelectItem value="rajshahi">রাজশাহী</SelectItem>
-            <SelectItem value="sylhet">সিলেট</SelectItem>
-            <SelectItem value="barisal">বরিশাল</SelectItem>
-            <SelectItem value="rangpur">রংপুর</SelectItem>
-            <SelectItem value="mymensingh">ময়মনসিংহ</SelectItem>
+            <SelectItem value="all">সব এলাকা</SelectItem>
+            <SelectItem value="gulshan">গুলশান</SelectItem>
+            <SelectItem value="banani">বনানী</SelectItem>
+            <SelectItem value="dhanmondi">ধানমন্ডি</SelectItem>
+            <SelectItem value="uttara">উত্তরা</SelectItem>
+            <SelectItem value="mohammadpur">মোহাম্মদপুর</SelectItem>
+            <SelectItem value="mirpur">মিরপুর</SelectItem>
+            <SelectItem value="wari">ওয়ারী</SelectItem>
+            <SelectItem value="old-dhaka">পুরান ঢাকা</SelectItem>
+            <SelectItem value="tejgaon">তেজগাঁও</SelectItem>
+            <SelectItem value="motijheel">মতিঝিল</SelectItem>
+            <SelectItem value="ramna">রমনা</SelectItem>
+            <SelectItem value="farmgate">ফার্মগেট</SelectItem>
+            <SelectItem value="newmarket">নিউমার্কেট</SelectItem>
+            <SelectItem value="baridhara">বারিধারা</SelectItem>
+            <SelectItem value="bashundhara">বসুন্ধরা</SelectItem>
+            <SelectItem value="savar">সাভার</SelectItem>
+            <SelectItem value="gazipur">গাজীপুর</SelectItem>
+            <SelectItem value="keraniganj">কেরানীগঞ্জ</SelectItem>
+            <SelectItem value="tongi">টঙ্গী</SelectItem>
           </SelectContent>
         </Select>
         <Button
-          type="button"
           variant="outline"
           size="icon"
           onClick={onGetCurrentLocation}
           disabled={isGettingLocation}
-          title="লাইভ লোকেশন"
+          className="shrink-0"
         >
-          <Navigation className="h-4 w-4" />
+          {isGettingLocation ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <MapPin className="h-4 w-4" />
+          )}
         </Button>
       </div>
     </div>

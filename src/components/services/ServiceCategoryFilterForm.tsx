@@ -28,10 +28,41 @@ const ServiceCategoryFilterForm: React.FC<ServiceCategoryFilterFormProps> = ({
 }) => {
   const { toast } = useToast();
 
+  // Sample subcategories for different service categories
+  const getSubcategories = (categoryId: string) => {
+    const subcategoryData: { [key: string]: any[] } = {
+      'home-services': [
+        { name: 'এসি সার্ভিস', count: 25 },
+        { name: 'প্লাম্বিং', count: 18 },
+        { name: 'ইলেকট্রিক্যাল', count: 20 },
+        { name: 'ক্লিনিং', count: 15 },
+        { name: 'পেইন্টিং', count: 12 }
+      ],
+      'education': [
+        { name: 'টিউটরিং', count: 35 },
+        { name: 'ল্যাঙ্গুয়েজ', count: 20 },
+        { name: 'প্রোগ্রামিং', count: 15 },
+        { name: 'মিউজিক', count: 12 },
+        { name: 'আর্ট', count: 8 }
+      ],
+      'health': [
+        { name: 'ফিজিওথেরাপি', count: 15 },
+        { name: 'নার্সিং', count: 12 },
+        { name: 'ম্যাসাজ', count: 10 },
+        { name: 'ইয়োগা', count: 8 },
+        { name: 'ডায়েট', count: 6 }
+      ]
+    };
+
+    return subcategoryData[categoryId] || [];
+  };
+
+  const subcategories = getSubcategories(category?.id);
+
   const handleApplyFilter = () => {
     toast({
       title: "ফিল্টার প্রয়োগ করা হয়েছে",
-      description: selectedSubcategory ? `${selectedSubcategory} নির্বাচিত` : "ফিল্টার প্রয়োগ করা হয়েছে"
+      description: selectedSubcategory !== 'all' ? `${selectedSubcategory} নির্বাচিত` : "ফিল্টার প্রয়োগ করা হয়েছে"
     });
   };
 
@@ -46,8 +77,13 @@ const ServiceCategoryFilterForm: React.FC<ServiceCategoryFilterFormProps> = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">সব সাব-ক্যাটাগরি</SelectItem>
-            {category?.subcategories?.map((sub: string, index: number) => (
-              <SelectItem key={index} value={sub}>{sub}</SelectItem>
+            {subcategories.map((subcategory: any, index: number) => (
+              <SelectItem key={index} value={subcategory.name}>
+                <div className="flex items-center gap-2">
+                  <span>{subcategory.name}</span>
+                  <Badge variant="outline" className="ml-auto">{subcategory.count}টি</Badge>
+                </div>
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -67,6 +103,9 @@ const ServiceCategoryFilterForm: React.FC<ServiceCategoryFilterFormProps> = ({
             <SelectItem value="dhanmondi">ধানমন্ডি</SelectItem>
             <SelectItem value="uttara">উত্তরা</SelectItem>
             <SelectItem value="mohammadpur">মোহাম্মদপুর</SelectItem>
+            <SelectItem value="mirpur">মিরপুর</SelectItem>
+            <SelectItem value="wari">ওয়ারী</SelectItem>
+            <SelectItem value="old-dhaka">পুরান ঢাকা</SelectItem>
           </SelectContent>
         </Select>
       </div>
