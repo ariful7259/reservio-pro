@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 export const rentCategories = [
@@ -12,43 +13,25 @@ export const rentCategories = [
         icon: React.createElement('div', { className: 'text-xl' }, '🏢'),
         name: "অ্যাপার্টমেন্ট/ফ্ল্যাট",
         path: "/rental-category/apartment",
-        count: 187,
-        description: "আধুনিক অ্যাপার্টমেন্ট ও ফ্ল্যাট"
+        count: 187
       },
       {
         icon: React.createElement('div', { className: 'text-xl' }, '🏡'),
         name: "বাসা/বাড়ি",
         path: "/rental-category/house",
-        count: 156,
-        description: "পারিবারিক বাসা ও বাড়ি"
+        count: 156
       },
       {
         icon: React.createElement('div', { className: 'text-xl' }, '🏨'),
         name: "মেস/হোস্টেল",
         path: "/rental-category/hostel",
-        count: 83,
-        description: "শিক্ষার্থীদের জন্য মেস ও হোস্টেল"
+        count: 83
       },
       {
         icon: React.createElement('div', { className: 'text-xl' }, '🛏️'),
         name: "সিঙ্গেল রুম/শেয়ারড",
         path: "/rental-category/room",
-        count: 119,
-        description: "একক কক্ষ ও শেয়ারড রুম"
-      },
-      {
-        icon: React.createElement('div', { className: 'text-xl' }, '🏪'),
-        name: "স্টুডিও অ্যাপার্টমেন্ট",
-        path: "/rental-category/studio",
-        count: 45,
-        description: "কমপ্যাক্ট স্টুডিও অ্যাপার্টমেন্ট"
-      },
-      {
-        icon: React.createElement('div', { className: 'text-xl' }, '🏘️'),
-        name: "ডুপ্লেক্স/ট্রিপ্লেক্স",
-        path: "/rental-category/duplex",
-        count: 32,
-        description: "বহুতল ডুপ্লেক্স ও ট্রিপ্লেক্স"
+        count: 119
       }
     ]
   },
@@ -58,54 +41,14 @@ export const rentCategories = [
     path: "/rental-category/electronics",
     count: 324,
     subcategories: [
-      { 
-        name: "ল্যাপটপ / কম্পিউটার", 
-        path: "/rental-category/laptop", 
-        count: 45,
-        icon: React.createElement('div', { className: 'text-lg' }, '💻')
-      },
-      { 
-        name: "প্রজেক্টর / মনিটর", 
-        path: "/rental-category/projector", 
-        count: 23,
-        icon: React.createElement('div', { className: 'text-lg' }, '📽️')
-      },
-      { 
-        name: "প্রিন্টার / স্ক্যানার", 
-        path: "/rental-category/printer", 
-        count: 18,
-        icon: React.createElement('div', { className: 'text-lg' }, '🖨️')
-      },
-      { 
-        name: "ক্যামেরা / ভিডিও ক্যামেরা", 
-        path: "/rental-category/camera", 
-        count: 34,
-        icon: React.createElement('div', { className: 'text-lg' }, '📸')
-      },
-      { 
-        name: "সাউন্ড সিস্টেম / স্পিকার", 
-        path: "/rental-category/sound", 
-        count: 28,
-        icon: React.createElement('div', { className: 'text-lg' }, '🔊')
-      },
-      { 
-        name: "LED টিভি", 
-        path: "/rental-category/tv", 
-        count: 42,
-        icon: React.createElement('div', { className: 'text-lg' }, '📺')
-      },
-      { 
-        name: "গেমিং কনসোল", 
-        path: "/rental-category/gaming", 
-        count: 15,
-        icon: React.createElement('div', { className: 'text-lg' }, '🎮')
-      },
-      { 
-        name: "পাওয়ার ব্যাঙ্ক / ইউপিএস", 
-        path: "/rental-category/power", 
-        count: 22,
-        icon: React.createElement('div', { className: 'text-lg' }, '🔋')
-      }
+      { name: "ল্যাপটপ / কম্পিউটার", path: "/rental-category/laptop", count: 45 },
+      { name: "প্রজেক্টর / মনিটর", path: "/rental-category/projector", count: 23 },
+      { name: "প্রিন্টার / স্ক্যানার", path: "/rental-category/printer", count: 18 },
+      { name: "ক্যামেরা / ভিডিও ক্যামেরা", path: "/rental-category/camera", count: 34 },
+      { name: "সাউন্ড সিস্টেম / স্পিকার", path: "/rental-category/sound", count: 28 },
+      { name: "LED টিভি", path: "/rental-category/tv", count: 42 },
+      { name: "গেমিং কনসোল", path: "/rental-category/gaming", count: 15 },
+      { name: "পাওয়ার ব্যাঙ্ক / ইউপিএস", path: "/rental-category/power", count: 22 }
     ]
   },
   {
