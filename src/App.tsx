@@ -28,6 +28,7 @@ import RentalManagement from './pages/dashboard/rental/RentalManagement';
 import PropertyManagement from './pages/dashboard/rental/PropertyManagement';
 import RentalCategoriesPage from './pages/RentalCategoriesPage';
 import RentalBookingDynamic from './pages/RentalBookingDynamic';
+import RentalCategoryPage from './pages/RentalCategoryPage';
 
 function App() {
   return (
@@ -62,6 +63,7 @@ function App() {
               <Route path="/dashboard/property" element={<PropertyManagement />} />
               <Route path="/rental-categories" element={<RentalCategoriesPage />} />
               <Route path="/rental-booking/:categoryId" element={<RentalBookingDynamic />} />
+              <Route path="/rental-category/:categoryId" element={<RentalCategoryPage />} />
             </Routes>
             <Toaster />
           </div>
