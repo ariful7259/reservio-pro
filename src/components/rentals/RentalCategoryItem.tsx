@@ -20,6 +20,12 @@ const RentalCategoryItem: React.FC<RentalCategoryItemProps> = ({
   const navigate = useNavigate();
 
   const handleCategoryClick = () => {
+    // For বাসা বাড়ি category, navigate to BasaBari page with full housing features
+    if (category.name === "বাসা বাড়ি") {
+      navigate('/basa-bari');
+      return;
+    }
+    
     // For rental categories with paths, navigate directly to the category page
     if (category.path && category.path.includes('/rental-category/')) {
       const categoryId = category.path.split('/rental-category/')[1];
