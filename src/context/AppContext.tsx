@@ -366,7 +366,6 @@ const translations = {
     'used_products': 'পুরাতন পণ্য',
     'local_brands': 'লোকাল ব্র্যান্ড',
     'post_item': 'পোস্ট করুন',
-    'buy_now': 'এখনই কিনুন',
     'chat': 'চ্যাট',
     'register_brand': 'ব্র্যান্ড রেজিস্টার',
     'support_local': 'স্থানীয় সাপোর্ট',
