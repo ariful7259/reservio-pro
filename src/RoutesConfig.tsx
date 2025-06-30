@@ -32,6 +32,7 @@ import Housing from './pages/Housing';
 import Rentals from './pages/Rentals';
 import RentAnything from './pages/RentAnything';
 import BasaBari from './pages/BasaBari';
+import RentalCategoryPage from './pages/RentalCategoryPage';
 import { FeatureSelectionPage } from './pages/FeatureSelectionPage';
 import CreateLinkInBio from './pages/CreateLinkInBio';
 import CreatorPaymentGateway from '@/pages/CreatorPaymentGateway';
@@ -125,7 +126,7 @@ const RoutesConfig = () => {
       <Route path="/housing" element={<Housing />} />
       <Route path="/rentals" element={<Rentals />} />
       <Route path="/rent-anything" element={<RentAnything />} />
-      <Route path="/rental-category/:category" element={<BasaBari />} />
+      <Route path="/rental-category/:categoryId" element={<RentalCategoryPage />} />
       <Route path="/basa-bari" element={<BasaBari />} />
       
       {/* Support and Dispute */}

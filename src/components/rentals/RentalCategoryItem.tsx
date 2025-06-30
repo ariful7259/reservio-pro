@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
@@ -17,6 +17,19 @@ const RentalCategoryItem: React.FC<RentalCategoryItemProps> = ({
   onCategoryClick,
   onSubcategoryClick
 }) => {
+  const navigate = useNavigate();
+
+  const handleCategoryClick = () => {
+    // For rental categories with paths, navigate directly to the category page
+    if (category.path && category.path.includes('/rental-category/')) {
+      const categoryId = category.path.split('/rental-category/')[1];
+      navigate(`/rental-category/${categoryId}`);
+    } else {
+      // For other categories, use the existing onCategoryClick handler
+      onCategoryClick(category);
+    }
+  };
+
   if (category.isMainCategory && category.subcategories) {
     return (
       <div key={index}>
@@ -24,7 +37,7 @@ const RentalCategoryItem: React.FC<RentalCategoryItemProps> = ({
           <CollapsibleTrigger asChild>
             <div 
               className="flex flex-col items-center justify-center transition-all hover:scale-105 cursor-pointer" 
-              onClick={() => onCategoryClick(category)}
+              onClick={handleCategoryClick}
             >
               <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
                 {category.icon}
@@ -62,7 +75,7 @@ const RentalCategoryItem: React.FC<RentalCategoryItemProps> = ({
       <div key={index}>
         <div 
           className="flex flex-col items-center justify-center transition-all hover:scale-105 cursor-pointer"
-          onClick={() => onCategoryClick(category)}
+          onClick={handleCategoryClick}
         >
           <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
             {category.icon}
@@ -77,7 +90,11 @@ const RentalCategoryItem: React.FC<RentalCategoryItemProps> = ({
   }
 
   return (
-    <Link key={index} to={category.path} className="flex flex-col items-center justify-center transition-all hover:scale-105">
+    <div 
+      key={index} 
+      className="flex flex-col items-center justify-center transition-all hover:scale-105 cursor-pointer"
+      onClick={handleCategoryClick}
+    >
       <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
         {category.icon}
       </div>
@@ -85,7 +102,7 @@ const RentalCategoryItem: React.FC<RentalCategoryItemProps> = ({
       <Badge variant="secondary" className="text-xs">
         {category.count}টি
       </Badge>
-    </Link>
+    </div>
   );
 };
 

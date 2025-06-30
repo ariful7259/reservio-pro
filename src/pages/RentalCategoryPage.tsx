@@ -7,7 +7,6 @@ import {
   MapPin,
   Star,
   Filter,
-  ChevronRight,
   Share2,
   Heart,
   ArrowLeft,
@@ -15,12 +14,9 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import SocialShareModal from '@/components/SocialShareModal';
 
-// ক্যাটাগরি-ভিত্তিক ডেটা ম্যাপিং
 const categoryData = {
   'electronics': {
     title: 'ইলেকট্রনিক্স',
@@ -51,15 +47,6 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?q=80&w=1000&auto=format&fit=crop',
         category: 'ইলেকট্রনিক্স',
         rating: 4.7
-      },
-      {
-        id: 4,
-        title: 'স্পিকার সিস্টেম',
-        location: 'বনানী, ঢাকা',
-        price: '৳৮০০/দিন',
-        image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?q=80&w=1000&auto=format&fit=crop',
-        category: 'ইলেকট্রনিক্স',
-        rating: 4.5
       }
     ]
   },
@@ -67,7 +54,7 @@ const categoryData = {
     title: 'পরিবহন',
     items: [
       {
-        id: 5,
+        id: 4,
         title: 'টয়োটা কোরোলা',
         location: 'মিরপুর, ঢাকা',
         price: '৳৫,০০০/দিন',
@@ -76,22 +63,13 @@ const categoryData = {
         rating: 4.6
       },
       {
-        id: 6,
+        id: 5,
         title: 'হোন্ডা সিবিআর মোটরসাইকেল',
         location: 'উত্তরা, ঢাকা',
         price: '৳১,২০০/দিন',
         image: 'https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=1000&auto=format&fit=crop',
         category: 'পরিবহন',
         rating: 4.7
-      },
-      {
-        id: 7,
-        title: 'মাইক্রোবাস (১৪ সিট)',
-        location: 'বসুন্ধরা, ঢাকা',
-        price: '৳৮,০০০/দিন',
-        image: 'https://images.unsplash.com/photo-1556122071-de6e3e1cca50?q=80&w=1000&auto=format&fit=crop',
-        category: 'পরিবহন',
-        rating: 4.5
       }
     ]
   },
@@ -99,7 +77,7 @@ const categoryData = {
     title: 'ইভেন্ট সামগ্রী',
     items: [
       {
-        id: 8,
+        id: 6,
         title: 'সাউন্ড সিস্টেম (পূর্ণ সেট)',
         location: 'মোহাম্মদপুর, ঢাকা',
         price: '৳১০,০০০/দিন',
@@ -108,7 +86,7 @@ const categoryData = {
         rating: 4.9
       },
       {
-        id: 9,
+        id: 7,
         title: 'ইভেন্ট টেন্ট (১০০ জন)',
         location: 'ধানমন্ডি, ঢাকা',
         price: '৳৮,০০০/দিন',
@@ -122,7 +100,7 @@ const categoryData = {
     title: 'ঘরোয়া সামগ্রী',
     items: [
       {
-        id: 10,
+        id: 8,
         title: 'এসি (১.৫ টন)',
         location: 'গুলশান, ঢাকা',
         price: '৳৮০০/দিন',
@@ -131,7 +109,7 @@ const categoryData = {
         rating: 4.5
       },
       {
-        id: 11,
+        id: 9,
         title: 'সোফা সেট',
         location: 'মিরপুর, ঢাকা',
         price: '৳৫০০/দিন',
@@ -145,13 +123,22 @@ const categoryData = {
     title: 'শিক্ষা সামগ্রী',
     items: [
       {
-        id: 12,
-        title: 'টিউটোরিয়াল বইসমূহ',
+        id: 10,
+        title: 'প্রজেক্টর (হাই ডেফিনিশন)',
         location: 'নিউমার্কেট, ঢাকা',
-        price: '৳২০০/সপ্তাহ',
+        price: '৳১,২০০/দিন',
         image: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?q=80&w=1000&auto=format&fit=crop',
         category: 'শিক্ষা সামগ্রী',
         rating: 4.6
+      },
+      {
+        id: 11,
+        title: 'হোয়াইটবোর্ড (বড় সাইজ)',
+        location: 'ফার্মগেট, ঢাকা',
+        price: '৳৩০০/দিন',
+        image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000&auto=format&fit=crop',
+        category: 'শিক্ষা সামগ্রী',
+        rating: 4.3
       }
     ]
   },
@@ -159,13 +146,22 @@ const categoryData = {
     title: 'কৃষি যন্ত্রপাতি',
     items: [
       {
-        id: 13,
+        id: 12,
         title: 'পাওয়ার টিলার',
         location: 'সাভার, ঢাকা',
         price: '৳১,২০০/দিন',
         image: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=1000&auto=format&fit=crop',
         category: 'কৃষি যন্ত্রপাতি',
         rating: 4.5
+      },
+      {
+        id: 13,
+        title: 'হারভেস্টার মেশিন',
+        location: 'গাজীপুর, ঢাকা',
+        price: '৳২,৫০০/দিন',
+        image: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=1000&auto=format&fit=crop',
+        category: 'কৃষি যন্ত্রপাতি',
+        rating: 4.7
       }
     ]
   },
@@ -174,12 +170,21 @@ const categoryData = {
     items: [
       {
         id: 14,
-        title: 'প্রজেক্টর',
+        title: 'প্রজেক্টর (বিজনেস গ্রেড)',
         location: 'মতিঝিল, ঢাকা',
         price: '৳১,০০০/দিন',
         image: 'https://images.unsplash.com/photo-1525913984309-0d4086099e69?q=80&w=1000&auto=format&fit=crop',
         category: 'ব্যবসায়িক সামগ্রী',
         rating: 4.8
+      },
+      {
+        id: 15,
+        title: 'পিওএস মেশিন',
+        location: 'গুলশান, ঢাকা',
+        price: '৳৫০০/দিন',
+        image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1000&auto=format&fit=crop',
+        category: 'ব্যবসায়িক সামগ্রী',
+        rating: 4.6
       }
     ]
   },
@@ -187,68 +192,21 @@ const categoryData = {
     title: 'কারিগরি টুলস',
     items: [
       {
-        id: 15,
+        id: 16,
         title: 'ড্রিল মেশিন',
         location: 'মিরপুর, ঢাকা',
         price: '৳৩০০/দিন',
         image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?q=80&w=1000&auto=format&fit=crop',
         category: 'কারিগরি টুলস',
         rating: 4.7
-      }
-    ]
-  },
-  'apartment': {
-    title: 'অ্যাপার্টমেন্ট/ফ্ল্যাট',
-    items: [
-      {
-        id: 16,
-        title: '৩ বেডরুম অ্যাপার্টমেন্ট',
-        location: 'গুলশান, ঢাকা',
-        price: '৳২৫,০০০/মাস',
-        image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1000&auto=format&fit=crop',
-        category: 'অ্যাপার্টমেন্ট/ফ্ল্যাট',
-        rating: 4.9
-      }
-    ]
-  },
-  'house': {
-    title: 'বাসা/বাড়ি',
-    items: [
+      },
       {
         id: 17,
-        title: '৪ বেডরুম বাড়ি',
-        location: 'উত্তরা, ঢাকা',
-        price: '৳৪০,০০০/মাস',
-        image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1000&auto=format&fit=crop',
-        category: 'বাসা/বাড়ি',
-        rating: 4.8
-      }
-    ]
-  },
-  'hostel': {
-    title: 'মেস/হোস্টেল',
-    items: [
-      {
-        id: 18,
-        title: 'ছাত্র মেস (শেয়ার্ড)',
-        location: 'ফার্মগেট, ঢাকা',
-        price: '৳৫,০০০/মাস',
-        image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=1000&auto=format&fit=crop',
-        category: 'মেস/হোস্টেল',
-        rating: 4.4
-      }
-    ]
-  },
-  'room': {
-    title: 'সিঙ্গেল রুম/শেয়ারড',
-    items: [
-      {
-        id: 19,
-        title: 'সিঙ্গেল রুম (আসবাবপত্র সহ)',
-        location: 'মিরপুর, ঢাকা',
-        price: '৳৮,০০০/মাস',
-        image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=1000&auto=format&fit=crop',
-        category: 'সিঙ্গেল রুম/শেয়ারড',
+        title: 'ওয়েল্ডিং মেশিন',
+        location: 'তেজগাঁও, ঢাকা',
+        price: '৳৮০০/দিন',
+        image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1000&auto=format&fit=crop',
+        category: 'কারিগরি টুলস',
         rating: 4.5
       }
     ]
@@ -257,13 +215,22 @@ const categoryData = {
     title: 'কমার্শিয়াল স্পেস',
     items: [
       {
-        id: 20,
+        id: 18,
         title: 'অফিস স্পেস',
         location: 'বনানী, ঢাকা',
         price: '৳৫০,০০০/মাস',
         image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1000&auto=format&fit=crop',
         category: 'কমার্শিয়াল স্পেস',
         rating: 4.7
+      },
+      {
+        id: 19,
+        title: 'দোকানের স্পেস',
+        location: 'নিউমার্কেট, ঢাকা',
+        price: '৳২৫,০০০/মাস',
+        image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1000&auto=format&fit=crop',
+        category: 'কমার্শিয়াল স্পেস',
+        rating: 4.4
       }
     ]
   },
@@ -271,13 +238,22 @@ const categoryData = {
     title: 'গেস্ট হাউস/স্বল্পমেয়াদী',
     items: [
       {
-        id: 21,
+        id: 20,
         title: 'গেস্ট হাউস (২ বেডরুম)',
         location: 'বারিধারা, ঢাকা',
         price: '৳২,৫০০/দিন',
         image: 'https://images.unsplash.com/photo-1586105251261-72a756497a11?q=80&w=1000&auto=format&fit=crop',
         category: 'গেস্ট হাউস/স্বল্পমেয়াদী',
         rating: 4.6
+      },
+      {
+        id: 21,
+        title: 'ফ্যামিলি গেস্ট হাউস',
+        location: 'উত্তরা, ঢাকা',
+        price: '৳৩,০০০/দিন',
+        image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1000&auto=format&fit=crop',
+        category: 'গেস্ট হাউস/স্বল্পমেয়াদী',
+        rating: 4.8
       }
     ]
   },
@@ -292,6 +268,15 @@ const categoryData = {
         image: 'https://images.unsplash.com/photo-1572547736089-b3dd93c9ac2e?q=80&w=1000&auto=format&fit=crop',
         category: 'গ্রামীণ বাসস্থান',
         rating: 4.5
+      },
+      {
+        id: 23,
+        title: 'কুটির ঘর',
+        location: 'টঙ্গী, গাজীপুর',
+        price: '৳৮,০০০/মাস',
+        image: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=1000&auto=format&fit=crop',
+        category: 'গ্রামীণ বাসস্থান',
+        rating: 4.3
       }
     ]
   },
@@ -299,16 +284,25 @@ const categoryData = {
     title: 'স্টুডিও/স্পেশাল স্পেস',
     items: [
       {
-        id: 23,
+        id: 24,
         title: 'ফটোগ্রাফি স্টুডিও',
         location: 'গুলশান, ঢাকা',
         price: '৳১০,০০০/দিন',
         image: 'https://images.unsplash.com/photo-1558449028-b53a39d100fc?q=80&w=1000&auto=format&fit=crop',
         category: 'স্টুডিও/স্পেশাল স্পেস',
         rating: 4.8
+      },
+      {
+        id: 25,
+        title: 'ভিডিও শুটিং স্টুডিও',
+        location: 'ধানমন্ডি, ঢাকা',
+        price: '৳১৫,০০০/দিন',
+        image: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?q=80&w=1000&auto=format&fit=crop',
+        category: 'স্টুডিও/স্পেশাল স্পেস',
+        rating: 4.9
       }
     ]
-  },
+  }
 };
 
 const RentalCategoryPage = () => {
@@ -319,14 +313,6 @@ const RentalCategoryPage = () => {
   const [shareItem, setShareItem] = useState<any | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
 
-  // ডিবাগিং তথ্য লগ করা
-  useEffect(() => {
-    console.log("Current categoryId from URL:", categoryId);
-    console.log("Available categories:", Object.keys(categoryData));
-    console.log("Category found:", categoryId && categoryData[categoryId as keyof typeof categoryData] ? "Yes" : "No");
-  }, [categoryId]);
-
-  // ক্যাটাগরি ডেটা লোড করা
   const category = categoryId && categoryData[categoryId as keyof typeof categoryData];
   
   useEffect(() => {
@@ -355,7 +341,6 @@ const RentalCategoryPage = () => {
   }
 
   const handleListingClick = (id: number) => {
-    console.log(`Navigating to rent details for item ID: ${id}`);
     navigate(`/rent-details/${id}`);
   };
 
@@ -382,7 +367,6 @@ const RentalCategoryPage = () => {
 
   const handleBookNow = (e: React.MouseEvent, rentalId: number) => {
     e.stopPropagation();
-    console.log(`Booking now for item ID: ${rentalId}`);
     navigate(`/rent-details/${rentalId}`);
   };
 
