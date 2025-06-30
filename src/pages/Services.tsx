@@ -7,6 +7,7 @@ import { Search, Filter, Star, MapPin, Clock, Users, Share2, Bookmark, Heart, Ar
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import ServiceCategoryFilterForm from '@/components/services/ServiceCategoryFilterForm';
+import ServiceCategoryGrid from '@/components/services/ServiceCategoryGrid';
 
 const Services = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const Services = () => {
   const [selectedSubcategory, setSelectedSubcategory] = useState('all');
   const [selectedLocation, setSelectedLocation] = useState('all');
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const serviceCategories = [{
     id: 'medical',
@@ -314,37 +316,14 @@ const Services = () => {
         </Button>
       </div>
 
-      {/* Service Categories - Grid Layout */}
-      <div className="mb-8">
-        <h2 className="text-lg font-semibold mb-4">ক্যাটাগরি সমূহ</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
-          {serviceCategories.map((category) => (
-            <div
-              key={category.id}
-              className={`flex flex-col items-center text-center p-4 rounded-lg transition-colors cursor-pointer ${
-                selectedCategory === category.id
-                  ? 'bg-primary/10 border-2 border-primary'
-                  : 'hover:bg-gray-50'
-              }`}
-              onClick={() => setSelectedCategory(category.id)}
-            >
-              <div className={`w-16 h-16 rounded-full ${category.color} flex items-center justify-center mb-3`}>
-                <div className={category.iconColor}>
-                  {category.icon}
-                </div>
-              </div>
-              <h3 className="font-medium text-sm mb-2">{category.name}</h3>
-              <Badge variant="secondary" className="text-xs">
-                {category.count}টি
-              </Badge>
-              {/* Show subcategories count */}
-              <div className="mt-2 text-xs text-muted-foreground">
-                {category.subcategories.length} সাব-ক্যাটাগরি
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Service Categories - Grid Layout with Collapsible */}
+      <ServiceCategoryGrid
+        serviceCategories={serviceCategories}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        isExpanded={isExpanded}
+        setIsExpanded={setIsExpanded}
+      />
 
       {/* Selected Category Filter Form */}
       {selectedCategory !== 'all' && (
