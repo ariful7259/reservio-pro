@@ -1,120 +1,121 @@
-
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface User {
   id: string;
-  email: string;
   name: string;
+  email: string;
   avatar?: string;
-  phone?: string;
-  address?: string;
-  verified?: boolean;
-  role?: string;
-  sellerType?: string;
+  role: 'user' | 'admin' | 'seller';
+  verified: boolean;
+  sellerVerified?: boolean;
+  sellerType?: 'marketplace' | 'rental' | 'service' | 'content'; // Added sellerType property
+  phone?: string; // Added phone property
+  address?: string; // Added address property
 }
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
-  signup: (email: string, password: string, name: string) => Promise<void>;
-  updateUserProfile: (data: Partial<User>) => Promise<void>;
-  isLoading: boolean;
   isAuthenticated: boolean;
   isAdmin: boolean;
   isSeller: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
+  signup: (name: string, email: string, password: string) => Promise<void>;
+  updateUserProfile: (data: Partial<User>) => void; // Added updateUserProfile method
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Check if user is already logged in (from localStorage)
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-    setIsLoading(false);
-  }, []);
-
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  
+  // Mock login function (would use Supabase or other auth in real app)
   const login = async (email: string, password: string) => {
-    setIsLoading(true);
-    try {
-      // Simulate login - in real app, this would call an API
-      const mockUser: User = { 
-        id: '1', 
-        email, 
-        name: 'Demo User',
-        avatar: 'https://i.pravatar.cc/150?img=1',
-        phone: '+8801234567890',
-        address: 'Dhaka, Bangladesh',
-        verified: true,
-        role: email === 'admin@example.com' ? 'admin' : 'user',
-        sellerType: email.includes('seller') ? 'premium' : undefined
-      };
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
-    } catch (error) {
-      console.error('Login failed:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const signup = async (email: string, password: string, name: string) => {
-    setIsLoading(true);
-    try {
-      // Simulate signup - in real app, this would call an API
-      const mockUser: User = { 
-        id: Date.now().toString(), 
-        email, 
-        name,
-        avatar: 'https://i.pravatar.cc/150?img=2',
-        phone: '',
-        address: '',
-        verified: false,
-        role: 'user'
-      };
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
-    } catch (error) {
-      console.error('Signup failed:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const updateUserProfile = async (data: Partial<User>) => {
-    if (!user) return;
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
-    const updatedUser = { ...user, ...data };
-    setUser(updatedUser);
-    localStorage.setItem('user', JSON.stringify(updatedUser));
+    // Mock user data with fixed seller type if seller
+    const userData: User = {
+      id: '1',
+      name: 'আহমেদ হাসান',
+      email: email,
+      avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+      role: email.includes('admin') ? 'admin' : email.includes('seller') ? 'seller' : 'user',
+      verified: true,
+      sellerVerified: email.includes('seller') ? true : false,
+      sellerType: email.includes('seller') ? 'marketplace' : undefined,
+      phone: '+8801712345678', // Mock phone
+      address: 'ঢাকা, বাংলাদেশ' // Mock address
+    };
+    
+    setUser(userData);
+    setIsAuthenticated(true);
+    
+    // Save to localStorage
+    localStorage.setItem('user', JSON.stringify(userData));
   };
-
+  
+  const signup = async (name: string, email: string, password: string) => {
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Similar to login but would actually create the user in a real app
+    const userData: User = {
+      id: '1',
+      name: name,
+      email: email,
+      role: 'user',
+      verified: false
+    };
+    
+    setUser(userData);
+    setIsAuthenticated(true);
+    
+    // Save to localStorage
+    localStorage.setItem('user', JSON.stringify(userData));
+  };
+  
   const logout = () => {
     setUser(null);
+    setIsAuthenticated(false);
     localStorage.removeItem('user');
   };
 
-  const isAuthenticated = !!user;
+  // Add updateUserProfile function
+  const updateUserProfile = (data: Partial<User>) => {
+    if (user) {
+      const updatedUser = { ...user, ...data };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    }
+  };
+  
+  // Check for saved user on mount
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+      setIsAuthenticated(true);
+    }
+  }, []);
+  
+  // Compute isAdmin based on user role
   const isAdmin = user?.role === 'admin';
-  const isSeller = !!user?.sellerType || user?.role === 'seller';
-
+  
+  // Compute isSeller based on user role
+  const isSeller = user?.role === 'seller';
+  
   return (
     <AuthContext.Provider value={{ 
       user, 
+      isAuthenticated, 
+      isAdmin,
+      isSeller,
       login, 
       logout, 
       signup,
-      updateUserProfile,
-      isLoading,
-      isAuthenticated,
-      isAdmin,
-      isSeller
+      updateUserProfile 
     }}>
       {children}
     </AuthContext.Provider>
@@ -124,26 +125,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    // Return a default value instead of throwing an error
-    return {
-      user: null,
-      login: async (email: string, password: string) => {
-        console.warn('useAuth called outside of AuthProvider');
-      },
-      logout: () => {
-        console.warn('useAuth called outside of AuthProvider');
-      },
-      signup: async (email: string, password: string, name: string) => {
-        console.warn('useAuth called outside of AuthProvider');
-      },
-      updateUserProfile: async (data: Partial<User>) => {
-        console.warn('useAuth called outside of AuthProvider');
-      },
-      isLoading: false,
-      isAuthenticated: false,
-      isAdmin: false,
-      isSeller: false
-    };
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
