@@ -7,7 +7,8 @@ import CreatePost from './pages/CreatePost';
 import PaymentAnalytics from './pages/PaymentAnalytics';
 import TransactionHistory from './pages/TransactionHistory';
 import Reviews from './pages/Reviews';
-import ServiceDetails from './pages/ServiceDetails';
+import ServiceDetails from '@/pages/ServiceDetails';
+import ServiceBooking from '@/pages/ServiceBooking';
 import NotFound from './pages/NotFound';
 import DisputeCenter from './components/dispute/DisputeCenter';
 import InvoiceGenerator from './pages/InvoiceGenerator';
@@ -119,6 +120,8 @@ const RoutesConfig = () => {
       
       {/* Service Related */}
       <Route path="/service/:id" element={<ServiceDetails />} />
+      <Route path="/service-details/:id" element={<ServiceDetails />} />
+      <Route path="/service-booking/:id" element={<ServiceBooking />} />
       <Route path="/ratings-reviews" element={<Reviews />} />
       <Route path="/feature-selection" element={<FeatureSelectionPage />} />
       

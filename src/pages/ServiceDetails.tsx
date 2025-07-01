@@ -1,329 +1,343 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { 
-  ArrowLeft, Star, MapPin, Clock, Phone, CheckCircle, 
-  Shield, Award, Users, Calendar, MessageSquare, Share2,
-  Heart, Home, Video, Truck, CreditCard
+  Building, 
+  MapPin, 
+  Calendar, 
+  Clock, 
+  User, 
+  Star, 
+  Heart, 
+  Share2, 
+  ChevronLeft, 
+  ChevronRight,
+  Check,
+  X
 } from 'lucide-react';
-import ServiceBookingModal from '@/components/booking/ServiceBookingModal';
-import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { useToast } from '@/components/ui/use-toast';
+import SocialShareModal from '@/components/SocialShareModal';
+import { serviceCategoryData } from '@/data/serviceCategoryData';
 
 const ServiceDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [service, setService] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('details');
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
 
-  // Mock service data - in real app, fetch from API
-  const service = {
-    id: parseInt(id || '1'),
-    title: 'হোম ভিজিট ডাক্তার',
-    provider: 'ডা. আহমেদ হাসান',
-    category: 'medical',
-    subcategory: 'জেনারেল ডাক্তার',
-    location: 'গুলশান, ঢাকা',
-    price: '৳১,৫০০',
-    rating: 4.8,
-    reviews: 256,
-    image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400&q=80',
-    isVerified: true,
-    bookingTypes: ['হোম ভিজিট', 'ভিডিও কনসালটেশন', 'চেম্বার ভিজিট'],
-    responseTime: '৩০ মিনিট',
-    description: 'অভিজ্ঞ জেনারেল ফিজিশিয়ান। ১৫+ বছরের অভিজ্ঞতা সহ সাধারণ রোগের চিকিৎসা, স্বাস্থ্য পরামর্শ এবং প্রতিরোধমূলক স্বাস্থ্যসেবা প্রদান করেন। হোম ভিজিট এবং অনলাইন কনসালটেশন উভয়ই উপলব্ধ।',
-    features: [
-      'হোম ভিজিট সুবিধা',
-      'ভিডিও কনসালটেশন',
-      'ফ্রি ফলো-আপ',
-      '২৪/৭ জরুরি সেবা',
-      'প্রেসক্রিপশন ডেলিভারি'
-    ],
-    qualifications: [
-      'MBBS - ঢাকা মেডিকেল কলেজ',
-      'MD - বঙ্গবন্ধু শেখ মুজিব মেডিকেল বিশ্ববিদ্যালয়',
-      'BMA রেজিস্ট্রেশন সহ',
-      '১৫+ বছরের অভিজ্ঞতা'
-    ],
-    availableHours: 'সকাল ৮টা - রাত ১০টা',
-    languages: ['বাংলা', 'English', 'हिंदी']
-  };
+  useEffect(() => {
+    const fetchService = () => {
+      setLoading(true);
+      try {
+        // Find service from all categories
+        let foundService = null;
+        Object.values(serviceCategoryData).forEach((category: any) => {
+          const serviceInCategory = category.items.find((item: any) => item.id === parseInt(id || '0'));
+          if (serviceInCategory) {
+            foundService = serviceInCategory;
+          }
+        });
 
-  const bookingTypeIcons = {
-    'হোম ভিজিট': <Home className="h-4 w-4" />,
-    'ভিডিও কনসালটেশন': <Video className="h-4 w-4" />,
-    'চেম্বার ভিজিট': <MapPin className="h-4 w-4" />,
-    'পিক-আপ সার্ভিস': <Truck className="h-4 w-4" />
-  };
+        if (foundService) {
+          setService(foundService);
+        } else {
+          toast({
+            title: "সেবা পাওয়া যায়নি",
+            description: "আপনার অনুরোধকৃত সেবা খুঁজে পাওয়া যায়নি।",
+            variant: "destructive"
+          });
+          navigate('/services');
+        }
+      } catch (error) {
+        toast({
+          title: "একটি সমস্যা হয়েছে",
+          description: "ডেটা লোড করতে সমস্যা হয়েছে। দয়া করে পরে আবার চেষ্টা করুন।",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const reviews = [
-    {
-      id: 1,
-      name: 'রহিম উদ্দিন',
-      rating: 5,
-      comment: 'খুবই ভালো সেবা পেয়েছি। ডাক্তার সাহেব খুব ধৈর্য সহকারে সমস্যা শুনেছেন এবং সঠিক চিকিৎসা দিয়েছেন।',
-      date: '২ দিন আগে'
-    },
-    {
-      id: 2,
-      name: 'সালমা খাতুন',
-      rating: 5,
-      comment: 'হোম ভিজিট সার্ভিস অসাধারণ। সময়মতো এসেছেন এবং পরিবারের সবার দেখাশোনা করেছেন।',
-      date: '১ সপ্তাহ আগে'
-    },
-    {
-      id: 3,
-      name: 'করিম মিয়া',
-      rating: 4,
-      comment: 'ভিডিও কল এর মাধ্যমে খুব ভালো পরামর্শ পেয়েছি। দামও যুক্তিসঙ্গত।',
-      date: '২ সপ্তাহ আগে'
+    if (id) {
+      fetchService();
     }
-  ];
+  }, [id, toast, navigate]);
 
-  const handleBookNow = () => {
-    setIsBookingModalOpen(true);
-  };
-
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: service.title,
-        text: `${service.provider} - ${service.description}`,
-        url: window.location.href
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast({
-        title: "লিংক কপি করা হয়েছে",
-        description: "সার্ভিসের লিংক ক্লিপবোর্ডে কপি করা হয়েছে"
-      });
-    }
-  };
-
-  const handleSaveToWishlist = () => {
+  const handleBookmark = () => {
+    setBookmarked(!bookmarked);
     toast({
-      title: "সংরক্ষিত হয়েছে",
-      description: "সার্ভিসটি আপনার পছন্দের তালিকায় যোগ করা হয়েছে"
+      title: bookmarked ? "বুকমার্ক থেকে সরানো হয়েছে" : "বুকমার্ক করা হয়েছে",
+      description: bookmarked 
+        ? "সেবাটি আপনার বুকমার্ক থেকে সরানো হয়েছে।" 
+        : "সেবাটি আপনার বুকমার্ক লিস্টে যোগ করা হয়েছে।",
     });
   };
 
+  const handleShare = () => {
+    setShowShareModal(true);
+  };
+
+  const handleRentNow = () => {
+    if (id && service) {
+      navigate(`/service-booking/${id}`, { 
+        state: { 
+          service: service 
+        } 
+      });
+    }
+  };
+
+  const handleContact = () => {
+    if (id && service) {
+      navigate(`/contact-owner/${id}`, { 
+        state: { 
+          ownerInfo: {
+            name: service.provider,
+            phone: "+৮৮০১৭১১২৩৪৫৬৷",
+            rating: service.rating,
+            reviews: service.reviews,
+            verified: true
+          },
+          serviceInfo: {
+            id: service.id,
+            title: service.title,
+            image: service.image
+          }
+        } 
+      });
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="container pt-20 pb-10">
+        <div className="flex items-center justify-center h-96">
+          <div className="flex flex-col items-center gap-2">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+            <p>লোড হচ্ছে...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!service) {
+    return (
+      <div className="container pt-20 pb-10">
+        <div className="flex flex-col items-center justify-center h-96 gap-4">
+          <X className="h-16 w-16 text-destructive" />
+          <h2 className="text-2xl font-bold">সেবা পাওয়া যায়নি</h2>
+          <p className="text-muted-foreground">আপনার অনুরোধকৃত সেবা খুঁজে পাওয়া যায়নি।</p>
+          <Button onClick={() => navigate('/services')}>সেবা পেজে ফিরে যান</Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="container px-4 pt-20 pb-20">
-      {/* Header */}
+    <div className="container pt-20 pb-10">
+      {/* ব্যাক বাটন */}
       <div className="flex items-center gap-2 mb-6">
-        <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-          <ArrowLeft className="h-5 w-5" />
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={() => navigate(-1)}
+        >
+          <ChevronLeft className="h-4 w-4" />
         </Button>
-        <h1 className="text-xl font-bold">সার্ভিস বিস্তারিত</h1>
+        <h1 className="text-2xl font-bold">সেবার বিবরণ</h1>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Service Image */}
+      {/* ছবি */}
+      <div className="mb-6">
+        <div className="overflow-hidden rounded-lg aspect-[16/9] w-full">
+          <img 
+            src={service.image} 
+            alt={service.title} 
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+
+      {/* শিরোনাম ও অ্যাকশন */}
+      <div className="flex justify-between items-start mb-4">
+        <div>
+          <h1 className="text-2xl font-bold">{service.title}</h1>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+            <MapPin className="h-4 w-4" />
+            <span>{service.location}</span>
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            size="icon"
+            onClick={handleBookmark}
+            className={bookmarked ? "text-red-500" : ""}
+          >
+            <Heart className={`h-4 w-4 ${bookmarked ? "fill-red-500" : ""}`} />
+          </Button>
+          <Button 
+            variant="outline" 
+            size="icon"
+            onClick={handleShare}
+          >
+            <Share2 className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* মূল তথ্য */}
+        <div className="w-full md:w-2/3">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="w-full grid grid-cols-3">
+              <TabsTrigger value="details">বিবরণ</TabsTrigger>
+              <TabsTrigger value="features">বৈশিষ্ট্য</TabsTrigger>
+              <TabsTrigger value="location">অবস্থান</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="details" className="mt-4">
+              <Card>
+                <CardContent className="p-4">
+                  <h3 className="text-lg font-medium mb-2">বিবরণ</h3>
+                  <p className="text-muted-foreground">
+                    {service.title} এর জন্য উন্নত মানের সেবা প্রদান করা হয়। আমাদের অভিজ্ঞ টিম আপনার প্রয়োজন অনুযায়ী সর্বোচ্চ মানের সেবা নিশ্চিত করে।
+                  </p>
+                  
+                  <Separator className="my-4" />
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <h4 className="text-sm font-medium mb-1">ক্যাটাগরি</h4>
+                      <p className="text-sm text-muted-foreground">{service.category}</p>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium mb-1">সাব-ক্যাটাগরি</h4>
+                      <p className="text-sm text-muted-foreground">{service.subcategory}</p>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium mb-1">রেটিং</h4>
+                      <div className="flex items-center">
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        <span className="text-sm ml-1">{service.rating} ({service.reviews} রিভিউ)</span>
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium mb-1">মূল্য</h4>
+                      <p className="text-sm text-muted-foreground font-bold text-primary">{service.price}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="features" className="mt-4">
+              <Card>
+                <CardContent className="p-4">
+                  <h3 className="text-lg font-medium mb-4">বৈশিষ্ট্য</h3>
+                  <div className="grid grid-cols-2 gap-y-3">
+                    <div className="flex items-center gap-2">
+                      <Check className="h-4 w-4 text-primary" />
+                      <span>উন্নত মানের সেবা</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Check className="h-4 w-4 text-primary" />
+                      <span>অভিজ্ঞ পেশাদার</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Check className="h-4 w-4 text-primary" />
+                      <span>নির্ভরযোগ্য সময়</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Check className="h-4 w-4 text-primary" />
+                      <span>সাশ্রয়ী মূল্য</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="location" className="mt-4">
+              <Card>
+                <CardContent className="p-4">
+                  <h3 className="text-lg font-medium mb-4">অবস্থান</h3>
+                  <div className="bg-gray-100 rounded-lg h-[300px] flex items-center justify-center">
+                    <p className="text-muted-foreground">ম্যাপ লোড হচ্ছে...</p>
+                  </div>
+                  
+                  <div className="mt-4">
+                    <h4 className="text-sm font-medium mb-1">ঠিকানা</h4>
+                    <p className="text-sm text-muted-foreground">{service.location}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
+        
+        {/* সাইডবার */}
+        <div className="w-full md:w-1/3">
           <Card className="overflow-hidden">
-            <div className="relative aspect-video">
-              <img 
-                src={service.image} 
-                alt={service.title}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute top-4 left-4">
-                <Badge className="bg-green-600">উপলব্ধ</Badge>
+            <CardContent className="p-0">
+              <div className="p-4 bg-primary text-primary-foreground">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xl font-bold">{service.price}</h3>
+                  <Badge variant="secondary">{service.category}</Badge>
+                </div>
               </div>
-              <div className="absolute top-4 right-4 flex gap-2">
-                <Button variant="outline" size="icon" className="bg-white" onClick={handleShare}>
-                  <Share2 className="h-4 w-4" />
-                </Button>
-                <Button variant="outline" size="icon" className="bg-white" onClick={handleSaveToWishlist}>
-                  <Heart className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </Card>
-
-          {/* Service Info */}
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h2 className="text-2xl font-bold mb-2">{service.title}</h2>
-                  <p className="text-lg text-muted-foreground mb-2">{service.provider}</p>
-                  <div className="flex items-center gap-4 mb-2">
-                    <div className="flex items-center">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
-                      <span className="font-medium">{service.rating}</span>
-                      <span className="text-muted-foreground ml-1">({service.reviews} রিভিউ)</span>
-                    </div>
-                    {service.isVerified && (
-                      <Badge variant="secondary" className="flex items-center gap-1">
-                        <CheckCircle className="h-3 w-3" /> ভেরিফায়েড
+              
+              <div className="p-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <User className="h-4 w-4 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm font-medium">{service.provider}</p>
+                    <div className="flex items-center gap-1">
+                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                      <span className="text-xs">{service.rating} ({service.reviews} রিভিউ)</span>
+                      <Badge variant="outline" className="h-5 text-xs border-green-500 text-green-600">
+                        <Check className="h-3 w-3 mr-1" /> যাচাইকৃত
                       </Badge>
-                    )}
-                  </div>
-                  <div className="flex items-center text-muted-foreground mb-4">
-                    <MapPin className="h-4 w-4 mr-1" />
-                    <span>{service.location}</span>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-3xl font-bold text-primary mb-1">{service.price}</div>
-                  <div className="text-sm text-muted-foreground">প্রতি সেশন</div>
-                </div>
-              </div>
-
-              <p className="text-muted-foreground mb-6 leading-relaxed">{service.description}</p>
-
-              {/* Booking Types */}
-              <div className="mb-6">
-                <h3 className="font-semibold mb-3">উপলব্ধ সেবা</h3>
-                <div className="flex flex-wrap gap-2">
-                  {service.bookingTypes.map((type, index) => (
-                    <Badge key={index} variant="outline" className="flex items-center gap-1">
-                      {bookingTypeIcons[type as keyof typeof bookingTypeIcons]}
-                      {type}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              {/* Features */}
-              <div className="mb-6">
-                <h3 className="font-semibold mb-3">বিশেষ সুবিধা</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {service.features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-green-500" />
-                      <span className="text-sm">{feature}</span>
                     </div>
-                  ))}
+                  </div>
                 </div>
-              </div>
-
-              {/* Qualifications */}
-              <div>
-                <h3 className="font-semibold mb-3">যোগ্যতা ও অভিজ্ঞতা</h3>
+                
                 <div className="space-y-2">
-                  {service.qualifications.map((qualification, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <Award className="h-4 w-4 text-blue-500" />
-                      <span className="text-sm">{qualification}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Reviews */}
-          <Card>
-            <CardContent className="p-6">
-              <h3 className="font-semibold mb-4">গ্রাহক পর্যালোচনা ({service.reviews})</h3>
-              <div className="space-y-4">
-                {reviews.map((review) => (
-                  <div key={review.id} className="border-b pb-4 last:border-b-0 last:pb-0">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                          <Users className="h-4 w-4" />
-                        </div>
-                        <span className="font-medium">{review.name}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="flex">
-                          {[1,2,3,4,5].map((star) => (
-                            <Star 
-                              key={star} 
-                              className={`h-4 w-4 ${star <= review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
-                            />
-                          ))}
-                        </div>
-                        <span className="text-sm text-muted-foreground">{review.date}</span>
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground">{review.comment}</p>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Quick Info */}
-          <Card className="sticky top-24">
-            <CardContent className="p-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">রেসপন্স টাইম: {service.responseTime}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">উপলব্ধ: {service.availableHours}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">ভাষা: {service.languages.join(', ')}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Shield className="h-4 w-4 text-green-500" />
-                  <span className="text-sm text-green-600">নিরাপত্তা যাচাইকৃত</span>
-                </div>
-              </div>
-
-              <Separator className="my-4" />
-
-              <div className="space-y-3">
-                <Button className="w-full" size="lg" onClick={handleBookNow}>
-                  <Calendar className="h-4 w-4 mr-2" />
-                  এখনই বুক করুন
-                </Button>
-                <Button variant="outline" className="w-full" size="lg">
-                  <Phone className="h-4 w-4 mr-2" />
-                  কল করুন
-                </Button>
-                <Button variant="outline" className="w-full" size="lg">
-                  <MessageSquare className="h-4 w-4 mr-2" />
-                  মেসেজ করুন
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Payment Options */}
-          <Card>
-            <CardContent className="p-6">
-              <h3 className="font-semibold mb-3">পেমেন্ট সুবিধা</h3>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <CreditCard className="h-4 w-4 text-blue-500" />
-                  <span className="text-sm">ভিসা/মাস্টার কার্ড</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Phone className="h-4 w-4 text-green-500" />
-                  <span className="text-sm">বিকাশ/নগদ</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CreditCard className="h-4 w-4 text-orange-500" />
-                  <span className="text-sm">ক্যাশ অন ডেলিভারি</span>
+                  <Button className="w-full" onClick={handleRentNow}>
+                    ভাড়া নিন
+                  </Button>
+                  <Button variant="outline" className="w-full" onClick={handleContact}>
+                    যোগাযোগ করুন
+                  </Button>
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
       </div>
-
-      {/* Booking Modal */}
-      <ServiceBookingModal
-        isOpen={isBookingModalOpen}
-        onClose={() => setIsBookingModalOpen(false)}
-        service={service}
-      />
+      
+      {/* সোশ্যাল শেয়ার মোডাল */}
+      {service && (
+        <SocialShareModal 
+          open={showShareModal}
+          onOpenChange={setShowShareModal}
+          item={{
+            ...service,
+            type: 'service',
+          }}
+        />
+      )}
     </div>
   );
 };

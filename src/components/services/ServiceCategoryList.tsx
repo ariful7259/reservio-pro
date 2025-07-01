@@ -52,9 +52,11 @@ const ServiceCategoryList: React.FC<ServiceCategoryListProps> = ({
     });
   };
 
-  const handleBookNow = (e: React.MouseEvent, serviceId: number) => {
+  const handleRentNow = (e: React.MouseEvent, service: ServiceItem) => {
     e.stopPropagation();
-    navigate(`/service-booking/${serviceId}`);
+    navigate(`/rental-booking/${service.id}`, {
+      state: { rental: service }
+    });
   };
 
   if (!services || services.length === 0) {
@@ -118,9 +120,9 @@ const ServiceCategoryList: React.FC<ServiceCategoryListProps> = ({
             <Button 
               className="w-full mt-3"
               size="sm"
-              onClick={(e) => handleBookNow(e, service.id)}
+              onClick={(e) => handleRentNow(e, service)}
             >
-              <Phone className="h-4 w-4 mr-2" /> বুকিং করুন
+              <Phone className="h-4 w-4 mr-2" /> ভাড়া নিন
             </Button>
           </CardContent>
         </Card>
