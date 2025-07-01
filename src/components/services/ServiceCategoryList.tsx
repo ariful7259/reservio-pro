@@ -23,7 +23,6 @@ interface ServiceItem {
   category: string;
   rating: number;
   reviews: number;
-  subcategory?: string;
 }
 
 interface ServiceCategoryListProps {
@@ -38,8 +37,6 @@ const ServiceCategoryList: React.FC<ServiceCategoryListProps> = ({
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  console.log('ServiceCategoryList rendering with services:', services);
-
   const handleServiceClick = (id: number) => {
     navigate(`/service-details/${id}`);
   };
@@ -52,20 +49,10 @@ const ServiceCategoryList: React.FC<ServiceCategoryListProps> = ({
     });
   };
 
-  const handleRentNow = (e: React.MouseEvent, service: ServiceItem) => {
+  const handleBookNow = (e: React.MouseEvent, serviceId: number) => {
     e.stopPropagation();
-    navigate(`/rental-booking/${service.id}`, {
-      state: { rental: service }
-    });
+    navigate(`/service-booking/${serviceId}`);
   };
-
-  if (!services || services.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground">এই ক্যাটাগরিতে কোন সেবা পাওয়া যায়নি</p>
-      </div>
-    );
-  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -81,7 +68,7 @@ const ServiceCategoryList: React.FC<ServiceCategoryListProps> = ({
               alt={service.title} 
               className="w-full h-full object-cover"
             />
-            <Badge className="absolute top-2 left-2">{service.subcategory || service.category}</Badge>
+            <Badge className="absolute top-2 left-2">{service.category}</Badge>
             <div className="absolute top-2 right-2 flex flex-col gap-2">
               <Button 
                 variant="outline" 
@@ -120,9 +107,9 @@ const ServiceCategoryList: React.FC<ServiceCategoryListProps> = ({
             <Button 
               className="w-full mt-3"
               size="sm"
-              onClick={(e) => handleRentNow(e, service)}
+              onClick={(e) => handleBookNow(e, service.id)}
             >
-              <Phone className="h-4 w-4 mr-2" /> ভাড়া নিন
+              <Phone className="h-4 w-4 mr-2" /> বুকিং করুন
             </Button>
           </CardContent>
         </Card>

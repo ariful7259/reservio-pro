@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,11 +9,10 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { ChevronLeft, Calendar as CalendarIcon, Clock, CreditCard, Wallet2, Landmark, MapPin, Users, Home, FileText } from 'lucide-react';
+import { ChevronLeft, Calendar as CalendarIcon, Clock, CreditCard, Wallet2, Landmark } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { format, addDays } from 'date-fns';
+import { bn } from 'date-fns/locale';
 
 const RentalBooking = () => {
   const { id } = useParams();
@@ -21,38 +20,15 @@ const RentalBooking = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   
+  // লোকেশন থেকে রেন্টাল ডেটা পাওয়া
   const { rental } = location.state || {};
   
   const [startDate, setStartDate] = useState<Date>(new Date());
-  const [endDate, setEndDate] = useState<Date>(addDays(new Date(), 1));
+  const [endDate, setEndDate] = useState<Date>(addDays(new Date(), 30));
   const [paymentMethod, setPaymentMethod] = useState("bkash");
   const [phone, setPhone] = useState("");
   const [transactionId, setTransactionId] = useState("");
   const [specialRequirements, setSpecialRequirements] = useState("");
-  
-  // Category specific states
-  const [familyType, setFamilyType] = useState("family");
-  const [peopleCount, setPeopleCount] = useState("");
-  const [address, setAddress] = useState("");
-  const [needDriver, setNeedDriver] = useState(false);
-  const [fuelIncluded, setFuelIncluded] = useState(false);
-  const [needSetup, setNeedSetup] = useState(false);
-  const [quantity, setQuantity] = useState("1");
-  const [pickupOption, setPickupOption] = useState("delivery");
-  const [rentalDuration, setRentalDuration] = useState("monthly");
-  const [businessType, setBusinessType] = useState("");
-  const [needOperator, setNeedOperator] = useState(false);
-  const [stayPurpose, setStayPurpose] = useState("");
-  const [equipmentNeeded, setEquipmentNeeded] = useState(false);
-  const [educationType, setEducationType] = useState("");
-  const [safetyAcknowledged, setSafetyAcknowledged] = useState(false);
-  const [needElectricity, setNeedElectricity] = useState(false);
-  const [needDecoration, setNeedDecoration] = useState(false);
-  const [licenseUploaded, setLicenseUploaded] = useState(false);
-  const [securityDeposit, setSecurityDeposit] = useState("");
-  const [brandCondition, setBrandCondition] = useState("");
-  const [studioPurpose, setStudioPurpose] = useState("");
-  const [needInternet, setNeedInternet] = useState(false);
   
   if (!rental) {
     return (
@@ -66,17 +42,19 @@ const RentalBooking = () => {
     );
   }
 
+  // মাসিক ভাড়ার ক্ষেত্রে সংখ্যা বের করা
   const extractPrice = () => {
     const priceString = rental.price;
     const priceMatch = priceString.match(/৳([0-9,]+)/);
     if (priceMatch && priceMatch[1]) {
       return parseInt(priceMatch[1].replace(/,/g, ''), 10);
     }
-    return 1000;
+    return 25000; // ডিফল্ট মূল্য
   };
 
   const basePrice = extractPrice();
-  const serviceFee = basePrice * 0.05;
+  const deposit = parseInt((rental.rentDeposit || '৳50,000').replace(/৳|,/g, ''), 10) || 50000;
+  const serviceFee = basePrice * 0.05; // ৫% সার্ভিস ফি
   const totalPrice = basePrice + serviceFee;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -100,6 +78,7 @@ const RentalBooking = () => {
       return;
     }
     
+    // বুকিং ডেটা প্রেরণ
     const bookingData = {
       rentalId: id,
       rental: rental,
@@ -110,581 +89,21 @@ const RentalBooking = () => {
       transactionId: transactionId,
       specialRequirements: specialRequirements,
       totalAmount: totalPrice,
-      serviceFee: serviceFee,
-      // Category specific data
-      familyType,
-      peopleCount,
-      address,
-      needDriver,
-      fuelIncluded,
-      needSetup,
-      quantity,
-      pickupOption,
-      rentalDuration,
-      businessType,
-      needOperator,
-      stayPurpose,
-      equipmentNeeded,
-      educationType,
-      safetyAcknowledged,
-      needElectricity,
-      needDecoration,
-      licenseUploaded,
-      securityDeposit,
-      brandCondition,
-      studioPurpose,
-      needInternet
+      deposit: deposit,
+      serviceFee: serviceFee
     };
     
+    // সাধারণত এখানে API কল হবে বুকিং সেভ করার জন্য
+    // এখন আমরা শুধু কনফার্মেশন পেজে রিডিরেক্ট করবো
     toast({
       title: "বুকিং প্রক্রিয়াধীন",
       description: "আপনার বুকিং প্রক্রিয়া করা হচ্ছে...",
     });
     
+    // কনফার্মেশন পেজে নেভিগেট করা
     navigate('/rental-confirmation', {
       state: { booking: bookingData }
     });
-  };
-
-  const renderCategorySpecificFields = () => {
-    const category = rental.category?.toLowerCase();
-    
-    // বাসা বাড়ি (House & Living Space)
-    if (category?.includes('apartment') || category?.includes('house') || category?.includes('flat')) {
-      return (
-        <div>
-          <h3 className="text-lg font-medium mb-3">বাসা বাড়ি বুকিং তথ্য</h3>
-          <div className="space-y-4">
-            <div>
-              <Label>পারিবারিক অবস্থা</Label>
-              <RadioGroup value={familyType} onValueChange={setFamilyType}>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="family" id="family" />
-                  <Label htmlFor="family">ফ্যামিলি</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="bachelor" id="bachelor" />
-                  <Label htmlFor="bachelor">ব্যাচেলর</Label>
-                </div>
-              </RadioGroup>
-            </div>
-            
-            <div>
-              <Label htmlFor="people">কতজন থাকবে (ঐচ্ছিক)</Label>
-              <Input 
-                id="people" 
-                type="number"
-                placeholder="যেমন: ৪"
-                value={peopleCount}
-                onChange={(e) => setPeopleCount(e.target.value)}
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="address">বিস্তারিত ঠিকানা</Label>
-              <Textarea 
-                id="address" 
-                placeholder="সম্পূর্ণ ঠিকানা লিখুন"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-              />
-            </div>
-            
-            <div>
-              <Label>ভাড়ার মেয়াদ</Label>
-              <Select value={rentalDuration} onValueChange={setRentalDuration}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="monthly">মাসিক</SelectItem>
-                  <SelectItem value="daily">দৈনিক</SelectItem>
-                  <SelectItem value="hourly">ঘন্টায়</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    
-    // ইলেকট্রনিক্স (Electronics)
-    if (category?.includes('electronics') || category?.includes('laptop') || category?.includes('camera')) {
-      return (
-        <div>
-          <h3 className="text-lg font-medium mb-3">ইলেকট্রনিক্স বুকিং তথ্য</h3>
-          <div className="space-y-4">
-            <div>
-              <Label>ভাড়ার মেয়াদ</Label>
-              <Select value={rentalDuration} onValueChange={setRentalDuration}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1day">১ দিন</SelectItem>
-                  <SelectItem value="1week">১ সপ্তাহ</SelectItem>
-                  <SelectItem value="1month">১ মাস</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div>
-              <Label htmlFor="brand-condition">ব্র্যান্ড/অবস্থা</Label>
-              <Input 
-                id="brand-condition" 
-                placeholder="যেমন: Canon EOS, চমৎকার অবস্থায়"
-                value={brandCondition}
-                onChange={(e) => setBrandCondition(e.target.value)}
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="security-deposit">সিকিউরিটি ডিপোজিট</Label>
-              <Input 
-                id="security-deposit" 
-                placeholder="যেমন: ৳১০,০০০"
-                value={securityDeposit}
-                onChange={(e) => setSecurityDeposit(e.target.value)}
-              />
-            </div>
-            
-            <div>
-              <Label>পিকআপ/ডেলিভারি</Label>
-              <RadioGroup value={pickupOption} onValueChange={setPickupOption}>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="pickup" id="pickup" />
-                  <Label htmlFor="pickup">নিজে নিয়ে যাব</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="delivery" id="delivery" />
-                  <Label htmlFor="delivery">ডেলিভারি চাই</Label>
-                </div>
-              </RadioGroup>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    
-    // পরিবহন (Transport)
-    if (category?.includes('transport') || category?.includes('car') || category?.includes('bike')) {
-      return (
-        <div>
-          <h3 className="text-lg font-medium mb-3">পরিবহন বুকিং তথ্য</h3>
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="driver" 
-                checked={needDriver}
-                onCheckedChange={(checked) => setNeedDriver(checked === true)}
-              />
-              <Label htmlFor="driver">ড্রাইভার প্রয়োজন?</Label>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="fuel" 
-                checked={fuelIncluded}
-                onCheckedChange={(checked) => setFuelIncluded(checked === true)}
-              />
-              <Label htmlFor="fuel">জ্বালানি অন্তর্ভুক্ত?</Label>
-            </div>
-            
-            <div>
-              <Label htmlFor="pickup-location">পিকআপ/ড্রপ লোকেশন</Label>
-              <Input 
-                id="pickup-location" 
-                placeholder="পিকআপ ও ড্রপ অবস্থান"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-              />
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="license" 
-                checked={licenseUploaded}
-                onCheckedChange={(checked) => setLicenseUploaded(checked === true)}
-              />
-              <Label htmlFor="license">লাইসেন্স আপলোড করেছি</Label>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    
-    // ইভেন্ট সামগ্রী (Event Equipment)
-    if (category?.includes('event') || category?.includes('chair') || category?.includes('sound')) {
-      return (
-        <div>
-          <h3 className="text-lg font-medium mb-3">ইভেন্ট সামগ্রী বুকিং</h3>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="quantity">পরিমাণ</Label>
-              <Input 
-                id="quantity" 
-                type="number"
-                placeholder="কয়টি প্রয়োজন"
-                value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="setup-location">সেটআপ লোকেশন</Label>
-              <Input 
-                id="setup-location" 
-                placeholder="ইভেন্টের ঠিকানা"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-              />
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="setup" 
-                checked={needSetup}
-                onCheckedChange={(checked) => setNeedSetup(checked === true)}
-              />
-              <Label htmlFor="setup">সেটআপ সেবা প্রয়োজন?</Label>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    
-    // ঘরোয়া সামগ্রী (Home Essentials)
-    if (category?.includes('home') || category?.includes('furniture') || category?.includes('fridge')) {
-      return (
-        <div>
-          <h3 className="text-lg font-medium mb-3">ঘরোয়া সামগ্রী বুকিং</h3>
-          <div className="space-y-4">
-            <div>
-              <Label>ভাড়ার মেয়াদ</Label>
-              <Select value={rentalDuration} onValueChange={setRentalDuration}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="daily">দিন</SelectItem>
-                  <SelectItem value="weekly">সপ্তাহ</SelectItem>
-                  <SelectItem value="monthly">মাস</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div>
-              <Label htmlFor="delivery-address">ডেলিভারি ঠিকানা</Label>
-              <Textarea 
-                id="delivery-address" 
-                placeholder="ডেলিভারির সম্পূর্ণ ঠিকানা"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="security-deposit">রিফান্ডেবল সিকিউরিটি ডিপোজিট</Label>
-              <Input 
-                id="security-deposit" 
-                placeholder="যেমন: ৳৫,০০০"
-                value={securityDeposit}
-                onChange={(e) => setSecurityDeposit(e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-    
-    // শিক্ষা সামগ্রী (Educational Tools)
-    if (category?.includes('education') || category?.includes('projector') || category?.includes('whiteboard')) {
-      return (
-        <div>
-          <h3 className="text-lg font-medium mb-3">শিক্ষা সামগ্রী বুকিং</h3>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="education-type">শিক্ষামূলক ব্যবহারের ধরন</Label>
-              <Select value={educationType} onValueChange={setEducationType}>
-                <SelectTrigger>
-                  <SelectValue placeholder="নির্বাচন করুন" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="school">স্কুল</SelectItem>
-                  <SelectItem value="online-class">অনলাইন ক্লাস</SelectItem>
-                  <SelectItem value="training">ট্রেনিং</SelectItem>
-                  <SelectItem value="presentation">প্রেজেন্টেশন</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div>
-              <Label>পিকআপ/ডেলিভারি</Label>
-              <RadioGroup value={pickupOption} onValueChange={setPickupOption}>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="pickup" id="pickup" />
-                  <Label htmlFor="pickup">নিজে নিয়ে যাব</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="delivery" id="delivery" />
-                  <Label htmlFor="delivery">ডেলিভারি চাই</Label>
-                </div>
-              </RadioGroup>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    
-    // কৃষি যন্ত্রপাতি (Agricultural Tools)
-    if (category?.includes('agriculture') || category?.includes('tractor') || category?.includes('spray')) {
-      return (
-        <div>
-          <h3 className="text-lg font-medium mb-3">কৃষি যন্ত্রপাতি বুকিং</h3>
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="operator" 
-                checked={needOperator}
-                onCheckedChange={(checked) => setNeedOperator(checked === true)}
-              />
-              <Label htmlFor="operator">অপারেটর প্রয়োজন?</Label>
-            </div>
-            
-            <div>
-              <Label htmlFor="field-location">ক্ষেতের অবস্থান</Label>
-              <Input 
-                id="field-location" 
-                placeholder="ক্ষেতের ঠিকানা"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-              />
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="fuel" 
-                checked={fuelIncluded}
-                onCheckedChange={(checked) => setFuelIncluded(checked === true)}
-              />
-              <Label htmlFor="fuel">জ্বালানি অন্তর্ভুক্ত?</Label>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    
-    // ব্যবসায়িক সামগ্রী (Business Items)
-    if (category?.includes('business') || category?.includes('pos') || category?.includes('cctv')) {
-      return (
-        <div>
-          <h3 className="text-lg font-medium mb-3">ব্যবসায়িক সামগ্রী বুকিং</h3>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="business-type">ব্যবসার ধরন</Label>
-              <Input 
-                id="business-type" 
-                placeholder="যেমন: রেস্তোরাঁ, দোকান, অফিস"
-                value={businessType}
-                onChange={(e) => setBusinessType(e.target.value)}
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="setup-location">সেটআপ লোকেশন</Label>
-              <Input 
-                id="setup-location" 
-                placeholder="ব্যবসার ঠিকানা"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-              />
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="service" 
-                checked={needSetup}
-                onCheckedChange={(checked) => setNeedSetup(checked === true)}
-              />
-              <Label htmlFor="service">সেবা প্রয়োজন?</Label>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    
-    // কারিগরি টুলস (Tools & Equipment)
-    if (category?.includes('tools') || category?.includes('drill') || category?.includes('cutter')) {
-      return (
-        <div>
-          <h3 className="text-lg font-medium mb-3">কারিগরি টুলস বুকিং</h3>
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="safety" 
-                checked={safetyAcknowledged}
-                onCheckedChange={(checked) => setSafetyAcknowledged(checked === true)}
-              />
-              <Label htmlFor="safety">নিরাপত্তা নির্দেশনা মেনে চলব</Label>
-            </div>
-            
-            <div>
-              <Label htmlFor="pickup-location">পিকআপ লোকেশন</Label>
-              <Input 
-                id="pickup-location" 
-                placeholder="পিকআপের ঠিকানা"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-    
-    // কমার্শিয়াল স্পেস (Commercial Space)
-    if (category?.includes('commercial') || category?.includes('shop') || category?.includes('booth')) {
-      return (
-        <div>
-          <h3 className="text-lg font-medium mb-3">কমার্শিয়াল স্পেস বুকিং</h3>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="use-type">ব্যবহারের ধরন</Label>
-              <Input 
-                id="use-type" 
-                placeholder="যেমন: ট্রেড শো, এক্সিবিশন, পপ-আপ স্টোর"
-                value={businessType}
-                onChange={(e) => setBusinessType(e.target.value)}
-              />
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="electricity" 
-                checked={needElectricity}
-                onCheckedChange={(checked) => setNeedElectricity(checked === true)}
-              />
-              <Label htmlFor="electricity">বিদ্যুৎ প্রয়োজন?</Label>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="decoration" 
-                checked={needDecoration}
-                onCheckedChange={(checked) => setNeedDecoration(checked === true)}
-              />
-              <Label htmlFor="decoration">সাজসজ্জা প্রয়োজন?</Label>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    
-    // গেস্ট হাউস (Short Stay)
-    if (category?.includes('guest') || category?.includes('stay') || category?.includes('short')) {
-      return (
-        <div>
-          <h3 className="text-lg font-medium mb-3">স্বল্পমেয়াদী থাকার ব্যবস্থা</h3>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="people-count">কতজন থাকবে</Label>
-              <Input 
-                id="people-count" 
-                type="number"
-                placeholder="যেমন: ২"
-                value={peopleCount}
-                onChange={(e) => setPeopleCount(e.target.value)}
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="stay-purpose">থাকার উদ্দেশ্য (ঐচ্ছিক)</Label>
-              <Input 
-                id="stay-purpose" 
-                placeholder="যেমন: ব্যবসা, পর্যটন, চিকিৎসা"
-                value={stayPurpose}
-                onChange={(e) => setStayPurpose(e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-    
-    // স্টুডিও (Studio Rentals)
-    if (category?.includes('studio') || category?.includes('video') || category?.includes('photo')) {
-      return (
-        <div>
-          <h3 className="text-lg font-medium mb-3">স্টুডিও বুকিং তথ্য</h3>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="studio-purpose">স্টুডিও ব্যবহারের উদ্দেশ্য</Label>
-              <Select value={studioPurpose} onValueChange={setStudioPurpose}>
-                <SelectTrigger>
-                  <SelectValue placeholder="নির্বাচন করুন" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="shooting">শুটিং</SelectItem>
-                  <SelectItem value="podcast">পডকাস্ট</SelectItem>
-                  <SelectItem value="cooking">কুকিং</SelectItem>
-                  <SelectItem value="interview">ইন্টারভিউ</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="equipment" 
-                checked={equipmentNeeded}
-                onCheckedChange={(checked) => setEquipmentNeeded(checked === true)}
-              />
-              <Label htmlFor="equipment">যন্ত্রপাতি প্রয়োজন?</Label>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="internet" 
-                checked={needInternet}
-                onCheckedChange={(checked) => setNeedInternet(checked === true)}
-              />
-              <Label htmlFor="internet">ইন্টারনেট/সেটআপ প্রয়োজন?</Label>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    
-    // Default general booking form
-    return (
-      <div>
-        <h3 className="text-lg font-medium mb-3">সাধারণ বুকিং তথ্য</h3>
-        <div className="space-y-4">
-          <div>
-            <Label>পিকআপ/ডেলিভারি</Label>
-            <RadioGroup value={pickupOption} onValueChange={setPickupOption}>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="pickup" id="pickup" />
-                <Label htmlFor="pickup">নিজে নিয়ে যাব</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="delivery" id="delivery" />
-                <Label htmlFor="delivery">ডেলিভারি চাই</Label>
-              </div>
-            </RadioGroup>
-          </div>
-          
-          <div>
-            <Label htmlFor="location">ঠিকানা</Label>
-            <Input 
-              id="location" 
-              placeholder="আপনার ঠিকানা"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-            />
-          </div>
-        </div>
-      </div>
-    );
   };
 
   return (
@@ -732,11 +151,12 @@ const RentalBooking = () => {
                       </div>
                     </div>
                   </div>
+                  
+                  <div className="mt-4 flex items-center gap-2 text-muted-foreground text-sm">
+                    <Clock className="h-4 w-4" />
+                    <span>বর্তমানে নির্বাচিত: {format(startDate, 'PPP', { locale: bn })} থেকে {format(endDate, 'PPP', { locale: bn })}</span>
+                  </div>
                 </div>
-                
-                <Separator />
-                
-                {renderCategorySpecificFields()}
                 
                 <Separator />
                 
@@ -792,6 +212,13 @@ const RentalBooking = () => {
                       </Label>
                     </div>
                     <div className="flex items-center space-x-2 border rounded-md p-3">
+                      <RadioGroupItem value="bank" id="bank" />
+                      <Label htmlFor="bank" className="flex-1 flex items-center">
+                        <Landmark className="h-5 w-5 mr-2 text-green-500" />
+                        ব্যাংক ট্রান্সফার
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 border rounded-md p-3">
                       <RadioGroupItem value="cash" id="cash" />
                       <Label htmlFor="cash" className="flex-1">ক্যাশ অন ডেলিভারি</Label>
                     </div>
@@ -806,6 +233,12 @@ const RentalBooking = () => {
                         value={transactionId}
                         onChange={(e) => setTransactionId(e.target.value)}
                       />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {paymentMethod === "bkash" && "01712345678 এই নম্বরে সেন্ড মানি করুন (মার্চেন্ট)"}
+                        {paymentMethod === "nagad" && "01712345678 এই নম্বরে সেন্ড মানি করুন (মার্চেন্ট)"}
+                        {paymentMethod === "bank" && "ABC Bank: 1234567890, Branch: Main Branch"}
+                        {paymentMethod === "card" && "পরবর্তী ধাপে কার্ড তথ্য দিন"}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -827,7 +260,7 @@ const RentalBooking = () => {
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-24 h-24 rounded-md overflow-hidden">
                   <img 
-                    src={rental.images?.[0] || rental.image} 
+                    src={rental.images?.[0]} 
                     alt={rental.title} 
                     className="w-full h-full object-cover" 
                   />
@@ -842,7 +275,7 @@ const RentalBooking = () => {
               
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span>মূল মূল্য</span>
+                  <span>মূল ভাড়া</span>
                   <span>৳{basePrice.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
@@ -853,6 +286,10 @@ const RentalBooking = () => {
                 <div className="flex justify-between font-medium">
                   <span>মোট মূল্য</span>
                   <span>৳{totalPrice.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>জামানত (রিফান্ডেবল)</span>
+                  <span>৳{deposit.toLocaleString()}</span>
                 </div>
               </div>
             </CardContent>

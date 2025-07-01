@@ -7,7 +7,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { ChevronRight, Flame, Sparkles } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { useNavigate } from 'react-router-dom';
-import { serviceCategoryData } from '@/data/serviceCategoryData';
 
 interface ServiceCategoryGridProps {
   serviceCategories: any[];
@@ -27,24 +26,10 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
   const { language, t } = useApp();
   const navigate = useNavigate();
   
-  console.log('ServiceCategoryGrid serviceCategories:', serviceCategories);
-  
-  // If serviceCategories is empty, create categories from serviceCategoryData
-  const categories = serviceCategories.length > 0 ? serviceCategories : Object.entries(serviceCategoryData).map(([id, data]) => ({
-    id,
-    name: data.title,
-    nameEn: data.title,
-    count: data.items.length,
-    subcategories: [...new Set(data.items.map(item => item.subcategory))],
-    color: 'bg-blue-50',
-    iconColor: 'text-blue-600',
-    icon: <ChevronRight className="h-6 w-6" />
-  }));
-  
-  const displayedCategories = isExpanded ? categories : categories.slice(0, 8);
+  const displayedCategories = isExpanded ? serviceCategories : serviceCategories.slice(0, 8);
 
   const handleCategoryClick = (categoryId: string) => {
-    console.log('Navigating to category:', categoryId);
+    // Navigate to category page instead of just setting selected category
     navigate(`/services/category/${categoryId}`);
   };
 
@@ -74,9 +59,9 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
           </div>
         )}
         
-        <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full ${category.color || 'bg-blue-50'} flex items-center justify-center mb-2`}>
-          <div className={category.iconColor || 'text-blue-600'}>
-            {category.icon || <ChevronRight className="h-6 w-6" />}
+        <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full ${category.color} flex items-center justify-center mb-2`}>
+          <div className={category.iconColor}>
+            {category.icon}
           </div>
         </div>
         

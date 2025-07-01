@@ -7,8 +7,7 @@ import CreatePost from './pages/CreatePost';
 import PaymentAnalytics from './pages/PaymentAnalytics';
 import TransactionHistory from './pages/TransactionHistory';
 import Reviews from './pages/Reviews';
-import ServiceDetails from '@/pages/ServiceDetails';
-import ServiceBooking from '@/pages/ServiceBooking';
+import ServiceDetails from './pages/ServiceDetails';
 import NotFound from './pages/NotFound';
 import DisputeCenter from './components/dispute/DisputeCenter';
 import InvoiceGenerator from './pages/InvoiceGenerator';
@@ -34,8 +33,6 @@ import Rentals from './pages/Rentals';
 import RentAnything from './pages/RentAnything';
 import BasaBari from './pages/BasaBari';
 import RentalCategoryPage from './pages/RentalCategoryPage';
-import RentalDetails from './pages/RentalDetails';
-import RentalBooking from './pages/RentalBooking';
 import { FeatureSelectionPage } from './pages/FeatureSelectionPage';
 import CreateLinkInBio from './pages/CreateLinkInBio';
 import CreatorPaymentGateway from '@/pages/CreatorPaymentGateway';
@@ -122,8 +119,6 @@ const RoutesConfig = () => {
       
       {/* Service Related */}
       <Route path="/service/:id" element={<ServiceDetails />} />
-      <Route path="/service-details/:id" element={<ServiceDetails />} />
-      <Route path="/service-booking/:id" element={<ServiceBooking />} />
       <Route path="/ratings-reviews" element={<Reviews />} />
       <Route path="/feature-selection" element={<FeatureSelectionPage />} />
       
@@ -133,10 +128,6 @@ const RoutesConfig = () => {
       <Route path="/rent-anything" element={<RentAnything />} />
       <Route path="/rental-category/:categoryId" element={<RentalCategoryPage />} />
       <Route path="/basa-bari" element={<BasaBari />} />
-      
-      {/* Rental Routes */}
-      <Route path="/rental-details/:id" element={<RentalDetails />} />
-      <Route path="/rental-booking/:id" element={<RentalBooking />} />
       
       {/* Support and Dispute */}
       <Route path="/help/dispute-center" element={<DisputeCenter />} />
