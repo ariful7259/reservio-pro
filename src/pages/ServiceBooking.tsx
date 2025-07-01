@@ -202,7 +202,7 @@ const ServiceBooking = () => {
                 <Checkbox 
                   id="driver" 
                   checked={needDriver}
-                  onCheckedChange={setNeedDriver}
+                  onCheckedChange={(checked) => setNeedDriver(checked === true)}
                 />
                 <Label htmlFor="driver">ড্রাইভার প্রয়োজন?</Label>
               </div>
@@ -211,7 +211,7 @@ const ServiceBooking = () => {
                 <Checkbox 
                   id="fuel" 
                   checked={fuelIncluded}
-                  onCheckedChange={setFuelIncluded}
+                  onCheckedChange={(checked) => setFuelIncluded(checked === true)}
                 />
                 <Label htmlFor="fuel">জ্বালানি অন্তর্ভুক্ত?</Label>
               </div>
@@ -262,7 +262,7 @@ const ServiceBooking = () => {
                 <Checkbox 
                   id="setup" 
                   checked={needSetup}
-                  onCheckedChange={setNeedSetup}
+                  onCheckedChange={(checked) => setNeedSetup(checked === true)}
                 />
                 <Label htmlFor="setup">সেটআপ সেবা প্রয়োজন?</Label>
               </div>
