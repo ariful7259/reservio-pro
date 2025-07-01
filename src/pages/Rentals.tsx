@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,24 +8,166 @@ import CategoryGrid from '@/components/rentals/CategoryGrid';
 import RentalCard from '@/components/rentals/RentalCard';
 import SocialShareModal from '@/components/SocialShareModal';
 import { useToast } from '@/components/ui/use-toast';
+import { 
+  MapPin, 
+  Star, 
+  TrendingUp, 
+  Clock, 
+  Shield, 
+  Users,
+  Filter,
+  Search,
+  ChevronRight
+} from 'lucide-react';
 
 // Sample rental data
 const rentCategories = [
-  { id: 1, name: "বাসা বাড়ি", icon: "🏠", count: 120 },
-  { id: 2, name: "ইলেকট্রনিক্স", icon: "💻", count: 85 },
-  { id: 3, name: "পরিবহন", icon: "🚗", count: 95 },
-  { id: 4, name: "ইভেন্ট সামগ্রী", icon: "🎪", count: 45 },
-  { id: 5, name: "ঘরোয়া সামগ্রী", icon: "🛏️", count: 78 },
-  { id: 6, name: "শিক্ষা সামগ্রী", icon: "📚", count: 32 },
-  { id: 7, name: "কৃষি যন্ত্রপাতি", icon: "🚜", count: 28 },
-  { id: 8, name: "ব্যবসায়িক সামগ্রী", icon: "💼", count: 56 },
-  { id: 9, name: "কারিগরি টুলস", icon: "🔧", count: 42 },
-  { id: 10, name: "কমার্শিয়াল স্পেস", icon: "🏪", count: 18 },
-  { id: 11, name: "গেস্ট হাউস", icon: "🏨", count: 34 },
-  { id: 12, name: "গ্রামীণ বাসস্থান", icon: "🏡", count: 15 },
-  { id: 13, name: "স্টুডিও", icon: "🎬", count: 22 }
+  { 
+    id: 1, 
+    name: "বাসা বাড়ি", 
+    icon: "🏠", 
+    count: 120,
+    description: "আবাসিক সম্পত্তি ভাড়া",
+    trending: true,
+    averagePrice: "৳২০,০০০-৮০,০০০/মাস",
+    features: ["ফার্নিশড", "আনফার্নিশড", "ব্যাচেলর", "ফ্যামিলি"],
+    popularAreas: ["গুলশান", "ধানমন্ডি", "বনানী", "উত্তরা"]
+  },
+  { 
+    id: 2, 
+    name: "ইলেকট্রনিক্স", 
+    icon: "💻", 
+    count: 85,
+    description: "ইলেকট্রনিক পণ্য ভাড়া",
+    trending: false,
+    averagePrice: "৳৫০০-৩,০০০/দিন",
+    features: ["ক্যামেরা", "ল্যাপটপ", "প্রজেক্টর", "সাউন্ড সিস্টেম"],
+    popularAreas: ["ধানমন্ডি", "নিউমার্কেট", "বনানী", "মিরপুর"]
+  },
+  { 
+    id: 3, 
+    name: "পরিবহন", 
+    icon: "🚗", 
+    count: 95,
+    description: "গাড়ি ও পরিবহন ভাড়া",
+    trending: true,
+    averagePrice: "৳২,০০০-১০,০০০/দিন",
+    features: ["প্রাইভেট কার", "মাইক্রোবাস", "ট্রাক", "মোটরসাইকেল"],
+    popularAreas: ["সাভার", "মিরপুর", "উত্তরা", "বাড্ডা"]
+  },
+  { 
+    id: 4, 
+    name: "ইভেন্ট সামগ্রী", 
+    icon: "🎪", 
+    count: 45,
+    description: "অনুষ্ঠানের জিনিসপত্র",
+    trending: false,
+    averagePrice: "৳৫০০-৫,০০০/দিন",
+    features: ["চেয়ার টেবিল", "সাউন্ড", "লাইটিং", "ডেকোরেশন"],
+    popularAreas: ["গুলশান", "ধানমন্ডি", "উত্তরা", "বনানী"]
+  },
+  { 
+    id: 5, 
+    name: "ঘরোয়া সামগ্রী", 
+    icon: "🛏️", 
+    count: 78,
+    description: "ঘরের আসবাবপত্র",
+    trending: false,
+    averagePrice: "৳১,০০০-৮,০০০/মাস",
+    features: ["ফ্রিজ", "ওয়াশিং মেশিন", "বিছানা", "সোফা"],
+    popularAreas: ["মিরপুর", "উত্তরা", "বাড্ডা", "ধানমন্ডি"]
+  },
+  { 
+    id: 6, 
+    name: "শিক্ষা সামগ্রী", 
+    icon: "📚", 
+    count: 32,
+    description: "শিক্ষা উপকরণ",
+    trending: false,
+    averagePrice: "৳৩০০-২,০০০/দিন",
+    features: ["প্রজেক্টর", "হোয়াইটবোর্ড", "বই", "কম্পিউটার"],
+    popularAreas: ["পান্থপথ", "বনানী", "ধানমন্ডি", "উত্তরা"]
+  },
+  { 
+    id: 7, 
+    name: "কৃষি যন্ত্রপাতি", 
+    icon: "🚜", 
+    count: 28,
+    description: "কৃষি কাজের যন্ত্র",
+    trending: true,
+    averagePrice: "৮০০-৩,০০০/দিন",
+    features: ["পাওয়ার টিলার", "স্প্রে মেশিন", "হারভেস্টার", "পাম্প"],
+    popularAreas: ["সাভার", "গাজীপুর", "নারায়ণগঞ্জ", "মানিকগঞ্জ"]
+  },
+  { 
+    id: 8, 
+    name: "ব্যবসায়িক সামগ্রী", 
+    icon: "💼", 
+    count: 56,
+    description: "ব্যবসার জন্য সরঞ্জাম",
+    trending: false,
+    averagePrice: "৳১,০০০-৮,০০০/মাস",
+    features: ["POS মেশিন", "CCTV", "ক্যাশ রেজিস্টার", "অফিস সরঞ্জাম"],
+    popularAreas: ["নিউমার্কেট", "গুলশান", "মতিঝিল", "ধানমন্ডি"]
+  },
+  { 
+    id: 9, 
+    name: "কারিগরি টুলস", 
+    icon: "🔧", 
+    count: 42,
+    description: "নির্মাণ ও মেরামতের টুলস",
+    trending: false,
+    averagePrice: "৩০০-২,০০০/দিন",
+    features: ["ড্রিল মেশিন", "কাটিং টুলস", "ওয়েল্ডিং", "মাপার যন্ত্র"],
+    popularAreas: ["মিরপুর", "তেজগাঁও", "শ্যামপুর", "কামরাঙ্গীরচর"]
+  },
+  { 
+    id: 10, 
+    name: "কমার্শিয়াল স্পেস", 
+    icon: "🏪", 
+    count: 18,
+    description: "ব্যবসায়িক জায়গা",
+    trending: true,
+    averagePrice: "৳২০,০০০-১,৫০,০০০/মাস",
+    features: ["অফিস স্পেস", "দোকান", "গুদাম", "শোরুম"],
+    popularAreas: ["বনানী", "নিউমার্কেট", "গুলশান", "মতিঝিল"]
+  },
+  { 
+    id: 11, 
+    name: "গেস্ট হাউস", 
+    icon: "🏨", 
+    count: 34,
+    description: "অস্থায়ী বাসস্থান",
+    trending: false,
+    averagePrice: "৳১,০০০-৫,০০০/রাত",
+    features: ["শর্ট স্টে", "গেস্ট রুম", "সার্ভিস অ্যাপার্টমেন্ট", "হোস্টেল"],
+    popularAreas: ["ধানমন্ডি", "উত্তরা", "গুলশান", "বনানী"]
+  },
+  { 
+    id: 12, 
+    name: "গ্রামীণ বাসস্থান", 
+    icon: "🏡", 
+    count: 15,
+    description: "গ্রামের পরিবেশে থাকার জায়গা",
+    trending: false,
+    averagePrice: "৫০০-২,০০০/রাত",
+    features: ["পুকুরপাড়ের বাড়ি", "টিনের ঘর", "মাটির ঘর", "বাগান বাড়ি"],
+    popularAreas: ["নারায়ণগঞ্জ", "মানিকগঞ্জ", "গাজীপুর", "টাঙ্গাইল"]
+  },
+  { 
+    id: 13, 
+    name: "স্টুডিও", 
+    icon: "🎬", 
+    count: 22,
+    description: "ভিডিও ও ফটো স্টুডিও",
+    trending: true,
+    averagePrice: "৳১,০০০-৫,০০০/ঘন্টা",
+    features: ["ভিডিও স্টুডিও", "ফটো স্টুডিও", "কুকিং স্টুডিও", "মিউজিক স্টুডিও"],
+    popularAreas: ["ধানমন্ডি", "বনানী", "গুলশান", "উত্তরা"]
+  }
 ];
 
+// Sample rental data
 const rentListings = [
   // বাসা বাড়ি listings
   {
@@ -479,15 +620,57 @@ const Rentals = () => {
   const renderCategoryItem = (category: any, index: number) => (
     <Card 
       key={category.id} 
-      className="text-center hover:shadow-md transition-shadow cursor-pointer"
+      className="text-center hover:shadow-lg transition-all duration-300 cursor-pointer group border-2 hover:border-primary/20"
       onClick={() => handleCategoryClick(category)}
     >
-      <CardContent className="p-3 flex flex-col items-center">
-        <div className="text-2xl mb-2">{category.icon}</div>
-        <h3 className="font-medium text-xs mb-1">{category.name}</h3>
-        <Badge variant="secondary" className="text-xs">
-          {category.count}
-        </Badge>
+      <CardContent className="p-4 flex flex-col items-center relative">
+        {category.trending && (
+          <Badge className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs flex items-center gap-1">
+            <TrendingUp className="h-3 w-3" />
+            ট্রেন্ডিং
+          </Badge>
+        )}
+        
+        <div className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">
+          {category.icon}
+        </div>
+        
+        <h3 className="font-semibold text-sm mb-2 text-center group-hover:text-primary transition-colors">
+          {category.name}
+        </h3>
+        
+        <p className="text-xs text-muted-foreground mb-2 text-center leading-tight">
+          {category.description}
+        </p>
+        
+        <div className="flex items-center justify-between w-full mb-2">
+          <Badge variant="secondary" className="text-xs flex items-center gap-1">
+            <Users className="h-3 w-3" />
+            {category.count}
+          </Badge>
+          <div className="flex items-center">
+            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+            <span className="text-xs ml-1">4.{Math.floor(Math.random() * 4) + 5}</span>
+          </div>
+        </div>
+        
+        <div className="text-xs font-medium text-primary mb-2">
+          {category.averagePrice}
+        </div>
+        
+        <div className="flex flex-wrap gap-1 justify-center mb-2">
+          {category.features.slice(0, 2).map((feature, idx) => (
+            <Badge key={idx} variant="outline" className="text-xs px-1 py-0">
+              {feature}
+            </Badge>
+          ))}
+        </div>
+        
+        <div className="flex items-center text-xs text-muted-foreground">
+          <MapPin className="h-3 w-3 mr-1" />
+          <span>{category.popularAreas[0]}+</span>
+          <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+        </div>
       </CardContent>
     </Card>
   );
@@ -513,22 +696,121 @@ const Rentals = () => {
             renderCategoryItem={renderCategoryItem}
           />
           
-          {/* Selected Category Listings */}
+          {/* Selected Category Detailed View */}
           {selectedCategory && (
             <div className="mt-8">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-medium flex items-center gap-2">
-                  <span className="text-2xl">{selectedCategory.icon}</span>
-                  {selectedCategory.name}
-                </h2>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => setSelectedCategory(null)}
-                >
-                  বন্ধ করুন
+              {/* Category Header with Enhanced Info */}
+              <Card className="mb-6 bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-4">
+                      <div className="text-4xl">{selectedCategory.icon}</div>
+                      <div>
+                        <h2 className="text-2xl font-bold flex items-center gap-2">
+                          {selectedCategory.name}
+                          {selectedCategory.trending && (
+                            <Badge className="bg-orange-500 text-white flex items-center gap-1">
+                              <TrendingUp className="h-3 w-3" />
+                              ট্রেন্ডিং
+                            </Badge>
+                          )}
+                        </h2>
+                        <p className="text-muted-foreground">{selectedCategory.description}</p>
+                      </div>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setSelectedCategory(null)}
+                    >
+                      বন্ধ করুন
+                    </Button>
+                  </div>
+                  
+                  {/* Category Stats */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                    <div className="text-center">
+                      <div className="flex items-center justify-center gap-1 text-lg font-semibold text-primary">
+                        <Users className="h-4 w-4" />
+                        {selectedCategory.count}
+                      </div>
+                      <p className="text-xs text-muted-foreground">মোট লিস্টিং</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="flex items-center justify-center gap-1 text-lg font-semibold text-green-600">
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        4.{Math.floor(Math.random() * 4) + 5}
+                      </div>
+                      <p className="text-xs text-muted-foreground">গড় রেটিং</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="flex items-center justify-center gap-1 text-lg font-semibold text-blue-600">
+                        <Clock className="h-4 w-4" />
+                        তাৎক্ষণিক
+                      </div>
+                      <p className="text-xs text-muted-foreground">উপলব্ধতা</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="flex items-center justify-center gap-1 text-lg font-semibold text-purple-600">
+                        <Shield className="h-4 w-4" />
+                        নিরাপদ
+                      </div>
+                      <p className="text-xs text-muted-foreground">যাচাইকৃত</p>
+                    </div>
+                  </div>
+                  
+                  {/* Price Range */}
+                  <div className="mb-4">
+                    <h4 className="font-medium mb-2">দামের পরিসর</h4>
+                    <Badge variant="secondary" className="text-sm px-3 py-1">
+                      {selectedCategory.averagePrice}
+                    </Badge>
+                  </div>
+                  
+                  {/* Features */}
+                  <div className="mb-4">
+                    <h4 className="font-medium mb-2">বৈশিষ্ট্যসমূহ</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedCategory.features.map((feature: string, idx: number) => (
+                        <Badge key={idx} variant="outline" className="text-sm">
+                          {feature}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Popular Areas */}
+                  <div>
+                    <h4 className="font-medium mb-2">জনপ্রিয় এলাকা</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedCategory.popularAreas.map((area: string, idx: number) => (
+                        <Badge key={idx} variant="secondary" className="text-sm flex items-center gap-1">
+                          <MapPin className="h-3 w-3" />
+                          {area}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              {/* Filter and Search Bar */}
+              <div className="flex flex-col md:flex-row gap-4 mb-6">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <input
+                    type="text"
+                    placeholder={`${selectedCategory.name} এ খুঁজুন...`}
+                    className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Filter className="h-4 w-4" />
+                  ফিল্টার
                 </Button>
               </div>
+              
+              {/* Category Listings */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {getListingsByCategory(selectedCategory.name).map((rental) => (
                   <RentalCard
@@ -538,8 +820,10 @@ const Rentals = () => {
                   />
                 ))}
                 {getListingsByCategory(selectedCategory.name).length === 0 && (
-                  <div className="col-span-full text-center py-8 text-muted-foreground">
-                    এই ক্যাটাগরিতে কোন লিস্টিং পাওয়া যায়নি
+                  <div className="col-span-full text-center py-12">
+                    <div className="text-4xl mb-4">😔</div>
+                    <h3 className="text-lg font-medium mb-2">কোন লিস্টিং পাওয়া যায়নি</h3>
+                    <p className="text-muted-foreground">এই ক্যাটাগরিতে এখনও কোন লিস্টিং যোগ করা হয়নি</p>
                   </div>
                 )}
               </div>
