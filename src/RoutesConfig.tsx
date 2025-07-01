@@ -34,6 +34,8 @@ import Rentals from './pages/Rentals';
 import RentAnything from './pages/RentAnything';
 import BasaBari from './pages/BasaBari';
 import RentalCategoryPage from './pages/RentalCategoryPage';
+import RentalDetails from './pages/RentalDetails';
+import RentalBooking from './pages/RentalBooking';
 import { FeatureSelectionPage } from './pages/FeatureSelectionPage';
 import CreateLinkInBio from './pages/CreateLinkInBio';
 import CreatorPaymentGateway from '@/pages/CreatorPaymentGateway';
@@ -131,6 +133,10 @@ const RoutesConfig = () => {
       <Route path="/rent-anything" element={<RentAnything />} />
       <Route path="/rental-category/:categoryId" element={<RentalCategoryPage />} />
       <Route path="/basa-bari" element={<BasaBari />} />
+      
+      {/* Rental Routes */}
+      <Route path="/rental-details/:id" element={<RentalDetails />} />
+      <Route path="/rental-booking/:id" element={<RentalBooking />} />
       
       {/* Support and Dispute */}
       <Route path="/help/dispute-center" element={<DisputeCenter />} />

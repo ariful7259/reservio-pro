@@ -1,187 +1,155 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ChevronRight } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
-import { useToast } from '@/hooks/use-toast';
-import { useApp } from '@/context/AppContext';
-
-// Data imports
-import { rentCategories } from '@/data/rentalCategoriesData';
-import { featuredListings, bannerImages, generateMockResults } from '@/data/rentalMockData';
-
-// Component imports
-import MapView from '@/components/MapView';
-import SocialShareModal from '@/components/SocialShareModal';
-import EnhancedHousingSection from '@/components/housing/EnhancedHousingSection';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CategoryGrid from '@/components/rentals/CategoryGrid';
-import BannerCarousel from '@/components/rentals/BannerCarousel';
-import FeaturedListings from '@/components/rentals/FeaturedListings';
-import FilterSection from '@/components/rentals/FilterSection';
-import SectionToggle from '@/components/rentals/SectionToggle';
-import CategoryModal from '@/components/rentals/CategoryModal';
-import SubcategoryResults from '@/components/rentals/SubcategoryResults';
-import RentalsHeader from '@/components/rentals/RentalsHeader';
-import RentalCategoryItem from '@/components/rentals/RentalCategoryItem';
+import RentalCard from '@/components/rentals/RentalCard';
+import SocialShareModal from '@/components/SocialShareModal';
+import { useToast } from '@/components/ui/use-toast';
+
+// Sample rental data
+const rentCategories = [
+  { id: 1, name: "বাসা বাড়ি", icon: "🏠", count: 120 },
+  { id: 2, name: "ইলেকট্রনিক্স", icon: "💻", count: 85 },
+  { id: 3, name: "পরিবহন", icon: "🚗", count: 95 },
+  { id: 4, name: "ইভেন্ট সামগ্রী", icon: "🎪", count: 45 },
+  { id: 5, name: "ঘরোয়া সামগ্রী", icon: "🛏️", count: 78 },
+  { id: 6, name: "শিক্ষা সামগ্রী", icon: "📚", count: 32 },
+  { id: 7, name: "কৃষি যন্ত্রপাতি", icon: "🚜", count: 28 },
+  { id: 8, name: "ব্যবসায়িক সামগ্রী", icon: "💼", count: 56 },
+  { id: 9, name: "কারিগরি টুলস", icon: "🔧", count: 42 },
+  { id: 10, name: "কমার্শিয়াল স্পেস", icon: "🏪", count: 18 },
+  { id: 11, name: "গেস্ট হাউস", icon: "🏨", count: 34 },
+  { id: 12, name: "গ্রামীণ বাসস্থান", icon: "🏡", count: 15 },
+  { id: 13, name: "স্টুডিও", icon: "🎬", count: 22 }
+];
+
+const rentListings = [
+  {
+    id: "1",
+    title: "৩ বেডরুম অ্যাপার্টমেন্ট",
+    provider: "কামাল হোসেন",
+    location: "গুলশান, ঢাকা",
+    price: "৳২৫,০০০/মাস",
+    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1000&auto=format&fit=crop",
+    category: "apartment",
+    subcategory: "বাসা বাড়ি",
+    rating: 4.8,
+    reviews: 34
+  },
+  {
+    id: "2",
+    title: "অফিস স্পেস",
+    provider: "রশিদ আহমেদ",
+    location: "বনানী, ঢাকা",
+    price: "৳৫০,০০০/মাস",
+    image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1000&auto=format&fit=crop",
+    category: "office",
+    subcategory: "কমার্শিয়াল স্পেস",
+    rating: 4.6,
+    reviews: 27
+  },
+  {
+    id: "3",
+    title: "টয়োটা কোরোলা",
+    provider: "সাইফুল ইসলাম",
+    location: "মিরপুর, ঢাকা",
+    price: "৳৫,০০০/দিন",
+    image: "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=1000&auto=format&fit=crop",
+    category: "car",
+    subcategory: "পরিবহন",
+    rating: 4.9,
+    reviews: 56
+  },
+  {
+    id: "4",
+    title: "ডিএসএলআর ক্যামেরা",
+    provider: "তানভীর আহমেদ",
+    location: "ধানমন্ডি, ঢাকা",
+    price: "৳১,০০০/দিন",
+    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1000&auto=format&fit=crop",
+    category: "camera",
+    subcategory: "ইলেকট্রনিক্স",
+    rating: 4.7,
+    reviews: 42
+  }
+];
 
 const Rentals = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { language } = useApp();
-
-  // State
   const [isExpanded, setIsExpanded] = useState(false);
-  const [filterVisible, setFilterVisible] = useState(false);
-  const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
   const [shareItem, setShareItem] = useState<any | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [activeSection, setActiveSection] = useState<'categories' | 'housing'>('categories');
-  const [selectedCategory, setSelectedCategory] = useState<any | null>(null);
-  const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [selectedSubcategory, setSelectedSubcategory] = useState<any | null>(null);
-  const [subcategoryResults, setSubcategoryResults] = useState<any[]>([]);
-
-  // Handler functions
-  const toggleFilter = () => {
-    setFilterVisible(!filterVisible);
-  };
-
-  const handleListingClick = (id: number) => {
-    navigate(`/rent-details/${id}`);
-  };
-
-  const handleBookmark = (e: React.MouseEvent, rentalId: number) => {
-    e.stopPropagation();
-    toast({
-      title: "সংরক্ষিত হয়েছে",
-      description: "রেন্টাল আইটেমটি আপনার পছন্দের তালিকায় যোগ করা হয়েছে"
-    });
-  };
 
   const handleShare = (e: React.MouseEvent, rental: any) => {
     e.stopPropagation();
     setShareItem({
       ...rental,
-      type: 'rental'
+      type: 'rental',
     });
     setShowShareModal(true);
   };
 
-  const handleCategoryClick = (category: any) => {
-    if (category.name === "বাসা বাড়ি") {
-      setActiveSection('housing');
-      toast({
-        title: "বাসা বাড়ি সেকশন",
-        description: "হাউজিং সেকশনে স্বাগতম! এখানে সব ধরনের বাসা বাড়ি দেখুন।"
-      });
-      return;
-    }
-    
-    // Open category modal for other categories
-    setSelectedCategory(category);
-    setShowCategoryModal(true);
-    setSelectedSubcategory(null);
-  };
-
-  const handleSubcategoryClick = (subcategory: any) => {
-    setSelectedSubcategory(subcategory);
-    setShowCategoryModal(false);
-    
-    // Generate mock results based on subcategory
-    const mockResults = generateMockResults(subcategory);
-    setSubcategoryResults(mockResults);
-    
-    toast({
-      title: subcategory.name,
-      description: `${mockResults.length}টি আইটেম পাওয়া গেছে`
-    });
-  };
-
-  const renderCategoryItem = (category: any, index: number) => {
-    return (
-      <RentalCategoryItem
-        key={index}
-        category={category}
-        index={index}
-        onCategoryClick={handleCategoryClick}
-        onSubcategoryClick={handleSubcategoryClick}
-      />
-    );
-  };
+  const renderCategoryItem = (category: any, index: number) => (
+    <Card 
+      key={category.id} 
+      className="text-center hover:shadow-md transition-shadow cursor-pointer"
+      onClick={() => navigate(`/rental-category/${category.id}`)}
+    >
+      <CardContent className="p-3 flex flex-col items-center">
+        <div className="text-2xl mb-2">{category.icon}</div>
+        <h3 className="font-medium text-xs mb-1">{category.name}</h3>
+        <Badge variant="secondary" className="text-xs">
+          {category.count}
+        </Badge>
+      </CardContent>
+    </Card>
+  );
 
   return (
     <div className="container px-4 pt-20 pb-20">
-      <RentalsHeader 
-        viewMode={viewMode}
-        setViewMode={setViewMode}
-        toggleFilter={toggleFilter}
-      />
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold mb-2">ভাড়া দিন</h1>
+        <p className="text-muted-foreground">আপনার প্রয়োজনীয় যেকোনো কিছু ভাড়া নিন</p>
+      </div>
 
-      {/* Section Toggle */}
-      <SectionToggle activeSection={activeSection} setActiveSection={setActiveSection} />
-
-      {activeSection === 'housing' ? (
-        <EnhancedHousingSection language={language || 'bn'} />
-      ) : selectedSubcategory ? (
-        <>
-          <Button 
-            variant="outline" 
-            onClick={() => setSelectedSubcategory(null)}
-            className="mb-4"
-          >
-            ← ক্যাটাগরিতে ফিরে যান
-          </Button>
-          <SubcategoryResults
-            subcategory={selectedSubcategory}
-            results={subcategoryResults}
-            onItemClick={(item) => navigate(`/rent-details/${item.id}`)}
-            onBookmark={handleBookmark}
-            onShare={handleShare}
+      <Tabs defaultValue="categories" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="categories">ক্যাটাগরি</TabsTrigger>
+          <TabsTrigger value="listings">সকল লিস্টিং</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="categories" className="mt-6">
+          <CategoryGrid
+            rentCategories={rentCategories}
+            isExpanded={isExpanded}
+            setIsExpanded={setIsExpanded}
+            renderCategoryItem={renderCategoryItem}
           />
-        </>
-      ) : (
-        <>
-          <FilterSection filterVisible={filterVisible} toggleFilter={toggleFilter} />
-          <CategoryGrid 
-            rentCategories={rentCategories} 
-            isExpanded={isExpanded} 
-            setIsExpanded={setIsExpanded} 
-            renderCategoryItem={renderCategoryItem} 
-          />
-          <BannerCarousel bannerImages={bannerImages} />
-          <Separator className="my-6" />
-          <FeaturedListings 
-            featuredListings={featuredListings} 
-            viewMode={viewMode} 
-            handleListingClick={handleListingClick} 
-            handleBookmark={handleBookmark} 
-            handleShare={handleShare} 
-            MapViewComponent={MapView} 
-          />
-          <div className="mb-6">
-            <div className="flex justify-center mt-4">
-              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/services')}>
-                আরও দেখুন <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
+        </TabsContent>
+        
+        <TabsContent value="listings" className="mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {rentListings.map((rental) => (
+              <RentalCard
+                key={rental.id}
+                rental={rental}
+                onShare={handleShare}
+              />
+            ))}
           </div>
-        </>
-      )}
-
-      {/* Category Modal */}
-      <CategoryModal
-        isOpen={showCategoryModal}
-        onClose={() => setShowCategoryModal(false)}
-        category={selectedCategory}
-        onSubcategoryClick={handleSubcategoryClick}
-      />
+        </TabsContent>
+      </Tabs>
 
       {shareItem && (
         <SocialShareModal 
-          open={showShareModal} 
-          onOpenChange={setShowShareModal} 
-          item={shareItem} 
+          open={showShareModal}
+          onOpenChange={setShowShareModal}
+          item={shareItem}
         />
       )}
     </div>
