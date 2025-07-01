@@ -132,6 +132,7 @@ const Rentals = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [shareItem, setShareItem] = useState<any | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<any | null>(null);
 
   const handleShare = (e: React.MouseEvent, rental: any) => {
     e.stopPropagation();
@@ -142,11 +143,19 @@ const Rentals = () => {
     setShowShareModal(true);
   };
 
+  const handleCategoryClick = (category: any) => {
+    setSelectedCategory(category);
+  };
+
+  const getListingsByCategory = (categoryName: string) => {
+    return rentListings.filter(listing => listing.subcategory === categoryName);
+  };
+
   const renderCategoryItem = (category: any, index: number) => (
     <Card 
       key={category.id} 
       className="text-center hover:shadow-md transition-shadow cursor-pointer"
-      onClick={() => navigate(`/rental-category/${category.id}`)}
+      onClick={() => handleCategoryClick(category)}
     >
       <CardContent className="p-3 flex flex-col items-center">
         <div className="text-2xl mb-2">{category.icon}</div>
@@ -179,28 +188,63 @@ const Rentals = () => {
             renderCategoryItem={renderCategoryItem}
           />
           
+          {/* Selected Category Listings */}
+          {selectedCategory && (
+            <div className="mt-8">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-medium flex items-center gap-2">
+                  <span className="text-2xl">{selectedCategory.icon}</span>
+                  {selectedCategory.name}
+                </h2>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setSelectedCategory(null)}
+                >
+                  বন্ধ করুন
+                </Button>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {getListingsByCategory(selectedCategory.name).map((rental) => (
+                  <RentalCard
+                    key={rental.id}
+                    rental={rental}
+                    onShare={handleShare}
+                  />
+                ))}
+                {getListingsByCategory(selectedCategory.name).length === 0 && (
+                  <div className="col-span-full text-center py-8 text-muted-foreground">
+                    এই ক্যাটাগরিতে কোন লিস্টিং পাওয়া যায়নি
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+          
           {/* Featured Listings Section */}
-          <div className="mt-8">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-medium">জনপ্রিয় লিস্টিং</h2>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => navigate('/rentals?tab=listings')}
-              >
-                সব দেখুন
-              </Button>
+          {!selectedCategory && (
+            <div className="mt-8">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-medium">জনপ্রিয় লিস্টিং</h2>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => navigate('/rentals?tab=listings')}
+                >
+                  সব দেখুন
+                </Button>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {rentListings.slice(0, 8).map((rental) => (
+                  <RentalCard
+                    key={rental.id}
+                    rental={rental}
+                    onShare={handleShare}
+                  />
+                ))}
+              </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {rentListings.slice(0, 8).map((rental) => (
-                <RentalCard
-                  key={rental.id}
-                  rental={rental}
-                  onShare={handleShare}
-                />
-              ))}
-            </div>
-          </div>
+          )}
         </TabsContent>
         
         <TabsContent value="listings" className="mt-6">
