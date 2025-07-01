@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
@@ -59,6 +60,9 @@ import Orders from './pages/Orders';
 import Settings from './pages/Settings';
 import KycVerification from './pages/KycVerification';
 import ServiceCategoryPage from "./pages/ServiceCategoryPage";
+import RentDetail from './pages/RentDetail';
+import RentalBooking from './pages/RentalBooking';
+import ServiceBooking from './pages/ServiceBooking';
 
 const RoutesConfig = () => {
   return (
@@ -122,11 +126,16 @@ const RoutesConfig = () => {
       <Route path="/ratings-reviews" element={<Reviews />} />
       <Route path="/feature-selection" element={<FeatureSelectionPage />} />
       
+      {/* Booking Routes */}
+      <Route path="/service-booking/:id" element={<ServiceBooking />} />
+      <Route path="/rental-booking/:id" element={<RentalBooking />} />
+      
       {/* Housing and Rentals */}
       <Route path="/housing" element={<Housing />} />
       <Route path="/rentals" element={<Rentals />} />
       <Route path="/rent-anything" element={<RentAnything />} />
       <Route path="/rental-category/:categoryId" element={<RentalCategoryPage />} />
+      <Route path="/rent-details/:id" element={<RentDetail />} />
       <Route path="/basa-bari" element={<BasaBari />} />
       
       {/* Support and Dispute */}

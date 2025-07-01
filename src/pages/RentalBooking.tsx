@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { ChevronLeft, Calendar as CalendarIcon, Clock, CreditCard, Wallet2, Landmark } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { format, addDays } from 'date-fns';
 import { bn } from 'date-fns/locale';
 
