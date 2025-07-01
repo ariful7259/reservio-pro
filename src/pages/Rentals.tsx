@@ -75,6 +75,54 @@ const rentListings = [
     subcategory: "ইলেকট্রনিক্স",
     rating: 4.7,
     reviews: 42
+  },
+  {
+    id: "5",
+    title: "ইভেন্ট চেয়ার সেট",
+    provider: "হাসান আলী",
+    location: "উত্তরা, ঢাকা",
+    price: "৳৫০/দিন",
+    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1000&auto=format&fit=crop",
+    category: "chair",
+    subcategory: "ইভেন্ট সামগ্রী",
+    rating: 4.5,
+    reviews: 23
+  },
+  {
+    id: "6",
+    title: "ফ্রিজ ভাড়া",
+    provider: "নাসির উদ্দিন",
+    location: "বাড্ডা, ঢাকা",
+    price: "৳৩,০০০/মাস",
+    image: "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?q=80&w=1000&auto=format&fit=crop",
+    category: "fridge",
+    subcategory: "ঘরোয়া সামগ্রী",
+    rating: 4.3,
+    reviews: 18
+  },
+  {
+    id: "7",
+    title: "প্রজেক্টর ভাড়া",
+    provider: "রাহুল চন্দ্র",
+    location: "পান্থপথ, ঢাকা",
+    price: "৳৮০০/দিন",
+    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=1000&auto=format&fit=crop",
+    category: "projector",
+    subcategory: "শিক্ষা সামগ্রী",
+    rating: 4.6,
+    reviews: 31
+  },
+  {
+    id: "8",
+    title: "মিনি ট্রাক ভাড়া",
+    provider: "আবুল কালাম",
+    location: "সাভার, ঢাকা",
+    price: "৳২,৫০০/দিন",
+    image: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?q=80&w=1000&auto=format&fit=crop",
+    category: "truck",
+    subcategory: "পরিবহন",
+    rating: 4.8,
+    reviews: 45
   }
 ];
 
@@ -130,6 +178,29 @@ const Rentals = () => {
             setIsExpanded={setIsExpanded}
             renderCategoryItem={renderCategoryItem}
           />
+          
+          {/* Featured Listings Section */}
+          <div className="mt-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-medium">জনপ্রিয় লিস্টিং</h2>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => navigate('/rentals?tab=listings')}
+              >
+                সব দেখুন
+              </Button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {rentListings.slice(0, 8).map((rental) => (
+                <RentalCard
+                  key={rental.id}
+                  rental={rental}
+                  onShare={handleShare}
+                />
+              ))}
+            </div>
+          </div>
         </TabsContent>
         
         <TabsContent value="listings" className="mt-6">
