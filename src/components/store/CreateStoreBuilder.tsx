@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { 
   Store, Palette, Settings, CreditCard, Truck, BarChart3, 
-  Globe, Shield, MessageSquare, Upload, Zap, CheckCircle2 
+  Globe, Shield, MessageSquare, Upload, Zap, CheckCircle2, Eye
 } from 'lucide-react';
 import StoreDesignEditor from './StoreDesignEditor';
 import ProductManagement from './ProductManagement';
@@ -43,6 +44,7 @@ const CreateStoreBuilder: React.FC = () => {
     address: ''
   });
   const [isCreating, setIsCreating] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const handleInputChange = (field: keyof StoreData, value: string) => {
     setStoreData(prev => ({ ...prev, [field]: value }));
@@ -52,18 +54,40 @@ const CreateStoreBuilder: React.FC = () => {
     setStoreData(prev => ({ ...prev, [field]: file }));
   };
 
+  const handlePreview = () => {
+    setIsPreviewOpen(true);
+    toast({
+      title: "প্রিভিউ খোলা হচ্ছে",
+      description: "আপনার স্টোরের প্রিভিউ দেখানো হচ্ছে...",
+    });
+    // Open preview in a new window or modal
+    window.open('/store-demo', '_blank');
+  };
+
   const createStore = async () => {
+    if (!storeData.storeName.trim() || !storeData.ownerName.trim() || !storeData.ownerEmail.trim()) {
+      toast({
+        title: "তথ্য অসম্পূর্ণ",
+        description: "অনুগ্রহ করে সব প্রয়োজনীয় তথ্য পূরণ করুন।",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsCreating(true);
     try {
       // Simulate store creation process
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 3000));
       
       toast({
         title: "স্টোর তৈরি সফল! 🎉",
         description: `${storeData.storeName} সফলভাবে তৈরি হয়েছে। আপনার স্টোর এখন লাইভ!`,
       });
       
-      // Here you would typically redirect to the store dashboard
+      // Redirect to store dashboard
+      setTimeout(() => {
+        window.location.href = '/seller-dashboard/marketplace';
+      }, 2000);
     } catch (error) {
       toast({
         title: "ত্রুটি হয়েছে",
@@ -87,19 +111,19 @@ const CreateStoreBuilder: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-2 md:p-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Header - Responsive */}
-        <div className="text-center mb-6 md:mb-8 px-2">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-0">
+      <div className="w-full">
+        {/* Full Width Header */}
+        <div className="text-center mb-6 md:mb-8 px-4">
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent mb-2 md:mb-4">
             আপনার অনলাইন স্টোর তৈরি করুন
           </h1>
-          <p className="text-sm md:text-base text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-sm md:text-base text-gray-600 max-w-4xl mx-auto leading-relaxed">
             সহজেই একটি পেশাদার অনলাইন স্টোর তৈরি করুন। সব ফিচার সহ, সম্পূর্ণ রেসপন্সিভ ডিজাইন।
           </p>
         </div>
 
-        <Card className="shadow-2xl border-0">
+        <Card className="shadow-2xl border-0 w-full">
           <CardContent className="p-2 sm:p-4 md:p-6 lg:p-8">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               {/* Mobile/Tablet/Desktop Responsive Tabs */}
@@ -146,7 +170,7 @@ const CreateStoreBuilder: React.FC = () => {
                 </div>
               </div>
 
-              {/* Basic Information Tab - Responsive Layout */}
+              {/* Basic Information Tab */}
               <TabsContent value="basic" className="space-y-4 md:space-y-6 mt-0">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
                   <div className="space-y-4">
@@ -158,6 +182,7 @@ const CreateStoreBuilder: React.FC = () => {
                         value={storeData.storeName}
                         onChange={(e) => handleInputChange('storeName', e.target.value)}
                         className="h-10 md:h-12 text-sm md:text-base mt-1"
+                        required
                       />
                     </div>
                     
@@ -194,6 +219,7 @@ const CreateStoreBuilder: React.FC = () => {
                         value={storeData.ownerName}
                         onChange={(e) => handleInputChange('ownerName', e.target.value)}
                         className="h-10 md:h-12 text-sm md:text-base mt-1"
+                        required
                       />
                     </div>
 
@@ -206,6 +232,7 @@ const CreateStoreBuilder: React.FC = () => {
                         value={storeData.ownerEmail}
                         onChange={(e) => handleInputChange('ownerEmail', e.target.value)}
                         className="h-10 md:h-12 text-sm md:text-base mt-1"
+                        required
                       />
                     </div>
 
@@ -217,6 +244,7 @@ const CreateStoreBuilder: React.FC = () => {
                         value={storeData.ownerPhone}
                         onChange={(e) => handleInputChange('ownerPhone', e.target.value)}
                         className="h-10 md:h-12 text-sm md:text-base mt-1"
+                        required
                       />
                     </div>
 
@@ -235,7 +263,7 @@ const CreateStoreBuilder: React.FC = () => {
                 </div>
               </TabsContent>
 
-              {/* Design Tab - Properly Structured */}
+              {/* Design Tab */}
               <TabsContent value="design" className="mt-0">
                 <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-4 md:p-6 border">
                   <div className="flex items-center gap-3 mb-6">
@@ -273,7 +301,7 @@ const CreateStoreBuilder: React.FC = () => {
                 </div>
               </TabsContent>
 
-              {/* Other Tabs with proper structure */}
+              {/* Payment Tab */}
               <TabsContent value="payment" className="mt-0">
                 <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-4 md:p-6 border">
                   <div className="flex items-center gap-3 mb-6">
@@ -292,6 +320,7 @@ const CreateStoreBuilder: React.FC = () => {
                 </div>
               </TabsContent>
 
+              {/* Shipping Tab */}
               <TabsContent value="shipping" className="mt-0">
                 <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 md:p-6 border">
                   <div className="flex items-center gap-3 mb-6">
@@ -310,6 +339,7 @@ const CreateStoreBuilder: React.FC = () => {
                 </div>
               </TabsContent>
 
+              {/* SEO Tab */}
               <TabsContent value="seo" className="mt-0">
                 <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl p-4 md:p-6 border">
                   <div className="flex items-center gap-3 mb-6">
@@ -328,6 +358,7 @@ const CreateStoreBuilder: React.FC = () => {
                 </div>
               </TabsContent>
 
+              {/* Analytics Tab */}
               <TabsContent value="analytics" className="mt-0">
                 <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-xl p-4 md:p-6 border">
                   <div className="flex items-center gap-3 mb-6">
@@ -346,6 +377,7 @@ const CreateStoreBuilder: React.FC = () => {
                 </div>
               </TabsContent>
 
+              {/* Settings Tab */}
               <TabsContent value="settings" className="mt-0">
                 <div className="space-y-4 md:space-y-6">
                   <div className="bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl p-4 md:p-6 border">
@@ -382,21 +414,26 @@ const CreateStoreBuilder: React.FC = () => {
               </TabsContent>
             </Tabs>
 
-            {/* Action Buttons - Responsive */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-6 md:mt-8 pt-4 md:pt-6 border-t">
+            {/* Action Buttons - Full Width Responsive */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-6 md:mt-8 pt-4 md:pt-6 border-t w-full">
               <div className="flex items-center gap-2 text-xs md:text-sm text-gray-600">
                 <CheckCircle2 className="h-4 w-4 text-green-500" />
                 সব ফিচার বিনামূল্যে
               </div>
               
               <div className="flex flex-col sm:flex-row gap-2 md:gap-3 w-full sm:w-auto">
-                <Button variant="outline" className="px-4 md:px-6 text-xs md:text-sm h-9 md:h-10 border-2 hover:bg-gray-50">
+                <Button 
+                  variant="outline" 
+                  onClick={handlePreview}
+                  className="px-4 md:px-6 text-xs md:text-sm h-9 md:h-10 border-2 hover:bg-gray-50 flex items-center gap-2"
+                >
+                  <Eye className="h-3 w-3 md:h-4 md:w-4" />
                   প্রিভিউ দেখুন
                 </Button>
                 <Button 
                   onClick={createStore}
-                  disabled={isCreating || !storeData.storeName || !storeData.ownerName}
-                  className="px-6 md:px-8 bg-gradient-to-r from-primary to-purple-600 hover:shadow-lg text-xs md:text-sm h-9 md:h-10 font-semibold"
+                  disabled={isCreating || !storeData.storeName || !storeData.ownerName || !storeData.ownerEmail}
+                  className="px-6 md:px-8 bg-gradient-to-r from-primary to-purple-600 hover:shadow-lg text-xs md:text-sm h-9 md:h-10 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isCreating ? (
                     <>
