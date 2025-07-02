@@ -1,10 +1,15 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Store, Verified, Star, Heart } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { useToast } from '@/hooks/use-toast';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 
 interface LocalBrand {
   id: string;
@@ -24,6 +29,16 @@ interface LocalBrand {
 
 const LocalBrandsSection = () => {
   const { language } = useApp();
+  const { toast } = useToast();
+  const [isRegisterDialogOpen, setIsRegisterDialogOpen] = useState(false);
+  const [registerForm, setRegisterForm] = useState({
+    brandName: '',
+    brandType: '',
+    location: '',
+    description: '',
+    website: '',
+    phone: ''
+  });
 
   const localBrands: LocalBrand[] = [
     {
@@ -58,6 +73,39 @@ const LocalBrandsSection = () => {
     }
   ];
 
+  const handleRegisterSubmit = () => {
+    if (!registerForm.brandName || !registerForm.brandType || !registerForm.location) {
+      toast({
+        title: "তথ্য অসম্পূর্ণ",
+        description: "অনুগ্রহ করে সব প্রয়োজনীয় তথ্য পূরণ করুন।",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    toast({
+      title: "রেজিস্ট্রেশন সফল!",
+      description: "আপনার ব্র্যান্ডের রেজিস্ট্রেশন সফলভাবে সম্পন্ন হয়েছে। আমরা শীঘ্রই যোগাযোগ করব।",
+    });
+
+    setIsRegisterDialogOpen(false);
+    setRegisterForm({
+      brandName: '',
+      brandType: '',
+      location: '',
+      description: '',
+      website: '',
+      phone: ''
+    });
+  };
+
+  const handleViewProduct = (brand: LocalBrand) => {
+    toast({
+      title: "পণ্য দেখা হচ্ছে",
+      description: `${brand.featuredProduct.title} এর বিস্তারিত দেখানো হচ্ছে...`,
+    });
+  };
+
   return (
     <Card className="mb-6 bg-gradient-to-r from-violet-50 to-purple-50 border-violet-200">
       <CardHeader>
@@ -69,9 +117,78 @@ const LocalBrandsSection = () => {
               {language === 'bn' ? 'স্থানীয় সাপোর্ট' : 'Support Local'}
             </Badge>
           </CardTitle>
-          <Button size="sm" className="bg-violet-500 hover:bg-violet-600">
-            {language === 'bn' ? 'ব্র্যান্ড রেজিস্টার' : 'Register Brand'}
-          </Button>
+          <Dialog open={isRegisterDialogOpen} onOpenChange={setIsRegisterDialogOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" className="bg-violet-500 hover:bg-violet-600">
+                {language === 'bn' ? 'ব্র্যান্ড রেজিস্টার' : 'Register Brand'}
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px] max-h-[80vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>আপনার ব্র্যান্ড রেজিস্টার করুন</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 pt-4">
+                <div>
+                  <Label htmlFor="brandName">ব্র্যান্ডের নাম *</Label>
+                  <Input
+                    id="brandName"
+                    value={registerForm.brandName}
+                    onChange={(e) => setRegisterForm({...registerForm, brandName: e.target.value})}
+                    placeholder="আপনার ব্র্যান্ডের নাম"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="brandType">ব্র্যান্ডের ধরন *</Label>
+                  <Input
+                    id="brandType"
+                    value={registerForm.brandType}
+                    onChange={(e) => setRegisterForm({...registerForm, brandType: e.target.value})}
+                    placeholder="যেমন: হস্তশিল্প, পোশাক, খাবার"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="location">অবস্থান *</Label>
+                  <Input
+                    id="location"
+                    value={registerForm.location}
+                    onChange={(e) => setRegisterForm({...registerForm, location: e.target.value})}
+                    placeholder="যেমন: ঢাকা, চট্টগ্রাম"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="phone">ফোন নম্বর</Label>
+                  <Input
+                    id="phone"
+                    value={registerForm.phone}
+                    onChange={(e) => setRegisterForm({...registerForm, phone: e.target.value})}
+                    placeholder="01XXXXXXXXX"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="website">ওয়েবসাইট</Label>
+                  <Input
+                    id="website"
+                    value={registerForm.website}
+                    onChange={(e) => setRegisterForm({...registerForm, website: e.target.value})}
+                    placeholder="www.example.com"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="description">ব্র্যান্ড সম্পর্কে</Label>
+                  <Textarea
+                    id="description"
+                    value={registerForm.description}
+                    onChange={(e) => setRegisterForm({...registerForm, description: e.target.value})}
+                    placeholder="আপনার ব্র্যান্ড সম্পর্কে বিস্তারিত লিখুন..."
+                    rows={3}
+                  />
+                </div>
+                <Button onClick={handleRegisterSubmit} className="w-full">
+                  রেজিস্টার করুন
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </CardHeader>
       <CardContent>
@@ -125,7 +242,12 @@ const LocalBrandsSection = () => {
                       <span className="font-bold text-violet-600 text-sm">
                         {brand.featuredProduct.price}
                       </span>
-                      <Button size="sm" variant="outline" className="h-6 px-2 text-xs">
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="h-6 px-2 text-xs"
+                        onClick={() => handleViewProduct(brand)}
+                      >
                         <Heart className="h-3 w-3 mr-1" />
                         দেখুন
                       </Button>

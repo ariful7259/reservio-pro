@@ -5,6 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Clock, Heart, Star, Zap } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { useShoppingStateWithToast } from '@/hooks/useShoppingState';
+import { useToast } from '@/hooks/use-toast';
 
 interface FlashDeal {
   id: string;
@@ -21,6 +23,8 @@ interface FlashDeal {
 const FlashDealsSection = () => {
   const { language } = useApp();
   const [timeLeft, setTimeLeft] = useState(120); // 2 hours in minutes
+  const { addToCartWithToast } = useShoppingStateWithToast();
+  const { toast } = useToast();
 
   // Demo flash deals
   const flashDeals: FlashDeal[] = [
@@ -61,6 +65,30 @@ const FlashDealsSection = () => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     return `${hours}:${mins.toString().padStart(2, '0')}`;
+  };
+
+  const handleBuyNow = (deal: FlashDeal) => {
+    // Add to cart first
+    addToCartWithToast({
+      id: deal.id,
+      title: deal.title,
+      price: deal.discountPrice,
+      image: deal.image
+    });
+    
+    // Show success message and simulate redirect to checkout
+    toast({
+      title: "অর্ডার প্রসেসিং",
+      description: `${deal.title} এর অর্ডার প্রসেস করা হচ্ছে...`,
+    });
+    
+    // Simulate redirect to checkout after 1 second
+    setTimeout(() => {
+      toast({
+        title: "চেকআউট পেইজে পাঠানো হচ্ছে",
+        description: "আপনার অর্ডার সম্পূর্ণ করতে চেকআউট পেইজে যাচ্ছেন...",
+      });
+    }, 1000);
   };
 
   return (
@@ -106,7 +134,11 @@ const FlashDealsSection = () => {
                   <span>{deal.sold} বিক্রিত</span>
                   <span>{deal.stock} স্টক</span>
                 </div>
-                <Button size="sm" className="w-full bg-red-500 hover:bg-red-600">
+                <Button 
+                  size="sm" 
+                  className="w-full bg-red-500 hover:bg-red-600"
+                  onClick={() => handleBuyNow(deal)}
+                >
                   {language === 'bn' ? 'এখনই কিনুন' : 'Buy Now'}
                 </Button>
               </CardContent>

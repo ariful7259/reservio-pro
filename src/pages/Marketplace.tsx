@@ -11,7 +11,8 @@ import {
   Heart, 
   Star, 
   MapPin,
-  ShoppingCart
+  ShoppingCart,
+  Zap
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { MarketplaceCategoryGrid } from '@/components/marketplace/MarketplaceCategoryGrid';
@@ -20,6 +21,8 @@ import UsedProductsSection from '@/components/marketplace/UsedProductsSection';
 import LocalBrandsSection from '@/components/marketplace/LocalBrandsSection';
 import MarketplaceCategoryFilterForm from '@/components/marketplace/MarketplaceCategoryFilterForm';
 import { marketplaceCategories } from '@/utils/marketplaceData';
+import { useShoppingStateWithToast } from '@/hooks/useShoppingState';
+import { useToast } from '@/hooks/use-toast';
 
 const Marketplace = () => {
   const { language, t } = useApp();
@@ -29,6 +32,8 @@ const Marketplace = () => {
   const [selectedSubcategory, setSelectedSubcategory] = useState('all');
   const [selectedLocation, setSelectedLocation] = useState('all');
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+  const { addToCartWithToast } = useShoppingStateWithToast();
+  const { toast } = useToast();
 
   const featuredProducts = [
     {
@@ -88,6 +93,39 @@ const Marketplace = () => {
     
     return matchesSearch && matchesLocation;
   });
+
+  const handleAddToCart = (product: any) => {
+    addToCartWithToast({
+      id: product.id.toString(),
+      title: product.title,
+      price: product.price,
+      image: product.image
+    });
+  };
+
+  const handleBuyNow = (product: any) => {
+    // Add to cart first
+    addToCartWithToast({
+      id: product.id.toString(),
+      title: product.title,
+      price: product.price,
+      image: product.image
+    });
+    
+    // Show buy now message
+    toast({
+      title: "অর্ডার প্রসেসিং",
+      description: `${product.title} এর অর্ডার প্রসেস করা হচ্ছে...`,
+    });
+    
+    // Simulate redirect to checkout
+    setTimeout(() => {
+      toast({
+        title: "চেকআউট পেইজে পাঠানো হচ্ছে",
+        description: "আপনার অর্ডার সম্পূর্ণ করতে চেকআউট পেইজে যাচ্ছেন...",
+      });
+    }, 1000);
+  };
 
   return (
     <div className="container px-4 pt-20 pb-20">
@@ -226,14 +264,29 @@ const Marketplace = () => {
                       <span className="font-bold text-primary">{product.price}</span>
                       <span className="text-xs text-muted-foreground line-through">{product.originalPrice}</span>
                     </div>
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground mb-2">
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground mb-3">
                       <MapPin className="h-3 w-3" />
                       <span>{product.location}</span>
                     </div>
-                    <Button size="sm" className="w-full">
-                      <ShoppingCart className="h-4 w-4 mr-1" />
-                      {language === 'bn' ? 'কার্টে যোগ করুন' : 'Add to Cart'}
-                    </Button>
+                    <div className="space-y-2">
+                      <Button 
+                        size="sm" 
+                        className="w-full"
+                        onClick={() => handleAddToCart(product)}
+                      >
+                        <ShoppingCart className="h-4 w-4 mr-1" />
+                        {language === 'bn' ? 'কার্টে যোগ করুন' : 'Add to Cart'}
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => handleBuyNow(product)}
+                      >
+                        <Zap className="h-4 w-4 mr-1" />
+                        {language === 'bn' ? 'এখনই কিনুন' : 'Buy Now'}
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               ) : (
@@ -257,13 +310,32 @@ const Marketplace = () => {
                         <span className="font-bold text-primary">{product.price}</span>
                         <span className="text-xs text-muted-foreground line-through">{product.originalPrice}</span>
                       </div>
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-1 text-xs text-muted-foreground">
                           <MapPin className="h-3 w-3" />
                           <span>{product.location}</span>
                         </div>
                         <Button variant="outline" size="icon" className="h-8 w-8">
                           <Heart className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button 
+                          size="sm" 
+                          className="flex-1"
+                          onClick={() => handleAddToCart(product)}
+                        >
+                          <ShoppingCart className="h-4 w-4 mr-1" />
+                          কার্ট
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          className="flex-1"
+                          onClick={() => handleBuyNow(product)}
+                        >
+                          <Zap className="h-4 w-4 mr-1" />
+                          কিনুন
                         </Button>
                       </div>
                     </div>
