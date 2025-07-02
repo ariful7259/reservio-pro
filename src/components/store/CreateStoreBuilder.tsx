@@ -1,0 +1,311 @@
+
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
+import { 
+  Store, Palette, Settings, CreditCard, Truck, BarChart3, 
+  Globe, Shield, MessageSquare, Upload, Zap, CheckCircle2 
+} from 'lucide-react';
+import StoreDesignEditor from './StoreDesignEditor';
+import ProductManagement from './ProductManagement';
+import PaymentGatewaySetup from './PaymentGatewaySetup';
+import ShippingConfiguration from './ShippingConfiguration';
+import SEOSettings from './SEOSettings';
+import AnalyticsSetup from './AnalyticsSetup';
+
+interface StoreData {
+  storeName: string;
+  storeDescription: string;
+  storeCategory: string;
+  ownerName: string;
+  ownerEmail: string;
+  ownerPhone: string;
+  address: string;
+  logo?: File;
+  banner?: File;
+}
+
+const CreateStoreBuilder: React.FC = () => {
+  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState('basic');
+  const [storeData, setStoreData] = useState<StoreData>({
+    storeName: '',
+    storeDescription: '',
+    storeCategory: '',
+    ownerName: '',
+    ownerEmail: '',
+    ownerPhone: '',
+    address: ''
+  });
+  const [isCreating, setIsCreating] = useState(false);
+
+  const handleInputChange = (field: keyof StoreData, value: string) => {
+    setStoreData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleFileUpload = (field: 'logo' | 'banner', file: File) => {
+    setStoreData(prev => ({ ...prev, [field]: file }));
+  };
+
+  const createStore = async () => {
+    setIsCreating(true);
+    try {
+      // Simulate store creation process
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      toast({
+        title: "স্টোর তৈরি সফল! 🎉",
+        description: `${storeData.storeName} সফলভাবে তৈরি হয়েছে। আপনার স্টোর এখন লাইভ!`,
+      });
+      
+      // Here you would typically redirect to the store dashboard
+    } catch (error) {
+      toast({
+        title: "ত্রুটি হয়েছে",
+        description: "স্টোর তৈরি করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।",
+        variant: "destructive"
+      });
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const tabs = [
+    { id: 'basic', label: 'বেসিক তথ্য', icon: Store },
+    { id: 'design', label: 'ডিজাইন', icon: Palette },
+    { id: 'products', label: 'পণ্য', icon: Upload },
+    { id: 'payment', label: 'পেমেন্ট', icon: CreditCard },
+    { id: 'shipping', label: 'শিপিং', icon: Truck },
+    { id: 'seo', label: 'SEO', icon: Globe },
+    { id: 'analytics', label: 'অ্যানালিটিক্স', icon: BarChart3 },
+    { id: 'settings', label: 'সেটিংস', icon: Settings }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent mb-4">
+            আপনার অনলাইন স্টোর তৈরি করুন
+          </h1>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            সহজেই একটি পেশাদার অনলাইন স্টোর তৈরি করুন। সব ফিচার সহ, সম্পূর্ণ রেসপন্সিভ ডিজাইন।
+          </p>
+        </div>
+
+        <Card className="shadow-2xl border-0">
+          <CardContent className="p-6">
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              {/* Mobile Responsive Tabs */}
+              <div className="mb-6">
+                <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2 h-auto bg-gray-100 p-2 rounded-xl">
+                  {tabs.map((tab) => (
+                    <TabsTrigger
+                      key={tab.id}
+                      value={tab.id}
+                      className="flex flex-col items-center gap-1 p-3 text-xs md:text-sm data-[state=active]:bg-white data-[state=active]:shadow-md rounded-lg transition-all"
+                    >
+                      <tab.icon className="h-4 w-4" />
+                      <span className="hidden md:inline">{tab.label}</span>
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </div>
+
+              {/* Basic Information Tab */}
+              <TabsContent value="basic" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="storeName">স্টোরের নাম *</Label>
+                      <Input
+                        id="storeName"
+                        placeholder="আপনার স্টোরের নাম লিখুন"
+                        value={storeData.storeName}
+                        onChange={(e) => handleInputChange('storeName', e.target.value)}
+                        className="h-12"
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="storeDescription">স্টোরের বিবরণ</Label>
+                      <Textarea
+                        id="storeDescription"
+                        placeholder="আপনার স্টোর সম্পর্কে লিখুন"
+                        value={storeData.storeDescription}
+                        onChange={(e) => handleInputChange('storeDescription', e.target.value)}
+                        rows={4}
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="storeCategory">স্টোরের ক্যাটাগরি</Label>
+                      <Input
+                        id="storeCategory"
+                        placeholder="যেমন: ফ্যাশন, ইলেকট্রনিক্স, খাবার"
+                        value={storeData.storeCategory}
+                        onChange={(e) => handleInputChange('storeCategory', e.target.value)}
+                        className="h-12"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="ownerName">মালিকের নাম *</Label>
+                      <Input
+                        id="ownerName"
+                        placeholder="আপনার নাম"
+                        value={storeData.ownerName}
+                        onChange={(e) => handleInputChange('ownerName', e.target.value)}
+                        className="h-12"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="ownerEmail">ইমেইল *</Label>
+                      <Input
+                        id="ownerEmail"
+                        type="email"
+                        placeholder="আপনার ইমেইল"
+                        value={storeData.ownerEmail}
+                        onChange={(e) => handleInputChange('ownerEmail', e.target.value)}
+                        className="h-12"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="ownerPhone">ফোন নম্বর *</Label>
+                      <Input
+                        id="ownerPhone"
+                        placeholder="01XXXXXXXXX"
+                        value={storeData.ownerPhone}
+                        onChange={(e) => handleInputChange('ownerPhone', e.target.value)}
+                        className="h-12"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="address">ঠিকানা</Label>
+                      <Textarea
+                        id="address"
+                        placeholder="আপনার ব্যবসার ঠিকানা"
+                        value={storeData.address}
+                        onChange={(e) => handleInputChange('address', e.target.value)}
+                        rows={3}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+
+              {/* Design Tab */}
+              <TabsContent value="design">
+                <StoreDesignEditor storeName={storeData.storeName || "আমার স্টোর"} />
+              </TabsContent>
+
+              {/* Products Tab */}
+              <TabsContent value="products">
+                <ProductManagement />
+              </TabsContent>
+
+              {/* Payment Tab */}
+              <TabsContent value="payment">
+                <PaymentGatewaySetup />
+              </TabsContent>
+
+              {/* Shipping Tab */}
+              <TabsContent value="shipping">
+                <ShippingConfiguration />
+              </TabsContent>
+
+              {/* SEO Tab */}
+              <TabsContent value="seo">
+                <SEOSettings />
+              </TabsContent>
+
+              {/* Analytics Tab */}
+              <TabsContent value="analytics">
+                <AnalyticsSetup />
+              </TabsContent>
+
+              {/* Settings Tab */}
+              <TabsContent value="settings">
+                <div className="space-y-6">
+                  <h3 className="text-xl font-semibold">অতিরিক্ত সেটিংস</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Shield className="h-5 w-5" />
+                          নিরাপত্তা
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-gray-600 mb-4">SSL সার্টিফিকেট এবং ডেটা এনক্রিপশন</p>
+                        <Badge className="bg-green-100 text-green-800">সক্রিয়</Badge>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <MessageSquare className="h-5 w-5" />
+                          কাস্টমার সাপোর্ট
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-gray-600 mb-4">লাইভ চ্যাট এবং টিকেট সিস্টেম</p>
+                        <Button variant="outline" size="sm">সেটআপ করুন</Button>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-8 pt-6 border-t">
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <CheckCircle2 className="h-4 w-4 text-green-500" />
+                সব ফিচার বিনামূল্যে
+              </div>
+              
+              <div className="flex gap-3">
+                <Button variant="outline" className="px-6">
+                  প্রিভিউ দেখুন
+                </Button>
+                <Button 
+                  onClick={createStore}
+                  disabled={isCreating || !storeData.storeName || !storeData.ownerName}
+                  className="px-8 bg-gradient-to-r from-primary to-purple-600 hover:shadow-lg"
+                >
+                  {isCreating ? (
+                    <>
+                      <Zap className="h-4 w-4 mr-2 animate-spin" />
+                      তৈরি হচ্ছে...
+                    </>
+                  ) : (
+                    <>
+                      <Zap className="h-4 w-4 mr-2" />
+                      স্টোর তৈরি করুন
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default CreateStoreBuilder;

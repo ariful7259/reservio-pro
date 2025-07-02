@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -266,11 +265,14 @@ export const StoreFeaturesList: React.FC = () => {
   ];
 
   const renderFeatureCard = (feature: any, index: number) => (
-    <Card key={index} className={cn("overflow-hidden transition-all hover:shadow-md border", feature.isPremium ? "border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50" : "border-gray-200 bg-white")}>
+    <Card key={index} className={cn(
+      "overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border", 
+      feature.isPremium ? "border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50" : "border-gray-200 bg-white"
+    )}>
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
           <div className={cn(
-            "p-2 rounded-full flex-shrink-0",
+            "p-2 rounded-full flex-shrink-0 transition-all duration-300",
             feature.isPremium ? "bg-gradient-to-r from-amber-400 to-orange-500 text-white" : "bg-primary/10 text-primary"
           )}>
             {feature.icon}
@@ -296,14 +298,14 @@ export const StoreFeaturesList: React.FC = () => {
   return (
     <div className="py-6">
       <div className="text-center mb-8">
-        <h2 className="text-2xl lg:text-3xl font-bold mb-4 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+        <h2 className="text-xl md:text-2xl lg:text-3xl font-bold mb-4 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
           🛍️ সম্পূর্ণ ডিজিটাল সলিউশন পান
         </h2>
-        <p className="text-muted-foreground max-w-2xl mx-auto text-sm lg:text-base">
+        <p className="text-muted-foreground max-w-2xl mx-auto text-sm lg:text-base px-4">
           আপনার ব্যবসার জন্য প্রয়োজনীয় সকল ফিচার একসাথে। কোনো ফিচার বাদ পড়বে না!
         </p>
-        <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border">
-          <p className="text-sm text-gray-600 flex items-center justify-center gap-2">
+        <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border mx-4">
+          <p className="text-sm text-gray-600 flex flex-col sm:flex-row items-center justify-center gap-2">
             <Crown className="h-4 w-4 text-amber-500" />
             <span className="font-medium">🔖 নোট:</span> 
             <Badge className="bg-amber-500 text-white">প্রিমিয়াম</Badge> 
@@ -312,174 +314,180 @@ export const StoreFeaturesList: React.FC = () => {
         </div>
       </div>
       
-      <Tabs defaultValue="store" className="w-full mb-8">
-        <TabsList className="grid w-full grid-cols-2 mb-6 h-12 bg-gradient-to-r from-blue-50 to-purple-50">
-          <TabsTrigger value="store" className="data-[state=active]:bg-white data-[state=active]:shadow-md font-medium">
-            <ShoppingCart className="h-4 w-4 mr-2" />
-            অনলাইন স্টোর
-          </TabsTrigger>
-          <TabsTrigger value="linkinbio" className="data-[state=active]:bg-white data-[state=active]:shadow-md font-medium">
-            <Globe className="h-4 w-4 mr-2" />
-            লিংক ইন বায়ো
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="store" className="space-y-8">
-          {/* ১. বেসিক স্টোর ফিচার */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <div className="p-2 bg-blue-100 rounded-full">
-                <ShoppingCart className="h-4 w-4 text-blue-600" />
-              </div>
-              🛍️ ১. বেসিক স্টোর ফিচার
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {basicStoreFeatures.map((feature, index) => renderFeatureCard(feature, index))}
-            </div>
-          </div>
-
-          {/* ২. পেমেন্ট ও ফিন্যান্স */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <div className="p-2 bg-green-100 rounded-full">
-                <CreditCard className="h-4 w-4 text-green-600" />
-              </div>
-              💰 ২. পেমেন্ট ও ফিন্যান্স
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {paymentFeatures.map((feature, index) => renderFeatureCard(feature, index))}
-            </div>
-          </div>
-
-          {/* ৩. মার্কেটিং ও প্রমোশন */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <div className="p-2 bg-purple-100 rounded-full">
-                <Megaphone className="h-4 w-4 text-purple-600" />
-              </div>
-              📣 ৩. মার্কেটিং ও প্রমোশন
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {marketingFeatures.map((feature, index) => renderFeatureCard(feature, index))}
-            </div>
-          </div>
-
-          {/* ৪. ডেলিভারি ও লজিস্টিক */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <div className="p-2 bg-orange-100 rounded-full">
-                <Truck className="h-4 w-4 text-orange-600" />
-              </div>
-              🚚 ৪. ডেলিভারি ও লজিস্টিক
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {deliveryFeatures.map((feature, index) => renderFeatureCard(feature, index))}
-            </div>
-          </div>
-
-          {/* ৫. অ্যানালিটিক্স ও রিপোর্টিং */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <div className="p-2 bg-indigo-100 rounded-full">
-                <BarChart3 className="h-4 w-4 text-indigo-600" />
-              </div>
-              📊 ৫. অ্যানালিটিক্স ও রিপোর্টিং
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {analyticsFeatures.map((feature, index) => renderFeatureCard(feature, index))}
-            </div>
-          </div>
-
-          {/* ৬. ডিজাইন ও কাস্টমাইজেশন */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <div className="p-2 bg-pink-100 rounded-full">
-                <Palette className="h-4 w-4 text-pink-600" />
-              </div>
-              🎨 ৬. ডিজাইন ও কাস্টমাইজেশন
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {designFeatures.map((feature, index) => renderFeatureCard(feature, index))}
-            </div>
-          </div>
-
-          {/* ৭. এডভান্সড ফিচার */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <div className="p-2 bg-red-100 rounded-full">
-                <Settings className="h-4 w-4 text-red-600" />
-              </div>
-              🚀 ৭. এডভান্সড ফিচার
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {advancedFeatures.map((feature, index) => renderFeatureCard(feature, index))}
-            </div>
-          </div>
+      <div className="w-full mb-8">
+        <Tabs defaultValue="store" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-6 h-auto bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-2">
+            <TabsTrigger value="store" className="data-[state=active]:bg-white data-[state=active]:shadow-md font-medium py-3 rounded-lg transition-all duration-300">
+              <ShoppingCart className="h-4 w-4 mr-2" />
+              <span className="hidden sm:inline">অনলাইন স্টোর</span>
+              <span className="sm:hidden">স্টোর</span>
+            </TabsTrigger>
+            <TabsTrigger value="linkinbio" className="data-[state=active]:bg-white data-[state=active]:shadow-md font-medium py-3 rounded-lg transition-all duration-300">
+              <Globe className="h-4 w-4 mr-2" />
+              <span className="hidden sm:inline">লিংক ইন বায়ো</span>
+              <span className="sm:hidden">লিংক</span>
+            </TabsTrigger>
+          </TabsList>
           
-          <div className="mt-8 text-center">
-            <div className="bg-gradient-to-r from-primary/10 to-purple-100 rounded-xl p-6 mb-6">
-              <h3 className="font-bold text-lg mb-2">🚀 সব ফিচার একসাথে পাবেন!</h3>
-              <p className="text-muted-foreground text-sm mb-4">
-                উপরের সকল ফিচার আপনার স্টোরে স্বয়ংক্রিয়ভাবে যুক্ত হবে। কোনো অতিরিক্ত সেটআপের প্রয়োজন নেই।
-              </p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">৮+</div>
-                  <div className="text-xs text-gray-600">ফিচার ক্যাটাগরি</div>
+          <TabsContent value="store" className="space-y-6 sm:space-y-8">
+            {/* Responsive Feature Sections */}
+            {/* ১. বেসিক স্টোর ফিচার */}
+            <div>
+              <h3 className="text-base sm:text-lg font-semibold mb-4 flex items-center gap-2 px-2">
+                <div className="p-2 bg-blue-100 rounded-full">
+                  <ShoppingCart className="h-4 w-4 text-blue-600" />
                 </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">২৮+</div>
-                  <div className="text-xs text-gray-600">মোট ফিচার</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600">১৮+</div>
-                  <div className="text-xs text-gray-600">প্রিমিয়াম ফিচার</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-orange-600">১০+</div>
-                  <div className="text-xs text-gray-600">ফ্রি ফিচার</div>
-                </div>
+                🛍️ ১. বেসিক স্টোর ফিচার
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-2">
+                {basicStoreFeatures.map((feature, index) => renderFeatureCard(feature, index))}
               </div>
             </div>
-            <Link to="/create-store/new">
-              <Button size="lg" className="px-8 py-3 text-base bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-600">
-                <Zap className="h-5 w-5 mr-2" />
-                এখনই আপনার স্টোর তৈরি করুন
-              </Button>
-            </Link>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="linkinbio" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {linkInBioFeatures.map((feature, index) => renderFeatureCard(feature, index))}
-          </div>
-          
-          <div className="text-center mt-8">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-100 rounded-xl p-6 mb-6">
-              <h3 className="font-bold text-lg mb-2">🔗 সকল লিংক এক জায়গায়!</h3>
-              <p className="text-muted-foreground text-sm">
-                আপনার সোশ্যাল মিডিয়া বায়োতে একটি লিংক দিয়ে সব কিছু শেয়ার করুন।
-              </p>
+
+            {/* ২. পেমেন্ট ও ফিন্যান্স */}
+            <div>
+              <h3 className="text-base sm:text-lg font-semibold mb-4 flex items-center gap-2 px-2">
+                <div className="p-2 bg-green-100 rounded-full">
+                  <CreditCard className="h-4 w-4 text-green-600" />
+                </div>
+                💰 ২. পেমেন্ট ও ফিন্যান্স
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-2">
+                {paymentFeatures.map((feature, index) => renderFeatureCard(feature, index))}
+              </div>
             </div>
-            <Link to="/create-linkinbio">
-              <Button size="lg" className="px-8 py-3 text-base bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600">
-                <Globe className="h-5 w-5 mr-2" />
-                লিংক ইন বায়ো পেজ তৈরি করুন
-              </Button>
-            </Link>
-          </div>
-        </TabsContent>
-      </Tabs>
+
+            {/* ৩. মার্কেটিং ও প্রমোশন */}
+            <div>
+              <h3 className="text-base sm:text-lg font-semibold mb-4 flex items-center gap-2 px-2">
+                <div className="p-2 bg-purple-100 rounded-full">
+                  <Megaphone className="h-4 w-4 text-purple-600" />
+                </div>
+                📣 ৩. মার্কেটিং ও প্রমোশন
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-2">
+                {marketingFeatures.map((feature, index) => renderFeatureCard(feature, index))}
+              </div>
+            </div>
+
+            {/* ৪. ডেলিভারি ও লজিস্টিক */}
+            <div>
+              <h3 className="text-base sm:text-lg font-semibold mb-4 flex items-center gap-2 px-2">
+                <div className="p-2 bg-orange-100 rounded-full">
+                  <Truck className="h-4 w-4 text-orange-600" />
+                </div>
+                🚚 ৪. ডেলিভারি ও লজিস্টিক
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-2">
+                {deliveryFeatures.map((feature, index) => renderFeatureCard(feature, index))}
+              </div>
+            </div>
+
+            {/* ৫. অ্যানালিটিক্স ও রিপোর্টিং */}
+            <div>
+              <h3 className="text-base sm:text-lg font-semibold mb-4 flex items-center gap-2 px-2">
+                <div className="p-2 bg-indigo-100 rounded-full">
+                  <BarChart3 className="h-4 w-4 text-indigo-600" />
+                </div>
+                📊 ৫. অ্যানালিটিক্স ও রিপোর্টিং
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-2">
+                {analyticsFeatures.map((feature, index) => renderFeatureCard(feature, index))}
+              </div>
+            </div>
+
+            {/* ৬. ডিজাইন ও কাস্টমাইজেশন */}
+            <div>
+              <h3 className="text-base sm:text-lg font-semibold mb-4 flex items-center gap-2 px-2">
+                <div className="p-2 bg-pink-100 rounded-full">
+                  <Palette className="h-4 w-4 text-pink-600" />
+                </div>
+                🎨 ৬. ডিজাইন ও কাস্টমাইজেশন
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-2">
+                {designFeatures.map((feature, index) => renderFeatureCard(feature, index))}
+              </div>
+            </div>
+
+            {/* ৭. এডভান্সড ফিচার */}
+            <div>
+              <h3 className="text-base sm:text-lg font-semibold mb-4 flex items-center gap-2 px-2">
+                <div className="p-2 bg-red-100 rounded-full">
+                  <Settings className="h-4 w-4 text-red-600" />
+                </div>
+                🚀 ৭. এডভান্সড ফিচার
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-2">
+                {advancedFeatures.map((feature, index) => renderFeatureCard(feature, index))}
+              </div>
+            </div>
+            
+            {/* Call to Action - Fully Responsive */}
+            <div className="mt-8 text-center px-4">
+              <div className="bg-gradient-to-r from-primary/10 to-purple-100 rounded-xl p-6 mb-6">
+                <h3 className="font-bold text-lg mb-2">🚀 সব ফিচার একসাথে পাবেন!</h3>
+                <p className="text-muted-foreground text-sm mb-4">
+                  উপরের সকল ফিচার আপনার স্টোরে স্বয়ংক্রিয়ভাবে যুক্ত হবে। কোনো অতিরিক্ত সেটআপের প্রয়োজন নেই।
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                  <div className="text-center">
+                    <div className="text-xl md:text-2xl font-bold text-primary">৮+</div>
+                    <div className="text-xs text-gray-600">ফিচার ক্যাটাগরি</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-xl md:text-2xl font-bold text-green-600">২৮+</div>
+                    <div className="text-xs text-gray-600">মোট ফিচার</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-xl md:text-2xl font-bold text-purple-600">১৮+</div>
+                    <div className="text-xs text-gray-600">প্রিমিয়াম ফিচার</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-xl md:text-2xl font-bold text-orange-600">১০+</div>
+                    <div className="text-xs text-gray-600">ফ্রি ফিচার</div>
+                  </div>
+                </div>
+              </div>
+              <Link to="/create-store/new">
+                <Button size="lg" className="w-full sm:w-auto px-8 py-3 text-base bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-600 hover:shadow-lg transition-all duration-300">
+                  <Zap className="h-5 w-5 mr-2" />
+                  এখনই আপনার স্টোর তৈরি করুন
+                </Button>
+              </Link>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="linkinbio" className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-2">
+              {linkInBioFeatures.map((feature, index) => renderFeatureCard(feature, index))}
+            </div>
+            
+            <div className="text-center mt-8 px-4">
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-100 rounded-xl p-6 mb-6">
+                <h3 className="font-bold text-lg mb-2">🔗 সকল লিংক এক জায়গায়!</h3>
+                <p className="text-muted-foreground text-sm">
+                  আপনার সোশ্যাল মিডিয়া বায়োতে একটি লিংক দিয়ে সব কিছু শেয়ার করুন।
+                </p>
+              </div>
+              <Link to="/create-linkinbio">
+                <Button size="lg" className="w-full sm:w-auto px-8 py-3 text-base bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 hover:shadow-lg transition-all duration-300">
+                  <Globe className="h-5 w-5 mr-2" />
+                  লিংক ইন বায়ো পেজ তৈরি করুন
+                </Button>
+              </Link>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
       
-      {/* সাহায্য সেকশন */}
-      <div className="bg-gradient-to-r from-slate-50 to-blue-50 rounded-xl p-6 mt-8 border">
-        <div className="flex items-start gap-4">
+      {/* সাহায্য সেকশন - Fully Responsive */}
+      <div className="bg-gradient-to-r from-slate-50 to-blue-50 rounded-xl p-4 sm:p-6 mt-8 border mx-2 sm:mx-0">
+        <div className="flex flex-col sm:flex-row items-start gap-4">
           <div className="p-3 bg-green-100 rounded-full text-green-600 flex-shrink-0">
             <CheckCircle2 className="h-6 w-6" />
           </div>
-          <div>
-            <h3 className="font-semibold text-lg mb-2">💡 আমরা আপনাকে সাহায্য করব</h3>
+          <div className="flex-1">
+            <h3 className="font-semibold text-base sm:text-lg mb-2">💡 আমরা আপনাকে সাহায্য করব</h3>
             <p className="text-muted-foreground text-sm leading-relaxed mb-3">
               আপনার অনলাইন ব্যবসা শুরু করতে আমাদের এক্সপার্ট টিম ২৪/৭ প্রস্তুত আছে। কোন প্রশ্ন বা সমস্যা থাকলে যোগাযোগ করুন।
             </p>
