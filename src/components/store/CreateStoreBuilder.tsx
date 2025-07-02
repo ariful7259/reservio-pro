@@ -88,118 +88,148 @@ const CreateStoreBuilder: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-2 md:p-4">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent mb-4">
+        {/* Header - Responsive */}
+        <div className="text-center mb-6 md:mb-8 px-2">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent mb-2 md:mb-4">
             আপনার অনলাইন স্টোর তৈরি করুন
           </h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-sm md:text-base text-gray-600 max-w-2xl mx-auto leading-relaxed">
             সহজেই একটি পেশাদার অনলাইন স্টোর তৈরি করুন। সব ফিচার সহ, সম্পূর্ণ রেসপন্সিভ ডিজাইন।
           </p>
         </div>
 
         <Card className="shadow-2xl border-0">
-          <CardContent className="p-6">
+          <CardContent className="p-3 md:p-6">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              {/* Mobile Responsive Tabs */}
-              <div className="mb-6">
-                <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2 h-auto bg-gray-100 p-2 rounded-xl">
+              {/* Mobile/Tablet/Desktop Responsive Tabs */}
+              <div className="mb-4 md:mb-6">
+                {/* Mobile Dropdown for Tabs */}
+                <div className="block md:hidden mb-4">
+                  <select
+                    value={activeTab}
+                    onChange={(e) => setActiveTab(e.target.value)}
+                    className="w-full p-3 border rounded-lg bg-white text-sm"
+                  >
+                    {tabs.map((tab) => (
+                      <option key={tab.id} value={tab.id}>
+                        {tab.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Tablet/Desktop Tab List */}
+                <TabsList className="hidden md:grid md:grid-cols-4 lg:grid-cols-8 gap-2 h-auto bg-gray-100 p-2 rounded-xl w-full">
                   {tabs.map((tab) => (
                     <TabsTrigger
                       key={tab.id}
                       value={tab.id}
-                      className="flex flex-col items-center gap-1 p-3 text-xs md:text-sm data-[state=active]:bg-white data-[state=active]:shadow-md rounded-lg transition-all"
+                      className="flex flex-col items-center gap-1 p-2 lg:p-3 text-xs lg:text-sm data-[state=active]:bg-white data-[state=active]:shadow-md rounded-lg transition-all min-h-[60px] lg:min-h-[70px]"
                     >
-                      <tab.icon className="h-4 w-4" />
-                      <span className="hidden md:inline">{tab.label}</span>
+                      <tab.icon className="h-4 w-4 lg:h-5 lg:w-5" />
+                      <span className="text-center leading-tight">{tab.label}</span>
                     </TabsTrigger>
                   ))}
                 </TabsList>
+
+                {/* Mobile Tab Indicators */}
+                <div className="flex md:hidden justify-center space-x-1 mt-3">
+                  {tabs.map((tab) => (
+                    <div
+                      key={tab.id}
+                      className={`h-2 w-2 rounded-full transition-all ${
+                        activeTab === tab.id ? 'bg-primary w-6' : 'bg-gray-300'
+                      }`}
+                    />
+                  ))}
+                </div>
               </div>
 
-              {/* Basic Information Tab */}
-              <TabsContent value="basic" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Basic Information Tab - Responsive Layout */}
+              <TabsContent value="basic" className="space-y-4 md:space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="storeName">স্টোরের নাম *</Label>
+                      <Label htmlFor="storeName" className="text-sm font-medium">স্টোরের নাম *</Label>
                       <Input
                         id="storeName"
                         placeholder="আপনার স্টোরের নাম লিখুন"
                         value={storeData.storeName}
                         onChange={(e) => handleInputChange('storeName', e.target.value)}
-                        className="h-12"
+                        className="h-10 md:h-12 text-sm md:text-base"
                       />
                     </div>
                     
                     <div>
-                      <Label htmlFor="storeDescription">স্টোরের বিবরণ</Label>
+                      <Label htmlFor="storeDescription" className="text-sm font-medium">স্টোরের বিবরণ</Label>
                       <Textarea
                         id="storeDescription"
                         placeholder="আপনার স্টোর সম্পর্কে লিখুন"
                         value={storeData.storeDescription}
                         onChange={(e) => handleInputChange('storeDescription', e.target.value)}
-                        rows={4}
+                        rows={3}
+                        className="text-sm md:text-base"
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="storeCategory">স্টোরের ক্যাটাগরি</Label>
+                      <Label htmlFor="storeCategory" className="text-sm font-medium">স্টোরের ক্যাটাগরি</Label>
                       <Input
                         id="storeCategory"
                         placeholder="যেমন: ফ্যাশন, ইলেকট্রনিক্স, খাবার"
                         value={storeData.storeCategory}
                         onChange={(e) => handleInputChange('storeCategory', e.target.value)}
-                        className="h-12"
+                        className="h-10 md:h-12 text-sm md:text-base"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="ownerName">মালিকের নাম *</Label>
+                      <Label htmlFor="ownerName" className="text-sm font-medium">মালিকের নাম *</Label>
                       <Input
                         id="ownerName"
                         placeholder="আপনার নাম"
                         value={storeData.ownerName}
                         onChange={(e) => handleInputChange('ownerName', e.target.value)}
-                        className="h-12"
+                        className="h-10 md:h-12 text-sm md:text-base"
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="ownerEmail">ইমেইল *</Label>
+                      <Label htmlFor="ownerEmail" className="text-sm font-medium">ইমেইল *</Label>
                       <Input
                         id="ownerEmail"
                         type="email"
                         placeholder="আপনার ইমেইল"
                         value={storeData.ownerEmail}
                         onChange={(e) => handleInputChange('ownerEmail', e.target.value)}
-                        className="h-12"
+                        className="h-10 md:h-12 text-sm md:text-base"
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="ownerPhone">ফোন নম্বর *</Label>
+                      <Label htmlFor="ownerPhone" className="text-sm font-medium">ফোন নম্বর *</Label>
                       <Input
                         id="ownerPhone"
                         placeholder="01XXXXXXXXX"
                         value={storeData.ownerPhone}
                         onChange={(e) => handleInputChange('ownerPhone', e.target.value)}
-                        className="h-12"
+                        className="h-10 md:h-12 text-sm md:text-base"
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="address">ঠিকানা</Label>
+                      <Label htmlFor="address" className="text-sm font-medium">ঠিকানা</Label>
                       <Textarea
                         id="address"
                         placeholder="আপনার ব্যবসার ঠিকানা"
                         value={storeData.address}
                         onChange={(e) => handleInputChange('address', e.target.value)}
                         rows={3}
+                        className="text-sm md:text-base"
                       />
                     </div>
                   </div>
@@ -211,59 +241,53 @@ const CreateStoreBuilder: React.FC = () => {
                 <StoreDesignEditor storeName={storeData.storeName || "আমার স্টোর"} />
               </TabsContent>
 
-              {/* Products Tab */}
               <TabsContent value="products">
                 <ProductManagement />
               </TabsContent>
 
-              {/* Payment Tab */}
               <TabsContent value="payment">
                 <PaymentGatewaySetup />
               </TabsContent>
 
-              {/* Shipping Tab */}
               <TabsContent value="shipping">
                 <ShippingConfiguration />
               </TabsContent>
 
-              {/* SEO Tab */}
               <TabsContent value="seo">
                 <SEOSettings />
               </TabsContent>
 
-              {/* Analytics Tab */}
               <TabsContent value="analytics">
                 <AnalyticsSetup />
               </TabsContent>
 
-              {/* Settings Tab */}
               <TabsContent value="settings">
-                <div className="space-y-6">
-                  <h3 className="text-xl font-semibold">অতিরিক্ত সেটিংস</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4 md:space-y-6">
+                  <h3 className="text-lg md:text-xl font-semibold">অতিরিক্ত সেটিংস</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <Shield className="h-5 w-5" />
+                      <CardHeader className="pb-3">
+                        <CardTitle className="flex items-center gap-2 text-base md:text-lg">
+                          <Shield className="h-4 w-4 md:h-5 md:w-5" />
                           নিরাপত্তা
                         </CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <p className="text-sm text-gray-600 mb-4">SSL সার্টিফিকেট এবং ডেটা এনক্রিপশন</p>
-                        <Badge className="bg-green-100 text-green-800">সক্রিয়</Badge>
+                        <p className="text-xs md:text-sm text-gray-600 mb-3 md:mb-4">SSL সার্টিফিকেট এবং ডেটা এনক্রিপশন</p>
+                        <Badge className="bg-green-100 text-green-800 text-xs">সক্রিয়</Badge>
                       </CardContent>
                     </Card>
 
                     <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <MessageSquare className="h-5 w-5" />
+                      <CardHeader className="pb-3">
+                        <CardTitle className="flex items-center gap-2 text-base md:text-lg">
+                          <MessageSquare className="h-4 w-4 md:h-5 md:w-5" />
                           কাস্টমার সাপোর্ট
                         </CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <p className="text-sm text-gray-600 mb-4">লাইভ চ্যাট এবং টিকেট সিস্টেম</p>
-                        <Button variant="outline" size="sm">সেটআপ করুন</Button>
+                        <p className="text-xs md:text-sm text-gray-600 mb-3 md:mb-4">লাইভ চ্যাট এবং টিকেট সিস্টেম</p>
+                        <Button variant="outline" size="sm" className="text-xs md:text-sm">সেটআপ করুন</Button>
                       </CardContent>
                     </Card>
                   </div>
@@ -271,30 +295,30 @@ const CreateStoreBuilder: React.FC = () => {
               </TabsContent>
             </Tabs>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-8 pt-6 border-t">
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <CheckCircle2 className="h-4 w-4 text-green-500" />
+            {/* Action Buttons - Responsive */}
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-3 md:gap-4 mt-6 md:mt-8 pt-4 md:pt-6 border-t">
+              <div className="flex items-center gap-2 text-xs md:text-sm text-gray-600">
+                <CheckCircle2 className="h-3 w-3 md:h-4 md:w-4 text-green-500" />
                 সব ফিচার বিনামূল্যে
               </div>
               
-              <div className="flex gap-3">
-                <Button variant="outline" className="px-6">
+              <div className="flex flex-col sm:flex-row gap-2 md:gap-3 w-full sm:w-auto">
+                <Button variant="outline" className="px-4 md:px-6 text-xs md:text-sm h-9 md:h-10">
                   প্রিভিউ দেখুন
                 </Button>
                 <Button 
                   onClick={createStore}
                   disabled={isCreating || !storeData.storeName || !storeData.ownerName}
-                  className="px-8 bg-gradient-to-r from-primary to-purple-600 hover:shadow-lg"
+                  className="px-6 md:px-8 bg-gradient-to-r from-primary to-purple-600 hover:shadow-lg text-xs md:text-sm h-9 md:h-10"
                 >
                   {isCreating ? (
                     <>
-                      <Zap className="h-4 w-4 mr-2 animate-spin" />
+                      <Zap className="h-3 w-3 md:h-4 md:w-4 mr-2 animate-spin" />
                       তৈরি হচ্ছে...
                     </>
                   ) : (
                     <>
-                      <Zap className="h-4 w-4 mr-2" />
+                      <Zap className="h-3 w-3 md:h-4 md:w-4 mr-2" />
                       স্টোর তৈরি করুন
                     </>
                   )}
