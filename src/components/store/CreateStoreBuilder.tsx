@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -101,7 +100,7 @@ const CreateStoreBuilder: React.FC = () => {
         </div>
 
         <Card className="shadow-2xl border-0">
-          <CardContent className="p-3 md:p-6">
+          <CardContent className="p-2 sm:p-4 md:p-6 lg:p-8">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               {/* Mobile/Tablet/Desktop Responsive Tabs */}
               <div className="mb-4 md:mb-6">
@@ -110,7 +109,7 @@ const CreateStoreBuilder: React.FC = () => {
                   <select
                     value={activeTab}
                     onChange={(e) => setActiveTab(e.target.value)}
-                    className="w-full p-3 border rounded-lg bg-white text-sm"
+                    className="w-full p-3 border rounded-lg bg-white text-sm shadow-sm focus:ring-2 focus:ring-primary focus:border-primary"
                   >
                     {tabs.map((tab) => (
                       <option key={tab.id} value={tab.id}>
@@ -121,15 +120,15 @@ const CreateStoreBuilder: React.FC = () => {
                 </div>
 
                 {/* Tablet/Desktop Tab List */}
-                <TabsList className="hidden md:grid md:grid-cols-4 lg:grid-cols-8 gap-2 h-auto bg-gray-100 p-2 rounded-xl w-full">
+                <TabsList className="hidden md:grid md:grid-cols-4 lg:grid-cols-8 gap-1 lg:gap-2 h-auto bg-gray-50 p-1 lg:p-2 rounded-xl w-full">
                   {tabs.map((tab) => (
                     <TabsTrigger
                       key={tab.id}
                       value={tab.id}
-                      className="flex flex-col items-center gap-1 p-2 lg:p-3 text-xs lg:text-sm data-[state=active]:bg-white data-[state=active]:shadow-md rounded-lg transition-all min-h-[60px] lg:min-h-[70px]"
+                      className="flex flex-col items-center gap-1 p-2 lg:p-3 text-xs lg:text-sm data-[state=active]:bg-white data-[state=active]:shadow-md rounded-lg transition-all min-h-[60px] lg:min-h-[70px] hover:bg-white/50"
                     >
                       <tab.icon className="h-4 w-4 lg:h-5 lg:w-5" />
-                      <span className="text-center leading-tight">{tab.label}</span>
+                      <span className="text-center leading-tight font-medium">{tab.label}</span>
                     </TabsTrigger>
                   ))}
                 </TabsList>
@@ -139,7 +138,7 @@ const CreateStoreBuilder: React.FC = () => {
                   {tabs.map((tab) => (
                     <div
                       key={tab.id}
-                      className={`h-2 w-2 rounded-full transition-all ${
+                      className={`h-2 w-2 rounded-full transition-all duration-300 ${
                         activeTab === tab.id ? 'bg-primary w-6' : 'bg-gray-300'
                       }`}
                     />
@@ -148,7 +147,7 @@ const CreateStoreBuilder: React.FC = () => {
               </div>
 
               {/* Basic Information Tab - Responsive Layout */}
-              <TabsContent value="basic" className="space-y-4 md:space-y-6">
+              <TabsContent value="basic" className="space-y-4 md:space-y-6 mt-0">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
                   <div className="space-y-4">
                     <div>
@@ -158,7 +157,7 @@ const CreateStoreBuilder: React.FC = () => {
                         placeholder="আপনার স্টোরের নাম লিখুন"
                         value={storeData.storeName}
                         onChange={(e) => handleInputChange('storeName', e.target.value)}
-                        className="h-10 md:h-12 text-sm md:text-base"
+                        className="h-10 md:h-12 text-sm md:text-base mt-1"
                       />
                     </div>
                     
@@ -170,7 +169,7 @@ const CreateStoreBuilder: React.FC = () => {
                         value={storeData.storeDescription}
                         onChange={(e) => handleInputChange('storeDescription', e.target.value)}
                         rows={3}
-                        className="text-sm md:text-base"
+                        className="text-sm md:text-base mt-1"
                       />
                     </div>
 
@@ -181,7 +180,7 @@ const CreateStoreBuilder: React.FC = () => {
                         placeholder="যেমন: ফ্যাশন, ইলেকট্রনিক্স, খাবার"
                         value={storeData.storeCategory}
                         onChange={(e) => handleInputChange('storeCategory', e.target.value)}
-                        className="h-10 md:h-12 text-sm md:text-base"
+                        className="h-10 md:h-12 text-sm md:text-base mt-1"
                       />
                     </div>
                   </div>
@@ -194,7 +193,7 @@ const CreateStoreBuilder: React.FC = () => {
                         placeholder="আপনার নাম"
                         value={storeData.ownerName}
                         onChange={(e) => handleInputChange('ownerName', e.target.value)}
-                        className="h-10 md:h-12 text-sm md:text-base"
+                        className="h-10 md:h-12 text-sm md:text-base mt-1"
                       />
                     </div>
 
@@ -206,7 +205,7 @@ const CreateStoreBuilder: React.FC = () => {
                         placeholder="আপনার ইমেইল"
                         value={storeData.ownerEmail}
                         onChange={(e) => handleInputChange('ownerEmail', e.target.value)}
-                        className="h-10 md:h-12 text-sm md:text-base"
+                        className="h-10 md:h-12 text-sm md:text-base mt-1"
                       />
                     </div>
 
@@ -217,7 +216,7 @@ const CreateStoreBuilder: React.FC = () => {
                         placeholder="01XXXXXXXXX"
                         value={storeData.ownerPhone}
                         onChange={(e) => handleInputChange('ownerPhone', e.target.value)}
-                        className="h-10 md:h-12 text-sm md:text-base"
+                        className="h-10 md:h-12 text-sm md:text-base mt-1"
                       />
                     </div>
 
@@ -229,87 +228,175 @@ const CreateStoreBuilder: React.FC = () => {
                         value={storeData.address}
                         onChange={(e) => handleInputChange('address', e.target.value)}
                         rows={3}
-                        className="text-sm md:text-base"
+                        className="text-sm md:text-base mt-1"
                       />
                     </div>
                   </div>
                 </div>
               </TabsContent>
 
-              {/* Design Tab */}
-              <TabsContent value="design">
-                <StoreDesignEditor storeName={storeData.storeName || "আমার স্টোর"} />
+              {/* Design Tab - Properly Structured */}
+              <TabsContent value="design" className="mt-0">
+                <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-4 md:p-6 border">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Palette className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg md:text-xl font-semibold text-gray-900">অনলাইন স্টোর ডিজাইন</h3>
+                      <p className="text-sm text-gray-600">আপনার স্টোরের ডিজাইন কাস্টমাইজ করুন</p>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white rounded-lg shadow-sm border">
+                    <StoreDesignEditor storeName={storeData.storeName || "আমার স্টোর"} />
+                  </div>
+                </div>
               </TabsContent>
 
-              <TabsContent value="products">
-                <ProductManagement />
+              {/* Products Tab */}
+              <TabsContent value="products" className="mt-0">
+                <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-xl p-4 md:p-6 border">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2 bg-green-100 rounded-lg">
+                      <Upload className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg md:text-xl font-semibold text-gray-900">পণ্য ব্যবস্থাপনা</h3>
+                      <p className="text-sm text-gray-600">আপনার পণ্য যুক্ত ও ব্যবস্থাপনা করুন</p>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white rounded-lg shadow-sm border">
+                    <ProductManagement />
+                  </div>
+                </div>
               </TabsContent>
 
-              <TabsContent value="payment">
-                <PaymentGatewaySetup />
+              {/* Other Tabs with proper structure */}
+              <TabsContent value="payment" className="mt-0">
+                <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-4 md:p-6 border">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2 bg-yellow-100 rounded-lg">
+                      <CreditCard className="h-5 w-5 text-yellow-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg md:text-xl font-semibold text-gray-900">পেমেন্ট গেটওয়ে</h3>
+                      <p className="text-sm text-gray-600">পেমেন্ট পদ্ধতি সেটআপ করুন</p>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white rounded-lg shadow-sm border">
+                    <PaymentGatewaySetup />
+                  </div>
+                </div>
               </TabsContent>
 
-              <TabsContent value="shipping">
-                <ShippingConfiguration />
+              <TabsContent value="shipping" className="mt-0">
+                <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 md:p-6 border">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2 bg-purple-100 rounded-lg">
+                      <Truck className="h-5 w-5 text-purple-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg md:text-xl font-semibold text-gray-900">শিপিং কনফিগারেশন</h3>
+                      <p className="text-sm text-gray-600">ডেলিভারি সেটিংস কনফিগার করুন</p>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white rounded-lg shadow-sm border">
+                    <ShippingConfiguration />
+                  </div>
+                </div>
               </TabsContent>
 
-              <TabsContent value="seo">
-                <SEOSettings />
+              <TabsContent value="seo" className="mt-0">
+                <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl p-4 md:p-6 border">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2 bg-teal-100 rounded-lg">
+                      <Globe className="h-5 w-5 text-teal-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg md:text-xl font-semibold text-gray-900">SEO সেটিংস</h3>
+                      <p className="text-sm text-gray-600">সার্চ ইঞ্জিন অপটিমাইজেশন করুন</p>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white rounded-lg shadow-sm border">
+                    <SEOSettings />
+                  </div>
+                </div>
               </TabsContent>
 
-              <TabsContent value="analytics">
-                <AnalyticsSetup />
+              <TabsContent value="analytics" className="mt-0">
+                <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-xl p-4 md:p-6 border">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2 bg-indigo-100 rounded-lg">
+                      <BarChart3 className="h-5 w-5 text-indigo-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg md:text-xl font-semibold text-gray-900">অ্যানালিটিক্স সেটআপ</h3>
+                      <p className="text-sm text-gray-600">ব্যবসার পারফরমেন্স ট্র্যাক করুন</p>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white rounded-lg shadow-sm border">
+                    <AnalyticsSetup />
+                  </div>
+                </div>
               </TabsContent>
 
-              <TabsContent value="settings">
+              <TabsContent value="settings" className="mt-0">
                 <div className="space-y-4 md:space-y-6">
-                  <h3 className="text-lg md:text-xl font-semibold">অতিরিক্ত সেটিংস</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                    <Card>
-                      <CardHeader className="pb-3">
-                        <CardTitle className="flex items-center gap-2 text-base md:text-lg">
-                          <Shield className="h-4 w-4 md:h-5 md:w-5" />
-                          নিরাপত্তা
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-xs md:text-sm text-gray-600 mb-3 md:mb-4">SSL সার্টিফিকেট এবং ডেটা এনক্রিপশন</p>
-                        <Badge className="bg-green-100 text-green-800 text-xs">সক্রিয়</Badge>
-                      </CardContent>
-                    </Card>
+                  <div className="bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl p-4 md:p-6 border">
+                    <h3 className="text-lg md:text-xl font-semibold mb-4">অতিরিক্ত সেটিংস</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                      <Card className="hover:shadow-md transition-shadow">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="flex items-center gap-2 text-base md:text-lg">
+                            <Shield className="h-4 w-4 md:h-5 md:w-5 text-green-600" />
+                            নিরাপত্তা
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-xs md:text-sm text-gray-600 mb-3 md:mb-4">SSL সার্টিফিকেট এবং ডেটা এনক্রিপশন</p>
+                          <Badge className="bg-green-100 text-green-800 text-xs">সক্রিয়</Badge>
+                        </CardContent>
+                      </Card>
 
-                    <Card>
-                      <CardHeader className="pb-3">
-                        <CardTitle className="flex items-center gap-2 text-base md:text-lg">
-                          <MessageSquare className="h-4 w-4 md:h-5 md:w-5" />
-                          কাস্টমার সাপোর্ট
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-xs md:text-sm text-gray-600 mb-3 md:mb-4">লাইভ চ্যাট এবং টিকেট সিস্টেম</p>
-                        <Button variant="outline" size="sm" className="text-xs md:text-sm">সেটআপ করুন</Button>
-                      </CardContent>
-                    </Card>
+                      <Card className="hover:shadow-md transition-shadow">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="flex items-center gap-2 text-base md:text-lg">
+                            <MessageSquare className="h-4 w-4 md:h-5 md:w-5 text-blue-600" />
+                            কাস্টমার সাপোর্ট
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-xs md:text-sm text-gray-600 mb-3 md:mb-4">লাইভ চ্যাট এবং টিকেট সিস্টেম</p>
+                          <Button variant="outline" size="sm" className="text-xs md:text-sm">সেটআপ করুন</Button>
+                        </CardContent>
+                      </Card>
+                    </div>
                   </div>
                 </div>
               </TabsContent>
             </Tabs>
 
             {/* Action Buttons - Responsive */}
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-3 md:gap-4 mt-6 md:mt-8 pt-4 md:pt-6 border-t">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-6 md:mt-8 pt-4 md:pt-6 border-t">
               <div className="flex items-center gap-2 text-xs md:text-sm text-gray-600">
-                <CheckCircle2 className="h-3 w-3 md:h-4 md:w-4 text-green-500" />
+                <CheckCircle2 className="h-4 w-4 text-green-500" />
                 সব ফিচার বিনামূল্যে
               </div>
               
               <div className="flex flex-col sm:flex-row gap-2 md:gap-3 w-full sm:w-auto">
-                <Button variant="outline" className="px-4 md:px-6 text-xs md:text-sm h-9 md:h-10">
+                <Button variant="outline" className="px-4 md:px-6 text-xs md:text-sm h-9 md:h-10 border-2 hover:bg-gray-50">
                   প্রিভিউ দেখুন
                 </Button>
                 <Button 
                   onClick={createStore}
                   disabled={isCreating || !storeData.storeName || !storeData.ownerName}
-                  className="px-6 md:px-8 bg-gradient-to-r from-primary to-purple-600 hover:shadow-lg text-xs md:text-sm h-9 md:h-10"
+                  className="px-6 md:px-8 bg-gradient-to-r from-primary to-purple-600 hover:shadow-lg text-xs md:text-sm h-9 md:h-10 font-semibold"
                 >
                   {isCreating ? (
                     <>
