@@ -15,7 +15,7 @@ import { useSellerProfile } from '@/hooks/useSellerProfile';
 
 // রিফ্যাক্টরড কম্পোনেন্টস
 import StoreCreationForm, { FormValues, formSchema } from '@/components/store/StoreCreationForm';
-import { StoreFeaturesList } from '@/components/store/StoreFeaturesList';
+import StoreFeaturesList from '@/components/store/StoreFeaturesList';
 import SettingsTabContent from '@/components/store/SettingsTabContent';
 import DesignTabContent from '@/components/store/DesignTabContent';
 import AdditionalSettings from '@/components/store/AdditionalSettings';
