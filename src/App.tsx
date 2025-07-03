@@ -9,7 +9,6 @@ import routes from "./RoutesConfig";
 import { AppProvider } from "./context/AppContext";
 import { AuthProvider } from "./hooks/useAuth";
 import GlobalAIAssistant from "@/components/GlobalAIAssistant";
-import Navbar from "@/components/Navbar";
 
 const queryClient = new QueryClient();
 
@@ -21,11 +20,7 @@ const App = () => (
         <Sonner />
         <AuthProvider>
           <AppProvider>
-            <div className="min-h-screen bg-background font-sans antialiased">
-              <Navbar />
-              <RouterProvider router={routes} />
-              <GlobalAIAssistant />
-            </div>
+            <RouterProvider router={routes} />
           </AppProvider>
         </AuthProvider>
       </ThemeProvider>

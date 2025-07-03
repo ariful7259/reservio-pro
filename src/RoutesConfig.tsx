@@ -93,388 +93,395 @@ import ContentDashboard from "./pages/dashboard/content/ContentDashboard";
 import MarketplaceDashboard from "./pages/dashboard/marketplace/MarketplaceDashboard";
 import RentalDashboard from "./pages/dashboard/rental/RentalDashboard";
 import ServiceDashboard from "./pages/dashboard/service/ServiceDashboard";
+import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
 
 const routes = createBrowserRouter([
   {
     path: "/",
-    element: <Index />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/signup",
-    element: <Signup />,
-  },
-  {
-    path: "/forgot-password",
-    element: <ForgotPassword />,
-  },
-  {
-    path: "/profile",
-    element: <Profile />,
-  },
-  {
-    path: "/services",
-    element: <Services />,
-  },
-  {
-    path: "/services/category/:categoryId",
-    element: <ServiceCategoryPage />,
-  },
-  {
-    path: "/services/:serviceId",
-    element: <ServiceDetail />,
-  },
-  {
-    path: "/services/:serviceId/book",
-    element: <ServiceBooking />,
-  },
-  {
-    path: "/marketplace",
-    element: <Marketplace />,
-  },
-  {
-    path: "/marketplace/category/:categoryId",
-    element: <MarketplaceCategoryPage />,
-  },
-  {
-    path: "/marketplace/product/:productId", 
-    element: <ProductDetail />,
-  },
-  {
-    path: "/rentals",
-    element: <Rentals />,
-  },
-  {
-    path: "/rentals/category/:categoryId",
-    element: <RentalCategoryPage />,
-  },
-  {
-    path: "/rent/:id",
-    element: <RentDetail />,
-  },
-  {
-    path: "/rent-anything",
-    element: <RentAnything />,
-  },
-  {
-    path: "/housing",
-    element: <Housing />,
-  },
-  {
-    path: "/housing/:id",
-    element: <BasaBari />,
-  },
-  {
-    path: "/my-services",
-    element: <MyServices />,
-  },
-  {
-    path: "/wallet",
-    element: <Wallet />,
-  },
-  {
-    path: "/settings",
-    element: <Settings />,
-  },
-  {
-    path: "/help",
-    element: <Help />,
-  },
-  {
-    path: "/feedback",
-    element: <Feedback />,
-  },
-  {
-    path: "/notifications",
-    element: <Notifications />,
-  },
-  {
-    path: "/search",
-    element: <SearchPage />,
-  },
-  {
-    path: "/orders",
-    element: <Orders />,
-  },
-  {
-    path: "/favorites",
-    element: <Favorites />,
-  },
-  {
-    path: "/rewards",
-    element: <Rewards />,
-  },
-  {
-    path: "/reviews",
-    element: <Reviews />,
-  },
-  {
-    path: "/onboarding",
-    element: <Onboarding />,
-  },
-  {
-    path: "/admin",
-    element: <AdminDashboard />,
-  },
-  {
-    path: "/create-post",
-    element: <CreatePost />,
-  },
-  {
-    path: "/stories",
-    element: <Stories />,
-  },
-  {
-    path: "/forums",
-    element: <Forums />,
-  },
-  {
-    path: "/create-store",
-    element: <CreateStore />,
-  },
-  {
-    path: "/create-store-new",
-    element: <CreateStoreNew />,
-  },
-  {
-    path: "/store-demo",
-    element: <StoreDemo />,
-  },
-  {
-    path: "/store/:storeId",
-    element: <StoreDetails />,
-  },
-  {
-    path: "/product/:productId",
-    element: <ProductDetail />,
-  },
-  {
-    path: "/create-digital-product",
-    element: <CreateDigitalProduct />,
-  },
-  {
-    path: "/digital-products",
-    element: <DigitalProductsMarketplace />,
-  },
-  {
-    path: "/digital-product/:productId",
-    element: <DigitalProductDetail />,
-  },
-  {
-    path: "/digital-product",
-    element: <DigitalProduct />,
-  },
-  {
-    path: "/seller-dashboard",
-    element: <SellerDashboard />,
-  },
-  {
-    path: "/become-seller",
-    element: <BecomeSeller />,
-  },
-  {
-    path: "/appointments",
-    element: <Appointments />,
-  },
-  {
-    path: "/appointment-booking",
-    element: <AppointmentBooking />,
-  },
-  {
-    path: "/payment-methods",
-    element: <PaymentMethods />,
-  },
-  {
-    path: "/payment-gateway",
-    element: <PaymentGateway />,
-  },
-  {
-    path: "/payment-demo",
-    element: <PaymentDemo />,
-  },
-  {
-    path: "/payment-analytics",
-    element: <PaymentAnalytics />,
-  },
-  {
-    path: "/utilities",
-    element: <Utilities />,
-  },
-  {
-    path: "/transaction-history",
-    element: <TransactionHistory />,
-  },
-  {
-    path: "/multi-currency-support",
-    element: <MultiCurrencySupport />,
-  },
-  {
-    path: "/language-settings",
-    element: <LanguageSettings />,
-  },
-  {
-    path: "/security",
-    element: <Security />,
-  },
-  {
-    path: "/two-factor-authentication",
-    element: <TwoFactorAuthentication />,
-  },
-  {
-    path: "/kyc-verification",
-    element: <KycVerification />,
-  },
-  {
-    path: "/offline-mode",
-    element: <OfflineMode />,
-  },
-  {
-    path: "/qr-scanner",
-    element: <QrScanner />,
-  },
-  {
-    path: "/rental-booking",
-    element: <RentalBooking />,
-  },
-  {
-    path: "/rental-confirmation",
-    element: <RentalConfirmation />,
-  },
-  {
-    path: "/group-booking",
-    element: <GroupBooking />,
-  },
-  {
-    path: "/event-calendar",
-    element: <EventCalendar />,
-  },
-  {
-    path: "/chat/:userId",
-    element: <ChatPage />,
-  },
-  {
-    path: "/dispute-center",
-    element: <DisputeCenter />,
-  },
-  {
-    path: "/escrow-status",
-    element: <EscrowStatus />,
-  },
-  {
-    path: "/automatic-refund",
-    element: <AutomaticRefund />,
-  },
-  {
-    path: "/invoice-generator",
-    element: <InvoiceGenerator />,
-  },
-  {
-    path: "/commission-calculator",
-    element: <CommissionCalculator />,
-  },
-  {
-    path: "/marketplace-hub",
-    element: <MarketplaceHub />,
-  },
-  {
-    path: "/contact-owner",
-    element: <ContactOwner />,
-  },
-  {
-    path: "/profile-management",
-    element: <ProfileManagement />,
-  },
-  {
-    path: "/service-category",
-    element: <ServiceCategory />,
-  },
-  {
-    path: "/service-details",
-    element: <ServiceDetails />,
-  },
-  {
-    path: "/shopping-category",
-    element: <ShoppingCategory />,
-  },
-  {
-    path: "/shopping",
-    element: <Shopping />,
-  },
-  {
-    path: "/product-order",
-    element: <ProductOrder />,
-  },
-  {
-    path: "/referral-system",
-    element: <ReferralSystem />,
-  },
-  {
-    path: "/wish2earn",
-    element: <Wish2Earn />,
-  },
-  {
-    path: "/secure-pay",
-    element: <SecurePay />,
-  },
-  {
-    path: "/secure-pay-creator",
-    element: <SecurePayCreator />,
-  },
-  {
-    path: "/secure-pay-buyer",
-    element: <SecurePayBuyer />,
-  },
-  {
-    path: "/secure-pay-admin",
-    element: <SecurePayAdmin />,
-  },
-  {
-    path: "/creator-payment-gateway",
-    element: <CreatorPaymentGateway />,
-  },
-  {
-    path: "/paid-community",
-    element: <PaidCommunity />,
-  },
-  {
-    path: "/course-builder",
-    element: <CourseBuilder />,
-  },
-  {
-    path: "/create-link-in-bio",
-    element: <CreateLinkInBio />,
-  },
-  {
-    path: "/feature-selection",
-    element: <FeatureSelectionPage />,
-  },
-  {
-    path: "/dashboard",
-    element: <DashboardLayout />,
+    element: <Layout />,
     children: [
       {
-        path: "",
-        element: <Navigate to="/dashboard/content" replace />,
+        index: true,
+        element: <Index />,
       },
       {
-        path: "content",
-        element: <ContentDashboard />,
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "signup",
+        element: <Signup />,
+      },
+      {
+        path: "forgot-password",
+        element: <ForgotPassword />,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
+      },
+      {
+        path: "services",
+        element: <Services />,
+      },
+      {
+        path: "services/category/:categoryId",
+        element: <ServiceCategoryPage />,
+      },
+      {
+        path: "services/:serviceId",
+        element: <ServiceDetail />,
+      },
+      {
+        path: "services/:serviceId/book",
+        element: <ServiceBooking />,
       },
       {
         path: "marketplace",
-        element: <MarketplaceDashboard />,
+        element: <Marketplace />,
       },
       {
-        path: "rental",
-        element: <RentalDashboard />,
+        path: "marketplace/category/:categoryId",
+        element: <MarketplaceCategoryPage />,
       },
       {
-        path: "service",
-        element: <ServiceDashboard />,
+        path: "marketplace/product/:productId", 
+        element: <ProductDetail />,
+      },
+      {
+        path: "rentals",
+        element: <Rentals />,
+      },
+      {
+        path: "rentals/category/:categoryId",
+        element: <RentalCategoryPage />,
+      },
+      {
+        path: "rent/:id",
+        element: <RentDetail />,
+      },
+      {
+        path: "rent-anything",
+        element: <RentAnything />,
+      },
+      {
+        path: "housing",
+        element: <Housing />,
+      },
+      {
+        path: "housing/:id",
+        element: <BasaBari />,
+      },
+      {
+        path: "my-services",
+        element: <MyServices />,
+      },
+      {
+        path: "wallet",
+        element: <Wallet />,
+      },
+      {
+        path: "settings",
+        element: <Settings />,
+      },
+      {
+        path: "help",
+        element: <Help />,
+      },
+      {
+        path: "feedback",
+        element: <Feedback />,
+      },
+      {
+        path: "notifications",
+        element: <Notifications />,
+      },
+      {
+        path: "search",
+        element: <SearchPage />,
+      },
+      {
+        path: "orders",
+        element: <Orders />,
+      },
+      {
+        path: "favorites",
+        element: <Favorites />,
+      },
+      {
+        path: "rewards",
+        element: <Rewards />,
+      },
+      {
+        path: "reviews",
+        element: <Reviews />,
+      },
+      {
+        path: "onboarding",
+        element: <Onboarding />,
+      },
+      {
+        path: "admin",
+        element: <AdminDashboard />,
+      },
+      {
+        path: "create-post",
+        element: <CreatePost />,
+      },
+      {
+        path: "stories",
+        element: <Stories />,
+      },
+      {
+        path: "forums",
+        element: <Forums />,
+      },
+      {
+        path: "create-store",
+        element: <CreateStore />,
+      },
+      {
+        path: "create-store-new",
+        element: <CreateStoreNew />,
+      },
+      {
+        path: "store-demo",
+        element: <StoreDemo />,
+      },
+      {
+        path: "store/:storeId",
+        element: <StoreDetails />,
+      },
+      {
+        path: "product/:productId",
+        element: <ProductDetail />,
+      },
+      {
+        path: "create-digital-product",
+        element: <CreateDigitalProduct />,
+      },
+      {
+        path: "digital-products",
+        element: <DigitalProductsMarketplace />,
+      },
+      {
+        path: "digital-product/:productId",
+        element: <DigitalProductDetail />,
+      },
+      {
+        path: "digital-product",
+        element: <DigitalProduct />,
+      },
+      {
+        path: "seller-dashboard",
+        element: <SellerDashboard />,
+      },
+      {
+        path: "become-seller",
+        element: <BecomeSeller />,
+      },
+      {
+        path: "appointments",
+        element: <Appointments />,
+      },
+      {
+        path: "appointment-booking",
+        element: <AppointmentBooking />,
+      },
+      {
+        path: "payment-methods",
+        element: <PaymentMethods />,
+      },
+      {
+        path: "payment-gateway",
+        element: <PaymentGateway />,
+      },
+      {
+        path: "payment-demo",
+        element: <PaymentDemo />,
+      },
+      {
+        path: "payment-analytics",
+        element: <PaymentAnalytics />,
+      },
+      {
+        path: "utilities",
+        element: <Utilities />,
+      },
+      {
+        path: "transaction-history",
+        element: <TransactionHistory />,
+      },
+      {
+        path: "multi-currency-support",
+        element: <MultiCurrencySupport />,
+      },
+      {
+        path: "language-settings",
+        element: <LanguageSettings />,
+      },
+      {
+        path: "security",
+        element: <Security />,
+      },
+      {
+        path: "two-factor-authentication",
+        element: <TwoFactorAuthentication />,
+      },
+      {
+        path: "kyc-verification",
+        element: <KycVerification />,
+      },
+      {
+        path: "offline-mode",
+        element: <OfflineMode />,
+      },
+      {
+        path: "qr-scanner",
+        element: <QrScanner />,
+      },
+      {
+        path: "rental-booking",
+        element: <RentalBooking />,
+      },
+      {
+        path: "rental-confirmation",
+        element: <RentalConfirmation />,
+      },
+      {
+        path: "group-booking",
+        element: <GroupBooking />,
+      },
+      {
+        path: "event-calendar",
+        element: <EventCalendar />,
+      },
+      {
+        path: "chat/:userId",
+        element: <ChatPage />,
+      },
+      {
+        path: "dispute-center",
+        element: <DisputeCenter />,
+      },
+      {
+        path: "escrow-status",
+        element: <EscrowStatus />,
+      },
+      {
+        path: "automatic-refund",
+        element: <AutomaticRefund />,
+      },
+      {
+        path: "invoice-generator",
+        element: <InvoiceGenerator />,
+      },
+      {
+        path: "commission-calculator",
+        element: <CommissionCalculator />,
+      },
+      {
+        path: "marketplace-hub",
+        element: <MarketplaceHub />,
+      },
+      {
+        path: "contact-owner",
+        element: <ContactOwner />,
+      },
+      {
+        path: "profile-management",
+        element: <ProfileManagement />,
+      },
+      {
+        path: "service-category",
+        element: <ServiceCategory />,
+      },
+      {
+        path: "service-details",
+        element: <ServiceDetails />,
+      },
+      {
+        path: "shopping-category",
+        element: <ShoppingCategory />,
+      },
+      {
+        path: "shopping",
+        element: <Shopping />,
+      },
+      {
+        path: "product-order",
+        element: <ProductOrder />,
+      },
+      {
+        path: "referral-system",
+        element: <ReferralSystem />,
+      },
+      {
+        path: "wish2earn",
+        element: <Wish2Earn />,
+      },
+      {
+        path: "secure-pay",
+        element: <SecurePay />,
+      },
+      {
+        path: "secure-pay-creator",
+        element: <SecurePayCreator />,
+      },
+      {
+        path: "secure-pay-buyer",
+        element: <SecurePayBuyer />,
+      },
+      {
+        path: "secure-pay-admin",
+        element: <SecurePayAdmin />,
+      },
+      {
+        path: "creator-payment-gateway",
+        element: <CreatorPaymentGateway />,
+      },
+      {
+        path: "paid-community",
+        element: <PaidCommunity />,
+      },
+      {
+        path: "course-builder",
+        element: <CourseBuilder />,
+      },
+      {
+        path: "create-link-in-bio",
+        element: <CreateLinkInBio />,
+      },
+      {
+        path: "feature-selection",
+        element: <FeatureSelectionPage />,
+      },
+      {
+        path: "dashboard",
+        element: <DashboardLayout />,
+        children: [
+          {
+            path: "",
+            element: <Navigate to="/dashboard/content" replace />,
+          },
+          {
+            path: "content",
+            element: <ContentDashboard />,
+          },
+          {
+            path: "marketplace",
+            element: <MarketplaceDashboard />,
+          },
+          {
+            path: "rental",
+            element: <RentalDashboard />,
+          },
+          {
+            path: "service",
+            element: <ServiceDashboard />,
+          },
+        ],
       },
     ],
   },
