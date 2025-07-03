@@ -1,62 +1,177 @@
-import React from "react";
-import { createBrowserRouter } from "react-router-dom";
-import Index from "./pages/Index";
-import Layout from "./components/Layout";
-import NotFound from "./pages/NotFound";
 
-// Import route collections
-import { authRoutes } from "./routes/authRoutes";
-import { marketplaceRoutes } from "./routes/marketplaceRoutes";
-import { servicesRoutes } from "./routes/servicesRoutes";
-import { rentalsRoutes } from "./routes/rentalsRoutes";
-import { housingRoutes } from "./routes/housingRoutes";
-import { paymentRoutes } from "./routes/paymentRoutes";
-import { userRoutes } from "./routes/userRoutes";
-import { adminRoutes } from "./routes/adminRoutes";
-import { contentRoutes } from "./routes/contentRoutes";
-import { utilityRoutes } from "./routes/utilityRoutes";
-import { specialRoutes } from "./routes/specialRoutes";
-import { dashboardRoutes } from "./routes/dashboardRoutes";
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
 
-const routes = createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      {
-        index: true,
-        element: <Index />,
-      },
-      // Auth routes
-      ...authRoutes,
-      // Marketplace routes
-      ...marketplaceRoutes,
-      // Services routes
-      ...servicesRoutes,
-      // Rentals routes
-      ...rentalsRoutes,
-      // Housing routes
-      ...housingRoutes,
-      // Payment routes
-      ...paymentRoutes,
-      // User management routes
-      ...userRoutes,
-      // Admin routes
-      ...adminRoutes,
-      // Content routes
-      ...contentRoutes,
-      // Utility routes
-      ...utilityRoutes,
-      // Special functionality routes
-      ...specialRoutes,
-      // Dashboard routes
-      ...dashboardRoutes,
-    ],
-  },
-  {
-    path: "*",
-    element: <NotFound />,
-  },
-]);
+// Import pages
+import Index from './pages/Index';
+import CreatePost from './pages/CreatePost';
+import PaymentAnalytics from './pages/PaymentAnalytics';
+import TransactionHistory from './pages/TransactionHistory';
+import Reviews from './pages/Reviews';
+import ServiceDetails from './pages/ServiceDetails';
+import NotFound from './pages/NotFound';
+import DisputeCenter from './components/dispute/DisputeCenter';
+import InvoiceGenerator from './pages/InvoiceGenerator';
+import PaymentLinkGenerator from './components/payment/PaymentLinkGenerator';
+import LoyaltySystem from './components/loyalty/LoyaltySystem';
+import MultiCurrencySupport from './pages/MultiCurrencySupport';
+import PaymentMethods from './pages/PaymentMethods';
+import EscrowStatus from './pages/EscrowStatus';
+import CommissionCalculator from './pages/CommissionCalculator';
+import AutomaticRefund from './pages/AutomaticRefund';
+import IndustryTemplates from './components/store/IndustryTemplates';
+import DigitalProductsMarketplace from './pages/DigitalProductsMarketplace';
+import DigitalProductDetail from './pages/DigitalProductDetail';
+import CreateDigitalProduct from './pages/CreateDigitalProduct';
+import SellerDashboard from './pages/SellerDashboard';
+import DashboardLayout from './pages/dashboard/DashboardLayout';
+import ReferralSystem from './pages/ReferralSystem';
+import OnlineStoreFeatures from './components/product/OnlineStoreFeatures';
+import CreateStore from './pages/CreateStore';
+import StoreDemo from './pages/StoreDemo';
+import Housing from './pages/Housing';
+import Rentals from './pages/Rentals';
+import RentAnything from './pages/RentAnything';
+import BasaBari from './pages/BasaBari';
+import RentalCategoryPage from './pages/RentalCategoryPage';
+import { FeatureSelectionPage } from './pages/FeatureSelectionPage';
+import CreateLinkInBio from './pages/CreateLinkInBio';
+import CreatorPaymentGateway from '@/pages/CreatorPaymentGateway';
+import PaymentGateway from '@/pages/PaymentGateway';
+import SecurePay from '@/pages/SecurePay';
+import SecurePayCreator from '@/pages/SecurePayCreator';
+import SecurePayBuyer from '@/pages/SecurePayBuyer';
+import SecurePayAdmin from '@/pages/SecurePayAdmin';
+import Wish2Earn from './pages/Wish2Earn';
+import CreateStoreNew from "@/pages/CreateStoreNew";
+import Services from './pages/Services';
+import Marketplace from './pages/Marketplace';
+import MarketplaceHub from './pages/MarketplaceHub';
+import Wallet from './pages/Wallet';
+import Profile from './pages/Profile';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import ForgotPassword from './pages/ForgotPassword';
+import AdminDashboard from './pages/AdminDashboard';
+import MyServices from './pages/MyServices';
+import ProfileManagement from './pages/ProfileManagement';
+import BecomeSeller from './pages/BecomeSeller';
+import Orders from './pages/Orders';
+import Settings from './pages/Settings';
+import KycVerification from './pages/KycVerification';
+import ServiceCategoryPage from "./pages/ServiceCategoryPage";
+import RentDetail from './pages/RentDetail';
+import RentalBooking from './pages/RentalBooking';
+import ServiceBooking from './pages/ServiceBooking';
 
-export default routes;
+const RoutesConfig = () => {
+  return (
+    <Routes>
+      {/* Home Route */}
+      <Route path="/" element={<Index />} />
+      
+      {/* Authentication Routes */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      
+      {/* Profile Management Routes */}
+      <Route path="/profile-management" element={<ProfileManagement />} />
+      <Route path="/become-seller" element={<BecomeSeller />} />
+      <Route path="/orders" element={<Orders />} />
+      <Route path="/settings" element={<Settings />} />
+      <Route path="/kyc-verification" element={<KycVerification />} />
+      
+      {/* Admin Dashboard Route */}
+      <Route path="/admin-dashboard" element={<AdminDashboard />} />
+      <Route path="/admin-dashboard/:section" element={<AdminDashboard />} />
+      
+      {/* Create Post Route */}
+      <Route path="/create-post" element={<CreatePost />} />
+      
+      {/* Main Navigation Routes */}
+      <Route path="/services" element={<Services />} />
+      <Route path="/marketplace" element={<Marketplace />} />
+      <Route path="/marketplace-hub" element={<MarketplaceHub />} />
+      <Route path="/shopping" element={<Marketplace />} />
+      <Route path="/wallet" element={<Wallet />} />
+      
+      {/* My Services Route */}
+      <Route path="/my-services" element={<MyServices />} />
+      
+      {/* SecurePay Routes */}
+      <Route path="/securepay" element={<SecurePay />} />
+      <Route path="/securepay/creator" element={<SecurePayCreator />} />
+      <Route path="/securepay/buyer" element={<SecurePayBuyer />} />
+      <Route path="/securepay/admin" element={<SecurePayAdmin />} />
+      
+      {/* Payment Gateway Routes */}
+      <Route path="/payment-gateway" element={<PaymentGateway />} />
+      <Route path="/creator-payment-gateway" element={<CreatorPaymentGateway />} />
+      
+      {/* Payment and Money Management */}
+      <Route path="/payment/analytics" element={<PaymentAnalytics />} />
+      <Route path="/payment/transaction-history" element={<TransactionHistory />} />
+      <Route path="/payment/generate-invoice" element={<InvoiceGenerator />} />
+      <Route path="/payment/payment-links" element={<PaymentLinkGenerator />} />
+      <Route path="/payment/multi-currency" element={<MultiCurrencySupport />} />
+      <Route path="/payment/payment-methods" element={<PaymentMethods />} />
+      <Route path="/payment/escrow-status" element={<EscrowStatus />} />
+      <Route path="/payment/commission-calculator" element={<CommissionCalculator />} />
+      <Route path="/payment/auto-refund" element={<AutomaticRefund />} />
+      
+      {/* Service Related */}
+      <Route path="/service/:id" element={<ServiceDetails />} />
+      <Route path="/ratings-reviews" element={<Reviews />} />
+      <Route path="/feature-selection" element={<FeatureSelectionPage />} />
+      
+      {/* Booking Routes */}
+      <Route path="/service-booking/:id" element={<ServiceBooking />} />
+      <Route path="/rental-booking/:id" element={<RentalBooking />} />
+      
+      {/* Housing and Rentals */}
+      <Route path="/housing" element={<Housing />} />
+      <Route path="/rentals" element={<Rentals />} />
+      <Route path="/rent-anything" element={<RentAnything />} />
+      <Route path="/rental-category/:categoryId" element={<RentalCategoryPage />} />
+      <Route path="/rent-details/:id" element={<RentDetail />} />
+      <Route path="/basa-bari" element={<BasaBari />} />
+      
+      {/* Support and Dispute */}
+      <Route path="/help/dispute-center" element={<DisputeCenter />} />
+      <Route path="/loyalty-program" element={<LoyaltySystem />} />
+      <Route path="/referral" element={<ReferralSystem />} />
+      
+      {/* Digital Creator */}
+      <Route path="/digital-creator/store-templates" element={<IndustryTemplates />} />
+      <Route path="/create-store" element={<CreateStore />} />
+      <Route path="/create-store/new" element={<CreateStoreNew />} />
+      <Route path="/store-demo" element={<StoreDemo />} />
+      <Route path="/create-linkinbio" element={<CreateLinkInBio />} />
+      <Route path="/multi-channel" element={<OnlineStoreFeatures />} />
+      
+      {/* Digital Products Marketplace */}
+      <Route path="/digital-products" element={<DigitalProductsMarketplace />} />
+      <Route path="/digital-products/:productId" element={<DigitalProductDetail />} />
+      <Route path="/create-digital-product" element={<CreateDigitalProduct />} />
+      
+      {/* Wish2Earn Full Page */}
+      <Route path="/wish2earn" element={<Wish2Earn />} />
+      
+      {/* Seller Dashboard */}
+      <Route path="/seller-dashboard" element={<SellerDashboard />} />
+      
+      {/* Seller Dashboard Sections */}
+      <Route path="/dashboard/*" element={<DashboardLayout />} />
+      
+      {/* Service Category Page */}
+      <Route path="/services/category/:categoryId" element={<ServiceCategoryPage />} />
+      
+      {/* 404 Page */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+};
+
+export default RoutesConfig;
