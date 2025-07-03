@@ -29,15 +29,13 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
   const displayedCategories = isExpanded ? serviceCategories : serviceCategories.slice(0, 8);
 
   const handleCategoryClick = (categoryId: string) => {
-    // Set selected category to show subcategories and listings
-    setSelectedCategory(categoryId);
+    // Navigate to service category page like rent section
+    navigate(`/services/category/${categoryId}`);
   };
 
   const CategoryCard = ({ category }: { category: any }) => (
     <Card 
-      className={`relative overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group ${
-        selectedCategory === category.id ? 'ring-2 ring-primary bg-primary/5 shadow-lg' : 'hover:bg-gray-50 hover:scale-105'
-      }`} 
+      className={`relative overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group hover:bg-gray-50 hover:scale-105`} 
       onClick={() => handleCategoryClick(category.id)}
     >
       <CardContent className="p-3 flex flex-col items-center text-center">
