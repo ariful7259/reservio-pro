@@ -356,7 +356,7 @@ const Services = () => {
         setIsExpanded={setIsExpanded}
       />
 
-      {/* Selected Category Filter Form */}
+      {/* Selected Category Filter Form - Show category-specific subcategories */}
       {selectedCategory !== 'all' && (
         <div className="mb-8">
           {(() => {
@@ -375,6 +375,7 @@ const Services = () => {
                   onPriceRangeChange={setPriceRange}
                 />
                 
+                {/* Category Header with specific subcategories */}
                 <Card className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
                   <div className="flex items-center gap-4 mb-4">
                     <div className={`w-16 h-16 rounded-full ${category.color} flex items-center justify-center shadow-lg border-2 border-white/20`}>
@@ -435,7 +436,7 @@ const Services = () => {
         </div>
       )}
 
-      {/* Services Grid */}
+      {/* Services Grid - Show category-specific listings */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">
