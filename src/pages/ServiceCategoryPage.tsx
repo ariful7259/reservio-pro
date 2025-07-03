@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -9,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Search, Filter, Star, MapPin, Clock, Users, Share2, Bookmark, Heart, ArrowUpRight, CheckCircle } from 'lucide-react';
 import SocialShareModal from '@/components/SocialShareModal';
 import ServiceCategoryHeader from '@/components/services/ServiceCategoryHeader';
-import ServiceCategoryFilters from '@/components/services/ServiceCategoryFilters';
+import ServiceCategoryFilterForm from '@/components/services/ServiceCategoryFilterForm';
 import { useApp } from '@/context/AppContext';
 import { Stethoscope, Scissors, Wrench, Smartphone, UtensilsCrossed, Brush, Hammer, Bug, GraduationCap, Camera, Package, Laptop, PartyPopper, Building, Car } from 'lucide-react';
 
@@ -70,6 +69,46 @@ const ServiceCategoryPage = () => {
     count: 178,
     subcategories: language === 'bn' ? ['ফ্রিজ', 'এসি', 'টিভি', 'ওভেন'] : ['Refrigerator', 'AC', 'TV', 'Oven'],
     bookingTypes: language === 'bn' ? ['হোম ভিজিট', 'ডেলিভারি রিপেয়ার'] : ['Home Visit', 'Delivery Repair']
+  }, {
+    id: 'mobile',
+    name: 'মোবাইল ও গ্যাজেট সার্ভিস',
+    nameEn: 'Mobile & Gadget Services',
+    icon: <Smartphone className="h-7 w-7" />,
+    color: 'bg-purple-50',
+    iconColor: 'text-purple-500',
+    count: 145,
+    subcategories: language === 'bn' ? ['মোবাইল রিপেয়ার', 'ল্যাপটপ সার্ভিস', 'ডিসপ্লে রিপ্লেস', 'সফটওয়্যার ইনস্টল'] : ['Mobile Repair', 'Laptop Service', 'Display Replace', 'Software Install'],
+    bookingTypes: language === 'bn' ? ['পিক-আপ সার্ভিস', 'হোম সার্ভিস', 'ভিডিও ডায়াগনসিস'] : ['Pick-up Service', 'Home Service', 'Video Diagnosis']
+  }, {
+    id: 'cooking',
+    name: 'খাবার ও কুকিং সার্ভিস',
+    nameEn: 'Food & Cooking Services',
+    icon: <UtensilsCrossed className="h-7 w-7" />,
+    color: 'bg-orange-50',
+    iconColor: 'text-orange-500',
+    count: 67,
+    subcategories: language === 'bn' ? ['হোম কুক', 'ক্যাটারিং', 'রান্নার সহকারী', 'হেলদি ফুড প্রিপারেশন'] : ['Home Cook', 'Catering', 'Cooking Assistant', 'Healthy Food Preparation'],
+    bookingTypes: language === 'bn' ? ['সাপ্তাহিক সাবস্ক্রিপশন', 'নির্দিষ্ট তারিখে বুকিং'] : ['Weekly Subscription', 'Specific Date Booking']
+  }, {
+    id: 'cleaning',
+    name: 'হাউজ ক্লিনিং সার্ভিস',
+    nameEn: 'House Cleaning Services',
+    icon: <Brush className="h-7 w-7" />,
+    color: 'bg-green-50',
+    iconColor: 'text-green-500',
+    count: 198,
+    subcategories: language === 'bn' ? ['ঘর ঝাড়ু ও মপিং', 'বাথরুম ক্লিন', 'সোফা/কার্পেট ওয়াশ', 'অফিস ক্লিনিং'] : ['Room Sweeping & Mopping', 'Bathroom Clean', 'Sofa/Carpet Wash', 'Office Cleaning'],
+    bookingTypes: language === 'bn' ? ['One-Time', 'Weekly/Monthly Plan'] : ['One-Time', 'Weekly/Monthly Plan']
+  }, {
+    id: 'furniture',
+    name: 'ফার্নিচার মেকিং/রিপেয়ার',
+    nameEn: 'Furniture Making/Repair',
+    icon: <Hammer className="h-7 w-7" />,
+    color: 'bg-amber-50',
+    iconColor: 'text-amber-600',
+    count: 76,
+    subcategories: language === 'bn' ? ['কাঠের বিছানা তৈরি', 'সোফা ফোম চেঞ্জ', 'কাঠ মেরামত', 'ইন্টেরিয়র কাঠ কাজ'] : ['Wooden Bed Making', 'Sofa Foam Change', 'Wood Repair', 'Interior Wood Work'],
+    bookingTypes: language === 'bn' ? ['কাস্টম কোট', 'ভিডিও কল কনসাল্ট'] : ['Custom Quote', 'Video Call Consult']
   }];
 
   // Sample services data for the selected category
@@ -133,7 +172,16 @@ const ServiceCategoryPage = () => {
     const matchesSubcategory = selectedSubcategory === 'all' || service.subcategory === selectedSubcategory;
     const matchesLocation = selectedLocation === 'all' || service.location.toLowerCase().includes(selectedLocation.toLowerCase());
     
-    return matchesCategory && matchesSearch && matchesSubcategory && matchesLocation;
+    // Price range filtering
+    let matchesPrice = true;
+    if (priceRange.min || priceRange.max) {
+      const servicePrice = parseInt(service.price.replace(/[৳,]/g, ''));
+      const minPrice = priceRange.min ? parseInt(priceRange.min) : 0;
+      const maxPrice = priceRange.max ? parseInt(priceRange.max) : Infinity;
+      matchesPrice = servicePrice >= minPrice && servicePrice <= maxPrice;
+    }
+    
+    return matchesCategory && matchesSearch && matchesSubcategory && matchesLocation && matchesPrice;
   });
 
   const handleShare = (e: React.MouseEvent, service: any) => {
@@ -204,6 +252,28 @@ const ServiceCategoryPage = () => {
           <Filter className="h-4 w-4" />
         </Button>
       </div>
+
+      {/* Filter Section */}
+      {showFilters && (
+        <div className="mb-6">
+          <ServiceCategoryFilterForm
+            category={category}
+            selectedSubcategory={selectedSubcategory}
+            selectedLocation={selectedLocation}
+            priceRange={priceRange}
+            onSubcategoryChange={setSelectedSubcategory}
+            onLocationChange={setSelectedLocation}
+            onPriceRangeChange={setPriceRange}
+            onApplyFilter={() => {
+              toast({
+                title: "ফিল্টার প্রয়োগ করা হয়েছে",
+                description: `${filteredServices.length}টি সার্ভিস পাওয়া গেছে`
+              });
+              setShowFilters(false);
+            }}
+          />
+        </div>
+      )}
 
       {/* Category Info Card */}
       <Card className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 mb-6">
