@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import SocialShareModal from '@/components/SocialShareModal';
 import CategoryFilterForm from '@/components/rentals/CategoryFilterForm';
+import { rentCategories } from '@/data/rentalCategoriesData';
 
 const categoryData = {
   'electronics': {
@@ -320,6 +321,11 @@ const RentalCategoryPage = () => {
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
   const [isGettingLocation, setIsGettingLocation] = useState(false);
 
+  // Find category from rentCategories data
+  const rentCategory = rentCategories.find(cat => 
+    cat.path.includes(categoryId || '') || cat.name.toLowerCase().includes(categoryId?.toLowerCase() || '')
+  );
+  
   const category = categoryId && categoryData[categoryId as keyof typeof categoryData];
   
   useEffect(() => {
@@ -410,7 +416,7 @@ const RentalCategoryPage = () => {
 
   return (
     <div className="container px-4 pt-20 pb-20">
-      <div className="flex items-center gap-2 mb-6">
+      <div className="flex items-center gap-2 mb-2">
         <Button 
           variant="ghost" 
           size="icon" 
@@ -420,6 +426,51 @@ const RentalCategoryPage = () => {
         </Button>
         <h1 className="text-2xl font-bold">{category.title}</h1>
       </div>
+      {rentCategory && (
+        <p className="text-sm text-muted-foreground mb-6">
+          {rentCategory.count} আইটেম উপলব্ধ • {rentCategory.subcategories?.length || 0} সাব-ক্যাটাগরি
+        </p>
+      )}
+
+      {/* Category Info Card */}
+      {rentCategory && (
+        <Card className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 mb-6">
+          <div className="flex items-center gap-4 mb-3">
+            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+              {rentCategory.icon}
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold">{rentCategory.name}</h3>
+              <p className="text-sm text-muted-foreground">
+                {rentCategory.count} আইটেম উপলব্ধ
+              </p>
+            </div>
+          </div>
+          
+          {rentCategory.subcategories && rentCategory.subcategories.length > 0 && (
+            <div>
+              <h4 className="font-medium mb-2 text-sm">সাব-ক্যাটাগরি সমূহ:</h4>
+              <div className="flex flex-wrap gap-2">
+                {rentCategory.subcategories.slice(0, 6).map((sub: any, index: number) => (
+                  <Badge 
+                    key={index} 
+                    variant="outline"
+                    className="cursor-pointer hover:bg-primary/10 text-xs"
+                    onClick={() => setSelectedSubcategory(selectedSubcategory === sub.name ? 'all' : sub.name)}
+                  >
+                    {sub.name} ({sub.count || 0})
+                  </Badge>
+                ))}
+                {rentCategory.subcategories.length > 6 && (
+                  <Badge variant="secondary" className="text-xs">
+                    +{rentCategory.subcategories.length - 6} আরও
+                  </Badge>
+                )}
+              </div>
+            </div>
+          )}
+        </Card>
+      )}
 
       {/* Filter Section */}
       <div className="mb-6">
@@ -434,7 +485,11 @@ const RentalCategoryPage = () => {
         
         {showFilters && (
           <CategoryFilterForm
-            category={{ title: category.title, id: categoryId }}
+            category={{
+              title: category.title,
+              id: categoryId,
+              subcategories: rentCategory?.subcategories || []
+            }}
             selectedSubcategory={selectedSubcategory}
             selectedLocation={selectedLocation}
             priceRange={priceRange}
