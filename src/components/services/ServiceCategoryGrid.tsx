@@ -29,14 +29,14 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
   const displayedCategories = isExpanded ? serviceCategories : serviceCategories.slice(0, 8);
 
   const handleCategoryClick = (categoryId: string) => {
-    // Navigate to category page instead of just setting selected category
-    navigate(`/services/category/${categoryId}`);
+    // Set selected category to show subcategories and listings
+    setSelectedCategory(categoryId);
   };
 
   const CategoryCard = ({ category }: { category: any }) => (
     <Card 
-      className={`relative overflow-hidden hover:shadow-md transition-all cursor-pointer ${
-        selectedCategory === category.id ? 'ring-2 ring-primary bg-primary/5' : 'hover:bg-gray-50'
+      className={`relative overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group ${
+        selectedCategory === category.id ? 'ring-2 ring-primary bg-primary/5 shadow-lg' : 'hover:bg-gray-50 hover:scale-105'
       }`} 
       onClick={() => handleCategoryClick(category.id)}
     >
@@ -59,22 +59,28 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
           </div>
         )}
         
-        <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full ${category.color} flex items-center justify-center mb-2`}>
-          <div className={category.iconColor}>
-            {category.icon}
+        {/* Digital Round Icon Style */}
+        <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full ${category.color} flex items-center justify-center mb-3 shadow-lg group-hover:shadow-xl transition-all duration-300 border-2 border-white/20`}>
+          <div className={`${category.iconColor} transition-transform duration-300 group-hover:scale-110`}>
+            {React.cloneElement(category.icon, { className: "h-8 w-8 md:h-10 md:w-10" })}
           </div>
         </div>
         
-        <h3 className="font-medium text-xs md:text-sm mb-1 line-clamp-2">
+        <h3 className="font-semibold text-sm md:text-base mb-2 line-clamp-2 group-hover:text-primary transition-colors">
           {language === 'bn' ? category.name : category.nameEn}
         </h3>
         
-        <Badge variant="secondary" className="text-xs">
+        <Badge variant="secondary" className="text-xs mb-1">
           {category.count} {language === 'bn' ? 'সার্ভিস' : 'services'}
         </Badge>
         
-        <div className="mt-1 text-xs text-muted-foreground">
+        <div className="text-xs text-muted-foreground">
           {category.subcategories.length} {language === 'bn' ? 'সাব-ক্যাটাগরি' : 'subcategories'}
+        </div>
+
+        {/* Click indicator */}
+        <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          <ChevronRight className="h-4 w-4 text-primary" />
         </div>
       </CardContent>
     </Card>
@@ -88,7 +94,7 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
         </h2>
         
         {/* Mobile: 4 columns, Desktop: 4 columns */}
-        <div className="grid grid-cols-4 gap-2 md:gap-4">
+        <div className="grid grid-cols-4 gap-3 md:gap-6">
           {displayedCategories.map(category => (
             <CategoryCard key={category.id} category={category} />
           ))}

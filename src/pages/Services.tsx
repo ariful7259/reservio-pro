@@ -375,11 +375,11 @@ const Services = () => {
                   onPriceRangeChange={setPriceRange}
                 />
                 
-                <Card className="p-6">
+                <Card className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
                   <div className="flex items-center gap-4 mb-4">
-                    <div className={`w-12 h-12 rounded-full ${category.color} flex items-center justify-center`}>
+                    <div className={`w-16 h-16 rounded-full ${category.color} flex items-center justify-center shadow-lg border-2 border-white/20`}>
                       <div className={category.iconColor}>
-                        {category.icon}
+                        {React.cloneElement(category.icon, { className: "h-8 w-8" })}
                       </div>
                     </div>
                     <div>
@@ -388,6 +388,14 @@ const Services = () => {
                       </h3>
                       <p className="text-sm text-muted-foreground">{category.monetization}</p>
                     </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => setSelectedCategory('all')}
+                      className="ml-auto"
+                    >
+                      {language === 'bn' ? 'সব দেখুন' : 'Show All'}
+                    </Button>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -397,7 +405,14 @@ const Services = () => {
                       </h4>
                       <div className="flex flex-wrap gap-2">
                         {category.subcategories.map((sub, index) => (
-                          <Badge key={index} variant="outline">{sub}</Badge>
+                          <Badge 
+                            key={index} 
+                            variant={selectedSubcategory === sub ? "default" : "outline"}
+                            className="cursor-pointer hover:bg-primary/10"
+                            onClick={() => setSelectedSubcategory(selectedSubcategory === sub ? 'all' : sub)}
+                          >
+                            {sub}
+                          </Badge>
                         ))}
                       </div>
                     </div>
@@ -433,7 +448,7 @@ const Services = () => {
             }
           </h2>
           <span className="text-sm text-muted-foreground">
-            {filteredServices.length}{language === 'bn' ? 'টি সার্ভিস পাওয়া গেছে' : ' services found'}
+            {filteredServices.length} {language === 'bn' ? 'টি সার্ভিস পাওয়া গেছে' : ' services found'}
           </span>
         </div>
         
