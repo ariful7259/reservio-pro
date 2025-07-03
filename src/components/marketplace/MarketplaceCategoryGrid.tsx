@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ChevronRight, Flame, Sparkles } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { useNavigate } from 'react-router-dom';
 import { marketplaceCategories, type MarketplaceCategory } from '@/utils/marketplaceData';
 
 interface MarketplaceCategoryGridProps {
@@ -17,20 +18,22 @@ export const MarketplaceCategoryGrid: React.FC<MarketplaceCategoryGridProps> = (
   setSelectedCategory
 }) => {
   const { language, t } = useApp();
+  const navigate = useNavigate();
   const [showAllCategories, setShowAllCategories] = useState(false);
 
   const displayedCategories = showAllCategories 
     ? marketplaceCategories 
     : marketplaceCategories.slice(0, 8);
 
+  const handleCategoryClick = (categoryId: string) => {
+    // Navigate to marketplace category page like rent section
+    navigate(`/marketplace/category/${categoryId}`);
+  };
+
   const CategoryCard = ({ category }: { category: MarketplaceCategory }) => (
     <Card
-      className={`relative overflow-hidden hover:shadow-md transition-all cursor-pointer ${
-        selectedCategory === category.id
-          ? 'ring-2 ring-primary bg-primary/5'
-          : 'hover:bg-gray-50'
-      }`}
-      onClick={() => setSelectedCategory(category.id)}
+      className={`relative overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group hover:bg-gray-50 hover:scale-105`}
+      onClick={() => handleCategoryClick(category.id)}
     >
       <CardContent className="p-3 flex flex-col items-center text-center">
         {/* New/Hot Badges */}
@@ -51,22 +54,28 @@ export const MarketplaceCategoryGrid: React.FC<MarketplaceCategoryGridProps> = (
           </div>
         )}
         
-        <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full ${category.color} flex items-center justify-center mb-2`}>
-          <div className={category.iconColor}>
+        {/* Digital Round Icon Style */}
+        <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full ${category.color} flex items-center justify-center mb-2 shadow-lg group-hover:shadow-xl transition-all duration-300 border-2 border-white/20`}>
+          <div className={`${category.iconColor} transition-transform duration-300 group-hover:scale-110`}>
             {category.icon}
           </div>
         </div>
         
-        <h3 className="font-medium text-xs md:text-sm mb-1 line-clamp-2">
+        <h3 className="font-medium text-xs md:text-sm mb-1 line-clamp-2 group-hover:text-primary transition-colors">
           {language === 'bn' ? category.name : category.nameEn}
         </h3>
         
-        <Badge variant="secondary" className="text-xs">
+        <Badge variant="secondary" className="text-xs mb-1">
           {category.count} {language === 'bn' ? 'পণ্য' : 'items'}
         </Badge>
         
-        <div className="mt-1 text-xs text-muted-foreground">
+        <div className="text-xs text-muted-foreground">
           {category.subcategories.length} {language === 'bn' ? 'সাব-ক্যাটাগরি' : 'subcategories'}
+        </div>
+
+        {/* Click indicator */}
+        <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          <ChevronRight className="h-4 w-4 text-primary" />
         </div>
       </CardContent>
     </Card>
