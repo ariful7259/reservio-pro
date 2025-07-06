@@ -26,7 +26,9 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
   const { language, t } = useApp();
   const navigate = useNavigate();
   
-  const displayedCategories = isExpanded ? serviceCategories : serviceCategories.slice(0, 8);
+  const initialDisplayCount = 8;
+  const displayedCategories = serviceCategories.slice(0, initialDisplayCount);
+  const remainingCategories = serviceCategories.slice(initialDisplayCount);
 
   const handleCategoryClick = (categoryId: string) => {
     // Navigate to service category page like rent section
@@ -91,7 +93,7 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
           {language === 'bn' ? 'ক্যাটাগরি সমূহ' : 'Categories'}
         </h2>
         
-        {/* Mobile: 4 columns, Desktop: 4 columns */}
+        {/* Initial Categories - Mobile: 4 columns, Desktop: 4 columns */}
         <div className="grid grid-cols-4 gap-3 md:gap-6">
           {displayedCategories.map(category => (
             <CategoryCard key={category.id} category={category} />
@@ -99,23 +101,29 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
         </div>
       </div>
       
-      <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className="w-full">
-        <CollapsibleContent className="mt-4">
+      {remainingCategories.length > 0 && (
+        <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className="w-full">
+          <CollapsibleContent className="space-y-4">
+            <div className="grid grid-cols-4 gap-3 md:gap-6">
+              {remainingCategories.map(category => (
+                <CategoryCard key={category.id} category={category} />
+              ))}
+            </div>
+          </CollapsibleContent>
           
-        </CollapsibleContent>
-        
-        <div className="flex justify-center mt-6">
-          <CollapsibleTrigger asChild>
-            <Button variant="outline" className="text-red-500 border-red-500 hover:bg-red-50">
-              {isExpanded ? (
-                <>{language === 'bn' ? '∧ কম দেখুন' : '∧ Show Less'}</>
-              ) : (
-                <>{language === 'bn' ? '∨ আরো দেখুন' : '∨ Show More'}</>
-              )}
-            </Button>
-          </CollapsibleTrigger>
-        </div>
-      </Collapsible>
+          <div className="flex justify-center mt-6">
+            <CollapsibleTrigger asChild>
+              <Button variant="outline" className="text-red-500 border-red-500 hover:bg-red-50">
+                {isExpanded ? (
+                  <>{language === 'bn' ? '∧ কম দেখুন' : '∧ Show Less'}</>
+                ) : (
+                  <>{language === 'bn' ? '∨ আরো দেখুন' : '∨ Show More'}</>
+                )}
+              </Button>
+            </CollapsibleTrigger>
+          </div>
+        </Collapsible>
+      )}
     </div>
   );
 };
