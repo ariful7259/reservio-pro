@@ -109,6 +109,105 @@ const Services = () => {
     subcategories: language === 'bn' ? ['কাঠের বিছানা তৈরি', 'সোফা ফোম চেঞ্জ', 'কাঠ মেরামত', 'ইন্টেরিয়র কাঠ কাজ'] : ['Wooden Bed Making', 'Sofa Foam Change', 'Wood Repair', 'Interior Wood Work'],
     bookingTypes: language === 'bn' ? ['কাস্টম কোট', 'ভিডিও কল কনসাল্ট'] : ['Custom Quote', 'Video Call Consult'],
     monetization: language === 'bn' ? 'কাস্টম বিলিং + % কমিশন' : 'Custom billing + % commission'
+  }, {
+    id: 'education',
+    name: 'শিক্ষা ও টিউটরিং',
+    nameEn: 'Education & Tutoring',
+    icon: React.createElement('div', { className: 'text-2xl' }, '📚'),
+    color: 'bg-indigo-50',
+    iconColor: 'text-indigo-500',
+    count: 142,
+    subcategories: language === 'bn' ? ['হোম টিউটর', 'অনলাইন ক্লাস', 'ভাষা শিক্ষা', 'স্কিল ডেভেলপমেন্ট'] : ['Home Tutor', 'Online Classes', 'Language Learning', 'Skill Development'],
+    bookingTypes: language === 'bn' ? ['হোম ভিজিট', 'অনলাইন সেশন', 'গ্রুপ ক্লাস'] : ['Home Visit', 'Online Session', 'Group Class'],
+    monetization: language === 'bn' ? 'ঘণ্টা প্রতি চার্জ + % কমিশন' : 'Hourly charge + % commission'
+  }, {
+    id: 'photography',
+    name: 'ফটোগ্রাফি ও ভিডিওগ্রাফি',
+    nameEn: 'Photography & Videography',
+    icon: React.createElement('div', { className: 'text-2xl' }, '📸'),
+    color: 'bg-rose-50',
+    iconColor: 'text-rose-500',
+    count: 98,
+    subcategories: language === 'bn' ? ['ওয়েডিং ফটো', 'ইভেন্ট কভারেজ', 'প্রোডাক্ট ফটো', 'পোর্ট্রেইট'] : ['Wedding Photo', 'Event Coverage', 'Product Photo', 'Portrait'],
+    bookingTypes: language === 'bn' ? ['প্যাকেজ বুকিং', 'ঘণ্টা ভিত্তিক', 'কাস্টম প্রজেক্ট'] : ['Package Booking', 'Hourly Basis', 'Custom Project'],
+    monetization: language === 'bn' ? 'প্যাকেজ রেট + ট্রাভেল চার্জ' : 'Package rate + Travel charge'
+  }, {
+    id: 'event',
+    name: 'ইভেন্ট প্ল্যানিং',
+    nameEn: 'Event Planning',
+    icon: React.createElement('div', { className: 'text-2xl' }, '🎉'),
+    color: 'bg-fuchsia-50',
+    iconColor: 'text-fuchsia-500',
+    count: 67,
+    subcategories: language === 'bn' ? ['বিয়ে অনুষ্ঠান', 'জন্মদিন পার্টি', 'কর্পোরেট ইভেন্ট', 'সাংস্কৃতিক অনুষ্ঠান'] : ['Wedding Planning', 'Birthday Party', 'Corporate Event', 'Cultural Program'],
+    bookingTypes: language === 'bn' ? ['ফুল প্যাকেজ', 'আংশিক সেবা', 'কনসালটেশন অনলি'] : ['Full Package', 'Partial Service', 'Consultation Only'],
+    monetization: language === 'bn' ? 'প্রজেক্ট বেসড + ভেন্ডর কমিশন' : 'Project based + Vendor commission'
+  }, {
+    id: 'pest_control',
+    name: 'পেস্ট কন্ট্রোল',
+    nameEn: 'Pest Control',
+    icon: React.createElement('div', { className: 'text-2xl' }, '🐛'),
+    color: 'bg-lime-50',
+    iconColor: 'text-lime-600',
+    count: 54,
+    subcategories: language === 'bn' ? ['মশা নিধন', 'তেলাপোকা দমন', 'ইঁদুর নিয়ন্ত্রণ', 'জেনারেল স্প্রে'] : ['Mosquito Control', 'Cockroach Control', 'Rat Control', 'General Spray'],
+    bookingTypes: language === 'bn' ? ['ওয়ান টাইম সার্ভিস', 'মাসিক চুক্তি', 'ইমার্জেন্সি কল'] : ['One Time Service', 'Monthly Contract', 'Emergency Call'],
+    monetization: language === 'bn' ? 'সার্ভিস চার্জ + কেমিক্যাল কস্ট' : 'Service charge + Chemical cost'
+  }, {
+    id: 'plumbing',
+    name: 'প্লাম্বিং সার্ভিস',
+    nameEn: 'Plumbing Services',
+    icon: React.createElement('div', { className: 'text-2xl' }, '🔧'),
+    color: 'bg-sky-50',
+    iconColor: 'text-sky-500',
+    count: 123,
+    subcategories: language === 'bn' ? ['পাইপ লিকেজ', 'বাথরুম ফিটিং', 'ড্রেন ক্লিনিং', 'ওয়াটার হিটার'] : ['Pipe Leakage', 'Bathroom Fitting', 'Drain Cleaning', 'Water Heater'],
+    bookingTypes: language === 'bn' ? ['ইমার্জেন্সি কল', 'স্ল্যাট টাইম', 'প্রজেক্ট বেসড'] : ['Emergency Call', 'Slot Time', 'Project Based'],
+    monetization: language === 'bn' ? 'কল আউট চার্জ + লেবার + পার্টস' : 'Call out charge + Labor + Parts'
+  }, {
+    id: 'security',
+    name: 'সিকিউরিটি সার্ভিস',
+    nameEn: 'Security Services',
+    icon: React.createElement('div', { className: 'text-2xl' }, '🛡️'),
+    color: 'bg-slate-50',
+    iconColor: 'text-slate-600',
+    count: 89,
+    subcategories: language === 'bn' ? ['হোম সিকিউরিটি', 'ইভেন্ট সিকিউরিটি', 'CCTV ইনস্টলেশন', 'পার্সোনাল গার্ড'] : ['Home Security', 'Event Security', 'CCTV Installation', 'Personal Guard'],
+    bookingTypes: language === 'bn' ? ['দৈনিক ভিত্তিতে', 'মাসিক চুক্তি', 'ইভেন্ট বেসড'] : ['Daily Basis', 'Monthly Contract', 'Event Based'],
+    monetization: language === 'bn' ? 'ঘণ্টা প্রতি রেট + সুপারভিশন চার্জ' : 'Hourly rate + Supervision charge'
+  }, {
+    id: 'transport',
+    name: 'ট্রান্সপোর্ট সার্ভিস',
+    nameEn: 'Transport Services',
+    icon: React.createElement('div', { className: 'text-2xl' }, '🚗'),
+    color: 'bg-cyan-50',
+    iconColor: 'text-cyan-600',
+    count: 156,
+    subcategories: language === 'bn' ? ['প্রাইভেট কার', 'ট্রাক রেন্টাল', 'পিকআপ ভ্যান', 'লং ট্রিপ'] : ['Private Car', 'Truck Rental', 'Pickup Van', 'Long Trip'],
+    bookingTypes: language === 'bn' ? ['ঘণ্টা ভিত্তিক', 'দিন ভিত্তিক', 'কিলোমিটার ভিত্তিক'] : ['Hourly Basis', 'Daily Basis', 'Per Kilometer'],
+    monetization: language === 'bn' ? 'ট্রিপ চার্জ + ফুয়েল + ড্রাইভার চার্জ' : 'Trip charge + Fuel + Driver charge'
+  }, {
+    id: 'pet_care',
+    name: 'পেট কেয়ার',
+    nameEn: 'Pet Care',
+    icon: React.createElement('div', { className: 'text-2xl' }, '🐕'),
+    color: 'bg-emerald-50',
+    iconColor: 'text-emerald-500',
+    count: 43,
+    subcategories: language === 'bn' ? ['পেট গ্রুমিং', 'ভেট কনসালটেশন', 'পেট সিটিং', 'ট্রেনিং'] : ['Pet Grooming', 'Vet Consultation', 'Pet Sitting', 'Training'],
+    bookingTypes: language === 'bn' ? ['হোম ভিজিট', 'ক্লিনিক ভিজিট', 'অনলাইন কনসালট'] : ['Home Visit', 'Clinic Visit', 'Online Consult'],
+    monetization: language === 'bn' ? 'সার্ভিস চার্জ + কেয়ার প্রোডাক্ট' : 'Service charge + Care products'
+  }, {
+    id: 'tailoring',
+    name: 'টেইলরিং সার্ভিস',
+    nameEn: 'Tailoring Services',
+    icon: React.createElement('div', { className: 'text-2xl' }, '🪡'),
+    color: 'bg-violet-50',
+    iconColor: 'text-violet-500',
+    count: 87,
+    subcategories: language === 'bn' ? ['কাস্টম স্যুট', 'পোশাক সিলাই', 'অলটারেশন', 'ড্রেস ডিজাইন'] : ['Custom Suit', 'Clothing Stitching', 'Alteration', 'Dress Design'],
+    bookingTypes: language === 'bn' ? ['মেজারমেন্ট হোম', 'শপ ভিজিট', 'ডেলিভারি সার্ভিস'] : ['Measurement Home', 'Shop Visit', 'Delivery Service'],
+    monetization: language === 'bn' ? 'পিস রেট + ম্যাটেরিয়াল চার্জ' : 'Piece rate + Material charge'
   }];
 
   const allServices = [{
