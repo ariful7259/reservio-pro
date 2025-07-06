@@ -268,8 +268,119 @@ const Services = () => {
         setIsExpanded={setIsExpanded}
       />
 
+      {/* Service Listings Section */}
+      <div className="mt-8">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-lg font-semibold">
+            {language === 'bn' ? 'উপযুক্ত সেবা সমূহ' : 'Available Services'}
+          </h2>
+          <Badge variant="secondary" className="text-sm">
+            {filteredServices.length} {language === 'bn' ? 'সেবা পাওয়া গেছে' : 'services found'}
+          </Badge>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredServices.map(service => (
+            <Card 
+              key={service.id} 
+              className="overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-300 group"
+              onClick={() => handleServiceClick(service.id)}
+            >
+              <div className="relative aspect-video">
+                <img 
+                  src={service.image} 
+                  alt={service.title} 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                {service.isVerified && (
+                  <Badge className="absolute top-2 left-2 bg-green-100 text-green-700">
+                    <CheckCircle className="h-3 w-3 mr-1" />
+                    {language === 'bn' ? 'যাচাইকৃত' : 'Verified'}
+                  </Badge>
+                )}
+                <div className="absolute top-2 right-2 flex flex-col gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="bg-white/90 h-8 w-8 rounded-full hover:bg-white"
+                    onClick={(e) => handleBookmark(e, service.id)}
+                  >
+                    <Heart className="h-4 w-4" />
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="bg-white/90 h-8 w-8 rounded-full hover:bg-white"
+                    onClick={(e) => handleShare(e, service.id)}
+                  >
+                    <Share2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+              
+              <CardContent className="p-4">
+                <div className="flex items-start justify-between mb-2">
+                  <h3 className="font-semibold text-base line-clamp-1">{service.title}</h3>
+                  <div className="flex items-center ml-2">
+                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    <span className="text-sm ml-1">{service.rating}</span>
+                    <span className="text-xs text-muted-foreground ml-1">({service.reviews})</span>
+                  </div>
+                </div>
+                
+                <p className="text-sm text-muted-foreground mb-2">{service.provider}</p>
+                
+                <div className="flex items-center text-sm text-muted-foreground mb-2">
+                  <MapPin className="h-4 w-4 mr-1" />
+                  <span>{service.location}</span>
+                </div>
+                
+                <div className="flex items-center text-sm text-muted-foreground mb-3">
+                  <Clock className="h-4 w-4 mr-1" />
+                  <span>{language === 'bn' ? 'রেসপন্স টাইম: ' : 'Response: '}{service.responseTime}</span>
+                </div>
+                
+                <div className="flex flex-wrap gap-1 mb-3">
+                  {service.bookingTypes.map((type: string, index: number) => (
+                    <Badge key={index} variant="outline" className="text-xs">
+                      {type}
+                    </Badge>
+                  ))}
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <p className="text-lg font-bold text-primary">{service.price}</p>
+                  <Button 
+                    size="sm"
+                    onClick={(e) => handleBookService(e, service.id)}
+                    className="hover:scale-105 transition-transform"
+                  >
+                    <ArrowUpRight className="h-4 w-4 mr-1" />
+                    {language === 'bn' ? 'বুক করুন' : 'Book Now'}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {filteredServices.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-muted-foreground mb-4">
+              <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
+              <p className="text-lg">
+                {language === 'bn' ? 'কোনো সেবা পাওয়া যায়নি' : 'No services found'}
+              </p>
+              <p className="text-sm">
+                {language === 'bn' ? 'অনুসন্ধান পরিবর্তন করে আবার চেষ্টা করুন' : 'Try adjusting your search criteria'}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Show More Button */}
-      <div className="text-center">
+      <div className="text-center mt-8">
         <Button className="px-8">
           {language === 'bn' ? 'আরো সেবা দেখুন' : 'Show More Services'}
         </Button>
