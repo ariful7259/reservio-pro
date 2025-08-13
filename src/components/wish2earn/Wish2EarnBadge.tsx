@@ -17,17 +17,8 @@ export const Wish2EarnBadge: React.FC<{
   };
 
   // Both mobile & desktop: open Dialog with Wish2EarnModule
-  return (
-    <>
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        className="relative h-8 w-8 md:h-10 md:w-10 bg-gradient-to-r from-purple-100 to-pink-100 hover:from-purple-200 hover:to-pink-200 rounded-full"
-        onClick={handleOpen}
-      >
-        <Heart className="h-4 w-4 md:h-5 md:w-5 text-purple-600" />
-        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-3 w-3 md:h-4 md:w-4 flex items-center justify-center font-bold">2</span>
-      </Button>
+  return <>
+      
       
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogOverlay className="bg-black/50" />
@@ -37,7 +28,6 @@ export const Wish2EarnBadge: React.FC<{
           </div>
         </DialogContent>
       </Dialog>
-    </>
-  );
+    </>;
 };
 export default Wish2EarnBadge;
