@@ -44,6 +44,16 @@ export const ActionButtons: React.FC = () => {
         <StoreIcon className="h-4 w-4 md:h-5 md:w-5" />
       </Button>
 
+      {/* Wish2Earn Feature Button */}
+      <Button 
+        variant="ghost" 
+        size="sm" 
+        className="relative h-8 md:h-10 px-2 md:px-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold text-xs md:text-sm rounded-lg shadow-md"
+        onClick={handleWish2EarnClick}
+      >
+        🎯 Wish2Earn
+      </Button>
+
       {/* নিচের Profile (avatar) বাদ দিয়ে Wish2EarnBadge লাগানো হলো */}
       <div className="ml-0 md:ml-2">
         <Wish2EarnBadge onClick={handleWish2EarnClick} />
