@@ -11,7 +11,7 @@ const tabs = [
   { key: "services", label: "আমার সার্ভিস/পণ্য", icon: Layers3 },
 ];
 
-export const Tabs: React.FC = () => {
+export const TabbedDashboard: React.FC = () => {
   const [active, setActive] = useState("stats");
 
   const tabClasses = (selected: boolean) =>
