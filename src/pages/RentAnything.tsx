@@ -239,112 +239,51 @@ const RentAnything = () => {
           
           {categories.map(category => (
             <TabsContent key={category.value} value={category.value}>
+              {/* Removed nested Tabs - using direct content filtering instead */}
               <div className="mb-4">
-                <Tabs defaultValue="all" className="w-full">
-                  <TabsList className="w-full mb-4">
-                    <TabsTrigger value="all">সব {category.name}</TabsTrigger>
-                    {category.subcategories.map(sub => (
-                      <TabsTrigger key={sub.value} value={sub.value} className="flex items-center gap-1">
-                        {sub.icon}
-                        {sub.name}
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-                  
-                  <TabsContent value="all">
-                    <div className="space-y-4">
-                      {rentalItems.filter(item => item.category === category.value).map((item) => (
-                        <Card key={item.id} className="overflow-hidden">
-                          <div className="flex flex-col sm:flex-row">
-                            <div className="sm:w-1/3">
-                              <img 
-                                src={item.image}
-                                alt={item.title}
-                                className="w-full h-48 sm:h-full object-cover"
-                              />
-                            </div>
-                            <CardContent className="p-4 sm:w-2/3 flex flex-col justify-between">
-                              <div>
-                                <div className="flex items-center justify-between">
-                                  <h3 className="font-semibold text-lg">{item.title}</h3>
-                                </div>
-                                <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
-                                <div className="flex items-center text-muted-foreground text-sm mt-2">
-                                  <MapPin className="h-4 w-4 mr-1" /> {item.location}
-                                </div>
-                                <div className="flex items-center text-sm mt-2">
-                                  <Tag className="h-4 w-4 mr-1 text-primary" /> 
-                                  <span className="font-medium">{item.owner}</span>
-                                  <span className="mx-1">•</span>
-                                  <span>{item.rating} রেটিং</span>
-                                </div>
-                              </div>
-                              <div className="flex items-center justify-between mt-4">
-                                <div className="text-lg font-bold">৳ {item.price}/{item.priceUnit}</div>
-                                <Button size="sm" className="gap-1">
-                                  বুক করুন <Calendar className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </CardContent>
-                          </div>
-                        </Card>
-                      ))}
-                      {rentalItems.filter(item => item.category === category.value).length === 0 && (
-                        <div className="text-center py-10 text-muted-foreground">
-                          এই ক্যাটাগরিতে কোনো আইটেম এখনো উপলব্ধ নেই
+                <div className="space-y-4">
+                  {rentalItems.filter(item => item.category === category.value).map((item) => (
+                    <Card key={item.id} className="overflow-hidden">
+                      <div className="flex flex-col sm:flex-row">
+                        <div className="sm:w-1/3">
+                          <img 
+                            src={item.image}
+                            alt={item.title}
+                            className="w-full h-48 sm:h-full object-cover"
+                          />
                         </div>
-                      )}
-                    </div>
-                  </TabsContent>
-                  
-                  {category.subcategories.map(sub => (
-                    <TabsContent key={sub.value} value={sub.value}>
-                      <div className="space-y-4">
-                        {rentalItems.filter(item => item.category === category.value && item.subcategory === sub.value).map((item) => (
-                          <Card key={item.id} className="overflow-hidden">
-                            <div className="flex flex-col sm:flex-row">
-                              <div className="sm:w-1/3">
-                                <img 
-                                  src={item.image}
-                                  alt={item.title}
-                                  className="w-full h-48 sm:h-full object-cover"
-                                />
-                              </div>
-                              <CardContent className="p-4 sm:w-2/3 flex flex-col justify-between">
-                                <div>
-                                  <div className="flex items-center justify-between">
-                                    <h3 className="font-semibold text-lg">{item.title}</h3>
-                                  </div>
-                                  <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
-                                  <div className="flex items-center text-muted-foreground text-sm mt-2">
-                                    <MapPin className="h-4 w-4 mr-1" /> {item.location}
-                                  </div>
-                                  <div className="flex items-center text-sm mt-2">
-                                    <Tag className="h-4 w-4 mr-1 text-primary" /> 
-                                    <span className="font-medium">{item.owner}</span>
-                                    <span className="mx-1">•</span>
-                                    <span>{item.rating} রেটিং</span>
-                                  </div>
-                                </div>
-                                <div className="flex items-center justify-between mt-4">
-                                  <div className="text-lg font-bold">৳ {item.price}/{item.priceUnit}</div>
-                                  <Button size="sm" className="gap-1">
-                                    বুক করুন <Calendar className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                              </CardContent>
+                        <CardContent className="p-4 sm:w-2/3 flex flex-col justify-between">
+                          <div>
+                            <div className="flex items-center justify-between">
+                              <h3 className="font-semibold text-lg">{item.title}</h3>
                             </div>
-                          </Card>
-                        ))}
-                        {rentalItems.filter(item => item.category === category.value && item.subcategory === sub.value).length === 0 && (
-                          <div className="text-center py-10 text-muted-foreground">
-                            এই সাবক্যাটাগরিতে কোনো আইটেম এখনো উপলব্ধ নেই
+                            <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
+                            <div className="flex items-center text-muted-foreground text-sm mt-2">
+                              <MapPin className="h-4 w-4 mr-1" /> {item.location}
+                            </div>
+                            <div className="flex items-center text-sm mt-2">
+                              <Tag className="h-4 w-4 mr-1 text-primary" /> 
+                              <span className="font-medium">{item.owner}</span>
+                              <span className="mx-1">•</span>
+                              <span>{item.rating} রেটিং</span>
+                            </div>
                           </div>
-                        )}
+                          <div className="flex items-center justify-between mt-4">
+                            <div className="text-lg font-bold">৳ {item.price}/{item.priceUnit}</div>
+                            <Button size="sm" className="gap-1">
+                              বুক করুন <Calendar className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </CardContent>
                       </div>
-                    </TabsContent>
+                    </Card>
                   ))}
-                </Tabs>
+                  {rentalItems.filter(item => item.category === category.value).length === 0 && (
+                    <div className="text-center py-10 text-muted-foreground">
+                      এই ক্যাটাগরিতে কোনো আইটেম এখনো উপলব্ধ নেই
+                    </div>
+                  )}
+                </div>
               </div>
             </TabsContent>
           ))}
