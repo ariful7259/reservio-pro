@@ -191,7 +191,7 @@ export const AssistantPanel: React.FC<AssistantPanelProps> = ({
           </TabsContent>
 
           <TabsContent value="messenger" className="flex-1 flex flex-col mt-0">
-            <MessengerPanel onClose={() => {}} />
+            <MessengerPanel onClose={() => {}} embedded={true} />
           </TabsContent>
         </CardContent>
       </Card>
