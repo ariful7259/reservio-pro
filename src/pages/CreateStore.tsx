@@ -220,31 +220,33 @@ const CreateStore = () => {
     }
 
     return (
-      <TabsList className="w-full mb-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1 h-auto bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-2">
-        <TabsTrigger value="easy-setup" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all">
-          <Zap className="h-4 w-4" />
+      <TabsList className="w-full mb-6 flex lg:grid lg:grid-cols-6 gap-1 h-auto bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-2 overflow-x-auto scrollbar-hide">
+        <div className="flex lg:contents gap-1 min-w-max lg:min-w-0">
+        <TabsTrigger value="easy-setup" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all whitespace-nowrap min-w-fit">
+          <Zap className="h-4 w-4 flex-shrink-0" />
           <span className="text-xs sm:text-sm font-medium">সহজ সেটআপ</span>
         </TabsTrigger>
-        <TabsTrigger value="features" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all">
-          <Sparkles className="h-4 w-4" />
+        <TabsTrigger value="features" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all whitespace-nowrap min-w-fit">
+          <Sparkles className="h-4 w-4 flex-shrink-0" />
           <span className="text-xs sm:text-sm font-medium">ফিচারস</span>
         </TabsTrigger>
-        <TabsTrigger value="design" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all">
-          <Paintbrush className="h-4 w-4" />
+        <TabsTrigger value="design" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all whitespace-nowrap min-w-fit">
+          <Paintbrush className="h-4 w-4 flex-shrink-0" />
           <span className="text-xs sm:text-sm font-medium">ডিজাইন</span>
         </TabsTrigger>
-        <TabsTrigger value="basic" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all">
-          <PanelTop className="h-4 w-4" />
+        <TabsTrigger value="basic" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all whitespace-nowrap min-w-fit">
+          <PanelTop className="h-4 w-4 flex-shrink-0" />
           <span className="text-xs sm:text-sm font-medium">বেসিক তথ্য</span>
         </TabsTrigger>
-        <TabsTrigger value="settings" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all">
-          <Wand2 className="h-4 w-4" />
+        <TabsTrigger value="settings" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all whitespace-nowrap min-w-fit">
+          <Wand2 className="h-4 w-4 flex-shrink-0" />
           <span className="text-xs sm:text-sm font-medium">সেটিংস</span>
         </TabsTrigger>
-        <TabsTrigger value="additional" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all">
-          <Gift className="h-4 w-4" />
+        <TabsTrigger value="additional" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all whitespace-nowrap min-w-fit">
+          <Gift className="h-4 w-4 flex-shrink-0" />
           <span className="text-xs sm:text-sm font-medium">অতিরিক্ত</span>
         </TabsTrigger>
+        </div>
       </TabsList>
     );
   };
