@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Wallet, StoreIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CommunityMenu } from './CommunityMenu';
+import { CartDropdown } from './CartDropdown';
 // import { UserProfile } from './UserProfile'; // পুরনো প্রোফাইল ইমেজ সরানো হয়েছে
 import Wish2EarnBadge from '@/components/wish2earn/Wish2EarnBadge';
 export const ActionButtons: React.FC = () => {
@@ -27,6 +28,9 @@ export const ActionButtons: React.FC = () => {
       <Button variant="ghost" size="icon" className="relative h-8 w-8 md:h-10 md:w-10" onClick={handleMarketplaceClick}>
         <StoreIcon className="h-4 w-4 md:h-5 md:w-5" />
       </Button>
+
+      {/* Cart Dropdown */}
+      <CartDropdown />
 
       {/* Wish2Earn Feature Button */}
       
