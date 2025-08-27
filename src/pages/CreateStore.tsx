@@ -167,27 +167,63 @@ const CreateStore = () => {
     if (isMobile) {
       return (
         <div className="w-full mb-4">
-          <TabsList className="grid grid-cols-2 w-full h-auto p-1 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border">
-            <TabsTrigger 
-              value="easy-setup" 
-              className="flex flex-col items-center gap-2 p-4 text-xs font-medium data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg"
-            >
-              <div className="p-2 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white">
-                <Zap className="h-5 w-5" />
-              </div>
-              <span className="font-semibold">সহজ সেটআপ</span>
-              <span className="text-xs text-muted-foreground">দ্রুত শুরু করুন</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="additional" 
-              className="flex flex-col items-center gap-2 p-4 text-xs font-medium data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg"
-            >
-              <div className="p-2 rounded-full bg-gradient-to-r from-purple-400 to-pink-500 text-white">
-                <Wand2 className="h-5 w-5" />
-              </div>
-              <span className="font-semibold">অ্যাডভান্সড</span>
-              <span className="text-xs text-muted-foreground">উন্নত ফিচার</span>
-            </TabsTrigger>
+          <TabsList className="flex w-full h-auto p-2 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border overflow-x-auto scrollbar-hide gap-2">
+            <div className="flex gap-2 min-w-max">
+              <TabsTrigger 
+                value="easy-setup" 
+                className="flex flex-col items-center gap-2 p-3 text-xs font-medium data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[100px] whitespace-nowrap"
+              >
+                <div className="p-2 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white">
+                  <Zap className="h-4 w-4" />
+                </div>
+                <span className="font-semibold text-center">সহজ সেটআপ</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="features" 
+                className="flex flex-col items-center gap-2 p-3 text-xs font-medium data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[100px] whitespace-nowrap"
+              >
+                <div className="p-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 text-white">
+                  <Sparkles className="h-4 w-4" />
+                </div>
+                <span className="font-semibold text-center">ফিচারস</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="design" 
+                className="flex flex-col items-center gap-2 p-3 text-xs font-medium data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[100px] whitespace-nowrap"
+              >
+                <div className="p-2 rounded-full bg-gradient-to-r from-pink-400 to-red-500 text-white">
+                  <Paintbrush className="h-4 w-4" />
+                </div>
+                <span className="font-semibold text-center">ডিজাইন</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="basic" 
+                className="flex flex-col items-center gap-2 p-3 text-xs font-medium data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[100px] whitespace-nowrap"
+              >
+                <div className="p-2 rounded-full bg-gradient-to-r from-orange-400 to-yellow-500 text-white">
+                  <PanelTop className="h-4 w-4" />
+                </div>
+                <span className="font-semibold text-center">বেসিক তথ্য</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="settings" 
+                className="flex flex-col items-center gap-2 p-3 text-xs font-medium data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[100px] whitespace-nowrap"
+              >
+                <div className="p-2 rounded-full bg-gradient-to-r from-teal-400 to-cyan-500 text-white">
+                  <Wand2 className="h-4 w-4" />
+                </div>
+                <span className="font-semibold text-center">সেটিংস</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="additional" 
+                className="flex flex-col items-center gap-2 p-3 text-xs font-medium data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[100px] whitespace-nowrap"
+              >
+                <div className="p-2 rounded-full bg-gradient-to-r from-purple-400 to-pink-500 text-white">
+                  <Gift className="h-4 w-4" />
+                </div>
+                <span className="font-semibold text-center">অতিরিক্ত</span>
+              </TabsTrigger>
+            </div>
           </TabsList>
           
           {/* Mobile Step Indicator */}
