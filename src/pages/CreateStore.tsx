@@ -220,30 +220,30 @@ const CreateStore = () => {
     }
 
     return (
-      <TabsList className="w-full mb-6 grid grid-cols-6 h-auto bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-2">
-        <TabsTrigger value="easy-setup" className="flex items-center gap-2 p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all">
+      <TabsList className="w-full mb-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1 h-auto bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-2">
+        <TabsTrigger value="easy-setup" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all">
           <Zap className="h-4 w-4" />
-          <span className="hidden sm:inline font-medium">সহজ সেটআপ</span>
+          <span className="text-xs sm:text-sm font-medium">সহজ সেটআপ</span>
         </TabsTrigger>
-        <TabsTrigger value="features" className="flex items-center gap-2 p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all">
+        <TabsTrigger value="features" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all">
           <Sparkles className="h-4 w-4" />
-          <span className="hidden sm:inline font-medium">ফিচারস</span>
+          <span className="text-xs sm:text-sm font-medium">ফিচারস</span>
         </TabsTrigger>
-        <TabsTrigger value="design" className="flex items-center gap-2 p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all">
+        <TabsTrigger value="design" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all">
           <Paintbrush className="h-4 w-4" />
-          <span className="hidden sm:inline font-medium">ডিজাইন</span>
+          <span className="text-xs sm:text-sm font-medium">ডিজাইন</span>
         </TabsTrigger>
-        <TabsTrigger value="basic" className="flex items-center gap-2 p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all">
+        <TabsTrigger value="basic" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all">
           <PanelTop className="h-4 w-4" />
-          <span className="hidden sm:inline font-medium">বেসিক তথ্য</span>
+          <span className="text-xs sm:text-sm font-medium">বেসিক তথ্য</span>
         </TabsTrigger>
-        <TabsTrigger value="settings" className="flex items-center gap-2 p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all">
+        <TabsTrigger value="settings" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all">
           <Wand2 className="h-4 w-4" />
-          <span className="hidden sm:inline font-medium">সেটিংস</span>
+          <span className="text-xs sm:text-sm font-medium">সেটিংস</span>
         </TabsTrigger>
-        <TabsTrigger value="additional" className="flex items-center gap-2 p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all">
+        <TabsTrigger value="additional" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-2 sm:p-3 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all">
           <Gift className="h-4 w-4" />
-          <span className="hidden sm:inline font-medium">অতিরিক্ত</span>
+          <span className="text-xs sm:text-sm font-medium">অতিরিক্ত</span>
         </TabsTrigger>
       </TabsList>
     );
