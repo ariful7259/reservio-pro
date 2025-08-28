@@ -15,6 +15,7 @@ import { useShoppingState } from '@/hooks/useShoppingState';
 import { useEnhancedWishlist } from '@/hooks/useEnhancedWishlist';
 import { WishlistCounter } from '@/components/wishlist/WishlistCounter';
 import { useToast } from '@/hooks/use-toast';
+import { formatCurrency } from '@/utils/currencyUtils';
 
 export const EnhancedCartDropdown: React.FC = () => {
   const navigate = useNavigate();
@@ -67,8 +68,13 @@ export const EnhancedCartDropdown: React.FC = () => {
     navigate('/marketplace-hub', { state: { activeTab: 'cart' } });
   };
 
+  const parsePrice = (priceStr: string): number => {
+    const cleanedStr = priceStr.replace(/[^\d.]/g, '');
+    return parseFloat(cleanedStr) || 0;
+  };
+
   const formatPrice = (price: number) => {
-    return `৳${price.toLocaleString()}`;
+    return formatCurrency(price, 'BDT');
   };
 
   return (
@@ -121,7 +127,7 @@ export const EnhancedCartDropdown: React.FC = () => {
                         />
                         <div className="flex-1 min-w-0">
                           <h4 className="text-sm font-medium truncate">{item.title}</h4>
-                          <p className="text-sm text-muted-foreground">{item.price}</p>
+                          <p className="text-sm text-muted-foreground">{formatPrice(parsePrice(item.price))}</p>
                           <div className="flex items-center gap-2 mt-2">
                             <Button
                               variant="outline"
