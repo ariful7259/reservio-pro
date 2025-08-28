@@ -168,7 +168,7 @@ const CreateStore = () => {
       return (
         <div className="w-full mb-4">
           <TabsList className="flex w-full h-auto p-2 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border overflow-x-auto scrollbar-hide gap-2">
-            <div className="flex gap-2 min-w-max">
+            <div className="flex gap-2 min-w-max pb-2">
               <TabsTrigger 
                 value="easy-setup" 
                 className="flex flex-col items-center gap-2 p-4 text-sm font-bold data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[120px] whitespace-nowrap border-2 border-green-200 bg-gradient-to-b from-green-50 to-blue-50"
