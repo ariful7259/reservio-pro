@@ -13,8 +13,6 @@ export const HeaderNav: React.FC = () => {
       </header>
       
       {/* Mobile search bar - show below header on mobile */}
-      <div className="sm:hidden bg-white border-t border-gray-100 px-2 py-2">
-        <NavbarSearch />
-      </div>
+      
     </div>;
 };
