@@ -1,6 +1,56 @@
 
 import { supabase } from '@/integrations/supabase/client';
 
+// User preference learning system
+interface UserPreference {
+  category: string;
+  interest: number; // 0-10 scale
+  lastInteraction: Date;
+  searchHistory: string[];
+}
+
+const getUserPreferences = async (): Promise<UserPreference[]> => {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return [];
+
+    const preferences = localStorage.getItem(`user_preferences_${user.id}`);
+    return preferences ? JSON.parse(preferences) : [];
+  } catch (error) {
+    return [];
+  }
+};
+
+const updateUserPreferences = async (category: string, query: string) => {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const preferences = await getUserPreferences();
+    const existingIndex = preferences.findIndex(p => p.category === category);
+    
+    if (existingIndex >= 0) {
+      preferences[existingIndex].interest = Math.min(10, preferences[existingIndex].interest + 0.5);
+      preferences[existingIndex].lastInteraction = new Date();
+      preferences[existingIndex].searchHistory.push(query);
+      if (preferences[existingIndex].searchHistory.length > 10) {
+        preferences[existingIndex].searchHistory = preferences[existingIndex].searchHistory.slice(-10);
+      }
+    } else {
+      preferences.push({
+        category,
+        interest: 1,
+        lastInteraction: new Date(),
+        searchHistory: [query]
+      });
+    }
+
+    localStorage.setItem(`user_preferences_${user.id}`, JSON.stringify(preferences));
+  } catch (error) {
+    console.error('Error updating user preferences:', error);
+  }
+};
+
 export const generateAIResponse = async (userMessage: string, selectedModel: string): Promise<string> => {
   const currentPage = window.location.pathname;
   
@@ -14,6 +64,11 @@ export const generateAIResponse = async (userMessage: string, selectedModel: str
   const isServiceQuery = serviceKeywords.some(keyword => userMessage.toLowerCase().includes(keyword));
   const isRentalQuery = rentalKeywords.some(keyword => userMessage.toLowerCase().includes(keyword));
   const isSearchQuery = searchKeywords.some(keyword => userMessage.toLowerCase().includes(keyword));
+
+  // Update user preferences based on query
+  if (isProductQuery) await updateUserPreferences('products', userMessage);
+  if (isServiceQuery) await updateUserPreferences('services', userMessage);
+  if (isRentalQuery) await updateUserPreferences('rentals', userMessage);
 
   // Enhanced quick responses with context
   const quickResponses = {
@@ -53,7 +108,8 @@ export const generateAIResponse = async (userMessage: string, selectedModel: str
     }
 
     const aiResponse = data.response || getFallbackResponse(userMessage, selectedModel, currentPage);
-    return aiResponse + getRecommendations(isProductQuery, isServiceQuery, isRentalQuery, currentPage, userMessage);
+    const personalizedRecs = await getPersonalizedRecommendations(isProductQuery, isServiceQuery, isRentalQuery, currentPage, userMessage);
+    return aiResponse + personalizedRecs;
 
   } catch (error) {
     console.error('Error generating AI response:', error);
@@ -82,6 +138,69 @@ const getFallbackResponse = (userMessage: string, selectedModel: string, current
                      currentPage === '/rentals' ? 'রেন্টাল সেকশনে' : 'এই পেজে';
 
   return `আপনার প্রশ্নটি খুবই ভাল! আপনি এখন ${pageContext} আছেন। ${selectedModel} মডেল ব্যবহার করে আমি আরও বিস্তারিত সাহায্য করতে পারি।`;
+};
+
+const getPersonalizedRecommendations = async (isProductQuery: boolean, isServiceQuery: boolean, isRentalQuery: boolean, currentPage: string, userMessage: string): Promise<string> => {
+  const userPreferences = await getUserPreferences();
+  let recommendations = '';
+  
+  // Check if it's a search query
+  const searchKeywords = ['খুঁজছি', 'চাই', 'দরকার', 'লাগবে'];
+  const isSearchQuery = searchKeywords.some(keyword => userMessage.toLowerCase().includes(keyword));
+  
+  if (isSearchQuery) {
+    recommendations += '\n\n🔍 নিচে সার্চ রেজাল্ট দেখুন - আপনার পছন্দের আইটেম খুঁজে নিন!';
+  }
+
+  // Purchase/booking intent detection
+  const purchaseKeywords = ['কিনব', 'বুক করব', 'নিব', 'অর্ডার', 'buy', 'book', 'order'];
+  const hasPurchaseIntent = purchaseKeywords.some(keyword => userMessage.toLowerCase().includes(keyword));
+  
+  if (hasPurchaseIntent) {
+    recommendations += '\n\n🗺️ পণ্য/সেবা নিশ্চিত করার পর আমি আপনাকে ম্যাপে দিকনির্দেশনা দেখিয়ে দেব!';
+  }
+
+  // Personalized recommendations based on user preferences
+  const productPrefs = userPreferences.filter(p => p.category === 'products').sort((a, b) => b.interest - a.interest);
+  const servicePrefs = userPreferences.filter(p => p.category === 'services').sort((a, b) => b.interest - a.interest);
+  const rentalPrefs = userPreferences.filter(p => p.category === 'rentals').sort((a, b) => b.interest - a.interest);
+  
+  if (isProductQuery || (productPrefs.length > 0 && !isServiceQuery && !isRentalQuery)) {
+    if (productPrefs.length > 0) {
+      recommendations += '\n\n📱 আপনার পছন্দ অনুযায়ী: ';
+      recommendations += productPrefs.slice(0, 3).map(p => p.searchHistory[p.searchHistory.length - 1]).join(', ');
+    } else {
+      recommendations += '\n\n📱 জনপ্রিয় পণ্য: স্মার্টফোন, ল্যাপটপ, ইলেকট্রনিক্স';
+    }
+    recommendations += '\n💡 ট্রেন্ডিং: iPhone, Samsung, gaming laptop';
+  }
+  
+  if (isServiceQuery || (servicePrefs.length > 0 && !isProductQuery && !isRentalQuery)) {
+    if (servicePrefs.length > 0) {
+      recommendations += '\n\n🏠 আপনার আগ্রহ অনুযায়ী: ';
+      recommendations += servicePrefs.slice(0, 3).map(p => p.searchHistory[p.searchHistory.length - 1]).join(', ');
+    } else {
+      recommendations += '\n\n🏠 জনপ্রিয় সেবা: হোম ক্লিনিং, AC সার্ভিস, রিপেয়ার';
+    }
+    recommendations += '\n⚡ দ্রুত বুকিং: ইলেকট্রিশিয়ান, প্লাম্বার, পেইন্টার';
+  }
+  
+  if (isRentalQuery || (rentalPrefs.length > 0 && !isProductQuery && !isServiceQuery)) {
+    if (rentalPrefs.length > 0) {
+      recommendations += '\n\n🚗 আপনার পছন্দ অনুযায়ী: ';
+      recommendations += rentalPrefs.slice(0, 3).map(p => p.searchHistory[p.searchHistory.length - 1]).join(', ');
+    } else {
+      recommendations += '\n\n🚗 জনপ্রিয় ভাড়া: গাড়ি, বাইক, ক্যামেরা';
+    }
+    recommendations += '\n🏡 হাউজিং: ফ্ল্যাট, রুম, অফিস স্পেস';
+  }
+  
+  // Page-specific recommendations
+  if (currentPage === '/securepay') {
+    recommendations += '\n\n💳 সিকিউর পেমেন্ট: নিরাপদ লেনদেন করুন';
+  }
+  
+  return recommendations;
 };
 
 const getRecommendations = (isProductQuery: boolean, isServiceQuery: boolean, isRentalQuery: boolean, currentPage: string, userMessage: string): string => {

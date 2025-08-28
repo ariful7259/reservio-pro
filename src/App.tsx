@@ -9,6 +9,7 @@ import RoutesConfig from "./RoutesConfig";
 import { AppProvider } from "./context/AppContext";
 import { AuthProvider } from "./hooks/useAuth";
 import GlobalAIAssistant from "@/components/GlobalAIAssistant";
+import { FloatingMessenger } from "@/components/FloatingMessenger";
 import Navbar from "@/components/Navbar";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
                   <RoutesConfig />
                 </main>
                 <GlobalAIAssistant />
+                <FloatingMessenger />
               </div>
             </AppProvider>
           </AuthProvider>

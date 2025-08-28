@@ -3,11 +3,12 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Bot, X, Volume2, Trash2 } from 'lucide-react';
+import { Bot, X, Volume2, Trash2, Settings } from 'lucide-react';
 import { MessageList } from './MessageList';
 import { InputArea } from './InputArea';
 import { SearchResults } from './SearchResults';
 import { ListingPreview } from './ListingPreview';
+import { APIIntegrationModal } from './APIIntegrationModal';
 import { Message } from '../types';
 import { AI_MODELS } from '../constants';
 
@@ -74,6 +75,8 @@ export const AssistantPanel: React.FC<AssistantPanelProps> = ({
   onEditListing,
   onCancelListing
 }) => {
+  const [showAPIModal, setShowAPIModal] = React.useState(false);
+
   return (
     <div 
       className="fixed inset-0 z-50 bg-black/50 md:bg-transparent md:inset-auto md:top-4 md:right-4"
@@ -88,6 +91,15 @@ export const AssistantPanel: React.FC<AssistantPanelProps> = ({
             <Bot className="h-5 w-5 text-primary" />
             AI সহায়ক
             <div className="ml-auto flex items-center gap-1">
+              <Button
+                onClick={() => setShowAPIModal(true)}
+                size="sm"
+                variant="ghost"
+                className="h-7 w-7 p-0"
+                title="API সেটিংস"
+              >
+                <Settings className="h-3 w-3" />
+              </Button>
               <Button
                 onClick={onClearMessages}
                 size="sm"
@@ -171,6 +183,11 @@ export const AssistantPanel: React.FC<AssistantPanelProps> = ({
           />
         </CardContent>
       </Card>
+
+      <APIIntegrationModal
+        isOpen={showAPIModal}
+        onClose={() => setShowAPIModal(false)}
+      />
     </div>
   );
 };
