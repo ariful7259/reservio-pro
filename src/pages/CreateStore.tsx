@@ -189,39 +189,39 @@ const CreateStore = () => {
               </TabsTrigger>
               <TabsTrigger 
                 value="design" 
-                className="flex flex-col items-center gap-2 p-3 text-xs font-medium data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[100px] whitespace-nowrap"
+                className="flex flex-col items-center gap-2 p-4 text-sm font-bold data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[120px] whitespace-nowrap border-2 border-pink-200 bg-gradient-to-b from-pink-50 to-red-50"
               >
-                <div className="p-2 rounded-full bg-gradient-to-r from-pink-400 to-red-500 text-white">
-                  <Paintbrush className="h-4 w-4" />
+                <div className="p-3 rounded-full bg-gradient-to-r from-pink-400 to-red-500 text-white shadow-md">
+                  <Paintbrush className="h-5 w-5" />
                 </div>
-                <span className="font-semibold text-center">ডিজাইন</span>
+                <span className="font-bold text-center text-pink-700">ডিজাইন</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="basic" 
-                className="flex flex-col items-center gap-2 p-3 text-xs font-medium data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[100px] whitespace-nowrap"
+                className="flex flex-col items-center gap-2 p-4 text-sm font-bold data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[120px] whitespace-nowrap border-2 border-orange-200 bg-gradient-to-b from-orange-50 to-yellow-50"
               >
-                <div className="p-2 rounded-full bg-gradient-to-r from-orange-400 to-yellow-500 text-white">
-                  <PanelTop className="h-4 w-4" />
+                <div className="p-3 rounded-full bg-gradient-to-r from-orange-400 to-yellow-500 text-white shadow-md">
+                  <PanelTop className="h-5 w-5" />
                 </div>
-                <span className="font-semibold text-center">বেসিক তথ্য</span>
+                <span className="font-bold text-center text-orange-700">বেসিক তথ্য</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="settings" 
-                className="flex flex-col items-center gap-2 p-3 text-xs font-medium data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[100px] whitespace-nowrap"
+                className="flex flex-col items-center gap-2 p-4 text-sm font-bold data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[120px] whitespace-nowrap border-2 border-teal-200 bg-gradient-to-b from-teal-50 to-cyan-50"
               >
-                <div className="p-2 rounded-full bg-gradient-to-r from-teal-400 to-cyan-500 text-white">
-                  <Wand2 className="h-4 w-4" />
+                <div className="p-3 rounded-full bg-gradient-to-r from-teal-400 to-cyan-500 text-white shadow-md">
+                  <Wand2 className="h-5 w-5" />
                 </div>
-                <span className="font-semibold text-center">সেটিংস</span>
+                <span className="font-bold text-center text-teal-700">সেটিংস</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="additional" 
-                className="flex flex-col items-center gap-2 p-3 text-xs font-medium data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[100px] whitespace-nowrap"
+                className="flex flex-col items-center gap-2 p-4 text-sm font-bold data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[120px] whitespace-nowrap border-2 border-purple-200 bg-gradient-to-b from-purple-50 to-pink-50"
               >
-                <div className="p-2 rounded-full bg-gradient-to-r from-purple-400 to-pink-500 text-white">
-                  <Gift className="h-4 w-4" />
+                <div className="p-3 rounded-full bg-gradient-to-r from-purple-400 to-pink-500 text-white shadow-md">
+                  <Gift className="h-5 w-5" />
                 </div>
-                <span className="font-semibold text-center">অতিরিক্ত</span>
+                <span className="font-bold text-center text-purple-700">অতিরিক্ত</span>
               </TabsTrigger>
             </div>
           </TabsList>
