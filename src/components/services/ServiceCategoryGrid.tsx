@@ -59,11 +59,9 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
           </div>
         )}
         
-        {/* Digital Round Icon Style */}
-        <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full ${category.color} flex items-center justify-center mb-3 shadow-lg group-hover:shadow-xl transition-all duration-300 border-2 border-white/20`}>
-          <div className={`${category.iconColor} transition-transform duration-300 group-hover:scale-110`}>
-            {React.cloneElement(category.icon, { className: "h-8 w-8 md:h-10 md:w-10" })}
-          </div>
+        {/* Match rental category design */}
+        <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+          {React.cloneElement(category.icon, { className: "h-8 w-8" })}
         </div>
         
         <h3 className="font-semibold text-sm md:text-base mb-2 line-clamp-2 group-hover:text-primary transition-colors">

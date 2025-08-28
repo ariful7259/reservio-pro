@@ -51,10 +51,8 @@ export const MarketplaceCategoryGrid: React.FC<MarketplaceCategoryGridProps> = (
           </div>
         )}
         
-        <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full ${category.color} flex items-center justify-center mb-2`}>
-          <div className={category.iconColor}>
-            {category.icon}
-          </div>
+        <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+          {category.icon}
         </div>
         
         <h3 className="font-medium text-xs md:text-sm mb-1 line-clamp-2">

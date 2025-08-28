@@ -27,7 +27,7 @@ export const ServiceCategoryItem = ({
         >
           <CollapsibleTrigger className="w-full" asChild>
             <div className="flex flex-col items-center justify-center p-2 border rounded-lg hover:bg-blue-50 hover:border-blue-200 transition-colors shadow-sm">
-              <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mb-2 shadow-inner">
+              <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
                 {category.icon}
               </div>
               <div className="flex items-center gap-1">
@@ -53,7 +53,7 @@ export const ServiceCategoryItem = ({
         to={category.path}
         className="flex flex-col items-center justify-center p-2 border rounded-lg hover:bg-blue-50 hover:border-blue-200 transition-colors shadow-sm"
       >
-        <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mb-2 shadow-inner">
+        <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
           {category.icon}
         </div>
         <span className="text-xs font-medium text-center line-clamp-2">{category.name}</span>
