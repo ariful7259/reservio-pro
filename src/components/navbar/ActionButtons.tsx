@@ -4,6 +4,7 @@ import { Wallet, StoreIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CommunityMenu } from './CommunityMenu';
 import { CartDropdown } from './CartDropdown';
+import { NotificationCenter } from '@/components/notifications/NotificationCenter';
 // import { UserProfile } from './UserProfile'; // পুরনো প্রোফাইল ইমেজ সরানো হয়েছে
 import Wish2EarnBadge from '@/components/wish2earn/Wish2EarnBadge';
 export const ActionButtons: React.FC = () => {
@@ -30,6 +31,7 @@ export const ActionButtons: React.FC = () => {
       </Button>
 
       {/* Cart Dropdown */}
+      <NotificationCenter />
       <CartDropdown />
 
       {/* Wish2Earn Feature Button */}
