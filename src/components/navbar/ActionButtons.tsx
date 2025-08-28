@@ -16,17 +16,17 @@ export const ActionButtons: React.FC = () => {
     // MarketplaceHub এ নিয়ে যাবে
     navigate('/marketplace-hub');
   };
-  return <div className="flex items-center gap-1 md:gap-3">
+  return <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
       <div className="hidden md:block">
         <CommunityMenu />
       </div>
       
-      <Button variant="ghost" size="icon" className="relative h-8 w-8 md:h-10 md:w-10" onClick={() => navigate('/wallet')}>
-        <Wallet className="h-4 w-4 md:h-5 md:w-5" />
+      <Button variant="ghost" size="icon" className="relative h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10" onClick={() => navigate('/wallet')}>
+        <Wallet className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5" />
       </Button>
 
-      <Button variant="ghost" size="icon" className="relative h-8 w-8 md:h-10 md:w-10" onClick={handleMarketplaceClick}>
-        <StoreIcon className="h-4 w-4 md:h-5 md:w-5" />
+      <Button variant="ghost" size="icon" className="relative h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10" onClick={handleMarketplaceClick}>
+        <StoreIcon className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5" />
       </Button>
 
       {/* Cart Dropdown */}
@@ -36,7 +36,7 @@ export const ActionButtons: React.FC = () => {
       
 
       {/* নিচের Profile (avatar) বাদ দিয়ে Wish2EarnBadge লাগানো হলো */}
-      <div className="ml-0 md:ml-2">
+      <div className="ml-0 sm:ml-1 md:ml-2">
         <Wish2EarnBadge onClick={handleWish2EarnClick} />
       </div>
     </div>;

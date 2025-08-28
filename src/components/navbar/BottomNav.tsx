@@ -37,8 +37,8 @@ export const BottomNav: React.FC = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t h-16 z-40">
-      <div className="grid grid-cols-5 h-full">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t h-16 z-40 safe-area-pb">
+      <div className="grid grid-cols-5 h-full max-w-screen-sm mx-auto">
         {navLinks.map((link, index) => {
           const isActive = location.pathname === link.path;
           

@@ -14,10 +14,11 @@ export const BottomNavItem: React.FC<BottomNavItemProps> = ({ title, path, icon,
       to={path}
       className={
         `relative flex flex-col items-center justify-center
-        px-3 py-2 min-w-[56px] min-h-[52px] gap-0.5
-        ${isActive ? 'text-primary' : 'text-gray-500'}
-        transition-colors duration-150
+        px-2 py-2 min-w-[60px] min-h-[56px] gap-1
+        ${isActive ? 'text-primary bg-primary/5' : 'text-gray-500'}
+        transition-all duration-200 touch-manipulation tap-highlight-none
         focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30
+        hover:text-primary/80 active:scale-95 rounded-md
         `
       }
       style={{
@@ -27,11 +28,15 @@ export const BottomNavItem: React.FC<BottomNavItemProps> = ({ title, path, icon,
       tabIndex={0}
       aria-current={isActive ? 'page' : undefined}
     >
-      <span className="flex items-center justify-center h-6 w-6 text-lg">{icon}</span>
-      <span className="text-xs mt-1 font-medium leading-4 max-w-[56px] whitespace-nowrap overflow-hidden text-ellipsis">
+      <span className={`flex items-center justify-center h-6 w-6 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`}>
+        {icon}
+      </span>
+      <span className={`text-xs font-medium leading-tight max-w-[60px] whitespace-nowrap overflow-hidden text-ellipsis text-center ${isActive ? 'font-semibold' : ''}`}>
         {title}
       </span>
-      {/* লাইন একেবারেই বাদ দেওয়া হয়েছে। */}
+      {isActive && (
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full" />
+      )}
     </Link>
   );
 };

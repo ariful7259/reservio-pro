@@ -22,9 +22,13 @@ const App = () => (
         <BrowserRouter>
           <AuthProvider>
             <AppProvider>
-              <div className="min-h-screen bg-background font-sans antialiased">
+              <div className="min-h-screen bg-background font-sans antialiased overflow-x-hidden">
+                {/* Mobile optimized viewport */}
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
                 <Navbar />
-                <RoutesConfig />
+                <main className="pt-14 sm:pt-16 pb-16 sm:pb-4 safe-area-pt safe-area-pb">
+                  <RoutesConfig />
+                </main>
                 <GlobalAIAssistant />
               </div>
             </AppProvider>
