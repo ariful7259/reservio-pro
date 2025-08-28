@@ -168,24 +168,26 @@ const CreateStore = () => {
       return (
         <div className="w-full mb-4">
           <TabsList className="flex w-full h-auto p-2 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border overflow-x-auto scrollbar-hide gap-2">
-            <div className="flex gap-2 min-w-max">
+            <div className="flex gap-3 min-w-max">
               <TabsTrigger 
                 value="easy-setup" 
-                className="flex flex-col items-center gap-2 p-3 text-xs font-medium data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[100px] whitespace-nowrap"
+                className="flex flex-col items-center gap-3 p-4 text-sm font-bold data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-xl min-w-[120px] whitespace-nowrap"
               >
-                <div className="p-2 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white">
-                  <Zap className="h-4 w-4" />
+                <div className="p-3 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white shadow-lg">
+                  <Zap className="h-5 w-5" />
                 </div>
-                <span className="font-semibold text-center">সহজ সেটআপ</span>
+                <span className="font-bold text-center text-sm">সহজ সেটআপ</span>
+                <span className="text-xs text-muted-foreground text-center">দ্রুত শুরু</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="features" 
-                className="flex flex-col items-center gap-2 p-3 text-xs font-medium data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[100px] whitespace-nowrap"
+                className="flex flex-col items-center gap-3 p-4 text-sm font-bold data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-xl min-w-[120px] whitespace-nowrap"
               >
-                <div className="p-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 text-white">
-                  <Sparkles className="h-4 w-4" />
+                <div className="p-3 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 text-white shadow-lg">
+                  <Sparkles className="h-5 w-5" />
                 </div>
-                <span className="font-semibold text-center">ফিচারস</span>
+                <span className="font-bold text-center text-sm">ফিচারস</span>
+                <span className="text-xs text-muted-foreground text-center">সব সুবিধা</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="design" 
