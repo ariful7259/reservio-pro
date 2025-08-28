@@ -24,7 +24,7 @@ export const CreatePostPopover: React.FC = () => {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <div className="flex flex-col items-center justify-center relative cursor-pointer px-2 py-2 min-w-[60px] min-h-[56px] gap-1 touch-manipulation tap-highlight-none hover:scale-105 active:scale-95 transition-transform duration-200 rounded-md">
-          <div className="bg-primary rounded-full h-8 w-8 flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow duration-200">
+          <div className="bg-red-500 rounded-full h-8 w-8 flex items-center justify-center shadow-md">
             <Plus className="h-5 w-5 text-white" />
           </div>
           <span className="text-xs text-primary font-semibold leading-tight text-center">পোস্ট করুন</span>
