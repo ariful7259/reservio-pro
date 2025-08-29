@@ -92,8 +92,10 @@ const WishlistTabContent: React.FC<{ onTabChange: (tab: string) => void }> = ({ 
                     />
                     <div className="absolute top-2 right-2">
                       <WishlistButton
-                        wished={wishlistedProducts.has(product.id)}
-                        onToggle={() => toggleWishlist(product.id)}
+                        productId={product.id}
+                        productTitle={product.name}
+                        productPrice={product.price?.toString()}
+                         productImage={product.image}
                       />
                     </div>
                   </div>
@@ -150,8 +152,10 @@ const WishlistTabContent: React.FC<{ onTabChange: (tab: string) => void }> = ({ 
                   <div className="flex items-center justify-between mt-1">
                     <span className="text-xs font-bold text-primary">{product.price}</span>
                     <WishlistButton
-                      wished={false}
-                      onToggle={() => toggleWishlist(product.id)}
+                      productId={product.id}
+                      productTitle={product.name}
+                      productPrice={product.price?.toString()}
+                      productImage={product.image}
                     />
                   </div>
                 </div>

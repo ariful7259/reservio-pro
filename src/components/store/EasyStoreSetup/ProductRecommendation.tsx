@@ -97,8 +97,9 @@ const ProductRecommendation: React.FC<ProductRecommendationProps> = ({
                 />
                 <div className="absolute top-2 right-2">
                   <WishlistButton
-                    wished={false}
-                    onToggle={() => console.log('Wishlist toggled for', product.id)}
+                    productId={product.id}
+                    productTitle={product.name}
+                    productPrice={product.price}
                   />
                 </div>
               </div>

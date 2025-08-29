@@ -167,8 +167,10 @@ const StoreInfoForm: React.FC<StoreInfoFormProps> = ({
                   className="font-semibold border-0 px-0 focus-visible:ring-0"
                 />
                 <WishlistButton
-                  wished={wishlistedProducts.has(product.id)}
-                  onToggle={() => toggleWishlist(product.id)}
+                  productId={product.id}
+                  productTitle={product.name}
+                  productPrice="0"
+                  productImage={product.images?.[0]}
                 />
               </div>
               <ProductImageGallery 
