@@ -21,14 +21,14 @@ interface PaymentGatewayProps {
   amount: number;
   onPaymentComplete?: (data: PaymentResultData) => void;
   onCancel?: () => void;
-  allowedMethods?: Array<'card' | 'bkash' | 'nagad' | 'rocket'>;
+  allowedMethods?: Array<'card' | 'bkash' | 'nagad' | 'rocket' | 'rupantorpay'>;
   processingFee?: number;
   includeCallbacks?: boolean;
 }
 
 export interface PaymentResultData {
   transactionId: string;
-  method: 'card' | 'bkash' | 'nagad' | 'rocket';
+  method: 'card' | 'bkash' | 'nagad' | 'rocket' | 'rupantorpay';
   amount: number;
   status: 'success' | 'failed' | 'canceled';
   date: Date;
@@ -38,12 +38,12 @@ const PaymentGateway: React.FC<PaymentGatewayProps> = ({
   amount,
   onPaymentComplete,
   onCancel,
-  allowedMethods = ['card', 'bkash', 'nagad', 'rocket'],
+  allowedMethods = ['card', 'bkash', 'nagad', 'rocket', 'rupantorpay'],
   processingFee = 0,
   includeCallbacks = true
 }) => {
   const { toast } = useToast();
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'bkash' | 'nagad' | 'rocket'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'bkash' | 'nagad' | 'rocket' | 'rupantorpay'>('card');
   const [cardNumber, setCardNumber] = useState('');
   const [cardName, setCardName] = useState('');
   const [cardExpiry, setCardExpiry] = useState('');
@@ -122,10 +122,10 @@ const PaymentGateway: React.FC<PaymentGatewayProps> = ({
 
   const handlePayment = () => {
     if (paymentMethod === 'card' && !validateCardForm()) return;
-    if (['bkash', 'nagad', 'rocket'].includes(paymentMethod) && !validateMobileForm()) return;
+    if (['bkash', 'nagad', 'rocket', 'rupantorpay'].includes(paymentMethod) && !validateMobileForm()) return;
     
     // Show OTP form for mobile payments
-    if (['bkash', 'nagad', 'rocket'].includes(paymentMethod) && !showOtpForm) {
+    if (['bkash', 'nagad', 'rocket', 'rupantorpay'].includes(paymentMethod) && !showOtpForm) {
       setShowOtpForm(true);
       toast({
         title: "OTP পাঠানো হয়েছে",
@@ -179,6 +179,8 @@ const PaymentGateway: React.FC<PaymentGatewayProps> = ({
         return 'নগদ নম্বর';
       case 'rocket':
         return 'রকেট নম্বর';
+      case 'rupantorpay':
+        return 'রূপান্তরপে নম্বর';
       default:
         return 'মোবাইল নম্বর';
     }
@@ -194,6 +196,8 @@ const PaymentGateway: React.FC<PaymentGatewayProps> = ({
         return 'নগদ';
       case 'rocket':
         return 'রকেট';
+      case 'rupantorpay':
+        return 'রূপান্তরপে';
       default:
         return '';
     }
@@ -315,6 +319,12 @@ const PaymentGateway: React.FC<PaymentGatewayProps> = ({
                 <span>রকেট</span>
               </TabsTrigger>
             )}
+            {allowedMethods.includes('rupantorpay') && (
+              <TabsTrigger value="rupantorpay" className="flex items-center gap-1">
+                <Smartphone className="h-4 w-4 text-green-600" />
+                <span>রূপান্তরপে</span>
+              </TabsTrigger>
+            )}
           </TabsList>
           
           <TabsContent value="card">
@@ -372,7 +382,7 @@ const PaymentGateway: React.FC<PaymentGatewayProps> = ({
             </div>
           </TabsContent>
           
-          {['bkash', 'nagad', 'rocket'].map((method) => (
+          {['bkash', 'nagad', 'rocket', 'rupantorpay'].map((method) => (
             <TabsContent key={method} value={method}>
               {!showOtpForm ? (
                 <div className="space-y-4">
@@ -392,7 +402,8 @@ const PaymentGateway: React.FC<PaymentGatewayProps> = ({
                     <span className="text-sm text-amber-700">
                       আপনার {
                         method === 'bkash' ? 'বিকাশ' : 
-                        method === 'nagad' ? 'নগদ' : 'রকেট'
+                        method === 'nagad' ? 'নগদ' : 
+                        method === 'rocket' ? 'রকেট' : 'রূপান্তরপে'
                       } নম্বর দিয়ে পেমেন্ট করুন
                     </span>
                   </div>

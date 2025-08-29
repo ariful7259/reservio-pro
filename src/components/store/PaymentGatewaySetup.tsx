@@ -16,6 +16,7 @@ const PaymentGatewaySetup: React.FC = () => {
     bkash: { enabled: true, merchantNumber: '' },
     nagad: { enabled: true, merchantNumber: '' },
     rocket: { enabled: false, merchantNumber: '' },
+    rupantorpay: { enabled: true, merchantNumber: '' },
     card: { enabled: true, apiKey: '', secretKey: '' },
     bank: { enabled: false, accountNumber: '', routingNumber: '' },
     cod: { enabled: true }
@@ -123,6 +124,51 @@ const PaymentGatewaySetup: React.FC = () => {
                 onCheckedChange={() => togglePaymentMethod('rocket')}
               />
             </div>
+            {paymentMethods.rocket.enabled && (
+              <div className="pl-4 space-y-2">
+                <Label htmlFor="rocket-merchant">মার্চেন্ট নম্বর</Label>
+                <Input
+                  id="rocket-merchant"
+                  placeholder="01XXXXXXXXX"
+                  value={paymentMethods.rocket.merchantNumber}
+                  onChange={(e) => setPaymentMethods(prev => ({
+                    ...prev,
+                    rocket: { ...prev.rocket, merchantNumber: e.target.value }
+                  }))}
+                />
+              </div>
+            )}
+
+            {/* Rupantorpay */}
+            <div className="flex items-center justify-between p-3 border rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">RP</span>
+                </div>
+                <div>
+                  <h4 className="font-medium">রূপান্তরপে</h4>
+                  <p className="text-sm text-gray-600">নতুন বাংলাদেশী পেমেন্ট</p>
+                </div>
+              </div>
+              <Switch
+                checked={paymentMethods.rupantorpay.enabled}
+                onCheckedChange={() => togglePaymentMethod('rupantorpay')}
+              />
+            </div>
+            {paymentMethods.rupantorpay.enabled && (
+              <div className="pl-4 space-y-2">
+                <Label htmlFor="rupantorpay-merchant">মার্চেন্ট নম্বর</Label>
+                <Input
+                  id="rupantorpay-merchant"
+                  placeholder="01XXXXXXXXX"
+                  value={paymentMethods.rupantorpay.merchantNumber}
+                  onChange={(e) => setPaymentMethods(prev => ({
+                    ...prev,
+                    rupantorpay: { ...prev.rupantorpay, merchantNumber: e.target.value }
+                  }))}
+                />
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -292,6 +338,7 @@ const PaymentGatewaySetup: React.FC = () => {
                   {key === 'bkash' && 'বিকাশ'}
                   {key === 'nagad' && 'নগদ'}
                   {key === 'rocket' && 'রকেট'}
+                  {key === 'rupantorpay' && 'রূপান্তরপে'}
                   {key === 'card' && 'কার্ড'}
                   {key === 'bank' && 'ব্যাংক'}
                   {key === 'cod' && 'COD'}
