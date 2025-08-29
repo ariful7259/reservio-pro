@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShoppingCart, Plus, Minus, Trash2, CreditCard, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Popover,
   PopoverContent,
@@ -20,15 +21,18 @@ import { formatCurrency } from '@/utils/currencyUtils';
 export const EnhancedCartDropdown: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState("cart");
+  
   const { 
     cart, 
+    addToCart,
     removeFromCart,
     updateCartItemQuantity, 
     getCartTotal, 
     getCartItemsCount 
   } = useShoppingState();
   
-  const { addToWishlist, isInWishlist, wishlistCount } = useEnhancedWishlist();
+  const { wishlistItems, addToWishlist, removeFromWishlist, isInWishlist, wishlistCount } = useEnhancedWishlist();
 
   const cartItemsCount = getCartItemsCount();
   const cartTotal = getCartTotal();
@@ -112,115 +116,216 @@ export const EnhancedCartDropdown: React.FC = () => {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 mr-4" align="end">
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="font-medium">আপনার কার্ট</h3>
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary">{cartItemsCount} টি আইটেম</Badge>
-              <WishlistCounter 
-                onClick={() => navigate('/marketplace-hub', { state: { activeTab: 'wishlist' } })}
-              />
-            </div>
-          </div>
-          
-          {cart.length === 0 ? (
-            <div className="text-center py-6">
-              <ShoppingCart className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
-              <p className="text-muted-foreground">আপনার কার্ট খালি</p>
-              <Button 
-                variant="outline" 
-                className="mt-2"
-                onClick={() => navigate('/marketplace-hub')}
-              >
-                শপিং শুরু করুন
-              </Button>
-            </div>
-          ) : (
-            <>
-              <ScrollArea className="h-64">
-                <div className="space-y-3">
-                  {cart.map((item) => (
-                    <Card key={item.id} className="p-3">
-                      <div className="flex items-start gap-3">
-                        <img 
-                          src={item.image} 
-                          alt={item.title}
-                          className="w-12 h-12 object-cover rounded"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <h4 className="text-sm font-medium truncate">{item.title}</h4>
-                          <p className="text-sm text-muted-foreground">{formatPrice(parsePrice(item.price))}</p>
-                          <div className="flex items-center gap-2 mt-2">
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              className="h-6 w-6"
-                              onClick={() => handleQuantityChange(item.id, -1, item.quantity)}
-                            >
-                              <Minus className="h-3 w-3" />
-                            </Button>
-                            <span className="text-sm min-w-[20px] text-center">{item.quantity}</span>
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              className="h-6 w-6"
-                              onClick={() => handleQuantityChange(item.id, 1, item.quantity)}
-                            >
-                              <Plus className="h-3 w-3" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-6 w-6"
-                              onClick={() => handleMoveToWishlist(item)}
-                              title="Move to Wishlist"
-                            >
-                              <Heart className="h-3 w-3" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-6 w-6 ml-auto"
-                              onClick={() => handleRemoveFromCart(item.id, item.title)}
-                            >
-                              <Trash2 className="h-3 w-3" />
-                            </Button>
+      <PopoverContent className="w-96 mr-4" align="end">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="cart" className="relative">
+              <ShoppingCart className="h-4 w-4 mr-1" />
+              কার্ট
+              {cartItemsCount > 0 && (
+                <Badge variant="destructive" className="ml-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                  {cartItemsCount}
+                </Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="wishlist" className="relative">
+              <Heart className="h-4 w-4 mr-1" />
+              উইশলিস্ট
+              {wishlistCount > 0 && (
+                <Badge variant="secondary" className="ml-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                  {wishlistCount}
+                </Badge>
+              )}
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Cart Tab Content */}
+          <TabsContent value="cart" className="space-y-4 mt-4">
+            {cart.length === 0 ? (
+              <div className="text-center py-6">
+                <ShoppingCart className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
+                <p className="text-muted-foreground">আপনার কার্ট খালি</p>
+                <Button 
+                  variant="outline" 
+                  className="mt-2"
+                  onClick={() => navigate('/marketplace-hub')}
+                >
+                  শপিং শুরু করুন
+                </Button>
+              </div>
+            ) : (
+              <>
+                <ScrollArea className="h-64">
+                  <div className="space-y-3">
+                    {cart.map((item) => (
+                      <Card key={item.id} className="p-3">
+                        <div className="flex items-start gap-3">
+                          <img 
+                            src={item.image} 
+                            alt={item.title}
+                            className="w-12 h-12 object-cover rounded"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-sm font-medium truncate">{item.title}</h4>
+                            <p className="text-sm text-muted-foreground">{formatPrice(parsePrice(item.price))}</p>
+                            <div className="flex items-center gap-2 mt-2">
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                className="h-6 w-6"
+                                onClick={() => handleQuantityChange(item.id, -1, item.quantity)}
+                              >
+                                <Minus className="h-3 w-3" />
+                              </Button>
+                              <span className="text-sm min-w-[20px] text-center">{item.quantity}</span>
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                className="h-6 w-6"
+                                onClick={() => handleQuantityChange(item.id, 1, item.quantity)}
+                              >
+                                <Plus className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6"
+                                onClick={() => handleMoveToWishlist(item)}
+                                title="Move to Wishlist"
+                              >
+                                <Heart className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6 ml-auto"
+                                onClick={() => handleRemoveFromCart(item.id, item.title)}
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </ScrollArea>
-              
-              <Separator />
-              
-              <div className="space-y-3">
-                <div className="flex justify-between font-medium">
-                  <span>মোট:</span>
-                  <span>{formatPrice(cartTotal)}</span>
-                </div>
+                      </Card>
+                    ))}
+                  </div>
+                </ScrollArea>
                 
-                <div className="grid grid-cols-2 gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => navigate('/marketplace-hub', { state: { activeTab: 'cart' } })}
-                  >
-                    কার্ট দেখুন
-                  </Button>
-                  <Button
-                    onClick={handleCheckout}
-                    className="bg-primary hover:bg-primary/90"
-                  >
-                    <CreditCard className="h-4 w-4 mr-1" />
-                    কিনুন
-                  </Button>
+                <Separator />
+                
+                <div className="space-y-3">
+                  <div className="flex justify-between font-medium">
+                    <span>মোট:</span>
+                    <span>{formatPrice(cartTotal)}</span>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => navigate('/marketplace-hub', { state: { activeTab: 'cart' } })}
+                    >
+                      কার্ট দেখুন
+                    </Button>
+                    <Button
+                      onClick={handleCheckout}
+                      className="bg-primary hover:bg-primary/90"
+                    >
+                      <CreditCard className="h-4 w-4 mr-1" />
+                      কিনুন
+                    </Button>
+                  </div>
                 </div>
+              </>
+            )}
+          </TabsContent>
+
+          {/* Wishlist Tab Content */}
+          <TabsContent value="wishlist" className="space-y-4 mt-4">
+            {wishlistItems.length === 0 ? (
+              <div className="text-center py-6">
+                <Heart className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
+                <p className="text-muted-foreground">আপনার উইশলিস্ট খালি</p>
+                <Button 
+                  variant="outline" 
+                  className="mt-2"
+                  onClick={() => navigate('/marketplace-hub')}
+                >
+                  শপিং শুরু করুন
+                </Button>
               </div>
-            </>
-          )}
-        </div>
+            ) : (
+              <>
+                <ScrollArea className="h-64">
+                  <div className="space-y-3">
+                    {wishlistItems.map((item) => (
+                      <Card key={item.id} className="p-3">
+                        <div className="flex items-start gap-3">
+                          <img 
+                            src={item.metadata?.image} 
+                            alt={item.metadata?.title}
+                            className="w-12 h-12 object-cover rounded"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-sm font-medium truncate">{item.metadata?.title}</h4>
+                            <p className="text-sm text-muted-foreground">{formatPrice(parsePrice(item.metadata?.price || '0'))}</p>
+                            <div className="flex items-center gap-2 mt-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  // Add to cart from wishlist
+                                  const cartItem = {
+                                    id: item.product_id,
+                                    title: item.metadata?.title || '',
+                                    price: item.metadata?.price || '0',
+                                    image: item.metadata?.image,
+                                  };
+                                  addToCart(cartItem);
+                                  toast({
+                                    title: "কার্টে যোগ করা হয়েছে",
+                                    description: `${item.metadata?.title} কার্টে যোগ করা হয়েছে`,
+                                  });
+                                }}
+                              >
+                                <ShoppingCart className="h-3 w-3 mr-1" />
+                                কার্টে যোগ করুন
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6 ml-auto"
+                                onClick={() => {
+                                  removeFromWishlist(item.id);
+                                  toast({
+                                    title: "উইশলিস্ট থেকে সরানো হয়েছে",
+                                    description: `${item.metadata?.title} উইশলিস্ট থেকে সরানো হয়েছে`,
+                                    variant: "destructive",
+                                  });
+                                }}
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </ScrollArea>
+                
+                <Separator />
+                
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => navigate('/marketplace-hub', { state: { activeTab: 'wishlist' } })}
+                >
+                  সব উইশলিস্ট দেখুন
+                </Button>
+              </>
+            )}
+          </TabsContent>
+        </Tabs>
       </PopoverContent>
     </Popover>
   );
