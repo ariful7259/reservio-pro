@@ -55,8 +55,16 @@ interface ShoppingState {
 
 // Helper function to parse price strings in Bengali/Bangla format (like "৳৫,৯৯৯")
 const parsePrice = (priceStr: string): number => {
-  // Remove non-numeric characters, except for dots
-  const cleanedStr = priceStr.replace(/[^\d.]/g, '');
+  if (!priceStr) return 0;
+  // Handle Bengali numbers and currency symbols
+  const cleanedStr = priceStr
+    .replace(/[৳$€£₹]/g, '') // Remove currency symbols
+    .replace(/[,\s]/g, '') // Remove commas and spaces
+    .replace(/[০-৯]/g, (match) => {
+      // Convert Bengali digits to English
+      const bengaliToEnglish = {'০': '0', '১': '1', '২': '2', '৩': '3', '৪': '4', '৫': '5', '৬': '6', '৭': '7', '৮': '8', '৯': '9'};
+      return bengaliToEnglish[match] || match;
+    });
   return parseFloat(cleanedStr) || 0;
 };
 
