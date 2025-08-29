@@ -65,7 +65,20 @@ export const EnhancedCartDropdown: React.FC = () => {
   };
 
   const handleCheckout = () => {
-    navigate('/marketplace-hub', { state: { activeTab: 'cart' } });
+    // প্রোডাক্ট কেনার জন্য checkout process শুরু করুন
+    toast({
+      title: "অর্ডার করা হচ্ছে",
+      description: `মোট ৳${cartTotal.toLocaleString()} টাকার অর্ডার প্রসেস করা হচ্ছে`,
+    });
+    
+    // Checkout page এ নিয়ে যান
+    navigate('/marketplace-hub', { 
+      state: { 
+        activeTab: 'cart',
+        checkout: true,
+        total: cartTotal 
+      } 
+    });
   };
 
   const parsePrice = (priceStr: string): number => {
