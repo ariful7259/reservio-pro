@@ -38,6 +38,7 @@ import { FeatureSelectionPage } from './pages/FeatureSelectionPage';
 import CreateLinkInBio from './pages/CreateLinkInBio';
 import CreatorPaymentGateway from '@/pages/CreatorPaymentGateway';
 import PaymentGateway from '@/pages/PaymentGateway';
+import PaymentPage from '@/pages/PaymentPage';
 import SecurePay from '@/pages/SecurePay';
 import SecurePayCreator from '@/pages/SecurePayCreator';
 import SecurePayBuyer from '@/pages/SecurePayBuyer';
@@ -107,7 +108,7 @@ const RoutesConfig = () => {
       <Route path="/securepay/admin" element={<SecurePayAdmin />} />
       
       {/* Payment Gateway Routes */}
-      <Route path="/payment-gateway" element={<PaymentGateway />} />
+      <Route path="/payment-gateway" element={<PaymentPage />} />
       <Route path="/creator-payment-gateway" element={<CreatorPaymentGateway />} />
       
       {/* Payment and Money Management */}
