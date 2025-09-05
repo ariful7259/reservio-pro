@@ -120,12 +120,12 @@ const PaymentGateway: React.FC<PaymentGatewayProps> = ({
     return true;
   };
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
     if (paymentMethod === 'card' && !validateCardForm()) return;
     if (['bkash', 'nagad', 'rocket', 'rupantorpay'].includes(paymentMethod) && !validateMobileForm()) return;
     
-    // Show OTP form for mobile payments
-    if (['bkash', 'nagad', 'rocket', 'rupantorpay'].includes(paymentMethod) && !showOtpForm) {
+    // Show OTP form for mobile payments (except rupantorpay which handles it differently)
+    if (['bkash', 'nagad', 'rocket'].includes(paymentMethod) && !showOtpForm) {
       setShowOtpForm(true);
       toast({
         title: "OTP পাঠানো হয়েছে",
@@ -134,7 +134,7 @@ const PaymentGateway: React.FC<PaymentGatewayProps> = ({
       return;
     }
     
-    if (showOtpForm && otp.length !== 6) {
+    if (showOtpForm && otp.length !== 6 && ['bkash', 'nagad', 'rocket'].includes(paymentMethod)) {
       toast({
         title: "OTP সঠিক নয়",
         description: "সঠিক ৬ ডিজিটের OTP প্রদান করুন",
@@ -146,7 +146,76 @@ const PaymentGateway: React.FC<PaymentGatewayProps> = ({
     setIsProcessing(true);
     setPaymentStatus('processing');
     
-    // Simulate payment processing
+    // Handle Rupantorpay payment via API
+    if (paymentMethod === 'rupantorpay') {
+      try {
+        const { supabase } = await import('@/integrations/supabase/client');
+        
+        const orderId = `ORDER_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+        
+        const { data, error } = await supabase.functions.invoke('rupantorpay-payment', {
+          body: {
+            amount: totalAmount,
+            mobileNumber: mobileNumber,
+            orderId: orderId,
+            customerName: 'Customer',
+            customerEmail: 'customer@example.com'
+          }
+        });
+
+        if (error) {
+          throw new Error(error.message);
+        }
+
+        if (data.success && data.paymentUrl) {
+          // Open Rupantorpay payment page in new tab
+          window.open(data.paymentUrl, '_blank');
+          
+          toast({
+            title: "পেমেন্ট পেজ খোলা হয়েছে",
+            description: "নতুন ট্যাবে রূপান্তরপে পেমেন্ট সম্পন্ন করুন।",
+          });
+          
+          // Simulate success after some time (in real app, this would be handled by webhook)
+          setTimeout(() => {
+            setIsProcessing(false);
+            setPaymentStatus('success');
+            
+            if (onPaymentComplete) {
+              onPaymentComplete({
+                transactionId: data.transactionId || 'RP' + Date.now(),
+                method: paymentMethod,
+                amount: totalAmount,
+                status: 'success',
+                date: new Date(),
+              });
+            }
+            
+            toast({
+              title: "পেমেন্ট সফল হয়েছে",
+              description: `${totalAmount}৳ সফলভাবে পেমেন্ট করা হয়েছে।`,
+            });
+          }, 5000);
+          
+          return;
+        } else {
+          throw new Error(data.error || 'Payment failed');
+        }
+      } catch (error) {
+        console.error('Rupantorpay payment error:', error);
+        setIsProcessing(false);
+        setPaymentStatus('failed');
+        
+        toast({
+          title: "পেমেন্ট ব্যর্থ হয়েছে",
+          description: error.message || "রূপান্তরপে পেমেন্ট প্রক্রিয়াকরণে সমস্যা হয়েছে।",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+    
+    // Simulate payment processing for other methods
     setTimeout(() => {
       setIsProcessing(false);
       setPaymentStatus('success');
@@ -382,7 +451,7 @@ const PaymentGateway: React.FC<PaymentGatewayProps> = ({
             </div>
           </TabsContent>
           
-          {['bkash', 'nagad', 'rocket', 'rupantorpay'].map((method) => (
+          {['bkash', 'nagad', 'rocket'].map((method) => (
             <TabsContent key={method} value={method}>
               {!showOtpForm ? (
                 <div className="space-y-4">
@@ -450,6 +519,29 @@ const PaymentGateway: React.FC<PaymentGatewayProps> = ({
               )}
             </TabsContent>
           ))}
+          
+          {/* Rupantorpay - Direct payment without OTP */}
+          <TabsContent value="rupantorpay">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="rupantorpay-mobile">রূপান্তরপে নম্বর</Label>
+                <Input 
+                  id="rupantorpay-mobile" 
+                  placeholder="01XXXXXXXXX" 
+                  value={mobileNumber}
+                  onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, '').substring(0, 11))}
+                  disabled={isProcessing}
+                />
+              </div>
+              
+              <div className="flex items-center gap-2 p-3 bg-green-50 rounded-md">
+                <AlertTriangle className="h-5 w-5 text-green-500" />
+                <span className="text-sm text-green-700">
+                  রূপান্তরপে দিয়ে নিরাপদ এবং দ্রুত পেমেন্ট করুন
+                </span>
+              </div>
+            </div>
+          </TabsContent>
         </Tabs>
         
         <div className="flex items-center gap-2 mt-5">
