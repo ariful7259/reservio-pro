@@ -69,18 +69,27 @@ export const EnhancedCartDropdown: React.FC = () => {
   };
 
   const handleCheckout = () => {
-    // প্রোডাক্ট কেনার জন্য checkout process শুরু করুন
+    if (cartItemsCount === 0) {
+      toast({
+        title: "কার্ট খালি",
+        description: "প্রথমে কিছু পণ্য কার্টে যোগ করুন",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // পেমেন্ট গেটওয়েতে নিয়ে যান
     toast({
-      title: "অর্ডার করা হচ্ছে",
-      description: `মোট ৳${cartTotal.toLocaleString()} টাকার অর্ডার প্রসেস করা হচ্ছে`,
+      title: "পেমেন্ট গেটওয়েতে নিয়ে যাওয়া হচ্ছে",
+      description: `মোট ৳${cartTotal.toLocaleString()} টাকার পেমেন্ট করুন`,
     });
     
-    // Checkout page এ নিয়ে যান
-    navigate('/marketplace-hub', { 
+    // পেমেন্ট গেটওয়ে পেজে নিয়ে যান
+    navigate('/payment-gateway', { 
       state: { 
-        activeTab: 'cart',
-        checkout: true,
-        total: cartTotal 
+        amount: cartTotal,
+        items: cart,
+        totalItems: cartItemsCount
       } 
     });
   };
