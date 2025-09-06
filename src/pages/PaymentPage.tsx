@@ -91,12 +91,17 @@ const PaymentPage: React.FC = () => {
                       </div>
                     </div>
                     <p className="font-medium">
-                      {formatCurrency(
-                        typeof item.price === 'number' 
-                          ? item.price * item.quantity
-                          : parseFloat(String(item.price).replace(/[^\d.]/g, '')) * item.quantity, 
-                        'BDT'
-                      )}
+                      {(() => {
+                        let price = 0;
+                        if (typeof item.price === 'number') {
+                          price = item.price;
+                        } else if (typeof item.price === 'string') {
+                          // Remove currency symbols and extract numbers
+                          const cleanPrice = item.price.replace(/[^\d.,]/g, '').replace(',', '.');
+                          price = parseFloat(cleanPrice) || 0;
+                        }
+                        return formatCurrency(price * (item.quantity || 1), 'BDT');
+                      })()}
                     </p>
                   </div>
                 ))}
