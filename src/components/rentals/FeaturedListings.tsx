@@ -4,6 +4,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Heart, Share2 } from 'lucide-react';
+import { useEnhancedWishlist } from '@/hooks/useEnhancedWishlist';
+import { useToast } from '@/hooks/use-toast';
 
 interface FeaturedListingsProps {
   featuredListings: any[];
@@ -21,7 +23,50 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({
   handleBookmark,
   handleShare,
   MapViewComponent
-}) => (
+}) => {
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useEnhancedWishlist();
+  const { toast } = useToast();
+
+  const handleWishlistToggle = async (e: React.MouseEvent, listing: any) => {
+    e.stopPropagation();
+    
+    const isCurrentlyInWishlist = isInWishlist(undefined, listing.id.toString());
+    
+    try {
+      if (isCurrentlyInWishlist) {
+        await removeFromWishlist(listing.id.toString());
+        toast({
+          title: "উইশলিস্ট থেকে সরানো হয়েছে",
+          description: `${listing.title} উইশলিস্ট থেকে সরানো হয়েছে`,
+          variant: "destructive",
+        });
+      } else {
+        await addToWishlist({
+          service_id: listing.id.toString(),
+          item_type: 'service',
+          metadata: {
+            title: listing.title,
+            price: listing.price,
+            image: listing.image,
+            location: listing.location,
+            category: listing.category
+          }
+        });
+        toast({
+          title: "উইশলিস্ট যোগ করা হয়েছে",
+          description: `${listing.title} উইশলিস্টে যোগ করা হয়েছে`,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  return (
   <div className="mb-6">
     <h2 className="text-lg font-medium mb-4">ফিচার্ড লিস্টিং</h2>
     {viewMode === 'grid' && (
@@ -33,8 +78,13 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({
                 <img src={listing.image} alt={listing.title} className="w-full h-full object-cover" />
                 <Badge className="absolute top-2 left-2">{listing.category}</Badge>
                 <div className="absolute top-2 right-2 flex flex-col gap-2">
-                  <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={e => handleBookmark(e, listing.id)}>
-                    <Heart className="h-4 w-4 text-gray-600" />
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="bg-white h-8 w-8 rounded-full" 
+                    onClick={e => handleWishlistToggle(e, listing)}
+                  >
+                    <Heart className={`h-4 w-4 ${isInWishlist(undefined, listing.id.toString()) ? 'text-red-500 fill-current' : 'text-gray-600'}`} />
                   </Button>
                   <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={e => handleShare(e, listing)}>
                     <Share2 className="h-4 w-4 text-gray-600" />
@@ -79,6 +129,7 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({
       </div>
     )}
   </div>
-);
+  );
+};
 
 export default FeaturedListings;
