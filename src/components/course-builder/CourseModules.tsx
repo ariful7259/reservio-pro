@@ -2,13 +2,16 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash, Settings, FileUp, Video, FileText, CheckSquare, Clock } from 'lucide-react';
+import { Plus, Trash, Settings, FileUp, Video, FileText, CheckSquare, Clock, Upload, HelpCircle } from 'lucide-react';
+import { VideoUploadSection } from './VideoUploadSection';
+import { QuizBuilder, Quiz } from './QuizBuilder';
 
 interface Lesson {
   id: number;
@@ -16,6 +19,9 @@ interface Lesson {
   type: string;
   duration: string;
   isComplete: boolean;
+  videoFiles?: any[];
+  quiz?: Quiz;
+  content?: string;
 }
 
 interface Module {
@@ -30,6 +36,8 @@ interface CourseModulesProps {
 }
 
 export const CourseModules: React.FC<CourseModulesProps> = ({ modules, setModules }) => {
+  const [showVideoUpload, setShowVideoUpload] = React.useState<string | null>(null);
+  const [showQuizBuilder, setShowQuizBuilder] = React.useState<string | null>(null);
   const addNewModule = () => {
     const newId = modules.length > 0 ? Math.max(...modules.map(m => m.id)) + 1 : 1;
     setModules([...modules, {
@@ -82,7 +90,7 @@ export const CourseModules: React.FC<CourseModulesProps> = ({ modules, setModule
     setModules(updatedModules);
   };
 
-  const updateLessonDetails = (moduleId: number, lessonId: number, field: string, value: string) => {
+  const updateLessonDetails = (moduleId: number, lessonId: number, field: string, value: any) => {
     const moduleIndex = modules.findIndex(m => m.id === moduleId);
     if (moduleIndex === -1) return;
     
@@ -96,6 +104,18 @@ export const CourseModules: React.FC<CourseModulesProps> = ({ modules, setModule
     };
     
     setModules(updatedModules);
+  };
+
+  const handleVideosUploaded = (lessonId: string, videos: any[]) => {
+    const [moduleId, actualLessonId] = lessonId.split('-').map(Number);
+    updateLessonDetails(moduleId, actualLessonId, 'videoFiles', videos);
+    setShowVideoUpload(null);
+  };
+
+  const handleQuizSaved = (lessonId: string, quiz: Quiz) => {
+    const [moduleId, actualLessonId] = lessonId.split('-').map(Number);
+    updateLessonDetails(moduleId, actualLessonId, 'quiz', quiz);
+    setShowQuizBuilder(null);
   };
 
   return (
@@ -187,42 +207,97 @@ export const CourseModules: React.FC<CourseModulesProps> = ({ modules, setModule
                               <Settings className="h-4 w-4" />
                             </Button>
                           </DialogTrigger>
-                          <DialogContent>
-                            <DialogHeader>
-                              <DialogTitle>{lesson.title} সেটিংস</DialogTitle>
-                              <DialogDescription>
-                                লেসনের বিস্তারিত সেটিংস কনফিগার করুন
-                              </DialogDescription>
-                            </DialogHeader>
-                            <div className="space-y-4 py-4">
-                              <div className="grid gap-2">
-                                <Label>কনটেন্ট আপলোড</Label>
-                                <div className="border-2 border-dashed rounded-lg p-6 text-center cursor-pointer">
-                                  <FileUp className="h-6 w-6 mx-auto mb-2 text-gray-400" />
-                                  <p className="text-sm text-gray-500">{lesson.type === 'video' ? 'ভিডিও' : lesson.type === 'text' ? 'ফাইল' : 'কুইজ'} আপলোড করুন</p>
-                                </div>
-                              </div>
-                              <div className="grid gap-2">
-                                <Label htmlFor="preview">প্রিভিউ সেটিংস</Label>
-                                <div className="flex items-center space-x-2">
-                                  <Switch id="preview" />
-                                  <Label htmlFor="preview">ফ্রি প্রিভিউ হিসাবে উপলব্ধ করুন</Label>
-                                </div>
-                              </div>
-                              {lesson.type === 'quiz' && (
+                            <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                              <DialogHeader>
+                                <DialogTitle>{lesson.title} সেটিংস</DialogTitle>
+                                <DialogDescription>
+                                  লেসনের বিস্তারিত সেটিংস কনফিগার করুন
+                                </DialogDescription>
+                              </DialogHeader>
+                              <div className="space-y-6 py-4">
+                                {/* Content Upload Section */}
+                                {lesson.type === 'video' && (
+                                  <div className="space-y-4">
+                                    <Label className="text-base font-medium">ভিডিও আপলোড</Label>
+                                    <VideoUploadSection
+                                      onVideosUploaded={(videos) => handleVideosUploaded(`${module.id}-${lesson.id}`, videos)}
+                                      maxFiles={5}
+                                      maxSizeGB={2}
+                                    />
+                                    {lesson.videoFiles && lesson.videoFiles.length > 0 && (
+                                      <div className="text-sm text-green-600">
+                                        ✓ {lesson.videoFiles.length}টি ভিডিও আপলোড করা হয়েছে
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+
+                                {lesson.type === 'text' && (
+                                  <div className="space-y-4">
+                                    <Label className="text-base font-medium">টেক্সট কনটেন্ট</Label>
+                                    <Textarea
+                                      value={lesson.content || ''}
+                                      onChange={(e) => updateLessonDetails(module.id, lesson.id, 'content', e.target.value)}
+                                      placeholder="লেসনের কনটেন্ট লিখুন..."
+                                      rows={8}
+                                      className="min-h-[200px]"
+                                    />
+                                    <div className="flex gap-2">
+                                      <Button variant="outline" size="sm">
+                                        <FileUp className="h-4 w-4 mr-2" />
+                                        ফাইল আপলোড
+                                      </Button>
+                                      <Button variant="outline" size="sm">
+                                        <Video className="h-4 w-4 mr-2" />
+                                        ইমেজ যোগ করুন
+                                      </Button>
+                                    </div>
+                                  </div>
+                                )}
+
+                                {lesson.type === 'quiz' && (
+                                  <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                      <Label className="text-base font-medium">কুইজ কনটেন্ট</Label>
+                                      <Button 
+                                        onClick={() => setShowQuizBuilder(`${module.id}-${lesson.id}`)}
+                                        variant="outline"
+                                      >
+                                        <HelpCircle className="h-4 w-4 mr-2" />
+                                        কুইজ এডিট করুন
+                                      </Button>
+                                    </div>
+                                    {lesson.quiz ? (
+                                      <div className="p-4 border rounded-lg bg-green-50">
+                                        <h4 className="font-medium">{lesson.quiz.title}</h4>
+                                        <p className="text-sm text-muted-foreground mt-1">{lesson.quiz.description}</p>
+                                        <div className="flex gap-4 mt-2 text-xs text-muted-foreground">
+                                          <span>{lesson.quiz.questions.length} প্রশ্ন</span>
+                                          <span>পাশের স্কোর: {lesson.quiz.passingScore}%</span>
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      <div className="p-8 border-2 border-dashed rounded-lg text-center">
+                                        <HelpCircle className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                                        <p className="text-sm text-gray-500">কুইজ তৈরি করুন</p>
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+
+                                {/* Preview Settings */}
                                 <div className="grid gap-2">
-                                  <Label>প্রশ্ন যোগ করুন</Label>
-                                  <Button variant="outline" size="sm" className="w-full">
-                                    <Plus className="h-4 w-4 mr-2" />
-                                    নতুন প্রশ্ন যোগ করুন
-                                  </Button>
+                                  <Label htmlFor="preview">প্রিভিউ সেটিংস</Label>
+                                  <div className="flex items-center space-x-2">
+                                    <Switch id="preview" />
+                                    <Label htmlFor="preview">ফ্রি প্রিভিউ হিসাবে উপলব্ধ করুন</Label>
+                                  </div>
                                 </div>
-                              )}
-                            </div>
-                            <DialogFooter>
-                              <Button type="submit">সেভ করুন</Button>
-                            </DialogFooter>
-                          </DialogContent>
+                              </div>
+                              <DialogFooter>
+                                <Button type="submit">সেভ করুন</Button>
+                              </DialogFooter>
+                            </DialogContent>
                         </Dialog>
                         <Button 
                           variant="ghost" 
@@ -249,6 +324,29 @@ export const CourseModules: React.FC<CourseModulesProps> = ({ modules, setModule
           ))}
         </Accordion>
       </CardContent>
+
+      {/* Quiz Builder Dialog */}
+      {showQuizBuilder && (
+        <Dialog open={!!showQuizBuilder} onOpenChange={() => setShowQuizBuilder(null)}>
+          <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden">
+            <DialogHeader>
+              <DialogTitle>কুইজ বিল্ডার</DialogTitle>
+            </DialogHeader>
+            <div className="overflow-y-auto max-h-[calc(90vh-100px)]">
+              <QuizBuilder
+                quiz={(() => {
+                  const [moduleId, lessonId] = showQuizBuilder.split('-').map(Number);
+                  const module = modules.find(m => m.id === moduleId);
+                  const lesson = module?.lessons.find(l => l.id === lessonId);
+                  return lesson?.quiz;
+                })()}
+                onSave={(quiz) => handleQuizSaved(showQuizBuilder, quiz)}
+                onCancel={() => setShowQuizBuilder(null)}
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </Card>
   );
 };

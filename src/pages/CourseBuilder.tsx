@@ -19,6 +19,7 @@ import { TemplateSelector } from '@/components/course-builder/TemplateSelector';
 import { ColorSchemeSelector } from '@/components/course-builder/ColorSchemeSelector';
 import { PricingModelSelector } from '@/components/course-builder/PricingModelSelector';
 import { PriceConfigurationForm } from '@/components/course-builder/PriceConfigurationForm';
+import { EnhancedPricingModel } from '@/components/course-builder/EnhancedPricingModel';
 import { ResellerOptions } from '@/components/course-builder/ResellerOptions';
 import { StudentEnrollment } from '@/components/course-builder/StudentEnrollment';
 import { StudentCommunication } from '@/components/course-builder/StudentCommunication';
@@ -35,6 +36,7 @@ const CourseBuilder: React.FC = () => {
   const [coursePrice, setCoursePrice] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pricingData, setPricingData] = useState(null);
   const [modules, setModules] = useState([
     {
       id: 1,
@@ -165,10 +167,12 @@ const CourseBuilder: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="pricing" className="space-y-6">
-          {/* Pricing Model Selector */}
-          <PricingModelSelector />
+          {/* Enhanced Pricing Model */}
+          <EnhancedPricingModel 
+            onPricingChange={setPricingData}
+          />
 
-          {/* Price Configuration Form */}
+          {/* Legacy Price Configuration (for backward compatibility) */}
           <PriceConfigurationForm 
             coursePrice={coursePrice}
             setCoursePrice={setCoursePrice}

@@ -35,14 +35,14 @@ export const CreatePostPopover: React.FC = () => {
           <div className="col-span-2">
             <h3 className="font-semibold text-center mb-3 text-responsive-base">পোস্ট করুন</h3>
           </div>
-          <Button
-            variant="outline"
-            onClick={() => handleNavigate('/create-post')}
-            className="flex flex-col items-center justify-center h-20 sm:h-24 gap-2 touch-manipulation tap-highlight-none hover-lift-mobile"
-          >
-            <Building className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
-            <span className="text-xs sm:text-sm text-center leading-tight">রেন্টাল পোস্ট</span>
-          </Button>
+              <Button
+                variant="outline"
+                onClick={() => handleNavigate('/creator-dashboard')}
+                className="flex flex-col items-center justify-center h-20 sm:h-24 gap-2 touch-manipulation tap-highlight-none hover-lift-mobile"
+              >
+                <Building className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+                <span className="text-xs sm:text-sm text-center leading-tight">ক্রিয়েটর ড্যাশবোর্ড</span>
+              </Button>
           <Button
             variant="outline"
             onClick={() => handleNavigate('/create-post?type=service')}
