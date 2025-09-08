@@ -93,13 +93,38 @@ const PaymentPage: React.FC = () => {
                     <p className="font-medium">
                       {(() => {
                         let price = 0;
+                        
                         if (typeof item.price === 'number') {
                           price = item.price;
                         } else if (typeof item.price === 'string') {
-                          // Remove currency symbols and extract numbers
-                          const cleanPrice = item.price.replace(/[^\d.,]/g, '').replace(',', '.');
-                          price = parseFloat(cleanPrice) || 0;
+                          // Handle various price formats including Bengali digits
+                          let cleanPrice = item.price
+                            // Convert Bengali digits to English
+                            .replace(/০/g, '0').replace(/১/g, '1').replace(/২/g, '2')
+                            .replace(/৩/g, '3').replace(/৪/g, '4').replace(/৫/g, '5')
+                            .replace(/৬/g, '6').replace(/৭/g, '7').replace(/৮/g, '8').replace(/৯/g, '9')
+                            // Remove all non-digit, non-decimal characters
+                            .replace(/[^\d.,]/g, '')
+                            // Handle comma as decimal separator
+                            .replace(/,/g, '.');
+                          
+                          // Extract the first valid number found
+                          const match = cleanPrice.match(/\d+\.?\d*/);
+                          if (match) {
+                            price = parseFloat(match[0]);
+                          }
+                        } else if (item.originalPrice) {
+                          // Fallback to originalPrice if available
+                          price = typeof item.originalPrice === 'number' 
+                            ? item.originalPrice 
+                            : parseFloat(item.originalPrice.toString()) || 0;
                         }
+                        
+                        // Ensure we have a valid price greater than 0
+                        if (!price || price <= 0) {
+                          price = 100; // Default minimum price
+                        }
+                        
                         return formatCurrency(price * (item.quantity || 1), 'BDT');
                       })()}
                     </p>
