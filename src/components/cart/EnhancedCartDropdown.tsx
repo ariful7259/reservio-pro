@@ -97,16 +97,31 @@ export const EnhancedCartDropdown: React.FC = () => {
   // Helper function to parse price strings correctly
   const parsePrice = (priceStr: string): number => {
     if (!priceStr) return 0;
-    // Handle Bengali numbers and symbols
-    const cleanedStr = priceStr
-      .replace(/[৳$€£₹]/g, '') // Remove currency symbols
-      .replace(/[,\s]/g, '') // Remove commas and spaces
-      .replace(/[০-৯]/g, (match) => {
-        // Convert Bengali digits to English
-        const bengaliToEnglish = {'০': '0', '১': '1', '২': '2', '৩': '3', '৪': '4', '৫': '5', '৬': '6', '৭': '7', '৮': '8', '৯': '9'};
-        return bengaliToEnglish[match] || match;
-      });
-    return parseFloat(cleanedStr) || 0;
+    
+    if (typeof priceStr === 'number') {
+      return priceStr;
+    }
+    
+    // Handle various price formats including Bengali digits
+    let cleanPrice = priceStr
+      // Convert Bengali digits to English
+      .replace(/০/g, '0').replace(/১/g, '1').replace(/২/g, '2')
+      .replace(/৩/g, '3').replace(/৪/g, '4').replace(/৫/g, '5')
+      .replace(/৬/g, '6').replace(/৭/g, '7').replace(/৮/g, '8').replace(/৯/g, '9')
+      // Remove all non-digit, non-decimal characters
+      .replace(/[^\d.,]/g, '')
+      // Handle comma as decimal separator
+      .replace(/,/g, '.');
+    
+    // Extract the first valid number found
+    const match = cleanPrice.match(/\d+\.?\d*/);
+    if (match) {
+      const price = parseFloat(match[0]);
+      // Ensure we have a valid price greater than 0
+      return price > 0 ? price : 100; // Default minimum price
+    }
+    
+    return 100; // Default minimum price if no valid number found
   };
 
   const formatPrice = (price: number) => {
