@@ -64,6 +64,8 @@ import ServiceCategoryPage from "./pages/ServiceCategoryPage";
 import RentDetail from './pages/RentDetail';
 import RentalBooking from './pages/RentalBooking';
 import ServiceBooking from './pages/ServiceBooking';
+import CourseBuilder from './pages/CourseBuilder';
+import CreatorDashboard from './pages/CreatorDashboard';
 
 const RoutesConfig = () => {
   return (
@@ -168,6 +170,10 @@ const RoutesConfig = () => {
       
       {/* Service Category Page */}
       <Route path="/services/category/:categoryId" element={<ServiceCategoryPage />} />
+      
+      {/* Course Builder & Creator Dashboard Routes */}
+      <Route path="/course-builder" element={<CourseBuilder />} />
+      <Route path="/creator-dashboard" element={<CreatorDashboard />} />
       
       {/* 404 Page */}
       <Route path="*" element={<NotFound />} />
