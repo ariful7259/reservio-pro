@@ -27,6 +27,8 @@ import { CertificateSettings } from '@/components/course-builder/CertificateSett
 import { AdvancedFeatures } from '@/components/course-builder/AdvancedFeatures';
 import { CourseAccess } from '@/components/course-builder/CourseAccess';
 import { SeoSettings } from '@/components/course-builder/SeoSettings';
+import { PaymentGatewaySetup } from '@/components/course-builder/PaymentGatewaySetup';
+import { AdTrackingAnalytics } from '@/components/course-builder/AdTrackingAnalytics';
 
 const CourseBuilder: React.FC = () => {
   const navigate = useNavigate();
@@ -119,10 +121,12 @@ const CourseBuilder: React.FC = () => {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-10">
-        <TabsList className="w-full overflow-x-auto flex flex-nowrap sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 mb-8">
+        <TabsList className="w-full overflow-x-auto flex flex-nowrap sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 mb-8">
           <TabsTrigger value="content" className="whitespace-nowrap">কোর্স কনটেন্ট</TabsTrigger>
           <TabsTrigger value="appearance" className="whitespace-nowrap">অ্যাপিয়ারেন্স</TabsTrigger>
           <TabsTrigger value="pricing" className="whitespace-nowrap">প্রাইসিং</TabsTrigger>
+          <TabsTrigger value="payment" className="whitespace-nowrap">পেমেন্ট গেটওয়ে</TabsTrigger>
+          <TabsTrigger value="analytics" className="whitespace-nowrap">অ্যাড ট্র্যাকিং</TabsTrigger>
           <TabsTrigger value="students" className="whitespace-nowrap">শিক্ষার্থী ম্যানেজমেন্ট</TabsTrigger>
           <TabsTrigger value="settings" className="whitespace-nowrap">সেটিংস</TabsTrigger>
         </TabsList>
@@ -180,6 +184,16 @@ const CourseBuilder: React.FC = () => {
 
           {/* Reseller Options */}
           <ResellerOptions />
+        </TabsContent>
+
+        <TabsContent value="payment" className="space-y-6">
+          {/* Payment Gateway Setup */}
+          <PaymentGatewaySetup />
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-6">
+          {/* Ad Tracking & Analytics */}
+          <AdTrackingAnalytics />
         </TabsContent>
 
         <TabsContent value="students" className="space-y-6">

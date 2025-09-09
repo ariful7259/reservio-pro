@@ -14,7 +14,13 @@ import {
   Star,
   FileText,
   Video,
-  Download
+  Download,
+  CreditCard,
+  Target,
+  Percent,
+  Clock,
+  ArrowDownLeft,
+  Wallet
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -32,7 +38,10 @@ const CreatorDashboard = () => {
     totalProducts: 12,
     totalRevenue: 125000,
     totalStudents: 450,
-    monthlyGrowth: 23.5
+    monthlyGrowth: 23.5,
+    adSpend: 25000,
+    adROI: 420,
+    totalCommission: 6250
   };
 
   const recentCourses = [
@@ -146,16 +155,17 @@ const CreatorDashboard = () => {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="overview">ওভারভিউ</TabsTrigger>
           <TabsTrigger value="courses">কোর্স সমূহ</TabsTrigger>
           <TabsTrigger value="products">প্রোডাক্ট সমূহ</TabsTrigger>
+          <TabsTrigger value="payments">পেমেন্ট</TabsTrigger>
           <TabsTrigger value="analytics">অ্যানালিটিক্স</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
           {/* Stats Cards */}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-8">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">মোট কোর্স</CardTitle>
@@ -208,6 +218,50 @@ const CreatorDashboard = () => {
               <CardContent>
                 <div className="text-2xl font-bold">{dashboardStats.monthlyGrowth}%</div>
                 <p className="text-xs text-muted-foreground">স্থিতিশীল বৃদ্ধি</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">অ্যাড খরচ</CardTitle>
+                <Target className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">৳{dashboardStats.adSpend.toLocaleString()}</div>
+                <p className="text-xs text-muted-foreground">এই মাসে</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">অ্যাড ROI</CardTitle>
+                <BarChart3 className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{dashboardStats.adROI}%</div>
+                <p className="text-xs text-muted-foreground">+৫৫% গত মাস থেকে</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">মোট কমিশন</CardTitle>
+                <Percent className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">৳{dashboardStats.totalCommission.toLocaleString()}</div>
+                <p className="text-xs text-muted-foreground">প্ল্যাটফর্ম ফি</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">নেট আয়</CardTitle>
+                <DollarSign className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">৳{(dashboardStats.totalRevenue - dashboardStats.totalCommission).toLocaleString()}</div>
+                <p className="text-xs text-muted-foreground">কমিশন বাদে</p>
               </CardContent>
             </Card>
           </div>
@@ -411,6 +465,68 @@ const CreatorDashboard = () => {
               </Card>
             ))}
           </div>
+        </TabsContent>
+
+        <TabsContent value="payments" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <CreditCard className="h-5 w-5" />
+                পেমেন্ট ওভারভিউ
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <div className="p-4 border rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-muted-foreground">পেন্ডিং পেমেন্ট</p>
+                      <p className="text-xl font-bold">৳১৫,৫০০</p>
+                    </div>
+                    <Clock className="h-6 w-6 text-yellow-500" />
+                  </div>
+                </div>
+                <div className="p-4 border rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-muted-foreground">এই মাসের আয়</p>
+                      <p className="text-xl font-bold">৳৪৫,২০০</p>
+                    </div>
+                    <TrendingUp className="h-6 w-6 text-green-500" />
+                  </div>
+                </div>
+                <div className="p-4 border rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-muted-foreground">মোট উইথড্রয়াল</p>
+                      <p className="text-xl font-bold">৳৮৯,৭০০</p>
+                    </div>
+                    <ArrowDownLeft className="h-6 w-6 text-blue-500" />
+                  </div>
+                </div>
+                <div className="p-4 border rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-muted-foreground">উপলব্ধ ব্যালেন্স</p>
+                      <p className="text-xl font-bold">৳২৩,৮০০</p>
+                    </div>
+                    <Wallet className="h-6 w-6 text-purple-500" />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-6 flex gap-3">
+                <Button>
+                  <Download className="h-4 w-4 mr-2" />
+                  উইথড্রয়াল রিকোয়েস্ট
+                </Button>
+                <Button variant="outline">
+                  <FileText className="h-4 w-4 mr-2" />
+                  পেমেন্ট হিস্টরি
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
