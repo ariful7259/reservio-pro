@@ -33,8 +33,8 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
   
   // Filter categories based on search term
   const filteredCategories = serviceCategories.filter(category =>
-    category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    category.nameEn.toLowerCase().includes(searchTerm.toLowerCase())
+    (category.name && category.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (category.nameEn && category.nameEn.toLowerCase().includes(searchTerm.toLowerCase()))
   );
   
   const initialDisplayCount = 7; // Changed from 8 to 7 as requested
