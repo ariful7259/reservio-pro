@@ -15,6 +15,7 @@ const Services = () => {
   const { toast } = useToast();
   const { language, t } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
+  const [categorySearchTerm, setCategorySearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedSubcategory, setSelectedSubcategory] = useState('all');
   const [selectedLocation, setSelectedLocation] = useState('all');
@@ -365,6 +366,8 @@ const Services = () => {
         setSelectedCategory={setSelectedCategory}
         isExpanded={isExpanded}
         setIsExpanded={setIsExpanded}
+        searchTerm={categorySearchTerm}
+        setSearchTerm={setCategorySearchTerm}
       />
 
       {/* Service Listings Section */}

@@ -4,7 +4,8 @@ import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/component
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ChevronRight, Flame, Sparkles } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { ChevronRight, Flame, Sparkles, Search } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,6 +15,8 @@ interface ServiceCategoryGridProps {
   setSelectedCategory: (categoryId: string) => void;
   isExpanded: boolean;
   setIsExpanded: (open: boolean) => void;
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
 }
 
 const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
@@ -21,14 +24,22 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
   selectedCategory,
   setSelectedCategory,
   isExpanded,
-  setIsExpanded
+  setIsExpanded,
+  searchTerm,
+  setSearchTerm
 }) => {
   const { language, t } = useApp();
   const navigate = useNavigate();
   
-  const initialDisplayCount = 8;
-  const displayedCategories = serviceCategories.slice(0, initialDisplayCount);
-  const remainingCategories = serviceCategories.slice(initialDisplayCount);
+  // Filter categories based on search term
+  const filteredCategories = serviceCategories.filter(category =>
+    category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    category.nameEn.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  
+  const initialDisplayCount = 7; // Changed from 8 to 7 as requested
+  const displayedCategories = filteredCategories.slice(0, initialDisplayCount);
+  const remainingCategories = filteredCategories.slice(initialDisplayCount);
 
   const handleCategoryClick = (categoryId: string) => {
     // Navigate to service category page like rent section
@@ -68,8 +79,8 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
           {language === 'bn' ? category.name : category.nameEn}
         </h3>
         
-        <Badge variant="secondary" className="text-xs mb-1">
-          {category.count} {language === 'bn' ? 'সার্ভিস' : 'services'}
+        <Badge variant="secondary" className="text-xs mb-1 bg-green-100 text-green-700 border-green-200">
+          {category.count}{language === 'bn' ? 'টি' : ' services'}
         </Badge>
         
         <div className="text-xs text-muted-foreground">
@@ -91,8 +102,19 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
           {language === 'bn' ? 'ক্যাটাগরি সমূহ' : 'Categories'}
         </h2>
         
-        {/* Initial Categories - Mobile: 4 columns, Desktop: 4 columns */}
-        <div className="grid grid-cols-4 gap-3 md:gap-6">
+        {/* Search Bar */}
+        <div className="relative mb-6">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <Input
+            placeholder={language === 'bn' ? 'ক্যাটাগরি খুঁজুন...' : 'Search categories...'}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 bg-background border-border"
+          />
+        </div>
+        
+        {/* Categories Grid - 3 columns as requested */}
+        <div className="grid grid-cols-3 gap-3 md:gap-4">
           {displayedCategories.map(category => (
             <CategoryCard key={category.id} category={category} />
           ))}
@@ -102,7 +124,7 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
       {remainingCategories.length > 0 && (
         <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className="w-full">
           <CollapsibleContent className="space-y-4">
-            <div className="grid grid-cols-4 gap-3 md:gap-6">
+            <div className="grid grid-cols-3 gap-3 md:gap-4">
               {remainingCategories.map(category => (
                 <CategoryCard key={category.id} category={category} />
               ))}
