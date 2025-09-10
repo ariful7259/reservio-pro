@@ -24,50 +24,47 @@ export const MarketplaceCategoryGrid: React.FC<MarketplaceCategoryGridProps> = (
     : marketplaceCategories.slice(0, 8);
 
   const CategoryCard = ({ category }: { category: MarketplaceCategory }) => (
-    <Card
-      className={`relative overflow-hidden hover:shadow-md transition-all cursor-pointer ${
+    <div
+      className={`flex flex-col items-center justify-center transition-all hover:scale-105 cursor-pointer relative ${
         selectedCategory === category.id
-          ? 'ring-2 ring-primary bg-primary/5'
-          : 'hover:bg-gray-50'
+          ? 'ring-2 ring-primary bg-primary/5 rounded-lg p-2'
+          : ''
       }`}
       onClick={() => setSelectedCategory(category.id)}
     >
-      <CardContent className="p-3 flex flex-col items-center text-center">
-        {/* New/Hot Badges */}
-        {(category.isNew || category.isHot) && (
-          <div className="absolute top-1 right-1 flex gap-1">
-            {category.isNew && (
-              <Badge variant="secondary" className="text-xs px-1 py-0 bg-blue-100 text-blue-600">
-                <Sparkles className="h-2 w-2 mr-1" />
-                নতুন
-              </Badge>
-            )}
-            {category.isHot && (
-              <Badge variant="secondary" className="text-xs px-1 py-0 bg-red-100 text-red-600">
-                <Flame className="h-2 w-2 mr-1" />
-                হট
-              </Badge>
-            )}
-          </div>
-        )}
-        
-        <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
-          {category.icon}
+      {/* New/Hot Badges */}
+      {(category.isNew || category.isHot) && (
+        <div className="absolute top-1 right-1 flex gap-1">
+          {category.isNew && (
+            <Badge variant="secondary" className="text-xs px-1 py-0 bg-blue-100 text-blue-600">
+              <Sparkles className="h-2 w-2 mr-1" />
+              নতুন
+            </Badge>
+          )}
+          {category.isHot && (
+            <Badge variant="secondary" className="text-xs px-1 py-0 bg-red-100 text-red-600">
+              <Flame className="h-2 w-2 mr-1" />
+              হট
+            </Badge>
+          )}
         </div>
-        
-        <h3 className="font-medium text-xs md:text-sm mb-1 line-clamp-2">
-          {language === 'bn' ? category.name : category.nameEn}
-        </h3>
-        
-        <Badge variant="secondary" className="text-xs">
-          {category.count} {language === 'bn' ? 'পণ্য' : 'items'}
-        </Badge>
-        
-        <div className="mt-1 text-xs text-muted-foreground">
-          {category.subcategories.length} {language === 'bn' ? 'সাব-ক্যাটাগরি' : 'subcategories'}
-        </div>
-      </CardContent>
-    </Card>
+      )}
+      
+      {/* Category Icon - Same as rental categories */}
+      <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+        {category.icon}
+      </div>
+      
+      {/* Category Name - Same as rental categories */}
+      <span className="text-xs text-center mb-1">
+        {language === 'bn' ? category.name : category.nameEn}
+      </span>
+      
+      {/* Item Count Badge - Same as rental categories */}
+      <Badge variant="secondary" className="text-xs bg-green-100 text-green-700 border-green-200">
+        {category.count}{language === 'bn' ? 'টি' : ' items'}
+      </Badge>
+    </div>
   );
 
   return (
