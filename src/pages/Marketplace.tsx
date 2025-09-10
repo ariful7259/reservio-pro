@@ -91,7 +91,24 @@ const Marketplace = () => {
                          product.seller.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesLocation = selectedLocation === 'all' || product.location.toLowerCase().includes(selectedLocation.toLowerCase());
     
-    return matchesSearch && matchesLocation;
+    // Filter by category if one is selected
+    let matchesCategory = true;
+    if (selectedCategory !== 'all') {
+      const category = marketplaceCategories.find(c => c.id === selectedCategory);
+      if (category) {
+        // For now, match by category name (you can extend this logic)
+        matchesCategory = product.title.toLowerCase().includes(category.nameEn.toLowerCase()) ||
+                         product.title.toLowerCase().includes(category.name.toLowerCase());
+      }
+    }
+    
+    // Filter by subcategory if one is selected
+    let matchesSubcategory = true;
+    if (selectedSubcategory !== 'all' && selectedCategory !== 'all') {
+      matchesSubcategory = product.title.toLowerCase().includes(selectedSubcategory.toLowerCase());
+    }
+    
+    return matchesSearch && matchesLocation && matchesCategory && matchesSubcategory;
   });
 
   const handleAddToCart = (product: any) => {
@@ -215,9 +232,124 @@ const Marketplace = () => {
                         {language === 'bn' ? category.name : category.nameEn}
                       </h3>
                       <p className="text-sm text-muted-foreground">
-                        {category.count} {language === 'bn' ? 'পণ্য' : 'products'}
+                        {filteredProducts.length} {language === 'bn' ? 'পণ্য পাওয়া গেছে' : 'products found'}
                       </p>
                     </div>
+                  </div>
+                  
+                  {/* Category Products */}
+                  <div className={viewMode === 'grid' ? 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4' : 'space-y-4'}>
+                    {filteredProducts.length > 0 ? filteredProducts.map(product => (
+                      <Card key={product.id} className="hover:shadow-md transition-all cursor-pointer overflow-hidden">
+                        {viewMode === 'grid' ? (
+                          <CardContent className="p-0">
+                            <div className="relative">
+                              <img src={product.image} alt={product.title} className="w-full h-48 object-cover" />
+                              <div className="absolute top-2 left-2">
+                                <Badge variant="destructive" className="text-xs">
+                                  -{product.discount}%
+                                </Badge>
+                              </div>
+                              <Button variant="outline" size="icon" className="absolute top-2 right-2 bg-white h-8 w-8 rounded-full">
+                                <Heart className="h-4 w-4" />
+                              </Button>
+                            </div>
+                            <div className="p-3">
+                              <h3 className="font-medium text-sm line-clamp-2 mb-2">{product.title}</h3>
+                              <div className="flex items-center gap-1 mb-2">
+                                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                                <span className="text-xs">{product.rating}</span>
+                                <span className="text-xs text-muted-foreground">({product.reviews})</span>
+                              </div>
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="font-bold text-primary">{product.price}</span>
+                                <span className="text-xs text-muted-foreground line-through">{product.originalPrice}</span>
+                              </div>
+                              <div className="flex items-center gap-1 text-xs text-muted-foreground mb-3">
+                                <MapPin className="h-3 w-3" />
+                                <span>{product.location}</span>
+                              </div>
+                              <div className="space-y-2">
+                                <Button 
+                                  size="sm" 
+                                  className="w-full"
+                                  onClick={() => handleAddToCart(product)}
+                                >
+                                  <ShoppingCart className="h-4 w-4 mr-1" />
+                                  {language === 'bn' ? 'কার্টে যোগ করুন' : 'Add to Cart'}
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  className="w-full"
+                                  onClick={() => handleBuyNow(product)}
+                                >
+                                  <Zap className="h-4 w-4 mr-1" />
+                                  {language === 'bn' ? 'এখনই কিনুন' : 'Buy Now'}
+                                </Button>
+                              </div>
+                            </div>
+                          </CardContent>
+                        ) : (
+                          <CardContent className="p-4">
+                            <div className="flex gap-4">
+                              <div className="relative w-24 h-24 flex-shrink-0">
+                                <img src={product.image} alt={product.title} className="w-full h-full object-cover rounded" />
+                                <Badge variant="destructive" className="absolute -top-1 -left-1 text-xs">
+                                  -{product.discount}%
+                                </Badge>
+                              </div>
+                              <div className="flex-1">
+                                <h3 className="font-medium mb-1">{product.title}</h3>
+                                <div className="flex items-center gap-1 mb-2">
+                                  <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                                  <span className="text-xs">{product.rating}</span>
+                                  <span className="text-xs text-muted-foreground">({product.reviews})</span>
+                                </div>
+                                <div className="flex items-center gap-2 mb-2">
+                                  <span className="font-bold text-primary">{product.price}</span>
+                                  <span className="text-xs text-muted-foreground line-through">{product.originalPrice}</span>
+                                </div>
+                                <div className="flex items-center justify-between mb-2">
+                                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                    <MapPin className="h-3 w-3" />
+                                    <span>{product.location}</span>
+                                  </div>
+                                  <Button variant="outline" size="icon" className="h-8 w-8">
+                                    <Heart className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                                <div className="flex gap-2">
+                                  <Button 
+                                    size="sm" 
+                                    className="flex-1"
+                                    onClick={() => handleAddToCart(product)}
+                                  >
+                                    <ShoppingCart className="h-4 w-4 mr-1" />
+                                    কার্ট
+                                  </Button>
+                                  <Button 
+                                    size="sm" 
+                                    variant="outline"
+                                    className="flex-1"
+                                    onClick={() => handleBuyNow(product)}
+                                  >
+                                    <Zap className="h-4 w-4 mr-1" />
+                                    কিনুন
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        )}
+                      </Card>
+                    )) : (
+                      <div className="col-span-full text-center py-8">
+                        <p className="text-muted-foreground">
+                          {language === 'bn' ? 'এই ক্যাটাগরিতে কোন পণ্য পাওয়া যায়নি' : 'No products found in this category'}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </Card>
               </div>
