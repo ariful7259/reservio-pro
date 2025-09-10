@@ -47,52 +47,43 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
   };
 
   const CategoryCard = ({ category }: { category: any }) => (
-    <Card 
-      className={`relative overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group hover:bg-gray-50 hover:scale-105`} 
+    <div 
+      className="flex flex-col items-center justify-center transition-all hover:scale-105 cursor-pointer"
       onClick={() => handleCategoryClick(category.id)}
     >
-      <CardContent className="p-3 flex flex-col items-center text-center">
-        {/* New/Hot Badges */}
-        {(category.isNew || category.isHot) && (
-          <div className="absolute top-1 right-1 flex gap-1">
-            {category.isNew && (
-              <Badge variant="secondary" className="text-xs px-1 py-0 bg-blue-100 text-blue-600">
-                <Sparkles className="h-2 w-2 mr-1" />
-                নতুন
-              </Badge>
-            )}
-            {category.isHot && (
-              <Badge variant="secondary" className="text-xs px-1 py-0 bg-red-100 text-red-600">
-                <Flame className="h-2 w-2 mr-1" />
-                হট
-              </Badge>
-            )}
-          </div>
-        )}
-        
-        {/* Match rental category design */}
-        <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
-          {React.cloneElement(category.icon, { className: "h-8 w-8" })}
+      {/* New/Hot Badges */}
+      {(category.isNew || category.isHot) && (
+        <div className="absolute top-1 right-1 flex gap-1">
+          {category.isNew && (
+            <Badge variant="secondary" className="text-xs px-1 py-0 bg-blue-100 text-blue-600">
+              <Sparkles className="h-2 w-2 mr-1" />
+              নতুন
+            </Badge>
+          )}
+          {category.isHot && (
+            <Badge variant="secondary" className="text-xs px-1 py-0 bg-red-100 text-red-600">
+              <Flame className="h-2 w-2 mr-1" />
+              হট
+            </Badge>
+          )}
         </div>
-        
-        <h3 className="font-semibold text-sm md:text-base mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-          {language === 'bn' ? category.name : category.nameEn}
-        </h3>
-        
-        <Badge variant="secondary" className="text-xs mb-1 bg-green-100 text-green-700 border-green-200">
-          {category.count}{language === 'bn' ? 'টি' : ' services'}
-        </Badge>
-        
-        <div className="text-xs text-muted-foreground">
-          {category.subcategories.length} {language === 'bn' ? 'সাব-ক্যাটাগরি' : 'subcategories'}
-        </div>
-
-        {/* Click indicator */}
-        <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-          <ChevronRight className="h-4 w-4 text-primary" />
-        </div>
-      </CardContent>
-    </Card>
+      )}
+      
+      {/* Category Icon - Same as rental categories */}
+      <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+        {React.cloneElement(category.icon, { className: "h-8 w-8" })}
+      </div>
+      
+      {/* Category Name - Same as rental categories */}
+      <span className="text-xs text-center mb-1">
+        {language === 'bn' ? category.name : category.nameEn}
+      </span>
+      
+      {/* Service Count Badge - Same as rental categories */}
+      <Badge variant="secondary" className="text-xs bg-green-100 text-green-700 border-green-200">
+        {category.count}{language === 'bn' ? 'টি' : ' services'}
+      </Badge>
+    </div>
   );
 
   return (
