@@ -393,10 +393,78 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_seller_profiles: {
+        Row: {
+          address: string | null
+          bio: string | null
+          business_name: string | null
+          content_settings: Json | null
+          created_at: string | null
+          id: string | null
+          logo_url: string | null
+          marketplace_settings: Json | null
+          payment_methods: Json | null
+          rental_settings: Json | null
+          seller_type: Database["public"]["Enums"]["seller_type"] | null
+          service_settings: Json | null
+          terms_conditions: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          address?: string | null
+          bio?: string | null
+          business_name?: string | null
+          content_settings?: Json | null
+          created_at?: string | null
+          id?: string | null
+          logo_url?: string | null
+          marketplace_settings?: Json | null
+          payment_methods?: Json | null
+          rental_settings?: Json | null
+          seller_type?: Database["public"]["Enums"]["seller_type"] | null
+          service_settings?: Json | null
+          terms_conditions?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string | null
+          bio?: string | null
+          business_name?: string | null
+          content_settings?: Json | null
+          created_at?: string | null
+          id?: string | null
+          logo_url?: string | null
+          marketplace_settings?: Json | null
+          payment_methods?: Json | null
+          rental_settings?: Json | null
+          seller_type?: Database["public"]["Enums"]["seller_type"] | null
+          service_settings?: Json | null
+          terms_conditions?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      [_ in never]: never
+      get_public_seller_info: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          address: string
+          bio: string
+          business_name: string
+          content_settings: Json
+          created_at: string
+          id: string
+          logo_url: string
+          marketplace_settings: Json
+          payment_methods: Json
+          rental_settings: Json
+          seller_type: Database["public"]["Enums"]["seller_type"]
+          service_settings: Json
+          terms_conditions: string
+          updated_at: string
+        }[]
+      }
     }
     Enums: {
       seller_type: "marketplace" | "rental" | "service" | "content"
