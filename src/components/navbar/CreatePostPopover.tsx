@@ -45,6 +45,14 @@ export const CreatePostPopover: React.FC = () => {
               </Button>
           <Button
             variant="outline"
+            onClick={() => handleNavigate('/create-post?type=rent')}
+            className="flex flex-col items-center justify-center h-20 sm:h-24 gap-2 touch-manipulation tap-highlight-none hover-lift-mobile"
+          >
+            <Building className="h-6 w-6 sm:h-8 sm:w-8 text-orange-500" />
+            <span className="text-xs sm:text-sm text-center leading-tight">রেন্ট পোস্ট</span>
+          </Button>
+          <Button
+            variant="outline"
             onClick={() => handleNavigate('/create-post?type=service')}
             className="flex flex-col items-center justify-center h-20 sm:h-24 gap-2 touch-manipulation tap-highlight-none hover-lift-mobile"
           >
