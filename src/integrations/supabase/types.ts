@@ -88,6 +88,45 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_sources: {
+        Row: {
+          account_holder_name: string | null
+          account_number: string | null
+          created_at: string
+          id: string
+          is_default: boolean | null
+          metadata: Json | null
+          provider_name: string
+          source_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_holder_name?: string | null
+          account_number?: string | null
+          created_at?: string
+          id?: string
+          is_default?: boolean | null
+          metadata?: Json | null
+          provider_name: string
+          source_type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_holder_name?: string | null
+          account_number?: string | null
+          created_at?: string
+          id?: string
+          is_default?: boolean | null
+          metadata?: Json | null
+          provider_name?: string
+          source_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           category: string | null
@@ -121,6 +160,45 @@ export type Database = {
           name?: string
           price?: number
           stock?: number | null
+        }
+        Relationships: []
+      }
+      qr_payment_requests: {
+        Row: {
+          amount: number
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          expires_at: string
+          id: string
+          paid_by: string | null
+          qr_code_data: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          expires_at: string
+          id?: string
+          paid_by?: string | null
+          qr_code_data: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          expires_at?: string
+          id?: string
+          paid_by?: string | null
+          qr_code_data?: string
+          status?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -326,6 +404,83 @@ export type Database = {
           preferred_notification_time?: string | null
           reminder_frequency?: number | null
           timezone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      wallet_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          id: string
+          metadata: Json | null
+          payment_method: string | null
+          recipient_id: string | null
+          sender_id: string | null
+          status: string
+          transaction_type: string
+          wallet_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          payment_method?: string | null
+          recipient_id?: string | null
+          sender_id?: string | null
+          status?: string
+          transaction_type: string
+          wallet_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          payment_method?: string | null
+          recipient_id?: string | null
+          sender_id?: string | null
+          status?: string
+          transaction_type?: string
+          wallet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_transactions_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallets: {
+        Row: {
+          balance: number
+          created_at: string
+          currency: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          created_at?: string
+          currency?: string
+          id?: string
           updated_at?: string
           user_id?: string
         }
