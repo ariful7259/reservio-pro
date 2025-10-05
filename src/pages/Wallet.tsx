@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -17,58 +17,120 @@ import {
   Shield,
   Settings
 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { SendMoneyDialog } from '@/components/wallet/SendMoneyDialog';
+import { ReceiveMoneyDialog } from '@/components/wallet/ReceiveMoneyDialog';
+import { QRPaymentDialog } from '@/components/wallet/QRPaymentDialog';
+import { AddMoneyDialog } from '@/components/wallet/AddMoneyDialog';
 
 const Wallet = () => {
+  const { toast } = useToast();
   const [balanceVisible, setBalanceVisible] = useState(true);
-  
-  const walletBalance = 15750;
-  const transactions = [
-    {
-      id: 1,
-      type: 'received',
-      amount: 2500,
-      description: 'ডিজিটাল প্রোডাক্ট বিক্রয়',
-      date: '২ ঘন্টা আগে',
-      status: 'completed'
-    },
-    {
-      id: 2,
-      type: 'sent',
-      amount: 800,
-      description: 'রেন্ট পেমেন্ট',
-      date: '৫ ঘন্টা আগে',
-      status: 'completed'
-    },
-    {
-      id: 3,
-      type: 'received',
-      amount: 1200,
-      description: 'সার্ভিস ফি',
-      date: '১ দিন আগে',
-      status: 'pending'
+  const [walletBalance, setWalletBalance] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [sendDialogOpen, setSendDialogOpen] = useState(false);
+  const [receiveDialogOpen, setReceiveDialogOpen] = useState(false);
+  const [qrDialogOpen, setQrDialogOpen] = useState(false);
+  const [addMoneyDialogOpen, setAddMoneyDialogOpen] = useState(false);
+  const [transactions, setTransactions] = useState<any[]>([]);
+  useEffect(() => {
+    loadWalletData();
+  }, []);
+
+  const loadWalletData = async () => {
+    try {
+      setLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast({
+          title: 'দয়া করে লগইন করুন',
+          description: 'ওয়ালেট ব্যবহার করতে লগইন করুন',
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      // Get or create wallet
+      let { data: wallet, error: walletError } = await supabase
+        .from('wallets')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      if (walletError && walletError.code === 'PGRST116') {
+        // Wallet doesn't exist, create one
+        const { data: newWallet, error: createError } = await supabase
+          .from('wallets')
+          .insert({ user_id: user.id, balance: 0 })
+          .select()
+          .single();
+
+        if (createError) throw createError;
+        wallet = newWallet;
+      } else if (walletError) {
+        throw walletError;
+      }
+
+      setWalletBalance(wallet?.balance || 0);
+
+      // Load transactions
+      const { data: txData, error: txError } = await supabase
+        .from('wallet_transactions')
+        .select('*')
+        .eq('wallet_id', wallet?.id)
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      if (txError) throw txError;
+
+      const formattedTx = (txData || []).map((tx: any) => ({
+        id: tx.id,
+        type: tx.transaction_type === 'send' ? 'sent' : 'received',
+        amount: tx.amount,
+        description: tx.description,
+        date: new Date(tx.created_at).toLocaleDateString('bn-BD'),
+        status: tx.status
+      }));
+
+      setTransactions(formattedTx);
+    } catch (error: any) {
+      console.error('Error loading wallet:', error);
+      toast({
+        title: 'ত্রুটি',
+        description: 'ওয়ালেট ডেটা লোড করতে সমস্যা হয়েছে',
+        variant: 'destructive'
+      });
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
   const quickActions = [
     {
       title: 'টাকা পাঠান',
       icon: <Send className="h-6 w-6" />,
-      color: 'bg-blue-100 text-blue-600'
+      color: 'bg-blue-100 text-blue-600',
+      onClick: () => setSendDialogOpen(true)
     },
     {
       title: 'টাকা নিন',
       icon: <ArrowDownToLine className="h-6 w-6" />,
-      color: 'bg-green-100 text-green-600'
+      color: 'bg-green-100 text-green-600',
+      onClick: () => setReceiveDialogOpen(true)
     },
     {
       title: 'QR কোড',
       icon: <QrCode className="h-6 w-6" />,
-      color: 'bg-purple-100 text-purple-600'
+      color: 'bg-purple-100 text-purple-600',
+      onClick: () => setQrDialogOpen(true)
     },
     {
       title: 'টাকা যোগ করুন',
       icon: <Plus className="h-6 w-6" />,
-      color: 'bg-orange-100 text-orange-600'
+      color: 'bg-orange-100 text-orange-600',
+      onClick: () => setAddMoneyDialogOpen(true)
     }
   ];
 
@@ -117,7 +179,11 @@ const Wallet = () => {
         <h3 className="text-lg font-semibold mb-4">দ্রুত কাজ</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {quickActions.map((action, index) => (
-            <Card key={index} className="hover:shadow-md transition-all cursor-pointer">
+            <Card 
+              key={index} 
+              className="hover:shadow-md transition-all cursor-pointer"
+              onClick={action.onClick}
+            >
               <CardContent className="p-4">
                 <div className="flex flex-col items-center text-center">
                   <div className={`p-3 rounded-full ${action.color} mb-3`}>
@@ -225,6 +291,31 @@ const Wallet = () => {
           </div>
         </CardContent>
       </Card>
+
+      <SendMoneyDialog
+        open={sendDialogOpen}
+        onOpenChange={setSendDialogOpen}
+        currentBalance={walletBalance}
+        onSuccess={loadWalletData}
+      />
+
+      <ReceiveMoneyDialog
+        open={receiveDialogOpen}
+        onOpenChange={setReceiveDialogOpen}
+      />
+
+      <QRPaymentDialog
+        open={qrDialogOpen}
+        onOpenChange={setQrDialogOpen}
+        currentBalance={walletBalance}
+        onSuccess={loadWalletData}
+      />
+
+      <AddMoneyDialog
+        open={addMoneyDialogOpen}
+        onOpenChange={setAddMoneyDialogOpen}
+        onSuccess={loadWalletData}
+      />
     </div>
   );
 };
