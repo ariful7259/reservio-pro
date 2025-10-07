@@ -173,6 +173,43 @@ const Marketplace = () => {
         </div>
       </div>
 
+      {/* Featured Products Section */}
+      <div className="mb-8">
+        <h2 className="text-lg font-medium mb-4">{language === 'bn' ? 'ফিচার্ড প্রোডাক্ট' : 'Featured Products'}</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {featuredProducts.map(product => (
+            <Card key={product.id} className="overflow-hidden cursor-pointer hover:shadow-md transition-all hover:scale-105">
+              <CardContent className="p-0">
+                <div className="relative aspect-square">
+                  <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
+                  <Badge variant="destructive" className="absolute top-2 left-2 text-xs">
+                    -{product.discount}%
+                  </Badge>
+                  <div className="absolute top-2 right-2 flex flex-col gap-2">
+                    <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full">
+                      <Heart className="h-4 w-4 text-gray-600" />
+                    </Button>
+                  </div>
+                </div>
+                <div className="p-3">
+                  <h3 className="font-medium text-sm line-clamp-1">{product.title}</h3>
+                  <p className="text-xs text-muted-foreground mb-1">{product.location}</p>
+                  <div className="flex items-center gap-1 mb-2">
+                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                    <span className="text-xs">{product.rating}</span>
+                    <span className="text-xs text-muted-foreground">({product.reviews})</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-bold text-primary">{product.price}</span>
+                    <span className="text-xs text-muted-foreground line-through">{product.originalPrice}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
       {/* Special Sections */}
       <FlashDealsSection />
       <UsedProductsSection />
@@ -226,11 +263,11 @@ const Marketplace = () => {
         </div>
       )}
 
-      {/* Featured Products */}
+      {/* All Products */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">
-            {language === 'bn' ? 'ফিচার্ড প্রোডাক্ট' : 'Featured Products'}
+            {language === 'bn' ? 'সব প্রোডাক্ট' : 'All Products'}
           </h2>
           <Button variant="outline" size="sm">
             {language === 'bn' ? 'সব দেখুন' : 'View All'}
@@ -290,7 +327,6 @@ const Marketplace = () => {
                   </div>
                 </CardContent>
               ) : (
-                // ... keep existing code (list view implementation)
                 <CardContent className="p-4">
                   <div className="flex gap-4">
                     <div className="relative w-24 h-24 flex-shrink-0">

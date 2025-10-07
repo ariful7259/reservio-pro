@@ -333,6 +333,9 @@ const Services = () => {
     navigate(`/services/${serviceId}/book`);
   };
 
+  // Featured services data
+  const featuredServices = allServices.slice(0, 4);
+
   return (
     <div className="container px-4 pt-20 pb-20">
       <div className="mb-6">
@@ -357,6 +360,46 @@ const Services = () => {
         <Button variant="outline" size="icon">
           <Filter className="h-4 w-4" />
         </Button>
+      </div>
+
+      {/* Featured Services Section */}
+      <div className="mb-8">
+        <h2 className="text-lg font-medium mb-4">{language === 'bn' ? 'ফিচার্ড সার্ভিস' : 'Featured Services'}</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {featuredServices.map(service => (
+            <Card key={service.id} className="overflow-hidden cursor-pointer hover:shadow-md transition-all hover:scale-105" onClick={() => handleServiceClick(service.id)}>
+              <CardContent className="p-0">
+                <div className="relative aspect-square">
+                  <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
+                  <Badge className="absolute top-2 left-2">{language === 'bn' ? service.category : service.subcategory}</Badge>
+                  <div className="absolute top-2 right-2 flex flex-col gap-2">
+                    <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full" onClick={e => handleBookmark(e, service.id)}>
+                      <Heart className="h-4 w-4 text-gray-600" />
+                    </Button>
+                  </div>
+                  {service.isVerified && (
+                    <div className="absolute bottom-2 right-2">
+                      <Badge variant="secondary" className="text-xs bg-green-500 text-white">
+                        <CheckCircle className="h-3 w-3 mr-1" />
+                        {language === 'bn' ? 'যাচাইকৃত' : 'Verified'}
+                      </Badge>
+                    </div>
+                  )}
+                </div>
+                <div className="p-3">
+                  <h3 className="font-medium text-sm line-clamp-1">{service.title}</h3>
+                  <p className="text-xs text-muted-foreground mb-1">{service.location}</p>
+                  <div className="flex items-center gap-1 mb-1">
+                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                    <span className="text-xs font-medium">{service.rating}</span>
+                    <span className="text-xs text-muted-foreground">({service.reviews})</span>
+                  </div>
+                  <p className="text-sm font-bold text-primary">{service.price}</p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
 
       {/* Service Categories - Grid Layout with Collapsible */}
