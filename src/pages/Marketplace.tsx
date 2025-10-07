@@ -173,6 +173,11 @@ const Marketplace = () => {
         </div>
       </div>
 
+      {/* Special Sections */}
+      <FlashDealsSection />
+      <UsedProductsSection />
+      <LocalBrandsSection />
+
       {/* Category Grid - Mobile: 4 columns */}
       <MarketplaceCategoryGrid 
         selectedCategory={selectedCategory}
@@ -181,62 +186,44 @@ const Marketplace = () => {
 
       {/* Selected Category Filter Form */}
       {selectedCategory !== 'all' && (
-        <div className="mb-8 mt-6">
+        <div className="mb-8">
           {(() => {
             const category = marketplaceCategories.find(c => c.id === selectedCategory);
             if (!category) return null;
             
             return (
               <div className="space-y-4">
+                <MarketplaceCategoryFilterForm
+                  category={category}
+                  selectedSubcategory={selectedSubcategory}
+                  selectedLocation={selectedLocation}
+                  priceRange={priceRange}
+                  onSubcategoryChange={setSelectedSubcategory}
+                  onLocationChange={setSelectedLocation}
+                  onPriceRangeChange={setPriceRange}
+                />
+                
                 <Card className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-4">
-                      <div className={`w-12 h-12 rounded-full ${category.color} flex items-center justify-center`}>
-                        <div className={category.iconColor}>
-                          {category.icon}
-                        </div>
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-semibold">
-                          {language === 'bn' ? category.name : category.nameEn}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">
-                          {category.count} {language === 'bn' ? 'পণ্য' : 'products'}
-                        </p>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className={`w-12 h-12 rounded-full ${category.color} flex items-center justify-center`}>
+                      <div className={category.iconColor}>
+                        {category.icon}
                       </div>
                     </div>
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={() => setSelectedCategory('all')}
-                    >
-                      {language === 'bn' ? 'বন্ধ করুন' : 'Close'}
-                    </Button>
+                    <div>
+                      <h3 className="text-xl font-semibold">
+                        {language === 'bn' ? category.name : category.nameEn}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {category.count} {language === 'bn' ? 'পণ্য' : 'products'}
+                      </p>
+                    </div>
                   </div>
-                  
-                  <MarketplaceCategoryFilterForm
-                    category={category}
-                    selectedSubcategory={selectedSubcategory}
-                    selectedLocation={selectedLocation}
-                    priceRange={priceRange}
-                    onSubcategoryChange={setSelectedSubcategory}
-                    onLocationChange={setSelectedLocation}
-                    onPriceRangeChange={setPriceRange}
-                  />
                 </Card>
               </div>
             );
           })()}
         </div>
-      )}
-
-      {/* Special Sections */}
-      {selectedCategory === 'all' && (
-        <>
-          <FlashDealsSection />
-          <UsedProductsSection />
-          <LocalBrandsSection />
-        </>
       )}
 
       {/* Featured Products */}
