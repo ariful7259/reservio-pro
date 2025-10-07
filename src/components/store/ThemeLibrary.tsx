@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { 
   Palette, 
   Download, 
@@ -12,7 +13,8 @@ import {
   Eye,
   Sparkles,
   Crown,
-  Heart
+  Heart,
+  X
 } from 'lucide-react';
 
 interface Theme {
@@ -36,6 +38,7 @@ const ThemeLibrary = () => {
   const { toast } = useToast();
   const [installedThemes, setInstalledThemes] = useState<string[]>(['modern-minimal']);
   const [activeTheme, setActiveTheme] = useState('modern-minimal');
+  const [previewTheme, setPreviewTheme] = useState<Theme | null>(null);
 
   const themes: Theme[] = [
     {
@@ -107,6 +110,150 @@ const ThemeLibrary = () => {
       features: ['প্রিমিয়াম ডিজাইন', 'অ্যানিমেশন ইফেক্ট', 'কাস্টম ফন্ট'],
       rating: 4.9,
       downloads: 3200,
+      isPremium: true,
+      isInstalled: false
+    },
+    {
+      id: 'healthcare-clinic',
+      name: 'হেলথকেয়ার ক্লিনিক',
+      category: 'স্বাস্থ্য',
+      preview: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400&auto=format&fit=crop&q=60',
+      colors: { primary: '#0891B2', secondary: '#64748B', accent: '#10B981' },
+      features: ['অ্যাপয়েন্টমেন্ট বুকিং', 'ডাক্তার প্রোফাইল', 'সেবা তালিকা'],
+      rating: 4.7,
+      downloads: 7800,
+      isPremium: false,
+      isInstalled: false
+    },
+    {
+      id: 'education-academy',
+      name: 'এডুকেশন একাডেমি',
+      category: 'শিক্ষা',
+      preview: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&auto=format&fit=crop&q=60',
+      colors: { primary: '#7C3AED', secondary: '#475569', accent: '#F59E0B' },
+      features: ['কোর্স ক্যাটালগ', 'ইন্সট্রাক্টর প্রোফাইল', 'প্রগ্রেস ট্র্যাকিং'],
+      rating: 4.8,
+      downloads: 6500,
+      isPremium: true,
+      isInstalled: false
+    },
+    {
+      id: 'real-estate-pro',
+      name: 'রিয়েল এস্টেট প্রো',
+      category: 'সম্পত্তি',
+      preview: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&auto=format&fit=crop&q=60',
+      colors: { primary: '#0F766E', secondary: '#334155', accent: '#EAB308' },
+      features: ['প্রপার্টি লিস্টিং', 'ম্যাপ ভিউ', 'ভার্চুয়াল ট্যুর'],
+      rating: 4.6,
+      downloads: 5900,
+      isPremium: false,
+      isInstalled: false
+    },
+    {
+      id: 'travel-explorer',
+      name: 'ট্রাভেল এক্সপ্লোরার',
+      category: 'ভ্রমণ',
+      preview: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400&auto=format&fit=crop&q=60',
+      colors: { primary: '#0284C7', secondary: '#94A3B8', accent: '#F97316' },
+      features: ['প্যাকেজ শোকেস', 'বুকিং সিস্টেম', 'গ্যালারি ভিউ'],
+      rating: 4.7,
+      downloads: 4300,
+      isPremium: false,
+      isInstalled: false
+    },
+    {
+      id: 'fitness-gym',
+      name: 'ফিটনেস জিম',
+      category: 'ফিটনেস',
+      preview: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&auto=format&fit=crop&q=60',
+      colors: { primary: '#DC2626', secondary: '#1E293B', accent: '#FACC15' },
+      features: ['ক্লাস শিডিউল', 'ট্রেনার প্রোফাইল', 'মেম্বারশিপ প্ল্যান'],
+      rating: 4.5,
+      downloads: 8100,
+      isPremium: true,
+      isInstalled: false
+    },
+    {
+      id: 'restaurant-deluxe',
+      name: 'রেস্টুরেন্ট ডিলাক্স',
+      category: 'রেস্টুরেন্ট',
+      preview: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&auto=format&fit=crop&q=60',
+      colors: { primary: '#B91C1C', secondary: '#78350F', accent: '#FCD34D' },
+      features: ['ডিজিটাল মেনু', 'টেবিল রিজার্ভেশন', 'অনলাইন অর্ডার'],
+      rating: 4.8,
+      downloads: 7200,
+      isPremium: false,
+      isInstalled: false
+    },
+    {
+      id: 'photography-studio',
+      name: 'ফটোগ্রাফি স্টুডিও',
+      category: 'ফটোগ্রাফি',
+      preview: 'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=400&auto=format&fit=crop&q=60',
+      colors: { primary: '#1F2937', secondary: '#6B7280', accent: '#F59E0B' },
+      features: ['পোর্টফোলিও গ্যালারি', 'লাইটবক্স ভিউ', 'বুকিং ফর্ম'],
+      rating: 4.9,
+      downloads: 3800,
+      isPremium: true,
+      isInstalled: false
+    },
+    {
+      id: 'consulting-business',
+      name: 'কনসালটিং বিজনেস',
+      category: 'ব্যবসা',
+      preview: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&auto=format&fit=crop&q=60',
+      colors: { primary: '#1E40AF', secondary: '#475569', accent: '#06B6D4' },
+      features: ['সার্ভিস পেজ', 'টেস্টিমোনিয়াল', 'কনট্যাক্ট ফর্ম'],
+      rating: 4.6,
+      downloads: 5600,
+      isPremium: false,
+      isInstalled: false
+    },
+    {
+      id: 'beauty-salon',
+      name: 'বিউটি সেলুন',
+      category: 'সৌন্দর্য',
+      preview: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&auto=format&fit=crop&q=60',
+      colors: { primary: '#DB2777', secondary: '#A855F7', accent: '#FBBF24' },
+      features: ['সার্ভিস মেনু', 'অনলাইন বুকিং', 'বিফোর-আফটার গ্যালারি'],
+      rating: 4.7,
+      downloads: 6900,
+      isPremium: false,
+      isInstalled: false
+    },
+    {
+      id: 'automotive-parts',
+      name: 'অটোমোটিভ পার্টস',
+      category: 'গাড়ি',
+      preview: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&auto=format&fit=crop&q=60',
+      colors: { primary: '#0F172A', secondary: '#475569', accent: '#EF4444' },
+      features: ['পার্টস ক্যাটালগ', 'ভেহিকেল সার্চ', 'ইনভেন্টরি ট্র্যাকিং'],
+      rating: 4.5,
+      downloads: 4700,
+      isPremium: true,
+      isInstalled: false
+    },
+    {
+      id: 'organic-farming',
+      name: 'অর্গানিক ফার্মিং',
+      category: 'কৃষি',
+      preview: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&auto=format&fit=crop&q=60',
+      colors: { primary: '#15803D', secondary: '#A3E635', accent: '#FB923C' },
+      features: ['প্রোডাক্ট শোকেস', 'ফার্ম স্টোরি', 'সাবস্ক্রিপশন বক্স'],
+      rating: 4.8,
+      downloads: 3500,
+      isPremium: false,
+      isInstalled: false
+    },
+    {
+      id: 'event-management',
+      name: 'ইভেন্ট ম্যানেজমেন্ট',
+      category: 'ইভেন্ট',
+      preview: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=400&auto=format&fit=crop&q=60',
+      colors: { primary: '#7C3AED', secondary: '#EC4899', accent: '#FBBF24' },
+      features: ['ইভেন্ট ক্যালেন্ডার', 'টিকেট বুকিং', 'গ্যালারি শোকেস'],
+      rating: 4.9,
+      downloads: 5200,
       isPremium: true,
       isInstalled: false
     }
@@ -259,7 +406,12 @@ const ThemeLibrary = () => {
 
               {/* অ্যাকশন বাটন */}
               <div className="flex gap-2 pt-2">
-                <Button variant="outline" size="sm" className="flex-1">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="flex-1"
+                  onClick={() => setPreviewTheme(theme)}
+                >
                   <Eye className="h-3 w-3 mr-1" />
                   প্রিভিউ
                 </Button>
@@ -318,6 +470,157 @@ const ThemeLibrary = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* থিম প্রিভিউ মডাল */}
+      <Dialog open={!!previewTheme} onOpenChange={() => setPreviewTheme(null)}>
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <DialogTitle className="text-2xl flex items-center gap-2">
+                  {previewTheme?.name}
+                  {previewTheme?.isPremium && (
+                    <Badge className="bg-yellow-500 text-white">
+                      <Crown className="h-3 w-3 mr-1" />
+                      প্রিমিয়াম
+                    </Badge>
+                  )}
+                </DialogTitle>
+                <Badge variant="secondary" className="mt-2">
+                  {previewTheme?.category}
+                </Badge>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={() => setPreviewTheme(null)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </DialogHeader>
+
+          {previewTheme && (
+            <div className="space-y-6 mt-4">
+              {/* থিম প্রিভিউ ইমেজ */}
+              <div className="rounded-lg overflow-hidden border">
+                <img 
+                  src={previewTheme.preview} 
+                  alt={previewTheme.name}
+                  className="w-full h-96 object-cover"
+                />
+              </div>
+
+              {/* থিম ডিটেইলস */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">কালার প্যালেট</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm">প্রাইমারি</span>
+                        <div className="flex items-center gap-2">
+                          <div 
+                            className="w-8 h-8 rounded border"
+                            style={{ backgroundColor: previewTheme.colors.primary }}
+                          />
+                          <code className="text-xs">{previewTheme.colors.primary}</code>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm">সেকেন্ডারি</span>
+                        <div className="flex items-center gap-2">
+                          <div 
+                            className="w-8 h-8 rounded border"
+                            style={{ backgroundColor: previewTheme.colors.secondary }}
+                          />
+                          <code className="text-xs">{previewTheme.colors.secondary}</code>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm">অ্যাকসেন্ট</span>
+                        <div className="flex items-center gap-2">
+                          <div 
+                            className="w-8 h-8 rounded border"
+                            style={{ backgroundColor: previewTheme.colors.accent }}
+                          />
+                          <code className="text-xs">{previewTheme.colors.accent}</code>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">ফিচার সমূহ</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {previewTheme.features.map((feature, idx) => (
+                        <div key={idx} className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-500" />
+                          <span className="text-sm">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* থিম স্ট্যাটস */}
+              <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    <span className="font-medium">{previewTheme.rating}</span>
+                    <span className="text-sm text-muted-foreground">রেটিং</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Download className="h-4 w-4 text-muted-foreground" />
+                    <span className="font-medium">{previewTheme.downloads.toLocaleString()}</span>
+                    <span className="text-sm text-muted-foreground">ডাউনলোড</span>
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  {installedThemes.includes(previewTheme.id) ? (
+                    <Button 
+                      variant={activeTheme === previewTheme.id ? "secondary" : "default"}
+                      onClick={() => {
+                        handleActivateTheme(previewTheme.id);
+                        setPreviewTheme(null);
+                      }}
+                      disabled={activeTheme === previewTheme.id}
+                    >
+                      {activeTheme === previewTheme.id ? (
+                        <>
+                          <Check className="h-4 w-4 mr-2" />
+                          অ্যাক্টিভ
+                        </>
+                      ) : (
+                        'অ্যাক্টিভ করুন'
+                      )}
+                    </Button>
+                  ) : (
+                    <Button 
+                      onClick={() => {
+                        handleInstallTheme(previewTheme.id);
+                        setPreviewTheme(null);
+                      }}
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      ইনস্টল করুন
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
