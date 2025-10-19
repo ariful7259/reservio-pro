@@ -104,8 +104,8 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
           />
         </div>
         
-        {/* Categories Grid - 3 columns as requested */}
-        <div className="grid grid-cols-3 gap-3 md:gap-4">
+        {/* Categories Grid - 4 columns as requested */}
+        <div className="grid grid-cols-4 gap-3 md:gap-4">
           {displayedCategories.map(category => (
             <CategoryCard key={category.id} category={category} />
           ))}
@@ -115,7 +115,7 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
       {remainingCategories.length > 0 && (
         <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className="w-full">
           <CollapsibleContent className="space-y-4">
-            <div className="grid grid-cols-3 gap-3 md:gap-4">
+            <div className="grid grid-cols-4 gap-3 md:gap-4">
               {remainingCategories.map(category => (
                 <CategoryCard key={category.id} category={category} />
               ))}
