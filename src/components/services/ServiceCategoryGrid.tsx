@@ -37,7 +37,7 @@ const ServiceCategoryGrid: React.FC<ServiceCategoryGridProps> = ({
     (category.nameEn && category.nameEn.toLowerCase().includes(searchTerm.toLowerCase()))
   );
   
-  const initialDisplayCount = 7; // Changed from 8 to 7 as requested
+  const initialDisplayCount = 8; // Show 8 categories (2 rows of 4)
   const displayedCategories = filteredCategories.slice(0, initialDisplayCount);
   const remainingCategories = filteredCategories.slice(initialDisplayCount);
 
