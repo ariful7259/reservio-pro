@@ -44,7 +44,7 @@ export const PropertyPostSection = () => {
               <Home className="h-6 w-6 text-green-600" />
             </div>
             <div className="flex items-center space-x-2">
-              <span className="font-medium text-gray-900">Post your property</span>
+              <span className="font-medium text-gray-900">Post your Assets</span>
               <span className="bg-black text-white px-2 py-1 rounded text-xs font-medium">FREE</span>
             </div>
           </div>
