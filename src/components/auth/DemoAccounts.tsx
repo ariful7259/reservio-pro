@@ -12,9 +12,10 @@ const formSchema = z.object({
 interface DemoAccountsProps {
   form: UseFormReturn<z.infer<typeof formSchema>>;
   setLoginType: (type: "user" | "admin" | "seller") => void;
+  onSubmit: (values: z.infer<typeof formSchema>) => Promise<void>;
 }
 
-export const DemoAccounts: React.FC<DemoAccountsProps> = ({ form, setLoginType }) => {
+export const DemoAccounts: React.FC<DemoAccountsProps> = ({ form, setLoginType, onSubmit }) => {
   const demoAccounts = {
     user: { email: "akash@example.com", password: "password123" },
     seller: { email: "seller@example.com", password: "password123" },
@@ -25,10 +26,6 @@ export const DemoAccounts: React.FC<DemoAccountsProps> = ({ form, setLoginType }
     if (type in demoAccounts) {
       const account = demoAccounts[type as keyof typeof demoAccounts];
       
-      // Set form values
-      form.setValue("email", account.email);
-      form.setValue("password", account.password);
-      
       // Set login type
       if (type === "admin") {
         setLoginType("admin");
@@ -37,18 +34,9 @@ export const DemoAccounts: React.FC<DemoAccountsProps> = ({ form, setLoginType }
       } else {
         setLoginType("user");
       }
-
-      // Wait a bit for form to update then submit
-      setTimeout(() => {
-        form.handleSubmit((data) => {
-          // This will trigger the onSubmit function passed to LoginForm
-          const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
-          const formElement = document.querySelector('form');
-          if (formElement) {
-            formElement.dispatchEvent(submitEvent);
-          }
-        })();
-      }, 100);
+      
+      // Call onSubmit directly with demo credentials
+      await onSubmit(account);
     }
   };
 

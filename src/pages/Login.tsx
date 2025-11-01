@@ -119,7 +119,7 @@ const Login = () => {
             <LoginTabs loginType={loginType} setLoginType={setLoginType} />
             <BiometricLogin biometricAvailable={biometricAvailable} />
             <LoginForm onSubmit={onSubmit} loginType={loginType} />
-            <DemoAccounts form={form} setLoginType={setLoginType} />
+            <DemoAccounts form={form} setLoginType={setLoginType} onSubmit={onSubmit} />
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <div className="text-center text-sm">
