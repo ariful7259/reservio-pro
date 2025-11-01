@@ -57,37 +57,105 @@ export const SendMoneyDialog: React.FC<SendMoneyDialogProps> = ({
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not found');
 
-      // Get current user's wallet
-      const { data: wallet } = await supabase
+      // Find recipient by phone
+      const { data: recipientProfile, error: recipientError } = await supabase
+        .from('profiles')
+        .select('id, full_name, phone')
+        .eq('phone', formData.recipientPhone)
+        .single();
+
+      if (recipientError || !recipientProfile) {
+        toast({
+          title: 'ত্রুটি',
+          description: 'প্রাপক খুঁজে পাওয়া যায়নি। ফোন নম্বর যাচাই করুন',
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      if (recipientProfile.id === user.id) {
+        toast({
+          title: 'ত্রুটি',
+          description: 'নিজেকে টাকা পাঠাতে পারবেন না',
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      // Get sender's wallet
+      const { data: senderWallet } = await supabase
         .from('wallets')
         .select('id, balance')
         .eq('user_id', user.id)
         .single();
 
-      if (!wallet) throw new Error('Wallet not found');
+      if (!senderWallet) throw new Error('Wallet not found');
 
-      // Create transaction
-      const { error: txError } = await supabase
+      // Get or create recipient's wallet
+      let { data: recipientWallet } = await supabase
+        .from('wallets')
+        .select('id, balance')
+        .eq('user_id', recipientProfile.id)
+        .maybeSingle();
+
+      if (!recipientWallet) {
+        const { data: newWallet, error: walletError } = await supabase
+          .from('wallets')
+          .insert({ user_id: recipientProfile.id, balance: 0 })
+          .select()
+          .single();
+
+        if (walletError) throw walletError;
+        recipientWallet = newWallet;
+      }
+
+      // Create sender transaction
+      const { error: senderTxError } = await supabase
         .from('wallet_transactions')
         .insert({
-          wallet_id: wallet.id,
+          wallet_id: senderWallet.id,
           transaction_type: 'send',
           amount: amount,
-          description: formData.description || 'টাকা পাঠানো হয়েছে',
+          recipient_id: recipientProfile.id,
+          description: formData.description || `${recipientProfile.full_name} কে টাকা পাঠানো হয়েছে`,
           payment_method: 'wallet',
           status: 'completed',
-          metadata: { recipient_phone: formData.recipientPhone }
+          metadata: { recipient_phone: formData.recipientPhone, recipient_name: recipientProfile.full_name }
         });
 
-      if (txError) throw txError;
+      if (senderTxError) throw senderTxError;
 
-      // Update wallet balance
-      const { error: balanceError } = await supabase
+      // Create recipient transaction
+      const { error: recipientTxError } = await supabase
+        .from('wallet_transactions')
+        .insert({
+          wallet_id: recipientWallet.id,
+          transaction_type: 'receive',
+          amount: amount,
+          sender_id: user.id,
+          description: formData.description || 'টাকা পেয়েছেন',
+          payment_method: 'wallet',
+          status: 'completed',
+          metadata: { sender_phone: formData.recipientPhone }
+        });
+
+      if (recipientTxError) throw recipientTxError;
+
+      // Update sender's wallet balance
+      const { error: senderBalanceError } = await supabase
         .from('wallets')
-        .update({ balance: wallet.balance - amount })
-        .eq('id', wallet.id);
+        .update({ balance: senderWallet.balance - amount })
+        .eq('id', senderWallet.id);
 
-      if (balanceError) throw balanceError;
+      if (senderBalanceError) throw senderBalanceError;
+
+      // Update recipient's wallet balance
+      const { error: recipientBalanceError } = await supabase
+        .from('wallets')
+        .update({ balance: recipientWallet.balance + amount })
+        .eq('id', recipientWallet.id);
+
+      if (recipientBalanceError) throw recipientBalanceError;
 
       toast({
         title: 'সফল!',
