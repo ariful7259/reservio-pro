@@ -13,8 +13,6 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { useShoppingState } from '@/hooks/useShoppingState';
-import { useEnhancedWishlist } from '@/hooks/useEnhancedWishlist';
-import { WishlistCounter } from '@/components/wishlist/WishlistCounter';
 import { useToast } from '@/hooks/use-toast';
 import { formatCurrency } from '@/utils/currencyUtils';
 
@@ -25,17 +23,19 @@ export const EnhancedCartDropdown: React.FC = () => {
   
   const { 
     cart, 
+    wishlist,
     addToCart,
     removeFromCart,
     updateCartItemQuantity, 
     getCartTotal, 
-    getCartItemsCount 
+    getCartItemsCount,
+    toggleWishlist,
+    isInWishlist 
   } = useShoppingState();
-  
-  const { wishlistItems, addToWishlist, removeFromWishlist, isInWishlist, wishlistCount } = useEnhancedWishlist();
 
   const cartItemsCount = getCartItemsCount();
   const cartTotal = getCartTotal();
+  const wishlistCount = wishlist.length;
 
   const handleQuantityChange = (id: string, delta: number, currentQuantity: number) => {
     const newQuantity = Math.max(1, currentQuantity + delta);
@@ -51,20 +51,17 @@ export const EnhancedCartDropdown: React.FC = () => {
     });
   };
 
-  const handleMoveToWishlist = async (item: any) => {
-    await addToWishlist({
-      product_id: item.id,
-      item_type: 'product',
-      metadata: {
-        title: item.title,
-        price: item.price,
-        image: item.image
-      }
+  const handleMoveToWishlist = (item: any) => {
+    toggleWishlist({
+      id: item.id,
+      title: item.title,
+      price: item.price,
+      image: item.image
     });
     handleRemoveFromCart(item.id, item.title);
     toast({
-      title: "Moved to Wishlist",
-      description: `${item.title} moved to your wishlist`,
+      title: "উইশলিস্টে সরানো হয়েছে",
+      description: `${item.title} উইশলিস্টে সরানো হয়েছে`,
     });
   };
 
@@ -265,7 +262,7 @@ export const EnhancedCartDropdown: React.FC = () => {
 
           {/* Wishlist Tab Content */}
           <TabsContent value="wishlist" className="space-y-4 mt-4">
-            {wishlistItems.length === 0 ? (
+            {wishlist.length === 0 ? (
               <div className="text-center py-6">
                 <Heart className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
                 <p className="text-muted-foreground">আপনার উইশলিস্ট খালি</p>
@@ -281,33 +278,32 @@ export const EnhancedCartDropdown: React.FC = () => {
               <>
                 <ScrollArea className="h-64">
                   <div className="space-y-3">
-                    {wishlistItems.map((item) => (
+                    {wishlist.map((item) => (
                       <Card key={item.id} className="p-3">
                         <div className="flex items-start gap-3">
                           <img 
-                            src={item.metadata?.image} 
-                            alt={item.metadata?.title}
+                            src={item.image} 
+                            alt={item.title}
                             className="w-12 h-12 object-cover rounded"
                           />
                           <div className="flex-1 min-w-0">
-                            <h4 className="text-sm font-medium truncate">{item.metadata?.title}</h4>
-                            <p className="text-sm text-muted-foreground">{formatPrice(parsePrice(item.metadata?.price || '0'))}</p>
+                            <h4 className="text-sm font-medium truncate">{item.title}</h4>
+                            <p className="text-sm text-muted-foreground">{formatPrice(parsePrice(item.price))}</p>
                             <div className="flex items-center gap-2 mt-2">
                               <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => {
                                   // Add to cart from wishlist
-                                  const cartItem = {
-                                    id: item.product_id,
-                                    title: item.metadata?.title || '',
-                                    price: item.metadata?.price || '0',
-                                    image: item.metadata?.image,
-                                  };
-                                  addToCart(cartItem);
+                                  addToCart({
+                                    id: item.id,
+                                    title: item.title,
+                                    price: item.price,
+                                    image: item.image,
+                                  });
                                   toast({
                                     title: "কার্টে যোগ করা হয়েছে",
-                                    description: `${item.metadata?.title} কার্টে যোগ করা হয়েছে`,
+                                    description: `${item.title} কার্টে যোগ করা হয়েছে`,
                                   });
                                 }}
                               >
@@ -319,10 +315,10 @@ export const EnhancedCartDropdown: React.FC = () => {
                                 size="icon"
                                 className="h-6 w-6 ml-auto"
                                 onClick={() => {
-                                  removeFromWishlist(item.id);
+                                  toggleWishlist(item);
                                   toast({
                                     title: "উইশলিস্ট থেকে সরানো হয়েছে",
-                                    description: `${item.metadata?.title} উইশলিস্ট থেকে সরানো হয়েছে`,
+                                    description: `${item.title} উইশলিস্ট থেকে সরানো হয়েছে`,
                                     variant: "destructive",
                                   });
                                 }}
