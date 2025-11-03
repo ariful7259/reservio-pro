@@ -52,6 +52,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ForgotPassword from './pages/ForgotPassword';
 import AdminDashboard from './pages/AdminDashboard';
+import ReferralSystem from './pages/ReferralSystem';
 import MyServices from './pages/MyServices';
 import ProfileManagement from './pages/ProfileManagement';
 import BecomeSeller from './pages/BecomeSeller';
@@ -86,6 +87,9 @@ const RoutesConfig = () => {
       {/* Admin Dashboard Route */}
       <Route path="/admin-dashboard" element={<AdminDashboard />} />
       <Route path="/admin-dashboard/:section" element={<AdminDashboard />} />
+      
+      {/* Referral System Route */}
+      <Route path="/referral" element={<ReferralSystem />} />
       
       {/* Create Post Route */}
       <Route path="/create-post" element={<CreatePost />} />
