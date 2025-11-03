@@ -14,50 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      notification_queue: {
-        Row: {
-          content: Json | null
-          created_at: string
-          id: string
-          notification_type: string
-          scheduled_for: string
-          sent_at: string | null
-          status: string | null
-          user_id: string
-          wishlist_item_id: string
-        }
-        Insert: {
-          content?: Json | null
-          created_at?: string
-          id?: string
-          notification_type: string
-          scheduled_for: string
-          sent_at?: string | null
-          status?: string | null
-          user_id: string
-          wishlist_item_id: string
-        }
-        Update: {
-          content?: Json | null
-          created_at?: string
-          id?: string
-          notification_type?: string
-          scheduled_for?: string
-          sent_at?: string | null
-          status?: string | null
-          user_id?: string
-          wishlist_item_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "notification_queue_wishlist_item_id_fkey"
-            columns: ["wishlist_item_id"]
-            isOneToOne: false
-            referencedRelation: "wishlist_items"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       orders: {
         Row: {
           created_at: string | null
@@ -232,57 +188,6 @@ export type Database = {
         }
         Relationships: []
       }
-      retargeting_campaigns: {
-        Row: {
-          campaign_message: string | null
-          campaign_name: string
-          created_at: string
-          discount_amount: number | null
-          discount_percentage: number | null
-          end_date: string | null
-          id: string
-          is_active: boolean | null
-          item_type: string
-          seller_id: string
-          start_date: string
-          target_criteria: Json | null
-          target_product_id: string | null
-          target_service_id: string | null
-        }
-        Insert: {
-          campaign_message?: string | null
-          campaign_name: string
-          created_at?: string
-          discount_amount?: number | null
-          discount_percentage?: number | null
-          end_date?: string | null
-          id?: string
-          is_active?: boolean | null
-          item_type: string
-          seller_id: string
-          start_date?: string
-          target_criteria?: Json | null
-          target_product_id?: string | null
-          target_service_id?: string | null
-        }
-        Update: {
-          campaign_message?: string | null
-          campaign_name?: string
-          created_at?: string
-          discount_amount?: number | null
-          discount_percentage?: number | null
-          end_date?: string | null
-          id?: string
-          is_active?: boolean | null
-          item_type?: string
-          seller_id?: string
-          start_date?: string
-          target_criteria?: Json | null
-          target_product_id?: string | null
-          target_service_id?: string | null
-        }
-        Relationships: []
-      }
       reviews: {
         Row: {
           content: string | null
@@ -307,42 +212,6 @@ export type Database = {
           product_id?: string
           rating?: number | null
           user_id?: string
-        }
-        Relationships: []
-      }
-      seller_insights: {
-        Row: {
-          conversion_count: number | null
-          conversion_rate: number | null
-          id: string
-          item_type: string
-          last_updated: string
-          product_id: string | null
-          seller_id: string
-          service_id: string | null
-          wishlist_count: number | null
-        }
-        Insert: {
-          conversion_count?: number | null
-          conversion_rate?: number | null
-          id?: string
-          item_type: string
-          last_updated?: string
-          product_id?: string | null
-          seller_id: string
-          service_id?: string | null
-          wishlist_count?: number | null
-        }
-        Update: {
-          conversion_count?: number | null
-          conversion_rate?: number | null
-          id?: string
-          item_type?: string
-          last_updated?: string
-          product_id?: string | null
-          seller_id?: string
-          service_id?: string | null
-          wishlist_count?: number | null
         }
         Relationships: []
       }
@@ -631,25 +500,7 @@ export type Database = {
       }
     }
     Functions: {
-      get_public_seller_info: {
-        Args: never
-        Returns: {
-          address: string
-          bio: string
-          business_name: string
-          content_settings: Json
-          created_at: string
-          id: string
-          logo_url: string
-          marketplace_settings: Json
-          payment_methods: Json
-          rental_settings: Json
-          seller_type: Database["public"]["Enums"]["seller_type"]
-          service_settings: Json
-          terms_conditions: string
-          updated_at: string
-        }[]
-      }
+      [_ in never]: never
     }
     Enums: {
       seller_type: "marketplace" | "rental" | "service" | "content"
