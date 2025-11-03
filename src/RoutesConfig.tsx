@@ -25,7 +25,6 @@ import DigitalProductDetail from './pages/DigitalProductDetail';
 import CreateDigitalProduct from './pages/CreateDigitalProduct';
 import SellerDashboard from './pages/SellerDashboard';
 import DashboardLayout from './pages/dashboard/DashboardLayout';
-import ReferralSystem from './pages/ReferralSystem';
 import OnlineStoreFeatures from './components/product/OnlineStoreFeatures';
 import CreateStore from './pages/CreateStore';
 import StoreDemo from './pages/StoreDemo';
@@ -142,7 +141,6 @@ const RoutesConfig = () => {
       {/* Support and Dispute */}
       <Route path="/help/dispute-center" element={<DisputeCenter />} />
       <Route path="/loyalty-program" element={<LoyaltySystem />} />
-      <Route path="/referral" element={<ReferralSystem />} />
       
       {/* Digital Creator */}
       <Route path="/digital-creator/store-templates" element={<IndustryTemplates />} />
