@@ -5,14 +5,9 @@ import { Button } from '@/components/ui/button';
 import { CommunityMenu } from './CommunityMenu';
 import { CartDropdown } from './CartDropdown';
 import { NotificationCenter } from '@/components/notifications/NotificationCenter';
-// import { UserProfile } from './UserProfile'; // পুরনো প্রোফাইল ইমেজ সরানো হয়েছে
-import Wish2EarnBadge from '@/components/wish2earn/Wish2EarnBadge';
+
 export const ActionButtons: React.FC = () => {
   const navigate = useNavigate();
-  const handleWish2EarnClick = () => {
-    // এখন Wish2Earn-এর ফুলপেজে যাবে
-    navigate('/wish2earn');
-  };
   const handleMarketplaceClick = () => {
     // MarketplaceHub এ নিয়ে যাবে
     navigate('/marketplace-hub');
@@ -33,13 +28,5 @@ export const ActionButtons: React.FC = () => {
       {/* Cart Dropdown */}
       <NotificationCenter />
       <CartDropdown />
-
-      {/* Wish2Earn Feature Button */}
-      
-
-      {/* নিচের Profile (avatar) বাদ দিয়ে Wish2EarnBadge লাগানো হলো */}
-      <div className="ml-0 sm:ml-1 md:ml-2">
-        <Wish2EarnBadge onClick={handleWish2EarnClick} />
-      </div>
     </div>;
 };

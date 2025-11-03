@@ -43,7 +43,6 @@ import SecurePay from '@/pages/SecurePay';
 import SecurePayCreator from '@/pages/SecurePayCreator';
 import SecurePayBuyer from '@/pages/SecurePayBuyer';
 import SecurePayAdmin from '@/pages/SecurePayAdmin';
-import Wish2Earn from './pages/Wish2Earn';
 import CreateStoreNew from "@/pages/CreateStoreNew";
 import Services from './pages/Services';
 import Marketplace from './pages/Marketplace';
@@ -64,7 +63,6 @@ import ServiceCategoryPage from "./pages/ServiceCategoryPage";
 import RentDetail from './pages/RentDetail';
 import RentalBooking from './pages/RentalBooking';
 import ServiceBooking from './pages/ServiceBooking';
-import CourseBuilder from './pages/CourseBuilder';
 import CreatorDashboard from './pages/CreatorDashboard';
 
 const RoutesConfig = () => {
@@ -159,9 +157,6 @@ const RoutesConfig = () => {
       <Route path="/digital-products/:productId" element={<DigitalProductDetail />} />
       <Route path="/create-digital-product" element={<CreateDigitalProduct />} />
       
-      {/* Wish2Earn Full Page */}
-      <Route path="/wish2earn" element={<Wish2Earn />} />
-      
       {/* Seller Dashboard */}
       <Route path="/seller-dashboard" element={<SellerDashboard />} />
       
@@ -171,8 +166,7 @@ const RoutesConfig = () => {
       {/* Service Category Page */}
       <Route path="/services/category/:categoryId" element={<ServiceCategoryPage />} />
       
-      {/* Course Builder & Creator Dashboard Routes */}
-      <Route path="/course-builder" element={<CourseBuilder />} />
+      {/* Creator Dashboard Route */}
       <Route path="/creator-dashboard" element={<CreatorDashboard />} />
       
       {/* 404 Page */}

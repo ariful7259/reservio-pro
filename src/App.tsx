@@ -8,7 +8,6 @@ import { ThemeProvider } from "next-themes";
 import RoutesConfig from "./RoutesConfig";
 import { AppProvider } from "./context/AppContext";
 import { AuthProvider } from "./hooks/useAuth";
-import GlobalAIAssistant from "@/components/GlobalAIAssistant";
 import { FloatingMessenger } from "@/components/FloatingMessenger";
 import Navbar from "@/components/Navbar";
 
@@ -30,7 +29,6 @@ const App = () => (
                 <main className="pt-14 sm:pt-16 pb-16 sm:pb-4 safe-area-pt safe-area-pb">
                   <RoutesConfig />
                 </main>
-                <GlobalAIAssistant />
                 <FloatingMessenger />
               </div>
             </AppProvider>
