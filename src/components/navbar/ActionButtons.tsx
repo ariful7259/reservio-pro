@@ -4,7 +4,7 @@ import { Wallet, StoreIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CommunityMenu } from './CommunityMenu';
 import { CartDropdown } from './CartDropdown';
-import { NotificationCenter } from '@/components/notifications/NotificationCenter';
+
 
 export const ActionButtons: React.FC = () => {
   const navigate = useNavigate();
@@ -26,7 +26,6 @@ export const ActionButtons: React.FC = () => {
       </Button>
 
       {/* Cart Dropdown */}
-      <NotificationCenter />
       <CartDropdown />
     </div>;
 };
