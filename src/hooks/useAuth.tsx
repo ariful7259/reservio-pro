@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import type { User as SupabaseUser, Session } from '@supabase/supabase-js';
 
 interface User {
   id: string;
@@ -8,9 +10,9 @@ interface User {
   role: 'user' | 'admin' | 'seller';
   verified: boolean;
   sellerVerified?: boolean;
-  sellerType?: 'marketplace' | 'rental' | 'service' | 'content'; // Added sellerType property
-  phone?: string; // Added phone property
-  address?: string; // Added address property
+  sellerType?: 'marketplace' | 'rental' | 'service' | 'content';
+  phone?: string;
+  address?: string;
 }
 
 interface AuthContextType {
@@ -19,91 +21,140 @@ interface AuthContextType {
   isAdmin: boolean;
   isSeller: boolean;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
-  updateUserProfile: (data: Partial<User>) => void; // Added updateUserProfile method
+  updateUserProfile: (data: Partial<User>) => Promise<void>;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
   
-  // Mock login function (would use Supabase or other auth in real app)
-  const login = async (email: string, password: string) => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Mock user data with fixed seller type if seller
-    const userData: User = {
-      id: '1',
-      name: 'আহমেদ হাসান',
-      email: email,
-      avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
-      role: email.includes('admin') ? 'admin' : email.includes('seller') ? 'seller' : 'user',
-      verified: true,
-      sellerVerified: email.includes('seller') ? true : false,
-      sellerType: email.includes('seller') ? 'marketplace' : undefined,
-      phone: '+8801712345678', // Mock phone
-      address: 'ঢাকা, বাংলাদেশ' // Mock address
-    };
-    
-    setUser(userData);
-    setIsAuthenticated(true);
-    
-    // Save to localStorage
-    localStorage.setItem('user', JSON.stringify(userData));
-  };
-  
-  const signup = async (name: string, email: string, password: string) => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Similar to login but would actually create the user in a real app
-    const userData: User = {
-      id: '1',
-      name: name,
-      email: email,
-      role: 'user',
-      verified: false
-    };
-    
-    setUser(userData);
-    setIsAuthenticated(true);
-    
-    // Save to localStorage
-    localStorage.setItem('user', JSON.stringify(userData));
-  };
-  
-  const logout = () => {
-    setUser(null);
-    setIsAuthenticated(false);
-    localStorage.removeItem('user');
+  const isAuthenticated = !!session && !!user;
+
+  // Fetch user profile from database
+  const fetchUserProfile = async (userId: string) => {
+    try {
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (error) throw error;
+
+      if (profile) {
+        const userData: User = {
+          id: profile.id,
+          name: profile.full_name || profile.email?.split('@')[0] || 'User',
+          email: profile.email || '',
+          avatar: profile.avatar_url || undefined,
+          role: 'user', // Default role, will be determined by user_roles table
+          verified: true,
+          phone: profile.phone || undefined,
+        };
+        setUser(userData);
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
   };
 
-  // Add updateUserProfile function
-  const updateUserProfile = (data: Partial<User>) => {
-    if (user) {
-      const updatedUser = { ...user, ...data };
-      setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
+  // Login with Supabase
+  const login = async (email: string, password: string) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) throw error;
+    
+    if (data.user) {
+      await fetchUserProfile(data.user.id);
     }
   };
   
-  // Check for saved user on mount
-  useEffect(() => {
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-      setIsAuthenticated(true);
+  // Signup with Supabase
+  const signup = async (name: string, email: string, password: string) => {
+    const redirectUrl = `${window.location.origin}/`;
+    
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: redirectUrl,
+        data: {
+          full_name: name,
+        }
+      }
+    });
+
+    if (error) throw error;
+    
+    if (data.user) {
+      await fetchUserProfile(data.user.id);
     }
+  };
+  
+  // Logout
+  const logout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    setSession(null);
+  };
+
+  // Update user profile
+  const updateUserProfile = async (data: Partial<User>) => {
+    if (!user) return;
+
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        full_name: data.name,
+        phone: data.phone,
+        avatar_url: data.avatar,
+      })
+      .eq('id', user.id);
+
+    if (error) throw error;
+
+    setUser({ ...user, ...data });
+  };
+  
+  // Set up auth state listener
+  useEffect(() => {
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        setSession(session);
+        if (session?.user) {
+          await fetchUserProfile(session.user.id);
+        } else {
+          setUser(null);
+        }
+        setLoading(false);
+      }
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session?.user) {
+        fetchUserProfile(session.user.id).then(() => setLoading(false));
+      } else {
+        setLoading(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
   
-  // Compute isAdmin based on user role
+  // Admin and seller checks (will be enhanced with proper role tables later)
   const isAdmin = user?.role === 'admin';
-  
-  // Compute isSeller based on user role
   const isSeller = user?.role === 'seller';
   
   return (
@@ -115,9 +166,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       login, 
       logout, 
       signup,
-      updateUserProfile 
+      updateUserProfile,
+      loading
     }}>
-      {children}
+      {loading ? (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      ) : (
+        children
+      )}
     </AuthContext.Provider>
   );
 };

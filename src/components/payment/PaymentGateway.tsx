@@ -151,6 +151,9 @@ const PaymentGateway: React.FC<PaymentGatewayProps> = ({
       try {
         const { supabase } = await import('@/integrations/supabase/client');
         
+        // Get current user
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        
         const orderId = `ORDER_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
         
         const { data, error } = await supabase.functions.invoke('rupantorpay-payment', {
@@ -158,8 +161,8 @@ const PaymentGateway: React.FC<PaymentGatewayProps> = ({
             amount: totalAmount,
             mobileNumber: mobileNumber,
             orderId: orderId,
-            customerName: 'Customer',
-            customerEmail: 'customer@example.com'
+            customerName: authUser?.user_metadata?.full_name || 'Customer',
+            customerEmail: authUser?.email || 'customer@example.com'
           }
         });
 
@@ -175,6 +178,44 @@ const PaymentGateway: React.FC<PaymentGatewayProps> = ({
             title: "পেমেন্ট পেজ খোলা হয়েছে",
             description: "নতুন ট্যাবে রূপান্তরপে পেমেন্ট সম্পন্ন করুন।",
           });
+          
+          // Record transaction in database
+          if (authUser) {
+            // Get or create wallet
+            let { data: wallet } = await supabase
+              .from('wallets')
+              .select('id')
+              .eq('user_id', authUser.id)
+              .single();
+            
+            if (!wallet) {
+              const { data: newWallet } = await supabase
+                .from('wallets')
+                .insert({ user_id: authUser.id, balance: 0 })
+                .select('id')
+                .single();
+              wallet = newWallet;
+            }
+
+            if (wallet) {
+              // Record transaction
+              await supabase
+                .from('wallet_transactions')
+                .insert({
+                  wallet_id: wallet.id,
+                  amount: totalAmount,
+                  transaction_type: 'payment',
+                  description: `Payment via Rupantorpay - Order ${orderId}`,
+                  payment_method: 'rupantorpay',
+                  status: 'pending',
+                  metadata: {
+                    orderId,
+                    transactionId: data.transactionId,
+                    paymentMethod: paymentMethod
+                  }
+                });
+            }
+          }
           
           // Simulate success after some time (in real app, this would be handled by webhook)
           setTimeout(() => {
@@ -215,28 +256,93 @@ const PaymentGateway: React.FC<PaymentGatewayProps> = ({
       }
     }
     
-    // Simulate payment processing for other methods
-    setTimeout(() => {
-      setIsProcessing(false);
-      setPaymentStatus('success');
-      
-      // Generate random transaction ID
-      const transactionId = Math.random().toString(36).substring(2, 10).toUpperCase();
-      
-      if (onPaymentComplete) {
-        onPaymentComplete({
-          transactionId,
-          method: paymentMethod,
-          amount: totalAmount,
-          status: 'success',
-          date: new Date(),
+    // Simulate payment processing for other methods and record in database
+    setTimeout(async () => {
+      try {
+        const { supabase } = await import('@/integrations/supabase/client');
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        
+        if (authUser) {
+          // Get or create wallet
+          let { data: wallet } = await supabase
+            .from('wallets')
+            .select('id')
+            .eq('user_id', authUser.id)
+            .single();
+          
+          if (!wallet) {
+            const { data: newWallet } = await supabase
+              .from('wallets')
+              .insert({ user_id: authUser.id, balance: 0 })
+              .select('id')
+              .single();
+            wallet = newWallet;
+          }
+
+          const transactionId = Math.random().toString(36).substring(2, 10).toUpperCase();
+
+          if (wallet) {
+            // Record transaction
+            await supabase
+              .from('wallet_transactions')
+              .insert({
+                wallet_id: wallet.id,
+                amount: totalAmount,
+                transaction_type: 'payment',
+                description: `Payment via ${getPaymentMethodName()}`,
+                payment_method: paymentMethod,
+                status: 'completed',
+                metadata: {
+                  transactionId,
+                  paymentMethod: paymentMethod
+                }
+              });
+          }
+        }
+        
+        setIsProcessing(false);
+        setPaymentStatus('success');
+        
+        // Generate random transaction ID
+        const transactionId = Math.random().toString(36).substring(2, 10).toUpperCase();
+        
+        if (onPaymentComplete) {
+          onPaymentComplete({
+            transactionId,
+            method: paymentMethod,
+            amount: totalAmount,
+            status: 'success',
+            date: new Date(),
+          });
+        }
+        
+        toast({
+          title: "পেমেন্ট সফল হয়েছে",
+          description: `${totalAmount}৳ সফলভাবে পেমেন্ট করা হয়েছে।`,
+        });
+      } catch (error) {
+        console.error('Payment recording error:', error);
+        // Still show success to user even if recording fails
+        setIsProcessing(false);
+        setPaymentStatus('success');
+        
+        const transactionId = Math.random().toString(36).substring(2, 10).toUpperCase();
+        
+        if (onPaymentComplete) {
+          onPaymentComplete({
+            transactionId,
+            method: paymentMethod,
+            amount: totalAmount,
+            status: 'success',
+            date: new Date(),
+          });
+        }
+        
+        toast({
+          title: "পেমেন্ট সফল হয়েছে",
+          description: `${totalAmount}৳ সফলভাবে পেমেন্ট করা হয়েছে।`,
         });
       }
-      
-      toast({
-        title: "পেমেন্ট সফল হয়েছে",
-        description: `${totalAmount}৳ সফলভাবে পেমেন্ট করা হয়েছে।`,
-      });
     }, 2000);
   };
 

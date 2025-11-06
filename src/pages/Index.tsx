@@ -84,7 +84,6 @@ const Index = () => {
           </Button>
         ) : (
           <>
-            {isSeller}
             {isAdmin && (
               <Button onClick={() => navigate('/admin-dashboard')} variant="outline" className="flex items-center gap-1">
                 <Briefcase className="h-4 w-4" /> অ্যাডমিন প্যানেল
