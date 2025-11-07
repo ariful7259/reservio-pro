@@ -35,8 +35,14 @@ export const DemoAccounts: React.FC<DemoAccountsProps> = ({ form, setLoginType, 
         setLoginType("user");
       }
       
-      // Call onSubmit directly with demo credentials
-      await onSubmit(account);
+      // Fill the form fields
+      form.setValue("email", account.email);
+      form.setValue("password", account.password);
+      
+      // Auto-submit after a brief delay to show the filled values
+      setTimeout(async () => {
+        await onSubmit(account);
+      }, 300);
     }
   };
 
