@@ -356,29 +356,6 @@ const CreateStore = () => {
     );
   };
 
-  // লগইন না করা ব্যবহারকারীদের জন্য প্রম্পট
-  if (!isAuthenticated) {
-    return (
-      <div className="container mx-auto px-4 py-8 pt-20 flex items-center justify-center min-h-screen">
-        <Card className="w-full max-w-md mx-4">
-          <CardHeader className="text-center">
-            <CardTitle className="text-xl">লগইন করুন</CardTitle>
-            <CardDescription>
-              ব্যবসা তৈরি করতে আগে লগইন করুন
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button 
-              onClick={() => navigate('/login', { state: { from: '/create-store' } })} 
-              className="w-full h-11 text-base"
-            >
-              লগইন পৃষ্ঠায় যান
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
