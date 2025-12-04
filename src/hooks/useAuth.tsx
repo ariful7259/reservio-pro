@@ -127,9 +127,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   
   // Set up auth state listener
   useEffect(() => {
+    let mounted = true;
+    
+    // Timeout to prevent infinite loading
+    const timeout = setTimeout(() => {
+      if (mounted && loading) {
+        console.log('Auth timeout - setting loading to false');
+        setLoading(false);
+      }
+    }, 3000);
+
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        if (!mounted) return;
         setSession(session);
         if (session?.user) {
           await fetchUserProfile(session.user.id);
@@ -142,15 +153,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!mounted) return;
       setSession(session);
       if (session?.user) {
-        fetchUserProfile(session.user.id).then(() => setLoading(false));
+        fetchUserProfile(session.user.id).then(() => {
+          if (mounted) setLoading(false);
+        });
       } else {
         setLoading(false);
       }
+    }).catch(() => {
+      if (mounted) setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      clearTimeout(timeout);
+      subscription.unsubscribe();
+    };
   }, []);
   
   // Admin and seller checks (will be enhanced with proper role tables later)
