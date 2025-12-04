@@ -66,23 +66,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Login with Supabase
   const login = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) throw error;
-    
-    if (data.user) {
-      await fetchUserProfile(data.user.id);
-    }
+    // Profile will be fetched by onAuthStateChange
   };
   
   // Signup with Supabase
   const signup = async (name: string, email: string, password: string) => {
     const redirectUrl = `${window.location.origin}/`;
     
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -94,10 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     if (error) throw error;
-    
-    if (data.user) {
-      await fetchUserProfile(data.user.id);
-    }
+    // Profile will be fetched by onAuthStateChange
   };
   
   // Logout
@@ -139,15 +133,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         if (!mounted) return;
         setSession(session);
+        
         if (session?.user) {
-          await fetchUserProfile(session.user.id);
+          // Defer profile fetch to avoid blocking
+          setTimeout(() => {
+            if (mounted) {
+              fetchUserProfile(session.user.id).finally(() => {
+                if (mounted) setLoading(false);
+              });
+            }
+          }, 0);
         } else {
           setUser(null);
+          setLoading(false);
         }
-        setLoading(false);
       }
     );
 
