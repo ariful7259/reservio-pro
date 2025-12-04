@@ -14,6 +14,194 @@ export type Database = {
   }
   public: {
     Tables: {
+      bookings: {
+        Row: {
+          created_at: string | null
+          end_date: string
+          id: string
+          listing_id: string
+          notes: string | null
+          payment_status: string | null
+          start_date: string
+          status: string | null
+          total_price: number
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          end_date: string
+          id?: string
+          listing_id: string
+          notes?: string | null
+          payment_status?: string | null
+          start_date: string
+          status?: string | null
+          total_price: number
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          end_date?: string
+          id?: string
+          listing_id?: string
+          notes?: string | null
+          payment_status?: string | null
+          start_date?: string
+          status?: string | null
+          total_price?: number
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      categories: {
+        Row: {
+          created_at: string | null
+          display_order: number | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          name_bn: string
+          name_en: string
+          parent_id: string | null
+          slug: string
+        }
+        Insert: {
+          created_at?: string | null
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name_bn: string
+          name_en: string
+          parent_id?: string | null
+          slug: string
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name_bn?: string
+          name_en?: string
+          parent_id?: string | null
+          slug?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listings: {
+        Row: {
+          category_id: string | null
+          created_at: string | null
+          description_bn: string | null
+          description_en: string | null
+          id: string
+          images: string[] | null
+          is_featured: boolean | null
+          listing_type: string
+          location_bn: string | null
+          location_en: string | null
+          metadata: Json | null
+          price: number
+          price_period: string | null
+          rating: number | null
+          review_count: number | null
+          seller_id: string | null
+          status: string | null
+          title_bn: string
+          title_en: string
+          updated_at: string | null
+          view_count: number | null
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string | null
+          description_bn?: string | null
+          description_en?: string | null
+          id?: string
+          images?: string[] | null
+          is_featured?: boolean | null
+          listing_type: string
+          location_bn?: string | null
+          location_en?: string | null
+          metadata?: Json | null
+          price: number
+          price_period?: string | null
+          rating?: number | null
+          review_count?: number | null
+          seller_id?: string | null
+          status?: string | null
+          title_bn: string
+          title_en: string
+          updated_at?: string | null
+          view_count?: number | null
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string | null
+          description_bn?: string | null
+          description_en?: string | null
+          id?: string
+          images?: string[] | null
+          is_featured?: boolean | null
+          listing_type?: string
+          location_bn?: string | null
+          location_en?: string | null
+          metadata?: Json | null
+          price?: number
+          price_period?: string | null
+          rating?: number | null
+          review_count?: number | null
+          seller_id?: string | null
+          status?: string | null
+          title_bn?: string
+          title_en?: string
+          updated_at?: string | null
+          view_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listings_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "listings_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           created_at: string | null
@@ -500,7 +688,21 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      get_categories_with_counts: {
+        Args: never
+        Returns: {
+          created_at: string
+          display_order: number
+          icon: string
+          id: string
+          is_active: boolean
+          listing_count: number
+          name_bn: string
+          name_en: string
+          parent_id: string
+          slug: string
+        }[]
+      }
     }
     Enums: {
       seller_type: "marketplace" | "rental" | "service" | "content"
