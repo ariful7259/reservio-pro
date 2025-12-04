@@ -34,7 +34,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   
-  const isAuthenticated = !!session && !!user;
+  // isAuthenticated should be based on session only (user is optional profile data)
+  const isAuthenticated = !!session;
 
   // Fetch user profile from database
   const fetchUserProfile = async (userId: string) => {
