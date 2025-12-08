@@ -1,74 +1,146 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { 
-  Store, Palette, Settings, CreditCard, Truck, BarChart3, 
-  Globe, Shield, MessageSquare, Upload, Zap, CheckCircle2, Eye
+  Store, Palette, CreditCard, Truck, Globe, Eye, QrCode,
+  Facebook, Instagram, Clock, FileText, Power, MessageCircle,
+  Upload, Package, Plus, X, Copy, ExternalLink, Check
 } from 'lucide-react';
+import QRCode from 'react-qr-code';
 import StoreDesignEditor from './StoreDesignEditor';
 import ProductManagement from './ProductManagement';
 import PaymentGatewaySetup from './PaymentGatewaySetup';
 import ShippingConfiguration from './ShippingConfiguration';
-import SEOSettings from './SEOSettings';
-import AnalyticsSetup from './AnalyticsSetup';
 
 interface StoreData {
   storeName: string;
+  storeSlug: string;
   storeDescription: string;
   storeCategory: string;
   ownerName: string;
   ownerEmail: string;
   ownerPhone: string;
   address: string;
-  logo?: File;
-  banner?: File;
+  logo?: string;
+  banner?: string;
+  isOpen: boolean;
+  customDomain: string;
+  socialLinks: {
+    facebook: string;
+    instagram: string;
+    whatsapp: string;
+  };
+  businessHours: {
+    monday: { open: string; close: string; isOpen: boolean };
+    tuesday: { open: string; close: string; isOpen: boolean };
+    wednesday: { open: string; close: string; isOpen: boolean };
+    thursday: { open: string; close: string; isOpen: boolean };
+    friday: { open: string; close: string; isOpen: boolean };
+    saturday: { open: string; close: string; isOpen: boolean };
+    sunday: { open: string; close: string; isOpen: boolean };
+  };
+  returnPolicy: string;
+  whatsappOrderEnabled: boolean;
 }
+
+const defaultBusinessHours = {
+  monday: { open: '09:00', close: '18:00', isOpen: true },
+  tuesday: { open: '09:00', close: '18:00', isOpen: true },
+  wednesday: { open: '09:00', close: '18:00', isOpen: true },
+  thursday: { open: '09:00', close: '18:00', isOpen: true },
+  friday: { open: '09:00', close: '18:00', isOpen: true },
+  saturday: { open: '10:00', close: '16:00', isOpen: true },
+  sunday: { open: '10:00', close: '16:00', isOpen: false },
+};
 
 const CreateStoreBuilder: React.FC = () => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('basic');
   const [storeData, setStoreData] = useState<StoreData>({
     storeName: '',
+    storeSlug: '',
     storeDescription: '',
     storeCategory: '',
     ownerName: '',
     ownerEmail: '',
     ownerPhone: '',
-    address: ''
+    address: '',
+    isOpen: true,
+    customDomain: '',
+    socialLinks: { facebook: '', instagram: '', whatsapp: '' },
+    businessHours: defaultBusinessHours,
+    returnPolicy: '',
+    whatsappOrderEnabled: true,
   });
   const [isCreating, setIsCreating] = useState(false);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [copiedUrl, setCopiedUrl] = useState(false);
 
-  const handleInputChange = (field: keyof StoreData, value: string) => {
-    setStoreData(prev => ({ ...prev, [field]: value }));
+  const generateSlug = (name: string) => {
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim();
   };
 
-  const handleFileUpload = (field: 'logo' | 'banner', file: File) => {
-    setStoreData(prev => ({ ...prev, [field]: file }));
+  const handleInputChange = (field: keyof StoreData, value: any) => {
+    setStoreData(prev => {
+      const updated = { ...prev, [field]: value };
+      if (field === 'storeName') {
+        updated.storeSlug = generateSlug(value);
+      }
+      return updated;
+    });
+  };
+
+  const handleSocialChange = (platform: keyof StoreData['socialLinks'], value: string) => {
+    setStoreData(prev => ({
+      ...prev,
+      socialLinks: { ...prev.socialLinks, [platform]: value }
+    }));
+  };
+
+  const handleBusinessHoursChange = (
+    day: keyof StoreData['businessHours'],
+    field: 'open' | 'close' | 'isOpen',
+    value: string | boolean
+  ) => {
+    setStoreData(prev => ({
+      ...prev,
+      businessHours: {
+        ...prev.businessHours,
+        [day]: { ...prev.businessHours[day], [field]: value }
+      }
+    }));
+  };
+
+  const storeUrl = `${window.location.origin}/store/${storeData.storeSlug || 'your-store'}`;
+
+  const copyStoreUrl = () => {
+    navigator.clipboard.writeText(storeUrl);
+    setCopiedUrl(true);
+    setTimeout(() => setCopiedUrl(false), 2000);
+    toast({ title: "লিংক কপি হয়েছে!" });
   };
 
   const handlePreview = () => {
-    setIsPreviewOpen(true);
-    toast({
-      title: "প্রিভিউ খোলা হচ্ছে",
-      description: "আপনার স্টোরের প্রিভিউ দেখানো হচ্ছে...",
-    });
-    // Open preview in a new window or modal
-    window.open('/store-demo', '_blank');
+    window.open(`/store/${storeData.storeSlug || 'demo'}`, '_blank');
   };
 
   const createStore = async () => {
-    if (!storeData.storeName.trim() || !storeData.ownerName.trim() || !storeData.ownerEmail.trim()) {
+    if (!storeData.storeName.trim() || !storeData.ownerPhone.trim()) {
       toast({
         title: "তথ্য অসম্পূর্ণ",
-        description: "অনুগ্রহ করে সব প্রয়োজনীয় তথ্য পূরণ করুন।",
+        description: "স্টোরের নাম এবং ফোন নম্বর আবশ্যক।",
         variant: "destructive"
       });
       return;
@@ -76,22 +148,18 @@ const CreateStoreBuilder: React.FC = () => {
 
     setIsCreating(true);
     try {
-      // Simulate store creation process
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
+      await new Promise(resolve => setTimeout(resolve, 2000));
       toast({
         title: "স্টোর তৈরি সফল! 🎉",
-        description: `${storeData.storeName} সফলভাবে তৈরি হয়েছে। আপনার স্টোর এখন লাইভ!`,
+        description: `${storeData.storeName} সফলভাবে তৈরি হয়েছে।`,
       });
-      
-      // Redirect to store dashboard
       setTimeout(() => {
         window.location.href = '/seller-dashboard/marketplace';
-      }, 2000);
+      }, 1500);
     } catch (error) {
       toast({
-        title: "ত্রুটি হয়েছে",
-        description: "স্টোর তৈরি করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।",
+        title: "ত্রুটি",
+        description: "আবার চেষ্টা করুন।",
         variant: "destructive"
       });
     } finally {
@@ -100,354 +168,412 @@ const CreateStoreBuilder: React.FC = () => {
   };
 
   const tabs = [
-    { id: 'basic', label: 'বেসিক তথ্য', icon: Store },
+    { id: 'basic', label: 'বেসিক', icon: Store },
     { id: 'design', label: 'ডিজাইন', icon: Palette },
-    { id: 'products', label: 'পণ্য', icon: Upload },
+    { id: 'products', label: 'পণ্য', icon: Package },
     { id: 'payment', label: 'পেমেন্ট', icon: CreditCard },
     { id: 'shipping', label: 'শিপিং', icon: Truck },
-    { id: 'seo', label: 'SEO', icon: Globe },
-    { id: 'analytics', label: 'অ্যানালিটিক্স', icon: BarChart3 },
-    { id: 'settings', label: 'সেটিংস', icon: Settings }
+    { id: 'domain', label: 'ডোমেইন', icon: Globe },
   ];
 
+  const dayNames: Record<string, string> = {
+    monday: 'সোমবার',
+    tuesday: 'মঙ্গলবার',
+    wednesday: 'বুধবার',
+    thursday: 'বৃহস্পতিবার',
+    friday: 'শুক্রবার',
+    saturday: 'শনিবার',
+    sunday: 'রবিবার',
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-0">
-      <div className="w-full">
-        {/* Full Width Header */}
-        <div className="text-center mb-6 md:mb-8 px-4">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent mb-2 md:mb-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 p-2 sm:p-4 md:p-6">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-6 animate-fade-in">
+          <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent mb-2">
             আপনার অনলাইন স্টোর তৈরি করুন
           </h1>
-          <p className="text-sm md:text-base text-gray-600 max-w-4xl mx-auto leading-relaxed">
-            সহজেই একটি পেশাদার অনলাইন স্টোর তৈরি করুন। সব ফিচার সহ, সম্পূর্ণ রেসপন্সিভ ডিজাইন।
+          <p className="text-sm text-muted-foreground">
+            সহজেই পেশাদার স্টোর তৈরি করুন • কাস্টম ডোমেইন সাপোর্ট
           </p>
         </div>
 
-        <Card className="shadow-2xl border-0 w-full">
-          <CardContent className="p-2 sm:p-4 md:p-6 lg:p-8">
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              {/* Mobile/Tablet/Desktop Responsive Tabs */}
-              <div className="mb-4 md:mb-6">
-                {/* Mobile Dropdown for Tabs */}
-                <div className="block md:hidden mb-4">
-                  <select
-                    value={activeTab}
-                    onChange={(e) => setActiveTab(e.target.value)}
-                    className="w-full p-3 border rounded-lg bg-white text-sm shadow-sm focus:ring-2 focus:ring-primary focus:border-primary"
-                  >
-                    {tabs.map((tab) => (
-                      <option key={tab.id} value={tab.id}>
-                        {tab.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Tablet/Desktop Tab List */}
-                <TabsList className="hidden md:grid md:grid-cols-4 lg:grid-cols-8 gap-1 lg:gap-2 h-auto bg-gray-50 p-1 lg:p-2 rounded-xl w-full">
-                  {tabs.map((tab) => (
-                    <TabsTrigger
-                      key={tab.id}
-                      value={tab.id}
-                      className="flex flex-col items-center gap-1 p-2 lg:p-3 text-xs lg:text-sm data-[state=active]:bg-white data-[state=active]:shadow-md rounded-lg transition-all min-h-[60px] lg:min-h-[70px] hover:bg-white/50"
-                    >
-                      <tab.icon className="h-4 w-4 lg:h-5 lg:w-5" />
-                      <span className="text-center leading-tight font-medium">{tab.label}</span>
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-
-                {/* Mobile Tab Indicators */}
-                <div className="flex md:hidden justify-center space-x-1 mt-3">
-                  {tabs.map((tab) => (
-                    <div
-                      key={tab.id}
-                      className={`h-2 w-2 rounded-full transition-all duration-300 ${
-                        activeTab === tab.id ? 'bg-primary w-6' : 'bg-gray-300'
-                      }`}
-                    />
-                  ))}
+        {/* Store Status & QR */}
+        <Card className="mb-4 border-0 shadow-lg bg-gradient-to-r from-primary/10 to-purple-500/10">
+          <CardContent className="p-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Power className={`h-5 w-5 ${storeData.isOpen ? 'text-green-500' : 'text-red-500'}`} />
+                  <span className="font-medium">{storeData.isOpen ? 'স্টোর খোলা' : 'স্টোর বন্ধ'}</span>
+                  <Switch
+                    checked={storeData.isOpen}
+                    onCheckedChange={(checked) => handleInputChange('isOpen', checked)}
+                  />
                 </div>
               </div>
+              
+              <div className="flex items-center gap-2">
+                <div className="bg-white p-2 rounded-lg shadow-sm">
+                  <QRCode value={storeUrl} size={60} />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2 bg-background/80 rounded-lg px-3 py-1.5">
+                    <span className="text-xs truncate max-w-[150px] sm:max-w-[250px]">{storeUrl}</span>
+                    <Button variant="ghost" size="sm" onClick={copyStoreUrl} className="h-6 w-6 p-0">
+                      {copiedUrl ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
+                    </Button>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={handlePreview} className="text-xs h-7">
+                    <Eye className="h-3 w-3 mr-1" /> প্রিভিউ
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-              {/* Basic Information Tab */}
-              <TabsContent value="basic" className="space-y-4 md:space-y-6 mt-0">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+        <Card className="shadow-xl border-0">
+          <CardContent className="p-3 sm:p-4 md:p-6">
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              {/* Mobile Dropdown */}
+              <div className="block md:hidden mb-4">
+                <select
+                  value={activeTab}
+                  onChange={(e) => setActiveTab(e.target.value)}
+                  className="w-full p-3 border rounded-lg bg-background text-sm shadow-sm focus:ring-2 focus:ring-primary"
+                >
+                  {tabs.map((tab) => (
+                    <option key={tab.id} value={tab.id}>{tab.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Desktop Tabs */}
+              <TabsList className="hidden md:grid md:grid-cols-6 gap-1 h-auto bg-muted/50 p-1 rounded-xl mb-6">
+                {tabs.map((tab) => (
+                  <TabsTrigger
+                    key={tab.id}
+                    value={tab.id}
+                    className="flex flex-col items-center gap-1 p-3 data-[state=active]:bg-background data-[state=active]:shadow-md rounded-lg transition-all"
+                  >
+                    <tab.icon className="h-4 w-4" />
+                    <span className="text-xs font-medium">{tab.label}</span>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+
+              {/* Basic Info Tab */}
+              <TabsContent value="basic" className="space-y-6 mt-0 animate-fade-in">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Store Info */}
                   <div className="space-y-4">
+                    <h3 className="font-semibold flex items-center gap-2">
+                      <Store className="h-4 w-4 text-primary" /> স্টোর তথ্য
+                    </h3>
                     <div>
-                      <Label htmlFor="storeName" className="text-sm font-medium">স্টোরের নাম *</Label>
+                      <Label>স্টোরের নাম *</Label>
                       <Input
-                        id="storeName"
-                        placeholder="আপনার স্টোরের নাম লিখুন"
+                        placeholder="আপনার স্টোরের নাম"
                         value={storeData.storeName}
                         onChange={(e) => handleInputChange('storeName', e.target.value)}
-                        className="h-10 md:h-12 text-sm md:text-base mt-1"
-                        required
+                        className="mt-1"
                       />
+                      {storeData.storeSlug && (
+                        <p className="text-xs text-muted-foreground mt-1">
+                          URL: /store/{storeData.storeSlug}
+                        </p>
+                      )}
                     </div>
-                    
                     <div>
-                      <Label htmlFor="storeDescription" className="text-sm font-medium">স্টোরের বিবরণ</Label>
+                      <Label>স্টোরের বিবরণ</Label>
                       <Textarea
-                        id="storeDescription"
                         placeholder="আপনার স্টোর সম্পর্কে লিখুন"
                         value={storeData.storeDescription}
                         onChange={(e) => handleInputChange('storeDescription', e.target.value)}
                         rows={3}
-                        className="text-sm md:text-base mt-1"
+                        className="mt-1"
                       />
                     </div>
-
                     <div>
-                      <Label htmlFor="storeCategory" className="text-sm font-medium">স্টোরের ক্যাটাগরি</Label>
+                      <Label>ক্যাটাগরি</Label>
                       <Input
-                        id="storeCategory"
-                        placeholder="যেমন: ফ্যাশন, ইলেকট্রনিক্স, খাবার"
+                        placeholder="যেমন: ফ্যাশন, ইলেকট্রনিক্স"
                         value={storeData.storeCategory}
                         onChange={(e) => handleInputChange('storeCategory', e.target.value)}
-                        className="h-10 md:h-12 text-sm md:text-base mt-1"
+                        className="mt-1"
                       />
                     </div>
                   </div>
 
+                  {/* Owner Info & Social */}
                   <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="ownerName" className="text-sm font-medium">মালিকের নাম *</Label>
-                      <Input
-                        id="ownerName"
-                        placeholder="আপনার নাম"
-                        value={storeData.ownerName}
-                        onChange={(e) => handleInputChange('ownerName', e.target.value)}
-                        className="h-10 md:h-12 text-sm md:text-base mt-1"
-                        required
-                      />
+                    <h3 className="font-semibold">মালিকের তথ্য</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label>নাম</Label>
+                        <Input
+                          placeholder="আপনার নাম"
+                          value={storeData.ownerName}
+                          onChange={(e) => handleInputChange('ownerName', e.target.value)}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label>ফোন *</Label>
+                        <Input
+                          placeholder="01XXXXXXXXX"
+                          value={storeData.ownerPhone}
+                          onChange={(e) => handleInputChange('ownerPhone', e.target.value)}
+                          className="mt-1"
+                        />
+                      </div>
                     </div>
-
                     <div>
-                      <Label htmlFor="ownerEmail" className="text-sm font-medium">ইমেইল *</Label>
+                      <Label>ইমেইল</Label>
                       <Input
-                        id="ownerEmail"
                         type="email"
-                        placeholder="আপনার ইমেইল"
+                        placeholder="email@example.com"
                         value={storeData.ownerEmail}
                         onChange={(e) => handleInputChange('ownerEmail', e.target.value)}
-                        className="h-10 md:h-12 text-sm md:text-base mt-1"
-                        required
+                        className="mt-1"
                       />
                     </div>
 
-                    <div>
-                      <Label htmlFor="ownerPhone" className="text-sm font-medium">ফোন নম্বর *</Label>
-                      <Input
-                        id="ownerPhone"
-                        placeholder="01XXXXXXXXX"
-                        value={storeData.ownerPhone}
-                        onChange={(e) => handleInputChange('ownerPhone', e.target.value)}
-                        className="h-10 md:h-12 text-sm md:text-base mt-1"
-                        required
-                      />
+                    {/* Social Links */}
+                    <h3 className="font-semibold pt-2">সোশ্যাল লিংক</h3>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Facebook className="h-4 w-4 text-blue-600" />
+                        <Input
+                          placeholder="Facebook Page URL"
+                          value={storeData.socialLinks.facebook}
+                          onChange={(e) => handleSocialChange('facebook', e.target.value)}
+                          className="flex-1"
+                        />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Instagram className="h-4 w-4 text-pink-600" />
+                        <Input
+                          placeholder="Instagram Profile URL"
+                          value={storeData.socialLinks.instagram}
+                          onChange={(e) => handleSocialChange('instagram', e.target.value)}
+                          className="flex-1"
+                        />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MessageCircle className="h-4 w-4 text-green-600" />
+                        <Input
+                          placeholder="WhatsApp Number (880...)"
+                          value={storeData.socialLinks.whatsapp}
+                          onChange={(e) => handleSocialChange('whatsapp', e.target.value)}
+                          className="flex-1"
+                        />
+                      </div>
                     </div>
 
-                    <div>
-                      <Label htmlFor="address" className="text-sm font-medium">ঠিকানা</Label>
-                      <Textarea
-                        id="address"
-                        placeholder="আপনার ব্যবসার ঠিকানা"
-                        value={storeData.address}
-                        onChange={(e) => handleInputChange('address', e.target.value)}
-                        rows={3}
-                        className="text-sm md:text-base mt-1"
+                    {/* WhatsApp Order */}
+                    <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                      <div className="flex items-center gap-2">
+                        <MessageCircle className="h-4 w-4 text-green-600" />
+                        <span className="text-sm">WhatsApp অর্ডার বাটন</span>
+                      </div>
+                      <Switch
+                        checked={storeData.whatsappOrderEnabled}
+                        onCheckedChange={(checked) => handleInputChange('whatsappOrderEnabled', checked)}
                       />
                     </div>
                   </div>
+                </div>
+
+                {/* Business Hours */}
+                <div className="border-t pt-4">
+                  <h3 className="font-semibold flex items-center gap-2 mb-4">
+                    <Clock className="h-4 w-4 text-primary" /> ব্যবসার সময়সূচী
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                    {Object.entries(storeData.businessHours).map(([day, hours]) => (
+                      <div key={day} className="flex items-center gap-2 p-2 bg-muted/50 rounded-lg">
+                        <Switch
+                          checked={hours.isOpen}
+                          onCheckedChange={(checked) => handleBusinessHoursChange(day as any, 'isOpen', checked)}
+                        />
+                        <span className="text-sm font-medium w-16">{dayNames[day]}</span>
+                        {hours.isOpen && (
+                          <div className="flex items-center gap-1 text-xs">
+                            <Input
+                              type="time"
+                              value={hours.open}
+                              onChange={(e) => handleBusinessHoursChange(day as any, 'open', e.target.value)}
+                              className="h-7 w-20 text-xs"
+                            />
+                            <span>-</span>
+                            <Input
+                              type="time"
+                              value={hours.close}
+                              onChange={(e) => handleBusinessHoursChange(day as any, 'close', e.target.value)}
+                              className="h-7 w-20 text-xs"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Return Policy */}
+                <div className="border-t pt-4">
+                  <h3 className="font-semibold flex items-center gap-2 mb-3">
+                    <FileText className="h-4 w-4 text-primary" /> রিটার্ন পলিসি
+                  </h3>
+                  <Textarea
+                    placeholder="আপনার রিটার্ন ও রিফান্ড পলিসি লিখুন..."
+                    value={storeData.returnPolicy}
+                    onChange={(e) => handleInputChange('returnPolicy', e.target.value)}
+                    rows={4}
+                  />
                 </div>
               </TabsContent>
 
               {/* Design Tab */}
-              <TabsContent value="design" className="mt-0">
-                <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-4 md:p-6 border">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <Palette className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg md:text-xl font-semibold text-gray-900">অনলাইন স্টোর ডিজাইন</h3>
-                      <p className="text-sm text-gray-600">আপনার স্টোরের ডিজাইন কাস্টমাইজ করুন</p>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white rounded-lg shadow-sm border">
-                    <StoreDesignEditor storeName={storeData.storeName || "আমার স্টোর"} />
-                  </div>
+              <TabsContent value="design" className="mt-0 animate-fade-in">
+                <div className="bg-gradient-to-br from-primary/5 to-purple-500/5 rounded-xl p-4 border">
+                  <StoreDesignEditor storeName={storeData.storeName || "আমার স্টোর"} />
                 </div>
               </TabsContent>
 
               {/* Products Tab */}
-              <TabsContent value="products" className="mt-0">
-                <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-xl p-4 md:p-6 border">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 bg-green-100 rounded-lg">
-                      <Upload className="h-5 w-5 text-green-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg md:text-xl font-semibold text-gray-900">পণ্য ব্যবস্থাপনা</h3>
-                      <p className="text-sm text-gray-600">আপনার পণ্য যুক্ত ও ব্যবস্থাপনা করুন</p>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white rounded-lg shadow-sm border">
-                    <ProductManagement />
-                  </div>
+              <TabsContent value="products" className="mt-0 animate-fade-in">
+                <div className="bg-gradient-to-br from-green-500/5 to-blue-500/5 rounded-xl p-4 border">
+                  <ProductManagement />
                 </div>
               </TabsContent>
 
               {/* Payment Tab */}
-              <TabsContent value="payment" className="mt-0">
-                <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-4 md:p-6 border">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 bg-yellow-100 rounded-lg">
-                      <CreditCard className="h-5 w-5 text-yellow-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg md:text-xl font-semibold text-gray-900">পেমেন্ট গেটওয়ে</h3>
-                      <p className="text-sm text-gray-600">পেমেন্ট পদ্ধতি সেটআপ করুন</p>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white rounded-lg shadow-sm border">
-                    <PaymentGatewaySetup />
-                  </div>
+              <TabsContent value="payment" className="mt-0 animate-fade-in">
+                <div className="bg-gradient-to-br from-yellow-500/5 to-orange-500/5 rounded-xl p-4 border">
+                  <PaymentGatewaySetup />
                 </div>
               </TabsContent>
 
               {/* Shipping Tab */}
-              <TabsContent value="shipping" className="mt-0">
-                <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 md:p-6 border">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <Truck className="h-5 w-5 text-purple-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg md:text-xl font-semibold text-gray-900">শিপিং কনফিগারেশন</h3>
-                      <p className="text-sm text-gray-600">ডেলিভারি সেটিংস কনফিগার করুন</p>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white rounded-lg shadow-sm border">
-                    <ShippingConfiguration />
-                  </div>
+              <TabsContent value="shipping" className="mt-0 animate-fade-in">
+                <div className="bg-gradient-to-br from-purple-500/5 to-pink-500/5 rounded-xl p-4 border">
+                  <ShippingConfiguration />
                 </div>
               </TabsContent>
 
-              {/* SEO Tab */}
-              <TabsContent value="seo" className="mt-0">
-                <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl p-4 md:p-6 border">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 bg-teal-100 rounded-lg">
-                      <Globe className="h-5 w-5 text-teal-600" />
+              {/* Custom Domain Tab */}
+              <TabsContent value="domain" className="mt-0 animate-fade-in">
+                <div className="space-y-6">
+                  <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-xl p-6 border">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <Globe className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">কাস্টম ডোমেইন</h3>
+                        <p className="text-sm text-muted-foreground">আপনার নিজের ডোমেইন কানেক্ট করুন</p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-lg md:text-xl font-semibold text-gray-900">SEO সেটিংস</h3>
-                      <p className="text-sm text-gray-600">সার্চ ইঞ্জিন অপটিমাইজেশন করুন</p>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white rounded-lg shadow-sm border">
-                    <SEOSettings />
-                  </div>
-                </div>
-              </TabsContent>
 
-              {/* Analytics Tab */}
-              <TabsContent value="analytics" className="mt-0">
-                <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-xl p-4 md:p-6 border">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 bg-indigo-100 rounded-lg">
-                      <BarChart3 className="h-5 w-5 text-indigo-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg md:text-xl font-semibold text-gray-900">অ্যানালিটিক্স সেটআপ</h3>
-                      <p className="text-sm text-gray-600">ব্যবসার পারফরমেন্স ট্র্যাক করুন</p>
+                    <div className="space-y-4">
+                      <div>
+                        <Label>আপনার ডোমেইন</Label>
+                        <Input
+                          placeholder="www.yourbrand.com"
+                          value={storeData.customDomain}
+                          onChange={(e) => handleInputChange('customDomain', e.target.value)}
+                          className="mt-1"
+                        />
+                      </div>
+
+                      <div className="bg-background/80 rounded-lg p-4">
+                        <h4 className="font-medium mb-3">DNS সেটআপ নির্দেশনা:</h4>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex items-start gap-2">
+                            <Badge variant="outline" className="text-xs">1</Badge>
+                            <span>আপনার ডোমেইন প্রোভাইডারে লগইন করুন</span>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <Badge variant="outline" className="text-xs">2</Badge>
+                            <span>DNS সেটিংসে যান</span>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <Badge variant="outline" className="text-xs">3</Badge>
+                            <div>
+                              <span>নিচের রেকর্ড যোগ করুন:</span>
+                              <div className="bg-muted p-2 rounded mt-1 font-mono text-xs">
+                                A Record: @ → 185.158.133.1<br/>
+                                CNAME: www → your-store.lovable.app
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <Button className="w-full">
+                        <Globe className="h-4 w-4 mr-2" /> ডোমেইন ভেরিফাই করুন
+                      </Button>
                     </div>
                   </div>
-                  
-                  <div className="bg-white rounded-lg shadow-sm border">
-                    <AnalyticsSetup />
-                  </div>
-                </div>
-              </TabsContent>
 
-              {/* Settings Tab */}
-              <TabsContent value="settings" className="mt-0">
-                <div className="space-y-4 md:space-y-6">
-                  <div className="bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl p-4 md:p-6 border">
-                    <h3 className="text-lg md:text-xl font-semibold mb-4">অতিরিক্ত সেটিংস</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                      <Card className="hover:shadow-md transition-shadow">
-                        <CardHeader className="pb-3">
-                          <CardTitle className="flex items-center gap-2 text-base md:text-lg">
-                            <Shield className="h-4 w-4 md:h-5 md:w-5 text-green-600" />
-                            নিরাপত্তা
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <p className="text-xs md:text-sm text-gray-600 mb-3 md:mb-4">SSL সার্টিফিকেট এবং ডেটা এনক্রিপশন</p>
-                          <Badge className="bg-green-100 text-green-800 text-xs">সক্রিয়</Badge>
-                        </CardContent>
-                      </Card>
+                  {/* QR Code Section */}
+                  <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl p-6 border">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                        <QrCode className="h-5 w-5 text-purple-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">স্টোর QR Code</h3>
+                        <p className="text-sm text-muted-foreground">স্ক্যান করে সহজে শেয়ার করুন</p>
+                      </div>
+                    </div>
 
-                      <Card className="hover:shadow-md transition-shadow">
-                        <CardHeader className="pb-3">
-                          <CardTitle className="flex items-center gap-2 text-base md:text-lg">
-                            <MessageSquare className="h-4 w-4 md:h-5 md:w-5 text-blue-600" />
-                            কাস্টমার সাপোর্ট
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <p className="text-xs md:text-sm text-gray-600 mb-3 md:mb-4">লাইভ চ্যাট এবং টিকেট সিস্টেম</p>
-                          <Button variant="outline" size="sm" className="text-xs md:text-sm">সেটআপ করুন</Button>
-                        </CardContent>
-                      </Card>
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="bg-white p-4 rounded-xl shadow-lg">
+                        <QRCode value={storeUrl} size={180} />
+                      </div>
+                      <p className="text-sm text-center text-muted-foreground">{storeUrl}</p>
+                      <div className="flex gap-2">
+                        <Button variant="outline" onClick={copyStoreUrl}>
+                          <Copy className="h-4 w-4 mr-2" /> কপি লিংক
+                        </Button>
+                        <Button variant="outline" onClick={handlePreview}>
+                          <ExternalLink className="h-4 w-4 mr-2" /> স্টোর দেখুন
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </TabsContent>
             </Tabs>
 
-            {/* Action Buttons - Full Width Responsive */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-6 md:mt-8 pt-4 md:pt-6 border-t w-full">
-              <div className="flex items-center gap-2 text-xs md:text-sm text-gray-600">
-                <CheckCircle2 className="h-4 w-4 text-green-500" />
-                সব ফিচার বিনামূল্যে
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-2 md:gap-3 w-full sm:w-auto">
-                <Button 
-                  variant="outline" 
-                  onClick={handlePreview}
-                  className="px-4 md:px-6 text-xs md:text-sm h-9 md:h-10 border-2 hover:bg-gray-50 flex items-center gap-2"
-                >
-                  <Eye className="h-3 w-3 md:h-4 md:w-4" />
-                  প্রিভিউ দেখুন
-                </Button>
-                <Button 
-                  onClick={createStore}
-                  disabled={isCreating || !storeData.storeName || !storeData.ownerName || !storeData.ownerEmail}
-                  className="px-6 md:px-8 bg-gradient-to-r from-primary to-purple-600 hover:shadow-lg text-xs md:text-sm h-9 md:h-10 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isCreating ? (
-                    <>
-                      <Zap className="h-3 w-3 md:h-4 md:w-4 mr-2 animate-spin" />
-                      তৈরি হচ্ছে...
-                    </>
-                  ) : (
-                    <>
-                      <Zap className="h-3 w-3 md:h-4 md:w-4 mr-2" />
-                      স্টোর তৈরি করুন
-                    </>
-                  )}
-                </Button>
-              </div>
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 mt-6 pt-4 border-t">
+              <Button
+                variant="outline"
+                onClick={handlePreview}
+                className="flex-1"
+              >
+                <Eye className="h-4 w-4 mr-2" /> প্রিভিউ দেখুন
+              </Button>
+              <Button
+                onClick={createStore}
+                disabled={isCreating}
+                className="flex-1 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90"
+              >
+                {isCreating ? (
+                  <>
+                    <span className="animate-spin mr-2">⏳</span> তৈরি হচ্ছে...
+                  </>
+                ) : (
+                  <>
+                    <Store className="h-4 w-4 mr-2" /> স্টোর তৈরি করুন
+                  </>
+                )}
+              </Button>
             </div>
           </CardContent>
         </Card>
