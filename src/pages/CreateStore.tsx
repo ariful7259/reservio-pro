@@ -167,61 +167,61 @@ const CreateStore = () => {
     if (isMobile) {
       return (
         <div className="w-full mb-4">
-          <TabsList className="flex w-full h-auto p-2 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border overflow-x-auto scrollbar-hide gap-2">
-            <div className="flex gap-2 min-w-max pb-2">
+          <TabsList className="flex w-full h-auto p-1.5 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border overflow-x-auto scrollbar-hide touch-pan-x">
+            <div className="flex gap-1.5 min-w-max px-1">
               <TabsTrigger 
                 value="easy-setup" 
-                className="flex flex-col items-center gap-2 p-4 text-sm font-bold data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[120px] whitespace-nowrap border-2 border-green-200 bg-gradient-to-b from-green-50 to-blue-50"
+                className="flex flex-col items-center gap-1 p-2 text-[10px] font-semibold data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:border transition-all duration-200 rounded-lg min-w-[60px] whitespace-nowrap border border-green-200/50 bg-gradient-to-b from-green-50/80 to-blue-50/80"
               >
-                <div className="p-3 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white shadow-md">
-                  <Zap className="h-5 w-5" />
+                <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white shadow-sm">
+                  <Zap className="h-3.5 w-3.5" />
                 </div>
-                <span className="font-bold text-center text-green-700">সহজ সেটআপ</span>
+                <span className="font-semibold text-center text-green-700 leading-tight">সহজ সেটআপ</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="features" 
-                className="flex flex-col items-center gap-2 p-4 text-sm font-bold data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[120px] whitespace-nowrap border-2 border-purple-200 bg-gradient-to-b from-blue-50 to-purple-50"
+                className="flex flex-col items-center gap-1 p-2 text-[10px] font-semibold data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:border transition-all duration-200 rounded-lg min-w-[60px] whitespace-nowrap border border-purple-200/50 bg-gradient-to-b from-blue-50/80 to-purple-50/80"
               >
-                <div className="p-3 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 text-white shadow-md">
-                  <Sparkles className="h-5 w-5" />
+                <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-r from-blue-400 to-purple-500 text-white shadow-sm">
+                  <Sparkles className="h-3.5 w-3.5" />
                 </div>
-                <span className="font-bold text-center text-purple-700">ফিচারস</span>
+                <span className="font-semibold text-center text-purple-700 leading-tight">ফিচারস</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="design" 
-                className="flex flex-col items-center gap-2 p-4 text-sm font-bold data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[120px] whitespace-nowrap border-2 border-pink-200 bg-gradient-to-b from-pink-50 to-red-50"
+                className="flex flex-col items-center gap-1 p-2 text-[10px] font-semibold data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:border transition-all duration-200 rounded-lg min-w-[60px] whitespace-nowrap border border-pink-200/50 bg-gradient-to-b from-pink-50/80 to-red-50/80"
               >
-                <div className="p-3 rounded-full bg-gradient-to-r from-pink-400 to-red-500 text-white shadow-md">
-                  <Paintbrush className="h-5 w-5" />
+                <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-r from-pink-400 to-red-500 text-white shadow-sm">
+                  <Paintbrush className="h-3.5 w-3.5" />
                 </div>
-                <span className="font-bold text-center text-pink-700">ডিজাইন</span>
+                <span className="font-semibold text-center text-pink-700 leading-tight">ডিজাইন</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="basic" 
-                className="flex flex-col items-center gap-2 p-4 text-sm font-bold data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[120px] whitespace-nowrap border-2 border-orange-200 bg-gradient-to-b from-orange-50 to-yellow-50"
+                className="flex flex-col items-center gap-1 p-2 text-[10px] font-semibold data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:border transition-all duration-200 rounded-lg min-w-[60px] whitespace-nowrap border border-orange-200/50 bg-gradient-to-b from-orange-50/80 to-yellow-50/80"
               >
-                <div className="p-3 rounded-full bg-gradient-to-r from-orange-400 to-yellow-500 text-white shadow-md">
-                  <PanelTop className="h-5 w-5" />
+                <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-r from-orange-400 to-yellow-500 text-white shadow-sm">
+                  <PanelTop className="h-3.5 w-3.5" />
                 </div>
-                <span className="font-bold text-center text-orange-700">বেসিক তথ্য</span>
+                <span className="font-semibold text-center text-orange-700 leading-tight">বেসিক তথ্য</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="settings" 
-                className="flex flex-col items-center gap-2 p-4 text-sm font-bold data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[120px] whitespace-nowrap border-2 border-teal-200 bg-gradient-to-b from-teal-50 to-cyan-50"
+                className="flex flex-col items-center gap-1 p-2 text-[10px] font-semibold data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:border transition-all duration-200 rounded-lg min-w-[60px] whitespace-nowrap border border-teal-200/50 bg-gradient-to-b from-teal-50/80 to-cyan-50/80"
               >
-                <div className="p-3 rounded-full bg-gradient-to-r from-teal-400 to-cyan-500 text-white shadow-md">
-                  <Wand2 className="h-5 w-5" />
+                <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-r from-teal-400 to-cyan-500 text-white shadow-sm">
+                  <Wand2 className="h-3.5 w-3.5" />
                 </div>
-                <span className="font-bold text-center text-teal-700">সেটিংস</span>
+                <span className="font-semibold text-center text-teal-700 leading-tight">সেটিংস</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="additional" 
-                className="flex flex-col items-center gap-2 p-4 text-sm font-bold data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:border transition-all duration-300 rounded-lg min-w-[120px] whitespace-nowrap border-2 border-purple-200 bg-gradient-to-b from-purple-50 to-pink-50"
+                className="flex flex-col items-center gap-1 p-2 text-[10px] font-semibold data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:border transition-all duration-200 rounded-lg min-w-[60px] whitespace-nowrap border border-purple-200/50 bg-gradient-to-b from-purple-50/80 to-pink-50/80"
               >
-                <div className="p-3 rounded-full bg-gradient-to-r from-purple-400 to-pink-500 text-white shadow-md">
-                  <Gift className="h-5 w-5" />
+                <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-r from-purple-400 to-pink-500 text-white shadow-sm">
+                  <Gift className="h-3.5 w-3.5" />
                 </div>
-                <span className="font-bold text-center text-purple-700">অতিরিক্ত</span>
+                <span className="font-semibold text-center text-purple-700 leading-tight">অতিরিক্ত</span>
               </TabsTrigger>
             </div>
           </TabsList>
