@@ -13,7 +13,10 @@ import {
   FileText,
   DollarSign,
   Truck,
-  Star
+  Star,
+  Clock,
+  XCircle,
+  Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -24,11 +27,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { useSellerApplication } from '@/hooks/useSellerApplication';
+import { useAuth } from '@/hooks/useAuth';
 
 const BecomeSeller = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user, isAuthenticated } = useAuth();
+  const { application, isLoading: appLoading, submitApplication, isPending, isApproved, isRejected } = useSellerApplication();
   const [currentStep, setCurrentStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     businessName: '',
     businessType: '',
@@ -81,13 +89,127 @@ const BecomeSeller = () => {
     }
   };
 
-  const handleSubmit = () => {
-    toast({
-      title: "আবেদন জমা দেওয়া হয়েছে",
-      description: "আপনার বিক্রেতা হওয়ার আবেদনটি আমাদের কাছে পৌঁছেছে। আমরা শীঘ্রই যোগাযোগ করব।"
-    });
-    navigate('/profile');
+  const handleSubmit = async () => {
+    if (!isAuthenticated || !user) {
+      toast({
+        title: "লগইন প্রয়োজন",
+        description: "আবেদন করতে প্রথমে লগইন করুন",
+        variant: "destructive"
+      });
+      navigate('/login');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await submitApplication({
+        businessName: formData.businessName,
+        businessType: formData.businessType,
+        phone: formData.phone,
+        email: formData.email,
+        address: formData.address,
+        description: formData.description,
+        category: formData.category,
+        experience: formData.experience
+      });
+
+      toast({
+        title: "আবেদন জমা দেওয়া হয়েছে",
+        description: "আপনার আবেদনটি এডমিনের কাছে পাঠানো হয়েছে। অনুমোদনের পর আপনি সেলার ড্যাশবোর্ড অ্যাক্সেস পাবেন।"
+      });
+      navigate('/profile');
+    } catch (error: any) {
+      toast({
+        title: "আবেদন জমা দিতে ব্যর্থ",
+        description: error.message || "একটি সমস্যা হয়েছে। আবার চেষ্টা করুন।",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  // যদি আগে থেকে আবেদন থাকে তাহলে স্ট্যাটাস দেখাও
+  if (appLoading) {
+    return (
+      <div className="container px-4 pt-16 pb-20 flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (application) {
+    return (
+      <div className="container px-4 pt-16 pb-20">
+        <div className="flex items-center gap-3 mb-6">
+          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h1 className="text-xl font-semibold">আবেদনের স্ট্যাটাস</h1>
+        </div>
+
+        <Card className="max-w-2xl mx-auto">
+          <CardContent className="p-8 text-center">
+            {isPending && (
+              <>
+                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-yellow-100 flex items-center justify-center">
+                  <Clock className="h-10 w-10 text-yellow-600" />
+                </div>
+                <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 mb-4">অপেক্ষমান</Badge>
+                <h2 className="text-2xl font-bold mb-2">আপনার আবেদন প্রক্রিয়াধীন</h2>
+                <p className="text-muted-foreground mb-4">
+                  আপনার বিক্রেতা হওয়ার আবেদনটি এডমিনের কাছে রয়েছে। অনুগ্রহ করে অপেক্ষা করুন।
+                </p>
+                <div className="bg-muted/50 p-4 rounded-lg text-left">
+                  <p className="text-sm"><strong>ব্যবসার নাম:</strong> {application.business_name}</p>
+                  <p className="text-sm"><strong>আবেদনের তারিখ:</strong> {new Date(application.created_at).toLocaleDateString('bn-BD')}</p>
+                </div>
+              </>
+            )}
+
+            {isApproved && (
+              <>
+                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
+                  <CheckCircle className="h-10 w-10 text-green-600" />
+                </div>
+                <Badge variant="secondary" className="bg-green-100 text-green-800 mb-4">অনুমোদিত</Badge>
+                <h2 className="text-2xl font-bold mb-2">অভিনন্দন! 🎉</h2>
+                <p className="text-muted-foreground mb-4">
+                  আপনার আবেদন অনুমোদিত হয়েছে। এখন আপনি সেলার ড্যাশবোর্ড অ্যাক্সেস করতে পারবেন।
+                </p>
+                <Button onClick={() => navigate('/seller-dashboard')} className="mt-4">
+                  <Store className="h-4 w-4 mr-2" />
+                  সেলার ড্যাশবোর্ডে যান
+                </Button>
+              </>
+            )}
+
+            {isRejected && (
+              <>
+                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
+                  <XCircle className="h-10 w-10 text-red-600" />
+                </div>
+                <Badge variant="secondary" className="bg-red-100 text-red-800 mb-4">প্রত্যাখ্যাত</Badge>
+                <h2 className="text-2xl font-bold mb-2">আবেদন প্রত্যাখ্যাত হয়েছে</h2>
+                <p className="text-muted-foreground mb-4">
+                  দুঃখিত, আপনার আবেদনটি প্রত্যাখ্যাত হয়েছে।
+                </p>
+                {application.admin_notes && (
+                  <div className="bg-red-50 p-4 rounded-lg text-left mb-4">
+                    <p className="text-sm font-medium text-red-800">এডমিনের মন্তব্য:</p>
+                    <p className="text-sm text-red-700">{application.admin_notes}</p>
+                  </div>
+                )}
+                <p className="text-sm text-muted-foreground">
+                  সাহায্যের জন্য আমাদের সাপোর্ট টিমে যোগাযোগ করুন।
+                </p>
+              </>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const renderStepContent = () => {
     switch (currentStep) {

@@ -403,6 +403,66 @@ export type Database = {
         }
         Relationships: []
       }
+      seller_applications: {
+        Row: {
+          address: string | null
+          admin_notes: string | null
+          business_name: string
+          business_type: string
+          category: string | null
+          created_at: string | null
+          description: string | null
+          documents: string[] | null
+          email: string | null
+          experience: string | null
+          id: string
+          phone: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["seller_application_status"]
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          admin_notes?: string | null
+          business_name: string
+          business_type: string
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          documents?: string[] | null
+          email?: string | null
+          experience?: string | null
+          id?: string
+          phone?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["seller_application_status"]
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          admin_notes?: string | null
+          business_name?: string
+          business_type?: string
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          documents?: string[] | null
+          email?: string | null
+          experience?: string | null
+          id?: string
+          phone?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["seller_application_status"]
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       seller_profiles: {
         Row: {
           address: string | null
@@ -709,6 +769,10 @@ export type Database = {
       }
     }
     Functions: {
+      approve_seller_application: {
+        Args: { admin_user_id: string; application_id: string; notes?: string }
+        Returns: boolean
+      }
       get_categories_with_counts: {
         Args: never
         Returns: {
@@ -731,9 +795,14 @@ export type Database = {
         }
         Returns: boolean
       }
+      reject_seller_application: {
+        Args: { admin_user_id: string; application_id: string; notes?: string }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      seller_application_status: "pending" | "approved" | "rejected"
       seller_type: "marketplace" | "rental" | "service" | "content"
     }
     CompositeTypes: {
@@ -863,6 +932,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      seller_application_status: ["pending", "approved", "rejected"],
       seller_type: ["marketplace", "rental", "service", "content"],
     },
   },

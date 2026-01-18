@@ -31,6 +31,7 @@ import SupportTicket from '@/components/admin/SupportTicket';
 import Settings from '@/components/admin/Settings';
 import MonetizationTab from '@/components/admin/MonetizationTab';
 import DashboardCharts from '@/components/admin/DashboardCharts';
+import SellerApplicationsManagement from '@/components/admin/SellerApplicationsManagement';
 import { adminTheme } from '@/themes/adminTheme';
 import { 
   BarChart3, 
@@ -121,6 +122,7 @@ const AdminDashboard = () => {
 
   const sidebarItems = [
     { id: 'dashboard', name: 'ড্যাশবোর্ড', icon: <BarChart3 size={18} /> },
+    { id: 'seller-applications', name: 'সেলার আবেদন', icon: <UserCog size={18} />, badge: true },
     { id: 'users', name: 'ব্যবহারকারী', icon: <Users size={18} /> },
     { id: 'marketplace', name: 'মার্কেটপ্লেস', icon: <ShoppingBag size={18} /> },
     { id: 'rentals', name: 'রেন্টাল', icon: <Building size={18} /> },
@@ -492,6 +494,8 @@ const AdminDashboard = () => {
                 )}
                 
                 {activeModule === 'users' && <UserManagementEnhanced />}
+                
+                {activeModule === 'seller-applications' && <SellerApplicationsManagement />}
                 
                 {activeModule === 'marketplace' && <MarketplaceManagement />}
                 
