@@ -28,6 +28,7 @@ export function useSellerProfile() {
   const [profile, setProfile] = useState<SellerProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasApprovedApplication, setHasApprovedApplication] = useState(false);
   const { user, isAuthenticated } = useAuth();
 
   useEffect(() => {
@@ -35,30 +36,40 @@ export function useSellerProfile() {
       try {
         if (!isAuthenticated || !user || !user.id) {
           setProfile(null);
+          setHasApprovedApplication(false);
           setError('অনুগ্রহ করে লগইন করুন');
           setIsLoading(false);
           return;
         }
 
-        // ব্যবহারকারীর আইডি সঠিক ফরম্যাটে আছে কিনা তা পরীক্ষা করি
         console.log('ব্যবহারকারীর আইডি লোড করছি:', user.id);
         
-        // মোটামুটি সিঙ্গেল রিটার্নের জন্য supabase থেকে প্রোফাইল ডাটা আনি
-        const { data, error } = await supabase
+        // প্রথমে seller_profiles থেকে ডাটা আনি
+        const { data: profileData, error: profileError } = await supabase
           .from('seller_profiles')
           .select('*')
           .eq('id', user.id)
           .maybeSingle();
 
-        if (error) {
-          console.error('সেলার প্রোফাইল লোড করতে সমস্যা:', error);
-          setError(error.message);
+        if (profileError) {
+          console.error('সেলার প্রোফাইল লোড করতে সমস্যা:', profileError);
+          setError(profileError.message);
           setProfile(null);
         } else {
-          console.log('সেলার প্রোফাইল লোড হয়েছে:', data);
-          setProfile(data);
+          console.log('সেলার প্রোফাইল লোড হয়েছে:', profileData);
+          setProfile(profileData);
           setError(null);
         }
+
+        // এরপর seller_applications থেকে approved status চেক করি
+        const { data: appData } = await supabase
+          .from('seller_applications')
+          .select('status')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        setHasApprovedApplication(appData?.status === 'approved');
+
       } catch (err) {
         console.error('সেলার প্রোফাইল লোড করতে ব্যর্থ:', err);
         setError(err instanceof Error ? err.message : 'একটি সমস্যা হয়েছে');
@@ -73,8 +84,13 @@ export function useSellerProfile() {
     } else {
       setIsLoading(false);
       setProfile(null);
+      setHasApprovedApplication(false);
     }
   }, [isAuthenticated, user]);
 
-  return { profile, isLoading, error };
+  // seller হিসেবে গণ্য হবে যদি profile থাকে অথবা approved application থাকে
+  const isSeller = !!profile || hasApprovedApplication;
+
+  return { profile, isLoading, error, isSeller, hasApprovedApplication };
 }
+

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronDown, LogOut, User as UserIcon, ShoppingBag, Wallet, Settings, ShieldCheck, Languages, SunMoon, Store } from 'lucide-react';
+import { ChevronDown, LogOut, User as UserIcon, ShoppingBag, Wallet, Settings, ShieldCheck, Languages, SunMoon, Store, Clock } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
@@ -11,9 +11,13 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { useApp } from '@/context/AppContext';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { useSellerProfile } from '@/hooks/useSellerProfile';
+import { useSellerApplication } from '@/hooks/useSellerApplication';
 
 export const UserProfileSection = () => {
-  const { user, isSeller, logout } = useAuth();
+  const { user, logout } = useAuth();
+  const { isSeller } = useSellerProfile();
+  const { application, isPending } = useSellerApplication();
   const { language, setLanguage, t } = useApp();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -68,6 +72,16 @@ export const UserProfileSection = () => {
               <Link to="/seller-dashboard" className="flex items-center gap-2 w-full">
                 <Store className="h-4 w-4" /> 
                 <span>{language === 'bn' ? 'সেলার ড্যাশবোর্ড' : 'Seller Dashboard'}</span>
+              </Link>
+            </DropdownMenuItem>
+          ) : isPending ? (
+            <DropdownMenuItem asChild>
+              <Link to="/become-seller" className="flex items-center gap-2 w-full">
+                <Clock className="h-4 w-4 text-yellow-600" /> 
+                <span className="flex items-center gap-2">
+                  {language === 'bn' ? 'আবেদন প্রক্রিয়াধীন' : 'Application Pending'}
+                  <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 text-xs">অপেক্ষমান</Badge>
+                </span>
               </Link>
             </DropdownMenuItem>
           ) : (
