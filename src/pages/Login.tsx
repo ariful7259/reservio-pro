@@ -31,7 +31,7 @@ const Login = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, isAuthenticated, isAdmin } = useAuth();
+  const { login, isAuthenticated, isAdmin, loading } = useAuth();
   
   // Check if biometric authentication is available
   useEffect(() => {
@@ -42,23 +42,12 @@ const Login = () => {
   
   // Redirect if already logged in
   useEffect(() => {
-    if (isAuthenticated) {
-      const from = location.state?.from || "/profile";
-      
-      if (from.includes('/seller-dashboard')) {
-        navigate(from);
-        return;
-      }
-      
+    if (isAuthenticated && !loading) {
       if (isAdmin) {
         navigate("/admin-dashboard");
-      } else if (loginType === "seller") {
-        navigate("/seller-dashboard");
-      } else {
-        navigate(from);
       }
     }
-  }, [isAuthenticated, isAdmin, navigate, location.state?.from, loginType]);
+  }, [isAuthenticated, isAdmin, navigate, loading]);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -68,27 +57,21 @@ const Login = () => {
     },
   });
   
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsLoggingIn(true);
     try {
-      await login(values.email, values.password);
+      const result = await login(values.email, values.password);
       
-      // লগইন সফল হলে বার্তা প্রদর্শন
       toast({
         title: "লগইন সফল",
         description: "আপনি সফলভাবে লগইন করেছেন",
       });
       
-      // লগইন প্রকার অনুসারে রিডাইরেক্ট
-      if (loginType === "admin") {
-        if (values.email === "admin@example.com") {
-          navigate("/admin-dashboard");
-        } else {
-          toast({
-            title: "অ্যাডমিন লগইন ব্যর্থ",
-            description: "আপনার অ্যাডমিন অ্যাকসেস নেই",
-            variant: "destructive",
-          });
-        }
+      // Check admin role from database result
+      if (result.isAdmin) {
+        navigate("/admin-dashboard");
       } else if (loginType === "seller") {
         navigate("/seller-dashboard");
       } else {
@@ -102,6 +85,8 @@ const Login = () => {
         description: "আপনার ইমেইল বা পাসওয়ার্ড ভুল",
         variant: "destructive",
       });
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
