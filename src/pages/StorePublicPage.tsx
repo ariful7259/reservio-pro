@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
@@ -24,6 +24,8 @@ import {
   Package
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import ProductDetailModal from '@/components/store/ProductDetailModal';
+import ProductFilters from '@/components/store/ProductFilters';
 
 interface StoreData {
   id: string;
@@ -72,6 +74,42 @@ const StorePublicPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [productsLoading, setProductsLoading] = useState(false);
   const [notFound, setNotFound] = useState(false);
+  
+  // Product detail modal state
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Search and filter state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  
+  // Extract unique categories from products
+  const categories = useMemo(() => {
+    const cats = products
+      .map(p => p.category)
+      .filter((cat): cat is string => !!cat);
+    return [...new Set(cats)];
+  }, [products]);
+  
+  // Filter products based on search and category
+  const filteredProducts = useMemo(() => {
+    return products.filter(product => {
+      const matchesSearch = !searchQuery || 
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.description?.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesCategory = !selectedCategory || 
+        selectedCategory === 'all' || 
+        product.category === selectedCategory;
+      
+      return matchesSearch && matchesCategory;
+    });
+  }, [products, searchQuery, selectedCategory]);
+  
+  const handleProductClick = (product: Product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
 
   useEffect(() => {
     const fetchStore = async () => {
@@ -379,12 +417,22 @@ const StorePublicPage = () => {
                 <Badge variant="secondary">{products.length}</Badge>
               )}
             </h2>
-            {products.length > 6 && (
-              <Button variant="ghost" size="sm">
-                সব দেখুন
-              </Button>
-            )}
           </div>
+
+          {/* Search and Filter */}
+          {products.length > 0 && (
+            <div className="mb-4">
+              <ProductFilters
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                selectedCategory={selectedCategory}
+                onCategoryChange={setSelectedCategory}
+                categories={categories}
+                totalProducts={products.length}
+                filteredCount={filteredProducts.length}
+              />
+            </div>
+          )}
 
           {productsLoading ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -398,10 +446,14 @@ const StorePublicPage = () => {
                 </Card>
               ))}
             </div>
-          ) : products.length > 0 ? (
+          ) : filteredProducts.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {products.slice(0, 6).map((product) => (
-                <Card key={product.id} className="overflow-hidden group cursor-pointer hover:shadow-md transition-shadow">
+              {filteredProducts.map((product) => (
+                <Card 
+                  key={product.id} 
+                  className="overflow-hidden group cursor-pointer hover:shadow-md transition-shadow"
+                  onClick={() => handleProductClick(product)}
+                >
                   <div className="aspect-square bg-muted relative overflow-hidden">
                     {product.images && product.images.length > 0 ? (
                       <img 
@@ -450,6 +502,16 @@ const StorePublicPage = () => {
                 </Card>
               ))}
             </div>
+          ) : products.length > 0 ? (
+            <Card>
+              <CardContent className="p-8 text-center">
+                <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="font-semibold mb-2">কোনো প্রোডাক্ট পাওয়া যায়নি</h3>
+                <p className="text-sm text-muted-foreground">
+                  অন্য কিওয়ার্ড বা ক্যাটাগরি দিয়ে খুঁজুন
+                </p>
+              </CardContent>
+            </Card>
           ) : (
             <Card>
               <CardContent className="p-8 text-center">
@@ -462,6 +524,16 @@ const StorePublicPage = () => {
             </Card>
           )}
         </div>
+
+        {/* Product Detail Modal */}
+        <ProductDetailModal
+          product={selectedProduct}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          storeName={store?.business_name || undefined}
+          storePhone={store?.phone || undefined}
+          whatsappEnabled={settings?.whatsappOrderEnabled}
+        />
 
         {/* Return Policy */}
         {settings?.returnPolicy && (

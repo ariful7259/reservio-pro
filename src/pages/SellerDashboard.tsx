@@ -52,6 +52,7 @@ import IntegratedBookingCalendar from '@/components/dashboard/IntegratedBookingC
 import MarketingToolsSystem from '@/components/dashboard/MarketingToolsSystem';
 import CustomerRelationshipManagement from '@/components/dashboard/CustomerRelationshipManagement';
 import CreateStoreBuilder from '@/components/store/CreateStoreBuilder';
+import ProductManager from '@/components/seller/ProductManager';
 
 const SellerDashboard = () => {
   const navigate = useNavigate();
@@ -424,9 +425,9 @@ const SellerDashboard = () => {
             <CustomersTab businessType={activeBusinessType} />
           </TabsContent>
           
-          {/* Products tab - Enhanced */}
+          {/* Products tab - Enhanced with real product manager */}
           <TabsContent value="products" className="space-y-6">
-            <ProductsTab businessType={activeBusinessType} />
+            <ProductManager />
           </TabsContent>
         </Tabs>
       ) : (
