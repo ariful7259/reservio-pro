@@ -31,6 +31,7 @@ interface StoreData {
   bio: string | null;
   address: string | null;
   logo_url: string | null;
+  phone: string | null;
   marketplace_settings: {
     storeSlug?: string;
     storeCategory?: string;
@@ -52,12 +53,24 @@ interface StoreData {
   } | null;
 }
 
+interface Product {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number;
+  images: string[] | null;
+  category: string | null;
+  stock: number | null;
+}
+
 const StorePublicPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [store, setStore] = useState<StoreData | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [productsLoading, setProductsLoading] = useState(false);
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
@@ -72,7 +85,7 @@ const StorePublicPage = () => {
         // Query seller_profiles where marketplace_settings contains the slug
         const { data, error } = await supabase
           .from('seller_profiles')
-          .select('id, business_name, bio, address, logo_url, marketplace_settings')
+          .select('id, business_name, bio, address, logo_url, phone, marketplace_settings')
           .not('marketplace_settings', 'is', null);
 
         if (error) throw error;
@@ -104,6 +117,31 @@ const StorePublicPage = () => {
     fetchStore();
   }, [slug, toast]);
 
+  // Fetch products when store is loaded
+  useEffect(() => {
+    const fetchProducts = async () => {
+      if (!store?.id) return;
+
+      setProductsLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('id, name, description, price, images, category, stock')
+          .eq('created_by', store.id)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        setProducts(data || []);
+      } catch (error: any) {
+        console.error('Products fetch error:', error);
+      } finally {
+        setProductsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [store?.id]);
+
   const handleShare = async () => {
     const url = window.location.href;
     if (navigator.share) {
@@ -122,10 +160,20 @@ const StorePublicPage = () => {
     }
   };
 
-  const handleWhatsAppOrder = () => {
-    const phone = '8801XXXXXXXXX'; // This would come from store settings
-    const message = encodeURIComponent(`হ্যালো! আমি ${store?.business_name} থেকে অর্ডার করতে চাই।`);
+  const handleWhatsAppOrder = (productName?: string) => {
+    const phone = store?.phone?.replace(/[^0-9]/g, '') || '8801XXXXXXXXX';
+    const message = productName 
+      ? encodeURIComponent(`হ্যালো! আমি ${store?.business_name} থেকে "${productName}" অর্ডার করতে চাই।`)
+      : encodeURIComponent(`হ্যালো! আমি ${store?.business_name} থেকে অর্ডার করতে চাই।`);
     window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+  };
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('bn-BD', {
+      style: 'currency',
+      currency: 'BDT',
+      minimumFractionDigits: 0
+    }).format(price);
   };
 
   if (isLoading) {
@@ -231,7 +279,7 @@ const StorePublicPage = () => {
           {settings?.whatsappOrderEnabled && (
             <Button 
               className="bg-green-600 hover:bg-green-700 text-white"
-              onClick={handleWhatsAppOrder}
+              onClick={() => handleWhatsAppOrder()}
             >
               <MessageCircle className="h-4 w-4 mr-2" />
               WhatsApp অর্ডার
@@ -327,22 +375,92 @@ const StorePublicPage = () => {
             <h2 className="text-xl font-bold flex items-center gap-2">
               <ShoppingBag className="h-5 w-5" />
               প্রোডাক্টসমূহ
+              {products.length > 0 && (
+                <Badge variant="secondary">{products.length}</Badge>
+              )}
             </h2>
-            <Button variant="ghost" size="sm">
-              সব দেখুন
-            </Button>
+            {products.length > 6 && (
+              <Button variant="ghost" size="sm">
+                সব দেখুন
+              </Button>
+            )}
           </div>
 
-          {/* Empty Products State */}
-          <Card>
-            <CardContent className="p-8 text-center">
-              <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="font-semibold mb-2">এখনো কোনো প্রোডাক্ট নেই</h3>
-              <p className="text-sm text-muted-foreground">
-                এই স্টোরে শীঘ্রই প্রোডাক্ট যোগ করা হবে।
-              </p>
-            </CardContent>
-          </Card>
+          {productsLoading ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Card key={i}>
+                  <Skeleton className="aspect-square w-full" />
+                  <CardContent className="p-3">
+                    <Skeleton className="h-4 w-3/4 mb-2" />
+                    <Skeleton className="h-5 w-1/2" />
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : products.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {products.slice(0, 6).map((product) => (
+                <Card key={product.id} className="overflow-hidden group cursor-pointer hover:shadow-md transition-shadow">
+                  <div className="aspect-square bg-muted relative overflow-hidden">
+                    {product.images && product.images.length > 0 ? (
+                      <img 
+                        src={product.images[0]} 
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Package className="h-10 w-10 text-muted-foreground" />
+                      </div>
+                    )}
+                    {product.stock !== null && product.stock <= 0 && (
+                      <Badge variant="destructive" className="absolute top-2 right-2">
+                        স্টক শেষ
+                      </Badge>
+                    )}
+                    {product.stock !== null && product.stock > 0 && product.stock <= 5 && (
+                      <Badge variant="secondary" className="absolute top-2 right-2 bg-orange-100 text-orange-700">
+                        স্টক কম
+                      </Badge>
+                    )}
+                  </div>
+                  <CardContent className="p-3">
+                    <h3 className="font-medium text-sm line-clamp-2 mb-1">{product.name}</h3>
+                    {product.category && (
+                      <p className="text-xs text-muted-foreground mb-1">{product.category}</p>
+                    )}
+                    <div className="flex items-center justify-between mt-2">
+                      <p className="font-bold text-primary">{formatPrice(product.price)}</p>
+                      {settings?.whatsappOrderEnabled && (
+                        <Button 
+                          size="icon" 
+                          variant="ghost" 
+                          className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleWhatsAppOrder(product.name);
+                          }}
+                        >
+                          <MessageCircle className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <Card>
+              <CardContent className="p-8 text-center">
+                <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="font-semibold mb-2">এখনো কোনো প্রোডাক্ট নেই</h3>
+                <p className="text-sm text-muted-foreground">
+                  এই স্টোরে শীঘ্রই প্রোডাক্ট যোগ করা হবে।
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         {/* Return Policy */}
@@ -368,7 +486,7 @@ const StorePublicPage = () => {
               variant="outline" 
               size="lg"
               className="border-green-600 text-green-600 hover:bg-green-50"
-              onClick={handleWhatsAppOrder}
+              onClick={() => handleWhatsAppOrder()}
             >
               <MessageCircle className="h-5 w-5" />
             </Button>
