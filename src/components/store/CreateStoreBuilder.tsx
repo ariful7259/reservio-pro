@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,10 +9,13 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { useSellerProfile } from '@/hooks/useSellerProfile';
 import { 
   Store, Palette, CreditCard, Truck, Globe, Eye, QrCode,
   Facebook, Instagram, Clock, FileText, Power, MessageCircle,
-  Upload, Package, Plus, X, Copy, ExternalLink, Check
+  Upload, Package, Plus, X, Copy, ExternalLink, Check, Loader2
 } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import StoreDesignEditor from './StoreDesignEditor';
@@ -63,6 +66,8 @@ const defaultBusinessHours = {
 
 const CreateStoreBuilder: React.FC = () => {
   const { toast } = useToast();
+  const { user } = useAuth();
+  const { profile } = useSellerProfile();
   const [activeTab, setActiveTab] = useState('basic');
   const [storeData, setStoreData] = useState<StoreData>({
     storeName: '',
@@ -82,6 +87,28 @@ const CreateStoreBuilder: React.FC = () => {
   });
   const [isCreating, setIsCreating] = useState(false);
   const [copiedUrl, setCopiedUrl] = useState(false);
+
+  // Load existing profile data
+  useEffect(() => {
+    if (profile) {
+      const settings = profile.marketplace_settings as any || {};
+      setStoreData(prev => ({
+        ...prev,
+        storeName: profile.business_name || '',
+        storeSlug: generateSlug(profile.business_name || ''),
+        ownerEmail: profile.email || '',
+        ownerPhone: profile.phone || '',
+        address: profile.address || '',
+        storeDescription: profile.bio || '',
+        socialLinks: settings.socialLinks || prev.socialLinks,
+        businessHours: settings.businessHours || prev.businessHours,
+        returnPolicy: settings.returnPolicy || '',
+        isOpen: settings.isOpen ?? true,
+        whatsappOrderEnabled: settings.whatsappOrderEnabled ?? true,
+        customDomain: settings.customDomain || '',
+      }));
+    }
+  }, [profile]);
 
   const generateSlug = (name: string) => {
     return name
@@ -146,20 +173,59 @@ const CreateStoreBuilder: React.FC = () => {
       return;
     }
 
+    if (!user?.id) {
+      toast({
+        title: "লগইন প্রয়োজন",
+        description: "অনুগ্রহ করে লগইন করুন।",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsCreating(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Prepare store settings JSON
+      const storeSettings = {
+        storeSlug: storeData.storeSlug,
+        socialLinks: storeData.socialLinks,
+        businessHours: storeData.businessHours,
+        returnPolicy: storeData.returnPolicy,
+        isOpen: storeData.isOpen,
+        whatsappOrderEnabled: storeData.whatsappOrderEnabled,
+        customDomain: storeData.customDomain,
+        storeCategory: storeData.storeCategory,
+      };
+
+      // Update seller_profiles with store data
+      const { error } = await supabase
+        .from('seller_profiles')
+        .update({
+          business_name: storeData.storeName,
+          phone: storeData.ownerPhone,
+          email: storeData.ownerEmail,
+          address: storeData.address,
+          bio: storeData.storeDescription,
+          marketplace_settings: storeSettings,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
       toast({
-        title: "স্টোর তৈরি সফল! 🎉",
-        description: `${storeData.storeName} সফলভাবে তৈরি হয়েছে।`,
+        title: "স্টোর সেভ হয়েছে! 🎉",
+        description: `${storeData.storeName} সফলভাবে সেভ হয়েছে।`,
       });
+
+      // Reload the page to refresh profile data
       setTimeout(() => {
-        window.location.href = '/seller-dashboard/marketplace';
+        window.location.reload();
       }, 1500);
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Store save error:', error);
       toast({
         title: "ত্রুটি",
-        description: "আবার চেষ্টা করুন।",
+        description: error.message || "আবার চেষ্টা করুন।",
         variant: "destructive"
       });
     } finally {
@@ -566,11 +632,11 @@ const CreateStoreBuilder: React.FC = () => {
               >
                 {isCreating ? (
                   <>
-                    <span className="animate-spin mr-2">⏳</span> তৈরি হচ্ছে...
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" /> সেভ হচ্ছে...
                   </>
                 ) : (
                   <>
-                    <Store className="h-4 w-4 mr-2" /> স্টোর তৈরি করুন
+                    <Store className="h-4 w-4 mr-2" /> স্টোর সেভ করুন
                   </>
                 )}
               </Button>
