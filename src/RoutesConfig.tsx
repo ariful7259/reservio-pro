@@ -64,6 +64,7 @@ import RentDetail from './pages/RentDetail';
 import RentalBooking from './pages/RentalBooking';
 import ServiceBooking from './pages/ServiceBooking';
 import CreatorDashboard from './pages/CreatorDashboard';
+import StorePublicPage from './pages/StorePublicPage';
 
 const RoutesConfig = () => {
   return (
@@ -151,6 +152,7 @@ const RoutesConfig = () => {
       <Route path="/create-store" element={<CreateStore />} />
       <Route path="/create-store/new" element={<CreateStoreNew />} />
       <Route path="/store-demo" element={<StoreDemo />} />
+      <Route path="/store/:slug" element={<StorePublicPage />} />
       <Route path="/create-linkinbio" element={<CreateLinkInBio />} />
       <Route path="/multi-channel" element={<OnlineStoreFeatures />} />
       

@@ -75,6 +75,7 @@ import UserExperienceTracking from '@/components/admin/UserExperienceTracking';
 import MonetizationTracking from '@/components/admin/MonetizationTracking';
 import ReferralManagement from '@/components/admin/ReferralManagement';
 import QRCodeManagement from '@/components/admin/QRCodeManagement';
+import { usePendingApplicationsCount } from '@/hooks/usePendingApplicationsCount';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { AdminConfigProvider } from '@/context/AdminConfigContext';
 
@@ -82,6 +83,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const { section } = useParams();
   const { toast } = useToast();
+  const { count: pendingApplicationsCount } = usePendingApplicationsCount();
   const [activeModule, setActiveModule] = useState(section || 'dashboard');
   const [showNotifications, setShowNotifications] = useState(false);
   
@@ -208,14 +210,19 @@ const AdminDashboard = () => {
                           tooltip={item.name}
                           isActive={activeModule === item.id}
                           onClick={() => handleModuleChange(item.id)}
-                          className={`${activeModule === item.id ? '' : 'text-gray-600'}`}
+                          className={`${activeModule === item.id ? '' : 'text-gray-600'} relative`}
                           style={activeModule === item.id ? {
                             backgroundImage: adminTheme.gradients.primary,
                             boxShadow: adminTheme.shadows.sm
                           } : {}}
                         >
                           {item.icon}
-                          <span className="ml-2">{item.name}</span>
+                          <span className="ml-2 flex-1">{item.name}</span>
+                          {item.id === 'seller-applications' && pendingApplicationsCount > 0 && (
+                            <span className="absolute right-2 top-1/2 -translate-y-1/2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                              {pendingApplicationsCount > 99 ? '99+' : pendingApplicationsCount}
+                            </span>
+                          )}
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                     ))}
