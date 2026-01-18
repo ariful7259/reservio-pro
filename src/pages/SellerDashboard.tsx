@@ -21,7 +21,11 @@ import {
   LayoutDashboard,
   ChevronRight,
   PieChart,
-  LineChart
+  LineChart,
+  Store,
+  Loader2,
+  Rocket,
+  CheckCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -30,6 +34,7 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useSellerProfile } from '@/hooks/useSellerProfile';
 import { Separator } from '@/components/ui/separator';
 import DashboardOverview from '@/components/dashboard/DashboardOverview';
 import BusinessTypeSelector from "@/components/dashboard/business-type-selector/BusinessTypeSelector";
@@ -46,19 +51,25 @@ import OrderBookingManagement from '@/components/dashboard/OrderBookingManagemen
 import IntegratedBookingCalendar from '@/components/dashboard/IntegratedBookingCalendar';
 import MarketingToolsSystem from '@/components/dashboard/MarketingToolsSystem';
 import CustomerRelationshipManagement from '@/components/dashboard/CustomerRelationshipManagement';
+import CreateStoreBuilder from '@/components/store/CreateStoreBuilder';
 
 const SellerDashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { profile, isLoading: profileLoading, isSeller } = useSellerProfile();
   const [dateRange, setDateRange] = useState('this-month');
   const [activeBusinessType, setActiveBusinessType] = useState<string | null>(null);
   const [activeModule, setActiveModule] = useState<string | null>(null);
+  const [showStoreBuilder, setShowStoreBuilder] = useState(false);
   const [alertsCount, setAlertsCount] = useState({ 
     lowStock: 5, 
     pendingOrders: 12, 
     maintenanceRequests: 3, 
     newMessages: 7 
   });
+
+  // Check if store exists (has business_name in profile)
+  const hasStore = profile?.business_name && profile.business_name.trim() !== '';
   
   // Handle business type change
   const handleBusinessTypeChange = (type: string | null) => {
@@ -119,6 +130,82 @@ const SellerDashboard = () => {
     alert('রিপোর্ট ডাউনলোড প্রসেসিং শুরু হয়েছে');
   };
 
+  // Loading state
+  if (profileLoading) {
+    return (
+      <div className="container pt-20 pb-16 flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
+          <p className="text-muted-foreground">ড্যাশবোর্ড লোড হচ্ছে...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If showing store builder
+  if (showStoreBuilder || !hasStore) {
+    return (
+      <div className="container pt-20 pb-16">
+        {/* Welcome Header for new sellers */}
+        {!hasStore && !showStoreBuilder && (
+          <div className="mb-8">
+            <Card className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border-primary/20">
+              <CardContent className="p-8">
+                <div className="flex flex-col md:flex-row items-center gap-6">
+                  <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center">
+                    <Rocket className="h-10 w-10 text-primary" />
+                  </div>
+                  <div className="flex-1 text-center md:text-left">
+                    <h1 className="text-2xl font-bold mb-2">অভিনন্দন! 🎉 আপনি এখন একজন অনুমোদিত বিক্রেতা</h1>
+                    <p className="text-muted-foreground mb-4">
+                      এখন আপনার অনলাইন স্টোর তৈরি করুন এবং বিক্রি শুরু করুন। স্টোর তৈরি করতে মাত্র কয়েক মিনিট সময় লাগবে।
+                    </p>
+                    <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+                      <div className="flex items-center gap-2 text-sm">
+                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        <span>আবেদন অনুমোদিত</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <Store className="h-4 w-4 text-primary" />
+                        <span>স্টোর তৈরি করুন</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <ShoppingBag className="h-4 w-4" />
+                        <span>বিক্রি শুরু করুন</span>
+                      </div>
+                    </div>
+                  </div>
+                  <Button size="lg" onClick={() => setShowStoreBuilder(true)} className="shrink-0">
+                    <Store className="h-5 w-5 mr-2" />
+                    স্টোর তৈরি করুন
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Store Builder */}
+        {(showStoreBuilder || !hasStore) && (
+          <div>
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h1 className="text-2xl font-bold">আপনার স্টোর তৈরি করুন</h1>
+                <p className="text-muted-foreground">সব তথ্য পূরণ করে আপনার অনলাইন স্টোর লঞ্চ করুন</p>
+              </div>
+              {hasStore && (
+                <Button variant="outline" onClick={() => setShowStoreBuilder(false)}>
+                  ড্যাশবোর্ডে ফিরুন
+                </Button>
+              )}
+            </div>
+            <CreateStoreBuilder />
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="container pt-20 pb-16">
       {/* Header section */}
@@ -133,6 +220,13 @@ const SellerDashboard = () => {
         </div>
         
         <div className="flex gap-2 flex-wrap">
+          <Button 
+            variant="outline"
+            onClick={() => setShowStoreBuilder(true)}
+          >
+            <Store className="h-4 w-4 mr-2" />
+            স্টোর সেটিংস
+          </Button>
           <Button 
             variant="outline"
             onClick={() => navigate('/create-digital-product')}
