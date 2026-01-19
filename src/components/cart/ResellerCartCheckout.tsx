@@ -23,6 +23,7 @@ import {
 import DeliveryAddressForm, { DeliveryAddress } from './DeliveryAddressForm';
 import ShippingMethodSelector, { getShippingMethodById } from './ShippingMethodSelector';
 import MarginCalculator from './MarginCalculator';
+import CheckoutProgressIndicator from './CheckoutProgressIndicator';
 
 const paymentMethods = [
   { id: 'bkash', name: 'বিকাশ', icon: <Wallet className="h-4 w-4" /> },
@@ -338,10 +339,22 @@ const ResellerCartCheckout: React.FC = () => {
     );
   }
 
+  // Calculate current step based on filled data
+  const getCurrentStep = (): number => {
+    if (!cart.length) return 0;
+    if (!isAddressValid()) return 1;
+    if (!selectedShippingMethod) return 2;
+    if (!selectedPaymentMethod) return 3;
+    return 4;
+  };
+
   const shippingMethod = getShippingMethodById(selectedShippingMethod, deliveryAddress.city);
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
+      {/* Progress Indicator */}
+      <CheckoutProgressIndicator currentStep={getCurrentStep()} />
+
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">চেকআউট</h1>
         {isReseller && (
