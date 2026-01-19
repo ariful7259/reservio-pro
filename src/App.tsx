@@ -10,6 +10,13 @@ import { AppProvider } from "./context/AppContext";
 import { AuthProvider } from "./hooks/useAuth";
 import { FloatingMessenger } from "@/components/FloatingMessenger";
 import Navbar from "@/components/Navbar";
+import { useOrderNotifications } from "./hooks/useOrderNotifications";
+
+// Component to handle order notifications
+const OrderNotificationHandler = () => {
+  useOrderNotifications();
+  return null;
+};
 
 const queryClient = new QueryClient();
 
@@ -22,6 +29,7 @@ const App = () => (
         <BrowserRouter>
           <AuthProvider>
             <AppProvider>
+              <OrderNotificationHandler />
               <div className="min-h-screen bg-background font-sans antialiased overflow-x-hidden">
                 {/* Mobile optimized viewport */}
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
