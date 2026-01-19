@@ -23,10 +23,14 @@ import {
   Download,
   AlertTriangle,
   Package,
-  History
+  History,
+  BarChart3,
+  Users
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { bn } from 'date-fns/locale';
+import SalesAnalyticsChart from '@/components/reseller/SalesAnalyticsChart';
+import ReferralSection from '@/components/reseller/ReferralSection';
 
 interface BalanceHistory {
   id: string;
@@ -69,6 +73,7 @@ const ResellerDashboard: React.FC = () => {
   const [balanceHistory, setBalanceHistory] = useState<BalanceHistory[]>([]);
   const [withdrawalRequests, setWithdrawalRequests] = useState<WithdrawalRequest[]>([]);
   const [resellerOrders, setResellerOrders] = useState<ResellerOrder[]>([]);
+  const [referralCode, setReferralCode] = useState<string | null>(null);
   
   // Withdrawal form state
   const [showWithdrawDialog, setShowWithdrawDialog] = useState(false);
@@ -93,7 +98,7 @@ const ResellerDashboard: React.FC = () => {
       // Fetch profile
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
-        .select('is_reseller, reseller_balance')
+        .select('is_reseller, reseller_balance, referral_code')
         .eq('id', user.id)
         .single();
       
@@ -106,6 +111,7 @@ const ResellerDashboard: React.FC = () => {
       
       setIsReseller(true);
       setBalance(profileData.reseller_balance || 0);
+      setReferralCode(profileData.referral_code || null);
 
       // Fetch balance history
       const { data: historyData } = await supabase
@@ -416,21 +422,42 @@ const ResellerDashboard: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="history">
-        <TabsList>
+      <Tabs defaultValue="analytics">
+        <TabsList className="flex-wrap h-auto">
+          <TabsTrigger value="analytics">
+            <BarChart3 className="mr-1 h-4 w-4" />
+            অ্যানালিটিক্স
+          </TabsTrigger>
+          <TabsTrigger value="referrals">
+            <Users className="mr-1 h-4 w-4" />
+            রেফারেল
+          </TabsTrigger>
           <TabsTrigger value="history">
             <History className="mr-1 h-4 w-4" />
-            ব্যালেন্স হিস্ট্রি
+            হিস্ট্রি
           </TabsTrigger>
           <TabsTrigger value="withdrawals">
             <Download className="mr-1 h-4 w-4" />
-            উইথড্রয়াল রিকোয়েস্ট
+            উইথড্রয়াল
           </TabsTrigger>
           <TabsTrigger value="orders">
             <Package className="mr-1 h-4 w-4" />
-            রিসেল অর্ডার
+            অর্ডার
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="analytics" className="mt-4">
+          <SalesAnalyticsChart 
+            balanceHistory={balanceHistory} 
+            resellerOrders={resellerOrders} 
+          />
+        </TabsContent>
+
+        <TabsContent value="referrals" className="mt-4">
+          {user?.id && (
+            <ReferralSection userId={user.id} referralCode={referralCode} />
+          )}
+        </TabsContent>
 
         <TabsContent value="history" className="mt-4">
           <Card>

@@ -20,3 +20,6 @@ enabled = true
 
 [functions.rupantorpay-payment]
 verify_jwt = false
+
+[functions.auto-balance-update]
+verify_jwt = false

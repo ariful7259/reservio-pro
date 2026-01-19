@@ -316,6 +316,8 @@ export type Database = {
           id: string
           is_reseller: boolean | null
           phone: string | null
+          referral_code: string | null
+          referred_by: string | null
           reseller_balance: number | null
           updated_at: string | null
         }
@@ -327,6 +329,8 @@ export type Database = {
           id: string
           is_reseller?: boolean | null
           phone?: string | null
+          referral_code?: string | null
+          referred_by?: string | null
           reseller_balance?: number | null
           updated_at?: string | null
         }
@@ -338,6 +342,8 @@ export type Database = {
           id?: string
           is_reseller?: boolean | null
           phone?: string | null
+          referral_code?: string | null
+          referred_by?: string | null
           reseller_balance?: number | null
           updated_at?: string | null
         }
@@ -468,6 +474,36 @@ export type Database = {
           total_amount?: number
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      reseller_referrals: {
+        Row: {
+          bonus_amount: number | null
+          bonus_paid: boolean | null
+          created_at: string
+          id: string
+          paid_at: string | null
+          referred_id: string
+          referrer_id: string
+        }
+        Insert: {
+          bonus_amount?: number | null
+          bonus_paid?: boolean | null
+          created_at?: string
+          id?: string
+          paid_at?: string | null
+          referred_id: string
+          referrer_id: string
+        }
+        Update: {
+          bonus_amount?: number | null
+          bonus_paid?: boolean | null
+          created_at?: string
+          id?: string
+          paid_at?: string | null
+          referred_id?: string
+          referrer_id?: string
         }
         Relationships: []
       }
@@ -962,6 +998,14 @@ export type Database = {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
+        }
+        Returns: boolean
+      }
+      process_referral_bonus: {
+        Args: {
+          p_bonus_amount?: number
+          p_referred_id: string
+          p_referrer_id: string
         }
         Returns: boolean
       }

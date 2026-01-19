@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,17 +17,21 @@ import {
   ShieldCheck,
   Gift,
   Target,
-  Loader2
+  Loader2,
+  UserPlus
 } from 'lucide-react';
 
 const ResellerRegistration: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const { user, isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(false);
   const [isReseller, setIsReseller] = useState(false);
   const [checkingStatus, setCheckingStatus] = useState(true);
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [referralCode, setReferralCode] = useState(searchParams.get('ref') || '');
+  const [referrerName, setReferrerName] = useState<string | null>(null);
   const [settings, setSettings] = useState({
     min_margin: 0,
     max_margin: 100,
@@ -42,7 +46,29 @@ const ResellerRegistration: React.FC = () => {
     }
     checkResellerStatus();
     fetchSettings();
+    if (referralCode) {
+      validateReferralCode();
+    }
   }, [isAuthenticated, user]);
+
+  const validateReferralCode = async () => {
+    if (!referralCode) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('full_name, id')
+        .eq('referral_code', referralCode.toUpperCase())
+        .eq('is_reseller', true)
+        .single();
+      
+      if (!error && data) {
+        setReferrerName(data.full_name);
+      }
+    } catch (error) {
+      console.error('Error validating referral code:', error);
+    }
+  };
 
   const checkResellerStatus = async () => {
     if (!user?.id) return;
@@ -98,15 +124,39 @@ const ResellerRegistration: React.FC = () => {
 
     setLoading(true);
     try {
+      // First, get referrer id if referral code provided
+      let referrerId: string | null = null;
+      if (referralCode) {
+        const { data: referrerData } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('referral_code', referralCode.toUpperCase())
+          .eq('is_reseller', true)
+          .single();
+        
+        referrerId = referrerData?.id || null;
+      }
+
+      // Update profile
       const { error } = await supabase
         .from('profiles')
         .update({ 
           is_reseller: true,
-          reseller_balance: 0
+          reseller_balance: 0,
+          referred_by: referrerId
         })
         .eq('id', user.id);
       
       if (error) throw error;
+
+      // Process referral bonus if valid referrer
+      if (referrerId) {
+        await supabase.rpc('process_referral_bonus', {
+          p_referrer_id: referrerId,
+          p_referred_id: user.id,
+          p_bonus_amount: 100
+        });
+      }
 
       toast({
         title: "সফলভাবে যোগ দিয়েছেন!",
@@ -241,6 +291,27 @@ const ResellerRegistration: React.FC = () => {
               <li>উইথড্রয়াল রিকোয়েস্ট অ্যাডমিন অনুমোদন সাপেক্ষে প্রসেস হবে</li>
               <li>প্রতারণামূলক কার্যকলাপে অ্যাকাউন্ট সাসপেন্ড করা হবে</li>
             </ul>
+          </div>
+
+          {/* Referral Code Input */}
+          <div className="space-y-2">
+            <Label htmlFor="referral-code" className="flex items-center gap-2">
+              <UserPlus className="h-4 w-4" />
+              রেফারেল কোড (ঐচ্ছিক)
+            </Label>
+            <Input
+              id="referral-code"
+              placeholder="রেফারেল কোড থাকলে লিখুন"
+              value={referralCode}
+              onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+              className="uppercase"
+            />
+            {referrerName && (
+              <p className="text-sm text-green-600 flex items-center gap-1">
+                <CheckCircle className="h-3 w-3" />
+                রেফার করেছেন: {referrerName}
+              </p>
+            )}
           </div>
 
           {/* Accept Terms Checkbox */}
