@@ -208,21 +208,21 @@ const ResellerCartCheckout: React.FC = () => {
         // Create reseller order
         const { data: insertedOrder, error } = await supabase
           .from('reseller_orders')
-          .insert({
+          .insert([{
             user_id: user.id,
-            order_data: {
+            order_data: JSON.parse(JSON.stringify({
               items: orderData,
               deliveryAddress,
               shippingMethod: shippingMethod || { id: 'standard', name: 'স্ট্যান্ডার্ড ডেলিভারি', cost: 60 },
               subtotal: getCartTotal(),
               shippingCost: getShippingCost()
-            },
+            })),
             payment_method: selectedPaymentMethod,
             margin_amount: calculateTotalMargin(),
             total_amount: getCartTotal() + getShippingCost(),
             final_price: calculateFinalPrice(),
             status: 'pending'
-          })
+          }])
           .select()
           .single();
 
@@ -249,8 +249,9 @@ const ResellerCartCheckout: React.FC = () => {
       }
 
       // Send email notification
-      const userEmail = user.email || user.user_metadata?.email;
-      const userName = deliveryAddress.fullName || user.user_metadata?.full_name || 'গ্রাহক';
+      const { data: { session } } = await supabase.auth.getSession();
+      const userEmail = user?.email || session?.user?.user_metadata?.email;
+      const userName = deliveryAddress.fullName || session?.user?.user_metadata?.full_name || 'গ্রাহক';
       
       if (userEmail) {
         try {
