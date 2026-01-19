@@ -66,6 +66,9 @@ import ServiceBooking from './pages/ServiceBooking';
 import CreatorDashboard from './pages/CreatorDashboard';
 import StorePublicPage from './pages/StorePublicPage';
 import CartCheckoutPage from './pages/CartCheckoutPage';
+import ResellerRegistration from './pages/ResellerRegistration';
+import ResellerDashboard from './pages/ResellerDashboard';
+
 const RoutesConfig = () => {
   return (
     <Routes>
@@ -91,6 +94,10 @@ const RoutesConfig = () => {
       
       {/* Referral System Route */}
       <Route path="/referral" element={<ReferralSystem />} />
+      
+      {/* Reseller Routes */}
+      <Route path="/reseller-registration" element={<ResellerRegistration />} />
+      <Route path="/reseller-dashboard" element={<ResellerDashboard />} />
       
       {/* Create Post Route */}
       <Route path="/create-post" element={<CreatePost />} />
