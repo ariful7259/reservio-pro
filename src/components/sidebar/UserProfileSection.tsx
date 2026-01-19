@@ -92,6 +92,12 @@ export const UserProfileSection = () => {
               </Link>
             </DropdownMenuItem>
           )}
+          <DropdownMenuItem asChild>
+            <Link to="/reseller-registration" className="flex items-center gap-2 w-full">
+              <ShoppingBag className="h-4 w-4" /> 
+              <span>{language === 'bn' ? 'রিসেলার হন' : 'Become a Reseller'}</span>
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
 
           {/* আগে থেকে থাকা অপশনগুলো নিচে */}
