@@ -171,6 +171,7 @@ const RoutesConfig = () => {
       
       {/* Seller Dashboard */}
       <Route path="/seller-dashboard" element={<SellerDashboard />} />
+      <Route path="/seller-dashboard/:sellerType" element={<SellerDashboard />} />
       
       {/* Seller Dashboard Sections */}
       <Route path="/dashboard/*" element={<DashboardLayout />} />
