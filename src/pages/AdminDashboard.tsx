@@ -76,6 +76,7 @@ import MonetizationTracking from '@/components/admin/MonetizationTracking';
 import ReferralManagement from '@/components/admin/ReferralManagement';
 import QRCodeManagement from '@/components/admin/QRCodeManagement';
 import ResellerManagement from '@/components/admin/ResellerManagement';
+import OrdersManagement from '@/components/admin/OrdersManagement';
 import { usePendingApplicationsCount } from '@/hooks/usePendingApplicationsCount';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { AdminConfigProvider } from '@/context/AdminConfigContext';
@@ -125,6 +126,7 @@ const AdminDashboard = () => {
 
   const sidebarItems = [
     { id: 'dashboard', name: 'ড্যাশবোর্ড', icon: <BarChart3 size={18} /> },
+    { id: 'orders', name: 'অর্ডার ম্যানেজমেন্ট', icon: <Package size={18} /> },
     { id: 'seller-applications', name: 'সেলার আবেদন', icon: <UserCog size={18} />, badge: true },
     { id: 'users', name: 'ব্যবহারকারী', icon: <Users size={18} /> },
     { id: 'marketplace', name: 'মার্কেটপ্লেস', icon: <ShoppingBag size={18} /> },
@@ -554,10 +556,13 @@ const AdminDashboard = () => {
                 
                 {activeModule === 'reseller-management' && <ResellerManagement />}
                 
+                {activeModule === 'orders' && <OrdersManagement />}
+                
                 {!['dashboard', 'users', 'marketplace', 'rentals', 'services', 'digital', 'categories', 
                    'payments', 'reports', 'analytics', 'support', 'settings', 'advanced', 'monetization',
                    'service-card', 'offline-config', 'language-manager', 'calendar-config', 'theme-management',
-                   'user-experience', 'monetization-tracking', 'referrals', 'qrcodes', 'reseller-management', 'seller-applications'].includes(activeModule) && (
+                   'user-experience', 'monetization-tracking', 'referrals', 'qrcodes', 'reseller-management', 
+                   'seller-applications', 'orders'].includes(activeModule) && (
                   <div className="flex flex-col items-center justify-center py-12">
                     <div className="h-24 w-24 rounded-full flex items-center justify-center mb-4"
                       style={{ backgroundColor: adminTheme.colors.primaryLight }}>
