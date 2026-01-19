@@ -75,20 +75,8 @@ export const EnhancedCartDropdown: React.FC = () => {
       return;
     }
     
-    // পেমেন্ট গেটওয়েতে নিয়ে যান
-    toast({
-      title: "পেমেন্ট গেটওয়েতে নিয়ে যাওয়া হচ্ছে",
-      description: `মোট ৳${cartTotal.toLocaleString()} টাকার পেমেন্ট করুন`,
-    });
-    
-    // পেমেন্ট গেটওয়ে পেজে নিয়ে যান
-    navigate('/payment-gateway', { 
-      state: { 
-        amount: cartTotal,
-        items: cart,
-        totalItems: cartItemsCount
-      } 
-    });
+    // Navigate to cart checkout page with reseller support
+    navigate('/cart-checkout');
   };
 
   // Helper function to parse price strings correctly

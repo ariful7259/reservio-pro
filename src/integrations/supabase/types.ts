@@ -314,7 +314,9 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
+          is_reseller: boolean | null
           phone: string | null
+          reseller_balance: number | null
           updated_at: string | null
         }
         Insert: {
@@ -323,7 +325,9 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id: string
+          is_reseller?: boolean | null
           phone?: string | null
+          reseller_balance?: number | null
           updated_at?: string | null
         }
         Update: {
@@ -332,7 +336,9 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          is_reseller?: boolean | null
           phone?: string | null
+          reseller_balance?: number | null
           updated_at?: string | null
         }
         Relationships: []
@@ -372,6 +378,51 @@ export type Database = {
           paid_by?: string | null
           qr_code_data?: string
           status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reseller_orders: {
+        Row: {
+          balance_update_date: string | null
+          balance_updated: boolean | null
+          created_at: string
+          final_price: number
+          id: string
+          margin_amount: number
+          order_data: Json
+          payment_method: string
+          status: string
+          total_amount: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance_update_date?: string | null
+          balance_updated?: boolean | null
+          created_at?: string
+          final_price: number
+          id?: string
+          margin_amount?: number
+          order_data: Json
+          payment_method: string
+          status?: string
+          total_amount: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance_update_date?: string | null
+          balance_updated?: boolean | null
+          created_at?: string
+          final_price?: number
+          id?: string
+          margin_amount?: number
+          order_data?: Json
+          payment_method?: string
+          status?: string
+          total_amount?: number
+          updated_at?: string
           user_id?: string
         }
         Relationships: []

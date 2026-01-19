@@ -36,13 +36,7 @@ const CartComponent = () => {
   };
 
   const handleCheckout = () => {
-    toast({
-      title: "চেকআউট প্রক্রিয়া শুরু হয়েছে",
-      description: "আপনার অর্ডার প্রক্রিয়াধীন। পেমেন্ট পেজে রিডাইরেক্ট করা হচ্ছে...",
-    });
-    
-    // In a real app, you'd navigate to a checkout page
-    // navigate('/checkout');
+    navigate('/cart-checkout');
   };
   
   const handleClearCart = () => {
