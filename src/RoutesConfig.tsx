@@ -69,6 +69,7 @@ import CartCheckoutPage from './pages/CartCheckoutPage';
 import OrderConfirmationPage from './pages/OrderConfirmationPage';
 import ResellerRegistration from './pages/ResellerRegistration';
 import ResellerDashboard from './pages/ResellerDashboard';
+import TrackOrder from './pages/TrackOrder';
 
 const RoutesConfig = () => {
   return (
@@ -170,6 +171,7 @@ const RoutesConfig = () => {
       <Route path="/create-digital-product" element={<CreateDigitalProduct />} />
       <Route path="/cart-checkout" element={<CartCheckoutPage />} />
       <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
+      <Route path="/track-order" element={<TrackOrder />} />
       
       {/* Seller Dashboard */}
       <Route path="/seller-dashboard" element={<SellerDashboard />} />
