@@ -65,7 +65,7 @@ import RentalBooking from './pages/RentalBooking';
 import ServiceBooking from './pages/ServiceBooking';
 import CreatorDashboard from './pages/CreatorDashboard';
 import StorePublicPage from './pages/StorePublicPage';
-
+import CartCheckoutPage from './pages/CartCheckoutPage';
 const RoutesConfig = () => {
   return (
     <Routes>
@@ -160,6 +160,7 @@ const RoutesConfig = () => {
       <Route path="/digital-products" element={<DigitalProductsMarketplace />} />
       <Route path="/digital-products/:productId" element={<DigitalProductDetail />} />
       <Route path="/create-digital-product" element={<CreateDigitalProduct />} />
+      <Route path="/cart-checkout" element={<CartCheckoutPage />} />
       
       {/* Seller Dashboard */}
       <Route path="/seller-dashboard" element={<SellerDashboard />} />

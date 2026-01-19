@@ -11,6 +11,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import ImageUploader from './ImageUploader';
 import { 
   Plus, 
   Package, 
@@ -18,7 +20,9 @@ import {
   Trash2, 
   Loader2,
   ImagePlus,
-  X
+  X,
+  Upload,
+  Link as LinkIcon
 } from 'lucide-react';
 
 interface Product {
@@ -71,7 +75,7 @@ const ProductManager = () => {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [formData, setFormData] = useState<ProductFormData>(defaultFormData);
   const [imageUrl, setImageUrl] = useState('');
-
+  const [imageInputMode, setImageInputMode] = useState<'upload' | 'url'>('upload');
   // Fetch products
   const fetchProducts = async () => {
     if (!user?.id) return;
@@ -338,37 +342,58 @@ const ProductManager = () => {
               </div>
 
               <div className="space-y-2">
-                <Label>ছবি (URL)</Label>
-                <div className="flex gap-2">
-                  <Input
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
-                    placeholder="ছবির URL দিন"
-                  />
-                  <Button type="button" variant="outline" onClick={handleAddImage}>
-                    <ImagePlus className="h-4 w-4" />
-                  </Button>
-                </div>
-                {formData.images.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {formData.images.map((img, idx) => (
-                      <div key={idx} className="relative group">
-                        <img 
-                          src={img} 
-                          alt={`Image ${idx + 1}`}
-                          className="w-16 h-16 object-cover rounded border"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveImage(idx)}
-                          className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
+                <Label>ছবি</Label>
+                <Tabs value={imageInputMode} onValueChange={(v) => setImageInputMode(v as 'upload' | 'url')}>
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="upload" className="flex items-center gap-2">
+                      <Upload className="h-4 w-4" />
+                      আপলোড
+                    </TabsTrigger>
+                    <TabsTrigger value="url" className="flex items-center gap-2">
+                      <LinkIcon className="h-4 w-4" />
+                      URL
+                    </TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="upload" className="mt-3">
+                    <ImageUploader
+                      images={formData.images}
+                      onImagesChange={(images) => setFormData(prev => ({ ...prev, images }))}
+                      maxImages={5}
+                    />
+                  </TabsContent>
+                  <TabsContent value="url" className="mt-3 space-y-3">
+                    <div className="flex gap-2">
+                      <Input
+                        value={imageUrl}
+                        onChange={(e) => setImageUrl(e.target.value)}
+                        placeholder="ছবির URL দিন"
+                      />
+                      <Button type="button" variant="outline" onClick={handleAddImage}>
+                        <ImagePlus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    {formData.images.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {formData.images.map((img, idx) => (
+                          <div key={idx} className="relative group">
+                            <img 
+                              src={img} 
+                              alt={`Image ${idx + 1}`}
+                              className="w-16 h-16 object-cover rounded border"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveImage(idx)}
+                              className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                )}
+                    )}
+                  </TabsContent>
+                </Tabs>
               </div>
 
               <div className="flex gap-2 pt-4">

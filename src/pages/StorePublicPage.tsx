@@ -26,6 +26,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import ProductDetailModal from '@/components/store/ProductDetailModal';
 import ProductFilters from '@/components/store/ProductFilters';
+import ProductSorting, { SortOption } from '@/components/store/ProductSorting';
 
 interface StoreData {
   id: string;
@@ -79,9 +80,10 @@ const StorePublicPage = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  // Search and filter state
+  // Search, filter and sort state
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [sortBy, setSortBy] = useState<SortOption>('newest');
   
   // Extract unique categories from products
   const categories = useMemo(() => {
@@ -91,9 +93,9 @@ const StorePublicPage = () => {
     return [...new Set(cats)];
   }, [products]);
   
-  // Filter products based on search and category
+  // Filter and sort products
   const filteredProducts = useMemo(() => {
-    return products.filter(product => {
+    let result = products.filter(product => {
       const matchesSearch = !searchQuery || 
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.description?.toLowerCase().includes(searchQuery.toLowerCase());
@@ -104,7 +106,28 @@ const StorePublicPage = () => {
       
       return matchesSearch && matchesCategory;
     });
-  }, [products, searchQuery, selectedCategory]);
+    
+    // Apply sorting
+    switch (sortBy) {
+      case 'newest':
+        // Products are already ordered by created_at desc from the query
+        break;
+      case 'oldest':
+        result = [...result].reverse();
+        break;
+      case 'price-low':
+        result = [...result].sort((a, b) => a.price - b.price);
+        break;
+      case 'price-high':
+        result = [...result].sort((a, b) => b.price - a.price);
+        break;
+      case 'popular':
+        // For now, just keep original order (could be based on sales/views later)
+        break;
+    }
+    
+    return result;
+  }, [products, searchQuery, selectedCategory, sortBy]);
   
   const handleProductClick = (product: Product) => {
     setSelectedProduct(product);
@@ -419,9 +442,9 @@ const StorePublicPage = () => {
             </h2>
           </div>
 
-          {/* Search and Filter */}
+          {/* Search, Filter and Sort */}
           {products.length > 0 && (
-            <div className="mb-4">
+            <div className="mb-4 space-y-3">
               <ProductFilters
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
@@ -431,6 +454,12 @@ const StorePublicPage = () => {
                 totalProducts={products.length}
                 filteredCount={filteredProducts.length}
               />
+              <div className="flex justify-end">
+                <ProductSorting
+                  sortBy={sortBy}
+                  onSortChange={setSortBy}
+                />
+              </div>
             </div>
           )}
 
