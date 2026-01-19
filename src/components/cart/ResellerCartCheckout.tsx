@@ -6,18 +6,8 @@ import { useShoppingState } from '@/hooks/useShoppingState';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { 
   ShoppingCart, 
   Trash2, 
@@ -25,22 +15,14 @@ import {
   PlusSquare,
   Loader2,
   CheckCircle2,
-  Package,
   CreditCard,
   Wallet,
   Building2,
-  Percent
+  AlertCircle
 } from 'lucide-react';
-
-interface CartItemWithResell {
-  id: string;
-  title: string;
-  price: string;
-  quantity: number;
-  image?: string;
-  isResell?: boolean;
-  margin?: number;
-}
+import DeliveryAddressForm, { DeliveryAddress } from './DeliveryAddressForm';
+import ShippingMethodSelector, { getShippingMethodById } from './ShippingMethodSelector';
+import MarginCalculator from './MarginCalculator';
 
 const paymentMethods = [
   { id: 'bkash', name: 'বিকাশ', icon: <Wallet className="h-4 w-4" /> },
@@ -66,8 +48,17 @@ const ResellerCartCheckout: React.FC = () => {
   const [isReseller, setIsReseller] = useState(false);
   const [resellItems, setResellItems] = useState<Record<string, { isResell: boolean; margin: number }>>({});
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState('standard');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [orderComplete, setOrderComplete] = useState(false);
+  
+  const [deliveryAddress, setDeliveryAddress] = useState<DeliveryAddress>({
+    fullName: '',
+    phone: '',
+    address: '',
+    city: '',
+    area: '',
+    postalCode: ''
+  });
 
   // Check if user is a reseller
   useEffect(() => {
@@ -77,12 +68,22 @@ const ResellerCartCheckout: React.FC = () => {
       try {
         const { data, error } = await supabase
           .from('profiles')
-          .select('is_reseller')
+          .select('is_reseller, full_name, phone')
           .eq('id', user.id)
           .single();
 
-        if (!error && data?.is_reseller) {
-          setIsReseller(true);
+        if (!error && data) {
+          if (data.is_reseller) {
+            setIsReseller(true);
+          }
+          // Pre-fill delivery address with profile data
+          if (data.full_name || data.phone) {
+            setDeliveryAddress(prev => ({
+              ...prev,
+              fullName: data.full_name || prev.fullName,
+              phone: data.phone || prev.phone
+            }));
+          }
         }
       } catch (error) {
         console.error('Error checking reseller status:', error);
@@ -119,11 +120,10 @@ const ResellerCartCheckout: React.FC = () => {
     }));
   };
 
-  const handleMarginChange = (itemId: string, margin: string) => {
-    const marginValue = parseFloat(margin) || 0;
+  const handleMarginChange = (itemId: string, margin: number) => {
     setResellItems(prev => ({
       ...prev,
-      [itemId]: { ...prev[itemId], margin: marginValue }
+      [itemId]: { ...prev[itemId], isResell: true, margin: margin }
     }));
   };
 
@@ -137,12 +137,27 @@ const ResellerCartCheckout: React.FC = () => {
     }, 0);
   };
 
+  const getShippingCost = (): number => {
+    const method = getShippingMethodById(selectedShippingMethod, deliveryAddress.city);
+    return method?.cost || 60;
+  };
+
   const calculateFinalPrice = (): number => {
-    return getCartTotal() + calculateTotalMargin();
+    return getCartTotal() + calculateTotalMargin() + getShippingCost();
   };
 
   const hasResellItems = (): boolean => {
     return cart.some(item => resellItems[item.id]?.isResell);
+  };
+
+  const isAddressValid = (): boolean => {
+    return !!(
+      deliveryAddress.fullName &&
+      deliveryAddress.phone &&
+      deliveryAddress.address &&
+      deliveryAddress.city &&
+      deliveryAddress.area
+    );
   };
 
   const handleCheckout = async () => {
@@ -153,6 +168,15 @@ const ResellerCartCheckout: React.FC = () => {
         variant: "destructive"
       });
       navigate('/login');
+      return;
+    }
+
+    if (!isAddressValid()) {
+      toast({
+        title: "ঠিকানা দিন",
+        description: "ডেলিভারি ঠিকানার সব তথ্য পূরণ করুন",
+        variant: "destructive"
+      });
       return;
     }
 
@@ -168,12 +192,16 @@ const ResellerCartCheckout: React.FC = () => {
     setIsSubmitting(true);
 
     try {
+      const shippingMethod = getShippingMethodById(selectedShippingMethod, deliveryAddress.city);
+      
       const orderData = cart.map(item => ({
         ...item,
         isResell: resellItems[item.id]?.isResell || false,
         margin: resellItems[item.id]?.margin || 0,
         finalPrice: parsePrice(item.price) * item.quantity + (resellItems[item.id]?.isResell ? (resellItems[item.id]?.margin || 0) * item.quantity : 0)
       }));
+
+      const orderId = `ORD-${Date.now().toString(36).toUpperCase()}`;
 
       if (hasResellItems()) {
         // Create reseller order
@@ -184,7 +212,7 @@ const ResellerCartCheckout: React.FC = () => {
             order_data: orderData,
             payment_method: selectedPaymentMethod,
             margin_amount: calculateTotalMargin(),
-            total_amount: getCartTotal(),
+            total_amount: getCartTotal() + getShippingCost(),
             final_price: calculateFinalPrice(),
             status: 'pending'
           });
@@ -204,15 +232,37 @@ const ResellerCartCheckout: React.FC = () => {
           });
       }
 
-      setOrderComplete(true);
+      // Prepare confirmation data
+      const confirmationData = {
+        orderId,
+        items: orderData,
+        deliveryAddress,
+        shippingMethod: shippingMethod || {
+          id: 'standard',
+          name: 'স্ট্যান্ডার্ড ডেলিভারি',
+          cost: 60,
+          estimatedDays: '৩-৫ দিন'
+        },
+        paymentMethod: selectedPaymentMethod,
+        subtotal: getCartTotal(),
+        shippingCost: getShippingCost(),
+        marginTotal: calculateTotalMargin(),
+        total: calculateFinalPrice(),
+        isReseller: hasResellItems(),
+        createdAt: new Date().toISOString()
+      };
+
       clearCart();
 
       toast({
         title: "অর্ডার সফল!",
         description: hasResellItems() 
-          ? "আপনার রিসেল অর্ডার সম্পন্ন হয়েছে। ৩-৫ দিনের মধ্যে ব্যালেন্স আপডেট হবে।"
+          ? "আপনার রিসেল অর্ডার সম্পন্ন হয়েছে।"
           : "আপনার অর্ডার সফলভাবে সম্পন্ন হয়েছে।"
       });
+
+      // Navigate to order confirmation page
+      navigate('/order-confirmation', { state: { orderData: confirmationData } });
 
     } catch (error: any) {
       console.error('Checkout error:', error);
@@ -226,31 +276,6 @@ const ResellerCartCheckout: React.FC = () => {
     }
   };
 
-  if (orderComplete) {
-    return (
-      <Card className="max-w-lg mx-auto">
-        <CardContent className="p-8 text-center">
-          <CheckCircle2 className="h-16 w-16 text-green-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold mb-2">অর্ডার সফল!</h2>
-          <p className="text-muted-foreground mb-4">
-            আপনার অর্ডার সফলভাবে সম্পন্ন হয়েছে।
-          </p>
-          {hasResellItems() && (
-            <div className="bg-primary/10 rounded-lg p-4 mb-4">
-              <Badge className="mb-2">রিসেলার অর্ডার</Badge>
-              <p className="text-sm">
-                ৩-৫ কার্যদিবসের মধ্যে আপনার ড্যাশবোর্ডে ব্যালেন্স আপডেট হবে।
-              </p>
-            </div>
-          )}
-          <Button onClick={() => navigate('/')}>
-            হোমে ফিরুন
-          </Button>
-        </CardContent>
-      </Card>
-    );
-  }
-
   if (cart.length === 0) {
     return (
       <Card className="max-w-lg mx-auto">
@@ -258,7 +283,7 @@ const ResellerCartCheckout: React.FC = () => {
           <ShoppingCart className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
           <h2 className="text-lg font-semibold mb-2">আপনার কার্ট খালি</h2>
           <p className="text-muted-foreground mb-4">কার্টে আইটেম যোগ করুন</p>
-          <Button onClick={() => navigate('/digital-products')}>
+          <Button onClick={() => navigate('/marketplace-hub')}>
             শপিং করুন
           </Button>
         </CardContent>
@@ -266,9 +291,18 @@ const ResellerCartCheckout: React.FC = () => {
     );
   }
 
+  const shippingMethod = getShippingMethodById(selectedShippingMethod, deliveryAddress.city);
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold">চেকআউট</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">চেকআউট</h1>
+        {isReseller && (
+          <Badge variant="secondary" className="text-sm">
+            রিসেলার অ্যাকাউন্ট
+          </Badge>
+        )}
+      </div>
 
       {/* Cart Items */}
       <Card>
@@ -323,52 +357,33 @@ const ResellerCartCheckout: React.FC = () => {
                 </Button>
               </div>
 
-              {/* Reseller Option - Only show if user is reseller */}
+              {/* Enhanced Margin Calculator for Resellers */}
               {isReseller && (
-                <div className="bg-muted/50 rounded-lg p-3 space-y-3">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`resell-${item.id}`}
-                      checked={resellItems[item.id]?.isResell || false}
-                      onCheckedChange={(checked) => handleToggleResell(item.id, checked as boolean)}
-                    />
-                    <Label 
-                      htmlFor={`resell-${item.id}`}
-                      className="flex items-center gap-2 cursor-pointer"
-                    >
-                      <Percent className="h-4 w-4 text-primary" />
-                      এটি রিসেল করবেন?
-                    </Label>
-                    {resellItems[item.id]?.isResell && (
-                      <Badge variant="secondary" className="ml-auto">রিসেল</Badge>
-                    )}
-                  </div>
-
-                  {resellItems[item.id]?.isResell && (
-                    <div className="flex items-center gap-3">
-                      <Label className="whitespace-nowrap">মার্জিন যোগ করুন:</Label>
-                      <Input
-                        type="number"
-                        min="0"
-                        placeholder="0"
-                        value={resellItems[item.id]?.margin || ''}
-                        onChange={(e) => handleMarginChange(item.id, e.target.value)}
-                        className="w-32"
-                      />
-                      <span className="text-sm text-muted-foreground">৳</span>
-                      {resellItems[item.id]?.margin > 0 && (
-                        <span className="text-sm text-green-600 font-medium">
-                          +{formatPrice(resellItems[item.id].margin * item.quantity)}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
+                <MarginCalculator
+                  item={item}
+                  resellInfo={resellItems[item.id] || { isResell: false, margin: 0 }}
+                  onToggleResell={(checked) => handleToggleResell(item.id, checked)}
+                  onMarginChange={(margin) => handleMarginChange(item.id, margin)}
+                  parsePrice={parsePrice}
+                />
               )}
             </div>
           ))}
         </CardContent>
       </Card>
+
+      {/* Delivery Address Form */}
+      <DeliveryAddressForm
+        address={deliveryAddress}
+        onChange={setDeliveryAddress}
+      />
+
+      {/* Shipping Method Selector */}
+      <ShippingMethodSelector
+        selectedMethod={selectedShippingMethod}
+        onSelect={setSelectedShippingMethod}
+        city={deliveryAddress.city}
+      />
 
       {/* Payment Method */}
       <Card>
@@ -402,26 +417,28 @@ const ResellerCartCheckout: React.FC = () => {
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex justify-between">
-            <span className="text-muted-foreground">সাবটোটাল</span>
+            <span className="text-muted-foreground">সাবটোটাল ({getCartItemsCount()} আইটেম)</span>
             <span>{formatPrice(getCartTotal())}</span>
           </div>
           
           {hasResellItems() && (
             <div className="flex justify-between text-green-600">
-              <span>মার্জিন</span>
+              <span>রিসেলার মার্জিন</span>
               <span>+{formatPrice(calculateTotalMargin())}</span>
             </div>
           )}
 
           <div className="flex justify-between">
-            <span className="text-muted-foreground">ডেলিভারি</span>
-            <span className="text-green-600">বিনামূল্যে</span>
+            <span className="text-muted-foreground">
+              শিপিং ({shippingMethod?.name || 'স্ট্যান্ডার্ড'})
+            </span>
+            <span>{formatPrice(getShippingCost())}</span>
           </div>
 
           <Separator />
 
           <div className="flex justify-between text-lg font-bold">
-            <span>মোট</span>
+            <span>সর্বমোট</span>
             <span className="text-primary">{formatPrice(calculateFinalPrice())}</span>
           </div>
 
@@ -432,13 +449,20 @@ const ResellerCartCheckout: React.FC = () => {
               </p>
             </div>
           )}
+
+          {!isAddressValid() && (
+            <div className="flex items-center gap-2 text-sm text-amber-600">
+              <AlertCircle className="h-4 w-4" />
+              <span>ডেলিভারি ঠিকানা সম্পূর্ণ করুন</span>
+            </div>
+          )}
         </CardContent>
         <CardFooter>
           <Button 
             className="w-full" 
             size="lg"
             onClick={handleCheckout}
-            disabled={isSubmitting || !selectedPaymentMethod}
+            disabled={isSubmitting || !selectedPaymentMethod || !isAddressValid()}
           >
             {isSubmitting ? (
               <>
@@ -448,7 +472,7 @@ const ResellerCartCheckout: React.FC = () => {
             ) : (
               <>
                 <CheckCircle2 className="h-4 w-4 mr-2" />
-                অর্ডার সম্পন্ন করুন
+                অর্ডার সম্পন্ন করুন ({formatPrice(calculateFinalPrice())})
               </>
             )}
           </Button>

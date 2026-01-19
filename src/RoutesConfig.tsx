@@ -66,6 +66,7 @@ import ServiceBooking from './pages/ServiceBooking';
 import CreatorDashboard from './pages/CreatorDashboard';
 import StorePublicPage from './pages/StorePublicPage';
 import CartCheckoutPage from './pages/CartCheckoutPage';
+import OrderConfirmationPage from './pages/OrderConfirmationPage';
 import ResellerRegistration from './pages/ResellerRegistration';
 import ResellerDashboard from './pages/ResellerDashboard';
 
@@ -168,6 +169,7 @@ const RoutesConfig = () => {
       <Route path="/digital-products/:productId" element={<DigitalProductDetail />} />
       <Route path="/create-digital-product" element={<CreateDigitalProduct />} />
       <Route path="/cart-checkout" element={<CartCheckoutPage />} />
+      <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
       
       {/* Seller Dashboard */}
       <Route path="/seller-dashboard" element={<SellerDashboard />} />
