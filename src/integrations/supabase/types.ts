@@ -382,14 +382,54 @@ export type Database = {
         }
         Relationships: []
       }
+      reseller_balance_history: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          id: string
+          order_id: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          order_id?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          order_id?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reseller_balance_history_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "reseller_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reseller_orders: {
         Row: {
+          admin_notes: string | null
           balance_update_date: string | null
           balance_updated: boolean | null
           created_at: string
           final_price: number
           id: string
           margin_amount: number
+          margin_blocked: boolean | null
           order_data: Json
           payment_method: string
           status: string
@@ -398,12 +438,14 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          admin_notes?: string | null
           balance_update_date?: string | null
           balance_updated?: boolean | null
           created_at?: string
           final_price: number
           id?: string
           margin_amount?: number
+          margin_blocked?: boolean | null
           order_data: Json
           payment_method: string
           status?: string
@@ -412,18 +454,53 @@ export type Database = {
           user_id: string
         }
         Update: {
+          admin_notes?: string | null
           balance_update_date?: string | null
           balance_updated?: boolean | null
           created_at?: string
           final_price?: number
           id?: string
           margin_amount?: number
+          margin_blocked?: boolean | null
           order_data?: Json
           payment_method?: string
           status?: string
           total_amount?: number
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      reseller_settings: {
+        Row: {
+          cod_enabled: boolean | null
+          created_at: string
+          fraud_prevention_enabled: boolean | null
+          id: string
+          max_margin: number | null
+          min_margin: number | null
+          payout_delay_days: number | null
+          updated_at: string
+        }
+        Insert: {
+          cod_enabled?: boolean | null
+          created_at?: string
+          fraud_prevention_enabled?: boolean | null
+          id?: string
+          max_margin?: number | null
+          min_margin?: number | null
+          payout_delay_days?: number | null
+          updated_at?: string
+        }
+        Update: {
+          cod_enabled?: boolean | null
+          created_at?: string
+          fraud_prevention_enabled?: boolean | null
+          id?: string
+          max_margin?: number | null
+          min_margin?: number | null
+          payout_delay_days?: number | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -765,6 +842,48 @@ export type Database = {
         }
         Relationships: []
       }
+      withdrawal_requests: {
+        Row: {
+          account_details: Json | null
+          admin_notes: string | null
+          amount: number
+          created_at: string
+          id: string
+          payment_method: string
+          processed_at: string | null
+          processed_by: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_details?: Json | null
+          admin_notes?: string | null
+          amount: number
+          created_at?: string
+          id?: string
+          payment_method: string
+          processed_at?: string | null
+          processed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_details?: Json | null
+          admin_notes?: string | null
+          amount?: number
+          created_at?: string
+          id?: string
+          payment_method?: string
+          processed_at?: string | null
+          processed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       public_seller_profiles: {
@@ -848,6 +967,16 @@ export type Database = {
       }
       reject_seller_application: {
         Args: { admin_user_id: string; application_id: string; notes?: string }
+        Returns: boolean
+      }
+      update_reseller_balance: {
+        Args: {
+          p_amount: number
+          p_description?: string
+          p_order_id?: string
+          p_type: string
+          p_user_id: string
+        }
         Returns: boolean
       }
     }

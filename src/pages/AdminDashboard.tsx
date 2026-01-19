@@ -75,6 +75,7 @@ import UserExperienceTracking from '@/components/admin/UserExperienceTracking';
 import MonetizationTracking from '@/components/admin/MonetizationTracking';
 import ReferralManagement from '@/components/admin/ReferralManagement';
 import QRCodeManagement from '@/components/admin/QRCodeManagement';
+import ResellerManagement from '@/components/admin/ResellerManagement';
 import { usePendingApplicationsCount } from '@/hooks/usePendingApplicationsCount';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { AdminConfigProvider } from '@/context/AdminConfigContext';
@@ -154,6 +155,11 @@ const AdminDashboard = () => {
       id: 'qrcodes', 
       name: 'QR কোড', 
       icon: <QrCode size={18} /> 
+    },
+    { 
+      id: 'reseller-management', 
+      name: 'রিসেলার ম্যানেজমেন্ট', 
+      icon: <Users size={18} /> 
     },
   ];
   
@@ -546,10 +552,12 @@ const AdminDashboard = () => {
                 
                 {activeModule === 'qrcodes' && <QRCodeManagement />}
                 
+                {activeModule === 'reseller-management' && <ResellerManagement />}
+                
                 {!['dashboard', 'users', 'marketplace', 'rentals', 'services', 'digital', 'categories', 
                    'payments', 'reports', 'analytics', 'support', 'settings', 'advanced', 'monetization',
                    'service-card', 'offline-config', 'language-manager', 'calendar-config', 'theme-management',
-                   'user-experience', 'monetization-tracking', 'referrals', 'qrcodes'].includes(activeModule) && (
+                   'user-experience', 'monetization-tracking', 'referrals', 'qrcodes', 'reseller-management', 'seller-applications'].includes(activeModule) && (
                   <div className="flex flex-col items-center justify-center py-12">
                     <div className="h-24 w-24 rounded-full flex items-center justify-center mb-4"
                       style={{ backgroundColor: adminTheme.colors.primaryLight }}>
