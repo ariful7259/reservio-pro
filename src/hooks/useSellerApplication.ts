@@ -139,42 +139,44 @@ export function useSellerApplication() {
       'partnership': 'marketplace'
     };
 
+    const insertData = {
+      user_id: user.id,
+      business_name: formData.businessName,
+      business_type: businessTypeMap[formData.businessType] || 'marketplace',
+      phone: formData.phone,
+      email: formData.email,
+      address: formData.address,
+      description: formData.description,
+      category: formData.category,
+      experience: formData.experience,
+      documents: formData.documents || null,
+      status: 'pending' as const,
+      // New fields - cast as any since types haven't regenerated yet
+      nid_type: formData.nidType || null,
+      nid_number: formData.nidNumber || null,
+      nid_front_image: formData.nidFrontImage || null,
+      nid_back_image: formData.nidBackImage || null,
+      trade_license_number: formData.tradeLicenseNumber || null,
+      trade_license_image: formData.tradeLicenseImage || null,
+      trade_license_expiry: formData.tradeLicenseExpiry || null,
+      bank_name: formData.bankName || null,
+      bank_account_number: formData.bankAccountNumber || null,
+      bank_account_holder: formData.bankAccountHolder || null,
+      bank_branch: formData.bankBranch || null,
+      mobile_banking_provider: formData.mobileBankingProvider || null,
+      mobile_banking_number: formData.mobileBankingNumber || null,
+      facebook_url: formData.facebookUrl || null,
+      instagram_url: formData.instagramUrl || null,
+      whatsapp_number: formData.whatsappNumber || null,
+      website_url: formData.websiteUrl || null,
+      product_samples: formData.productSamples || [],
+      seller_references: formData.references || [],
+      video_introduction_url: formData.videoIntroductionUrl || null
+    };
+
     const { data, error } = await supabase
       .from('seller_applications')
-      .insert({
-        user_id: user.id,
-        business_name: formData.businessName,
-        business_type: businessTypeMap[formData.businessType] || 'marketplace',
-        phone: formData.phone,
-        email: formData.email,
-        address: formData.address,
-        description: formData.description,
-        category: formData.category,
-        experience: formData.experience,
-        documents: formData.documents || null,
-        status: 'pending',
-        // New fields
-        nid_type: formData.nidType || null,
-        nid_number: formData.nidNumber || null,
-        nid_front_image: formData.nidFrontImage || null,
-        nid_back_image: formData.nidBackImage || null,
-        trade_license_number: formData.tradeLicenseNumber || null,
-        trade_license_image: formData.tradeLicenseImage || null,
-        trade_license_expiry: formData.tradeLicenseExpiry || null,
-        bank_name: formData.bankName || null,
-        bank_account_number: formData.bankAccountNumber || null,
-        bank_account_holder: formData.bankAccountHolder || null,
-        bank_branch: formData.bankBranch || null,
-        mobile_banking_provider: formData.mobileBankingProvider || null,
-        mobile_banking_number: formData.mobileBankingNumber || null,
-        facebook_url: formData.facebookUrl || null,
-        instagram_url: formData.instagramUrl || null,
-        whatsapp_number: formData.whatsappNumber || null,
-        website_url: formData.websiteUrl || null,
-        product_samples: formData.productSamples || [],
-        seller_references: formData.references || [],
-        video_introduction_url: formData.videoIntroductionUrl || null
-      })
+      .insert(insertData as any)
       .select()
       .single();
 
