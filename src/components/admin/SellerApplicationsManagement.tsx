@@ -18,7 +18,10 @@ import {
   UserCheck,
   UserX,
   Loader2,
-  RefreshCw
+  RefreshCw,
+  FileText,
+  Download,
+  ExternalLink
 } from 'lucide-react';
 
 interface SellerApplication {
@@ -35,6 +38,7 @@ interface SellerApplication {
   status: 'pending' | 'approved' | 'rejected';
   admin_notes: string | null;
   created_at: string;
+  documents: string[] | null;
 }
 
 const SellerApplicationsManagement = () => {
@@ -330,6 +334,57 @@ const SellerApplicationsManagement = () => {
                 <div className="bg-muted/50 p-3 rounded-lg">
                   <p className="text-sm text-muted-foreground">এডমিনের মন্তব্য</p>
                   <p className="font-medium">{selectedApplication.admin_notes}</p>
+                </div>
+              )}
+              
+              {/* Documents Section */}
+              {selectedApplication.documents && selectedApplication.documents.length > 0 && (
+                <div className="border-t pt-4">
+                  <p className="text-sm text-muted-foreground mb-3">
+                    <FileText className="h-4 w-4 inline mr-1" />
+                    জমা দেওয়া ডকুমেন্ট ({selectedApplication.documents.length})
+                  </p>
+                  <div className="space-y-2">
+                    {selectedApplication.documents.map((doc, index) => {
+                      const fileName = doc.split('/').pop()?.split('-').slice(1).join('-') || `Document ${index + 1}`;
+                      const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(doc);
+                      
+                      return (
+                        <div key={index} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                          <div className="flex items-center gap-2 flex-1 min-w-0">
+                            <FileText className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                            <span className="text-sm truncate">{fileName}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => window.open(doc, '_blank')}
+                              title="প্রিভিউ"
+                            >
+                              <ExternalLink className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                const link = document.createElement('a');
+                                link.href = doc;
+                                link.download = fileName;
+                                link.target = '_blank';
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+                              }}
+                              title="ডাউনলোড"
+                            >
+                              <Download className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
             </div>
