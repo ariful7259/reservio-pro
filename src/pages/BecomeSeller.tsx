@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, 
@@ -26,9 +26,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { useSellerApplication } from '@/hooks/useSellerApplication';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+
+interface UploadedFile {
+  file: File;
+  progress: number;
+  url?: string;
+  uploading: boolean;
+  error?: string;
+}
 
 const BecomeSeller = () => {
   const navigate = useNavigate();
@@ -37,7 +47,7 @@ const BecomeSeller = () => {
   const { application, isLoading: appLoading, submitApplication, isPending, isApproved, isRejected } = useSellerApplication();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [formData, setFormData] = useState({
     businessName: '',
     businessType: '',
@@ -51,21 +61,100 @@ const BecomeSeller = () => {
     agreeTerms: false
   });
   
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files) {
-      const newFiles = Array.from(files);
-      setUploadedFiles(prev => [...prev, ...newFiles].slice(0, 5)); // Max 5 files
-      toast({
-        title: "ফাইল যোগ হয়েছে",
-        description: `${newFiles.length}টি ফাইল সফলভাবে যোগ করা হয়েছে।`,
-      });
+    if (!files || !user?.id) return;
+    
+    const newFiles = Array.from(files).slice(0, 5 - uploadedFiles.length);
+    
+    // Add files to state with initial progress
+    const fileObjects: UploadedFile[] = newFiles.map(file => ({
+      file,
+      progress: 0,
+      uploading: true
+    }));
+    
+    setUploadedFiles(prev => [...prev, ...fileObjects]);
+    
+    // Upload each file
+    for (let i = 0; i < newFiles.length; i++) {
+      const file = newFiles[i];
+      const fileIndex = uploadedFiles.length + i;
+      const fileName = `${user.id}/${Date.now()}-${file.name}`;
+      
+      try {
+        // Simulate progress updates
+        const progressInterval = setInterval(() => {
+          setUploadedFiles(prev => prev.map((f, idx) => 
+            idx === fileIndex && f.progress < 90 
+              ? { ...f, progress: f.progress + 10 } 
+              : f
+          ));
+        }, 100);
+        
+        const { data, error } = await supabase.storage
+          .from('seller-documents')
+          .upload(fileName, file);
+        
+        clearInterval(progressInterval);
+        
+        if (error) throw error;
+        
+        // Get signed URL for the file
+        const { data: urlData } = await supabase.storage
+          .from('seller-documents')
+          .createSignedUrl(fileName, 60 * 60 * 24 * 365); // 1 year
+        
+        setUploadedFiles(prev => prev.map((f, idx) => 
+          idx === fileIndex 
+            ? { ...f, progress: 100, uploading: false, url: urlData?.signedUrl || fileName } 
+            : f
+        ));
+        
+        toast({
+          title: "আপলোড সম্পন্ন",
+          description: `${file.name} সফলভাবে আপলোড হয়েছে।`,
+        });
+      } catch (error: any) {
+        console.error('Upload error:', error);
+        setUploadedFiles(prev => prev.map((f, idx) => 
+          idx === fileIndex 
+            ? { ...f, uploading: false, error: error.message, progress: 0 } 
+            : f
+        ));
+        toast({
+          title: "আপলোড ব্যর্থ",
+          description: `${file.name} আপলোড করতে সমস্যা হয়েছে।`,
+          variant: "destructive"
+        });
+      }
+    }
+    
+    // Reset input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
-  const removeFile = (index: number) => {
+  const removeFile = async (index: number) => {
+    const fileToRemove = uploadedFiles[index];
+    
+    // If file was uploaded, delete from storage
+    if (fileToRemove.url && user?.id) {
+      try {
+        const filePath = fileToRemove.url.split('/').pop();
+        if (filePath) {
+          await supabase.storage
+            .from('seller-documents')
+            .remove([`${user.id}/${filePath}`]);
+        }
+      } catch (error) {
+        console.error('Error deleting file:', error);
+      }
+    }
+    
     setUploadedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
@@ -119,8 +208,24 @@ const BecomeSeller = () => {
       return;
     }
 
+    // Check if any file is still uploading
+    const stillUploading = uploadedFiles.some(f => f.uploading);
+    if (stillUploading) {
+      toast({
+        title: "অপেক্ষা করুন",
+        description: "ফাইল আপলোড সম্পন্ন হওয়ার জন্য অপেক্ষা করুন।",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     try {
+      // Get document URLs from uploaded files
+      const documentUrls = uploadedFiles
+        .filter(f => f.url && !f.error)
+        .map(f => f.url as string);
+
       await submitApplication({
         businessName: formData.businessName,
         businessType: formData.businessType,
@@ -129,7 +234,8 @@ const BecomeSeller = () => {
         address: formData.address,
         description: formData.description,
         category: formData.category,
-        experience: formData.experience
+        experience: formData.experience,
+        documents: documentUrls
       });
 
       toast({
@@ -362,22 +468,40 @@ const BecomeSeller = () => {
             {uploadedFiles.length > 0 && (
               <div className="space-y-2">
                 <p className="text-sm font-medium">আপলোড করা ফাইল ({uploadedFiles.length}/৫):</p>
-                {uploadedFiles.map((file, index) => (
-                  <div key={index} className="flex items-center justify-between p-2 bg-muted rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <FileText className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm truncate max-w-[200px]">{file.name}</span>
-                      <span className="text-xs text-muted-foreground">
-                        ({(file.size / 1024).toFixed(1)} KB)
-                      </span>
+                {uploadedFiles.map((uploadedFile, index) => (
+                  <div key={index} className="p-3 bg-muted rounded-lg space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 flex-1">
+                        <FileText className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                        <span className="text-sm truncate max-w-[180px]">{uploadedFile.file.name}</span>
+                        <span className="text-xs text-muted-foreground">
+                          ({(uploadedFile.file.size / 1024).toFixed(1)} KB)
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {uploadedFile.uploading ? (
+                          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                        ) : uploadedFile.error ? (
+                          <Badge variant="destructive" className="text-xs">ব্যর্থ</Badge>
+                        ) : (
+                          <Badge className="bg-green-500 text-xs">
+                            <CheckCircle className="h-3 w-3 mr-1" />
+                            সম্পন্ন
+                          </Badge>
+                        )}
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => removeFile(index)}
+                          disabled={uploadedFile.uploading}
+                        >
+                          <XCircle className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </div>
                     </div>
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={() => removeFile(index)}
-                    >
-                      <XCircle className="h-4 w-4 text-destructive" />
-                    </Button>
+                    {uploadedFile.uploading && (
+                      <Progress value={uploadedFile.progress} className="h-2" />
+                    )}
                   </div>
                 ))}
               </div>
