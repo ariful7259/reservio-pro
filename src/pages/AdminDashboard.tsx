@@ -64,7 +64,8 @@ import {
   Layout,
   Activity,
   LineChart,
-  QrCode
+  QrCode,
+  Store
 } from 'lucide-react';
 import ServiceCardCustomization from '@/components/admin/ServiceCardCustomization';
 import OfflineConfiguration from '@/components/admin/OfflineConfiguration';
@@ -77,6 +78,7 @@ import ReferralManagement from '@/components/admin/ReferralManagement';
 import QRCodeManagement from '@/components/admin/QRCodeManagement';
 import ResellerManagement from '@/components/admin/ResellerManagement';
 import OrdersManagement from '@/components/admin/OrdersManagement';
+import AddSellerManagement from '@/components/admin/AddSellerManagement';
 import { usePendingApplicationsCount } from '@/hooks/usePendingApplicationsCount';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { AdminConfigProvider } from '@/context/AdminConfigContext';
@@ -128,6 +130,7 @@ const AdminDashboard = () => {
     { id: 'dashboard', name: 'ড্যাশবোর্ড', icon: <BarChart3 size={18} /> },
     { id: 'orders', name: 'অর্ডার ম্যানেজমেন্ট', icon: <Package size={18} /> },
     { id: 'seller-applications', name: 'সেলার আবেদন', icon: <UserCog size={18} />, badge: true },
+    { id: 'add-seller', name: 'সেলার যোগ করুন', icon: <Store size={18} /> },
     { id: 'users', name: 'ব্যবহারকারী', icon: <Users size={18} /> },
     { id: 'marketplace', name: 'মার্কেটপ্লেস', icon: <ShoppingBag size={18} /> },
     { id: 'rentals', name: 'রেন্টাল', icon: <Building size={18} /> },
@@ -558,11 +561,13 @@ const AdminDashboard = () => {
                 
                 {activeModule === 'orders' && <OrdersManagement />}
                 
+                {activeModule === 'add-seller' && <AddSellerManagement />}
+                
                 {!['dashboard', 'users', 'marketplace', 'rentals', 'services', 'digital', 'categories', 
                    'payments', 'reports', 'analytics', 'support', 'settings', 'advanced', 'monetization',
                    'service-card', 'offline-config', 'language-manager', 'calendar-config', 'theme-management',
                    'user-experience', 'monetization-tracking', 'referrals', 'qrcodes', 'reseller-management', 
-                   'seller-applications', 'orders'].includes(activeModule) && (
+                   'seller-applications', 'orders', 'add-seller'].includes(activeModule) && (
                   <div className="flex flex-col items-center justify-center py-12">
                     <div className="h-24 w-24 rounded-full flex items-center justify-center mb-4"
                       style={{ backgroundColor: adminTheme.colors.primaryLight }}>
