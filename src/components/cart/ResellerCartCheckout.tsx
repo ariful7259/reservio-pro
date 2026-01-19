@@ -503,13 +503,20 @@ const ResellerCartCheckout: React.FC = () => {
               <span>ডেলিভারি ঠিকানা সম্পূর্ণ করুন</span>
             </div>
           )}
+          
+          {!selectedPaymentMethod && (
+            <div className="flex items-center gap-2 text-sm text-amber-600">
+              <AlertCircle className="h-4 w-4" />
+              <span>পেমেন্ট মেথড নির্বাচন করুন</span>
+            </div>
+          )}
         </CardContent>
         <CardFooter>
           <Button 
             className="w-full" 
             size="lg"
             onClick={handleCheckout}
-            disabled={isSubmitting || !selectedPaymentMethod || !isAddressValid()}
+            disabled={isSubmitting}
           >
             {isSubmitting ? (
               <>
