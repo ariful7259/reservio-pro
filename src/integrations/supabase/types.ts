@@ -571,6 +571,10 @@ export type Database = {
         Row: {
           address: string | null
           admin_notes: string | null
+          bank_account_holder: string | null
+          bank_account_number: string | null
+          bank_branch: string | null
+          bank_name: string | null
           business_name: string
           business_type: string
           category: string | null
@@ -579,17 +583,37 @@ export type Database = {
           documents: string[] | null
           email: string | null
           experience: string | null
+          facebook_url: string | null
           id: string
+          instagram_url: string | null
+          mobile_banking_number: string | null
+          mobile_banking_provider: string | null
+          nid_back_image: string | null
+          nid_front_image: string | null
+          nid_number: string | null
+          nid_type: string | null
           phone: string | null
+          product_samples: Json | null
           reviewed_at: string | null
           reviewed_by: string | null
+          seller_references: Json | null
           status: Database["public"]["Enums"]["seller_application_status"]
+          trade_license_expiry: string | null
+          trade_license_image: string | null
+          trade_license_number: string | null
           updated_at: string | null
           user_id: string
+          video_introduction_url: string | null
+          website_url: string | null
+          whatsapp_number: string | null
         }
         Insert: {
           address?: string | null
           admin_notes?: string | null
+          bank_account_holder?: string | null
+          bank_account_number?: string | null
+          bank_branch?: string | null
+          bank_name?: string | null
           business_name: string
           business_type: string
           category?: string | null
@@ -598,17 +622,37 @@ export type Database = {
           documents?: string[] | null
           email?: string | null
           experience?: string | null
+          facebook_url?: string | null
           id?: string
+          instagram_url?: string | null
+          mobile_banking_number?: string | null
+          mobile_banking_provider?: string | null
+          nid_back_image?: string | null
+          nid_front_image?: string | null
+          nid_number?: string | null
+          nid_type?: string | null
           phone?: string | null
+          product_samples?: Json | null
           reviewed_at?: string | null
           reviewed_by?: string | null
+          seller_references?: Json | null
           status?: Database["public"]["Enums"]["seller_application_status"]
+          trade_license_expiry?: string | null
+          trade_license_image?: string | null
+          trade_license_number?: string | null
           updated_at?: string | null
           user_id: string
+          video_introduction_url?: string | null
+          website_url?: string | null
+          whatsapp_number?: string | null
         }
         Update: {
           address?: string | null
           admin_notes?: string | null
+          bank_account_holder?: string | null
+          bank_account_number?: string | null
+          bank_branch?: string | null
+          bank_name?: string | null
           business_name?: string
           business_type?: string
           category?: string | null
@@ -617,13 +661,29 @@ export type Database = {
           documents?: string[] | null
           email?: string | null
           experience?: string | null
+          facebook_url?: string | null
           id?: string
+          instagram_url?: string | null
+          mobile_banking_number?: string | null
+          mobile_banking_provider?: string | null
+          nid_back_image?: string | null
+          nid_front_image?: string | null
+          nid_number?: string | null
+          nid_type?: string | null
           phone?: string | null
+          product_samples?: Json | null
           reviewed_at?: string | null
           reviewed_by?: string | null
+          seller_references?: Json | null
           status?: Database["public"]["Enums"]["seller_application_status"]
+          trade_license_expiry?: string | null
+          trade_license_image?: string | null
+          trade_license_number?: string | null
           updated_at?: string | null
           user_id?: string
+          video_introduction_url?: string | null
+          website_url?: string | null
+          whatsapp_number?: string | null
         }
         Relationships: []
       }
