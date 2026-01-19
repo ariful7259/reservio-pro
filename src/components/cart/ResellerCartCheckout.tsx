@@ -196,45 +196,91 @@ const ResellerCartCheckout: React.FC = () => {
       
       const orderData = cart.map(item => ({
         ...item,
+        name: item.title,
         isResell: resellItems[item.id]?.isResell || false,
         margin: resellItems[item.id]?.margin || 0,
         finalPrice: parsePrice(item.price) * item.quantity + (resellItems[item.id]?.isResell ? (resellItems[item.id]?.margin || 0) * item.quantity : 0)
       }));
 
-      const orderId = `ORD-${Date.now().toString(36).toUpperCase()}`;
+      let createdOrderId = '';
 
       if (hasResellItems()) {
         // Create reseller order
-        const { error } = await supabase
+        const { data: insertedOrder, error } = await supabase
           .from('reseller_orders')
           .insert({
             user_id: user.id,
-            order_data: orderData,
+            order_data: {
+              items: orderData,
+              deliveryAddress,
+              shippingMethod: shippingMethod || { id: 'standard', name: 'স্ট্যান্ডার্ড ডেলিভারি', cost: 60 },
+              subtotal: getCartTotal(),
+              shippingCost: getShippingCost()
+            },
             payment_method: selectedPaymentMethod,
             margin_amount: calculateTotalMargin(),
             total_amount: getCartTotal() + getShippingCost(),
             final_price: calculateFinalPrice(),
             status: 'pending'
-          });
+          })
+          .select()
+          .single();
 
         if (error) throw error;
+        createdOrderId = insertedOrder?.id || '';
       }
 
       // Also create regular orders for all items
       for (const item of cart) {
-        await supabase
+        const { data: regularOrder } = await supabase
           .from('orders')
           .insert({
             user_id: user.id,
             product_id: item.id,
             quantity: item.quantity,
             status: 'pending'
+          })
+          .select()
+          .single();
+        
+        if (!createdOrderId && regularOrder) {
+          createdOrderId = regularOrder.id;
+        }
+      }
+
+      // Send email notification
+      const userEmail = user.email || user.user_metadata?.email;
+      const userName = deliveryAddress.fullName || user.user_metadata?.full_name || 'গ্রাহক';
+      
+      if (userEmail) {
+        try {
+          await supabase.functions.invoke('send-order-notification', {
+            body: {
+              orderId: createdOrderId,
+              type: 'confirmation',
+              customerEmail: userEmail,
+              customerName: userName,
+              orderDetails: {
+                items: orderData.map(item => ({
+                  name: item.title || item.name,
+                  price: parsePrice(item.price),
+                  quantity: item.quantity
+                })),
+                totalAmount: getCartTotal() + getShippingCost(),
+                finalPrice: calculateFinalPrice(),
+                deliveryAddress,
+                trackingId: `TRK${createdOrderId.slice(0, 8).toUpperCase()}`
+              }
+            }
           });
+        } catch (emailError) {
+          console.log('Email notification skipped:', emailError);
+        }
       }
 
       // Prepare confirmation data
       const confirmationData = {
-        orderId,
+        orderId: createdOrderId || `ORD-${Date.now().toString(36).toUpperCase()}`,
         items: orderData,
         deliveryAddress,
         shippingMethod: shippingMethod || {
