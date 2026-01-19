@@ -87,26 +87,79 @@ const BecomeSeller = () => {
     }
   };
 
+  // ফাইল ভ্যালিডেশন কনস্ট্যান্ট
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  const ALLOWED_TYPES = {
+    'image/jpeg': ['.jpg', '.jpeg'],
+    'image/png': ['.png'],
+    'image/gif': ['.gif'],
+    'image/webp': ['.webp'],
+    'application/pdf': ['.pdf'],
+    'application/msword': ['.doc'],
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx']
+  };
+
+  const validateFile = (file: File): { valid: boolean; error?: string } => {
+    // ফাইল সাইজ চেক
+    if (file.size > MAX_FILE_SIZE) {
+      return { 
+        valid: false, 
+        error: `ফাইল সাইজ ${(file.size / (1024 * 1024)).toFixed(2)}MB - সর্বোচ্চ ৫MB অনুমোদিত` 
+      };
+    }
+
+    // MIME টাইপ চেক
+    const allowedMimeTypes = Object.keys(ALLOWED_TYPES);
+    if (!allowedMimeTypes.includes(file.type)) {
+      return { 
+        valid: false, 
+        error: 'অবৈধ ফাইল টাইপ - শুধুমাত্র JPG, PNG, GIF, WebP, PDF ও Word ফাইল অনুমোদিত' 
+      };
+    }
+
+    // এক্সটেনশন চেক (MIME স্পুফিং প্রতিরোধ)
+    const fileName = file.name.toLowerCase();
+    const allowedExtensions = ALLOWED_TYPES[file.type as keyof typeof ALLOWED_TYPES] || [];
+    const hasValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
+    
+    if (!hasValidExtension) {
+      return { 
+        valid: false, 
+        error: 'ফাইল এক্সটেনশন মিলছে না - সঠিক ফাইল টাইপ ব্যবহার করুন' 
+      };
+    }
+
+    return { valid: true };
+  };
+
   const processFiles = async (files: File[]) => {
     if (!user?.id) return;
     
-    const validFiles = files.filter(file => {
-      const isValidType = file.type.startsWith('image/') || 
-                         file.type === 'application/pdf' ||
-                         file.type === 'application/msword' ||
-                         file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-      return isValidType;
-    });
+    const validatedFiles: { file: File; error?: string }[] = [];
+    const errors: string[] = [];
 
-    if (validFiles.length === 0) {
+    for (const file of files) {
+      const validation = validateFile(file);
+      if (validation.valid) {
+        validatedFiles.push({ file });
+      } else {
+        validatedFiles.push({ file, error: validation.error });
+        errors.push(`${file.name}: ${validation.error}`);
+      }
+    }
+
+    // সব ফাইল অবৈধ হলে
+    if (validatedFiles.every(f => f.error)) {
       toast({
-        title: "অবৈধ ফাইল টাইপ",
-        description: "শুধুমাত্র ছবি, PDF ও Word ফাইল আপলোড করা যাবে।",
+        title: "অবৈধ ফাইল",
+        description: errors.join('; '),
         variant: "destructive"
       });
       return;
     }
-    
+
+    // সর্বোচ্চ ৫টি ফাইল চেক
+    const validFiles = validatedFiles.filter(f => !f.error);
     const newFiles = validFiles.slice(0, 5 - uploadedFiles.length);
     
     if (newFiles.length < validFiles.length) {
@@ -116,10 +169,19 @@ const BecomeSeller = () => {
         variant: "destructive"
       });
     }
+
+    // আংশিক ভ্যালিড ফাইল থাকলে সতর্কতা
+    if (errors.length > 0 && newFiles.length > 0) {
+      toast({
+        title: "কিছু ফাইল বাদ দেওয়া হয়েছে",
+        description: errors.slice(0, 2).join('; '),
+        variant: "destructive"
+      });
+    }
     
     // Add files to state with initial progress
-    const fileObjects: UploadedFile[] = newFiles.map(file => ({
-      file,
+    const fileObjects: UploadedFile[] = newFiles.map(f => ({
+      file: f.file,
       progress: 0,
       uploading: true
     }));
@@ -128,9 +190,9 @@ const BecomeSeller = () => {
     
     // Upload each file
     for (let i = 0; i < newFiles.length; i++) {
-      const file = newFiles[i];
+      const fileItem = newFiles[i];
       const fileIndex = uploadedFiles.length + i;
-      const fileName = `${user.id}/${Date.now()}-${file.name}`;
+      const fileName = `${user.id}/${Date.now()}-${fileItem.file.name}`;
       
       try {
         // Simulate progress updates
@@ -144,7 +206,7 @@ const BecomeSeller = () => {
         
         const { data, error } = await supabase.storage
           .from('seller-documents')
-          .upload(fileName, file);
+          .upload(fileName, fileItem.file);
         
         clearInterval(progressInterval);
         
@@ -163,7 +225,7 @@ const BecomeSeller = () => {
         
         toast({
           title: "আপলোড সম্পন্ন",
-          description: `${file.name} সফলভাবে আপলোড হয়েছে।`,
+          description: `${fileItem.file.name} সফলভাবে আপলোড হয়েছে।`,
         });
       } catch (error: any) {
         console.error('Upload error:', error);
@@ -174,7 +236,7 @@ const BecomeSeller = () => {
         ));
         toast({
           title: "আপলোড ব্যর্থ",
-          description: `${file.name} আপলোড করতে সমস্যা হয়েছে।`,
+          description: `${fileItem.file.name} আপলোড করতে সমস্যা হয়েছে।`,
           variant: "destructive"
         });
       }
@@ -512,11 +574,14 @@ const BecomeSeller = () => {
               <p className="text-lg font-medium mb-2">
                 {isDragging ? 'ফাইল এখানে ড্রপ করুন' : 'প্রয়োজনীয় ডকুমেন্ট আপলোড করুন'}
               </p>
-              <p className="text-sm text-muted-foreground mb-4">
+              <p className="text-sm text-muted-foreground mb-2">
                 ট্রেড লাইসেন্স, NID কপি, ব্যাংক স্টেটমেন্ট ইত্যাদি আপলোড করুন
               </p>
+              <p className="text-xs text-muted-foreground mb-2">
+                <span className="font-medium">সমর্থিত ফরম্যাট:</span> JPG, PNG, GIF, WebP, PDF, DOC, DOCX
+              </p>
               <p className="text-xs text-muted-foreground mb-4">
-                ফাইল ড্র্যাগ করে এখানে ড্রপ করুন অথবা ক্লিক করুন
+                <span className="font-medium">সর্বোচ্চ সাইজ:</span> ৫MB প্রতি ফাইল • সর্বোচ্চ ৫টি ফাইল
               </p>
               <input
                 type="file"
