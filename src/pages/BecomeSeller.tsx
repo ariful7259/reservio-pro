@@ -37,6 +37,7 @@ const BecomeSeller = () => {
   const { application, isLoading: appLoading, submitApplication, isPending, isApproved, isRejected } = useSellerApplication();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [formData, setFormData] = useState({
     businessName: '',
     businessType: '',
@@ -49,6 +50,24 @@ const BecomeSeller = () => {
     documents: null,
     agreeTerms: false
   });
+  
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      const newFiles = Array.from(files);
+      setUploadedFiles(prev => [...prev, ...newFiles].slice(0, 5)); // Max 5 files
+      toast({
+        title: "ফাইল যোগ হয়েছে",
+        description: `${newFiles.length}টি ফাইল সফলভাবে যোগ করা হয়েছে।`,
+      });
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+  };
 
   const steps = [
     { id: 1, title: 'ব্যবসায়িক তথ্য', description: 'আপনার ব্যবসার মূল তথ্য প্রদান করুন' },
@@ -322,11 +341,48 @@ const BecomeSeller = () => {
               <p className="text-sm text-muted-foreground mb-4">
                 ট্রেড লাইসেন্স, NID কপি, ব্যাংক স্টেটমেন্ট ইত্যাদি আপলোড করুন
               </p>
-              <Button variant="outline">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileSelect}
+                multiple
+                accept="image/*,.pdf,.doc,.docx"
+                className="hidden"
+              />
+              <Button 
+                variant="outline" 
+                onClick={() => fileInputRef.current?.click()}
+              >
                 <Upload className="h-4 w-4 mr-2" />
                 ফাইল নির্বাচন করুন
               </Button>
             </div>
+            
+            {/* Uploaded Files List */}
+            {uploadedFiles.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-sm font-medium">আপলোড করা ফাইল ({uploadedFiles.length}/৫):</p>
+                {uploadedFiles.map((file, index) => (
+                  <div key={index} className="flex items-center justify-between p-2 bg-muted rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <FileText className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm truncate max-w-[200px]">{file.name}</span>
+                      <span className="text-xs text-muted-foreground">
+                        ({(file.size / 1024).toFixed(1)} KB)
+                      </span>
+                    </div>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => removeFile(index)}
+                    >
+                      <XCircle className="h-4 w-4 text-destructive" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+            
             <div className="bg-blue-50 p-4 rounded-lg">
               <h4 className="font-medium mb-2">প্রয়োজনীয় ডকুমেন্ট:</h4>
               <ul className="text-sm space-y-1">
