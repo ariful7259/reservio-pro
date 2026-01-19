@@ -37,16 +37,28 @@ const cities = [
   { id: 'mymensingh', name: 'ময়মনসিংহ' },
 ];
 
-const dhakaAreas = [
-  'ধানমন্ডি', 'মিরপুর', 'উত্তরা', 'গুলশান', 'বনানী', 'মোহাম্মদপুর',
-  'মতিঝিল', 'পুরান ঢাকা', 'তেজগাঁও', 'বাড্ডা', 'রামপুরা', 'খিলগাঁও',
-  'যাত্রাবাড়ী', 'শ্যামলী', 'আজিমপুর', 'লালবাগ', 'কামরাঙ্গীরচর'
-];
+const areasByCity: Record<string, string[]> = {
+  'ঢাকা': ['ধানমন্ডি', 'মিরপুর', 'উত্তরা', 'গুলশান', 'বনানী', 'মোহাম্মদপুর', 'মতিঝিল', 'পুরান ঢাকা', 'তেজগাঁও', 'বাড্ডা', 'রামপুরা', 'খিলগাঁও', 'যাত্রাবাড়ী', 'শ্যামলী', 'আজিমপুর', 'লালবাগ', 'কামরাঙ্গীরচর'],
+  'চট্টগ্রাম': ['আগ্রাবাদ', 'নাসিরাবাদ', 'জিইসি', 'খুলশী', 'পতেঙ্গা', 'হালিশহর', 'চান্দগাঁও'],
+  'সিলেট': ['জিন্দাবাজার', 'আম্বরখানা', 'শাহজালাল', 'সুবিদবাজার', 'টিলাগড়'],
+  'রাজশাহী': ['সদর', 'শাহমখদুম', 'বোয়ালিয়া', 'মতিহার'],
+  'খুলনা': ['খালিশপুর', 'সোনাডাঙ্গা', 'বয়রা', 'দৌলতপুর'],
+  'বরিশাল': ['সদর', 'বানারীপাড়া', 'কাউনিয়া'],
+  'রংপুর': ['সদর', 'মাহিগঞ্জ', 'পীরগাছা'],
+  'ময়মনসিংহ': ['সদর', 'গৌরীপুর', 'মুক্তাগাছা']
+};
 
 const DeliveryAddressForm: React.FC<DeliveryAddressFormProps> = ({ address, onChange }) => {
   const handleChange = (field: keyof DeliveryAddress, value: string) => {
-    onChange({ ...address, [field]: value });
+    // If city changes, reset area
+    if (field === 'city' && value !== address.city) {
+      onChange({ ...address, [field]: value, area: '' });
+    } else {
+      onChange({ ...address, [field]: value });
+    }
   };
+  
+  const availableAreas = address.city ? (areasByCity[address.city] || []) : [];
 
   return (
     <Card>
@@ -94,7 +106,7 @@ const DeliveryAddressForm: React.FC<DeliveryAddressFormProps> = ({ address, onCh
               <SelectTrigger>
                 <SelectValue placeholder="শহর নির্বাচন করুন" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-background border shadow-lg z-50">
                 {cities.map(city => (
                   <SelectItem key={city.id} value={city.name}>
                     {city.name}
@@ -105,7 +117,7 @@ const DeliveryAddressForm: React.FC<DeliveryAddressFormProps> = ({ address, onCh
           </div>
           <div className="space-y-2">
             <Label htmlFor="area">এলাকা *</Label>
-            {address.city === 'ঢাকা' ? (
+            {availableAreas.length > 0 ? (
               <Select 
                 value={address.area} 
                 onValueChange={(value) => handleChange('area', value)}
@@ -113,8 +125,8 @@ const DeliveryAddressForm: React.FC<DeliveryAddressFormProps> = ({ address, onCh
                 <SelectTrigger>
                   <SelectValue placeholder="এলাকা নির্বাচন করুন" />
                 </SelectTrigger>
-                <SelectContent>
-                  {dhakaAreas.map(area => (
+                <SelectContent className="bg-background border shadow-lg z-50">
+                  {availableAreas.map(area => (
                     <SelectItem key={area} value={area}>
                       {area}
                     </SelectItem>
@@ -124,7 +136,7 @@ const DeliveryAddressForm: React.FC<DeliveryAddressFormProps> = ({ address, onCh
             ) : (
               <Input
                 id="area"
-                placeholder="আপনার এলাকা"
+                placeholder="আপনার এলাকা লিখুন"
                 value={address.area}
                 onChange={(e) => handleChange('area', e.target.value)}
               />
