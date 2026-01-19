@@ -1,11 +1,13 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Plus, RefreshCw, MessageCircle, MapPin } from 'lucide-react';
+import { Plus, RefreshCw, MessageCircle, MapPin, ShoppingCart } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { useToast } from '@/hooks/use-toast';
+import { useShoppingStateWithToast } from '@/hooks/useShoppingState';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -23,8 +25,10 @@ interface UsedProduct {
 }
 
 const UsedProductsSection = () => {
+  const navigate = useNavigate();
   const { language } = useApp();
   const { toast } = useToast();
+  const { addToCartWithToast } = useShoppingStateWithToast();
   const [isPostDialogOpen, setIsPostDialogOpen] = useState(false);
   const [postForm, setPostForm] = useState({
     title: '',
@@ -87,6 +91,19 @@ const UsedProductsSection = () => {
       title: "চ্যাট শুরু",
       description: `${product.seller} এর সাথে চ্যাট শুরু করা হচ্ছে...`,
     });
+  };
+
+  const handleBuyNow = (product: UsedProduct) => {
+    // Add to cart first
+    addToCartWithToast({
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      image: product.image
+    });
+    
+    // Navigate to checkout page
+    navigate('/cart-checkout');
   };
 
   return (
@@ -189,15 +206,25 @@ const UsedProductsSection = () => {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">{product.postedDate}</span>
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      className="h-6 px-2 text-xs"
-                      onClick={() => handleChat(product)}
-                    >
-                      <MessageCircle className="h-3 w-3 mr-1" />
-                      চ্যাট
-                    </Button>
+                    <div className="flex gap-1">
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="h-6 px-2 text-xs"
+                        onClick={() => handleChat(product)}
+                      >
+                        <MessageCircle className="h-3 w-3 mr-1" />
+                        চ্যাট
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        className="h-6 px-2 text-xs bg-emerald-500 hover:bg-emerald-600"
+                        onClick={() => handleBuyNow(product)}
+                      >
+                        <ShoppingCart className="h-3 w-3 mr-1" />
+                        কিনুন
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </div>

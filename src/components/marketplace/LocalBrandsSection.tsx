@@ -1,11 +1,13 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Store, Verified, Star, Heart } from 'lucide-react';
+import { Store, Verified, Star, Heart, ShoppingCart } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { useToast } from '@/hooks/use-toast';
+import { useShoppingStateWithToast } from '@/hooks/useShoppingState';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -28,8 +30,10 @@ interface LocalBrand {
 }
 
 const LocalBrandsSection = () => {
+  const navigate = useNavigate();
   const { language } = useApp();
   const { toast } = useToast();
+  const { addToCartWithToast } = useShoppingStateWithToast();
   const [isRegisterDialogOpen, setIsRegisterDialogOpen] = useState(false);
   const [registerForm, setRegisterForm] = useState({
     brandName: '',
@@ -104,6 +108,19 @@ const LocalBrandsSection = () => {
       title: "পণ্য দেখা হচ্ছে",
       description: `${brand.featuredProduct.title} এর বিস্তারিত দেখানো হচ্ছে...`,
     });
+  };
+
+  const handleBuyNow = (brand: LocalBrand) => {
+    // Add featured product to cart
+    addToCartWithToast({
+      id: `${brand.id}-featured`,
+      title: brand.featuredProduct.title,
+      price: brand.featuredProduct.price,
+      image: brand.featuredProduct.image
+    });
+    
+    // Navigate to checkout page
+    navigate('/cart-checkout');
   };
 
   return (
@@ -242,15 +259,25 @@ const LocalBrandsSection = () => {
                       <span className="font-bold text-violet-600 text-sm">
                         {brand.featuredProduct.price}
                       </span>
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="h-6 px-2 text-xs"
-                        onClick={() => handleViewProduct(brand)}
-                      >
-                        <Heart className="h-3 w-3 mr-1" />
-                        দেখুন
-                      </Button>
+                      <div className="flex gap-1">
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="h-6 px-2 text-xs"
+                          onClick={() => handleViewProduct(brand)}
+                        >
+                          <Heart className="h-3 w-3 mr-1" />
+                          দেখুন
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          className="h-6 px-2 text-xs bg-violet-500 hover:bg-violet-600"
+                          onClick={() => handleBuyNow(brand)}
+                        >
+                          <ShoppingCart className="h-3 w-3 mr-1" />
+                          কিনুন
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
