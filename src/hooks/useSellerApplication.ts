@@ -70,6 +70,7 @@ export function useSellerApplication() {
     description: string;
     category: string;
     experience: string;
+    documents?: string[];
   }) => {
     if (!user?.id) {
       throw new Error('ব্যবহারকারী লগইন করা নেই');
@@ -94,6 +95,7 @@ export function useSellerApplication() {
         description: formData.description,
         category: formData.category,
         experience: formData.experience,
+        documents: formData.documents || null,
         status: 'pending'
       })
       .select()
