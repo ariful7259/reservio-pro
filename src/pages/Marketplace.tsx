@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -25,6 +26,7 @@ import { useShoppingStateWithToast } from '@/hooks/useShoppingState';
 import { useToast } from '@/hooks/use-toast';
 
 const Marketplace = () => {
+  const navigate = useNavigate();
   const { language, t } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState('grid');
@@ -112,19 +114,8 @@ const Marketplace = () => {
       image: product.image
     });
     
-    // Show buy now message
-    toast({
-      title: "অর্ডার প্রসেসিং",
-      description: `${product.title} এর অর্ডার প্রসেস করা হচ্ছে...`,
-    });
-    
-    // Simulate redirect to checkout
-    setTimeout(() => {
-      toast({
-        title: "চেকআউট পেইজে পাঠানো হচ্ছে",
-        description: "আপনার অর্ডার সম্পূর্ণ করতে চেকআউট পেইজে যাচ্ছেন...",
-      });
-    }, 1000);
+    // Navigate to checkout page
+    navigate('/cart-checkout');
   };
 
   return (
