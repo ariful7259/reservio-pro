@@ -48,6 +48,7 @@ const BecomeSeller = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
   const [formData, setFormData] = useState({
     businessName: '',
     businessType: '',
@@ -63,11 +64,58 @@ const BecomeSeller = () => {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || !user?.id) return;
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
     
-    const newFiles = Array.from(files).slice(0, 5 - uploadedFiles.length);
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      await processFiles(Array.from(files));
+    }
+  };
+
+  const processFiles = async (files: File[]) => {
+    if (!user?.id) return;
+    
+    const validFiles = files.filter(file => {
+      const isValidType = file.type.startsWith('image/') || 
+                         file.type === 'application/pdf' ||
+                         file.type === 'application/msword' ||
+                         file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+      return isValidType;
+    });
+
+    if (validFiles.length === 0) {
+      toast({
+        title: "অবৈধ ফাইল টাইপ",
+        description: "শুধুমাত্র ছবি, PDF ও Word ফাইল আপলোড করা যাবে।",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    const newFiles = validFiles.slice(0, 5 - uploadedFiles.length);
+    
+    if (newFiles.length < validFiles.length) {
+      toast({
+        title: "সর্বোচ্চ ৫টি ফাইল",
+        description: "আপনি সর্বোচ্চ ৫টি ফাইল আপলোড করতে পারবেন।",
+        variant: "destructive"
+      });
+    }
     
     // Add files to state with initial progress
     const fileObjects: UploadedFile[] = newFiles.map(file => ({
@@ -131,6 +179,13 @@ const BecomeSeller = () => {
         });
       }
     }
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    
+    await processFiles(Array.from(files));
     
     // Reset input
     if (fileInputRef.current) {
@@ -441,11 +496,27 @@ const BecomeSeller = () => {
       case 3:
         return (
           <div className="space-y-4">
-            <div className="text-center">
-              <Upload className="h-16 w-16 mx-auto text-gray-400 mb-4" />
-              <p className="text-lg font-medium mb-2">প্রয়োজনীয় ডকুমেন্ট আপলোড করুন</p>
+            {/* Drag and Drop Zone */}
+            <div
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+              className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all ${
+                isDragging 
+                  ? 'border-primary bg-primary/10' 
+                  : 'border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/50'
+              }`}
+            >
+              <Upload className={`h-16 w-16 mx-auto mb-4 transition-colors ${isDragging ? 'text-primary' : 'text-gray-400'}`} />
+              <p className="text-lg font-medium mb-2">
+                {isDragging ? 'ফাইল এখানে ড্রপ করুন' : 'প্রয়োজনীয় ডকুমেন্ট আপলোড করুন'}
+              </p>
               <p className="text-sm text-muted-foreground mb-4">
                 ট্রেড লাইসেন্স, NID কপি, ব্যাংক স্টেটমেন্ট ইত্যাদি আপলোড করুন
+              </p>
+              <p className="text-xs text-muted-foreground mb-4">
+                ফাইল ড্র্যাগ করে এখানে ড্রপ করুন অথবা ক্লিক করুন
               </p>
               <input
                 type="file"
@@ -457,7 +528,10 @@ const BecomeSeller = () => {
               />
               <Button 
                 variant="outline" 
-                onClick={() => fileInputRef.current?.click()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  fileInputRef.current?.click();
+                }}
               >
                 <Upload className="h-4 w-4 mr-2" />
                 ফাইল নির্বাচন করুন
