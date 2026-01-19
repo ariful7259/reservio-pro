@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -21,6 +22,7 @@ interface FlashDeal {
 }
 
 const FlashDealsSection = () => {
+  const navigate = useNavigate();
   const { language } = useApp();
   const [timeLeft, setTimeLeft] = useState(120); // 2 hours in minutes
   const { addToCartWithToast } = useShoppingStateWithToast();
@@ -76,19 +78,8 @@ const FlashDealsSection = () => {
       image: deal.image
     });
     
-    // Show success message and simulate redirect to checkout
-    toast({
-      title: "অর্ডার প্রসেসিং",
-      description: `${deal.title} এর অর্ডার প্রসেস করা হচ্ছে...`,
-    });
-    
-    // Simulate redirect to checkout after 1 second
-    setTimeout(() => {
-      toast({
-        title: "চেকআউট পেইজে পাঠানো হচ্ছে",
-        description: "আপনার অর্ডার সম্পূর্ণ করতে চেকআউট পেইজে যাচ্ছেন...",
-      });
-    }, 1000);
+    // Navigate to checkout page
+    navigate('/cart-checkout');
   };
 
   return (
