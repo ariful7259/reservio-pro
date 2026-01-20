@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,14 +19,21 @@ import {
   Trash2, 
   Edit, 
   Eye,
-  CheckCircle,
-  XCircle,
-  Building,
+  Upload,
+  FileSpreadsheet,
+  BarChart3,
+  TrendingUp,
+  Star,
+  ShoppingBag,
   Phone,
   Mail,
-  MapPin
+  MapPin,
+  Download,
+  AlertCircle,
+  CheckCircle
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
 
 interface SellerProfile {
   id: string;
@@ -40,6 +47,15 @@ interface SellerProfile {
   updated_at: string;
 }
 
+interface SellerPerformance {
+  sellerId: string;
+  businessName: string;
+  totalOrders: number;
+  totalSales: number;
+  avgRating: number;
+  reviewCount: number;
+}
+
 interface NewSellerForm {
   userId: string;
   sellerType: 'marketplace' | 'rental' | 'service' | 'content';
@@ -50,17 +66,49 @@ interface NewSellerForm {
   bio: string;
 }
 
+interface BulkImportResult {
+  success: number;
+  failed: number;
+  errors: string[];
+}
+
 const AddSellerManagement = () => {
   const { toast } = useToast();
   const { user } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
   const [sellers, setSellers] = useState<SellerProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isBulkImportDialogOpen, setIsBulkImportDialogOpen] = useState(false);
   const [selectedSeller, setSelectedSeller] = useState<SellerProfile | null>(null);
   const [availableUsers, setAvailableUsers] = useState<{ id: string; email: string; full_name: string }[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
+  const [activeTab, setActiveTab] = useState('sellers');
+  
+  // Performance data
+  const [performanceData, setPerformanceData] = useState<SellerPerformance[]>([]);
+  const [loadingPerformance, setLoadingPerformance] = useState(false);
+  
+  // Bulk import
+  const [bulkImportData, setBulkImportData] = useState<any[]>([]);
+  const [importProgress, setImportProgress] = useState(0);
+  const [isImporting, setIsImporting] = useState(false);
+  const [importResult, setImportResult] = useState<BulkImportResult | null>(null);
+  
+  // Edit form
+  const [editForm, setEditForm] = useState<NewSellerForm>({
+    userId: '',
+    sellerType: 'marketplace',
+    businessName: '',
+    email: '',
+    phone: '',
+    address: '',
+    bio: ''
+  });
   
   const [newSeller, setNewSeller] = useState<NewSellerForm>({
     userId: '',
@@ -94,18 +142,69 @@ const AddSellerManagement = () => {
     }
   };
 
+  // Fetch seller performance data
+  const fetchPerformanceData = async () => {
+    setLoadingPerformance(true);
+    try {
+      const { data: sellersData, error: sellersError } = await supabase
+        .from('seller_profiles')
+        .select('id, business_name');
+
+      if (sellersError) throw sellersError;
+
+      const performancePromises = (sellersData || []).map(async (seller) => {
+        // Get orders count and total sales
+        const { data: ordersData } = await supabase
+          .from('reseller_orders')
+          .select('total_amount, status')
+          .eq('user_id', seller.id);
+
+        const completedOrders = ordersData?.filter(o => o.status === 'delivered') || [];
+        const totalSales = completedOrders.reduce((sum, o) => sum + (o.total_amount || 0), 0);
+
+        // Get reviews
+        const { data: reviewsData } = await supabase
+          .from('reviews')
+          .select('rating')
+          .eq('product_id', seller.id);
+
+        const avgRating = reviewsData?.length 
+          ? reviewsData.reduce((sum, r) => sum + (r.rating || 0), 0) / reviewsData.length 
+          : 0;
+
+        return {
+          sellerId: seller.id,
+          businessName: seller.business_name || 'নাম নেই',
+          totalOrders: ordersData?.length || 0,
+          totalSales,
+          avgRating: Math.round(avgRating * 10) / 10,
+          reviewCount: reviewsData?.length || 0
+        };
+      });
+
+      const results = await Promise.all(performancePromises);
+      setPerformanceData(results.sort((a, b) => b.totalSales - a.totalSales));
+    } catch (error: any) {
+      toast({
+        title: "ত্রুটি",
+        description: "পারফরম্যান্স ডেটা লোড করতে সমস্যা হয়েছে।",
+        variant: "destructive"
+      });
+    } finally {
+      setLoadingPerformance(false);
+    }
+  };
+
   // Fetch users who are not sellers yet
   const fetchAvailableUsers = async () => {
     setLoadingUsers(true);
     try {
-      // Get all profiles
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select('id, email, full_name');
 
       if (profilesError) throw profilesError;
 
-      // Get existing seller IDs
       const { data: existingSellers, error: sellersError } = await supabase
         .from('seller_profiles')
         .select('id');
@@ -113,8 +212,6 @@ const AddSellerManagement = () => {
       if (sellersError) throw sellersError;
 
       const existingSellerIds = new Set(existingSellers?.map(s => s.id) || []);
-      
-      // Filter out users who are already sellers
       const available = (profiles || []).filter(p => !existingSellerIds.has(p.id));
       setAvailableUsers(available);
     } catch (error: any) {
@@ -131,6 +228,12 @@ const AddSellerManagement = () => {
   useEffect(() => {
     fetchSellers();
   }, []);
+
+  useEffect(() => {
+    if (activeTab === 'performance') {
+      fetchPerformanceData();
+    }
+  }, [activeTab]);
 
   // Add new seller
   const handleAddSeller = async () => {
@@ -183,6 +286,49 @@ const AddSellerManagement = () => {
     }
   };
 
+  // Update seller
+  const handleUpdateSeller = async () => {
+    if (!selectedSeller || !editForm.businessName) {
+      toast({
+        title: "ত্রুটি",
+        description: "ব্যবসার নাম আবশ্যক।",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('seller_profiles')
+        .update({
+          seller_type: editForm.sellerType,
+          business_name: editForm.businessName,
+          email: editForm.email || null,
+          phone: editForm.phone || null,
+          address: editForm.address || null,
+          bio: editForm.bio || null,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', selectedSeller.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "সফল",
+        description: "সেলার তথ্য আপডেট করা হয়েছে।",
+      });
+
+      setIsEditDialogOpen(false);
+      fetchSellers();
+    } catch (error: any) {
+      toast({
+        title: "ত্রুটি",
+        description: error.message || "সেলার আপডেট করতে সমস্যা হয়েছে।",
+        variant: "destructive"
+      });
+    }
+  };
+
   // Delete seller
   const handleDeleteSeller = async (sellerId: string) => {
     if (!confirm('আপনি কি নিশ্চিত এই সেলার মুছে ফেলতে চান?')) return;
@@ -210,6 +356,160 @@ const AddSellerManagement = () => {
     }
   };
 
+  // Open edit dialog
+  const openEditDialog = (seller: SellerProfile) => {
+    setSelectedSeller(seller);
+    setEditForm({
+      userId: seller.id,
+      sellerType: seller.seller_type as any,
+      businessName: seller.business_name || '',
+      email: seller.email || '',
+      phone: seller.phone || '',
+      address: seller.address || '',
+      bio: seller.bio || ''
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  // Handle CSV file upload
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target?.result as string;
+      const lines = text.split('\n');
+      const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+      
+      const data = [];
+      for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+        
+        const values = lines[i].split(',').map(v => v.trim());
+        const row: any = {};
+        
+        headers.forEach((header, index) => {
+          row[header] = values[index] || '';
+        });
+        
+        data.push(row);
+      }
+      
+      setBulkImportData(data);
+      setImportResult(null);
+    };
+    reader.readAsText(file);
+  };
+
+  // Process bulk import
+  const handleBulkImport = async () => {
+    if (bulkImportData.length === 0) {
+      toast({
+        title: "ত্রুটি",
+        description: "কোনো ডেটা পাওয়া যায়নি।",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsImporting(true);
+    setImportProgress(0);
+    
+    const result: BulkImportResult = { success: 0, failed: 0, errors: [] };
+    const total = bulkImportData.length;
+
+    for (let i = 0; i < bulkImportData.length; i++) {
+      const row = bulkImportData[i];
+      
+      try {
+        // First, find or create user
+        let userId = row.user_id;
+        
+        if (!userId && row.email) {
+          // Try to find user by email
+          const { data: existingProfile } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('email', row.email)
+            .single();
+          
+          userId = existingProfile?.id;
+        }
+
+        if (!userId) {
+          throw new Error(`Row ${i + 1}: ব্যবহারকারী আইডি বা ইমেইল প্রয়োজন`);
+        }
+
+        // Check if already a seller
+        const { data: existingSeller } = await supabase
+          .from('seller_profiles')
+          .select('id')
+          .eq('id', userId)
+          .single();
+
+        if (existingSeller) {
+          throw new Error(`Row ${i + 1}: ইতিমধ্যে সেলার হিসেবে নিবন্ধিত`);
+        }
+
+        // Validate seller type
+        const validTypes = ['marketplace', 'rental', 'service', 'content'];
+        const sellerType = row.seller_type?.toLowerCase() || 'marketplace';
+        
+        if (!validTypes.includes(sellerType)) {
+          throw new Error(`Row ${i + 1}: অবৈধ সেলার টাইপ`);
+        }
+
+        // Insert seller
+        const { error } = await supabase
+          .from('seller_profiles')
+          .insert({
+            id: userId,
+            seller_type: sellerType,
+            business_name: row.business_name || row.businessname || 'নতুন ব্যবসা',
+            email: row.email || null,
+            phone: row.phone || null,
+            address: row.address || null,
+            bio: row.bio || row.description || null
+          });
+
+        if (error) throw error;
+        result.success++;
+      } catch (error: any) {
+        result.failed++;
+        result.errors.push(error.message || `Row ${i + 1}: অজানা ত্রুটি`);
+      }
+
+      setImportProgress(Math.round(((i + 1) / total) * 100));
+    }
+
+    setImportResult(result);
+    setIsImporting(false);
+    
+    if (result.success > 0) {
+      fetchSellers();
+    }
+
+    toast({
+      title: result.failed === 0 ? "সফল" : "আংশিক সফল",
+      description: `${result.success} সেলার যোগ হয়েছে, ${result.failed} ব্যর্থ হয়েছে`,
+      variant: result.failed > 0 ? "destructive" : "default"
+    });
+  };
+
+  // Download sample CSV
+  const downloadSampleCSV = () => {
+    const csvContent = `user_id,email,business_name,seller_type,phone,address,bio
+,seller1@example.com,ABC Store,marketplace,01712345678,Dhaka,Best electronics store
+,seller2@example.com,XYZ Rentals,rental,01812345678,Chittagong,Premium rental services`;
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'seller_import_sample.csv';
+    link.click();
+  };
+
   // Filter sellers by search query
   const filteredSellers = sellers.filter(seller => 
     seller.business_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -230,239 +530,544 @@ const AddSellerManagement = () => {
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="sellers" className="gap-2">
+            <Store className="h-4 w-4" />
+            সেলার তালিকা
+          </TabsTrigger>
+          <TabsTrigger value="performance" className="gap-2">
+            <BarChart3 className="h-4 w-4" />
+            পারফরম্যান্স
+          </TabsTrigger>
+          <TabsTrigger value="import" className="gap-2">
+            <Upload className="h-4 w-4" />
+            বাল্ক ইম্পোর্ট
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Sellers Tab */}
+        <TabsContent value="sellers">
+          <Card>
+            <CardHeader>
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Store className="h-5 w-5" />
+                    সেলার ম্যানেজমেন্ট
+                  </CardTitle>
+                  <CardDescription>
+                    সরাসরি নতুন সেলার যোগ করুন বা বিদ্যমান সেলার পরিচালনা করুন
+                  </CardDescription>
+                </div>
+                <Dialog open={isAddDialogOpen} onOpenChange={(open) => {
+                  setIsAddDialogOpen(open);
+                  if (open) fetchAvailableUsers();
+                }}>
+                  <DialogTrigger asChild>
+                    <Button className="gap-2">
+                      <UserPlus className="h-4 w-4" />
+                      নতুন সেলার যোগ করুন
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>নতুন সেলার যোগ করুন</DialogTitle>
+                      <DialogDescription>
+                        একজন বিদ্যমান ব্যবহারকারীকে সেলার হিসেবে যোগ করুন
+                      </DialogDescription>
+                    </DialogHeader>
+                    
+                    <div className="grid gap-4 py-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="userId">ব্যবহারকারী নির্বাচন করুন *</Label>
+                        <Select
+                          value={newSeller.userId}
+                          onValueChange={(value) => {
+                            const selectedUser = availableUsers.find(u => u.id === value);
+                            setNewSeller({ 
+                              ...newSeller, 
+                              userId: value,
+                              email: selectedUser?.email || ''
+                            });
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder={loadingUsers ? "লোড হচ্ছে..." : "ব্যবহারকারী নির্বাচন করুন"} />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {availableUsers.map(user => (
+                              <SelectItem key={user.id} value={user.id}>
+                                {user.full_name || user.email || user.id.substring(0, 8)}
+                              </SelectItem>
+                            ))}
+                            {availableUsers.length === 0 && !loadingUsers && (
+                              <SelectItem value="none" disabled>
+                                কোনো ব্যবহারকারী পাওয়া যায়নি
+                              </SelectItem>
+                            )}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="grid gap-2">
+                        <Label htmlFor="sellerType">সেলার টাইপ *</Label>
+                        <Select
+                          value={newSeller.sellerType}
+                          onValueChange={(value: 'marketplace' | 'rental' | 'service' | 'content') => 
+                            setNewSeller({ ...newSeller, sellerType: value })
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="টাইপ নির্বাচন করুন" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="marketplace">মার্কেটপ্লেস</SelectItem>
+                            <SelectItem value="rental">রেন্টাল</SelectItem>
+                            <SelectItem value="service">সার্ভিস</SelectItem>
+                            <SelectItem value="content">কন্টেন্ট</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="grid gap-2">
+                        <Label htmlFor="businessName">ব্যবসার নাম *</Label>
+                        <Input
+                          id="businessName"
+                          value={newSeller.businessName}
+                          onChange={(e) => setNewSeller({ ...newSeller, businessName: e.target.value })}
+                          placeholder="ব্যবসার নাম লিখুন"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="grid gap-2">
+                          <Label htmlFor="email">ইমেইল</Label>
+                          <Input
+                            id="email"
+                            type="email"
+                            value={newSeller.email}
+                            onChange={(e) => setNewSeller({ ...newSeller, email: e.target.value })}
+                            placeholder="email@example.com"
+                          />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="phone">ফোন</Label>
+                          <Input
+                            id="phone"
+                            value={newSeller.phone}
+                            onChange={(e) => setNewSeller({ ...newSeller, phone: e.target.value })}
+                            placeholder="01XXXXXXXXX"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid gap-2">
+                        <Label htmlFor="address">ঠিকানা</Label>
+                        <Input
+                          id="address"
+                          value={newSeller.address}
+                          onChange={(e) => setNewSeller({ ...newSeller, address: e.target.value })}
+                          placeholder="ব্যবসার ঠিকানা"
+                        />
+                      </div>
+
+                      <div className="grid gap-2">
+                        <Label htmlFor="bio">বিবরণ</Label>
+                        <Textarea
+                          id="bio"
+                          value={newSeller.bio}
+                          onChange={(e) => setNewSeller({ ...newSeller, bio: e.target.value })}
+                          placeholder="ব্যবসার সংক্ষিপ্ত বিবরণ"
+                          rows={3}
+                        />
+                      </div>
+                    </div>
+
+                    <DialogFooter>
+                      <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                        বাতিল
+                      </Button>
+                      <Button onClick={handleAddSeller}>
+                        <UserPlus className="h-4 w-4 mr-2" />
+                        সেলার যোগ করুন
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col md:flex-row gap-4 mb-6">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="সেলার খুঁজুন (নাম, ইমেইল, ফোন)..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                <Button variant="outline" onClick={fetchSellers}>
+                  <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                  রিফ্রেশ
+                </Button>
+              </div>
+
+              {loading ? (
+                <div className="text-center py-12">
+                  <RefreshCw className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
+                  <p className="mt-2 text-muted-foreground">লোড হচ্ছে...</p>
+                </div>
+              ) : filteredSellers.length === 0 ? (
+                <div className="text-center py-12">
+                  <Store className="h-12 w-12 mx-auto text-muted-foreground" />
+                  <p className="mt-2 text-muted-foreground">কোনো সেলার পাওয়া যায়নি</p>
+                </div>
+              ) : (
+                <div className="rounded-md border overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>ব্যবসার নাম</TableHead>
+                        <TableHead>টাইপ</TableHead>
+                        <TableHead>ইমেইল</TableHead>
+                        <TableHead>ফোন</TableHead>
+                        <TableHead>যোগ হয়েছে</TableHead>
+                        <TableHead className="text-right">অ্যাকশন</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredSellers.map((seller) => (
+                        <TableRow key={seller.id}>
+                          <TableCell className="font-medium">
+                            {seller.business_name || 'নাম নেই'}
+                          </TableCell>
+                          <TableCell>
+                            {getSellerTypeBadge(seller.seller_type)}
+                          </TableCell>
+                          <TableCell>{seller.email || '-'}</TableCell>
+                          <TableCell>{seller.phone || '-'}</TableCell>
+                          <TableCell>
+                            {new Date(seller.created_at).toLocaleDateString('bn-BD')}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex justify-end gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedSeller(seller);
+                                  setIsViewDialogOpen(true);
+                                }}
+                              >
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => openEditDialog(seller)}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-destructive hover:text-destructive"
+                                onClick={() => handleDeleteSeller(seller.id)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Performance Tab */}
+        <TabsContent value="performance">
+          <Card>
+            <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Store className="h-5 w-5" />
-                সেলার ম্যানেজমেন্ট
+                <BarChart3 className="h-5 w-5" />
+                সেলার পারফরম্যান্স রিপোর্ট
               </CardTitle>
               <CardDescription>
-                সরাসরি নতুন সেলার যোগ করুন বা বিদ্যমান সেলার পরিচালনা করুন
+                প্রতিটি সেলারের বিক্রি, অর্ডার এবং রেটিং দেখুন
               </CardDescription>
-            </div>
-            <Dialog open={isAddDialogOpen} onOpenChange={(open) => {
-              setIsAddDialogOpen(open);
-              if (open) fetchAvailableUsers();
-            }}>
-              <DialogTrigger asChild>
-                <Button className="gap-2">
-                  <UserPlus className="h-4 w-4" />
-                  নতুন সেলার যোগ করুন
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                <DialogHeader>
-                  <DialogTitle>নতুন সেলার যোগ করুন</DialogTitle>
-                  <DialogDescription>
-                    একজন বিদ্যমান ব্যবহারকারীকে সেলার হিসেবে যোগ করুন
-                  </DialogDescription>
-                </DialogHeader>
-                
-                <div className="grid gap-4 py-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="userId">ব্যবহারকারী নির্বাচন করুন *</Label>
-                    <Select
-                      value={newSeller.userId}
-                      onValueChange={(value) => {
-                        const selectedUser = availableUsers.find(u => u.id === value);
-                        setNewSeller({ 
-                          ...newSeller, 
-                          userId: value,
-                          email: selectedUser?.email || ''
-                        });
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder={loadingUsers ? "লোড হচ্ছে..." : "ব্যবহারকারী নির্বাচন করুন"} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {availableUsers.map(user => (
-                          <SelectItem key={user.id} value={user.id}>
-                            {user.full_name || user.email || user.id.substring(0, 8)}
-                          </SelectItem>
+            </CardHeader>
+            <CardContent>
+              {loadingPerformance ? (
+                <div className="text-center py-12">
+                  <RefreshCw className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
+                  <p className="mt-2 text-muted-foreground">পারফরম্যান্স ডেটা লোড হচ্ছে...</p>
+                </div>
+              ) : performanceData.length === 0 ? (
+                <div className="text-center py-12">
+                  <BarChart3 className="h-12 w-12 mx-auto text-muted-foreground" />
+                  <p className="mt-2 text-muted-foreground">কোনো পারফরম্যান্স ডেটা নেই</p>
+                </div>
+              ) : (
+                <>
+                  {/* Summary Cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-primary/10 rounded-lg">
+                            <Store className="h-5 w-5 text-primary" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">মোট সেলার</p>
+                            <p className="text-2xl font-bold">{performanceData.length}</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-green-100 rounded-lg">
+                            <TrendingUp className="h-5 w-5 text-green-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">মোট বিক্রি</p>
+                            <p className="text-2xl font-bold">
+                              ৳{performanceData.reduce((sum, p) => sum + p.totalSales, 0).toLocaleString('bn-BD')}
+                            </p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-blue-100 rounded-lg">
+                            <ShoppingBag className="h-5 w-5 text-blue-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">মোট অর্ডার</p>
+                            <p className="text-2xl font-bold">
+                              {performanceData.reduce((sum, p) => sum + p.totalOrders, 0).toLocaleString('bn-BD')}
+                            </p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-yellow-100 rounded-lg">
+                            <Star className="h-5 w-5 text-yellow-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">গড় রেটিং</p>
+                            <p className="text-2xl font-bold">
+                              {performanceData.length > 0
+                                ? (performanceData.reduce((sum, p) => sum + p.avgRating, 0) / performanceData.length).toFixed(1)
+                                : '0'}
+                            </p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* Performance Table */}
+                  <div className="rounded-md border overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>র‍্যাংক</TableHead>
+                          <TableHead>ব্যবসার নাম</TableHead>
+                          <TableHead className="text-right">মোট অর্ডার</TableHead>
+                          <TableHead className="text-right">মোট বিক্রি</TableHead>
+                          <TableHead className="text-right">গড় রেটিং</TableHead>
+                          <TableHead className="text-right">রিভিউ</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {performanceData.map((seller, index) => (
+                          <TableRow key={seller.sellerId}>
+                            <TableCell>
+                              <Badge variant={index < 3 ? "default" : "outline"}>
+                                #{index + 1}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="font-medium">{seller.businessName}</TableCell>
+                            <TableCell className="text-right">{seller.totalOrders.toLocaleString('bn-BD')}</TableCell>
+                            <TableCell className="text-right">৳{seller.totalSales.toLocaleString('bn-BD')}</TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex items-center justify-end gap-1">
+                                <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                                {seller.avgRating}
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-right">{seller.reviewCount.toLocaleString('bn-BD')}</TableCell>
+                          </TableRow>
                         ))}
-                        {availableUsers.length === 0 && !loadingUsers && (
-                          <SelectItem value="none" disabled>
-                            কোনো ব্যবহারকারী পাওয়া যায়নি
-                          </SelectItem>
-                        )}
-                      </SelectContent>
-                    </Select>
+                      </TableBody>
+                    </Table>
                   </div>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-                  <div className="grid gap-2">
-                    <Label htmlFor="sellerType">সেলার টাইপ *</Label>
-                    <Select
-                      value={newSeller.sellerType}
-                      onValueChange={(value: 'marketplace' | 'rental' | 'service' | 'content') => 
-                        setNewSeller({ ...newSeller, sellerType: value })
-                      }
+        {/* Bulk Import Tab */}
+        <TabsContent value="import">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Upload className="h-5 w-5" />
+                বাল্ক সেলার ইম্পোর্ট
+              </CardTitle>
+              <CardDescription>
+                CSV ফাইল থেকে একসাথে অনেক সেলার আপলোড করুন
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Instructions */}
+              <div className="bg-muted/50 p-4 rounded-lg space-y-3">
+                <h4 className="font-medium flex items-center gap-2">
+                  <FileSpreadsheet className="h-4 w-4" />
+                  CSV ফাইল ফরম্যাট
+                </h4>
+                <p className="text-sm text-muted-foreground">
+                  আপনার CSV ফাইলে নিম্নলিখিত কলামগুলি থাকা উচিত:
+                </p>
+                <ul className="text-sm text-muted-foreground list-disc list-inside space-y-1">
+                  <li><strong>user_id</strong> (ঐচ্ছিক) - ব্যবহারকারীর আইডি</li>
+                  <li><strong>email</strong> - ব্যবহারকারীর ইমেইল (user_id না থাকলে এটি দিয়ে খোঁজা হবে)</li>
+                  <li><strong>business_name</strong> - ব্যবসার নাম</li>
+                  <li><strong>seller_type</strong> - marketplace, rental, service, বা content</li>
+                  <li><strong>phone</strong> (ঐচ্ছিক) - ফোন নম্বর</li>
+                  <li><strong>address</strong> (ঐচ্ছিক) - ঠিকানা</li>
+                  <li><strong>bio</strong> (ঐচ্ছিক) - বিবরণ</li>
+                </ul>
+                <Button variant="outline" size="sm" onClick={downloadSampleCSV}>
+                  <Download className="h-4 w-4 mr-2" />
+                  নমুনা CSV ডাউনলোড করুন
+                </Button>
+              </div>
+
+              {/* File Upload */}
+              <div className="border-2 border-dashed rounded-lg p-8 text-center">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".csv"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+                <FileSpreadsheet className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <p className="text-muted-foreground mb-4">CSV ফাইল আপলোড করতে ক্লিক করুন</p>
+                <Button onClick={() => fileInputRef.current?.click()}>
+                  <Upload className="h-4 w-4 mr-2" />
+                  CSV ফাইল নির্বাচন করুন
+                </Button>
+              </div>
+
+              {/* Preview Data */}
+              {bulkImportData.length > 0 && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium">প্রিভিউ ({bulkImportData.length} সেলার)</h4>
+                    <Button 
+                      onClick={handleBulkImport} 
+                      disabled={isImporting}
                     >
-                      <SelectTrigger>
-                        <SelectValue placeholder="টাইপ নির্বাচন করুন" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="marketplace">মার্কেটপ্লেস</SelectItem>
-                        <SelectItem value="rental">রেন্টাল</SelectItem>
-                        <SelectItem value="service">সার্ভিস</SelectItem>
-                        <SelectItem value="content">কন্টেন্ট</SelectItem>
-                      </SelectContent>
-                    </Select>
+                      {isImporting ? (
+                        <>
+                          <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                          ইম্পোর্ট হচ্ছে...
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="h-4 w-4 mr-2" />
+                          সব ইম্পোর্ট করুন
+                        </>
+                      )}
+                    </Button>
                   </div>
 
-                  <div className="grid gap-2">
-                    <Label htmlFor="businessName">ব্যবসার নাম *</Label>
-                    <Input
-                      id="businessName"
-                      value={newSeller.businessName}
-                      onChange={(e) => setNewSeller({ ...newSeller, businessName: e.target.value })}
-                      placeholder="ব্যবসার নাম লিখুন"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="email">ইমেইল</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={newSeller.email}
-                        onChange={(e) => setNewSeller({ ...newSeller, email: e.target.value })}
-                        placeholder="email@example.com"
-                      />
+                  {isImporting && (
+                    <div className="space-y-2">
+                      <Progress value={importProgress} />
+                      <p className="text-sm text-muted-foreground text-center">{importProgress}% সম্পন্ন</p>
                     </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="phone">ফোন</Label>
-                      <Input
-                        id="phone"
-                        value={newSeller.phone}
-                        onChange={(e) => setNewSeller({ ...newSeller, phone: e.target.value })}
-                        placeholder="01XXXXXXXXX"
-                      />
-                    </div>
-                  </div>
+                  )}
 
-                  <div className="grid gap-2">
-                    <Label htmlFor="address">ঠিকানা</Label>
-                    <Input
-                      id="address"
-                      value={newSeller.address}
-                      onChange={(e) => setNewSeller({ ...newSeller, address: e.target.value })}
-                      placeholder="ব্যবসার ঠিকানা"
-                    />
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="bio">বিবরণ</Label>
-                    <Textarea
-                      id="bio"
-                      value={newSeller.bio}
-                      onChange={(e) => setNewSeller({ ...newSeller, bio: e.target.value })}
-                      placeholder="ব্যবসার সংক্ষিপ্ত বিবরণ"
-                      rows={3}
-                    />
+                  <div className="rounded-md border overflow-x-auto max-h-64">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>ইমেইল</TableHead>
+                          <TableHead>ব্যবসার নাম</TableHead>
+                          <TableHead>টাইপ</TableHead>
+                          <TableHead>ফোন</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {bulkImportData.slice(0, 10).map((row, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{row.email || '-'}</TableCell>
+                            <TableCell>{row.business_name || row.businessname || '-'}</TableCell>
+                            <TableCell>{row.seller_type || 'marketplace'}</TableCell>
+                            <TableCell>{row.phone || '-'}</TableCell>
+                          </TableRow>
+                        ))}
+                        {bulkImportData.length > 10 && (
+                          <TableRow>
+                            <TableCell colSpan={4} className="text-center text-muted-foreground">
+                              ...এবং আরো {bulkImportData.length - 10} টি
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
                   </div>
                 </div>
+              )}
 
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                    বাতিল
-                  </Button>
-                  <Button onClick={handleAddSeller}>
-                    <UserPlus className="h-4 w-4 mr-2" />
-                    সেলার যোগ করুন
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="সেলার খুঁজুন (নাম, ইমেইল, ফোন)..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <Button variant="outline" onClick={fetchSellers}>
-              <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-              রিফ্রেশ
-            </Button>
-          </div>
-
-          {loading ? (
-            <div className="text-center py-12">
-              <RefreshCw className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
-              <p className="mt-2 text-muted-foreground">লোড হচ্ছে...</p>
-            </div>
-          ) : filteredSellers.length === 0 ? (
-            <div className="text-center py-12">
-              <Store className="h-12 w-12 mx-auto text-muted-foreground" />
-              <p className="mt-2 text-muted-foreground">কোনো সেলার পাওয়া যায়নি</p>
-            </div>
-          ) : (
-            <div className="rounded-md border overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>ব্যবসার নাম</TableHead>
-                    <TableHead>টাইপ</TableHead>
-                    <TableHead>ইমেইল</TableHead>
-                    <TableHead>ফোন</TableHead>
-                    <TableHead>যোগ হয়েছে</TableHead>
-                    <TableHead className="text-right">অ্যাকশন</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredSellers.map((seller) => (
-                    <TableRow key={seller.id}>
-                      <TableCell className="font-medium">
-                        {seller.business_name || 'নাম নেই'}
-                      </TableCell>
-                      <TableCell>
-                        {getSellerTypeBadge(seller.seller_type)}
-                      </TableCell>
-                      <TableCell>{seller.email || '-'}</TableCell>
-                      <TableCell>{seller.phone || '-'}</TableCell>
-                      <TableCell>
-                        {new Date(seller.created_at).toLocaleDateString('bn-BD')}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setSelectedSeller(seller);
-                              setIsViewDialogOpen(true);
-                            }}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="text-destructive hover:text-destructive"
-                            onClick={() => handleDeleteSeller(seller.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+              {/* Import Result */}
+              {importResult && (
+                <div className={`p-4 rounded-lg ${importResult.failed > 0 ? 'bg-destructive/10' : 'bg-green-50'}`}>
+                  <div className="flex items-start gap-3">
+                    {importResult.failed > 0 ? (
+                      <AlertCircle className="h-5 w-5 text-destructive mt-0.5" />
+                    ) : (
+                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+                    )}
+                    <div className="space-y-2">
+                      <p className="font-medium">
+                        ইম্পোর্ট ফলাফল: {importResult.success} সফল, {importResult.failed} ব্যর্থ
+                      </p>
+                      {importResult.errors.length > 0 && (
+                        <ul className="text-sm text-destructive list-disc list-inside">
+                          {importResult.errors.slice(0, 5).map((error, index) => (
+                            <li key={index}>{error}</li>
+                          ))}
+                          {importResult.errors.length > 5 && (
+                            <li>...এবং আরো {importResult.errors.length - 5} টি ত্রুটি</li>
+                          )}
+                        </ul>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
       {/* View Seller Dialog */}
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
@@ -518,6 +1123,103 @@ const AddSellerManagement = () => {
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Seller Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>সেলার তথ্য সম্পাদনা করুন</DialogTitle>
+            <DialogDescription>
+              সেলারের ব্যবসার তথ্য আপডেট করুন
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="editSellerType">সেলার টাইপ *</Label>
+              <Select
+                value={editForm.sellerType}
+                onValueChange={(value: 'marketplace' | 'rental' | 'service' | 'content') => 
+                  setEditForm({ ...editForm, sellerType: value })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="টাইপ নির্বাচন করুন" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="marketplace">মার্কেটপ্লেস</SelectItem>
+                  <SelectItem value="rental">রেন্টাল</SelectItem>
+                  <SelectItem value="service">সার্ভিস</SelectItem>
+                  <SelectItem value="content">কন্টেন্ট</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="editBusinessName">ব্যবসার নাম *</Label>
+              <Input
+                id="editBusinessName"
+                value={editForm.businessName}
+                onChange={(e) => setEditForm({ ...editForm, businessName: e.target.value })}
+                placeholder="ব্যবসার নাম লিখুন"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="editEmail">ইমেইল</Label>
+                <Input
+                  id="editEmail"
+                  type="email"
+                  value={editForm.email}
+                  onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                  placeholder="email@example.com"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="editPhone">ফোন</Label>
+                <Input
+                  id="editPhone"
+                  value={editForm.phone}
+                  onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                  placeholder="01XXXXXXXXX"
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="editAddress">ঠিকানা</Label>
+              <Input
+                id="editAddress"
+                value={editForm.address}
+                onChange={(e) => setEditForm({ ...editForm, address: e.target.value })}
+                placeholder="ব্যবসার ঠিকানা"
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="editBio">বিবরণ</Label>
+              <Textarea
+                id="editBio"
+                value={editForm.bio}
+                onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
+                placeholder="ব্যবসার সংক্ষিপ্ত বিবরণ"
+                rows={3}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+              বাতিল
+            </Button>
+            <Button onClick={handleUpdateSeller}>
+              <Edit className="h-4 w-4 mr-2" />
+              আপডেট করুন
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
