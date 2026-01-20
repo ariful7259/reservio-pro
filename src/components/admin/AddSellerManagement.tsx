@@ -38,7 +38,9 @@ import {
   ShieldCheck,
   ShieldX,
   Send,
-  Bell
+  Bell,
+  Users,
+  Megaphone
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
@@ -142,6 +144,18 @@ const AddSellerManagement = () => {
   });
   const [sendingNotification, setSendingNotification] = useState(false);
   const [selectedSellerForNotification, setSelectedSellerForNotification] = useState<SellerProfile | null>(null);
+  
+  // Bulk Notification
+  const [isBulkNotificationDialogOpen, setIsBulkNotificationDialogOpen] = useState(false);
+  const [bulkNotificationForm, setBulkNotificationForm] = useState({
+    subject: '',
+    message: '',
+    notificationType: 'announcement' as 'custom' | 'verification' | 'warning' | 'announcement',
+    targetGroup: 'all' as 'all' | 'verified' | 'unverified' | 'filtered'
+  });
+  const [bulkNotificationProgress, setBulkNotificationProgress] = useState(0);
+  const [sendingBulkNotification, setSendingBulkNotification] = useState(false);
+  const [bulkNotificationResult, setBulkNotificationResult] = useState<{ sent: number; failed: number } | null>(null);
   
   // Edit form
   const [editForm, setEditForm] = useState<NewSellerForm>({
@@ -628,6 +642,96 @@ const AddSellerManagement = () => {
     }
   };
 
+  // Get target sellers for bulk notification
+  const getBulkNotificationTargets = (): SellerProfile[] => {
+    switch (bulkNotificationForm.targetGroup) {
+      case 'verified':
+        return sellers.filter(s => s.is_verified && s.email);
+      case 'unverified':
+        return sellers.filter(s => !s.is_verified && s.email);
+      case 'filtered':
+        return filteredSellers.filter(s => s.email);
+      case 'all':
+      default:
+        return sellers.filter(s => s.email);
+    }
+  };
+
+  // Send bulk notification to multiple sellers
+  const handleSendBulkNotification = async () => {
+    if (!bulkNotificationForm.subject || !bulkNotificationForm.message) {
+      toast({
+        title: "ত্রুটি",
+        description: "বিষয় এবং বার্তা আবশ্যক।",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const targetSellers = getBulkNotificationTargets();
+    
+    if (targetSellers.length === 0) {
+      toast({
+        title: "ত্রুটি",
+        description: "কোনো সেলার পাওয়া যায়নি যাদের ইমেইল আছে।",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setSendingBulkNotification(true);
+    setBulkNotificationProgress(0);
+    setBulkNotificationResult(null);
+
+    let sent = 0;
+    let failed = 0;
+
+    for (let i = 0; i < targetSellers.length; i++) {
+      const seller = targetSellers[i];
+      
+      try {
+        const response = await supabase.functions.invoke('send-seller-notification', {
+          body: {
+            sellerEmail: seller.email,
+            sellerName: seller.business_name || 'সেলার',
+            subject: bulkNotificationForm.subject,
+            message: bulkNotificationForm.message,
+            notificationType: bulkNotificationForm.notificationType
+          }
+        });
+
+        if (response.error) throw response.error;
+        sent++;
+      } catch (error) {
+        failed++;
+      }
+
+      setBulkNotificationProgress(Math.round(((i + 1) / targetSellers.length) * 100));
+    }
+
+    setBulkNotificationResult({ sent, failed });
+    setSendingBulkNotification(false);
+
+    toast({
+      title: failed === 0 ? "সফল" : "আংশিক সফল",
+      description: `${sent} সেলারকে ইমেইল পাঠানো হয়েছে${failed > 0 ? `, ${failed} ব্যর্থ হয়েছে` : ''}`,
+      variant: failed > 0 ? "destructive" : "default"
+    });
+  };
+
+  // Open bulk notification dialog
+  const openBulkNotificationDialog = () => {
+    setBulkNotificationForm({
+      subject: '',
+      message: '',
+      notificationType: 'announcement',
+      targetGroup: 'all'
+    });
+    setBulkNotificationProgress(0);
+    setBulkNotificationResult(null);
+    setIsBulkNotificationDialogOpen(true);
+  };
+
   // Open edit dialog
   const openEditDialog = (seller: SellerProfile) => {
     setSelectedSeller(seller);
@@ -827,6 +931,16 @@ const AddSellerManagement = () => {
                   </CardDescription>
                 </div>
                 <div className="flex gap-2 flex-wrap">
+                  {/* Bulk Notification Button */}
+                  <Button 
+                    variant="outline" 
+                    className="gap-2"
+                    onClick={openBulkNotificationDialog}
+                  >
+                    <Megaphone className="h-4 w-4" />
+                    বাল্ক নোটিফিকেশন
+                  </Button>
+
                   {/* Export Dropdown */}
                   <Popover>
                     <PopoverTrigger asChild>
@@ -1845,6 +1959,160 @@ const AddSellerManagement = () => {
                 <>
                   <Send className="h-4 w-4 mr-2" />
                   পাঠান
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Bulk Notification Dialog */}
+      <Dialog open={isBulkNotificationDialogOpen} onOpenChange={setIsBulkNotificationDialogOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Megaphone className="h-5 w-5" />
+              বাল্ক নোটিফিকেশন পাঠান
+            </DialogTitle>
+            <DialogDescription>
+              একসাথে সব সেলার বা নির্দিষ্ট গ্রুপের সেলারদের ইমেইল পাঠান
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="targetGroup">প্রাপক গ্রুপ</Label>
+              <Select
+                value={bulkNotificationForm.targetGroup}
+                onValueChange={(value: 'all' | 'verified' | 'unverified' | 'filtered') => 
+                  setBulkNotificationForm({ ...bulkNotificationForm, targetGroup: value })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="গ্রুপ নির্বাচন করুন" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">
+                    <div className="flex items-center gap-2">
+                      <Users className="h-4 w-4" />
+                      সব সেলার ({sellers.filter(s => s.email).length})
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="verified">
+                    <div className="flex items-center gap-2">
+                      <ShieldCheck className="h-4 w-4" />
+                      শুধু ভেরিফাইড ({sellers.filter(s => s.is_verified && s.email).length})
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="unverified">
+                    <div className="flex items-center gap-2">
+                      <Shield className="h-4 w-4" />
+                      শুধু আনভেরিফাইড ({sellers.filter(s => !s.is_verified && s.email).length})
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="filtered">
+                    <div className="flex items-center gap-2">
+                      <Filter className="h-4 w-4" />
+                      ফিল্টার করা সেলার ({filteredSellers.filter(s => s.email).length})
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="bulkNotificationType">নোটিফিকেশন টাইপ</Label>
+              <Select
+                value={bulkNotificationForm.notificationType}
+                onValueChange={(value: 'custom' | 'verification' | 'warning' | 'announcement') => 
+                  setBulkNotificationForm({ ...bulkNotificationForm, notificationType: value })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="টাইপ নির্বাচন করুন" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="announcement">📢 ঘোষণা</SelectItem>
+                  <SelectItem value="custom">📬 কাস্টম বার্তা</SelectItem>
+                  <SelectItem value="verification">✅ ভেরিফিকেশন</SelectItem>
+                  <SelectItem value="warning">⚠️ সতর্কতা</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="bulkSubject">বিষয় *</Label>
+              <Input
+                id="bulkSubject"
+                value={bulkNotificationForm.subject}
+                onChange={(e) => setBulkNotificationForm({ ...bulkNotificationForm, subject: e.target.value })}
+                placeholder="ইমেইলের বিষয় লিখুন"
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="bulkMessage">বার্তা *</Label>
+              <Textarea
+                id="bulkMessage"
+                value={bulkNotificationForm.message}
+                onChange={(e) => setBulkNotificationForm({ ...bulkNotificationForm, message: e.target.value })}
+                placeholder="আপনার বার্তা লিখুন..."
+                rows={5}
+              />
+            </div>
+
+            <div className="bg-muted/50 p-3 rounded-lg text-sm space-y-1">
+              <p className="text-muted-foreground flex items-center gap-2">
+                <Users className="h-4 w-4" />
+                <strong>মোট প্রাপক:</strong> {getBulkNotificationTargets().length} সেলার
+              </p>
+            </div>
+
+            {/* Progress Bar */}
+            {sendingBulkNotification && (
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>পাঠানো হচ্ছে...</span>
+                  <span>{bulkNotificationProgress}%</span>
+                </div>
+                <Progress value={bulkNotificationProgress} className="h-2" />
+              </div>
+            )}
+
+            {/* Result Summary */}
+            {bulkNotificationResult && (
+              <div className="bg-muted/50 p-3 rounded-lg text-sm space-y-1">
+                <p className="flex items-center gap-2 text-emerald-600">
+                  <CheckCircle className="h-4 w-4" />
+                  সফল: {bulkNotificationResult.sent}
+                </p>
+                {bulkNotificationResult.failed > 0 && (
+                  <p className="flex items-center gap-2 text-destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    ব্যর্থ: {bulkNotificationResult.failed}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsBulkNotificationDialogOpen(false)}>
+              বন্ধ করুন
+            </Button>
+            <Button 
+              onClick={handleSendBulkNotification} 
+              disabled={sendingBulkNotification || getBulkNotificationTargets().length === 0}
+            >
+              {sendingBulkNotification ? (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  পাঠানো হচ্ছে...
+                </>
+              ) : (
+                <>
+                  <Send className="h-4 w-4 mr-2" />
+                  {getBulkNotificationTargets().length} জনকে পাঠান
                 </>
               )}
             </Button>
