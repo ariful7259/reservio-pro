@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import DragDropEditor from './DragDropEditor';
+import ThemeLibrary from '@/components/store/ThemeLibrary';
 import ProductManagement from './ProductManagement';
 import PaymentGatewaySetup from './PaymentGatewaySetup';
 import ShippingConfiguration from './ShippingConfiguration';
@@ -504,8 +505,23 @@ const CreateStoreBuilder: React.FC = () => {
 
               {/* Design Tab */}
               <TabsContent value="design" className="mt-0 animate-fade-in">
-                <div className="bg-gradient-to-br from-primary/5 to-purple-500/5 rounded-xl p-4 border min-h-[500px]">
-                  <DragDropEditor storeName={storeData.storeName || "আমার স্টোর"} />
+                <div className="bg-gradient-to-br from-primary/5 to-purple-500/5 rounded-xl p-4 border">
+                  <Tabs defaultValue="layout" className="w-full">
+                    <TabsList className="w-full mb-4 grid grid-cols-2">
+                      <TabsTrigger value="layout">লেআউট</TabsTrigger>
+                      <TabsTrigger value="themes">থিম</TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="layout" className="mt-0">
+                      <div className="min-h-[500px]">
+                        <DragDropEditor storeName={storeData.storeName || "আমার স্টোর"} />
+                      </div>
+                    </TabsContent>
+
+                    <TabsContent value="themes" className="mt-0">
+                      <ThemeLibrary />
+                    </TabsContent>
+                  </Tabs>
                 </div>
               </TabsContent>
 
