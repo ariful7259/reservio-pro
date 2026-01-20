@@ -45,7 +45,7 @@ const DigitalProductsShowcase = () => {
       description: "নিজের ব্র্যান্ডের ওয়েবসাইট তৈরি করুন", 
       icon: Rocket, 
       color: "bg-blue-100 text-blue-600",
-      path: "/create-store"
+      path: "/seller-dashboard/marketplace"
     },
     { 
       id: 2,
