@@ -183,10 +183,13 @@ const CreateStoreBuilder: React.FC = () => {
   const mapThemeIdToTemplate = (themeId?: string): string | undefined => {
     if (!themeId) return undefined;
     if (themeId.includes('fashion')) return 'fashion';
+    if (themeId === 'luxury-brand' || themeId === 'beauty-salon') return 'fashion';
     if (themeId.includes('tech') || themeId.includes('electronics')) return 'electronics';
+    if (themeId === 'ecommerce-pro' || themeId === 'automotive-parts') return 'electronics';
     if (themeId.includes('food') || themeId.includes('restaurant')) return 'food';
     if (themeId.includes('artisan') || themeId.includes('organic')) return 'artisan';
     if (themeId.includes('education') || themeId.includes('consulting') || themeId.includes('digital')) return 'digital';
+    if (themeId === 'healthcare-clinic' || themeId === 'travel-explorer' || themeId === 'real-estate-pro' || themeId === 'event-management') return 'digital';
     if (themeId.includes('minimal')) return 'minimal';
     return undefined;
   };
