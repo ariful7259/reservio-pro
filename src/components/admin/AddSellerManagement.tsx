@@ -33,7 +33,12 @@ import {
   CheckCircle,
   Filter,
   Calendar,
-  FileDown
+  FileDown,
+  Shield,
+  ShieldCheck,
+  ShieldX,
+  Send,
+  Bell
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
@@ -50,6 +55,9 @@ interface SellerProfile {
   bio: string | null;
   created_at: string;
   updated_at: string;
+  is_verified?: boolean;
+  verified_at?: string | null;
+  verified_by?: string | null;
 }
 
 interface SellerPerformance {
@@ -124,6 +132,16 @@ const AddSellerManagement = () => {
   const [importProgress, setImportProgress] = useState(0);
   const [isImporting, setIsImporting] = useState(false);
   const [importResult, setImportResult] = useState<BulkImportResult | null>(null);
+  
+  // Notification
+  const [isNotificationDialogOpen, setIsNotificationDialogOpen] = useState(false);
+  const [notificationForm, setNotificationForm] = useState({
+    subject: '',
+    message: '',
+    notificationType: 'custom' as 'custom' | 'verification' | 'warning' | 'announcement'
+  });
+  const [sendingNotification, setSendingNotification] = useState(false);
+  const [selectedSellerForNotification, setSelectedSellerForNotification] = useState<SellerProfile | null>(null);
   
   // Edit form
   const [editForm, setEditForm] = useState<NewSellerForm>({
@@ -510,6 +528,103 @@ const AddSellerManagement = () => {
         description: "সেলার মুছতে সমস্যা হয়েছে।",
         variant: "destructive"
       });
+    }
+  };
+
+  // Toggle seller verification
+  const handleToggleVerification = async (seller: SellerProfile) => {
+    const newVerifiedStatus = !seller.is_verified;
+    
+    try {
+      const { error } = await supabase
+        .from('seller_profiles')
+        .update({
+          is_verified: newVerifiedStatus,
+          verified_at: newVerifiedStatus ? new Date().toISOString() : null,
+          verified_by: newVerifiedStatus ? user?.id : null,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', seller.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "সফল",
+        description: newVerifiedStatus 
+          ? "সেলার ভেরিফাই করা হয়েছে।" 
+          : "সেলার ভেরিফিকেশন বাতিল করা হয়েছে।",
+      });
+
+      fetchSellers();
+    } catch (error: any) {
+      toast({
+        title: "ত্রুটি",
+        description: "ভেরিফিকেশন স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে।",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Open notification dialog
+  const openNotificationDialog = (seller: SellerProfile) => {
+    setSelectedSellerForNotification(seller);
+    setNotificationForm({
+      subject: '',
+      message: '',
+      notificationType: 'custom'
+    });
+    setIsNotificationDialogOpen(true);
+  };
+
+  // Send notification to seller
+  const handleSendNotification = async () => {
+    if (!selectedSellerForNotification?.email) {
+      toast({
+        title: "ত্রুটি",
+        description: "সেলারের ইমেইল ঠিকানা নেই।",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!notificationForm.subject || !notificationForm.message) {
+      toast({
+        title: "ত্রুটি",
+        description: "বিষয় এবং বার্তা আবশ্যক।",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setSendingNotification(true);
+
+    try {
+      const response = await supabase.functions.invoke('send-seller-notification', {
+        body: {
+          sellerEmail: selectedSellerForNotification.email,
+          sellerName: selectedSellerForNotification.business_name || 'সেলার',
+          subject: notificationForm.subject,
+          message: notificationForm.message,
+          notificationType: notificationForm.notificationType
+        }
+      });
+
+      if (response.error) throw response.error;
+
+      toast({
+        title: "সফল",
+        description: "নোটিফিকেশন পাঠানো হয়েছে।",
+      });
+
+      setIsNotificationDialogOpen(false);
+    } catch (error: any) {
+      toast({
+        title: "ত্রুটি",
+        description: error.message || "নোটিফিকেশন পাঠাতে সমস্যা হয়েছে।",
+        variant: "destructive"
+      });
+    } finally {
+      setSendingNotification(false);
     }
   };
 
@@ -1018,6 +1133,7 @@ const AddSellerManagement = () => {
                       <TableRow>
                         <TableHead>ব্যবসার নাম</TableHead>
                         <TableHead>টাইপ</TableHead>
+                        <TableHead>স্ট্যাটাস</TableHead>
                         <TableHead>ইমেইল</TableHead>
                         <TableHead>ফোন</TableHead>
                         <TableHead>যোগ হয়েছে</TableHead>
@@ -1033,13 +1149,26 @@ const AddSellerManagement = () => {
                           <TableCell>
                             {getSellerTypeBadge(seller.seller_type)}
                           </TableCell>
+                          <TableCell>
+                            {seller.is_verified ? (
+                              <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 gap-1">
+                                <ShieldCheck className="h-3 w-3" />
+                                ভেরিফাইড
+                              </Badge>
+                            ) : (
+                              <Badge variant="outline" className="gap-1 text-muted-foreground">
+                                <Shield className="h-3 w-3" />
+                                আনভেরিফাইড
+                              </Badge>
+                            )}
+                          </TableCell>
                           <TableCell>{seller.email || '-'}</TableCell>
                           <TableCell>{seller.phone || '-'}</TableCell>
                           <TableCell>
                             {new Date(seller.created_at).toLocaleDateString('bn-BD')}
                           </TableCell>
                           <TableCell className="text-right">
-                            <div className="flex justify-end gap-2">
+                            <div className="flex justify-end gap-1">
                               <Button
                                 variant="outline"
                                 size="sm"
@@ -1047,6 +1176,7 @@ const AddSellerManagement = () => {
                                   setSelectedSeller(seller);
                                   setIsViewDialogOpen(true);
                                 }}
+                                title="বিস্তারিত দেখুন"
                               >
                                 <Eye className="h-4 w-4" />
                               </Button>
@@ -1054,14 +1184,34 @@ const AddSellerManagement = () => {
                                 variant="outline"
                                 size="sm"
                                 onClick={() => openEditDialog(seller)}
+                                title="সম্পাদনা করুন"
                               >
                                 <Edit className="h-4 w-4" />
                               </Button>
                               <Button
                                 variant="outline"
                                 size="sm"
+                                onClick={() => handleToggleVerification(seller)}
+                                title={seller.is_verified ? "ভেরিফিকেশন বাতিল করুন" : "ভেরিফাই করুন"}
+                                className={seller.is_verified ? "text-amber-600 hover:text-amber-700" : "text-emerald-600 hover:text-emerald-700"}
+                              >
+                                {seller.is_verified ? <ShieldX className="h-4 w-4" /> : <ShieldCheck className="h-4 w-4" />}
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => openNotificationDialog(seller)}
+                                title="নোটিফিকেশন পাঠান"
+                                disabled={!seller.email}
+                              >
+                                <Bell className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
                                 className="text-destructive hover:text-destructive"
                                 onClick={() => handleDeleteSeller(seller.id)}
+                                title="মুছে ফেলুন"
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
@@ -1465,7 +1615,20 @@ const AddSellerManagement = () => {
                   <h3 className="font-semibold text-lg">
                     {selectedSeller.business_name || 'নাম নেই'}
                   </h3>
-                  {getSellerTypeBadge(selectedSeller.seller_type)}
+                  <div className="flex items-center gap-2">
+                    {getSellerTypeBadge(selectedSeller.seller_type)}
+                    {selectedSeller.is_verified ? (
+                      <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 gap-1">
+                        <ShieldCheck className="h-3 w-3" />
+                        ভেরিফাইড
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="gap-1 text-muted-foreground">
+                        <Shield className="h-3 w-3" />
+                        আনভেরিফাইড
+                      </Badge>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -1500,6 +1663,9 @@ const AddSellerManagement = () => {
               <div className="pt-4 border-t text-sm text-muted-foreground">
                 <p>যোগ হয়েছে: {new Date(selectedSeller.created_at).toLocaleDateString('bn-BD')}</p>
                 <p>আপডেট: {new Date(selectedSeller.updated_at).toLocaleDateString('bn-BD')}</p>
+                {selectedSeller.is_verified && selectedSeller.verified_at && (
+                  <p>ভেরিফাইড: {new Date(selectedSeller.verified_at).toLocaleDateString('bn-BD')}</p>
+                )}
               </div>
             </div>
           )}
@@ -1598,6 +1764,89 @@ const AddSellerManagement = () => {
             <Button onClick={handleUpdateSeller}>
               <Edit className="h-4 w-4 mr-2" />
               আপডেট করুন
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Send Notification Dialog */}
+      <Dialog open={isNotificationDialogOpen} onOpenChange={setIsNotificationDialogOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Bell className="h-5 w-5" />
+              সেলারকে নোটিফিকেশন পাঠান
+            </DialogTitle>
+            <DialogDescription>
+              {selectedSellerForNotification?.business_name || 'সেলার'} কে ইমেইল নোটিফিকেশন পাঠান
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="notificationType">নোটিফিকেশন টাইপ</Label>
+              <Select
+                value={notificationForm.notificationType}
+                onValueChange={(value: 'custom' | 'verification' | 'warning' | 'announcement') => 
+                  setNotificationForm({ ...notificationForm, notificationType: value })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="টাইপ নির্বাচন করুন" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="custom">কাস্টম বার্তা</SelectItem>
+                  <SelectItem value="verification">ভেরিফিকেশন</SelectItem>
+                  <SelectItem value="warning">সতর্কতা</SelectItem>
+                  <SelectItem value="announcement">ঘোষণা</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="subject">বিষয় *</Label>
+              <Input
+                id="subject"
+                value={notificationForm.subject}
+                onChange={(e) => setNotificationForm({ ...notificationForm, subject: e.target.value })}
+                placeholder="ইমেইলের বিষয় লিখুন"
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="message">বার্তা *</Label>
+              <Textarea
+                id="message"
+                value={notificationForm.message}
+                onChange={(e) => setNotificationForm({ ...notificationForm, message: e.target.value })}
+                placeholder="আপনার বার্তা লিখুন..."
+                rows={5}
+              />
+            </div>
+
+            <div className="bg-muted/50 p-3 rounded-lg text-sm">
+              <p className="text-muted-foreground">
+                <strong>প্রাপক:</strong> {selectedSellerForNotification?.email || 'ইমেইল নেই'}
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsNotificationDialogOpen(false)}>
+              বাতিল
+            </Button>
+            <Button onClick={handleSendNotification} disabled={sendingNotification}>
+              {sendingNotification ? (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  পাঠানো হচ্ছে...
+                </>
+              ) : (
+                <>
+                  <Send className="h-4 w-4 mr-2" />
+                  পাঠান
+                </>
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>
