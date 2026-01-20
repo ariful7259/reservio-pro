@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, 
@@ -28,7 +28,9 @@ import {
   Trash2,
   Facebook,
   Instagram,
-  MessageCircle
+  MessageCircle,
+  AlertCircle,
+  RefreshCw
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -71,11 +73,12 @@ const BecomeSeller = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user, isAuthenticated } = useAuth();
-  const { application, isLoading: appLoading, submitApplication, isPending, isApproved, isRejected } = useSellerApplication();
+  const { application, isLoading: appLoading, submitApplication, updateApplication, isPending, isApproved, isRejected } = useSellerApplication();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+  const [isReapplying, setIsReapplying] = useState(false);
   
   // Form Data
   const [formData, setFormData] = useState({
@@ -517,6 +520,51 @@ const BecomeSeller = () => {
     'অন্যান্য'
   ];
 
+  // Prefill form data for rejected applications when reapplying
+  useEffect(() => {
+    if (isReapplying && application) {
+      const productSamples = Array.isArray(application.product_samples) 
+        ? (application.product_samples as ProductSample[])
+        : [];
+      const references = Array.isArray(application.seller_references)
+        ? (application.seller_references as Reference[])
+        : [];
+      
+      setFormData({
+        businessName: application.business_name || '',
+        businessType: application.business_type || '',
+        phone: application.phone || '',
+        email: application.email || '',
+        address: application.address || '',
+        description: application.description || '',
+        nidType: application.nid_type || 'nid',
+        nidNumber: application.nid_number || '',
+        nidFrontImage: application.nid_front_image || '',
+        nidBackImage: application.nid_back_image || '',
+        tradeLicenseNumber: application.trade_license_number || '',
+        tradeLicenseImage: application.trade_license_image || '',
+        tradeLicenseExpiry: application.trade_license_expiry || '',
+        paymentMethod: application.bank_name ? 'bank' : 'mobile',
+        bankName: application.bank_name || '',
+        bankAccountNumber: application.bank_account_number || '',
+        bankAccountHolder: application.bank_account_holder || '',
+        bankBranch: application.bank_branch || '',
+        mobileBankingProvider: application.mobile_banking_provider || '',
+        mobileBankingNumber: application.mobile_banking_number || '',
+        category: application.category || '',
+        experience: application.experience || '',
+        facebookUrl: application.facebook_url || '',
+        instagramUrl: application.instagram_url || '',
+        whatsappNumber: application.whatsapp_number || '',
+        websiteUrl: application.website_url || '',
+        references: references,
+        productSamples: productSamples,
+        videoIntroductionUrl: application.video_introduction_url || '',
+        agreeTerms: false
+      });
+    }
+  }, [isReapplying, application]);
+
   const handleNext = () => {
     if (currentStep < 8) {
       setCurrentStep(currentStep + 1);
@@ -556,7 +604,7 @@ const BecomeSeller = () => {
         .filter(f => f.url && !f.error)
         .map(f => f.url as string);
 
-      await submitApplication({
+      const applicationData = {
         businessName: formData.businessName,
         businessType: formData.businessType,
         phone: formData.phone,
@@ -566,7 +614,6 @@ const BecomeSeller = () => {
         category: formData.category,
         experience: formData.experience,
         documents: documentUrls,
-        // New fields
         nidType: formData.nidType,
         nidNumber: formData.nidNumber,
         nidFrontImage: formData.nidFrontImage,
@@ -587,12 +634,25 @@ const BecomeSeller = () => {
         references: formData.references,
         productSamples: formData.productSamples,
         videoIntroductionUrl: formData.videoIntroductionUrl
-      });
+      };
 
-      toast({
-        title: "আবেদন জমা দেওয়া হয়েছে",
-        description: "আপনার আবেদনটি এডমিনের কাছে পাঠানো হয়েছে। অনুমোদনের পর আপনি সেলার ড্যাশবোর্ড অ্যাক্সেস পাবেন।"
-      });
+      if (isReapplying && application) {
+        // Update existing rejected application
+        await updateApplication(applicationData);
+        toast({
+          title: "আবেদন পুনরায় জমা দেওয়া হয়েছে",
+          description: "আপনার আপডেট করা আবেদনটি এডমিনের কাছে পাঠানো হয়েছে।"
+        });
+      } else {
+        // New application
+        await submitApplication(applicationData);
+        toast({
+          title: "আবেদন জমা দেওয়া হয়েছে",
+          description: "আপনার আবেদনটি এডমিনের কাছে পাঠানো হয়েছে। অনুমোদনের পর আপনি সেলার ড্যাশবোর্ড অ্যাক্সেস পাবেন।"
+        });
+      }
+      
+      setIsReapplying(false);
       navigate('/profile');
     } catch (error: any) {
       toast({
@@ -614,8 +674,8 @@ const BecomeSeller = () => {
     );
   }
 
-  // Show existing application status
-  if (application) {
+  // Show existing application status (but not when reapplying)
+  if (application && !isReapplying) {
     return (
       <div className="container px-4 pt-16 pb-20">
         <div className="flex items-center gap-3 mb-6">
@@ -661,25 +721,35 @@ const BecomeSeller = () => {
               </>
             )}
 
-            {isRejected && (
+            {isRejected && !isReapplying && (
               <>
-                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
-                  <XCircle className="h-10 w-10 text-red-600" />
+                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-destructive/10 flex items-center justify-center">
+                  <XCircle className="h-10 w-10 text-destructive" />
                 </div>
-                <Badge variant="secondary" className="bg-red-100 text-red-800 mb-4">প্রত্যাখ্যাত</Badge>
+                <Badge variant="secondary" className="bg-destructive/10 text-destructive mb-4">প্রত্যাখ্যাত</Badge>
                 <h2 className="text-2xl font-bold mb-2">আবেদন প্রত্যাখ্যাত হয়েছে</h2>
                 <p className="text-muted-foreground mb-4">
                   দুঃখিত, আপনার আবেদনটি প্রত্যাখ্যাত হয়েছে।
                 </p>
                 {application.admin_notes && (
-                  <div className="bg-red-50 p-4 rounded-lg text-left mb-4">
-                    <p className="text-sm font-medium text-red-800">এডমিনের মন্তব্য:</p>
-                    <p className="text-sm text-red-700">{application.admin_notes}</p>
+                  <div className="bg-destructive/5 border border-destructive/20 p-4 rounded-lg text-left mb-4">
+                    <p className="text-sm font-medium text-destructive flex items-center gap-2">
+                      <AlertCircle className="h-4 w-4" />
+                      প্রত্যাখ্যানের কারণ:
+                    </p>
+                    <p className="text-sm text-destructive/80 mt-1">{application.admin_notes}</p>
                   </div>
                 )}
-                <p className="text-sm text-muted-foreground">
-                  সাহায্যের জন্য আমাদের সাপোর্ট টিমে যোগাযোগ করুন।
-                </p>
+                <div className="bg-muted/50 p-4 rounded-lg text-left mb-6">
+                  <p className="text-sm text-muted-foreground">
+                    আপনি আপনার আবেদনের তথ্য আপডেট করে পুনরায় জমা দিতে পারেন।
+                    যে তথ্য মিসিং বা ভুল ছিল তা ঠিক করুন।
+                  </p>
+                </div>
+                <Button onClick={() => setIsReapplying(true)} className="mt-2">
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  পুনরায় আবেদন করুন
+                </Button>
               </>
             )}
           </CardContent>
@@ -1402,12 +1472,30 @@ const BecomeSeller = () => {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => navigate(-1)}
+          onClick={() => isReapplying ? setIsReapplying(false) : navigate(-1)}
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <h1 className="text-xl font-semibold">বিক্রেতা হয়ে যান</h1>
+        <h1 className="text-xl font-semibold">
+          {isReapplying ? 'আবেদন আপডেট করুন' : 'বিক্রেতা হয়ে যান'}
+        </h1>
       </div>
+
+      {/* Reapply Banner */}
+      {isReapplying && application?.admin_notes && (
+        <div className="bg-amber-50 border border-amber-200 p-4 rounded-lg mb-6">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-medium text-amber-800 mb-1">পূর্বের আবেদন প্রত্যাখ্যানের কারণ:</p>
+              <p className="text-sm text-amber-700">{application.admin_notes}</p>
+              <p className="text-sm text-amber-600 mt-2">
+                অনুগ্রহ করে উপরের সমস্যা সমাধান করে পুনরায় জমা দিন।
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Benefits Section */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">

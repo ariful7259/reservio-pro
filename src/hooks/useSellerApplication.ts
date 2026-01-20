@@ -127,11 +127,7 @@ export function useSellerApplication() {
     }
   };
 
-  const submitApplication = async (formData: SubmitApplicationData) => {
-    if (!user?.id) {
-      throw new Error('ব্যবহারকারী লগইন করা নেই');
-    }
-
+  const buildApplicationData = (formData: SubmitApplicationData) => {
     // Map business type to seller_type enum values
     const businessTypeMap: Record<string, string> = {
       'individual': 'marketplace',
@@ -139,8 +135,7 @@ export function useSellerApplication() {
       'partnership': 'marketplace'
     };
 
-    const insertData = {
-      user_id: user.id,
+    return {
       business_name: formData.businessName,
       business_type: businessTypeMap[formData.businessType] || 'marketplace',
       phone: formData.phone,
@@ -150,8 +145,6 @@ export function useSellerApplication() {
       category: formData.category,
       experience: formData.experience,
       documents: formData.documents || null,
-      status: 'pending' as const,
-      // New fields - cast as any since types haven't regenerated yet
       nid_type: formData.nidType || null,
       nid_number: formData.nidNumber || null,
       nid_front_image: formData.nidFrontImage || null,
@@ -173,10 +166,51 @@ export function useSellerApplication() {
       seller_references: formData.references || [],
       video_introduction_url: formData.videoIntroductionUrl || null
     };
+  };
+
+  const submitApplication = async (formData: SubmitApplicationData) => {
+    if (!user?.id) {
+      throw new Error('ব্যবহারকারী লগইন করা নেই');
+    }
+
+    const insertData = {
+      user_id: user.id,
+      ...buildApplicationData(formData),
+      status: 'pending' as const
+    };
 
     const { data, error } = await supabase
       .from('seller_applications')
       .insert(insertData as any)
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    setApplication(data as SellerApplication);
+    return data;
+  };
+
+  const updateApplication = async (formData: SubmitApplicationData) => {
+    if (!user?.id || !application?.id) {
+      throw new Error('আবেদন পাওয়া যায়নি');
+    }
+
+    const updateData = {
+      ...buildApplicationData(formData),
+      status: 'pending' as const,
+      admin_notes: null,
+      reviewed_by: null,
+      reviewed_at: null,
+      updated_at: new Date().toISOString()
+    };
+
+    const { data, error } = await supabase
+      .from('seller_applications')
+      .update(updateData as any)
+      .eq('id', application.id)
       .select()
       .single();
 
@@ -202,6 +236,7 @@ export function useSellerApplication() {
     isLoading, 
     error, 
     submitApplication,
+    updateApplication,
     refetch: fetchApplication,
     isPending: application?.status === 'pending',
     isApproved: application?.status === 'approved',
