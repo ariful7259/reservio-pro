@@ -1448,14 +1448,17 @@ const BecomeSeller = () => {
             </div>
 
             {/* Terms Agreement */}
-            <div className="flex items-center space-x-2 p-4 border rounded-lg">
+            <div className={`flex items-center space-x-2 p-4 border rounded-lg transition-colors ${!formData.agreeTerms ? 'border-amber-300 bg-amber-50' : 'border-green-300 bg-green-50'}`}>
               <Checkbox 
                 id="terms" 
                 checked={formData.agreeTerms}
                 onCheckedChange={(checked) => setFormData({...formData, agreeTerms: Boolean(checked)})}
               />
-              <Label htmlFor="terms" className="text-sm">
+              <Label htmlFor="terms" className="text-sm cursor-pointer">
                 আমি <a href="#" className="text-primary underline">শর্তাবলী ও নীতিমালা</a> পড়েছি এবং সম্মত আছি
+                {!formData.agreeTerms && (
+                  <span className="text-amber-600 ml-2 text-xs">(আবেদন জমা দিতে এটি চেক করুন)</span>
+                )}
               </Label>
             </div>
           </div>
@@ -1562,8 +1565,19 @@ const BecomeSeller = () => {
               </Button>
             ) : (
               <Button 
-                onClick={handleSubmit}
-                disabled={!formData.agreeTerms || isSubmitting}
+                onClick={() => {
+                  if (!formData.agreeTerms) {
+                    toast({
+                      title: "শর্তাবলী সম্মত হতে হবে",
+                      description: "আবেদন জমা দিতে প্রথমে শর্তাবলী ও নীতিমালা চেকবক্সে টিক দিন।",
+                      variant: "destructive"
+                    });
+                    return;
+                  }
+                  handleSubmit();
+                }}
+                disabled={isSubmitting}
+                className={!formData.agreeTerms ? 'opacity-60' : ''}
               >
                 {isSubmitting ? (
                   <>
