@@ -696,6 +696,7 @@ export type Database = {
           created_at: string | null
           email: string | null
           id: string
+          is_verified: boolean | null
           logo_url: string | null
           marketplace_settings: Json | null
           payment_methods: Json | null
@@ -705,6 +706,8 @@ export type Database = {
           service_settings: Json | null
           terms_conditions: string | null
           updated_at: string | null
+          verified_at: string | null
+          verified_by: string | null
         }
         Insert: {
           address?: string | null
@@ -714,6 +717,7 @@ export type Database = {
           created_at?: string | null
           email?: string | null
           id: string
+          is_verified?: boolean | null
           logo_url?: string | null
           marketplace_settings?: Json | null
           payment_methods?: Json | null
@@ -723,6 +727,8 @@ export type Database = {
           service_settings?: Json | null
           terms_conditions?: string | null
           updated_at?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
         }
         Update: {
           address?: string | null
@@ -732,6 +738,7 @@ export type Database = {
           created_at?: string | null
           email?: string | null
           id?: string
+          is_verified?: boolean | null
           logo_url?: string | null
           marketplace_settings?: Json | null
           payment_methods?: Json | null
@@ -741,6 +748,8 @@ export type Database = {
           service_settings?: Json | null
           terms_conditions?: string | null
           updated_at?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
         }
         Relationships: []
       }
