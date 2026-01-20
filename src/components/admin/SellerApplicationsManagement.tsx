@@ -326,25 +326,26 @@ const SellerApplicationsManagement = () => {
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
+                          {(app.status === 'pending' || app.status === 'rejected') && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                              onClick={() => openActionDialog(app, 'approve')}
+                              title={app.status === 'rejected' ? 'পুনরায় অনুমোদন করুন' : 'অনুমোদন করুন'}
+                            >
+                              <UserCheck className="h-4 w-4" />
+                            </Button>
+                          )}
                           {app.status === 'pending' && (
-                            <>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="text-green-600 hover:text-green-700 hover:bg-green-50"
-                                onClick={() => openActionDialog(app, 'approve')}
-                              >
-                                <UserCheck className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                                onClick={() => openActionDialog(app, 'reject')}
-                              >
-                                <UserX className="h-4 w-4" />
-                              </Button>
-                            </>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                              onClick={() => openActionDialog(app, 'reject')}
+                            >
+                              <UserX className="h-4 w-4" />
+                            </Button>
                           )}
                         </div>
                       </TableCell>

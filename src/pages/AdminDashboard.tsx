@@ -129,8 +129,7 @@ const AdminDashboard = () => {
   const sidebarItems = [
     { id: 'dashboard', name: 'ড্যাশবোর্ড', icon: <BarChart3 size={18} /> },
     { id: 'orders', name: 'অর্ডার ম্যানেজমেন্ট', icon: <Package size={18} /> },
-    { id: 'seller-applications', name: 'সেলার আবেদন', icon: <UserCog size={18} />, badge: true },
-    { id: 'add-seller', name: 'সেলার যোগ করুন', icon: <Store size={18} /> },
+    { id: 'add-seller', name: 'সেলার যোগ করুন', icon: <Store size={18} />, badge: true },
     { id: 'users', name: 'ব্যবহারকারী', icon: <Users size={18} /> },
     { id: 'marketplace', name: 'মার্কেটপ্লেস', icon: <ShoppingBag size={18} /> },
     { id: 'rentals', name: 'রেন্টাল', icon: <Building size={18} /> },
@@ -229,7 +228,7 @@ const AdminDashboard = () => {
                         >
                           {item.icon}
                           <span className="ml-2 flex-1">{item.name}</span>
-                          {item.id === 'seller-applications' && pendingApplicationsCount > 0 && (
+                          {item.id === 'add-seller' && pendingApplicationsCount > 0 && (
                             <span className="absolute right-2 top-1/2 -translate-y-1/2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                               {pendingApplicationsCount > 99 ? '99+' : pendingApplicationsCount}
                             </span>
