@@ -65,6 +65,26 @@ const TEMPLATES = [
     id: 'digital',
     name: 'ডিজিটাল',
     description: 'ডিজিটাল প্রডাক্ট এবং সার্ভিসের জন্য'
+  },
+  {
+    id: 'services',
+    name: 'সার্ভিস',
+    description: 'পার্লার/রিপেয়ার/কনসালটেন্সি সার্ভিসের জন্য'
+  },
+  {
+    id: 'books',
+    name: 'বুক স্টোর',
+    description: 'বই, স্টেশনারি এবং শিক্ষা সামগ্রীর জন্য'
+  },
+  {
+    id: 'beauty',
+    name: 'বিউটি',
+    description: 'স্কিনকেয়ার, কসমেটিক্স, পার্লার এবং সেলুন'
+  },
+  {
+    id: 'furniture',
+    name: 'ফার্নিচার',
+    description: 'ফার্নিচার/হোম ডেকর/লাইফস্টাইল পণ্যের জন্য'
   }
 ];
 
@@ -283,7 +303,11 @@ const DragDropEditor: React.FC<DragDropEditorProps> = ({
                   template.id === 'electronics' && "from-blue-400 to-blue-700",
                   template.id === 'food' && "from-amber-400 to-amber-600",
                   template.id === 'artisan' && "from-emerald-400 to-emerald-700",
-                  template.id === 'digital' && "from-purple-400 to-purple-700"
+                    template.id === 'digital' && "from-purple-400 to-purple-700",
+                    template.id === 'services' && "from-teal-400 to-teal-700",
+                    template.id === 'books' && "from-indigo-400 to-indigo-700",
+                    template.id === 'beauty' && "from-rose-400 to-rose-700",
+                    template.id === 'furniture' && "from-orange-400 to-orange-700"
                 )}
               />
               <CardContent className="p-3">
