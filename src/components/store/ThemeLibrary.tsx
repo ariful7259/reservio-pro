@@ -283,10 +283,12 @@ const ThemeLibrary: React.FC<ThemeLibraryProps> = ({
       return;
     }
 
-    setInstalledThemes(prev => [...prev, themeId]);
+    setInstalledThemes(prev => (prev.includes(themeId) ? prev : [...prev, themeId]));
+    setActiveTheme(themeId);
+    onSelectTheme?.(themeId);
     toast({
       title: "থিম ইনস্টল সম্পন্ন",
-      description: `${theme.name} থিম সফলভাবে ইনস্টল হয়েছে।`,
+      description: `${theme.name} থিম ইনস্টল ও অ্যাক্টিভ হয়েছে।`,
     });
   };
 
