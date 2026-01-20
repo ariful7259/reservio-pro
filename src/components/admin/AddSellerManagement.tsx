@@ -15,6 +15,7 @@ import { useSellerActivityLog } from '@/hooks/useSellerActivityLog';
 import { useNotificationTemplates, NotificationTemplate } from '@/hooks/useNotificationTemplates';
 import SellerActivityLog from './SellerActivityLog';
 import NotificationTemplates from './NotificationTemplates';
+import SellerApplicationsManagement from './SellerApplicationsManagement';
 import { 
   UserPlus, 
   Store, 
@@ -46,7 +47,8 @@ import {
   Users,
   Megaphone,
   Activity,
-  FileText
+  FileText,
+  UserCog
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
@@ -945,10 +947,14 @@ const AddSellerManagement = () => {
   return (
     <div className="space-y-6">
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="sellers" className="gap-2">
             <Store className="h-4 w-4" />
             সেলার
+          </TabsTrigger>
+          <TabsTrigger value="applications" className="gap-2">
+            <UserCog className="h-4 w-4" />
+            আবেদন
           </TabsTrigger>
           <TabsTrigger value="performance" className="gap-2">
             <BarChart3 className="h-4 w-4" />
@@ -1391,6 +1397,11 @@ const AddSellerManagement = () => {
               )}
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Applications Tab */}
+        <TabsContent value="applications">
+          <SellerApplicationsManagement />
         </TabsContent>
 
         {/* Performance Tab */}
