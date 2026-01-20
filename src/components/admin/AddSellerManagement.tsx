@@ -11,6 +11,10 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useSellerActivityLog } from '@/hooks/useSellerActivityLog';
+import { useNotificationTemplates, NotificationTemplate } from '@/hooks/useNotificationTemplates';
+import SellerActivityLog from './SellerActivityLog';
+import NotificationTemplates from './NotificationTemplates';
 import { 
   UserPlus, 
   Store, 
@@ -40,7 +44,9 @@ import {
   Send,
   Bell,
   Users,
-  Megaphone
+  Megaphone,
+  Activity,
+  FileText
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
@@ -102,6 +108,8 @@ interface FilterOptions {
 const AddSellerManagement = () => {
   const { toast } = useToast();
   const { user } = useAuth();
+  const { logActivity } = useSellerActivityLog();
+  const { templates } = useNotificationTemplates();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [sellers, setSellers] = useState<SellerProfile[]>([]);
@@ -450,6 +458,12 @@ const AddSellerManagement = () => {
 
       if (error) throw error;
 
+      // Log activity
+      await logActivity(newSeller.userId, 'seller_created', {
+        business_name: newSeller.businessName,
+        seller_type: newSeller.sellerType
+      });
+
       toast({
         title: "সফল",
         description: "নতুন সেলার সফলভাবে যোগ করা হয়েছে।",
@@ -502,6 +516,12 @@ const AddSellerManagement = () => {
 
       if (error) throw error;
 
+      // Log activity
+      await logActivity(selectedSeller.id, 'seller_updated', {
+        business_name: editForm.businessName,
+        changes: 'Profile updated'
+      });
+
       toast({
         title: "সফল",
         description: "সেলার তথ্য আপডেট করা হয়েছে।",
@@ -529,6 +549,9 @@ const AddSellerManagement = () => {
         .eq('id', sellerId);
 
       if (error) throw error;
+
+      // Log activity
+      await logActivity(sellerId, 'seller_deleted', {});
 
       toast({
         title: "সফল",
@@ -561,6 +584,11 @@ const AddSellerManagement = () => {
         .eq('id', seller.id);
 
       if (error) throw error;
+
+      // Log activity
+      await logActivity(seller.id, newVerifiedStatus ? 'seller_verified' : 'seller_unverified', {
+        business_name: seller.business_name
+      });
 
       toast({
         title: "সফল",
@@ -624,6 +652,12 @@ const AddSellerManagement = () => {
       });
 
       if (response.error) throw response.error;
+
+      // Log activity
+      await logActivity(selectedSellerForNotification.id, 'notification_sent', {
+        subject: notificationForm.subject,
+        type: notificationForm.notificationType
+      });
 
       toast({
         title: "সফল",
@@ -711,6 +745,16 @@ const AddSellerManagement = () => {
 
     setBulkNotificationResult({ sent, failed });
     setSendingBulkNotification(false);
+
+    // Log bulk notification activity
+    if (sent > 0) {
+      await logActivity('bulk', 'bulk_notification_sent', {
+        sent_count: sent,
+        failed_count: failed,
+        target_group: bulkNotificationForm.targetGroup,
+        subject: bulkNotificationForm.subject
+      });
+    }
 
     toast({
       title: failed === 0 ? "সফল" : "আংশিক সফল",
@@ -901,10 +945,10 @@ const AddSellerManagement = () => {
   return (
     <div className="space-y-6">
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="sellers" className="gap-2">
             <Store className="h-4 w-4" />
-            সেলার তালিকা
+            সেলার
           </TabsTrigger>
           <TabsTrigger value="performance" className="gap-2">
             <BarChart3 className="h-4 w-4" />
@@ -912,7 +956,15 @@ const AddSellerManagement = () => {
           </TabsTrigger>
           <TabsTrigger value="import" className="gap-2">
             <Upload className="h-4 w-4" />
-            বাল্ক ইম্পোর্ট
+            ইম্পোর্ট
+          </TabsTrigger>
+          <TabsTrigger value="activity" className="gap-2">
+            <Activity className="h-4 w-4" />
+            লগ
+          </TabsTrigger>
+          <TabsTrigger value="templates" className="gap-2">
+            <FileText className="h-4 w-4" />
+            টেমপ্লেট
           </TabsTrigger>
         </TabsList>
 
@@ -1710,6 +1762,34 @@ const AddSellerManagement = () => {
               )}
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Activity Log Tab */}
+        <TabsContent value="activity">
+          <SellerActivityLog />
+        </TabsContent>
+
+        {/* Templates Tab */}
+        <TabsContent value="templates">
+          <NotificationTemplates 
+            onSelectTemplate={(template) => {
+              setNotificationForm({
+                subject: template.subject,
+                message: template.message,
+                notificationType: template.notification_type
+              });
+              setBulkNotificationForm(prev => ({
+                ...prev,
+                subject: template.subject,
+                message: template.message,
+                notificationType: template.notification_type
+              }));
+              toast({
+                title: "টেমপ্লেট লোড হয়েছে",
+                description: `"${template.name}" টেমপ্লেট নির্বাচন করা হয়েছে।`
+              });
+            }}
+          />
         </TabsContent>
       </Tabs>
 
