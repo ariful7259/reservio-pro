@@ -637,8 +637,18 @@ const BecomeSeller = () => {
       };
 
       if (isReapplying && application) {
-        // Update existing rejected application
-        await updateApplication(applicationData);
+        // Delete old rejected application and create new one
+        const { error: deleteError } = await supabase
+          .from('seller_applications')
+          .delete()
+          .eq('id', application.id);
+        
+        if (deleteError) {
+          throw new Error('পূর্ববর্তী আবেদন মুছতে ব্যর্থ: ' + deleteError.message);
+        }
+        
+        // Submit as new application
+        await submitApplication(applicationData);
         toast({
           title: "আবেদন পুনরায় জমা দেওয়া হয়েছে",
           description: "আপনার আপডেট করা আবেদনটি এডমিনের কাছে পাঠানো হয়েছে।"
