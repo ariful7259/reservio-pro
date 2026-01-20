@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -20,7 +20,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import StorePreview from '@/components/store/StorePreview';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-interface ElementProps {
+export interface ElementProps {
   id: string;
   type: string;
   content: string;
@@ -29,6 +29,10 @@ interface ElementProps {
 
 interface DragDropEditorProps {
   storeName: string;
+  initialElements?: ElementProps[];
+  initialTemplateId?: string;
+  onLayoutChange?: (payload: { elements: ElementProps[]; templateId: string }) => void;
+  onSave?: (payload: { elements: ElementProps[]; templateId: string }) => Promise<void> | void;
 }
 
 const TEMPLATES = [
@@ -75,7 +79,13 @@ const ELEMENTS = [
   { id: 'features', name: 'ফিচারস', icon: <Sliders className="h-4 w-4" /> }
 ];
 
-const DragDropEditor: React.FC<DragDropEditorProps> = ({ storeName }) => {
+const DragDropEditor: React.FC<DragDropEditorProps> = ({
+  storeName,
+  initialElements,
+  initialTemplateId,
+  onLayoutChange,
+  onSave,
+}) => {
   const [activeTab, setActiveTab] = useState('templates');
   const [selectedTemplate, setSelectedTemplate] = useState('minimal');
   const [previewDevice, setPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
@@ -87,6 +97,31 @@ const DragDropEditor: React.FC<DragDropEditorProps> = ({ storeName }) => {
   const [historyIndex, setHistoryIndex] = useState(-1);
   const isMobile = useIsMobile();
   const { toast } = useToast();
+
+  // initial restore (layout + template)
+  useEffect(() => {
+    if (initialTemplateId) setSelectedTemplate(initialTemplateId);
+
+    if (initialElements) {
+      setElements(initialElements);
+      setHistory([initialElements]);
+      setHistoryIndex(0);
+    } else {
+      setElements([]);
+      setHistory([]);
+      setHistoryIndex(-1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialTemplateId, initialElements?.length]);
+
+  const layoutPayload = useMemo(
+    () => ({ elements, templateId: selectedTemplate }),
+    [elements, selectedTemplate]
+  );
+
+  useEffect(() => {
+    onLayoutChange?.(layoutPayload);
+  }, [layoutPayload, onLayoutChange]);
 
   // ড্র্যাগ-ড্রপ এলিমেন্টগুলি মুভ করার ফাংশন
   const onDragEnd = (result: any) => {
@@ -195,14 +230,23 @@ const DragDropEditor: React.FC<DragDropEditorProps> = ({ storeName }) => {
   // সেভ হ্যান্ডলার
   const handleSave = () => {
     setLoading(true);
-    
-    setTimeout(() => {
-      setLoading(false);
-      toast({
-        title: "সংরক্ষিত হয়েছে",
-        description: "আপনার ডিজাইন সফলভাবে সংরক্ষণ করা হয়েছে।",
-      });
-    }, 1000);
+
+    Promise.resolve(onSave?.(layoutPayload))
+      .then(() => {
+        toast({
+          title: "সংরক্ষিত হয়েছে",
+          description: "আপনার ডিজাইন সফলভাবে সংরক্ষণ করা হয়েছে।",
+        });
+      })
+      .catch((err: any) => {
+        console.error('Design save error:', err);
+        toast({
+          title: "সেভ করা যায়নি",
+          description: err?.message || "আবার চেষ্টা করুন।",
+          variant: "destructive",
+        });
+      })
+      .finally(() => setLoading(false));
   };
 
   // এলিমেন্ট মোছার হ্যান্ডলার
