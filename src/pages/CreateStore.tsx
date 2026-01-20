@@ -50,12 +50,7 @@ const CreateStore = () => {
   const { profile } = useSellerProfile();
   const isMobile = useIsMobile();
 
-  // যদি ব্যবহারকারীর একটি প্রোফাইল থাকে তবে ড্যাশবোর্ডে পরিচালিত করে
-  useEffect(() => {
-    if (profile) {
-      navigate(`/seller-dashboard/${profile.seller_type}`);
-    }
-  }, [profile, navigate]);
+  // Redirect logic removed - users should stay on /create-store page
 
   // ফর্ম ইনিশিয়ালাইজেশন
   const form = useForm<FormValues>({
