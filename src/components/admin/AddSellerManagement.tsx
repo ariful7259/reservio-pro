@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,10 +30,15 @@ import {
   MapPin,
   Download,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
+  Filter,
+  Calendar,
+  FileDown
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts';
 
 interface SellerProfile {
   id: string;
@@ -56,6 +61,12 @@ interface SellerPerformance {
   reviewCount: number;
 }
 
+interface MonthlySalesData {
+  month: string;
+  sales: number;
+  orders: number;
+}
+
 interface NewSellerForm {
   userId: string;
   sellerType: 'marketplace' | 'rental' | 'service' | 'content';
@@ -70,6 +81,12 @@ interface BulkImportResult {
   success: number;
   failed: number;
   errors: string[];
+}
+
+interface FilterOptions {
+  sellerType: string;
+  dateFrom: string;
+  dateTo: string;
 }
 
 const AddSellerManagement = () => {
@@ -89,8 +106,17 @@ const AddSellerManagement = () => {
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [activeTab, setActiveTab] = useState('sellers');
   
+  // Filter options
+  const [filters, setFilters] = useState<FilterOptions>({
+    sellerType: 'all',
+    dateFrom: '',
+    dateTo: ''
+  });
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  
   // Performance data
   const [performanceData, setPerformanceData] = useState<SellerPerformance[]>([]);
+  const [monthlySalesData, setMonthlySalesData] = useState<MonthlySalesData[]>([]);
   const [loadingPerformance, setLoadingPerformance] = useState(false);
   
   // Bulk import
@@ -142,7 +168,7 @@ const AddSellerManagement = () => {
     }
   };
 
-  // Fetch seller performance data
+  // Fetch seller performance data with monthly trends
   const fetchPerformanceData = async () => {
     setLoadingPerformance(true);
     try {
@@ -152,8 +178,44 @@ const AddSellerManagement = () => {
 
       if (sellersError) throw sellersError;
 
+      // Get all orders for monthly trend
+      const { data: allOrders } = await supabase
+        .from('reseller_orders')
+        .select('total_amount, created_at, status')
+        .order('created_at', { ascending: true });
+
+      // Calculate monthly sales data (last 6 months)
+      const monthlyData: Record<string, { sales: number; orders: number }> = {};
+      const now = new Date();
+      
+      for (let i = 5; i >= 0; i--) {
+        const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const monthKey = date.toLocaleDateString('bn-BD', { month: 'short', year: 'numeric' });
+        monthlyData[monthKey] = { sales: 0, orders: 0 };
+      }
+
+      (allOrders || []).forEach(order => {
+        const orderDate = new Date(order.created_at);
+        const monthKey = orderDate.toLocaleDateString('bn-BD', { month: 'short', year: 'numeric' });
+        
+        if (monthlyData[monthKey]) {
+          monthlyData[monthKey].orders++;
+          if (order.status === 'delivered') {
+            monthlyData[monthKey].sales += order.total_amount || 0;
+          }
+        }
+      });
+
+      const monthlySales: MonthlySalesData[] = Object.entries(monthlyData).map(([month, data]) => ({
+        month,
+        sales: data.sales,
+        orders: data.orders
+      }));
+
+      setMonthlySalesData(monthlySales);
+
+      // Calculate per-seller performance
       const performancePromises = (sellersData || []).map(async (seller) => {
-        // Get orders count and total sales
         const { data: ordersData } = await supabase
           .from('reseller_orders')
           .select('total_amount, status')
@@ -162,7 +224,6 @@ const AddSellerManagement = () => {
         const completedOrders = ordersData?.filter(o => o.status === 'delivered') || [];
         const totalSales = completedOrders.reduce((sum, o) => sum + (o.total_amount || 0), 0);
 
-        // Get reviews
         const { data: reviewsData } = await supabase
           .from('reviews')
           .select('rating')
@@ -234,6 +295,102 @@ const AddSellerManagement = () => {
       fetchPerformanceData();
     }
   }, [activeTab]);
+
+  // Filtered sellers based on filters
+  const filteredSellers = useMemo(() => {
+    return sellers.filter(seller => {
+      // Search filter
+      const matchesSearch = 
+        seller.business_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        seller.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        seller.phone?.includes(searchQuery);
+
+      // Type filter
+      const matchesType = filters.sellerType === 'all' || seller.seller_type === filters.sellerType;
+
+      // Date filter
+      let matchesDate = true;
+      if (filters.dateFrom) {
+        matchesDate = matchesDate && new Date(seller.created_at) >= new Date(filters.dateFrom);
+      }
+      if (filters.dateTo) {
+        matchesDate = matchesDate && new Date(seller.created_at) <= new Date(filters.dateTo + 'T23:59:59');
+      }
+
+      return matchesSearch && matchesType && matchesDate;
+    });
+  }, [sellers, searchQuery, filters]);
+
+  // Export sellers to CSV
+  const exportToCSV = () => {
+    const headers = ['ID', 'ব্যবসার নাম', 'টাইপ', 'ইমেইল', 'ফোন', 'ঠিকানা', 'বিবরণ', 'যোগ হয়েছে'];
+    const csvRows = [
+      headers.join(','),
+      ...filteredSellers.map(seller => [
+        seller.id,
+        `"${seller.business_name || ''}"`,
+        seller.seller_type,
+        seller.email || '',
+        seller.phone || '',
+        `"${seller.address || ''}"`,
+        `"${seller.bio || ''}"`,
+        new Date(seller.created_at).toLocaleDateString('bn-BD')
+      ].join(','))
+    ];
+
+    const csvContent = csvRows.join('\n');
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `sellers_export_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+
+    toast({
+      title: "সফল",
+      description: `${filteredSellers.length} সেলার এক্সপোর্ট হয়েছে।`
+    });
+  };
+
+  // Export to Excel (XLSX-like format)
+  const exportToExcel = () => {
+    const headers = ['ID', 'ব্যবসার নাম', 'টাইপ', 'ইমেইল', 'ফোন', 'ঠিকানা', 'বিবরণ', 'যোগ হয়েছে'];
+    
+    // Create tab-separated content for Excel compatibility
+    const excelRows = [
+      headers.join('\t'),
+      ...filteredSellers.map(seller => [
+        seller.id,
+        seller.business_name || '',
+        seller.seller_type,
+        seller.email || '',
+        seller.phone || '',
+        seller.address || '',
+        seller.bio || '',
+        new Date(seller.created_at).toLocaleDateString('bn-BD')
+      ].join('\t'))
+    ];
+
+    const excelContent = excelRows.join('\n');
+    const blob = new Blob(['\ufeff' + excelContent], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `sellers_export_${new Date().toISOString().split('T')[0]}.xls`;
+    link.click();
+
+    toast({
+      title: "সফল",
+      description: `${filteredSellers.length} সেলার Excel এ এক্সপোর্ট হয়েছে।`
+    });
+  };
+
+  // Clear filters
+  const clearFilters = () => {
+    setFilters({
+      sellerType: 'all',
+      dateFrom: '',
+      dateTo: ''
+    });
+  };
 
   // Add new seller
   const handleAddSeller = async () => {
@@ -423,11 +580,9 @@ const AddSellerManagement = () => {
       const row = bulkImportData[i];
       
       try {
-        // First, find or create user
         let userId = row.user_id;
         
         if (!userId && row.email) {
-          // Try to find user by email
           const { data: existingProfile } = await supabase
             .from('profiles')
             .select('id')
@@ -441,7 +596,6 @@ const AddSellerManagement = () => {
           throw new Error(`Row ${i + 1}: ব্যবহারকারী আইডি বা ইমেইল প্রয়োজন`);
         }
 
-        // Check if already a seller
         const { data: existingSeller } = await supabase
           .from('seller_profiles')
           .select('id')
@@ -452,7 +606,6 @@ const AddSellerManagement = () => {
           throw new Error(`Row ${i + 1}: ইতিমধ্যে সেলার হিসেবে নিবন্ধিত`);
         }
 
-        // Validate seller type
         const validTypes = ['marketplace', 'rental', 'service', 'content'];
         const sellerType = row.seller_type?.toLowerCase() || 'marketplace';
         
@@ -460,7 +613,6 @@ const AddSellerManagement = () => {
           throw new Error(`Row ${i + 1}: অবৈধ সেলার টাইপ`);
         }
 
-        // Insert seller
         const { error } = await supabase
           .from('seller_profiles')
           .insert({
@@ -510,13 +662,6 @@ const AddSellerManagement = () => {
     link.click();
   };
 
-  // Filter sellers by search query
-  const filteredSellers = sellers.filter(seller => 
-    seller.business_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    seller.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    seller.phone?.includes(searchQuery)
-  );
-
   const getSellerTypeBadge = (type: string) => {
     const types: Record<string, { label: string; color: string }> = {
       marketplace: { label: 'মার্কেটপ্লেস', color: 'bg-blue-100 text-blue-800' },
@@ -527,6 +672,12 @@ const AddSellerManagement = () => {
     const typeInfo = types[type] || { label: type, color: 'bg-gray-100 text-gray-800' };
     return <Badge className={typeInfo.color}>{typeInfo.label}</Badge>;
   };
+
+  const activeFiltersCount = [
+    filters.sellerType !== 'all',
+    filters.dateFrom,
+    filters.dateTo
+  ].filter(Boolean).length;
 
   return (
     <div className="space-y-6">
@@ -560,144 +711,177 @@ const AddSellerManagement = () => {
                     সরাসরি নতুন সেলার যোগ করুন বা বিদ্যমান সেলার পরিচালনা করুন
                   </CardDescription>
                 </div>
-                <Dialog open={isAddDialogOpen} onOpenChange={(open) => {
-                  setIsAddDialogOpen(open);
-                  if (open) fetchAvailableUsers();
-                }}>
-                  <DialogTrigger asChild>
-                    <Button className="gap-2">
-                      <UserPlus className="h-4 w-4" />
-                      নতুন সেলার যোগ করুন
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle>নতুন সেলার যোগ করুন</DialogTitle>
-                      <DialogDescription>
-                        একজন বিদ্যমান ব্যবহারকারীকে সেলার হিসেবে যোগ করুন
-                      </DialogDescription>
-                    </DialogHeader>
-                    
-                    <div className="grid gap-4 py-4">
-                      <div className="grid gap-2">
-                        <Label htmlFor="userId">ব্যবহারকারী নির্বাচন করুন *</Label>
-                        <Select
-                          value={newSeller.userId}
-                          onValueChange={(value) => {
-                            const selectedUser = availableUsers.find(u => u.id === value);
-                            setNewSeller({ 
-                              ...newSeller, 
-                              userId: value,
-                              email: selectedUser?.email || ''
-                            });
-                          }}
+                <div className="flex gap-2 flex-wrap">
+                  {/* Export Dropdown */}
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="gap-2">
+                        <FileDown className="h-4 w-4" />
+                        এক্সপোর্ট
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-48 p-2">
+                      <div className="space-y-1">
+                        <Button 
+                          variant="ghost" 
+                          className="w-full justify-start gap-2"
+                          onClick={exportToCSV}
                         >
-                          <SelectTrigger>
-                            <SelectValue placeholder={loadingUsers ? "লোড হচ্ছে..." : "ব্যবহারকারী নির্বাচন করুন"} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {availableUsers.map(user => (
-                              <SelectItem key={user.id} value={user.id}>
-                                {user.full_name || user.email || user.id.substring(0, 8)}
-                              </SelectItem>
-                            ))}
-                            {availableUsers.length === 0 && !loadingUsers && (
-                              <SelectItem value="none" disabled>
-                                কোনো ব্যবহারকারী পাওয়া যায়নি
-                              </SelectItem>
-                            )}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="grid gap-2">
-                        <Label htmlFor="sellerType">সেলার টাইপ *</Label>
-                        <Select
-                          value={newSeller.sellerType}
-                          onValueChange={(value: 'marketplace' | 'rental' | 'service' | 'content') => 
-                            setNewSeller({ ...newSeller, sellerType: value })
-                          }
+                          <FileSpreadsheet className="h-4 w-4" />
+                          CSV ফাইল
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          className="w-full justify-start gap-2"
+                          onClick={exportToExcel}
                         >
-                          <SelectTrigger>
-                            <SelectValue placeholder="টাইপ নির্বাচন করুন" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="marketplace">মার্কেটপ্লেস</SelectItem>
-                            <SelectItem value="rental">রেন্টাল</SelectItem>
-                            <SelectItem value="service">সার্ভিস</SelectItem>
-                            <SelectItem value="content">কন্টেন্ট</SelectItem>
-                          </SelectContent>
-                        </Select>
+                          <FileSpreadsheet className="h-4 w-4" />
+                          Excel ফাইল
+                        </Button>
                       </div>
+                    </PopoverContent>
+                  </Popover>
 
-                      <div className="grid gap-2">
-                        <Label htmlFor="businessName">ব্যবসার নাম *</Label>
-                        <Input
-                          id="businessName"
-                          value={newSeller.businessName}
-                          onChange={(e) => setNewSeller({ ...newSeller, businessName: e.target.value })}
-                          placeholder="ব্যবসার নাম লিখুন"
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
+                  <Dialog open={isAddDialogOpen} onOpenChange={(open) => {
+                    setIsAddDialogOpen(open);
+                    if (open) fetchAvailableUsers();
+                  }}>
+                    <DialogTrigger asChild>
+                      <Button className="gap-2">
+                        <UserPlus className="h-4 w-4" />
+                        নতুন সেলার
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle>নতুন সেলার যোগ করুন</DialogTitle>
+                        <DialogDescription>
+                          একজন বিদ্যমান ব্যবহারকারীকে সেলার হিসেবে যোগ করুন
+                        </DialogDescription>
+                      </DialogHeader>
+                      
+                      <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
-                          <Label htmlFor="email">ইমেইল</Label>
+                          <Label htmlFor="userId">ব্যবহারকারী নির্বাচন করুন *</Label>
+                          <Select
+                            value={newSeller.userId}
+                            onValueChange={(value) => {
+                              const selectedUser = availableUsers.find(u => u.id === value);
+                              setNewSeller({ 
+                                ...newSeller, 
+                                userId: value,
+                                email: selectedUser?.email || ''
+                              });
+                            }}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder={loadingUsers ? "লোড হচ্ছে..." : "ব্যবহারকারী নির্বাচন করুন"} />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {availableUsers.map(user => (
+                                <SelectItem key={user.id} value={user.id}>
+                                  {user.full_name || user.email || user.id.substring(0, 8)}
+                                </SelectItem>
+                              ))}
+                              {availableUsers.length === 0 && !loadingUsers && (
+                                <SelectItem value="none" disabled>
+                                  কোনো ব্যবহারকারী পাওয়া যায়নি
+                                </SelectItem>
+                              )}
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="grid gap-2">
+                          <Label htmlFor="sellerType">সেলার টাইপ *</Label>
+                          <Select
+                            value={newSeller.sellerType}
+                            onValueChange={(value: 'marketplace' | 'rental' | 'service' | 'content') => 
+                              setNewSeller({ ...newSeller, sellerType: value })
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="টাইপ নির্বাচন করুন" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="marketplace">মার্কেটপ্লেস</SelectItem>
+                              <SelectItem value="rental">রেন্টাল</SelectItem>
+                              <SelectItem value="service">সার্ভিস</SelectItem>
+                              <SelectItem value="content">কন্টেন্ট</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="grid gap-2">
+                          <Label htmlFor="businessName">ব্যবসার নাম *</Label>
                           <Input
-                            id="email"
-                            type="email"
-                            value={newSeller.email}
-                            onChange={(e) => setNewSeller({ ...newSeller, email: e.target.value })}
-                            placeholder="email@example.com"
+                            id="businessName"
+                            value={newSeller.businessName}
+                            onChange={(e) => setNewSeller({ ...newSeller, businessName: e.target.value })}
+                            placeholder="ব্যবসার নাম লিখুন"
                           />
                         </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="grid gap-2">
+                            <Label htmlFor="email">ইমেইল</Label>
+                            <Input
+                              id="email"
+                              type="email"
+                              value={newSeller.email}
+                              onChange={(e) => setNewSeller({ ...newSeller, email: e.target.value })}
+                              placeholder="email@example.com"
+                            />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="phone">ফোন</Label>
+                            <Input
+                              id="phone"
+                              value={newSeller.phone}
+                              onChange={(e) => setNewSeller({ ...newSeller, phone: e.target.value })}
+                              placeholder="01XXXXXXXXX"
+                            />
+                          </div>
+                        </div>
+
                         <div className="grid gap-2">
-                          <Label htmlFor="phone">ফোন</Label>
+                          <Label htmlFor="address">ঠিকানা</Label>
                           <Input
-                            id="phone"
-                            value={newSeller.phone}
-                            onChange={(e) => setNewSeller({ ...newSeller, phone: e.target.value })}
-                            placeholder="01XXXXXXXXX"
+                            id="address"
+                            value={newSeller.address}
+                            onChange={(e) => setNewSeller({ ...newSeller, address: e.target.value })}
+                            placeholder="ব্যবসার ঠিকানা"
+                          />
+                        </div>
+
+                        <div className="grid gap-2">
+                          <Label htmlFor="bio">বিবরণ</Label>
+                          <Textarea
+                            id="bio"
+                            value={newSeller.bio}
+                            onChange={(e) => setNewSeller({ ...newSeller, bio: e.target.value })}
+                            placeholder="ব্যবসার সংক্ষিপ্ত বিবরণ"
+                            rows={3}
                           />
                         </div>
                       </div>
 
-                      <div className="grid gap-2">
-                        <Label htmlFor="address">ঠিকানা</Label>
-                        <Input
-                          id="address"
-                          value={newSeller.address}
-                          onChange={(e) => setNewSeller({ ...newSeller, address: e.target.value })}
-                          placeholder="ব্যবসার ঠিকানা"
-                        />
-                      </div>
-
-                      <div className="grid gap-2">
-                        <Label htmlFor="bio">বিবরণ</Label>
-                        <Textarea
-                          id="bio"
-                          value={newSeller.bio}
-                          onChange={(e) => setNewSeller({ ...newSeller, bio: e.target.value })}
-                          placeholder="ব্যবসার সংক্ষিপ্ত বিবরণ"
-                          rows={3}
-                        />
-                      </div>
-                    </div>
-
-                    <DialogFooter>
-                      <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                        বাতিল
-                      </Button>
-                      <Button onClick={handleAddSeller}>
-                        <UserPlus className="h-4 w-4 mr-2" />
-                        সেলার যোগ করুন
-                      </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                          বাতিল
+                        </Button>
+                        <Button onClick={handleAddSeller}>
+                          <UserPlus className="h-4 w-4 mr-2" />
+                          সেলার যোগ করুন
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
               </div>
             </CardHeader>
             <CardContent>
+              {/* Search and Filter Bar */}
               <div className="flex flex-col md:flex-row gap-4 mb-6">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -708,10 +892,113 @@ const AddSellerManagement = () => {
                     className="pl-10"
                   />
                 </div>
+                
+                {/* Filter Popover */}
+                <Popover open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="gap-2">
+                      <Filter className="h-4 w-4" />
+                      ফিল্টার
+                      {activeFiltersCount > 0 && (
+                        <Badge variant="secondary" className="ml-1">
+                          {activeFiltersCount}
+                        </Badge>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-80 p-4">
+                    <div className="space-y-4">
+                      <h4 className="font-medium">ফিল্টার অপশন</h4>
+                      
+                      <div className="space-y-2">
+                        <Label>সেলার টাইপ</Label>
+                        <Select
+                          value={filters.sellerType}
+                          onValueChange={(value) => setFilters({ ...filters, sellerType: value })}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="সব টাইপ" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">সব টাইপ</SelectItem>
+                            <SelectItem value="marketplace">মার্কেটপ্লেস</SelectItem>
+                            <SelectItem value="rental">রেন্টাল</SelectItem>
+                            <SelectItem value="service">সার্ভিস</SelectItem>
+                            <SelectItem value="content">কন্টেন্ট</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>যোগ হওয়ার তারিখ</Label>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <Label className="text-xs text-muted-foreground">থেকে</Label>
+                            <Input
+                              type="date"
+                              value={filters.dateFrom}
+                              onChange={(e) => setFilters({ ...filters, dateFrom: e.target.value })}
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs text-muted-foreground">পর্যন্ত</Label>
+                            <Input
+                              type="date"
+                              value={filters.dateTo}
+                              onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2 pt-2">
+                        <Button variant="outline" size="sm" onClick={clearFilters} className="flex-1">
+                          ক্লিয়ার
+                        </Button>
+                        <Button size="sm" onClick={() => setIsFilterOpen(false)} className="flex-1">
+                          প্রয়োগ করুন
+                        </Button>
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+
                 <Button variant="outline" onClick={fetchSellers}>
                   <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
                   রিফ্রেশ
                 </Button>
+              </div>
+
+              {/* Active Filters Display */}
+              {activeFiltersCount > 0 && (
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {filters.sellerType !== 'all' && (
+                    <Badge variant="secondary" className="gap-1">
+                      টাইপ: {filters.sellerType}
+                      <button onClick={() => setFilters({ ...filters, sellerType: 'all' })} className="ml-1 hover:text-destructive">×</button>
+                    </Badge>
+                  )}
+                  {filters.dateFrom && (
+                    <Badge variant="secondary" className="gap-1">
+                      থেকে: {filters.dateFrom}
+                      <button onClick={() => setFilters({ ...filters, dateFrom: '' })} className="ml-1 hover:text-destructive">×</button>
+                    </Badge>
+                  )}
+                  {filters.dateTo && (
+                    <Badge variant="secondary" className="gap-1">
+                      পর্যন্ত: {filters.dateTo}
+                      <button onClick={() => setFilters({ ...filters, dateTo: '' })} className="ml-1 hover:text-destructive">×</button>
+                    </Badge>
+                  )}
+                  <Button variant="ghost" size="sm" onClick={clearFilters} className="h-6 px-2 text-xs">
+                    সব ক্লিয়ার
+                  </Button>
+                </div>
+              )}
+
+              {/* Results Count */}
+              <div className="text-sm text-muted-foreground mb-4">
+                {filteredSellers.length} সেলার পাওয়া গেছে
               </div>
 
               {loading ? (
@@ -792,133 +1079,226 @@ const AddSellerManagement = () => {
 
         {/* Performance Tab */}
         <TabsContent value="performance">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5" />
-                সেলার পারফরম্যান্স রিপোর্ট
-              </CardTitle>
-              <CardDescription>
-                প্রতিটি সেলারের বিক্রি, অর্ডার এবং রেটিং দেখুন
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {loadingPerformance ? (
-                <div className="text-center py-12">
-                  <RefreshCw className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
-                  <p className="mt-2 text-muted-foreground">পারফরম্যান্স ডেটা লোড হচ্ছে...</p>
-                </div>
-              ) : performanceData.length === 0 ? (
-                <div className="text-center py-12">
-                  <BarChart3 className="h-12 w-12 mx-auto text-muted-foreground" />
-                  <p className="mt-2 text-muted-foreground">কোনো পারফরম্যান্স ডেটা নেই</p>
-                </div>
-              ) : (
-                <>
-                  {/* Summary Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <Card>
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-primary/10 rounded-lg">
-                            <Store className="h-5 w-5 text-primary" />
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">মোট সেলার</p>
-                            <p className="text-2xl font-bold">{performanceData.length}</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    <Card>
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-green-100 rounded-lg">
-                            <TrendingUp className="h-5 w-5 text-green-600" />
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">মোট বিক্রি</p>
-                            <p className="text-2xl font-bold">
-                              ৳{performanceData.reduce((sum, p) => sum + p.totalSales, 0).toLocaleString('bn-BD')}
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    <Card>
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-blue-100 rounded-lg">
-                            <ShoppingBag className="h-5 w-5 text-blue-600" />
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">মোট অর্ডার</p>
-                            <p className="text-2xl font-bold">
-                              {performanceData.reduce((sum, p) => sum + p.totalOrders, 0).toLocaleString('bn-BD')}
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    <Card>
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-yellow-100 rounded-lg">
-                            <Star className="h-5 w-5 text-yellow-600" />
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">গড় রেটিং</p>
-                            <p className="text-2xl font-bold">
-                              {performanceData.length > 0
-                                ? (performanceData.reduce((sum, p) => sum + p.avgRating, 0) / performanceData.length).toFixed(1)
-                                : '0'}
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+          <div className="space-y-6">
+            {/* Monthly Sales Chart */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5" />
+                  মাসিক বিক্রি ট্রেন্ড
+                </CardTitle>
+                <CardDescription>
+                  গত ৬ মাসের বিক্রি এবং অর্ডার পরিসংখ্যান
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {loadingPerformance ? (
+                  <div className="h-64 flex items-center justify-center">
+                    <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
                   </div>
+                ) : (
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={monthlySalesData}>
+                        <defs>
+                          <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                        <XAxis dataKey="month" className="text-xs" />
+                        <YAxis className="text-xs" />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: 'hsl(var(--background))', 
+                            border: '1px solid hsl(var(--border))',
+                            borderRadius: '8px'
+                          }}
+                          formatter={(value: number, name: string) => [
+                            name === 'sales' ? `৳${value.toLocaleString('bn-BD')}` : value.toLocaleString('bn-BD'),
+                            name === 'sales' ? 'বিক্রি' : 'অর্ডার'
+                          ]}
+                        />
+                        <Area 
+                          type="monotone" 
+                          dataKey="sales" 
+                          stroke="hsl(var(--primary))" 
+                          fillOpacity={1} 
+                          fill="url(#colorSales)" 
+                          name="sales"
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
-                  {/* Performance Table */}
-                  <div className="rounded-md border overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>র‍্যাংক</TableHead>
-                          <TableHead>ব্যবসার নাম</TableHead>
-                          <TableHead className="text-right">মোট অর্ডার</TableHead>
-                          <TableHead className="text-right">মোট বিক্রি</TableHead>
-                          <TableHead className="text-right">গড় রেটিং</TableHead>
-                          <TableHead className="text-right">রিভিউ</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {performanceData.map((seller, index) => (
-                          <TableRow key={seller.sellerId}>
-                            <TableCell>
-                              <Badge variant={index < 3 ? "default" : "outline"}>
-                                #{index + 1}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="font-medium">{seller.businessName}</TableCell>
-                            <TableCell className="text-right">{seller.totalOrders.toLocaleString('bn-BD')}</TableCell>
-                            <TableCell className="text-right">৳{seller.totalSales.toLocaleString('bn-BD')}</TableCell>
-                            <TableCell className="text-right">
-                              <div className="flex items-center justify-end gap-1">
-                                <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                                {seller.avgRating}
-                              </div>
-                            </TableCell>
-                            <TableCell className="text-right">{seller.reviewCount.toLocaleString('bn-BD')}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+            {/* Orders Bar Chart */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <ShoppingBag className="h-5 w-5" />
+                  মাসিক অর্ডার পরিসংখ্যান
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {loadingPerformance ? (
+                  <div className="h-48 flex items-center justify-center">
+                    <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
                   </div>
-                </>
-              )}
-            </CardContent>
-          </Card>
+                ) : (
+                  <div className="h-48">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={monthlySalesData}>
+                        <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                        <XAxis dataKey="month" className="text-xs" />
+                        <YAxis className="text-xs" />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: 'hsl(var(--background))', 
+                            border: '1px solid hsl(var(--border))',
+                            borderRadius: '8px'
+                          }}
+                        />
+                        <Bar dataKey="orders" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} name="অর্ডার" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Performance Summary & Table */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5" />
+                  সেলার পারফরম্যান্স রিপোর্ট
+                </CardTitle>
+                <CardDescription>
+                  প্রতিটি সেলারের বিক্রি, অর্ডার এবং রেটিং দেখুন
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {loadingPerformance ? (
+                  <div className="text-center py-12">
+                    <RefreshCw className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
+                    <p className="mt-2 text-muted-foreground">পারফরম্যান্স ডেটা লোড হচ্ছে...</p>
+                  </div>
+                ) : performanceData.length === 0 ? (
+                  <div className="text-center py-12">
+                    <BarChart3 className="h-12 w-12 mx-auto text-muted-foreground" />
+                    <p className="mt-2 text-muted-foreground">কোনো পারফরম্যান্স ডেটা নেই</p>
+                  </div>
+                ) : (
+                  <>
+                    {/* Summary Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                      <Card>
+                        <CardContent className="p-4">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-primary/10 rounded-lg">
+                              <Store className="h-5 w-5 text-primary" />
+                            </div>
+                            <div>
+                              <p className="text-sm text-muted-foreground">মোট সেলার</p>
+                              <p className="text-2xl font-bold">{performanceData.length}</p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardContent className="p-4">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-green-500/10 rounded-lg">
+                              <TrendingUp className="h-5 w-5 text-green-600" />
+                            </div>
+                            <div>
+                              <p className="text-sm text-muted-foreground">মোট বিক্রি</p>
+                              <p className="text-2xl font-bold">
+                                ৳{performanceData.reduce((sum, p) => sum + p.totalSales, 0).toLocaleString('bn-BD')}
+                              </p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardContent className="p-4">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-blue-500/10 rounded-lg">
+                              <ShoppingBag className="h-5 w-5 text-blue-600" />
+                            </div>
+                            <div>
+                              <p className="text-sm text-muted-foreground">মোট অর্ডার</p>
+                              <p className="text-2xl font-bold">
+                                {performanceData.reduce((sum, p) => sum + p.totalOrders, 0).toLocaleString('bn-BD')}
+                              </p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardContent className="p-4">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-yellow-500/10 rounded-lg">
+                              <Star className="h-5 w-5 text-yellow-600" />
+                            </div>
+                            <div>
+                              <p className="text-sm text-muted-foreground">গড় রেটিং</p>
+                              <p className="text-2xl font-bold">
+                                {performanceData.length > 0
+                                  ? (performanceData.reduce((sum, p) => sum + p.avgRating, 0) / performanceData.length).toFixed(1)
+                                  : '0'}
+                              </p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+
+                    {/* Performance Table */}
+                    <div className="rounded-md border overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>র‍্যাংক</TableHead>
+                            <TableHead>ব্যবসার নাম</TableHead>
+                            <TableHead className="text-right">মোট অর্ডার</TableHead>
+                            <TableHead className="text-right">মোট বিক্রি</TableHead>
+                            <TableHead className="text-right">গড় রেটিং</TableHead>
+                            <TableHead className="text-right">রিভিউ</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {performanceData.map((seller, index) => (
+                            <TableRow key={seller.sellerId}>
+                              <TableCell>
+                                <Badge variant={index < 3 ? "default" : "outline"}>
+                                  #{index + 1}
+                                </Badge>
+                              </TableCell>
+                              <TableCell className="font-medium">{seller.businessName}</TableCell>
+                              <TableCell className="text-right">{seller.totalOrders.toLocaleString('bn-BD')}</TableCell>
+                              <TableCell className="text-right">৳{seller.totalSales.toLocaleString('bn-BD')}</TableCell>
+                              <TableCell className="text-right">
+                                <div className="flex items-center justify-end gap-1">
+                                  <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                                  {seller.avgRating}
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-right">{seller.reviewCount.toLocaleString('bn-BD')}</TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         {/* Bulk Import Tab */}
@@ -1039,7 +1419,7 @@ const AddSellerManagement = () => {
 
               {/* Import Result */}
               {importResult && (
-                <div className={`p-4 rounded-lg ${importResult.failed > 0 ? 'bg-destructive/10' : 'bg-green-50'}`}>
+                <div className={`p-4 rounded-lg ${importResult.failed > 0 ? 'bg-destructive/10' : 'bg-green-500/10'}`}>
                   <div className="flex items-start gap-3">
                     {importResult.failed > 0 ? (
                       <AlertCircle className="h-5 w-5 text-destructive mt-0.5" />
