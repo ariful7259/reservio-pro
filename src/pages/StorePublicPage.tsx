@@ -53,13 +53,6 @@ interface StoreData {
     };
     returnPolicy?: string;
     customDomain?: string;
-
-    themeId?: string;
-    layout?: {
-      elements?: any[];
-      templateId?: string;
-      updatedAt?: string;
-    };
   } | null;
 }
 
@@ -289,42 +282,10 @@ const StorePublicPage = () => {
   const businessHours = settings?.businessHours;
   const socialLinks = settings?.socialLinks;
 
-  const mapThemeIdToTemplate = (themeId?: string): string | undefined => {
-    if (!themeId) return undefined;
-    if (themeId.includes('fashion')) return 'fashion';
-    if (themeId === 'luxury-brand' || themeId === 'beauty-salon') return 'fashion';
-    if (themeId.includes('tech') || themeId.includes('electronics')) return 'electronics';
-    if (themeId === 'ecommerce-pro' || themeId === 'automotive-parts') return 'electronics';
-    if (themeId.includes('food') || themeId.includes('restaurant')) return 'food';
-    if (themeId.includes('artisan') || themeId.includes('organic')) return 'artisan';
-    if (themeId.includes('education') || themeId.includes('consulting') || themeId.includes('digital')) return 'digital';
-    if (themeId === 'healthcare-clinic' || themeId === 'travel-explorer' || themeId === 'real-estate-pro' || themeId === 'event-management') return 'digital';
-    if (themeId.includes('minimal')) return 'minimal';
-    return undefined;
-  };
-
-  const activeTemplate =
-    settings?.layout?.templateId ||
-    mapThemeIdToTemplate(settings?.themeId) ||
-    'minimal';
-
-  const headerGradientClass =
-    activeTemplate === 'fashion'
-      ? 'from-pink-500/30 via-pink-500/20 to-pink-500/10'
-      : activeTemplate === 'electronics'
-        ? 'from-blue-500/30 via-blue-500/20 to-blue-500/10'
-        : activeTemplate === 'food'
-          ? 'from-amber-500/30 via-amber-500/20 to-amber-500/10'
-          : activeTemplate === 'artisan'
-            ? 'from-emerald-500/30 via-emerald-500/20 to-emerald-500/10'
-            : activeTemplate === 'digital'
-              ? 'from-purple-500/30 via-purple-500/20 to-purple-500/10'
-              : 'from-primary/30 via-primary/20 to-primary/10';
-
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Store Header Banner */}
-      <div className={`h-48 bg-gradient-to-r ${headerGradientClass} relative`}>
+      <div className="h-48 bg-gradient-to-r from-primary/30 via-primary/20 to-primary/10 relative">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml,...')] opacity-10" />
       </div>
 

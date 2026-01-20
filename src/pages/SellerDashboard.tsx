@@ -33,7 +33,6 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useNavigate } from 'react-router-dom';
-import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useSellerProfile } from '@/hooks/useSellerProfile';
 import { Separator } from '@/components/ui/separator';
@@ -57,7 +56,6 @@ import ProductManager from '@/components/seller/ProductManager';
 
 const SellerDashboard = () => {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useAuth();
   const { profile, isLoading: profileLoading, isSeller } = useSellerProfile();
   const [dateRange, setDateRange] = useState('this-month');
@@ -225,15 +223,7 @@ const SellerDashboard = () => {
         <div className="flex gap-2 flex-wrap">
           <Button 
             variant="outline"
-            onClick={() => {
-              setSearchParams((prev) => {
-                const p = new URLSearchParams(prev);
-                p.set('tab', 'design');
-                p.set('subtab', 'themes');
-                return p;
-              });
-              setShowStoreBuilder(true);
-            }}
+            onClick={() => setShowStoreBuilder(true)}
           >
             <Store className="h-4 w-4 mr-2" />
             স্টোর সেটিংস

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -13,32 +13,14 @@ import {
   Copy, Trash, MoveRight, Check, Sparkles,
   PanelLeft, PanelRight, Eye, Undo, Redo,
   Sliders, ChevronRight, PencilRuler, GripVertical,
-  PlusCircle, Settings, ArrowDownCircle, Upload,
-  RectangleHorizontal, Move, Zap, Code, BoxSelect
+  PlusCircle, Settings, ArrowDownCircle
 } from 'lucide-react';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Slider } from '@/components/ui/slider';
-import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import StorePreview from '@/components/store/StorePreview';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-export interface ElementProps {
+interface ElementProps {
   id: string;
   type: string;
   content: string;
@@ -47,10 +29,6 @@ export interface ElementProps {
 
 interface DragDropEditorProps {
   storeName: string;
-  initialElements?: ElementProps[];
-  initialTemplateId?: string;
-  onLayoutChange?: (payload: { elements: ElementProps[]; templateId: string }) => void;
-  onSave?: (payload: { elements: ElementProps[]; templateId: string }) => Promise<void> | void;
 }
 
 const TEMPLATES = [
@@ -83,26 +61,6 @@ const TEMPLATES = [
     id: 'digital',
     name: 'ডিজিটাল',
     description: 'ডিজিটাল প্রডাক্ট এবং সার্ভিসের জন্য'
-  },
-  {
-    id: 'services',
-    name: 'সার্ভিস',
-    description: 'পার্লার/রিপেয়ার/কনসালটেন্সি সার্ভিসের জন্য'
-  },
-  {
-    id: 'books',
-    name: 'বুক স্টোর',
-    description: 'বই, স্টেশনারি এবং শিক্ষা সামগ্রীর জন্য'
-  },
-  {
-    id: 'beauty',
-    name: 'বিউটি',
-    description: 'স্কিনকেয়ার, কসমেটিক্স, পার্লার এবং সেলুন'
-  },
-  {
-    id: 'furniture',
-    name: 'ফার্নিচার',
-    description: 'ফার্নিচার/হোম ডেকর/লাইফস্টাইল পণ্যের জন্য'
   }
 ];
 
@@ -117,59 +75,18 @@ const ELEMENTS = [
   { id: 'features', name: 'ফিচারস', icon: <Sliders className="h-4 w-4" /> }
 ];
 
-const DragDropEditor: React.FC<DragDropEditorProps> = ({
-  storeName,
-  initialElements,
-  initialTemplateId,
-  onLayoutChange,
-  onSave,
-}) => {
+const DragDropEditor: React.FC<DragDropEditorProps> = ({ storeName }) => {
   const [activeTab, setActiveTab] = useState('templates');
   const [selectedTemplate, setSelectedTemplate] = useState('minimal');
   const [previewDevice, setPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
   const [elements, setElements] = useState<ElementProps[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedColor, setSelectedColor] = useState('#E3324A'); // প্রাইমারি কালার
-  const [secondaryColor, setSecondaryColor] = useState('#8b5cf6');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [history, setHistory] = useState<ElementProps[][]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
-  const [selectedFont, setSelectedFont] = useState('Hind Siliguri');
-  const [logoUrl, setLogoUrl] = useState('');
-  const [bannerUrl, setBannerUrl] = useState('');
-  const [borderRadius, setBorderRadius] = useState(8);
-  const [shadowLevel, setShadowLevel] = useState<'none' | 'sm' | 'md' | 'lg'>('md');
-  const [spacing, setSpacing] = useState<'compact' | 'normal' | 'relaxed'>('normal');
-  const [enableAnimations, setEnableAnimations] = useState(true);
-  const [animationType, setAnimationType] = useState<'fade' | 'slide' | 'scale'>('fade');
-  const [customCss, setCustomCss] = useState('');
   const isMobile = useIsMobile();
   const { toast } = useToast();
-
-  // initial restore (layout + template)
-  useEffect(() => {
-    if (initialTemplateId) setSelectedTemplate(initialTemplateId);
-
-    if (initialElements) {
-      setElements(initialElements);
-      setHistory([initialElements]);
-      setHistoryIndex(0);
-    } else {
-      setElements([]);
-      setHistory([]);
-      setHistoryIndex(-1);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialTemplateId, initialElements?.length]);
-
-  const layoutPayload = useMemo(
-    () => ({ elements, templateId: selectedTemplate }),
-    [elements, selectedTemplate]
-  );
-
-  useEffect(() => {
-    onLayoutChange?.(layoutPayload);
-  }, [layoutPayload, onLayoutChange]);
 
   // ড্র্যাগ-ড্রপ এলিমেন্টগুলি মুভ করার ফাংশন
   const onDragEnd = (result: any) => {
@@ -278,23 +195,14 @@ const DragDropEditor: React.FC<DragDropEditorProps> = ({
   // সেভ হ্যান্ডলার
   const handleSave = () => {
     setLoading(true);
-
-    Promise.resolve(onSave?.(layoutPayload))
-      .then(() => {
-        toast({
-          title: "সংরক্ষিত হয়েছে",
-          description: "আপনার ডিজাইন সফলভাবে সংরক্ষণ করা হয়েছে।",
-        });
-      })
-      .catch((err: any) => {
-        console.error('Design save error:', err);
-        toast({
-          title: "সেভ করা যায়নি",
-          description: err?.message || "আবার চেষ্টা করুন।",
-          variant: "destructive",
-        });
-      })
-      .finally(() => setLoading(false));
+    
+    setTimeout(() => {
+      setLoading(false);
+      toast({
+        title: "সংরক্ষিত হয়েছে",
+        description: "আপনার ডিজাইন সফলভাবে সংরক্ষণ করা হয়েছে।",
+      });
+    }, 1000);
   };
 
   // এলিমেন্ট মোছার হ্যান্ডলার
@@ -331,11 +239,7 @@ const DragDropEditor: React.FC<DragDropEditorProps> = ({
                   template.id === 'electronics' && "from-blue-400 to-blue-700",
                   template.id === 'food' && "from-amber-400 to-amber-600",
                   template.id === 'artisan' && "from-emerald-400 to-emerald-700",
-                    template.id === 'digital' && "from-purple-400 to-purple-700",
-                    template.id === 'services' && "from-teal-400 to-teal-700",
-                    template.id === 'books' && "from-indigo-400 to-indigo-700",
-                    template.id === 'beauty' && "from-rose-400 to-rose-700",
-                    template.id === 'furniture' && "from-orange-400 to-orange-700"
+                  template.id === 'digital' && "from-purple-400 to-purple-700"
                 )}
               />
               <CardContent className="p-3">
@@ -450,276 +354,56 @@ const DragDropEditor: React.FC<DragDropEditorProps> = ({
       );
     } else if (activeTab === 'design') {
       return (
-        <div className="p-3 space-y-2 overflow-y-auto max-h-[550px]">
-          <Accordion type="multiple" defaultValue={['colors', 'branding']} className="w-full">
-            {/* কালার সেটিংস */}
-            <AccordionItem value="colors">
-              <AccordionTrigger className="text-sm font-medium py-2">
-                <div className="flex items-center gap-2">
-                  <Palette className="h-4 w-4" /> রঙ কাস্টমাইজ
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="space-y-3 pt-2">
-                <div>
-                  <Label className="text-xs">প্রাইমারি কালার</Label>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Input
-                      type="color"
-                      value={selectedColor}
-                      onChange={(e) => setSelectedColor(e.target.value)}
-                      className="w-12 h-8 p-1 cursor-pointer"
-                    />
-                    <Input
-                      value={selectedColor}
-                      onChange={(e) => setSelectedColor(e.target.value)}
-                      className="flex-1 h-8 text-xs"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label className="text-xs">সেকেন্ডারি কালার</Label>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Input
-                      type="color"
-                      value={secondaryColor}
-                      onChange={(e) => setSecondaryColor(e.target.value)}
-                      className="w-12 h-8 p-1 cursor-pointer"
-                    />
-                    <Input
-                      value={secondaryColor}
-                      onChange={(e) => setSecondaryColor(e.target.value)}
-                      className="flex-1 h-8 text-xs"
-                    />
-                  </div>
-                </div>
-                <div className="p-2 border rounded-md">
-                  <p className="text-xs text-muted-foreground mb-2">প্রিভিউ</p>
-                  <div className="flex gap-2">
-                    <div className="w-10 h-10 rounded" style={{ backgroundColor: selectedColor }} />
-                    <div className="w-10 h-10 rounded" style={{ backgroundColor: secondaryColor }} />
-                    <div
-                      className="flex-1 h-10 rounded"
-                      style={{ background: `linear-gradient(135deg, ${selectedColor}, ${secondaryColor})` }}
-                    />
-                  </div>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-
-            {/* ব্র্যান্ডিং */}
-            <AccordionItem value="branding">
-              <AccordionTrigger className="text-sm font-medium py-2">
-                <div className="flex items-center gap-2">
-                  <Image className="h-4 w-4" /> লোগো ও ব্যানার
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="space-y-3 pt-2">
-                <div>
-                  <Label className="text-xs">লোগো URL</Label>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Input
-                      placeholder="https://example.com/logo.png"
-                      value={logoUrl}
-                      onChange={(e) => setLogoUrl(e.target.value)}
-                      className="flex-1 h-8 text-xs"
-                    />
-                    <Button size="sm" variant="outline" className="h-8">
-                      <Upload className="h-3 w-3" />
-                    </Button>
-                  </div>
-                  {logoUrl && (
-                    <img src={logoUrl} alt="Logo" className="h-12 w-auto mt-2 rounded border" />
+        <div className="p-3 space-y-4">
+          <div>
+            <h3 className="text-sm font-medium mb-2">থিম কালার</h3>
+            <div className="grid grid-cols-3 gap-2">
+              {['#E3324A', '#35aa47', '#4c9ac0', '#8b5cf6', '#f97316', '#14b8a6'].map((color) => (
+                <div
+                  key={color}
+                  className={cn(
+                    'h-8 rounded-md cursor-pointer transition-all hover:scale-110',
+                    selectedColor === color && 'ring-2 ring-offset-2 ring-gray-600'
                   )}
-                </div>
-                <div>
-                  <Label className="text-xs">ব্যানার URL</Label>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Input
-                      placeholder="https://example.com/banner.jpg"
-                      value={bannerUrl}
-                      onChange={(e) => setBannerUrl(e.target.value)}
-                      className="flex-1 h-8 text-xs"
-                    />
-                    <Button size="sm" variant="outline" className="h-8">
-                      <Upload className="h-3 w-3" />
-                    </Button>
-                  </div>
-                  {bannerUrl && (
-                    <img src={bannerUrl} alt="Banner" className="w-full h-16 object-cover mt-2 rounded border" />
-                  )}
-                </div>
-                <div>
-                  <Label className="text-xs">স্টোর নাম</Label>
-                  <Input value={storeName} readOnly className="mt-1 h-8 text-xs bg-muted" />
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-
-            {/* টাইপোগ্রাফি */}
-            <AccordionItem value="typography">
-              <AccordionTrigger className="text-sm font-medium py-2">
-                <div className="flex items-center gap-2">
-                  <Type className="h-4 w-4" /> ফন্ট স্টাইল
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="space-y-3 pt-2">
-                <div>
-                  <Label className="text-xs">ফন্ট ফ্যামিলি</Label>
-                  <Select value={selectedFont} onValueChange={setSelectedFont}>
-                    <SelectTrigger className="h-8 text-xs mt-1">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {['Hind Siliguri', 'Noto Sans Bengali', 'SolaimanLipi', 'Kalpurush', 'Galada', 'Tiro Bangla'].map((font) => (
-                        <SelectItem key={font} value={font} className="text-xs">
-                          {font}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="p-2 border rounded-md" style={{ fontFamily: selectedFont }}>
-                  <p className="text-sm">ফন্ট প্রিভিউ: বাংলায় দেখুন</p>
-                  <p className="text-xs text-muted-foreground">Font Preview: English Text</p>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-
-            {/* স্টাইল সেটিংস */}
-            <AccordionItem value="style">
-              <AccordionTrigger className="text-sm font-medium py-2">
-                <div className="flex items-center gap-2">
-                  <BoxSelect className="h-4 w-4" /> বর্ডার ও শ্যাডো
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="space-y-3 pt-2">
-                <div>
-                  <Label className="text-xs">বর্ডার রেডিয়াস: {borderRadius}px</Label>
-                  <Slider
-                    value={[borderRadius]}
-                    onValueChange={([v]) => setBorderRadius(v)}
-                    min={0}
-                    max={24}
-                    step={2}
-                    className="mt-2"
-                  />
-                </div>
-                <div>
-                  <Label className="text-xs">শ্যাডো লেভেল</Label>
-                  <Select value={shadowLevel} onValueChange={(v: any) => setShadowLevel(v)}>
-                    <SelectTrigger className="h-8 text-xs mt-1">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none" className="text-xs">কোনো শ্যাডো নেই</SelectItem>
-                      <SelectItem value="sm" className="text-xs">হালকা (sm)</SelectItem>
-                      <SelectItem value="md" className="text-xs">মাঝারি (md)</SelectItem>
-                      <SelectItem value="lg" className="text-xs">গভীর (lg)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex gap-2 justify-center pt-2">
-                  {(['none', 'sm', 'md', 'lg'] as const).map((s) => (
-                    <div
-                      key={s}
-                      className={cn(
-                        'w-12 h-12 bg-background border',
-                        s === 'none' && 'shadow-none',
-                        s === 'sm' && 'shadow-sm',
-                        s === 'md' && 'shadow-md',
-                        s === 'lg' && 'shadow-lg',
-                        shadowLevel === s && 'ring-2 ring-primary'
-                      )}
-                      style={{ borderRadius: `${borderRadius}px` }}
-                      onClick={() => setShadowLevel(s)}
-                    />
-                  ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-
-            {/* স্পেসিং */}
-            <AccordionItem value="spacing">
-              <AccordionTrigger className="text-sm font-medium py-2">
-                <div className="flex items-center gap-2">
-                  <Move className="h-4 w-4" /> স্পেসিং
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="space-y-3 pt-2">
-                <div className="grid grid-cols-3 gap-2">
-                  {([
-                    { id: 'compact', label: 'কম্প্যাক্ট' },
-                    { id: 'normal', label: 'নরমাল' },
-                    { id: 'relaxed', label: 'রিল্যাক্সড' },
-                  ] as const).map((s) => (
-                    <Button
-                      key={s.id}
-                      variant={spacing === s.id ? 'default' : 'outline'}
-                      size="sm"
-                      className="text-xs"
-                      onClick={() => setSpacing(s.id)}
-                    >
-                      {s.label}
-                    </Button>
-                  ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-
-            {/* অ্যানিমেশন */}
-            <AccordionItem value="animation">
-              <AccordionTrigger className="text-sm font-medium py-2">
-                <div className="flex items-center gap-2">
-                  <Zap className="h-4 w-4" /> অ্যানিমেশন
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="space-y-3 pt-2">
-                <div className="flex items-center justify-between">
-                  <Label className="text-xs">অ্যানিমেশন চালু</Label>
-                  <Switch checked={enableAnimations} onCheckedChange={setEnableAnimations} />
-                </div>
-                {enableAnimations && (
-                  <div>
-                    <Label className="text-xs">অ্যানিমেশন টাইপ</Label>
-                    <Select value={animationType} onValueChange={(v: any) => setAnimationType(v)}>
-                      <SelectTrigger className="h-8 text-xs mt-1">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="fade" className="text-xs">Fade In</SelectItem>
-                        <SelectItem value="slide" className="text-xs">Slide Up</SelectItem>
-                        <SelectItem value="scale" className="text-xs">Scale In</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-              </AccordionContent>
-            </AccordionItem>
-
-            {/* কাস্টম CSS */}
-            <AccordionItem value="custom-css">
-              <AccordionTrigger className="text-sm font-medium py-2">
-                <div className="flex items-center gap-2">
-                  <Code className="h-4 w-4" /> কাস্টম CSS
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="space-y-3 pt-2">
-                <Textarea
-                  placeholder=".my-class { color: red; }"
-                  value={customCss}
-                  onChange={(e) => setCustomCss(e.target.value)}
-                  rows={4}
-                  className="text-xs font-mono"
+                  style={{ backgroundColor: color }}
+                  onClick={() => setSelectedColor(color)}
                 />
-                <p className="text-xs text-muted-foreground">
-                  আপনার স্টোরে কাস্টম CSS যোগ করুন (অ্যাডভান্সড)
-                </p>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-
-          <div className="pt-3 flex justify-end border-t">
-            <Button onClick={handleSave} size="sm">
+              ))}
+            </div>
+          </div>
+          
+          <div>
+            <h3 className="text-sm font-medium mb-2">হেডার সেটিংস</h3>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Input placeholder="লোগো লিংক" />
+                <Button size="sm" className="whitespace-nowrap">
+                  <Image className="h-4 w-4 mr-2" /> আপলোড
+                </Button>
+              </div>
+              <Input placeholder="স্টোর নাম" value={storeName} />
+            </div>
+          </div>
+          
+          <div>
+            <h3 className="text-sm font-medium mb-2">ফন্ট স্টাইল</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {['Hind Siliguri', 'Noto Sans Bengali', 'SolaimanLipi', 'Kalpurush'].map((font) => (
+                <Button
+                  key={font}
+                  variant="outline"
+                  size="sm"
+                  className="justify-start"
+                >
+                  <Type className="h-4 w-4 mr-2" />
+                  {font}
+                </Button>
+              ))}
+            </div>
+          </div>
+          
+          <div className="pt-2 flex justify-end">
+            <Button onClick={handleSave}>
               <Save className="h-4 w-4 mr-2" />
               সেটিংস সেভ করুন
             </Button>

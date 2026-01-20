@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Paintbrush, PanelTop, Wand2, Gift, MoveRight, CreditCard, Tag, BellRing, Search, BarChart3, MessageSquare, Globe, Shield, Package, Calculator, Upload, Zap } from 'lucide-react';
+import { Sparkles, Paintbrush, PanelTop, Wand2, Gift, MoveRight, CreditCard, Tag, BellRing, Palette, Search, BarChart3, MessageSquare, Globe, Shield, Package, Calculator, Upload, Zap } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useSellerProfile } from '@/hooks/useSellerProfile';
 
@@ -37,6 +37,7 @@ import LiveChatSupport from '@/components/chat/LiveChatSupport';
 import MultiVendorSupport from '@/components/marketplace/MultiVendorSupport';
 import MultiLanguageCurrency from '@/components/language/MultiLanguageCurrency';
 import BackupSecurity from '@/components/security/BackupSecurity';
+import ThemeLibrary from '@/components/store/ThemeLibrary';
 import ProductImportExport from '@/components/store/ProductImportExport';
 import IntegratedPaymentGateway from '@/components/store/IntegratedPaymentGateway';
 import TaxInvoiceGenerator from '@/components/store/TaxInvoiceGenerator';
@@ -49,7 +50,12 @@ const CreateStore = () => {
   const { profile } = useSellerProfile();
   const isMobile = useIsMobile();
 
-  // Redirect logic removed - users should stay on /create-store page
+  // যদি ব্যবহারকারীর একটি প্রোফাইল থাকে তবে ড্যাশবোর্ডে পরিচালিত করে
+  useEffect(() => {
+    if (profile) {
+      navigate(`/seller-dashboard/${profile.seller_type}`);
+    }
+  }, [profile, navigate]);
 
   // ফর্ম ইনিশিয়ালাইজেশন
   const form = useForm<FormValues>({
@@ -143,6 +149,8 @@ const CreateStore = () => {
             <ReferralSystem />
           </div>
         );
+      case 'themes':
+        return <ThemeLibrary />;
       case 'import-export':
         return <ProductImportExport />;
       case 'payment':
@@ -287,6 +295,7 @@ const CreateStore = () => {
       { id: 'multivendor', icon: Sparkles, label: 'মাল্টি-ভেন্ডর', color: 'from-purple-400 to-purple-600' },
       { id: 'language', icon: Globe, label: 'ভাষা ও কারেন্সি', color: 'from-orange-400 to-orange-600' },
       { id: 'backup', icon: Shield, label: 'নিরাপত্তা', color: 'from-red-400 to-red-600' },
+      { id: 'themes', icon: Palette, label: 'থিম', color: 'from-pink-400 to-pink-600' },
       { id: 'import-export', icon: Upload, label: 'ইমপোর্ট/এক্সপোর্ট', color: 'from-indigo-400 to-indigo-600' },
       { id: 'payment', icon: CreditCard, label: 'পেমেন্ট', color: 'from-yellow-400 to-yellow-600' }
     ];

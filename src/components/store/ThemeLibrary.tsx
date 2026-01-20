@@ -1,5 +1,5 @@
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -34,22 +34,11 @@ interface Theme {
   isInstalled: boolean;
 }
 
-interface ThemeLibraryProps {
-  selectedThemeId?: string;
-  onSelectTheme?: (themeId: string) => void;
-  initialCategory?: string;
-}
-
-const ThemeLibrary: React.FC<ThemeLibraryProps> = ({
-  selectedThemeId,
-  onSelectTheme,
-  initialCategory,
-}) => {
+const ThemeLibrary = () => {
   const { toast } = useToast();
   const [installedThemes, setInstalledThemes] = useState<string[]>(['modern-minimal']);
   const [activeTheme, setActiveTheme] = useState('modern-minimal');
   const [previewTheme, setPreviewTheme] = useState<Theme | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory || 'all');
 
   const themes: Theme[] = [
     {
@@ -283,12 +272,10 @@ const ThemeLibrary: React.FC<ThemeLibraryProps> = ({
       return;
     }
 
-    setInstalledThemes(prev => (prev.includes(themeId) ? prev : [...prev, themeId]));
-    setActiveTheme(themeId);
-    onSelectTheme?.(themeId);
+    setInstalledThemes(prev => [...prev, themeId]);
     toast({
       title: "থিম ইনস্টল সম্পন্ন",
-      description: `${theme.name} থিম ইনস্টল ও অ্যাক্টিভ হয়েছে।`,
+      description: `${theme.name} থিম সফলভাবে ইনস্টল হয়েছে।`,
     });
   };
 
@@ -299,20 +286,9 @@ const ThemeLibrary: React.FC<ThemeLibraryProps> = ({
       title: "থিম অ্যাক্টিভ",
       description: `${theme?.name} থিম এখন অ্যাক্টিভ।`,
     });
-
-    onSelectTheme?.(themeId);
   };
 
-  const categories = useMemo(() => [...new Set(themes.map(t => t.category))], [themes]);
-
-  useEffect(() => {
-    if (selectedThemeId) setActiveTheme(selectedThemeId);
-  }, [selectedThemeId]);
-
-  const filteredThemes = useMemo(() => {
-    if (selectedCategory === 'all') return themes;
-    return themes.filter(t => t.category === selectedCategory);
-  }, [themes, selectedCategory]);
+  const categories = [...new Set(themes.map(t => t.category))];
 
   return (
     <div className="space-y-6">
@@ -334,20 +310,11 @@ const ThemeLibrary: React.FC<ThemeLibraryProps> = ({
 
       {/* ক্যাটাগরি ফিল্টার */}
       <div className="flex flex-wrap gap-2">
-        <Button
-          variant={selectedCategory === 'all' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setSelectedCategory('all')}
-        >
+        <Button variant="outline" size="sm" className="bg-primary text-white">
           সব থিম
         </Button>
         {categories.map(category => (
-          <Button
-            key={category}
-            variant={selectedCategory === category ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setSelectedCategory(category)}
-          >
+          <Button key={category} variant="outline" size="sm">
             {category}
           </Button>
         ))}
@@ -355,7 +322,7 @@ const ThemeLibrary: React.FC<ThemeLibraryProps> = ({
 
       {/* থিম গ্রিড */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredThemes.map((theme) => (
+        {themes.map((theme) => (
           <Card key={theme.id} className={`overflow-hidden transition-all hover:shadow-lg ${
             activeTheme === theme.id ? 'ring-2 ring-primary' : ''
           }`}>

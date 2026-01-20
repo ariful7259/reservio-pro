@@ -24,14 +24,6 @@ const StorePreview: React.FC<StorePreviewProps> = ({ theme, storeName }) => {
         return 'bg-emerald-600 text-white';
       case 'digital':
         return 'bg-purple-600 text-white';
-      case 'services':
-        return 'bg-teal-600 text-white';
-      case 'books':
-        return 'bg-indigo-700 text-white';
-      case 'beauty':
-        return 'bg-rose-600 text-white';
-      case 'furniture':
-        return 'bg-orange-600 text-white';
       default:
         return 'bg-gray-800 text-white';
     }
@@ -50,14 +42,6 @@ const StorePreview: React.FC<StorePreviewProps> = ({ theme, storeName }) => {
         return 'bg-emerald-50';
       case 'digital':
         return 'bg-purple-50';
-      case 'services':
-        return 'bg-teal-50';
-      case 'books':
-        return 'bg-indigo-50';
-      case 'beauty':
-        return 'bg-rose-50';
-      case 'furniture':
-        return 'bg-orange-50';
       default:
         return 'bg-white';
     }
@@ -76,14 +60,6 @@ const StorePreview: React.FC<StorePreviewProps> = ({ theme, storeName }) => {
         return 'bg-emerald-600 hover:bg-emerald-700 text-white';
       case 'digital':
         return 'bg-purple-600 hover:bg-purple-700 text-white';
-      case 'services':
-        return 'bg-teal-600 hover:bg-teal-700 text-white';
-      case 'books':
-        return 'bg-indigo-700 hover:bg-indigo-800 text-white';
-      case 'beauty':
-        return 'bg-rose-600 hover:bg-rose-700 text-white';
-      case 'furniture':
-        return 'bg-orange-600 hover:bg-orange-700 text-white';
       default:
         return 'bg-gray-800 hover:bg-gray-900 text-white';
     }
@@ -102,14 +78,6 @@ const StorePreview: React.FC<StorePreviewProps> = ({ theme, storeName }) => {
         return 'border-emerald-200 hover:border-emerald-400';
       case 'digital':
         return 'border-purple-200 hover:border-purple-400';
-      case 'services':
-        return 'border-teal-200 hover:border-teal-400';
-      case 'books':
-        return 'border-indigo-200 hover:border-indigo-400';
-      case 'beauty':
-        return 'border-rose-200 hover:border-rose-400';
-      case 'furniture':
-        return 'border-orange-200 hover:border-orange-400';
       default:
         return 'border-gray-200 hover:border-gray-400';
     }
@@ -128,14 +96,6 @@ const StorePreview: React.FC<StorePreviewProps> = ({ theme, storeName }) => {
         return 'text-emerald-600';
       case 'digital':
         return 'text-purple-600';
-      case 'services':
-        return 'text-teal-600';
-      case 'books':
-        return 'text-indigo-700';
-      case 'beauty':
-        return 'text-rose-600';
-      case 'furniture':
-        return 'text-orange-600';
       default:
         return 'text-gray-800';
     }
@@ -174,30 +134,6 @@ const StorePreview: React.FC<StorePreviewProps> = ({ theme, storeName }) => {
           { name: 'প্রিমিয়াম কোর্স', price: '৪৯৯৯ টাকা', image: 'https://images.unsplash.com/photo-1580894894513-541e068a3e2b?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3' },
           { name: 'ফটো টেমপ্লেট', price: '১৯৯৯ টাকা', image: 'https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3' }
         ];
-      case 'services':
-        return [
-          { name: 'হেয়ার কাটিং সার্ভিস', price: '৪৯৯ টাকা', image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3' },
-          { name: 'হোম রিপেয়ার প্যাকেজ', price: '১৪৯৯ টাকা', image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3' },
-          { name: 'কনসালটেন্সি কল', price: '৯৯৯ টাকা', image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3' }
-        ];
-      case 'books':
-        return [
-          { name: 'বেস্টসেলার উপন্যাস', price: '৩৫০ টাকা', image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3' },
-          { name: 'নোটবুক সেট', price: '৪৫০ টাকা', image: 'https://images.unsplash.com/photo-1455885666463-59b3cf4edb23?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3' },
-          { name: 'স্টাডি গাইড', price: '২৯৯ টাকা', image: 'https://images.unsplash.com/photo-1519682337058-a94d519337bc?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3' }
-        ];
-      case 'beauty':
-        return [
-          { name: 'স্কিনকেয়ার সিরাম', price: '১২৯৯ টাকা', image: 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3' },
-          { name: 'লিপস্টিক সেট', price: '৮৯৯ টাকা', image: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3' },
-          { name: 'পারফিউম', price: '১৯৯৯ টাকা', image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3' }
-        ];
-      case 'furniture':
-        return [
-          { name: 'ডাইনিং চেয়ার', price: '৩৯৯৯ টাকা', image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3' },
-          { name: 'সাইড টেবিল', price: '২৪৯৯ টাকা', image: 'https://images.unsplash.com/photo-1499933374294-4584851497cc?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3' },
-          { name: 'ল্যাম্প', price: '১৫৯৯ টাকা', image: 'https://images.unsplash.com/photo-1524484485831-a92ffc0de03f?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3' }
-        ];
       default:
         return [
           { name: 'প্রোডাক্ট ১', price: '১২০০ টাকা', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3' },
@@ -220,14 +156,6 @@ const StorePreview: React.FC<StorePreviewProps> = ({ theme, storeName }) => {
         return 'https://images.unsplash.com/photo-1464022914313-050b597bb287?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3';
       case 'digital':
         return 'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3';
-      case 'services':
-        return 'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3';
-      case 'books':
-        return 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3';
-      case 'beauty':
-        return 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3';
-      case 'furniture':
-        return 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3';
       default:
         return 'https://images.unsplash.com/photo-1607082350899-7e105aa886ae?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3';
     }
@@ -246,14 +174,6 @@ const StorePreview: React.FC<StorePreviewProps> = ({ theme, storeName }) => {
         return 'বাংলাদেশের সেরা হস্তশিল্পীদের অনন্য সৃষ্টি';
       case 'digital':
         return 'ডিজিটাল প্রোডাক্টের সর্বোত্তম মার্কেটপ্লেস';
-      case 'services':
-        return 'পেশাদার সার্ভিস—দ্রুত বুকিং, সহজ যোগাযোগ';
-      case 'books':
-        return 'নতুন বই, বেস্টসেলার আর স্টাডি ম্যাটেরিয়াল';
-      case 'beauty':
-        return 'স্কিনকেয়ার ও বিউটি কালেকশন—নিজেকে দিন নতুন লুক';
-      case 'furniture':
-        return 'হোম ডেকর ও ফার্নিচার—আপনার ঘর হোক আরও সুন্দর';
       default:
         return 'আপনার প্রয়োজনীয় সকল পণ্য একসাথে';
     }

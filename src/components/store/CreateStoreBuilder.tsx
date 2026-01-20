@@ -1,6 +1,5 @@
 
-import React, { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,8 +18,7 @@ import {
   Upload, Package, Plus, X, Copy, ExternalLink, Check, Loader2
 } from 'lucide-react';
 import QRCode from 'react-qr-code';
-import DragDropEditor, { ElementProps } from './DragDropEditor';
-import ThemeLibrary from '@/components/store/ThemeLibrary';
+import StoreDesignEditor from './StoreDesignEditor';
 import ProductManagement from './ProductManagement';
 import PaymentGatewaySetup from './PaymentGatewaySetup';
 import ShippingConfiguration from './ShippingConfiguration';
@@ -54,13 +52,6 @@ interface StoreData {
   };
   returnPolicy: string;
   whatsappOrderEnabled: boolean;
-
-  themeId?: string;
-  layout?: {
-    elements: ElementProps[];
-    templateId?: string;
-    updatedAt?: string;
-  };
 }
 
 const defaultBusinessHours = {
@@ -77,9 +68,7 @@ const CreateStoreBuilder: React.FC = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   const { profile } = useSellerProfile();
-  const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('basic');
-  const [designSubTab, setDesignSubTab] = useState<'layout' | 'themes'>('layout');
   const [storeData, setStoreData] = useState<StoreData>({
     storeName: '',
     storeSlug: '',
@@ -95,8 +84,6 @@ const CreateStoreBuilder: React.FC = () => {
     businessHours: defaultBusinessHours,
     returnPolicy: '',
     whatsappOrderEnabled: true,
-    themeId: undefined,
-    layout: undefined,
   });
   const [isCreating, setIsCreating] = useState(false);
   const [copiedUrl, setCopiedUrl] = useState(false);
@@ -119,24 +106,9 @@ const CreateStoreBuilder: React.FC = () => {
         isOpen: settings.isOpen ?? true,
         whatsappOrderEnabled: settings.whatsappOrderEnabled ?? true,
         customDomain: settings.customDomain || '',
-
-        themeId: settings.themeId || prev.themeId,
-        layout: settings.layout || prev.layout,
       }));
     }
   }, [profile]);
-
-  useEffect(() => {
-    const tab = searchParams.get('tab');
-    const subtab = searchParams.get('subtab');
-
-    if (tab && ['basic', 'design', 'products', 'payment', 'shipping', 'domain'].includes(tab)) {
-      setActiveTab(tab);
-    }
-    if (subtab === 'themes' || subtab === 'layout') {
-      setDesignSubTab(subtab);
-    }
-  }, [searchParams]);
 
   const generateSlug = (name: string) => {
     return name
@@ -180,54 +152,6 @@ const CreateStoreBuilder: React.FC = () => {
 
   const storeUrl = `${window.location.origin}/store/${storeData.storeSlug || 'your-store'}`;
 
-  const mapThemeIdToTemplate = (themeId?: string): string | undefined => {
-    if (!themeId) return undefined;
-    if (themeId.includes('fashion')) return 'fashion';
-    if (themeId === 'luxury-brand' || themeId === 'beauty-salon') return 'fashion';
-    if (themeId.includes('tech') || themeId.includes('electronics')) return 'electronics';
-    if (themeId === 'ecommerce-pro' || themeId === 'automotive-parts') return 'electronics';
-    if (themeId.includes('food') || themeId.includes('restaurant')) return 'food';
-    if (themeId.includes('artisan') || themeId.includes('organic')) return 'artisan';
-    if (themeId.includes('education') || themeId.includes('consulting') || themeId.includes('digital')) return 'digital';
-    if (themeId === 'healthcare-clinic' || themeId === 'travel-explorer' || themeId === 'real-estate-pro' || themeId === 'event-management') return 'digital';
-    if (themeId.includes('minimal')) return 'minimal';
-    return undefined;
-  };
-
-  const persistMarketplaceSettings = async (partial: Record<string, any>) => {
-    if (!user?.id) {
-      toast({
-        title: 'লগইন প্রয়োজন',
-        description: 'অনুগ্রহ করে লগইন করুন।',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    try {
-      const prevSettings = (profile?.marketplace_settings as any) || {};
-      const nextSettings = { ...prevSettings, ...partial };
-
-      const { error } = await supabase
-        .from('seller_profiles')
-        .update({
-          marketplace_settings: nextSettings,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', user.id);
-
-      if (error) throw error;
-    } catch (error: any) {
-      console.error('Marketplace settings save error:', error);
-      toast({
-        title: 'সেভ করা যায়নি',
-        description: error?.message || 'আবার চেষ্টা করুন।',
-        variant: 'destructive',
-      });
-      throw error;
-    }
-  };
-
   const copyStoreUrl = () => {
     navigator.clipboard.writeText(storeUrl);
     setCopiedUrl(true);
@@ -260,11 +184,8 @@ const CreateStoreBuilder: React.FC = () => {
 
     setIsCreating(true);
     try {
-      const prevSettings = (profile?.marketplace_settings as any) || {};
-
-      // Prepare store settings JSON (merge to avoid overwriting other keys)
+      // Prepare store settings JSON
       const storeSettings = {
-        ...prevSettings,
         storeSlug: storeData.storeSlug,
         socialLinks: storeData.socialLinks,
         businessHours: storeData.businessHours,
@@ -273,8 +194,6 @@ const CreateStoreBuilder: React.FC = () => {
         whatsappOrderEnabled: storeData.whatsappOrderEnabled,
         customDomain: storeData.customDomain,
         storeCategory: storeData.storeCategory,
-        themeId: storeData.themeId,
-        layout: storeData.layout,
       };
 
       // Update seller_profiles with store data
@@ -313,14 +232,6 @@ const CreateStoreBuilder: React.FC = () => {
       setIsCreating(false);
     }
   };
-
-  const initialTemplateId = useMemo(() => {
-    return (
-      storeData.layout?.templateId ||
-      mapThemeIdToTemplate(storeData.themeId) ||
-      'minimal'
-    );
-  }, [storeData.layout?.templateId, storeData.themeId]);
 
   const tabs = [
     { id: 'basic', label: 'বেসিক', icon: Store },
@@ -391,19 +302,7 @@ const CreateStoreBuilder: React.FC = () => {
 
         <Card className="shadow-xl border-0">
           <CardContent className="p-3 sm:p-4 md:p-6">
-            <Tabs
-              value={activeTab}
-              onValueChange={(next) => {
-                setActiveTab(next);
-                // keep URL in sync (for deep-linking)
-                setSearchParams((prev) => {
-                  const p = new URLSearchParams(prev);
-                  p.set('tab', next);
-                  if (next !== 'design') p.delete('subtab');
-                  return p;
-                });
-              }}
-            >
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
               {/* Mobile Dropdown */}
               <div className="block md:hidden mb-4">
                 <select
@@ -606,64 +505,7 @@ const CreateStoreBuilder: React.FC = () => {
               {/* Design Tab */}
               <TabsContent value="design" className="mt-0 animate-fade-in">
                 <div className="bg-gradient-to-br from-primary/5 to-purple-500/5 rounded-xl p-4 border">
-                  <Tabs
-                    value={designSubTab}
-                    onValueChange={(v) => {
-                      const next = (v === 'themes' ? 'themes' : 'layout') as 'layout' | 'themes';
-                      setDesignSubTab(next);
-                      setSearchParams((prev) => {
-                        const p = new URLSearchParams(prev);
-                        p.set('tab', 'design');
-                        p.set('subtab', next);
-                        return p;
-                      });
-                    }}
-                    className="w-full"
-                  >
-                    <TabsList className="w-full mb-4 grid grid-cols-2">
-                      <TabsTrigger value="layout">লেআউট</TabsTrigger>
-                      <TabsTrigger value="themes">থিম</TabsTrigger>
-                    </TabsList>
-
-                    <TabsContent value="layout" className="mt-0">
-                      <div className="min-h-[500px]">
-                        <DragDropEditor
-                          storeName={storeData.storeName || 'আমার স্টোর'}
-                          initialElements={storeData.layout?.elements}
-                          initialTemplateId={initialTemplateId}
-                          onLayoutChange={({ elements, templateId }) => {
-                            setStoreData((prev) => ({
-                              ...prev,
-                              layout: {
-                                elements,
-                                templateId,
-                                updatedAt: new Date().toISOString(),
-                              },
-                            }));
-                          }}
-                          onSave={({ elements, templateId }) =>
-                            persistMarketplaceSettings({
-                              layout: {
-                                elements,
-                                templateId,
-                                updatedAt: new Date().toISOString(),
-                              },
-                            })
-                          }
-                        />
-                      </div>
-                    </TabsContent>
-
-                    <TabsContent value="themes" className="mt-0">
-                      <ThemeLibrary
-                        selectedThemeId={storeData.themeId}
-                        onSelectTheme={async (themeId) => {
-                          setStoreData((prev) => ({ ...prev, themeId }));
-                          await persistMarketplaceSettings({ themeId });
-                        }}
-                      />
-                    </TabsContent>
-                  </Tabs>
+                  <StoreDesignEditor storeName={storeData.storeName || "আমার স্টোর"} />
                 </div>
               </TabsContent>
 
