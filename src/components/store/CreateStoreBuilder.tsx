@@ -18,7 +18,7 @@ import {
   Upload, Package, Plus, X, Copy, ExternalLink, Check, Loader2
 } from 'lucide-react';
 import QRCode from 'react-qr-code';
-import StoreDesignEditor from './StoreDesignEditor';
+import DragDropEditor from './DragDropEditor';
 import ProductManagement from './ProductManagement';
 import PaymentGatewaySetup from './PaymentGatewaySetup';
 import ShippingConfiguration from './ShippingConfiguration';
@@ -504,8 +504,8 @@ const CreateStoreBuilder: React.FC = () => {
 
               {/* Design Tab */}
               <TabsContent value="design" className="mt-0 animate-fade-in">
-                <div className="bg-gradient-to-br from-primary/5 to-purple-500/5 rounded-xl p-4 border">
-                  <StoreDesignEditor storeName={storeData.storeName || "আমার স্টোর"} />
+                <div className="bg-gradient-to-br from-primary/5 to-purple-500/5 rounded-xl p-4 border min-h-[500px]">
+                  <DragDropEditor storeName={storeData.storeName || "আমার স্টোর"} />
                 </div>
               </TabsContent>
 
