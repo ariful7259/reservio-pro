@@ -33,7 +33,7 @@ const Rentals = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { language } = useApp();
-  const { userLocation, isGettingLocation, getCurrentLocation, filterByDistance, sortByDistance, calculateDistance } = useGeolocation();
+  const { userLocation, isGettingLocation, getCurrentLocation, setUserLocation, filterByDistance, sortByDistance, calculateDistance } = useGeolocation();
 
   // State
   const [isExpanded, setIsExpanded] = useState(false);
@@ -96,6 +96,17 @@ const Rentals = () => {
       setNearMeActive(false);
       setShowNearMeFilter(false);
     }
+  };
+
+  // Handle saved location selection
+  const handleSelectSavedLocation = (latitude: number, longitude: number) => {
+    setUserLocation({ latitude, longitude });
+    setNearMeActive(true);
+    setShowNearMeFilter(true);
+    toast({
+      title: 'সেভড লোকেশন নির্বাচিত',
+      description: 'সেভড লোকেশন থেকে কাছের আইটেম দেখাচ্ছে',
+    });
   };
 
   // Handler functions
@@ -198,6 +209,7 @@ const Rentals = () => {
           onToggle={handleNearMeToggle}
           onRadiusChange={setNearMeRadius}
           onClose={() => setShowNearMeFilter(false)}
+          onSelectSavedLocation={handleSelectSavedLocation}
         />
       )}
 
