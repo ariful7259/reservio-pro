@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -7,13 +7,19 @@ import { Search, Filter, Star, MapPin, Clock, Users, Share2, Bookmark, Heart, Ar
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useApp } from '@/context/AppContext';
+import { useGeolocation } from '@/hooks/useGeolocation';
 import ServiceCategoryFilterForm from '@/components/services/ServiceCategoryFilterForm';
 import ServiceCategoryGrid from '@/components/services/ServiceCategoryGrid';
+import NearMeButton from '@/components/NearMeButton';
+import NearMeFilter from '@/components/NearMeFilter';
+import DistanceBadge from '@/components/DistanceBadge';
 
 const Services = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { language, t } = useApp();
+  const { userLocation, isGettingLocation, getCurrentLocation, calculateDistance } = useGeolocation();
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [categorySearchTerm, setCategorySearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -21,6 +27,25 @@ const Services = () => {
   const [selectedLocation, setSelectedLocation] = useState('all');
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
   const [isExpanded, setIsExpanded] = useState(false);
+  
+  // Near Me state
+  const [nearMeActive, setNearMeActive] = useState(false);
+  const [nearMeRadius, setNearMeRadius] = useState(5);
+  const [showNearMeFilter, setShowNearMeFilter] = useState(false);
+
+  // Handle Near Me toggle
+  const handleNearMeToggle = async () => {
+    if (!nearMeActive) {
+      const location = await getCurrentLocation();
+      if (location) {
+        setNearMeActive(true);
+        setShowNearMeFilter(true);
+      }
+    } else {
+      setNearMeActive(false);
+      setShowNearMeFilter(false);
+    }
+  };
 
   const serviceCategories = [{
     id: 'medical',
@@ -224,7 +249,9 @@ const Services = () => {
     image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
     isVerified: true,
     bookingTypes: language === 'bn' ? ['হোম ভিজিট', 'ভিডিও কনসালটেশন'] : ['Home Visit', 'Video Consultation'],
-    responseTime: language === 'bn' ? '৩০ মিনিট' : '30 minutes'
+    responseTime: language === 'bn' ? '৩০ মিনিট' : '30 minutes',
+    latitude: 23.7937,
+    longitude: 90.4137
   }, {
     id: 2,
     title: language === 'bn' ? 'ডেন্টাল চেকআপ' : 'Dental Checkup',
@@ -238,7 +265,9 @@ const Services = () => {
     image: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
     isVerified: true,
     bookingTypes: language === 'bn' ? ['চেম্বার ভিজিট', 'হোম সার্ভিস'] : ['Chamber Visit', 'Home Service'],
-    responseTime: language === 'bn' ? '১ ঘণ্টা' : '1 hour' 
+    responseTime: language === 'bn' ? '১ ঘণ্টা' : '1 hour',
+    latitude: 23.7937,
+    longitude: 90.3938
   }, {
     id: 3,
     title: language === 'bn' ? 'প্রিমিয়াম হেয়ার কাট' : 'Premium Hair Cut',
@@ -252,7 +281,9 @@ const Services = () => {
     image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
     isVerified: false,
     bookingTypes: language === 'bn' ? ['হোম সার্ভিস', 'পার্লার ভিজিট'] : ['Home Service', 'Parlor Visit'],
-    responseTime: language === 'bn' ? '৪৫ মিনিট' : '45 minutes'
+    responseTime: language === 'bn' ? '৪৫ মিনিট' : '45 minutes',
+    latitude: 23.7465,
+    longitude: 90.3751
   }, {
     id: 4,
     title: language === 'bn' ? 'এসি সার্ভিসিং' : 'AC Servicing',
@@ -266,7 +297,9 @@ const Services = () => {
     image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=300&fit=crop',
     isVerified: true,
     bookingTypes: language === 'bn' ? ['হোম ভিজিট'] : ['Home Visit'],
-    responseTime: language === 'bn' ? '২ ঘণ্টা' : '2 hours'
+    responseTime: language === 'bn' ? '২ ঘণ্টা' : '2 hours',
+    latitude: 23.7662,
+    longitude: 90.3527
   }, {
     id: 5,
     title: language === 'bn' ? 'মোবাইল স্ক্রিন রিপেয়ার' : 'Mobile Screen Repair',
@@ -280,7 +313,9 @@ const Services = () => {
     image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
     isVerified: true,
     bookingTypes: language === 'bn' ? ['পিক-আপ সার্ভিস', 'হোম সার্ভিস'] : ['Pick-up Service', 'Home Service'],
-    responseTime: language === 'bn' ? '১ দিন' : '1 day'
+    responseTime: language === 'bn' ? '১ দিন' : '1 day',
+    latitude: 23.8728,
+    longitude: 90.3923
   }, {
     id: 6,
     title: language === 'bn' ? 'হোম ক্লিনিং সার্ভিস' : 'Home Cleaning Service',
@@ -294,19 +329,54 @@ const Services = () => {
     image: 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=300&fit=crop',
     isVerified: true,
     bookingTypes: language === 'bn' ? ['One-Time', 'Weekly Plan'] : ['One-Time', 'Weekly Plan'],
-    responseTime: language === 'bn' ? '৩ ঘণ্টা' : '3 hours'
+    responseTime: language === 'bn' ? '৩ ঘণ্টা' : '3 hours',
+    latitude: 23.7937,
+    longitude: 90.4137
   }];
 
-  const filteredServices = allServices.filter(service => {
-    const matchesSearch = service.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         service.provider.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         service.subcategory.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || service.category === selectedCategory;
-    const matchesSubcategory = selectedSubcategory === 'all' || service.subcategory === selectedSubcategory;
-    const matchesLocation = selectedLocation === 'all' || service.location.toLowerCase().includes(selectedLocation.toLowerCase());
-    
-    return matchesSearch && matchesCategory && matchesSubcategory && matchesLocation;
-  });
+  // Process services with Near Me filtering
+  const processedServices = useMemo(() => {
+    let services = allServices.map(service => ({
+      ...service,
+      distance: undefined as number | undefined
+    }));
+
+    // Apply search and category filters
+    services = services.filter(service => {
+      const matchesSearch = service.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                           service.provider.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                           service.subcategory.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === 'all' || service.category === selectedCategory;
+      const matchesSubcategory = selectedSubcategory === 'all' || service.subcategory === selectedSubcategory;
+      const matchesLocation = selectedLocation === 'all' || service.location.toLowerCase().includes(selectedLocation.toLowerCase());
+      
+      return matchesSearch && matchesCategory && matchesSubcategory && matchesLocation;
+    });
+
+    // Apply Near Me filtering
+    if (nearMeActive && userLocation) {
+      services = services.map(service => ({
+        ...service,
+        distance: service.latitude && service.longitude 
+          ? calculateDistance(userLocation.latitude, userLocation.longitude, service.latitude, service.longitude)
+          : undefined
+      }));
+
+      // Filter by radius
+      services = services.filter(service => 
+        service.distance === undefined || service.distance <= nearMeRadius
+      );
+
+      // Sort by distance
+      services.sort((a, b) => {
+        if (a.distance === undefined) return 1;
+        if (b.distance === undefined) return -1;
+        return a.distance - b.distance;
+      });
+    }
+
+    return services;
+  }, [allServices, searchTerm, selectedCategory, selectedSubcategory, selectedLocation, nearMeActive, userLocation, nearMeRadius, calculateDistance]);
 
   const handleBookmark = (e: React.MouseEvent, serviceId: number) => {
     e.stopPropagation();
@@ -354,10 +424,28 @@ const Services = () => {
             onChange={e => setSearchTerm(e.target.value)} 
           />
         </div>
+        <NearMeButton
+          isActive={nearMeActive}
+          isLoading={isGettingLocation}
+          onClick={handleNearMeToggle}
+        />
         <Button variant="outline" size="icon">
           <Filter className="h-4 w-4" />
         </Button>
       </div>
+
+      {/* Near Me Filter Panel */}
+      {showNearMeFilter && (
+        <NearMeFilter
+          isActive={nearMeActive}
+          isLoading={isGettingLocation}
+          radius={nearMeRadius}
+          itemCount={processedServices.length}
+          onToggle={handleNearMeToggle}
+          onRadiusChange={setNearMeRadius}
+          onClose={() => setShowNearMeFilter(false)}
+        />
+      )}
 
       {/* Service Categories - Grid Layout with Collapsible */}
       <ServiceCategoryGrid
@@ -377,12 +465,12 @@ const Services = () => {
             {language === 'bn' ? 'উপযুক্ত সেবা সমূহ' : 'Available Services'}
           </h2>
           <Badge variant="secondary" className="text-sm">
-            {filteredServices.length} {language === 'bn' ? 'সেবা পাওয়া গেছে' : 'services found'}
+            {processedServices.length} {language === 'bn' ? 'সেবা পাওয়া গেছে' : 'services found'}
           </Badge>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredServices.map(service => (
+          {processedServices.map(service => (
             <Card 
               key={service.id} 
               className="overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-300 group"
@@ -394,8 +482,11 @@ const Services = () => {
                   alt={service.title} 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
+                {nearMeActive && service.distance !== undefined && (
+                  <DistanceBadge distanceKm={service.distance} className="absolute bottom-2 left-2" />
+                )}
                 {service.isVerified && (
-                  <Badge className="absolute top-2 left-2 bg-green-100 text-green-700">
+                  <Badge className="absolute top-2 left-2 bg-green-100 text-green-700 hover:bg-green-100">
                     <CheckCircle className="h-3 w-3 mr-1" />
                     {language === 'bn' ? 'যাচাইকৃত' : 'Verified'}
                   </Badge>
@@ -466,7 +557,7 @@ const Services = () => {
           ))}
         </div>
 
-        {filteredServices.length === 0 && (
+        {processedServices.length === 0 && (
           <div className="text-center py-12">
             <div className="text-muted-foreground mb-4">
               <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />

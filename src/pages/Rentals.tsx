@@ -1,11 +1,12 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { useApp } from '@/context/AppContext';
+import { useGeolocation } from '@/hooks/useGeolocation';
 
 // Data imports
 import { rentCategories } from '@/data/rentalCategoriesData';
@@ -24,11 +25,15 @@ import CategoryModal from '@/components/rentals/CategoryModal';
 import SubcategoryResults from '@/components/rentals/SubcategoryResults';
 import RentalsHeader from '@/components/rentals/RentalsHeader';
 import RentalCategoryItem from '@/components/rentals/RentalCategoryItem';
+import NearMeButton from '@/components/NearMeButton';
+import NearMeFilter from '@/components/NearMeFilter';
+import DistanceBadge from '@/components/DistanceBadge';
 
 const Rentals = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { language } = useApp();
+  const { userLocation, isGettingLocation, getCurrentLocation, filterByDistance, sortByDistance, calculateDistance } = useGeolocation();
 
   // State
   const [isExpanded, setIsExpanded] = useState(false);
@@ -41,6 +46,57 @@ const Rentals = () => {
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [selectedSubcategory, setSelectedSubcategory] = useState<any | null>(null);
   const [subcategoryResults, setSubcategoryResults] = useState<any[]>([]);
+  
+  // Near Me state
+  const [nearMeActive, setNearMeActive] = useState(false);
+  const [nearMeRadius, setNearMeRadius] = useState(5);
+  const [showNearMeFilter, setShowNearMeFilter] = useState(false);
+
+  // Filter and sort listings based on Near Me
+  const processedListings = useMemo(() => {
+    let listings = featuredListings.map(listing => ({
+      ...listing,
+      distance: undefined as number | undefined
+    }));
+    
+    if (nearMeActive && userLocation) {
+      // Add distance to each listing
+      listings = listings.map(listing => ({
+        ...listing,
+        distance: listing.latitude && listing.longitude 
+          ? calculateDistance(userLocation.latitude, userLocation.longitude, listing.latitude, listing.longitude)
+          : undefined
+      }));
+      
+      // Filter by radius
+      listings = listings.filter(listing => 
+        listing.distance === undefined || listing.distance <= nearMeRadius
+      );
+      
+      // Sort by distance
+      listings.sort((a, b) => {
+        if (a.distance === undefined) return 1;
+        if (b.distance === undefined) return -1;
+        return a.distance - b.distance;
+      });
+    }
+    
+    return listings;
+  }, [nearMeActive, userLocation, nearMeRadius, calculateDistance]);
+
+  // Handle Near Me toggle
+  const handleNearMeToggle = async () => {
+    if (!nearMeActive) {
+      const location = await getCurrentLocation();
+      if (location) {
+        setNearMeActive(true);
+        setShowNearMeFilter(true);
+      }
+    } else {
+      setNearMeActive(false);
+      setShowNearMeFilter(false);
+    }
+  };
 
   // Handler functions
   const toggleFilter = () => {
@@ -118,6 +174,33 @@ const Rentals = () => {
         toggleFilter={toggleFilter}
       />
 
+      {/* Near Me Button in header area */}
+      <div className="flex items-center gap-2 mb-4">
+        <NearMeButton
+          isActive={nearMeActive}
+          isLoading={isGettingLocation}
+          onClick={handleNearMeToggle}
+        />
+        {nearMeActive && userLocation && (
+          <span className="text-sm text-muted-foreground">
+            {processedListings.length}টি আইটেম কাছে পাওয়া গেছে
+          </span>
+        )}
+      </div>
+
+      {/* Near Me Filter Panel */}
+      {showNearMeFilter && (
+        <NearMeFilter
+          isActive={nearMeActive}
+          isLoading={isGettingLocation}
+          radius={nearMeRadius}
+          itemCount={processedListings.length}
+          onToggle={handleNearMeToggle}
+          onRadiusChange={setNearMeRadius}
+          onClose={() => setShowNearMeFilter(false)}
+        />
+      )}
+
       {/* Section Toggle */}
       <SectionToggle activeSection={activeSection} setActiveSection={setActiveSection} />
 
@@ -152,12 +235,14 @@ const Rentals = () => {
           <BannerCarousel bannerImages={bannerImages} />
           <Separator className="my-6" />
           <FeaturedListings 
-            featuredListings={featuredListings} 
+            featuredListings={processedListings} 
             viewMode={viewMode} 
             handleListingClick={handleListingClick} 
             handleBookmark={handleBookmark} 
             handleShare={handleShare} 
-            MapViewComponent={MapView} 
+            MapViewComponent={MapView}
+            userLocation={userLocation}
+            nearMeActive={nearMeActive}
           />
           <div className="mb-6">
             <div className="flex justify-center mt-4">
