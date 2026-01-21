@@ -30,6 +30,7 @@ import CreateStore from './pages/CreateStore';
 import StoreDemo from './pages/StoreDemo';
 import Housing from './pages/Housing';
 import Rentals from './pages/Rentals';
+import AllRentals from './pages/AllRentals';
 import RentAnything from './pages/RentAnything';
 import BasaBari from './pages/BasaBari';
 import RentalCategoryPage from './pages/RentalCategoryPage';
@@ -147,6 +148,7 @@ const RoutesConfig = () => {
       {/* Housing and Rentals */}
       <Route path="/housing" element={<Housing />} />
       <Route path="/rentals" element={<Rentals />} />
+      <Route path="/all-rentals" element={<AllRentals />} />
       <Route path="/rent-anything" element={<RentAnything />} />
       <Route path="/rental-category/:categoryId" element={<RentalCategoryPage />} />
       <Route path="/rent-details/:id" element={<RentDetail />} />

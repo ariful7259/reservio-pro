@@ -161,7 +161,7 @@ const Rentals = () => {
           />
           <div className="mb-6">
             <div className="flex justify-center mt-4">
-              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/services')}>
+              <Button variant="outline" className="flex items-center gap-1" onClick={() => navigate('/all-rentals')}>
                 আরও দেখুন <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
