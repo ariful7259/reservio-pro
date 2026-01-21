@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { MapPin, Navigation, Locate, Filter, Home, Bookmark, MapPinOff, Filter as FilterIcon } from 'lucide-react';
+import { MapPin, Navigation, Locate, Filter, Home, Bookmark, MapPinOff, Filter as FilterIcon, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,6 +9,7 @@ import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import SavedLocations from './SavedLocations';
+import { useGeolocation } from '@/hooks/useGeolocation';
 
 interface MapViewProps {
   listings?: Array<{
@@ -36,6 +37,7 @@ const MapView: React.FC<MapViewProps> = ({
   const [showSavedLocations, setShowSavedLocations] = useState(false);
   const [offlineMode, setOfflineMode] = useState(false);
   const [radius, setRadius] = useState([5]); // কিলোমিটার হিসাবে রেডিয়াস
+  const [selectedMarkerId, setSelectedMarkerId] = useState<string | number | null>(null);
   const [filters, setFilters] = useState({
     enableFilter: false,
     showOnlyHighRated: false,
@@ -44,6 +46,7 @@ const MapView: React.FC<MapViewProps> = ({
   });
   
   const { toast } = useToast();
+  const { calculateDistance, getDistanceLabel } = useGeolocation();
 
   // নেটওয়ার্ক স্টেটাস চেক করা
   useEffect(() => {
@@ -235,13 +238,112 @@ const MapView: React.FC<MapViewProps> = ({
     );
   }
 
+
+  // Calculate marker position on map (percentage based)
+  const getMarkerPosition = (lat: number, lng: number) => {
+    const centerLat = 23.8103;
+    const centerLng = 90.4125;
+    const latRange = 0.15;
+    const lngRange = 0.2;
+    
+    const x = Math.min(90, Math.max(10, 50 + ((lng - centerLng) / lngRange) * 50));
+    const y = Math.min(90, Math.max(10, 50 - ((lat - centerLat) / latRange) * 50));
+    return { x, y };
+  };
+
   return (
-    <div className="relative w-full h-[300px] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
+    <div className="relative w-full h-[300px] bg-muted rounded-lg overflow-hidden">
       {/* ম্যাপের প্লেসহোল্ডার */}
       <div 
         ref={mapRef} 
-        className="w-full h-full bg-[url('https://maps.googleapis.com/maps/api/staticmap?center=23.8103,90.4125&zoom=12&size=600x300&key=YOUR_API_KEY')] bg-cover bg-center dark:brightness-[0.85] dark:contrast-[1.2]"
+        className="w-full h-full bg-gradient-to-br from-green-100 via-green-50 to-blue-100 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700"
       >
+        {/* Map grid lines */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="grid grid-cols-6 grid-rows-4 h-full w-full">
+            {Array.from({ length: 24 }).map((_, i) => (
+              <div key={i} className="border border-muted-foreground/30" />
+            ))}
+          </div>
+        </div>
+        
+        {/* Simulated roads */}
+        <div className="absolute inset-0">
+          <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-muted-foreground/30" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-muted-foreground/30" />
+          <div className="absolute top-1/4 left-0 right-0 h-0.5 bg-muted-foreground/20" />
+          <div className="absolute top-3/4 left-0 right-0 h-0.5 bg-muted-foreground/20" />
+          <div className="absolute left-1/4 top-0 bottom-0 w-0.5 bg-muted-foreground/20" />
+          <div className="absolute left-3/4 top-0 bottom-0 w-0.5 bg-muted-foreground/20" />
+        </div>
+
+        {/* User location marker (Blue) */}
+        {userLocation && (
+          <div 
+            className="absolute transform -translate-x-1/2 -translate-y-1/2 z-20"
+            style={{ 
+              left: `${getMarkerPosition(userLocation.lat, userLocation.lng).x}%`, 
+              top: `${getMarkerPosition(userLocation.lat, userLocation.lng).y}%` 
+            }}
+          >
+            {/* Pulse effect */}
+            <div className="absolute inset-0 w-12 h-12 -ml-4 -mt-4">
+              <div className="absolute inset-0 bg-primary/30 rounded-full animate-ping" />
+            </div>
+            
+            {/* Marker */}
+            <div className="relative w-8 h-8 bg-primary rounded-full border-3 border-background shadow-lg flex items-center justify-center">
+              <User className="w-4 h-4 text-primary-foreground" />
+            </div>
+            
+            {/* Label */}
+            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap bg-primary text-primary-foreground text-xs px-2 py-0.5 rounded-full shadow">
+              আপনি এখানে
+            </div>
+          </div>
+        )}
+
+        {/* Item markers (Red) */}
+        {listings.filter(l => l.latitude && l.longitude).map((listing) => {
+          const pos = getMarkerPosition(listing.latitude!, listing.longitude!);
+          const isSelected = selectedMarkerId === listing.id;
+          const distance = userLocation 
+            ? getDistanceLabel(calculateDistance(userLocation.lat, userLocation.lng, listing.latitude!, listing.longitude!))
+            : null;
+          
+          return (
+            <div
+              key={listing.id}
+              className={`absolute transform -translate-x-1/2 -translate-y-full cursor-pointer transition-all duration-200 z-10 ${isSelected ? 'z-30 scale-110' : 'hover:scale-110'}`}
+              style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
+              onClick={() => setSelectedMarkerId(isSelected ? null : listing.id)}
+            >
+              {/* Marker icon */}
+              <div className="relative flex flex-col items-center">
+                <div className="w-7 h-7 rounded-full flex items-center justify-center shadow-lg border-2 border-background bg-destructive text-destructive-foreground">
+                  <MapPin className="w-4 h-4" />
+                </div>
+                
+                {/* Pin point */}
+                <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] -mt-1 border-l-transparent border-r-transparent border-t-destructive" />
+                
+                {/* Popup on select */}
+                {isSelected && (
+                  <div className="absolute bottom-full mb-2 bg-background rounded-lg shadow-xl p-2 min-w-[140px] border z-40">
+                    <p className="text-sm font-medium truncate">{listing.title}</p>
+                    {listing.price && (
+                      <p className="text-xs text-primary font-semibold">৳{listing.price.toLocaleString('bn-BD')}</p>
+                    )}
+                    {distance && (
+                      <p className="text-xs text-muted-foreground">{distance} দূরে</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+        
         {listings.length === 0 && !userLocation && (
           <div className="flex flex-col items-center justify-center h-full">
             <MapPin className="h-8 w-8 text-primary mb-2" />
