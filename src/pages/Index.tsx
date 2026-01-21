@@ -4,9 +4,12 @@ import { LogIn, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePostStore, Post } from '@/store/usePostStore';
 import { useAuth } from '@/hooks/useAuth';
-import HeroCarousel from '@/components/HeroCarousel';
 import DigitalProductsSection from '@/components/DigitalProductsSection';
 import FeaturedListings from '@/components/FeaturedListings';
+import FlashDealsSection from '@/components/marketplace/FlashDealsSection';
+import LocalBrandsSection from '@/components/marketplace/LocalBrandsSection';
+import HomeSection from '@/components/home/HomeSection';
+import HeroBanner from '@/components/home/HeroBanner';
 
 const bannerImages = [
   "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop",
@@ -69,7 +72,7 @@ const postToFeaturedListing = (post: Post) => {
 const Index = () => {
   const navigate = useNavigate();
   const { posts } = usePostStore();
-  const { isAuthenticated, isSeller, isAdmin } = useAuth();
+  const { isAuthenticated, isAdmin } = useAuth();
 
   // Feature listings data construction
   const userPosts = useMemo(() => posts.map(postToFeaturedListing).filter(Boolean), [posts]);
@@ -92,16 +95,39 @@ const Index = () => {
           </>
         )}
       </div>
-      
-      <HeroCarousel bannerImages={bannerImages} />
 
-      <div className="my-8">
-        <DigitalProductsSection />
-      </div>
+      {/* Hero: Buyer-first + Primary CTA */}
+      <HeroBanner bannerImages={bannerImages} scrollTargetId="featured-listings" />
 
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg my-8">
+      {/* Deals & Brands */}
+      <HomeSection
+        title="ডিলস & ব্র্যান্ড"
+        description="আজকের ফ্ল্যাশ ডিল এবং লোকাল ব্র্যান্ডগুলো দেখুন"
+        className="mt-2"
+      >
+        <div className="space-y-6">
+          <FlashDealsSection />
+          <LocalBrandsSection />
+        </div>
+      </HomeSection>
+
+      {/* Featured listings (main browsing) */}
+      <HomeSection
+        id="featured-listings"
+        title="ফিচার্ড লিস্টিং"
+        description="রেন্ট, সার্ভিস এবং মার্কেটপ্লেস থেকে বাছাইকৃত আইটেম"
+        className="rounded-xl border border-border bg-card p-4"
+      >
         <FeaturedListings allListings={allListings as any[]} />
-      </div>
+      </HomeSection>
+
+      {/* Digital products (secondary discovery) */}
+      <HomeSection
+        title="ডিজিটাল প্রোডাক্টস"
+        description="টুলস, টেমপ্লেট এবং ডিজিটাল আইটেম ব্রাউজ করুন"
+      >
+        <DigitalProductsSection />
+      </HomeSection>
     </div>
   );
 };
