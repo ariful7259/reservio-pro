@@ -7,6 +7,8 @@ export interface CreatePostFormData {
   category: string;
   subcategory: string;
   location: string;
+  latitude?: number;
+  longitude?: number;
   price: string;
   period: string; // for rental
   duration: string; // for service
@@ -22,6 +24,8 @@ export const useCreatePostForm = () => {
     category: '',
     subcategory: '',
     location: '',
+    latitude: undefined,
+    longitude: undefined,
     price: '',
     period: '',
     duration: '',

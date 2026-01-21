@@ -92,6 +92,10 @@ const CreatePost = () => {
     updateFormData({ location });
   };
 
+  const handleCoordinatesChange = (lat: number, lng: number) => {
+    updateFormData({ latitude: lat, longitude: lng });
+  };
+
   const handleFieldChange = (field: string, value: string) => {
     updateFormData({ [field]: value });
   };
@@ -115,6 +119,8 @@ const CreatePost = () => {
       category: formData.category,
       subcategory: formData.subcategory,
       location: formData.location,
+      latitude: formData.latitude,
+      longitude: formData.longitude,
       price: formData.price,
       images: uploadedImages.map(img => URL.createObjectURL(img)),
       videos: uploadedVideos.map(video => URL.createObjectURL(video)),
@@ -230,6 +236,7 @@ const CreatePost = () => {
                 <LocationSelector
                   location={formData.location}
                   onLocationChange={handleLocationChange}
+                  onCoordinatesChange={handleCoordinatesChange}
                 />
 
                 <PostTypeFields
