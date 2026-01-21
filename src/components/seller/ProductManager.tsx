@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ImageUploader from './ImageUploader';
+import ProductBulkImportExportDialog from './ProductBulkImportExportDialog';
 import { 
   Plus, 
   Package, 
@@ -85,6 +86,7 @@ const ProductManager = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [stockFilter, setStockFilter] = useState<'all' | 'inStock' | 'lowStock' | 'outOfStock'>('all');
+  const [isBulkDialogOpen, setIsBulkDialogOpen] = useState(false);
 
   // Get store slug for preview
   const storeSlug = React.useMemo(() => {
@@ -336,9 +338,34 @@ const ProductManager = () => {
             স্টোর প্রিভিউ
             <ExternalLink className="h-3 w-3" />
           </Button>
+
+          <Button
+            variant="outline"
+            onClick={() => setIsBulkDialogOpen(true)}
+            className="gap-2"
+            disabled={!user?.id}
+          >
+            <Upload className="h-4 w-4" />
+            বাল্ক ইমপোর্ট/এক্সপোর্ট
+          </Button>
+
+          <Button onClick={() => handleOpenDialog()} className="gap-2">
+            <Plus className="h-4 w-4" />
+            নতুন প্রোডাক্ট
+          </Button>
           
         </div>
       </div>
+
+      {user?.id && (
+        <ProductBulkImportExportDialog
+          open={isBulkDialogOpen}
+          onOpenChange={setIsBulkDialogOpen}
+          userId={user.id}
+          products={products}
+          onImported={() => fetchProducts()}
+        />
+      )}
 
       {/* Search and Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
