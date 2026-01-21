@@ -54,11 +54,15 @@ import CustomerRelationshipManagement from '@/components/dashboard/CustomerRelat
 import CreateStoreBuilder from '@/components/store/CreateStoreBuilder';
 import ProductManager from '@/components/seller/ProductManager';
 import SellerOrderManagement from '@/components/seller/SellerOrderManagement';
+import { useSellerOrderStats } from '@/hooks/useSellerOrderStats';
+import SellerOrderStatsCards from '@/components/seller/SellerOrderStatsCards';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const SellerDashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { profile, isLoading: profileLoading, isSeller } = useSellerProfile();
+  const { stats: orderStats, isLoading: ordersLoading } = useSellerOrderStats({ userId: user?.id });
   const [dateRange, setDateRange] = useState('this-month');
   const [activeBusinessType, setActiveBusinessType] = useState<string | null>(null);
   const [activeModule, setActiveModule] = useState<string | null>(null);
@@ -276,6 +280,26 @@ const SellerDashboard = () => {
           <TabsContent value="overview" className="space-y-6">
             {/* Alert notifications system */}
             <AlertNotifications alertsCount={alertsCount} />
+
+            {/* Order stats (live from database) */}
+            {ordersLoading ? (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[1, 2, 3, 4].map((i) => (
+                  <Skeleton key={i} className="h-24" />
+                ))}
+              </div>
+            ) : (
+              <SellerOrderStatsCards
+                stats={orderStats}
+                formatPrice={(price) =>
+                  new Intl.NumberFormat('bn-BD', {
+                    style: 'currency',
+                    currency: 'BDT',
+                    minimumFractionDigits: 0,
+                  }).format(price)
+                }
+              />
+            )}
             
             {/* Main statistics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
