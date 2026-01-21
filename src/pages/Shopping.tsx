@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, ShoppingBag, Package, Tag, Heart, Share2, MapPin, ChevronDown, ChevronUp, Star, Filter, TruckIcon, CreditCard, CalendarClock, CircleDollarSign, LayoutGrid, Map as MapIcon, Locate, Smartphone, Laptop, Camera, HeartPulse, Headphones, Watch, Shirt, Baby, Utensils, Book, Tv, Gamepad, ActivitySquare, Car, Home, ArrowDown, ArrowUp, Building, Clock, Store } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,10 +13,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import MapView from '@/components/MapView';
 import { useToast } from '@/components/ui/use-toast';
 import SocialShareModal from '@/components/SocialShareModal';
+import { useGeolocation } from '@/hooks/useGeolocation';
+import NearMeButton from '@/components/NearMeButton';
+import DistanceBadge from '@/components/DistanceBadge';
 
 const Shopping = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { userLocation, isGettingLocation, getCurrentLocation, calculateDistance } = useGeolocation();
+  
   const [filterVisible, setFilterVisible] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
   const [showMoreCategories, setShowMoreCategories] = useState(false);
@@ -27,6 +32,21 @@ const Shopping = () => {
   const [sortBy, setSortBy] = useState('recommended');
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('products');
+  
+  // Near Me state
+  const [nearMeActive, setNearMeActive] = useState(false);
+
+  // Handle Near Me toggle
+  const handleNearMeToggle = async () => {
+    if (!nearMeActive) {
+      const location = await getCurrentLocation();
+      if (location) {
+        setNearMeActive(true);
+      }
+    } else {
+      setNearMeActive(false);
+    }
+  };
   const bannerImages = ["https://images.unsplash.com/photo-1607082349566-187342175e2f?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1607082350899-7e105aa886ae?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop", "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?q=80&w=1000&auto=format&fit=crop"];
   const categoryIconColors = {
     electronics: 'bg-blue-100 text-blue-600',
@@ -348,6 +368,12 @@ const Shopping = () => {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">মার্কেটপ্লেস</h1>
         <div className="flex gap-2">
+          <NearMeButton
+            isActive={nearMeActive}
+            isLoading={isGettingLocation}
+            onClick={handleNearMeToggle}
+            showLabel={false}
+          />
           <Tabs value={viewMode} onValueChange={value => setViewMode(value as 'grid' | 'map')} className="w-[180px]">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="grid" className="flex items-center gap-1">

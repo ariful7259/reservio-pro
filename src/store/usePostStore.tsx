@@ -14,6 +14,10 @@ export interface Post {
   createdAt: Date;
   type: 'rent' | 'service' | 'marketplace';
   
+  // Location coordinates
+  latitude?: number;
+  longitude?: number;
+  
   // Rental specific fields
   period?: string;
   

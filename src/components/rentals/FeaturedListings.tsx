@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEnhancedWishlist } from '@/hooks/useEnhancedWishlist';
 import { useToast } from '@/hooks/use-toast';
 import RentalCard from './RentalCard';
+import DistanceBadge from '@/components/DistanceBadge';
 
 interface FeaturedListingsProps {
   featuredListings: any[];
@@ -12,6 +13,8 @@ interface FeaturedListingsProps {
   handleBookmark: (e: React.MouseEvent, id: number) => void;
   handleShare: (e: React.MouseEvent, rental: any) => void;
   MapViewComponent: React.ElementType;
+  userLocation?: { latitude: number; longitude: number } | null;
+  nearMeActive?: boolean;
 }
 
 const FeaturedListings: React.FC<FeaturedListingsProps> = ({
@@ -20,7 +23,9 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({
   handleListingClick,
   handleBookmark,
   handleShare,
-  MapViewComponent
+  MapViewComponent,
+  userLocation,
+  nearMeActive = false
 }) => {
   const navigate = useNavigate();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useEnhancedWishlist();
@@ -71,18 +76,24 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({
       {viewMode === 'grid' && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {featuredListings.map(listing => (
-            <RentalCard
-              key={listing.id}
-              listing={{
-                ...listing,
-                featured: true,
-                availability: true
-              }}
-              onBookmark={(e) => handleWishlistToggle(e, listing)}
-              onShare={handleShare}
-              onClick={() => handleListingClick(listing.id)}
-              showActions={true}
-            />
+            <div key={listing.id} className="relative">
+              {nearMeActive && listing.distance !== undefined && (
+                <div className="absolute top-2 left-2 z-10">
+                  <DistanceBadge distanceKm={listing.distance} />
+                </div>
+              )}
+              <RentalCard
+                listing={{
+                  ...listing,
+                  featured: true,
+                  availability: true
+                }}
+                onBookmark={(e) => handleWishlistToggle(e, listing)}
+                onShare={handleShare}
+                onClick={() => handleListingClick(listing.id)}
+                showActions={true}
+              />
+            </div>
           ))}
         </div>
       )}
