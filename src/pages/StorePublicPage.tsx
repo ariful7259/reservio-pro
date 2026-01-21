@@ -28,6 +28,28 @@ import ProductDetailModal from '@/components/store/ProductDetailModal';
 import ProductFilters from '@/components/store/ProductFilters';
 import ProductSorting, { SortOption } from '@/components/store/ProductSorting';
 
+interface ThemeSettings {
+  themeId?: string;
+  colorSchemeId?: string;
+  customColors?: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+  };
+  layout?: {
+    productColumns: number;
+    showBanner: boolean;
+    compactMode: boolean;
+    cardStyle: 'rounded' | 'square' | 'soft';
+  };
+  typography?: {
+    headingSize: 'small' | 'medium' | 'large';
+    bodySize: 'small' | 'medium' | 'large';
+  };
+  darkMode?: boolean;
+}
+
 interface StoreData {
   id: string;
   business_name: string | null;
@@ -53,6 +75,7 @@ interface StoreData {
     };
     returnPolicy?: string;
     customDomain?: string;
+    themeSettings?: ThemeSettings;
   } | null;
 }
 
@@ -281,11 +304,52 @@ const StorePublicPage = () => {
   const isOpen = settings?.isOpen !== false;
   const businessHours = settings?.businessHours;
   const socialLinks = settings?.socialLinks;
+  const themeSettings = settings?.themeSettings;
+
+  // Default theme values
+  const themeColors = themeSettings?.customColors || {
+    primary: '#0ea5e9',
+    secondary: '#06b6d4',
+    accent: '#22d3ee',
+    background: '#f0f9ff'
+  };
+  const layoutSettings = themeSettings?.layout || {
+    productColumns: 3,
+    showBanner: true,
+    compactMode: false,
+    cardStyle: 'rounded' as const
+  };
+  const isDarkMode = themeSettings?.darkMode || false;
+
+  // Dynamic card radius based on theme
+  const getCardRadius = () => {
+    switch (layoutSettings.cardStyle) {
+      case 'square': return 'rounded-none';
+      case 'soft': return 'rounded-2xl';
+      default: return 'rounded-xl';
+    }
+  };
+
+  // Dynamic grid columns for products
+  const getGridColumns = () => {
+    const cols = layoutSettings.productColumns;
+    return cols === 4 ? 'grid-cols-2 sm:grid-cols-4' : cols === 2 ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-3';
+  };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div 
+      className={`min-h-screen pb-20 ${isDarkMode ? 'dark' : ''}`}
+      style={{ backgroundColor: isDarkMode ? '#111827' : themeColors.background }}
+    >
       {/* Store Header Banner */}
-      <div className="h-48 bg-gradient-to-r from-primary/30 via-primary/20 to-primary/10 relative">
+      <div 
+        className="h-48 relative"
+        style={{ 
+          background: layoutSettings.showBanner 
+            ? `linear-gradient(135deg, ${themeColors.primary}40, ${themeColors.secondary}30, ${themeColors.primary}20)`
+            : `linear-gradient(135deg, ${themeColors.primary}20, ${themeColors.secondary}10)`
+        }}
+      >
         <div className="absolute inset-0 bg-[url('data:image/svg+xml,...')] opacity-10" />
       </div>
 
@@ -476,14 +540,14 @@ const StorePublicPage = () => {
               ))}
             </div>
           ) : filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div className={`grid gap-4 ${getGridColumns()}`}>
               {filteredProducts.map((product) => (
                 <Card 
                   key={product.id} 
-                  className="overflow-hidden group cursor-pointer hover:shadow-md transition-shadow"
+                  className={`overflow-hidden group cursor-pointer hover:shadow-md transition-shadow ${getCardRadius()} ${isDarkMode ? 'bg-gray-800 border-gray-700' : ''}`}
                   onClick={() => handleProductClick(product)}
                 >
-                  <div className="aspect-square bg-muted relative overflow-hidden">
+                  <div className={`aspect-square bg-muted relative overflow-hidden ${layoutSettings.compactMode ? '' : ''}`}>
                     {product.images && product.images.length > 0 ? (
                       <img 
                         src={product.images[0]} 
@@ -501,23 +565,28 @@ const StorePublicPage = () => {
                       </Badge>
                     )}
                     {product.stock !== null && product.stock > 0 && product.stock <= 5 && (
-                      <Badge variant="secondary" className="absolute top-2 right-2 bg-orange-100 text-orange-700">
+                      <Badge 
+                        variant="secondary" 
+                        className="absolute top-2 right-2"
+                        style={{ backgroundColor: `${themeColors.accent}30`, color: themeColors.accent }}
+                      >
                         স্টক কম
                       </Badge>
                     )}
                   </div>
-                  <CardContent className="p-3">
+                  <CardContent className={`p-3 ${layoutSettings.compactMode ? 'p-2' : ''} ${isDarkMode ? 'text-white' : ''}`}>
                     <h3 className="font-medium text-sm line-clamp-2 mb-1">{product.name}</h3>
                     {product.category && (
                       <p className="text-xs text-muted-foreground mb-1">{product.category}</p>
                     )}
                     <div className="flex items-center justify-between mt-2">
-                      <p className="font-bold text-primary">{formatPrice(product.price)}</p>
+                      <p className="font-bold" style={{ color: themeColors.primary }}>{formatPrice(product.price)}</p>
                       {settings?.whatsappOrderEnabled && (
                         <Button 
                           size="icon" 
                           variant="ghost" 
-                          className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
+                          className="h-8 w-8"
+                          style={{ color: '#16a34a' }}
                           onClick={(e) => {
                             e.stopPropagation();
                             handleWhatsAppOrder(product.name);

@@ -719,6 +719,7 @@ const CreateStoreBuilder: React.FC = () => {
                 <LiveStorePreview 
                   storeData={storeData}
                   products={products}
+                  themeSettings={themeSettings}
                 />
               </CardContent>
             </Card>

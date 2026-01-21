@@ -199,6 +199,15 @@ interface StoreThemeCustomizerProps {
   storeName?: string;
 }
 
+interface SavedPreset {
+  id: string;
+  name: string;
+  settings: ThemeSettings;
+  createdAt: string;
+}
+
+const SAVED_PRESETS_KEY = 'store_theme_presets';
+
 const StoreThemeCustomizer: React.FC<StoreThemeCustomizerProps> = ({
   settings = defaultSettings,
   onSettingsChange,
@@ -207,6 +216,21 @@ const StoreThemeCustomizer: React.FC<StoreThemeCustomizerProps> = ({
   const { toast } = useToast();
   const [currentSettings, setCurrentSettings] = useState<ThemeSettings>(settings);
   const [useCustomColors, setUseCustomColors] = useState(false);
+  const [savedPresets, setSavedPresets] = useState<SavedPreset[]>([]);
+  const [presetName, setPresetName] = useState('');
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+
+  // Load saved presets from localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(SAVED_PRESETS_KEY);
+      if (saved) {
+        setSavedPresets(JSON.parse(saved));
+      }
+    } catch (error) {
+      console.error('Failed to load saved presets:', error);
+    }
+  }, []);
 
   useEffect(() => {
     setCurrentSettings(settings);
@@ -257,6 +281,44 @@ const StoreThemeCustomizer: React.FC<StoreThemeCustomizerProps> = ({
     toast({ title: "সেটিংস রিসেট হয়েছে" });
   };
 
+  // Save current settings as a preset
+  const savePreset = () => {
+    if (!presetName.trim()) {
+      toast({ title: "প্রিসেট নাম দিন", variant: "destructive" });
+      return;
+    }
+
+    const newPreset: SavedPreset = {
+      id: `preset_${Date.now()}`,
+      name: presetName.trim(),
+      settings: { ...currentSettings },
+      createdAt: new Date().toISOString()
+    };
+
+    const updatedPresets = [...savedPresets, newPreset];
+    setSavedPresets(updatedPresets);
+    localStorage.setItem(SAVED_PRESETS_KEY, JSON.stringify(updatedPresets));
+    
+    setPresetName('');
+    setShowSaveDialog(false);
+    toast({ title: "প্রিসেট সেভ হয়েছে!" });
+  };
+
+  // Apply a saved preset
+  const applyPreset = (preset: SavedPreset) => {
+    setCurrentSettings(preset.settings);
+    onSettingsChange(preset.settings);
+    toast({ title: `"${preset.name}" প্রিসেট প্রয়োগ হয়েছে` });
+  };
+
+  // Delete a saved preset
+  const deletePreset = (presetId: string) => {
+    const updatedPresets = savedPresets.filter(p => p.id !== presetId);
+    setSavedPresets(updatedPresets);
+    localStorage.setItem(SAVED_PRESETS_KEY, JSON.stringify(updatedPresets));
+    toast({ title: "প্রিসেট মুছে ফেলা হয়েছে" });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -276,7 +338,7 @@ const StoreThemeCustomizer: React.FC<StoreThemeCustomizerProps> = ({
       </div>
 
       <Tabs defaultValue="themes" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="themes" className="text-xs sm:text-sm">
             <Layout className="h-4 w-4 mr-1 hidden sm:inline" />
             থিম
@@ -289,8 +351,12 @@ const StoreThemeCustomizer: React.FC<StoreThemeCustomizerProps> = ({
             <Grid3X3 className="h-4 w-4 mr-1 hidden sm:inline" />
             লেআউট
           </TabsTrigger>
-          <TabsTrigger value="preview" className="text-xs sm:text-sm">
+          <TabsTrigger value="myThemes" className="text-xs sm:text-sm">
             <Sparkles className="h-4 w-4 mr-1 hidden sm:inline" />
+            আমার থিম
+          </TabsTrigger>
+          <TabsTrigger value="preview" className="text-xs sm:text-sm">
+            <Type className="h-4 w-4 mr-1 hidden sm:inline" />
             প্রিভিউ
           </TabsTrigger>
         </TabsList>
@@ -560,6 +626,107 @@ const StoreThemeCustomizer: React.FC<StoreThemeCustomizerProps> = ({
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* My Themes Tab */}
+        <TabsContent value="myThemes" className="space-y-4 mt-4">
+          {/* Save Current Theme */}
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Sparkles className="h-4 w-4" />
+                বর্তমান থিম সেভ করুন
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {showSaveDialog ? (
+                <div className="space-y-3">
+                  <div>
+                    <Label className="text-xs">প্রিসেট নাম</Label>
+                    <Input
+                      placeholder="যেমন: আমার ফ্যাশন থিম"
+                      value={presetName}
+                      onChange={(e) => setPresetName(e.target.value)}
+                      className="mt-1"
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <Button size="sm" onClick={savePreset} className="flex-1">
+                      <Check className="h-4 w-4 mr-1" />
+                      সেভ
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => setShowSaveDialog(false)}>
+                      বাতিল
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm">বর্তমান সেটিংস প্রিসেট হিসেবে সংরক্ষণ করুন</p>
+                    <p className="text-xs text-muted-foreground">পরে দ্রুত প্রয়োগ করতে পারবেন</p>
+                  </div>
+                  <Button size="sm" onClick={() => setShowSaveDialog(true)}>
+                    সেভ করুন
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Saved Presets List */}
+          <div>
+            <Label className="text-sm font-medium mb-3 block">সংরক্ষিত প্রিসেট ({savedPresets.length})</Label>
+            {savedPresets.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {savedPresets.map((preset) => (
+                  <Card key={preset.id} className="overflow-hidden">
+                    <div 
+                      className="h-12"
+                      style={{ 
+                        background: `linear-gradient(135deg, ${preset.settings.customColors.primary}, ${preset.settings.customColors.secondary})` 
+                      }}
+                    />
+                    <CardContent className="p-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium text-sm">{preset.name}</h4>
+                          <p className="text-xs text-muted-foreground">
+                            {new Date(preset.createdAt).toLocaleDateString('bn-BD')}
+                          </p>
+                        </div>
+                        <div className="flex gap-1">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => applyPreset(preset)}
+                          >
+                            প্রয়োগ
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="ghost"
+                            className="text-destructive hover:text-destructive"
+                            onClick={() => deletePreset(preset.id)}
+                          >
+                            ×
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <Card>
+                <CardContent className="p-8 text-center">
+                  <Sparkles className="h-10 w-10 mx-auto text-muted-foreground/30 mb-3" />
+                  <p className="text-sm text-muted-foreground">এখনো কোনো প্রিসেট সেভ হয়নি</p>
+                  <p className="text-xs text-muted-foreground mt-1">থিম কাস্টমাইজ করে সেভ করুন</p>
+                </CardContent>
+              </Card>
+            )}
+          </div>
         </TabsContent>
 
         {/* Preview Tab */}
