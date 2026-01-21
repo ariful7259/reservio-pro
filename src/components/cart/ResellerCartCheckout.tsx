@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useShoppingState } from '@/hooks/useShoppingState';
 import { useToast } from '@/hooks/use-toast';
+import { useWalletPayment } from '@/hooks/useWalletPayment';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -18,17 +19,21 @@ import {
   CreditCard,
   Wallet,
   Building2,
+  Smartphone,
   AlertCircle
 } from 'lucide-react';
 import DeliveryAddressForm, { DeliveryAddress } from './DeliveryAddressForm';
 import ShippingMethodSelector, { getShippingMethodById } from './ShippingMethodSelector';
 import MarginCalculator from './MarginCalculator';
 import CheckoutProgressIndicator from './CheckoutProgressIndicator';
+import WalletBalanceIndicator from '@/components/payment/WalletBalanceIndicator';
+import WalletPaymentConfirmDialog from '@/components/payment/WalletPaymentConfirmDialog';
 
 const paymentMethods = [
-  { id: 'bkash', name: 'বিকাশ', icon: <Wallet className="h-4 w-4" /> },
-  { id: 'nagad', name: 'নগদ', icon: <Wallet className="h-4 w-4" /> },
-  { id: 'rocket', name: 'রকেট', icon: <Wallet className="h-4 w-4" /> },
+  { id: 'wallet', name: 'ওয়ালেট', icon: <Wallet className="h-4 w-4" />, highlight: true },
+  { id: 'bkash', name: 'বিকাশ', icon: <Smartphone className="h-4 w-4" /> },
+  { id: 'nagad', name: 'নগদ', icon: <Smartphone className="h-4 w-4" /> },
+  { id: 'rocket', name: 'রকেট', icon: <Smartphone className="h-4 w-4" /> },
   { id: 'bank', name: 'ব্যাংক ট্রান্সফার', icon: <Building2 className="h-4 w-4" /> },
   { id: 'cod', name: 'ক্যাশ অন ডেলিভারি', icon: <CreditCard className="h-4 w-4" /> },
 ];
@@ -51,6 +56,16 @@ const ResellerCartCheckout: React.FC = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('standard');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showWalletConfirm, setShowWalletConfirm] = useState(false);
+  
+  // Wallet payment hook
+  const { 
+    walletBalance, 
+    canPayFromWallet, 
+    processWalletPayment, 
+    isLoading: walletLoading,
+    refreshBalance
+  } = useWalletPayment();
   
   const [deliveryAddress, setDeliveryAddress] = useState<DeliveryAddress>({
     fullName: '',
@@ -161,6 +176,35 @@ const ResellerCartCheckout: React.FC = () => {
     );
   };
 
+  const handlePaymentMethodSelect = (methodId: string) => {
+    setSelectedPaymentMethod(methodId);
+    // If wallet is selected and has enough balance, show confirm dialog
+    if (methodId === 'wallet' && canPayFromWallet(calculateFinalPrice())) {
+      setShowWalletConfirm(true);
+    }
+  };
+
+  const handleWalletPayment = async () => {
+    const amount = calculateFinalPrice();
+    const result = await processWalletPayment(
+      amount,
+      `প্রোডাক্ট কেনা - ${cart.length} আইটেম`,
+      'product_purchase',
+      { order_type: 'product', items_count: cart.length }
+    );
+
+    if (result.success) {
+      setShowWalletConfirm(false);
+      await completeCheckout(result.transactionId);
+    } else {
+      toast({
+        title: "পেমেন্ট ব্যর্থ",
+        description: result.error,
+        variant: "destructive"
+      });
+    }
+  };
+
   const handleCheckout = async () => {
     if (!user?.id) {
       toast({
@@ -190,6 +234,17 @@ const ResellerCartCheckout: React.FC = () => {
       return;
     }
 
+    // For wallet payment, show confirm dialog first
+    if (selectedPaymentMethod === 'wallet' && canPayFromWallet(calculateFinalPrice())) {
+      setShowWalletConfirm(true);
+      return;
+    }
+
+    setIsSubmitting(true);
+    await completeCheckout();
+  };
+
+  const completeCheckout = async (walletTransactionId?: string) => {
     setIsSubmitting(true);
 
     try {
@@ -453,22 +508,59 @@ const ResellerCartCheckout: React.FC = () => {
             পেমেন্ট মেথড
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
+          {/* Wallet Balance Indicator */}
+          <WalletBalanceIndicator
+            balance={walletBalance}
+            requiredAmount={calculateFinalPrice()}
+            onAddMoney={() => navigate('/wallet')}
+          />
+          
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {paymentMethods.map(method => (
-              <Button
-                key={method.id}
-                variant={selectedPaymentMethod === method.id ? "default" : "outline"}
-                className="h-auto py-4 flex flex-col items-center gap-2"
-                onClick={() => setSelectedPaymentMethod(method.id)}
-              >
-                {method.icon}
-                <span>{method.name}</span>
-              </Button>
-            ))}
+            {paymentMethods.map(method => {
+              const isWallet = method.id === 'wallet';
+              const hasBalance = canPayFromWallet(calculateFinalPrice());
+              const isDisabled = isWallet && !hasBalance;
+              
+              return (
+                <Button
+                  key={method.id}
+                  variant={selectedPaymentMethod === method.id ? "default" : "outline"}
+                  className={`h-auto py-4 flex flex-col items-center gap-2 relative ${
+                    isWallet && hasBalance ? 'border-primary ring-1 ring-primary' : ''
+                  }`}
+                  onClick={() => !isDisabled && handlePaymentMethodSelect(method.id)}
+                  disabled={isDisabled}
+                >
+                  {isWallet && hasBalance && (
+                    <Badge className="absolute -top-2 -right-2 text-[10px] px-1.5 bg-green-500">
+                      প্রস্তাবিত
+                    </Badge>
+                  )}
+                  {method.icon}
+                  <span>{method.name}</span>
+                  {isWallet && (
+                    <span className={`text-xs ${hasBalance ? 'text-green-600' : 'text-muted-foreground'}`}>
+                      ৳{walletBalance.toLocaleString('bn-BD')}
+                    </span>
+                  )}
+                </Button>
+              );
+            })}
           </div>
         </CardContent>
       </Card>
+
+      {/* Wallet Payment Confirmation Dialog */}
+      <WalletPaymentConfirmDialog
+        open={showWalletConfirm}
+        onOpenChange={setShowWalletConfirm}
+        amount={calculateFinalPrice()}
+        currentBalance={walletBalance}
+        description={`${cart.length} আইটেম কেনার জন্য পেমেন্ট`}
+        onConfirm={handleWalletPayment}
+        isProcessing={isSubmitting || walletLoading}
+      />
 
       {/* Order Summary */}
       <Card>
