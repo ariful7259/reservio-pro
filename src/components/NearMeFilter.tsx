@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { MapPin, Navigation, Loader2, X } from 'lucide-react';
+import SavedLocationsList from './SavedLocationsList';
 
 interface NearMeFilterProps {
   isActive: boolean;
@@ -12,6 +13,7 @@ interface NearMeFilterProps {
   onToggle: () => void;
   onRadiusChange: (radius: number) => void;
   onClose?: () => void;
+  onSelectSavedLocation?: (latitude: number, longitude: number) => void;
 }
 
 const NearMeFilter: React.FC<NearMeFilterProps> = ({
@@ -22,7 +24,14 @@ const NearMeFilter: React.FC<NearMeFilterProps> = ({
   onToggle,
   onRadiusChange,
   onClose,
+  onSelectSavedLocation,
 }) => {
+  const handleSelectSavedLocation = (lat: number, lng: number) => {
+    if (onSelectSavedLocation) {
+      onSelectSavedLocation(lat, lng);
+    }
+  };
+
   return (
     <Card className="mb-4 border-primary/20 bg-primary/5">
       <CardContent className="p-4">
@@ -41,24 +50,40 @@ const NearMeFilter: React.FC<NearMeFilterProps> = ({
         </div>
 
         {!isActive ? (
-          <Button
-            onClick={onToggle}
-            disabled={isLoading}
-            className="w-full"
-            variant="outline"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                লোকেশন খোঁজা হচ্ছে...
-              </>
-            ) : (
-              <>
-                <Navigation className="h-4 w-4 mr-2" />
-                লোকেশন অ্যাক্সেস করুন
-              </>
-            )}
-          </Button>
+          <div className="space-y-4">
+            <Button
+              onClick={onToggle}
+              disabled={isLoading}
+              className="w-full"
+              variant="outline"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  লোকেশন খোঁজা হচ্ছে...
+                </>
+              ) : (
+                <>
+                  <Navigation className="h-4 w-4 mr-2" />
+                  বর্তমান লোকেশন ব্যবহার করুন
+                </>
+              )}
+            </Button>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-primary/5 px-2 text-muted-foreground">অথবা</span>
+              </div>
+            </div>
+
+            <SavedLocationsList 
+              onSelectLocation={handleSelectSavedLocation}
+              compact
+            />
+          </div>
         ) : (
           <div className="space-y-4">
             <div>
@@ -87,6 +112,20 @@ const NearMeFilter: React.FC<NearMeFilterProps> = ({
                 </span>
               </div>
             )}
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-primary/5 px-2 text-muted-foreground">সেভড লোকেশন</span>
+              </div>
+            </div>
+
+            <SavedLocationsList 
+              onSelectLocation={handleSelectSavedLocation}
+              compact
+            />
 
             <Button
               variant="outline"

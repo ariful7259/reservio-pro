@@ -17,6 +17,7 @@ interface UseGeolocationReturn {
   isGettingLocation: boolean;
   error: string | null;
   getCurrentLocation: () => Promise<GeoLocation | null>;
+  setUserLocation: (location: GeoLocation) => void;
   calculateDistance: (lat1: number, lng1: number, lat2: number, lng2: number) => number;
   filterByDistance: <T extends LocationItem>(items: T[], maxDistanceKm: number) => T[];
   sortByDistance: <T extends LocationItem>(items: T[]) => T[];
@@ -196,6 +197,7 @@ export const useGeolocation = (): UseGeolocationReturn => {
     isGettingLocation,
     error,
     getCurrentLocation,
+    setUserLocation,
     calculateDistance,
     filterByDistance,
     sortByDistance,
