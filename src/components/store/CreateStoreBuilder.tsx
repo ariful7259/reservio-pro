@@ -19,7 +19,7 @@ import {
   Smartphone, Monitor, PanelLeftClose, PanelLeft
 } from 'lucide-react';
 import QRCode from 'react-qr-code';
-import StoreDesignEditor from './StoreDesignEditor';
+import StoreThemeCustomizer, { type ThemeSettings } from './StoreThemeCustomizer';
 import ProductManagement from './ProductManagement';
 import PaymentGatewaySetup from './PaymentGatewaySetup';
 import ShippingConfiguration from './ShippingConfiguration';
@@ -73,6 +73,7 @@ const CreateStoreBuilder: React.FC = () => {
   const [activeTab, setActiveTab] = useState('basic');
   const [showPreviewPanel, setShowPreviewPanel] = useState(true);
   const [products, setProducts] = useState<any[]>([]);
+  const [themeSettings, setThemeSettings] = useState<ThemeSettings | undefined>(undefined);
   const [storeData, setStoreData] = useState<StoreData>({
     storeName: '',
     storeSlug: '',
@@ -129,6 +130,11 @@ const CreateStoreBuilder: React.FC = () => {
         whatsappOrderEnabled: settings.whatsappOrderEnabled ?? true,
         customDomain: settings.customDomain || '',
       }));
+
+      // Theme settings (optional)
+      if (settings.themeSettings) {
+        setThemeSettings(settings.themeSettings as ThemeSettings);
+      }
     }
   }, [profile]);
 
@@ -216,6 +222,8 @@ const CreateStoreBuilder: React.FC = () => {
         whatsappOrderEnabled: storeData.whatsappOrderEnabled,
         customDomain: storeData.customDomain,
         storeCategory: storeData.storeCategory,
+        // Ensure JSON-safe payload for marketplace_settings
+        themeSettings: themeSettings ? (JSON.parse(JSON.stringify(themeSettings)) as any) : null,
       };
 
       // Update seller_profiles with store data
@@ -227,7 +235,7 @@ const CreateStoreBuilder: React.FC = () => {
           email: storeData.ownerEmail,
           address: storeData.address,
           bio: storeData.storeDescription,
-          marketplace_settings: storeSettings,
+            marketplace_settings: storeSettings as any,
           updated_at: new Date().toISOString()
         })
         .eq('id', user.id);
@@ -550,7 +558,11 @@ const CreateStoreBuilder: React.FC = () => {
               {/* Design Tab */}
               <TabsContent value="design" className="mt-0 animate-fade-in">
                 <div className="bg-gradient-to-br from-primary/5 to-purple-500/5 rounded-xl p-4 border">
-                  <StoreDesignEditor storeName={storeData.storeName || "আমার স্টোর"} />
+                  <StoreThemeCustomizer
+                    storeName={storeData.storeName || 'আমার স্টোর'}
+                    settings={themeSettings}
+                    onSettingsChange={setThemeSettings}
+                  />
                 </div>
               </TabsContent>
 
