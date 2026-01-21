@@ -80,6 +80,11 @@ const ProductManager = () => {
   const [formData, setFormData] = useState<ProductFormData>(defaultFormData);
   const [imageUrl, setImageUrl] = useState('');
   const [imageInputMode, setImageInputMode] = useState<'upload' | 'url'>('upload');
+  
+  // Filter states
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [stockFilter, setStockFilter] = useState<'all' | 'inStock' | 'lowStock' | 'outOfStock'>('all');
 
   // Get store slug for preview
   const storeSlug = React.useMemo(() => {
@@ -254,6 +259,37 @@ const ProductManager = () => {
     }).format(price);
   };
 
+  // Get unique categories from products
+  const productCategories = React.useMemo(() => {
+    const cats = products.map(p => p.category).filter(Boolean) as string[];
+    return [...new Set(cats)];
+  }, [products]);
+
+  // Filter products
+  const filteredProducts = React.useMemo(() => {
+    return products.filter(product => {
+      // Search filter
+      const matchesSearch = !searchQuery || 
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.description?.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      // Category filter
+      const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
+      
+      // Stock filter
+      let matchesStock = true;
+      if (stockFilter === 'inStock') {
+        matchesStock = (product.stock || 0) > 10;
+      } else if (stockFilter === 'lowStock') {
+        matchesStock = (product.stock || 0) > 0 && (product.stock || 0) <= 10;
+      } else if (stockFilter === 'outOfStock') {
+        matchesStock = (product.stock || 0) === 0;
+      }
+
+      return matchesSearch && matchesCategory && matchesStock;
+    });
+  }, [products, searchQuery, categoryFilter, stockFilter]);
+
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -283,7 +319,10 @@ const ProductManager = () => {
         <div>
           <h2 className="text-xl font-bold">প্রোডাক্ট ম্যানেজমেন্ট</h2>
           <p className="text-sm text-muted-foreground">
-            মোট {products.length} টি প্রোডাক্ট
+            {filteredProducts.length === products.length 
+              ? `মোট ${products.length} টি প্রোডাক্ট`
+              : `${filteredProducts.length} / ${products.length} টি প্রোডাক্ট`
+            }
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -298,13 +337,101 @@ const ProductManager = () => {
             <ExternalLink className="h-3 w-3" />
           </Button>
           
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={() => handleOpenDialog()}>
-                <Plus className="h-4 w-4 mr-2" />
-                নতুন প্রোডাক্ট
-              </Button>
-            </DialogTrigger>
+        </div>
+      </div>
+
+      {/* Search and Filters */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="relative flex-1">
+          <Package className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="প্রোডাক্ট নাম দিয়ে খুঁজুন..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+          {searchQuery && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+              onClick={() => setSearchQuery('')}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+        
+        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+          <SelectTrigger className="w-full sm:w-[180px]">
+            <SelectValue placeholder="সব ক্যাটাগরি" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">সব ক্যাটাগরি</SelectItem>
+            {productCategories.map(cat => (
+              <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select value={stockFilter} onValueChange={(v) => setStockFilter(v as any)}>
+          <SelectTrigger className="w-full sm:w-[150px]">
+            <SelectValue placeholder="স্টক ফিল্টার" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">সব স্টক</SelectItem>
+            <SelectItem value="inStock">স্টকে আছে (১০+)</SelectItem>
+            <SelectItem value="lowStock">কম স্টক (১-১০)</SelectItem>
+            <SelectItem value="outOfStock">স্টক শেষ</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Active Filters */}
+      {(searchQuery || categoryFilter !== 'all' || stockFilter !== 'all') && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm text-muted-foreground">ফিল্টার:</span>
+          {searchQuery && (
+            <Badge variant="secondary" className="gap-1">
+              "{searchQuery}"
+              <button onClick={() => setSearchQuery('')}>
+                <X className="h-3 w-3" />
+              </button>
+            </Badge>
+          )}
+          {categoryFilter !== 'all' && (
+            <Badge variant="secondary" className="gap-1">
+              {categoryFilter}
+              <button onClick={() => setCategoryFilter('all')}>
+                <X className="h-3 w-3" />
+              </button>
+            </Badge>
+          )}
+          {stockFilter !== 'all' && (
+            <Badge variant="secondary" className="gap-1">
+              {stockFilter === 'inStock' ? 'স্টকে আছে' : stockFilter === 'lowStock' ? 'কম স্টক' : 'স্টক শেষ'}
+              <button onClick={() => setStockFilter('all')}>
+                <X className="h-3 w-3" />
+              </button>
+            </Badge>
+          )}
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="text-xs h-7"
+            onClick={() => {
+              setSearchQuery('');
+              setCategoryFilter('all');
+              setStockFilter('all');
+            }}
+          >
+            সব ফিল্টার মুছুন
+          </Button>
+        </div>
+      )}
+
+      {/* Add Product Dialog */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
@@ -455,10 +582,9 @@ const ProductManager = () => {
             </form>
           </DialogContent>
         </Dialog>
-        </div>
-      </div>
+
       {/* Products Grid */}
-      {products.length === 0 ? (
+      {filteredProducts.length === 0 ? (
         <Card>
           <CardContent className="p-8 text-center">
             <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
@@ -474,7 +600,7 @@ const ProductManager = () => {
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {products.map(product => (
+          {filteredProducts.map(product => (
             <Card key={product.id} className="overflow-hidden">
               <div className="aspect-video bg-muted relative">
                 {product.images && product.images.length > 0 ? (
