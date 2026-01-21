@@ -53,6 +53,7 @@ import MarketingToolsSystem from '@/components/dashboard/MarketingToolsSystem';
 import CustomerRelationshipManagement from '@/components/dashboard/CustomerRelationshipManagement';
 import CreateStoreBuilder from '@/components/store/CreateStoreBuilder';
 import ProductManager from '@/components/seller/ProductManager';
+import SellerOrderManagement from '@/components/seller/SellerOrderManagement';
 
 const SellerDashboard = () => {
   const navigate = useNavigate();
@@ -419,9 +420,9 @@ const SellerDashboard = () => {
             />
           </TabsContent>
           
-          {/* Orders and booking tab - Enhanced */}
+          {/* Orders and booking tab - Enhanced with real order management */}
           <TabsContent value="orders" className="space-y-6">
-            <OrdersTab businessType={activeBusinessType} />
+            <SellerOrderManagement />
           </TabsContent>
           
           {/* Customers tab - Enhanced */}
