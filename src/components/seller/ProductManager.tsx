@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useSellerProfile } from '@/hooks/useSellerProfile';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,7 +23,9 @@ import {
   ImagePlus,
   X,
   Upload,
-  Link as LinkIcon
+  Link as LinkIcon,
+  Eye,
+  ExternalLink
 } from 'lucide-react';
 
 interface Product {
@@ -67,6 +70,7 @@ const categories = [
 
 const ProductManager = () => {
   const { user } = useAuth();
+  const { profile } = useSellerProfile();
   const { toast } = useToast();
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -76,6 +80,27 @@ const ProductManager = () => {
   const [formData, setFormData] = useState<ProductFormData>(defaultFormData);
   const [imageUrl, setImageUrl] = useState('');
   const [imageInputMode, setImageInputMode] = useState<'upload' | 'url'>('upload');
+
+  // Get store slug for preview
+  const storeSlug = React.useMemo(() => {
+    if (profile?.marketplace_settings) {
+      const settings = profile.marketplace_settings as any;
+      return settings.storeSlug || profile.business_name?.toLowerCase().replace(/\s+/g, '-') || '';
+    }
+    return profile?.business_name?.toLowerCase().replace(/\s+/g, '-') || '';
+  }, [profile]);
+
+  const handlePreviewStore = () => {
+    if (storeSlug) {
+      window.open(`/store/${storeSlug}`, '_blank');
+    } else {
+      toast({
+        title: "স্টোর সেটআপ প্রয়োজন",
+        description: "প্রথমে স্টোর সেটিংস থেকে স্টোর তৈরি করুন।",
+        variant: "destructive"
+      });
+    }
+  };
   // Fetch products
   const fetchProducts = async () => {
     if (!user?.id) return;
@@ -261,13 +286,25 @@ const ProductManager = () => {
             মোট {products.length} টি প্রোডাক্ট
           </p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={() => handleOpenDialog()}>
-              <Plus className="h-4 w-4 mr-2" />
-              নতুন প্রোডাক্ট
-            </Button>
-          </DialogTrigger>
+        <div className="flex flex-wrap gap-2">
+          {/* Store Preview Button */}
+          <Button 
+            variant="outline" 
+            onClick={handlePreviewStore}
+            className="gap-2"
+          >
+            <Eye className="h-4 w-4" />
+            স্টোর প্রিভিউ
+            <ExternalLink className="h-3 w-3" />
+          </Button>
+          
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={() => handleOpenDialog()}>
+                <Plus className="h-4 w-4 mr-2" />
+                নতুন প্রোডাক্ট
+              </Button>
+            </DialogTrigger>
           <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
@@ -418,8 +455,8 @@ const ProductManager = () => {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
-
       {/* Products Grid */}
       {products.length === 0 ? (
         <Card>

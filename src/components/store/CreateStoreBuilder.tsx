@@ -15,13 +15,15 @@ import { useSellerProfile } from '@/hooks/useSellerProfile';
 import { 
   Store, Palette, CreditCard, Truck, Globe, Eye, QrCode,
   Facebook, Instagram, Clock, FileText, Power, MessageCircle,
-  Upload, Package, Plus, X, Copy, ExternalLink, Check, Loader2
+  Upload, Package, Plus, X, Copy, ExternalLink, Check, Loader2,
+  Smartphone, Monitor, PanelLeftClose, PanelLeft
 } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import StoreDesignEditor from './StoreDesignEditor';
 import ProductManagement from './ProductManagement';
 import PaymentGatewaySetup from './PaymentGatewaySetup';
 import ShippingConfiguration from './ShippingConfiguration';
+import LiveStorePreview from './LiveStorePreview';
 
 interface StoreData {
   storeName: string;
@@ -69,6 +71,8 @@ const CreateStoreBuilder: React.FC = () => {
   const { user } = useAuth();
   const { profile } = useSellerProfile();
   const [activeTab, setActiveTab] = useState('basic');
+  const [showPreviewPanel, setShowPreviewPanel] = useState(true);
+  const [products, setProducts] = useState<any[]>([]);
   const [storeData, setStoreData] = useState<StoreData>({
     storeName: '',
     storeSlug: '',
@@ -87,6 +91,24 @@ const CreateStoreBuilder: React.FC = () => {
   });
   const [isCreating, setIsCreating] = useState(false);
   const [copiedUrl, setCopiedUrl] = useState(false);
+
+  // Fetch products for live preview
+  useEffect(() => {
+    const fetchProducts = async () => {
+      if (!user?.id) return;
+      try {
+        const { data } = await supabase
+          .from('products')
+          .select('id, name, price, images, category')
+          .eq('created_by', user.id)
+          .limit(10);
+        setProducts(data || []);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+    fetchProducts();
+  }, [user?.id]);
 
   // Load existing profile data
   useEffect(() => {
@@ -254,7 +276,7 @@ const CreateStoreBuilder: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 p-2 sm:p-4 md:p-6">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-6 animate-fade-in">
           <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent mb-2">
@@ -265,7 +287,7 @@ const CreateStoreBuilder: React.FC = () => {
           </p>
         </div>
 
-        {/* Store Status & QR */}
+        {/* Store Status & Preview Toggle */}
         <Card className="mb-4 border-0 shadow-lg bg-gradient-to-r from-primary/10 to-purple-500/10">
           <CardContent className="p-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -281,12 +303,32 @@ const CreateStoreBuilder: React.FC = () => {
               </div>
               
               <div className="flex items-center gap-2">
+                {/* Toggle Live Preview Button */}
+                <Button
+                  variant={showPreviewPanel ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setShowPreviewPanel(!showPreviewPanel)}
+                  className="gap-2"
+                >
+                  {showPreviewPanel ? (
+                    <>
+                      <PanelLeftClose className="h-4 w-4" />
+                      প্রিভিউ লুকান
+                    </>
+                  ) : (
+                    <>
+                      <PanelLeft className="h-4 w-4" />
+                      প্রিভিউ দেখান
+                    </>
+                  )}
+                </Button>
+                
                 <div className="bg-white p-2 rounded-lg shadow-sm">
-                  <QRCode value={storeUrl} size={60} />
+                  <QRCode value={storeUrl} size={50} />
                 </div>
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2 bg-background/80 rounded-lg px-3 py-1.5">
-                    <span className="text-xs truncate max-w-[150px] sm:max-w-[250px]">{storeUrl}</span>
+                    <span className="text-xs truncate max-w-[150px] sm:max-w-[200px]">{storeUrl}</span>
                     <Button variant="ghost" size="sm" onClick={copyStoreUrl} className="h-6 w-6 p-0">
                       {copiedUrl ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
                     </Button>
@@ -300,8 +342,11 @@ const CreateStoreBuilder: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="shadow-xl border-0">
-          <CardContent className="p-3 sm:p-4 md:p-6">
+        {/* Main Content with Live Preview Panel */}
+        <div className={`grid gap-6 ${showPreviewPanel ? 'lg:grid-cols-[1fr,400px]' : ''}`}>
+          {/* Editor Section */}
+          <Card className="shadow-xl border-0">
+            <CardContent className="p-3 sm:p-4 md:p-6">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               {/* Mobile Dropdown */}
               <div className="block md:hidden mb-4">
@@ -643,6 +688,31 @@ const CreateStoreBuilder: React.FC = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Live Preview Panel */}
+        {showPreviewPanel && (
+          <div className="hidden lg:block">
+            <Card className="sticky top-4 shadow-xl border-0">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold flex items-center gap-2">
+                    <Eye className="h-4 w-4 text-primary" />
+                    লাইভ প্রিভিউ
+                  </h3>
+                  <Badge variant="outline" className="text-xs">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse mr-1" />
+                    রিয়েল-টাইম
+                  </Badge>
+                </div>
+                <LiveStorePreview 
+                  storeData={storeData}
+                  products={products}
+                />
+              </CardContent>
+            </Card>
+          </div>
+        )}
+        </div>
       </div>
     </div>
   );

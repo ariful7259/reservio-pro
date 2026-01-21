@@ -256,16 +256,20 @@ const SellerDashboard = () => {
         onChange={handleBusinessTypeChange} 
       />
 
-      {/* কন্ডিশনাল ট্যাব রেন্ডার */}
-      {activeBusinessType ? (
-        <Tabs defaultValue="overview" className="mt-6">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="overview">ওভারভিউ</TabsTrigger>
-            <TabsTrigger value="analytics">অ্যানালিটিক্স</TabsTrigger>
-            <TabsTrigger value="orders">অর্ডার ও বুকিং</TabsTrigger>
-            <TabsTrigger value="customers">গ্রাহক</TabsTrigger>
-            <TabsTrigger value="products">প্রোডাক্ট ও সার্ভিস</TabsTrigger>
-          </TabsList>
+      {/* Main Tabs - Always visible */}
+      <Tabs defaultValue="overview" className="mt-6">
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="overview">ওভারভিউ</TabsTrigger>
+          <TabsTrigger value="products">প্রোডাক্ট ও সার্ভিস</TabsTrigger>
+          <TabsTrigger value="analytics">অ্যানালিটিক্স</TabsTrigger>
+          <TabsTrigger value="orders">অর্ডার ও বুকিং</TabsTrigger>
+          <TabsTrigger value="customers">গ্রাহক</TabsTrigger>
+        </TabsList>
+
+        {/* Products Tab - Always Accessible */}
+        <TabsContent value="products" className="space-y-4">
+          <ProductManager />
+        </TabsContent>
 
           {/* Overview tab */}
           <TabsContent value="overview" className="space-y-6">
@@ -424,22 +428,7 @@ const SellerDashboard = () => {
           <TabsContent value="customers" className="space-y-6">
             <CustomersTab businessType={activeBusinessType} />
           </TabsContent>
-          
-          {/* Products tab - Enhanced with real product manager */}
-          <TabsContent value="products" className="space-y-6">
-            <ProductManager />
-          </TabsContent>
         </Tabs>
-      ) : (
-        <div className="mt-10 w-full flex flex-col items-center justify-center h-64">
-          <div className="text-lg font-medium text-muted-foreground mb-2">
-            কোনো ব্যবসা সিলেক্ট করুন
-          </div>
-          <div className="text-sm text-muted-foreground">
-            ব্যবসার ধরন সিলেক্ট করলে ড্যাশবোর্ডের ডিটেইলস দেখতে পারবেন
-          </div>
-        </div>
-      )}
     </div>
   );
 };
