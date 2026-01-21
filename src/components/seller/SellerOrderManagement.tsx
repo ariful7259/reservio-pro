@@ -13,6 +13,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { useSellerOrderStats } from '@/hooks/useSellerOrderStats';
+import SellerOrderStatsCards from '@/components/seller/SellerOrderStatsCards';
 import { 
   Package, Search, Filter, Clock, User, MapPin, Phone,
   CheckCircle, XCircle, Truck, AlertCircle, Eye, Edit,
@@ -69,8 +71,7 @@ const statusConfig: Record<string, { label: string; color: string; icon: React.R
 const SellerOrderManagement: React.FC = () => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { orders, stats, isLoading, error: ordersError, refetch } = useSellerOrderStats({ userId: user?.id });
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -79,35 +80,14 @@ const SellerOrderManagement: React.FC = () => {
   const [newStatus, setNewStatus] = useState('');
   const [statusNote, setStatusNote] = useState('');
 
-  // Fetch orders
-  const fetchOrders = async () => {
-    if (!user?.id) return;
-
-    setIsLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from('reseller_orders')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setOrders(data || []);
-    } catch (error: any) {
-      console.error('Error fetching orders:', error);
-      toast({
-        title: "অর্ডার লোড করতে সমস্যা",
-        description: error.message,
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchOrders();
-  }, [user?.id]);
+    if (!ordersError) return;
+    toast({
+      title: "অর্ডার লোড করতে সমস্যা",
+      description: ordersError,
+      variant: "destructive",
+    });
+  }, [ordersError, toast]);
 
   // Update order status
   const handleStatusUpdate = async () => {
@@ -131,7 +111,7 @@ const SellerOrderManagement: React.FC = () => {
         description: `অর্ডার #${selectedOrder.id.slice(0, 8)} এর স্ট্যাটাস "${statusConfig[newStatus]?.label}" এ পরিবর্তন হয়েছে`
       });
 
-      fetchOrders();
+      refetch();
       setIsDetailsOpen(false);
       setNewStatus('');
       setStatusNote('');
@@ -157,17 +137,6 @@ const SellerOrderManagement: React.FC = () => {
 
     return matchesSearch && matchesStatus;
   });
-
-  // Stats
-  const stats = {
-    total: orders.length,
-    pending: orders.filter(o => o.status === 'pending').length,
-    processing: orders.filter(o => o.status === 'processing').length,
-    delivered: orders.filter(o => o.status === 'delivered').length,
-    revenue: orders
-      .filter(o => o.status === 'delivered')
-      .reduce((sum, o) => sum + o.margin_amount, 0)
-  };
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('bn-BD', {
@@ -208,52 +177,7 @@ const SellerOrderManagement: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs text-muted-foreground">মোট অর্ডার</p>
-                <p className="text-2xl font-bold">{stats.total}</p>
-              </div>
-              <ShoppingBag className="h-8 w-8 text-primary/20" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs text-muted-foreground">পেন্ডিং</p>
-                <p className="text-2xl font-bold text-yellow-600">{stats.pending}</p>
-              </div>
-              <Clock className="h-8 w-8 text-yellow-200" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs text-muted-foreground">সম্পন্ন</p>
-                <p className="text-2xl font-bold text-green-600">{stats.delivered}</p>
-              </div>
-              <CheckCircle className="h-8 w-8 text-green-200" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs text-muted-foreground">মোট আয়</p>
-                <p className="text-2xl font-bold text-primary">{formatPrice(stats.revenue)}</p>
-              </div>
-              <DollarSign className="h-8 w-8 text-primary/20" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <SellerOrderStatsCards stats={stats} formatPrice={formatPrice} />
 
       {/* Search and Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
@@ -278,7 +202,7 @@ const SellerOrderManagement: React.FC = () => {
             ))}
           </SelectContent>
         </Select>
-        <Button variant="outline" onClick={fetchOrders}>
+        <Button variant="outline" onClick={refetch}>
           <RefreshCw className="h-4 w-4 mr-2" />
           রিফ্রেশ
         </Button>
@@ -297,7 +221,7 @@ const SellerOrderManagement: React.FC = () => {
             প্রসেসিং ({stats.processing})
           </TabsTrigger>
           <TabsTrigger value="shipped" className="flex-shrink-0">
-            শিপড ({orders.filter(o => o.status === 'shipped').length})
+            শিপড ({stats.shipped})
           </TabsTrigger>
           <TabsTrigger value="delivered" className="flex-shrink-0">
             ডেলিভার্ড ({stats.delivered})
