@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ChevronDown, LogOut, User as UserIcon, ShoppingBag, Wallet, Settings, ShieldCheck, Languages, SunMoon, Store, Clock } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -13,6 +13,7 @@ import { useApp } from '@/context/AppContext';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useSellerProfile } from '@/hooks/useSellerProfile';
 import { useSellerApplication } from '@/hooks/useSellerApplication';
+import { supabase } from '@/integrations/supabase/client';
 
 export const UserProfileSection = () => {
   const { user, logout } = useAuth();
@@ -21,6 +22,39 @@ export const UserProfileSection = () => {
   const { language, setLanguage, t } = useApp();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  const [isReseller, setIsReseller] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadResellerStatus = async () => {
+      if (!user?.id) {
+        if (mounted) setIsReseller(false);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('is_reseller')
+        .eq('id', user.id)
+        .single();
+
+      if (!mounted) return;
+      if (error) {
+        // Fail safe: if we can't determine status, keep default (registration)
+        setIsReseller(false);
+        return;
+      }
+
+      setIsReseller(Boolean(data?.is_reseller));
+    };
+
+    loadResellerStatus();
+    return () => {
+      mounted = false;
+    };
+  }, [user?.id]);
 
   const handleLanguageChange = (newLanguage: 'bn' | 'en') => {
     setLanguage(newLanguage);
@@ -93,7 +127,7 @@ export const UserProfileSection = () => {
             </DropdownMenuItem>
           )}
           <DropdownMenuItem asChild>
-            <Link to="/reseller-registration" className="flex items-center gap-2 w-full">
+            <Link to={isReseller ? "/reseller-dashboard" : "/reseller-registration"} className="flex items-center gap-2 w-full">
               <ShoppingBag className="h-4 w-4" /> 
               <span>{language === 'bn' ? 'রিসেলার হন' : 'Become a Reseller'}</span>
             </Link>
