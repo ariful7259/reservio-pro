@@ -104,13 +104,19 @@ export const useWalletPayment = () => {
         .from('wallet_transactions')
         .insert({
           wallet_id: walletId,
-          amount: -amount,
+           // NOTE: DB has a constraint (positive_amount) that requires amount to be positive.
+           // We store direction in metadata while wallet balance update reflects the debit.
+           amount: amount,
           transaction_type: transactionType,
           description,
           sender_id: user.id,
           status: 'completed',
           payment_method: 'wallet',
-          metadata: metadata as any
+           metadata: {
+             ...metadata,
+             direction: 'debit',
+             debited_amount: amount,
+           } as any
         })
         .select()
         .single();
