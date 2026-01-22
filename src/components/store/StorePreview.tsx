@@ -247,7 +247,7 @@ const StorePreview: React.FC<StorePreviewProps> = ({ theme, storeName }) => {
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
             {getProductData().map((product, idx) => (
               <div key={idx} className={cn("border rounded-lg overflow-hidden bg-white hover:shadow-md transition-shadow", getCardStyle())}>
                 <div className="h-48 overflow-hidden">
