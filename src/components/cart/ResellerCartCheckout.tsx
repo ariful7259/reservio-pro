@@ -28,6 +28,14 @@ import MarginCalculator from './MarginCalculator';
 import CheckoutProgressIndicator from './CheckoutProgressIndicator';
 import WalletBalanceIndicator from '@/components/payment/WalletBalanceIndicator';
 import WalletPaymentConfirmDialog from '@/components/payment/WalletPaymentConfirmDialog';
+import { useSavedDeliveryAddresses } from '@/hooks/useSavedDeliveryAddresses';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const paymentMethods = [
   { id: 'wallet', name: 'ওয়ালেট', icon: <Wallet className="h-4 w-4" />, highlight: true },
@@ -75,6 +83,32 @@ const ResellerCartCheckout: React.FC = () => {
     area: '',
     postalCode: ''
   });
+
+  const {
+    savedAddresses,
+    defaultAddressId,
+    getById: getSavedAddressById,
+    saveAddress,
+    removeAddress,
+    setDefaultAddress,
+  } = useSavedDeliveryAddresses();
+
+  const [selectedSavedAddressId, setSelectedSavedAddressId] = useState<string>('');
+
+  // Load default saved address once (if exists)
+  useEffect(() => {
+    if (!defaultAddressId) return;
+    const saved = getSavedAddressById(defaultAddressId);
+    if (!saved) return;
+    setDeliveryAddress((prev) => ({
+      ...prev,
+      ...saved.address,
+      // keep profile-prefill if saved value is empty
+      fullName: saved.address.fullName || prev.fullName,
+      phone: saved.address.phone || prev.phone,
+    }));
+    setSelectedSavedAddressId(defaultAddressId);
+  }, [defaultAddressId, getSavedAddressById]);
 
   // Check if user is a reseller
   useEffect(() => {
@@ -488,6 +522,102 @@ const ResellerCartCheckout: React.FC = () => {
       </Card>
 
       {/* Delivery Address Form */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between gap-3">
+            <span>সেভড ঠিকানা</span>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const label = window.prompt('ঠিকানাটির নাম দিন (যেমন: বাসা / অফিস)');
+                  if (!label) return;
+                  const saved = saveAddress(label, deliveryAddress, { setDefault: true });
+                  if (saved) {
+                    // select the (new) default address
+                    // defaultAddressId will update from hook; keep UI responsive
+                    // by setting selection to the latest matched label if possible
+                    const match = savedAddresses.find(
+                      (a) => a.label.toLowerCase() === label.trim().toLowerCase()
+                    );
+                    if (match) setSelectedSavedAddressId(match.id);
+                  }
+                }}
+              >
+                এই ঠিকানা সেভ করুন
+              </Button>
+            </div>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {savedAddresses.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              এখনো কোনো ঠিকানা সেভ করা নেই। একবার ঠিকানা লিখে “এই ঠিকানা সেভ করুন” দিন—পরেরবার আর লিখতে হবে না।
+            </p>
+          ) : (
+            <div className="grid gap-3 md:grid-cols-[1fr_auto_auto] items-start">
+              <div className="space-y-2">
+                <Select
+                  value={selectedSavedAddressId}
+                  onValueChange={(id) => {
+                    setSelectedSavedAddressId(id);
+                    const saved = getSavedAddressById(id);
+                    if (saved) {
+                      setDeliveryAddress((prev) => ({
+                        ...prev,
+                        ...saved.address,
+                        fullName: saved.address.fullName || prev.fullName,
+                        phone: saved.address.phone || prev.phone,
+                      }));
+                      setDefaultAddress(id);
+                    }
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="সেভড ঠিকানা নির্বাচন করুন" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background border shadow-lg z-50">
+                    {savedAddresses
+                      .slice()
+                      .sort((a, b) => b.updatedAt - a.updatedAt)
+                      .map((a) => (
+                        <SelectItem key={a.id} value={a.id}>
+                          {a.label}{a.id === defaultAddressId ? ' (ডিফল্ট)' : ''}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+                {selectedSavedAddressId && getSavedAddressById(selectedSavedAddressId) && (
+                  <p className="text-xs text-muted-foreground">
+                    {(() => {
+                      const a = getSavedAddressById(selectedSavedAddressId)!.address;
+                      const parts = [a.area, a.city].filter(Boolean).join(', ');
+                      return `${parts} — ${a.address}`;
+                    })()}
+                  </p>
+                )}
+              </div>
+
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!selectedSavedAddressId}
+                onClick={() => {
+                  if (!selectedSavedAddressId) return;
+                  const ok = window.confirm('এই ঠিকানা মুছে ফেলতে চান?');
+                  if (!ok) return;
+                  removeAddress(selectedSavedAddressId);
+                  setSelectedSavedAddressId('');
+                }}
+              >
+                ডিলিট
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       <DeliveryAddressForm
         address={deliveryAddress}
         onChange={setDeliveryAddress}
@@ -533,14 +663,14 @@ const ResellerCartCheckout: React.FC = () => {
                   disabled={isDisabled}
                 >
                   {isWallet && hasBalance && (
-                    <Badge className="absolute -top-2 -right-2 text-[10px] px-1.5 bg-green-500">
+                    <Badge className="absolute -top-2 -right-2 text-[10px] px-1.5">
                       প্রস্তাবিত
                     </Badge>
                   )}
                   {method.icon}
                   <span>{method.name}</span>
                   {isWallet && (
-                    <span className={`text-xs ${hasBalance ? 'text-green-600' : 'text-muted-foreground'}`}>
+                    <span className={`text-xs ${hasBalance ? 'text-primary' : 'text-muted-foreground'}`}>
                       ৳{walletBalance.toLocaleString('bn-BD')}
                     </span>
                   )}
@@ -574,7 +704,7 @@ const ResellerCartCheckout: React.FC = () => {
           </div>
           
           {hasResellItems() && (
-            <div className="flex justify-between text-green-600">
+            <div className="flex justify-between text-primary">
               <span>রিসেলার মার্জিন</span>
               <span>+{formatPrice(calculateTotalMargin())}</span>
             </div>
@@ -594,23 +724,23 @@ const ResellerCartCheckout: React.FC = () => {
             <span className="text-primary">{formatPrice(calculateFinalPrice())}</span>
           </div>
 
-          {hasResellItems() && (
-            <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3 text-sm">
-              <p className="text-amber-800 dark:text-amber-200">
-                <strong>রিসেলার নোট:</strong> অর্ডার সম্পন্ন হলে ৩-৫ কার্যদিবসের মধ্যে আপনার ড্যাশবোর্ড ব্যালেন্স আপডেট হবে।
-              </p>
-            </div>
-          )}
+           {hasResellItems() && (
+             <div className="bg-muted/40 border border-border rounded-lg p-3 text-sm">
+               <p className="text-foreground">
+                 <strong>রিসেলার নোট:</strong> অর্ডার সম্পন্ন হলে ৩-৫ কার্যদিবসের মধ্যে আপনার ড্যাশবোর্ড ব্যালেন্স আপডেট হবে।
+               </p>
+             </div>
+           )}
 
-          {!isAddressValid() && (
-            <div className="flex items-center gap-2 text-sm text-amber-600">
+           {!isAddressValid() && (
+             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <AlertCircle className="h-4 w-4" />
               <span>ডেলিভারি ঠিকানা সম্পূর্ণ করুন</span>
             </div>
           )}
           
-          {!selectedPaymentMethod && (
-            <div className="flex items-center gap-2 text-sm text-amber-600">
+           {!selectedPaymentMethod && (
+             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <AlertCircle className="h-4 w-4" />
               <span>পেমেন্ট মেথড নির্বাচন করুন</span>
             </div>
