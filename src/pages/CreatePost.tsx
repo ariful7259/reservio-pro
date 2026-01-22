@@ -13,6 +13,7 @@ import { LocationSelector } from '@/components/create-post/LocationSelector';
 import { ImageUpload } from '@/components/create-post/ImageUpload';
 import { VideoUpload } from '@/components/create-post/VideoUpload';
 import { PostTypeFields } from '@/components/create-post/PostTypeFields';
+import RentalDetailsTabs from '@/components/rentals/RentalDetailsTabs';
 import { 
   Building, 
   ShoppingBag, 
@@ -261,6 +262,30 @@ const CreatePost = () => {
                     onPrevVideo={prevVideo}
                   />
                 </div>
+
+                {postType === 'rental' && (
+                  <div className="pt-2">
+                    <div className="mb-2">
+                      <h3 className="text-sm font-medium">প্রিভিউ</h3>
+                      <p className="text-xs text-muted-foreground">
+                        আপনি যা লিখছেন সেটাই নিচের “বিবরণ/বৈশিষ্ট্য/অবস্থান” এ live দেখাবে।
+                      </p>
+                    </div>
+                    <RentalDetailsTabs
+                      compact
+                      data={{
+                        id: 'create-preview',
+                        description: formData.description,
+                        createdAt: new Date(),
+                        period: formData.period,
+                        category: formData.category,
+                        location: formData.location,
+                        latitude: formData.latitude,
+                        longitude: formData.longitude,
+                      }}
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="flex gap-3">

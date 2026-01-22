@@ -10,6 +10,7 @@ import CategoryTabs from "./CategoryTabs";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/hooks/use-toast";
+import RentalDetailsTabs from "@/components/rentals/RentalDetailsTabs";
 
 interface FeaturedListing {
   id: string;
@@ -19,6 +20,12 @@ interface FeaturedListing {
   image: string;
   category: string;
   path: string;
+  description?: string;
+  latitude?: number;
+  longitude?: number;
+  period?: string;
+  createdAt?: string | Date;
+  tags?: string;
 }
 
 interface FeaturedListingsProps {
@@ -302,59 +309,27 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({ allListings }) => {
                     </div>
                   </div>
 
-                  {/* Detailed Information */}
-                  <div className="bg-gray-50 p-4 rounded-lg space-y-3">
-                    <h4 className="font-semibold mb-3 border-b pb-2">বিবরণ</h4>
-                    
-                    <div className="space-y-2 text-sm">
-                      <p className="text-gray-700">
-                        এটি চট্টগ্রামের ৩ বেডরুমের অ্যাপার্টমেন্ট রয়েছে আধুনিক সুবিধা, বিশাল খেলার জায়গা এবং দক্ষিণমুখী বারান্দা।
-                        অ্যাপার্টমেন্টটি সম্পূর্ণ আসবাবযুক্ত এবং তাৎক্ষণিক ব্যবহারের জন্য প্রস্তুত, যা শিক্ষা প্রতিষ্ঠান, 
-                        শপিং মল এবং হাসপাতালের কাছাকাছি।
-                      </p>
+                  {/* Tabs like RentDetail (for rental listings) */}
+                  {selectedListing.category === "রেন্ট" ? (
+                    <RentalDetailsTabs
+                      data={{
+                        id: selectedListing.id,
+                        description: selectedListing.description,
+                        createdAt: selectedListing.createdAt,
+                        period: selectedListing.period,
+                        category: selectedListing.category,
+                        location: selectedListing.location,
+                        latitude: selectedListing.latitude,
+                        longitude: selectedListing.longitude,
+                        tags: selectedListing.tags,
+                      }}
+                    />
+                  ) : (
+                    <div className="rounded-lg border p-4">
+                      <h4 className="font-semibold mb-2">বিবরণ</h4>
+                      <p className="text-sm text-muted-foreground">{selectedListing.description || '—'}</p>
                     </div>
-
-                    {/* Property Details */}
-                    <div className="grid grid-cols-2 gap-3 mt-4 pt-3 border-t">
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span className="text-gray-600">অবস্থা:</span>
-                          <span className="font-medium">আবহবিক</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-600">ভাড়ার মেয়াদ:</span>
-                          <span className="font-medium">সর্বনিম্ন ৫ মাস</span>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span className="text-gray-600">আমানত:</span>
-                          <span className="font-medium">৫০,০০০</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-600">পোস্ট করা হয়েছে:</span>
-                          <span className="font-medium">২০২৫-০৪-০১</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Location */}
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-5 w-5 text-primary" />
-                    <span className="text-sm">{selectedListing.location}</span>
-                  </div>
-
-                  {/* Live Location Map */}
-                  <div className="bg-blue-50 p-3 rounded-lg">
-                    <h4 className="font-medium mb-2 flex items-center gap-2">
-                      <MapPin className="h-4 w-4" />
-                      লাইভ লোকেশন
-                    </h4>
-                    <div className="bg-gray-200 h-32 rounded-lg flex items-center justify-center">
-                      <span className="text-sm text-gray-500">ম্যাপ লোড হচ্ছে...</span>
-                    </div>
-                  </div>
+                  )}
 
                   {/* Contact Information */}
                   <div className="bg-green-50 p-3 rounded-lg">
