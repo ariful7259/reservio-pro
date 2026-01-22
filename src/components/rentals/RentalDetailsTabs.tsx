@@ -12,6 +12,10 @@ export interface RentalDetailsTabsData {
   createdAt?: string | Date;
   period?: string;
   rentDeposit?: string;
+  duration?: string;
+  timeUnit?: string;
+  price?: string;
+  discountPrice?: string;
   category?: string;
   location?: string;
   latitude?: number;
@@ -22,6 +26,7 @@ export interface RentalDetailsTabsData {
 
 interface RentalDetailsTabsProps {
   data: RentalDetailsTabsData;
+  kind?: 'rental' | 'service' | 'marketplace';
   compact?: boolean;
 }
 
@@ -50,7 +55,7 @@ const periodLabel = (period?: string) => {
   return period;
 };
 
-const RentalDetailsTabs: React.FC<RentalDetailsTabsProps> = ({ data, compact = false }) => {
+const RentalDetailsTabs: React.FC<RentalDetailsTabsProps> = ({ data, kind = 'rental', compact = false }) => {
   const [activeTab, setActiveTab] = useState<'details' | 'features' | 'location'>('details');
 
   const featureList = useMemo(() => {
@@ -89,14 +94,47 @@ const RentalDetailsTabs: React.FC<RentalDetailsTabsProps> = ({ data, compact = f
                 <h4 className="text-sm font-medium mb-1">পোস্ট করা হয়েছে</h4>
                 <p className="text-sm text-muted-foreground">{formatCreatedAt(data.createdAt)}</p>
               </div>
-              <div>
-                <h4 className="text-sm font-medium mb-1">ভাড়ার মেয়াদ</h4>
-                <p className="text-sm text-muted-foreground">{periodLabel(data.period)}</p>
-              </div>
-              <div>
-                <h4 className="text-sm font-medium mb-1">জামানত</h4>
-                <p className="text-sm text-muted-foreground">{data.rentDeposit || '—'}</p>
-              </div>
+
+              {kind === 'rental' && (
+                <>
+                  <div>
+                    <h4 className="text-sm font-medium mb-1">ভাড়ার মেয়াদ</h4>
+                    <p className="text-sm text-muted-foreground">{periodLabel(data.period)}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-medium mb-1">জামানত</h4>
+                    <p className="text-sm text-muted-foreground">{data.rentDeposit || '—'}</p>
+                  </div>
+                </>
+              )}
+
+              {kind === 'service' && (
+                <>
+                  <div>
+                    <h4 className="text-sm font-medium mb-1">সেবার সময়</h4>
+                    <p className="text-sm text-muted-foreground">
+                      {data.duration ? `${data.duration} ${data.timeUnit || ''}`.trim() : '—'}
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-medium mb-1">মূল্য</h4>
+                    <p className="text-sm text-muted-foreground">{data.price || '—'}</p>
+                  </div>
+                </>
+              )}
+
+              {kind === 'marketplace' && (
+                <>
+                  <div>
+                    <h4 className="text-sm font-medium mb-1">মূল্য</h4>
+                    <p className="text-sm text-muted-foreground">{data.price || '—'}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-medium mb-1">ছাড়ের মূল্য</h4>
+                    <p className="text-sm text-muted-foreground">{data.discountPrice || '—'}</p>
+                  </div>
+                </>
+              )}
             </div>
           </CardContent>
         </Card>

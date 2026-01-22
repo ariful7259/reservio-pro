@@ -263,7 +263,7 @@ const CreatePost = () => {
                   />
                 </div>
 
-                {postType === 'rental' && (
+                {(postType === 'rental' || postType === 'service' || postType === 'marketplace') && (
                   <div className="pt-2">
                     <div className="mb-2">
                       <h3 className="text-sm font-medium">প্রিভিউ</h3>
@@ -273,15 +273,21 @@ const CreatePost = () => {
                     </div>
                     <RentalDetailsTabs
                       compact
+                      kind={postType as any}
                       data={{
                         id: 'create-preview',
                         description: formData.description,
                         createdAt: new Date(),
-                        period: formData.period,
                         category: formData.category,
                         location: formData.location,
                         latitude: formData.latitude,
                         longitude: formData.longitude,
+                        price: formData.price,
+                        period: formData.period,
+                        duration: formData.duration,
+                        timeUnit: formData.timeUnit,
+                        discountPrice: formData.discountPrice,
+                        tags: formData.tags,
                       }}
                     />
                   </div>

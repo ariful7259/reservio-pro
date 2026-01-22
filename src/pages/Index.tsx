@@ -57,6 +57,8 @@ const postToFeaturedListing = (post: Post) => {
       description: post.description,
       latitude: post.latitude,
       longitude: post.longitude,
+      duration: post.duration,
+      timeUnit: post.timeUnit,
       createdAt: post.createdAt,
       path: `/services/${post.id}`
     };
@@ -71,6 +73,7 @@ const postToFeaturedListing = (post: Post) => {
       category: "মার্কেটপ্লেস",
       description: post.description,
       createdAt: post.createdAt,
+      discountPrice: post.discountPrice,
       tags: post.tags,
       path: `/product/${post.id}`
     };
