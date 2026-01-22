@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { 
+import {
   ShoppingCart, 
   Trash2, 
   MinusSquare, 
@@ -20,7 +20,8 @@ import {
   Wallet,
   Building2,
   Smartphone,
-  AlertCircle
+  AlertCircle,
+  Pencil
 } from 'lucide-react';
 import DeliveryAddressForm, { DeliveryAddress } from './DeliveryAddressForm';
 import ShippingMethodSelector, { getShippingMethodById } from './ShippingMethodSelector';
@@ -28,7 +29,7 @@ import MarginCalculator from './MarginCalculator';
 import CheckoutProgressIndicator from './CheckoutProgressIndicator';
 import WalletBalanceIndicator from '@/components/payment/WalletBalanceIndicator';
 import WalletPaymentConfirmDialog from '@/components/payment/WalletPaymentConfirmDialog';
-import { useSavedDeliveryAddresses } from '@/hooks/useSavedDeliveryAddresses';
+import { useUserAddresses } from '@/hooks/useUserAddresses';
 import {
   Select,
   SelectContent,
@@ -36,6 +37,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 const paymentMethods = [
   { id: 'wallet', name: 'ওয়ালেট', icon: <Wallet className="h-4 w-4" />, highlight: true },
@@ -85,15 +106,21 @@ const ResellerCartCheckout: React.FC = () => {
   });
 
   const {
-    savedAddresses,
+    addresses: savedAddresses,
     defaultAddressId,
     getById: getSavedAddressById,
-    saveAddress,
-    removeAddress,
+    createAddress,
+    updateAddress,
+    deleteAddress,
     setDefaultAddress,
-  } = useSavedDeliveryAddresses();
+  } = useUserAddresses();
 
   const [selectedSavedAddressId, setSelectedSavedAddressId] = useState<string>('');
+  const [addressDialogOpen, setAddressDialogOpen] = useState(false);
+  const [addressDialogMode, setAddressDialogMode] = useState<'create' | 'edit'>('create');
+  const [addressLabelDraft, setAddressLabelDraft] = useState('');
+  const [addressDraft, setAddressDraft] = useState<DeliveryAddress>(deliveryAddress);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
   // Load default saved address once (if exists)
   useEffect(() => {
@@ -109,6 +136,44 @@ const ResellerCartCheckout: React.FC = () => {
     }));
     setSelectedSavedAddressId(defaultAddressId);
   }, [defaultAddressId, getSavedAddressById]);
+
+  useEffect(() => {
+    setAddressDraft(deliveryAddress);
+  }, [deliveryAddress]);
+
+  const openCreateAddressDialog = () => {
+    setAddressDialogMode('create');
+    setAddressLabelDraft('');
+    setAddressDraft(deliveryAddress);
+    setAddressDialogOpen(true);
+  };
+
+  const openEditAddressDialog = () => {
+    if (!selectedSavedAddressId) return;
+    const saved = getSavedAddressById(selectedSavedAddressId);
+    if (!saved) return;
+    setAddressDialogMode('edit');
+    setAddressLabelDraft(saved.label);
+    setAddressDraft(saved.address);
+    setAddressDialogOpen(true);
+  };
+
+  const submitAddressDialog = async () => {
+    if (addressDialogMode === 'create') {
+      const id = await createAddress(addressLabelDraft, addressDraft, { setDefault: true });
+      if (id) {
+        setSelectedSavedAddressId(id);
+        setAddressDialogOpen(false);
+      }
+      return;
+    }
+
+    if (!selectedSavedAddressId) return;
+    const ok = await updateAddress(selectedSavedAddressId, addressLabelDraft, addressDraft);
+    if (ok) {
+      setAddressDialogOpen(false);
+    }
+  };
 
   // Check if user is a reseller
   useEffect(() => {
@@ -521,31 +586,88 @@ const ResellerCartCheckout: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Delivery Address Form */}
+      {/* Saved Address: Add/Edit/Delete (Supabase) */}
+
+      <Dialog open={addressDialogOpen} onOpenChange={setAddressDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{addressDialogMode === 'create' ? 'নতুন ঠিকানা সেভ করুন' : 'সেভড ঠিকানা এডিট করুন'}</DialogTitle>
+            <DialogDescription>
+              {addressDialogMode === 'create'
+                ? 'একবার সেভ করলে পরেরবার ড্রপডাউন থেকে সিলেক্ট করতে পারবেন।'
+                : 'লেবেল বা ঠিকানা আপডেট করুন।'}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>লেবেল</Label>
+              <div className="flex flex-wrap gap-2">
+                {['Home', 'Office'].map((lbl) => (
+                  <Button
+                    key={lbl}
+                    type="button"
+                    variant={addressLabelDraft.trim().toLowerCase() === lbl.toLowerCase() ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setAddressLabelDraft(lbl)}
+                  >
+                    {lbl}
+                  </Button>
+                ))}
+              </div>
+              <Input
+                value={addressLabelDraft}
+                onChange={(e) => setAddressLabelDraft(e.target.value)}
+                placeholder="যেমন: Home / Office / বাসা"
+              />
+            </div>
+
+            <div>
+              <DeliveryAddressForm address={addressDraft} onChange={setAddressDraft} />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setAddressDialogOpen(false)}>
+              বাতিল
+            </Button>
+            <Button onClick={submitAddressDialog}>
+              {addressDialogMode === 'create' ? 'সেভ করুন' : 'আপডেট করুন'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>ঠিকানা ডিলিট করবেন?</AlertDialogTitle>
+            <AlertDialogDescription>
+              এই ঠিকানাটি ডিলিট করলে আর ফিরিয়ে আনা যাবে না।
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>বাতিল</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={async () => {
+                if (!selectedSavedAddressId) return;
+                const ok = await deleteAddress(selectedSavedAddressId);
+                if (ok) setSelectedSavedAddressId('');
+              }}
+            >
+              ডিলিট
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center justify-between gap-3">
             <span>সেভড ঠিকানা</span>
             <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  const label = window.prompt('ঠিকানাটির নাম দিন (যেমন: বাসা / অফিস)');
-                  if (!label) return;
-                  const saved = saveAddress(label, deliveryAddress, { setDefault: true });
-                  if (saved) {
-                    // select the (new) default address
-                    // defaultAddressId will update from hook; keep UI responsive
-                    // by setting selection to the latest matched label if possible
-                    const match = savedAddresses.find(
-                      (a) => a.label.toLowerCase() === label.trim().toLowerCase()
-                    );
-                    if (match) setSelectedSavedAddressId(match.id);
-                  }
-                }}
-              >
-                এই ঠিকানা সেভ করুন
+              <Button variant="outline" size="sm" onClick={openCreateAddressDialog}>
+                নতুন ঠিকানা যোগ করুন
               </Button>
             </div>
           </CardTitle>
@@ -553,14 +675,14 @@ const ResellerCartCheckout: React.FC = () => {
         <CardContent className="space-y-3">
           {savedAddresses.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              এখনো কোনো ঠিকানা সেভ করা নেই। একবার ঠিকানা লিখে “এই ঠিকানা সেভ করুন” দিন—পরেরবার আর লিখতে হবে না।
+              এখনো কোনো ঠিকানা সেভ করা নেই। “নতুন ঠিকানা যোগ করুন” থেকে Home/Office হিসেবে সেভ করুন।
             </p>
           ) : (
             <div className="grid gap-3 md:grid-cols-[1fr_auto_auto] items-start">
               <div className="space-y-2">
                 <Select
                   value={selectedSavedAddressId}
-                  onValueChange={(id) => {
+                  onValueChange={async (id) => {
                     setSelectedSavedAddressId(id);
                     const saved = getSavedAddressById(id);
                     if (saved) {
@@ -570,7 +692,7 @@ const ResellerCartCheckout: React.FC = () => {
                         fullName: saved.address.fullName || prev.fullName,
                         phone: saved.address.phone || prev.phone,
                       }));
-                      setDefaultAddress(id);
+                      await setDefaultAddress(id);
                     }
                   }}
                 >
@@ -580,10 +702,11 @@ const ResellerCartCheckout: React.FC = () => {
                   <SelectContent className="bg-background border shadow-lg z-50">
                     {savedAddresses
                       .slice()
-                      .sort((a, b) => b.updatedAt - a.updatedAt)
+                      .sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''))
                       .map((a) => (
                         <SelectItem key={a.id} value={a.id}>
-                          {a.label}{a.id === defaultAddressId ? ' (ডিফল্ট)' : ''}
+                          {a.label}
+                          {a.id === defaultAddressId ? ' (ডিফল্ট)' : ''}
                         </SelectItem>
                       ))}
                   </SelectContent>
@@ -601,17 +724,22 @@ const ResellerCartCheckout: React.FC = () => {
 
               <Button
                 variant="outline"
-                size="sm"
+                size="icon"
+                className="h-9 w-9"
                 disabled={!selectedSavedAddressId}
-                onClick={() => {
-                  if (!selectedSavedAddressId) return;
-                  const ok = window.confirm('এই ঠিকানা মুছে ফেলতে চান?');
-                  if (!ok) return;
-                  removeAddress(selectedSavedAddressId);
-                  setSelectedSavedAddressId('');
-                }}
+                onClick={openEditAddressDialog}
               >
-                ডিলিট
+                <Pencil className="h-4 w-4" />
+              </Button>
+
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9"
+                disabled={!selectedSavedAddressId}
+                onClick={() => setConfirmDeleteOpen(true)}
+              >
+                <Trash2 className="h-4 w-4" />
               </Button>
             </div>
           )}
