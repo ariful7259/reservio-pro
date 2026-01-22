@@ -102,7 +102,8 @@ export const VideoCarousel = () => {
     setTimeout(() => {
       switch (ad.type) {
         case 'service':
-          navigate(`/services/${ad.serviceId || '1'}`);
+          // Open service checkout/booking flow
+          navigate(`/service-booking/${ad.serviceId || '1'}`);
           break;
         case 'product':
           navigate(`/product/${ad.productId || '1'}`);
