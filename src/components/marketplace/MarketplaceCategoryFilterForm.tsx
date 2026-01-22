@@ -3,8 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { MapPin, DollarSign } from 'lucide-react';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 
 interface MarketplaceCategoryFilterFormProps {
@@ -43,10 +42,11 @@ const MarketplaceCategoryFilterForm: React.FC<MarketplaceCategoryFilterFormProps
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+    // Note: The parent (category card) provides the container styling.
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {/* Subcategory Selector */}
-      <div>
-        <label className="block text-sm font-medium mb-2">সাব-ক্যাটাগরি</label>
+      <div className="space-y-2">
+        <Label className="text-sm font-medium">সাব-ক্যাটাগরি</Label>
         <Select value={selectedSubcategory} onValueChange={onSubcategoryChange}>
           <SelectTrigger>
             <SelectValue placeholder="সাব-ক্যাটাগরি নির্বাচন করুন" />
@@ -61,8 +61,8 @@ const MarketplaceCategoryFilterForm: React.FC<MarketplaceCategoryFilterFormProps
       </div>
 
       {/* Location Selector */}
-      <div>
-        <label className="block text-sm font-medium mb-2">এলাকা</label>
+      <div className="space-y-2">
+        <Label className="text-sm font-medium">এলাকা</Label>
         <Select value={selectedLocation} onValueChange={onLocationChange}>
           <SelectTrigger>
             <SelectValue placeholder="এলাকা নির্বাচন করুন" />
@@ -79,8 +79,8 @@ const MarketplaceCategoryFilterForm: React.FC<MarketplaceCategoryFilterFormProps
       </div>
 
       {/* Price Range Filter */}
-      <div>
-        <label className="block text-sm font-medium mb-2">মূল্য পরিসীমা</label>
+      <div className="space-y-2">
+        <Label className="text-sm font-medium">মূল্য পরিসীমা</Label>
         <div className="flex gap-2">
           <Input
             type="number"
