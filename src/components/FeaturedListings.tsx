@@ -309,27 +309,28 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({ allListings }) => {
                     </div>
                   </div>
 
-                  {/* Tabs like RentDetail (for rental listings) */}
-                  {selectedListing.category === "রেন্ট" ? (
-                    <RentalDetailsTabs
-                      data={{
-                        id: selectedListing.id,
-                        description: selectedListing.description,
-                        createdAt: selectedListing.createdAt,
-                        period: selectedListing.period,
-                        category: selectedListing.category,
-                        location: selectedListing.location,
-                        latitude: selectedListing.latitude,
-                        longitude: selectedListing.longitude,
-                        tags: selectedListing.tags,
-                      }}
-                    />
-                  ) : (
-                    <div className="rounded-lg border p-4">
-                      <h4 className="font-semibold mb-2">বিবরণ</h4>
-                      <p className="text-sm text-muted-foreground">{selectedListing.description || '—'}</p>
-                    </div>
-                  )}
+                  {/* Tabs like RentDetail (all types) */}
+                  <RentalDetailsTabs
+                    kind={
+                      selectedListing.category === 'রেন্ট'
+                        ? 'rental'
+                        : selectedListing.category === 'সার্ভিস'
+                          ? 'service'
+                          : 'marketplace'
+                    }
+                    data={{
+                      id: selectedListing.id,
+                      description: selectedListing.description,
+                      createdAt: selectedListing.createdAt,
+                      period: selectedListing.period,
+                      category: selectedListing.category,
+                      location: selectedListing.location,
+                      latitude: selectedListing.latitude,
+                      longitude: selectedListing.longitude,
+                      tags: selectedListing.tags,
+                      price: selectedListing.price,
+                    }}
+                  />
 
                   {/* Contact Information */}
                   <div className="bg-green-50 p-3 rounded-lg">
