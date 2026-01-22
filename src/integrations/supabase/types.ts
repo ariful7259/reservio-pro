@@ -1144,6 +1144,15 @@ export type Database = {
         }
         Returns: boolean
       }
+      process_wallet_debit: {
+        Args: {
+          p_amount: number
+          p_description: string
+          p_metadata?: Json
+          p_transaction_type: string
+        }
+        Returns: string
+      }
       reject_seller_application: {
         Args: { admin_user_id: string; application_id: string; notes?: string }
         Returns: boolean

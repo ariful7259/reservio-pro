@@ -99,50 +99,31 @@ export const useWalletPayment = () => {
     setIsLoading(true);
 
     try {
-      // Create transaction record
-      const { data: transaction, error: txError } = await supabase
-        .from('wallet_transactions')
-        .insert({
-          wallet_id: walletId,
-           // NOTE: DB has a constraint (positive_amount) that requires amount to be positive.
-           // We store direction in metadata while wallet balance update reflects the debit.
-           amount: amount,
-          transaction_type: transactionType,
-          description,
-          sender_id: user.id,
-          status: 'completed',
-          payment_method: 'wallet',
-           metadata: {
-             ...metadata,
-             direction: 'debit',
-             debited_amount: amount,
-           } as any
-        })
-        .select()
-        .single();
+      // Atomic debit (DB-side) to avoid race conditions and constraint violations.
+      const { data: txId, error: rpcError } = await supabase.rpc('process_wallet_debit', {
+        p_amount: amount,
+        p_transaction_type: transactionType,
+        p_description: description,
+        p_metadata: (metadata || {}) as any,
+      });
 
-      if (txError) throw txError;
+      if (rpcError) throw rpcError;
 
-      // Update wallet balance
-      const { error: updateError } = await supabase
-        .from('wallets')
-        .update({ 
-          balance: walletBalance - amount,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', walletId);
+      // Refresh local balance from DB (source of truth)
+      await fetchWalletBalance();
 
-      if (updateError) throw updateError;
-
-      // Update local state
-      setWalletBalance(prev => prev - amount);
-
-      return { 
-        success: true, 
-        transactionId: transaction.id 
+      return {
+        success: true,
+        transactionId: (txId as unknown as string) || undefined,
       };
     } catch (error: any) {
       console.error('Wallet payment error:', error);
+
+      const msg = (error?.message || '').toLowerCase();
+      if (msg.includes('insufficient balance')) {
+        return { success: false, error: 'ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই' };
+      }
+
       return { 
         success: false, 
         error: error.message || 'পেমেন্ট প্রক্রিয়াকরণে সমস্যা হয়েছে' 
@@ -150,7 +131,7 @@ export const useWalletPayment = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id, walletId, walletBalance, canPayFromWallet]);
+  }, [user?.id, walletId, canPayFromWallet, fetchWalletBalance]);
 
   // Process partial wallet payment
   const processPartialWalletPayment = useCallback(async (
