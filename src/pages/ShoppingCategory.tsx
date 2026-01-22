@@ -29,6 +29,7 @@ import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import MapView from '@/components/MapView';
 import SocialShareModal from '@/components/SocialShareModal';
+import ProductCard from '@/components/ProductCard';
 
 const ShoppingCategory = () => {
   const { id } = useParams<{ id: string }>();
@@ -465,52 +466,14 @@ const ShoppingCategory = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             {products.length > 0 ? (
               products.map(product => (
-                <Card 
+                <ProductCard
                   key={product.id}
-                  className="overflow-hidden cursor-pointer hover:shadow-md transition-all relative"
+                  product={product}
+                  variant="compact"
                   onClick={() => handleProductClick(product.id)}
-                >
-                  {product.isSponsored && (
-                    <Badge className="absolute top-2 left-2 bg-amber-500 hover:bg-amber-600 z-10">স্পন্সর্ড</Badge>
-                  )}
-                  <div className="relative">
-                    <img 
-                      src={product.image} 
-                      alt={product.name}
-                      className="aspect-square w-full object-cover"
-                    />
-                    <div className="absolute top-2 right-2 flex flex-col gap-2">
-                      <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full"
-                        onClick={(e) => handleBookmark(e, product.id)}>
-                        <Heart className="h-4 w-4 text-gray-600" />
-                      </Button>
-                      <Button variant="outline" size="icon" className="bg-white h-8 w-8 rounded-full"
-                        onClick={(e) => handleShare(e, product)}>
-                        <Share2 className="h-4 w-4 text-gray-600" />
-                      </Button>
-                    </div>
-                  </div>
-                  <CardContent className="p-3">
-                    <h3 className="font-medium text-sm line-clamp-1">{product.name}</h3>
-                    <div className="flex items-center text-xs text-muted-foreground my-1">
-                      <MapPin className="h-3 w-3 mr-1" /> {product.location}
-                    </div>
-                    <div className="flex items-center text-xs text-muted-foreground mb-1">
-                      <div className="flex items-center">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                        <span className="ml-1">{product.rating}</span>
-                      </div>
-                      <span className="mx-1">•</span>
-                      <span>{product.reviews} রিভিউ</span>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="text-sm font-bold text-primary">{product.price}</span>
-                      {product.originalPrice && (
-                        <span className="text-xs text-muted-foreground line-through ml-2">{product.originalPrice}</span>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
+                  onBookmark={handleBookmark}
+                  onShare={handleShare}
+                />
               ))
             ) : (
               <div className="col-span-4 text-center py-12">

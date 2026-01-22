@@ -226,6 +226,7 @@ const AllRentals = () => {
             <RentalCard
               key={`${rental.source}-${rental.id}-${index}`}
               listing={rental}
+              variant="compact"
               onBookmark={handleBookmark}
               onShare={handleShare}
               onClick={() => navigate(`/rent-details/${rental.id}`)}

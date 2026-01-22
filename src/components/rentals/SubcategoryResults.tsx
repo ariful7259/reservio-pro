@@ -53,6 +53,7 @@ const SubcategoryResults: React.FC<SubcategoryResultsProps> = ({
               featured: item.featured,
               availability: item.availability
             }}
+            variant="compact"
             onBookmark={onBookmark}
             onShare={onShare}
             onClick={() => onItemClick(item)}

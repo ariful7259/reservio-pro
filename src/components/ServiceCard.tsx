@@ -17,6 +17,7 @@ interface ServiceCardProps {
   tags?: string[];
   buttonLabel?: string;
   onClick: (id: string) => void;
+  variant?: 'default' | 'compact';
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({
@@ -31,8 +32,10 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   tags = [],
   buttonLabel = "বুক করুন",
   onClick,
+  variant = 'default',
 }) => {
   const discountedPrice = discount ? price - (price * discount) / 100 : price;
+  const isCompact = variant === 'compact';
 
   // CSS ভেরিয়েবলগুলি থেকে স্টাইল পাবে - এই ভেরিয়েবলগুলি অ্যাডমিন প্যানেল থেকে সেট করা হবে
   const cardStyle = {
@@ -46,6 +49,14 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
     '--service-card-hover-scale': 'var(--service-card-hover-scale, 1.05)',
   } as React.CSSProperties;
 
+  const compactOverrides = isCompact
+    ? ({
+        '--service-card-image-height': 'var(--service-card-image-height-compact, 10rem)',
+        '--service-card-title-size': 'var(--service-card-title-size-compact, 1rem)',
+        '--service-card-hover-scale': 'var(--service-card-hover-scale-compact, 1.02)',
+      } as React.CSSProperties)
+    : ({} as React.CSSProperties);
+
   return (
     <Card 
       className="overflow-hidden border service-card transition-all duration-300 hover:shadow-md hover:scale-105 cursor-pointer"
@@ -54,7 +65,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         boxShadow: 'var(--service-card-shadow)',
         backgroundColor: 'var(--service-card-background)',
         transition: `all var(--service-card-transition-speed) ease-in-out`,
-        ...cardStyle
+        ...cardStyle,
+        ...compactOverrides
       }}
     >
       <div 
@@ -70,7 +82,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         />
       </div>
       <CardContent 
-        className="p-4"
+        className={isCompact ? "p-3 sm:p-4" : "p-4"}
         style={{
           color: 'var(--service-card-text-color)'
         }}
@@ -85,9 +97,9 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
             >
               {title}
             </h3>
-            <p className="text-muted-foreground text-sm">{provider}</p>
+            <p className={isCompact ? "text-muted-foreground text-xs sm:text-sm" : "text-muted-foreground text-sm"}>{provider}</p>
           </div>
-          <div className="flex items-center gap-1 bg-amber-100 px-2 py-1 rounded text-amber-700">
+          <div className={isCompact ? "flex items-center gap-1 bg-amber-100 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded text-amber-700" : "flex items-center gap-1 bg-amber-100 px-2 py-1 rounded text-amber-700"}>
             <Star className="h-3 w-3 fill-amber-500 text-amber-500" />
             <span className="text-xs font-medium">{rating.toFixed(1)}</span>
           </div>
@@ -99,7 +111,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
               ৳{discountedPrice}
             </span>
             {discount && (
-              <span className="text-muted-foreground text-sm line-through">
+              <span className={isCompact ? "text-muted-foreground text-xs sm:text-sm line-through" : "text-muted-foreground text-sm line-through"}>
                 ৳{price}
               </span>
             )}
@@ -117,10 +129,10 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           </div>
         </div>
       </CardContent>
-      <CardFooter className="p-4 pt-0">
+      <CardFooter className={isCompact ? "p-3 sm:p-4 pt-0" : "p-4 pt-0"}>
         <Button
           variant="default"
-          className="w-full"
+          className={isCompact ? "w-full h-8 sm:h-10 text-xs sm:text-sm" : "w-full"}
           onClick={() => onClick(id)}
         >
           {buttonLabel}
