@@ -20,14 +20,14 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
 }) => (
   <div className="mb-8">
     <h2 className="text-lg font-medium mb-4">ক্যাটাগরি</h2>
-    <div className="grid grid-cols-4 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
       {rentCategories.slice(0, 8).map((category, index) =>
         renderCategoryItem(category, index)
       )}
     </div>
     <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className="w-full mt-3">
       <CollapsibleContent className="mt-3">
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {rentCategories.slice(8).map((category, index) =>
             renderCategoryItem(category, index + 8)
           )}
