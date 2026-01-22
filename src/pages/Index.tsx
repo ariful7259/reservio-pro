@@ -38,6 +38,11 @@ const postToFeaturedListing = (post: Post) => {
       price: `৳${post.price || '---'}/${post.period === 'month' ? 'মাস' : post.period === 'day' ? 'দিন' : 'ঘন্টা'}`,
       image: displayImage,
       category: "রেন্ট",
+      description: post.description,
+      latitude: post.latitude,
+      longitude: post.longitude,
+      period: post.period,
+      createdAt: post.createdAt,
       path: `/rent-details/${post.id}`
     };
   }
@@ -49,6 +54,10 @@ const postToFeaturedListing = (post: Post) => {
       price: `৳${post.price || '---'}`,
       image: displayImage,
       category: "সার্ভিস",
+      description: post.description,
+      latitude: post.latitude,
+      longitude: post.longitude,
+      createdAt: post.createdAt,
       path: `/services/${post.id}`
     };
   }
@@ -60,6 +69,9 @@ const postToFeaturedListing = (post: Post) => {
       price: `৳${post.price || '---'}`,
       image: displayImage,
       category: "মার্কেটপ্লেস",
+      description: post.description,
+      createdAt: post.createdAt,
+      tags: post.tags,
       path: `/product/${post.id}`
     };
   }
