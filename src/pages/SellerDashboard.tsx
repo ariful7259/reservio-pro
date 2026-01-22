@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { 
   BarChart, 
   Download,
@@ -73,6 +73,20 @@ const SellerDashboard = () => {
     maintenanceRequests: 3, 
     newMessages: 7 
   });
+
+  const storeSlug = useMemo(() => {
+    const base = profile?.business_name
+      ? profile.business_name
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9\s-]/g, '')
+          .replace(/\s+/g, '-')
+          .replace(/-+/g, '-')
+      : '';
+
+    const settings = (profile?.marketplace_settings as any) || null;
+    return (settings?.storeSlug as string) || base;
+  }, [profile?.business_name, profile?.marketplace_settings]);
 
   // Check if store exists (has business_name in profile)
   const hasStore = profile?.business_name && profile.business_name.trim() !== '';
@@ -226,6 +240,19 @@ const SellerDashboard = () => {
         </div>
         
         <div className="flex gap-2 flex-wrap">
+          <Button
+            variant="outline"
+            onClick={() => {
+              if (storeSlug) {
+                window.open(`/store/${storeSlug}`, '_blank');
+              } else {
+                setShowStoreBuilder(true);
+              }
+            }}
+          >
+            <Store className="h-4 w-4 mr-2" />
+            আমার স্টোর দেখুন
+          </Button>
           <Button 
             variant="outline"
             onClick={() => setShowStoreBuilder(true)}
