@@ -511,26 +511,26 @@ const Services = () => {
                 </div>
               </div>
               
-              <CardContent className="p-4">
+              <CardContent className="p-3 sm:p-4">
                 <div className="flex items-start justify-between mb-2">
-                  <h3 className="font-semibold text-base line-clamp-1">{service.title}</h3>
+                  <h3 className="font-semibold text-sm sm:text-base line-clamp-1">{service.title}</h3>
                   <div className="flex items-center ml-2">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm ml-1">{service.rating}</span>
-                    <span className="text-xs text-muted-foreground ml-1">({service.reviews})</span>
+                    <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-yellow-400 text-yellow-400" />
+                    <span className="text-[12px] sm:text-sm ml-1">{service.rating}</span>
+                    <span className="text-[11px] sm:text-xs text-muted-foreground ml-1">({service.reviews})</span>
                   </div>
                 </div>
                 
-                <p className="text-sm text-muted-foreground mb-2">{service.provider}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mb-2">{service.provider}</p>
                 
-                <div className="flex items-center text-sm text-muted-foreground mb-2">
-                  <MapPin className="h-4 w-4 mr-1" />
-                  <span>{service.location}</span>
+                <div className="flex items-center text-xs sm:text-sm text-muted-foreground mb-2">
+                  <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
+                  <span className="line-clamp-1">{service.location}</span>
                 </div>
                 
-                <div className="flex items-center text-sm text-muted-foreground mb-3">
-                  <Clock className="h-4 w-4 mr-1" />
-                  <span>{language === 'bn' ? 'রেসপন্স টাইম: ' : 'Response: '}{service.responseTime}</span>
+                <div className="flex items-center text-xs sm:text-sm text-muted-foreground mb-3">
+                  <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
+                  <span className="line-clamp-1">{language === 'bn' ? 'রেসপন্স টাইম: ' : 'Response: '}{service.responseTime}</span>
                 </div>
                 
                 <div className="flex flex-wrap gap-1 mb-3">
@@ -542,13 +542,13 @@ const Services = () => {
                 </div>
                 
                 <div className="flex items-center justify-between">
-                  <p className="text-lg font-bold text-primary">{service.price}</p>
+                  <p className="text-base sm:text-lg font-bold text-primary">{service.price}</p>
                   <Button 
                     size="sm"
                     onClick={(e) => handleBookService(e, service.id)}
-                    className="hover:scale-105 transition-transform"
+                    className="h-7 sm:h-8 text-[11px] sm:text-sm hover:scale-105 transition-transform"
                   >
-                    <ArrowUpRight className="h-4 w-4 mr-1" />
+                    <ArrowUpRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
                     {language === 'bn' ? 'বুক করুন' : 'Book Now'}
                   </Button>
                 </div>

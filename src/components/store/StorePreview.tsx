@@ -250,15 +250,15 @@ const StorePreview: React.FC<StorePreviewProps> = ({ theme, storeName }) => {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
             {getProductData().map((product, idx) => (
               <div key={idx} className={cn("border rounded-lg overflow-hidden bg-white hover:shadow-md transition-shadow", getCardStyle())}>
-                <div className="h-48 overflow-hidden">
+                <div className="h-32 sm:h-48 overflow-hidden">
                   <img 
                     src={product.image} 
                     alt={product.name}
                     className="w-full h-full object-cover hover:scale-105 transition-transform"
                   />
                 </div>
-                <div className="p-4">
-                  <h3 className="font-medium mb-1">{product.name}</h3>
+                <div className="p-2 sm:p-4">
+                  <h3 className="font-medium mb-1 text-[13px] sm:text-base">{product.name}</h3>
                   <div className="flex items-center gap-1 mb-2">
                     {[...Array(5)].map((_, i) => (
                       <Star key={i} className="h-3 w-3 fill-amber-400 text-amber-400" />
@@ -267,7 +267,7 @@ const StorePreview: React.FC<StorePreviewProps> = ({ theme, storeName }) => {
                   </div>
                   <div className="flex items-center justify-between">
                     <p className={cn("font-bold", getAccentTextColor())}>{product.price}</p>
-                    <Button size="sm" className={cn("text-xs", getButtonStyle())}>
+                    <Button size="sm" className={cn("text-[11px] sm:text-xs h-7 sm:h-8", getButtonStyle())}>
                       <ShoppingCart className="h-3.5 w-3.5 mr-1.5" /> কার্টে যোগ করুন
                     </Button>
                   </div>

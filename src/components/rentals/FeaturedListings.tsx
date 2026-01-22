@@ -88,6 +88,7 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({
                   featured: true,
                   availability: true
                 }}
+                variant="compact"
                 onBookmark={(e) => handleWishlistToggle(e, listing)}
                 onShare={handleShare}
                 onClick={() => handleListingClick(listing.id)}
@@ -115,6 +116,7 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({
                   featured: true,
                   availability: true
                 }}
+                variant="compact"
                 onBookmark={(e) => handleWishlistToggle(e, listing)}
                 onShare={handleShare}
                 onClick={() => handleListingClick(listing.id)}

@@ -25,6 +25,7 @@ interface RentalCardProps {
   onShare?: (e: React.MouseEvent, listing: any) => void;
   onClick?: () => void;
   showActions?: boolean;
+  variant?: 'default' | 'compact';
 }
 
 const RentalCard: React.FC<RentalCardProps> = ({
@@ -32,8 +33,10 @@ const RentalCard: React.FC<RentalCardProps> = ({
   onBookmark,
   onShare,
   onClick,
-  showActions = true
+  showActions = true,
+  variant = 'default'
 }) => {
+  const isCompact = variant === 'compact';
   const navigate = useNavigate();
   const { toast } = useToast();
   const { addToCart } = useShoppingState();
@@ -104,27 +107,27 @@ const RentalCard: React.FC<RentalCardProps> = ({
             <Button 
               variant="outline" 
               size="icon" 
-              className="bg-white h-8 w-8 rounded-full" 
+              className={isCompact ? "bg-white h-7 w-7 rounded-full sm:h-8 sm:w-8" : "bg-white h-8 w-8 rounded-full"}
               onClick={handleBookmarkClick}
             >
-              <Heart className="h-4 w-4 text-gray-600" />
+              <Heart className={isCompact ? "h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-600" : "h-4 w-4 text-gray-600"} />
             </Button>
             <Button 
               variant="outline" 
               size="icon" 
-              className="bg-white h-8 w-8 rounded-full" 
+              className={isCompact ? "bg-white h-7 w-7 rounded-full sm:h-8 sm:w-8" : "bg-white h-8 w-8 rounded-full"}
               onClick={handleShareClick}
             >
-              <Share2 className="h-4 w-4 text-gray-600" />
+              <Share2 className={isCompact ? "h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-600" : "h-4 w-4 text-gray-600"} />
             </Button>
           </div>
         </div>
         
-        <div className="p-3">
-          <h3 className="font-medium text-sm line-clamp-1">{listing.title}</h3>
+        <div className={isCompact ? "p-2 sm:p-3" : "p-3"}>
+          <h3 className={isCompact ? "font-medium text-[13px] sm:text-sm line-clamp-1" : "font-medium text-sm line-clamp-1"}>{listing.title}</h3>
           <div className="flex items-center gap-1 mb-1">
             <MapPin className="h-3 w-3 text-muted-foreground" />
-            <p className="text-xs text-muted-foreground">{listing.location}</p>
+            <p className={isCompact ? "text-[11px] sm:text-xs text-muted-foreground" : "text-xs text-muted-foreground"}>{listing.location}</p>
           </div>
           
           {listing.rating && (
@@ -138,7 +141,7 @@ const RentalCard: React.FC<RentalCardProps> = ({
           )}
           
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-bold text-primary">{listing.price}</p>
+            <p className={isCompact ? "text-sm sm:text-sm font-bold text-primary" : "text-sm font-bold text-primary"}>{listing.price}</p>
             {listing.availability && (
               <Badge variant="outline" className="text-xs text-green-600">
                 উপলব্ধ
@@ -150,7 +153,7 @@ const RentalCard: React.FC<RentalCardProps> = ({
             <div className="flex gap-2 mt-2">
               <Button 
                 size="sm" 
-                className="flex-1 text-xs h-8"
+                className={isCompact ? "flex-1 text-[11px] sm:text-xs h-7 sm:h-8" : "flex-1 text-xs h-8"}
                 onClick={handleRentNow}
               >
                 ভাড়া দিন
@@ -158,7 +161,7 @@ const RentalCard: React.FC<RentalCardProps> = ({
               <Button 
                 size="sm" 
                 variant="outline"
-                className="h-8 px-2"
+                className={isCompact ? "h-7 sm:h-8 px-2" : "h-8 px-2"}
                 onClick={handleAddToCart}
               >
                 <ShoppingCart className="h-4 w-4" />
