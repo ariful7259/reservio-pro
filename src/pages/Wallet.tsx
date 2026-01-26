@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { SendMoneyDialog } from '@/components/wallet/SendMoneyDialog';
@@ -27,6 +28,7 @@ interface QRPaymentData {
 
 const Wallet = () => {
   const { toast } = useToast();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [balanceVisible, setBalanceVisible] = useState(true);
   const [walletBalance, setWalletBalance] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -41,6 +43,33 @@ const Wallet = () => {
   const [scannedPaymentData, setScannedPaymentData] = useState<QRPaymentData | null>(null);
   const [addMoneyDialogOpen, setAddMoneyDialogOpen] = useState(false);
   const [activeNavItem, setActiveNavItem] = useState<'home' | 'statement' | 'qr' | 'support' | 'more'>('home');
+
+  // Handle payment link from URL parameter
+  useEffect(() => {
+    const payParam = searchParams.get('pay');
+    if (payParam) {
+      try {
+        const decodedData = atob(payParam);
+        const paymentData = JSON.parse(decodedData) as QRPaymentData;
+        
+        if (paymentData.type === 'payment_request' && paymentData.amount && paymentData.user_id) {
+          setScannedPaymentData(paymentData);
+          setPaymentConfirmOpen(true);
+          
+          // Remove the pay parameter from URL after processing
+          searchParams.delete('pay');
+          setSearchParams(searchParams, { replace: true });
+        }
+      } catch (error) {
+        console.error('Error parsing payment link:', error);
+        toast({
+          title: 'ত্রুটি',
+          description: 'পেমেন্ট লিংক পার্স করতে সমস্যা হয়েছে',
+          variant: 'destructive'
+        });
+      }
+    }
+  }, [searchParams, setSearchParams, toast]);
 
   useEffect(() => {
     loadWalletData();
