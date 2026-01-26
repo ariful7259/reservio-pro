@@ -7,11 +7,22 @@ import { QRPaymentDialog } from '@/components/wallet/QRPaymentDialog';
 import { AddMoneyDialog } from '@/components/wallet/AddMoneyDialog';
 import { WalletQRScannerDialog } from '@/components/wallet/WalletQRScannerDialog';
 import { WalletStatement } from '@/components/wallet/WalletStatement';
+import { QRPaymentConfirmDialog } from '@/components/wallet/QRPaymentConfirmDialog';
 import WalletHeader from '@/components/wallet/WalletHeader';
 import WalletBalanceCard from '@/components/wallet/WalletBalanceCard';
 import WalletQuickActions from '@/components/wallet/WalletQuickActions';
 import WalletServiceCategories from '@/components/wallet/WalletServiceCategories';
 import WalletBottomNav from '@/components/wallet/WalletBottomNav';
+
+interface QRPaymentData {
+  type: string;
+  amount?: number;
+  user_id?: string;
+  name?: string;
+  phone?: string;
+  description?: string;
+  data?: string;
+}
 
 const Wallet = () => {
   const { toast } = useToast();
@@ -24,6 +35,8 @@ const Wallet = () => {
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
   const [qrScannerOpen, setQrScannerOpen] = useState(false);
   const [statementOpen, setStatementOpen] = useState(false);
+  const [paymentConfirmOpen, setPaymentConfirmOpen] = useState(false);
+  const [scannedPaymentData, setScannedPaymentData] = useState<QRPaymentData | null>(null);
   const [addMoneyDialogOpen, setAddMoneyDialogOpen] = useState(false);
   const [activeNavItem, setActiveNavItem] = useState<'home' | 'statement' | 'qr' | 'support' | 'more'>('home');
 
@@ -110,16 +123,25 @@ const Wallet = () => {
     }
   };
 
-  const handleQrScanSuccess = (data: any) => {
+  const handleQrScanSuccess = (data: QRPaymentData) => {
     console.log('QR Scan Result:', data);
-    if (data.type === 'payment_request') {
-      // Handle payment request
+    
+    // Check if it's a payment request or wallet receive QR
+    if (data.type === 'payment_request' || data.type === 'wallet_receive') {
+      setScannedPaymentData(data);
+      setPaymentConfirmOpen(true);
+    } else if (data.type === 'text' && data.data) {
+      // Plain text QR - show as toast
       toast({
-        title: 'পেমেন্ট রিকোয়েস্ট',
-        description: `৳${data.amount} পেমেন্ট করতে চান?`
+        title: 'QR কোড স্ক্যান হয়েছে',
+        description: data.data
+      });
+    } else {
+      toast({
+        title: 'QR ডেটা',
+        description: JSON.stringify(data)
       });
     }
-    setQrScannerOpen(false);
   };
 
   return (
@@ -187,6 +209,14 @@ const Wallet = () => {
       <WalletStatement
         open={statementOpen}
         onOpenChange={setStatementOpen}
+      />
+
+      <QRPaymentConfirmDialog
+        open={paymentConfirmOpen}
+        onOpenChange={setPaymentConfirmOpen}
+        paymentData={scannedPaymentData}
+        currentBalance={walletBalance}
+        onSuccess={loadWalletData}
       />
 
       <AddMoneyDialog
