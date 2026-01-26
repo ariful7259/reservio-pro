@@ -1,231 +1,95 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
-import { Send } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Send, Phone, Mail, Link2, QrCode } from 'lucide-react';
+import { SendByPhoneTab } from './send-money/SendByPhoneTab';
+import { SendByEmailTab } from './send-money/SendByEmailTab';
+import { SendByLinkTab } from './send-money/SendByLinkTab';
+import { SendByQRTab } from './send-money/SendByQRTab';
 
 interface SendMoneyDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   currentBalance: number;
   onSuccess: () => void;
+  onQrScanSuccess?: (data: any) => void;
 }
 
 export const SendMoneyDialog: React.FC<SendMoneyDialogProps> = ({
   open,
   onOpenChange,
   currentBalance,
-  onSuccess
+  onSuccess,
+  onQrScanSuccess
 }) => {
-  const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    recipientPhone: '',
-    amount: '',
-    description: ''
-  });
+  const [activeTab, setActiveTab] = useState<'phone' | 'email' | 'link' | 'qr'>('phone');
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  const handleClose = () => {
+    onOpenChange(false);
+  };
 
-    try {
-      const amount = parseFloat(formData.amount);
-      
-      if (amount <= 0) {
-        toast({
-          title: 'ত্রুটি',
-          description: 'সঠিক পরিমাণ লিখুন',
-          variant: 'destructive'
-        });
-        return;
-      }
-
-      if (amount > currentBalance) {
-        toast({
-          title: 'অপর্যাপ্ত ব্যালেন্স',
-          description: 'আপনার ওয়ালেটে যথেষ্ট টাকা নেই',
-          variant: 'destructive'
-        });
-        return;
-      }
-
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('User not found');
-
-      // Find recipient by phone
-      const { data: recipientProfile, error: recipientError } = await supabase
-        .from('profiles')
-        .select('id, full_name, phone')
-        .eq('phone', formData.recipientPhone)
-        .single();
-
-      if (recipientError || !recipientProfile) {
-        toast({
-          title: 'ত্রুটি',
-          description: 'প্রাপক খুঁজে পাওয়া যায়নি। ফোন নম্বর যাচাই করুন',
-          variant: 'destructive'
-        });
-        return;
-      }
-
-      if (recipientProfile.id === user.id) {
-        toast({
-          title: 'ত্রুটি',
-          description: 'নিজেকে টাকা পাঠাতে পারবেন না',
-          variant: 'destructive'
-        });
-        return;
-      }
-
-      // Get sender's wallet
-      const { data: senderWallet } = await supabase
-        .from('wallets')
-        .select('id, balance')
-        .eq('user_id', user.id)
-        .single();
-
-      if (!senderWallet) throw new Error('Wallet not found');
-
-      // Get or create recipient's wallet
-      let { data: recipientWallet } = await supabase
-        .from('wallets')
-        .select('id, balance')
-        .eq('user_id', recipientProfile.id)
-        .maybeSingle();
-
-      if (!recipientWallet) {
-        const { data: newWallet, error: walletError } = await supabase
-          .from('wallets')
-          .insert({ user_id: recipientProfile.id, balance: 0 })
-          .select()
-          .single();
-
-        if (walletError) throw walletError;
-        recipientWallet = newWallet;
-      }
-
-      // Create sender transaction
-      const { error: senderTxError } = await supabase
-        .from('wallet_transactions')
-        .insert({
-          wallet_id: senderWallet.id,
-          transaction_type: 'send',
-          amount: amount,
-          recipient_id: recipientProfile.id,
-          description: formData.description || `${recipientProfile.full_name} কে টাকা পাঠানো হয়েছে`,
-          payment_method: 'wallet',
-          status: 'completed',
-          metadata: { recipient_phone: formData.recipientPhone, recipient_name: recipientProfile.full_name }
-        });
-
-      if (senderTxError) throw senderTxError;
-
-      // Create recipient transaction
-      const { error: recipientTxError } = await supabase
-        .from('wallet_transactions')
-        .insert({
-          wallet_id: recipientWallet.id,
-          transaction_type: 'receive',
-          amount: amount,
-          sender_id: user.id,
-          description: formData.description || 'টাকা পেয়েছেন',
-          payment_method: 'wallet',
-          status: 'completed',
-          metadata: { sender_phone: formData.recipientPhone }
-        });
-
-      if (recipientTxError) throw recipientTxError;
-
-      // Update sender's wallet balance
-      const { error: senderBalanceError } = await supabase
-        .from('wallets')
-        .update({ balance: senderWallet.balance - amount })
-        .eq('id', senderWallet.id);
-
-      if (senderBalanceError) throw senderBalanceError;
-
-      // Update recipient's wallet balance
-      const { error: recipientBalanceError } = await supabase
-        .from('wallets')
-        .update({ balance: recipientWallet.balance + amount })
-        .eq('id', recipientWallet.id);
-
-      if (recipientBalanceError) throw recipientBalanceError;
-
-      toast({
-        title: 'সফল!',
-        description: `৳${amount} টাকা পাঠানো হয়েছে`
-      });
-
-      setFormData({ recipientPhone: '', amount: '', description: '' });
-      onOpenChange(false);
-      onSuccess();
-    } catch (error: any) {
-      toast({
-        title: 'ত্রুটি',
-        description: error.message,
-        variant: 'destructive'
-      });
-    } finally {
-      setLoading(false);
-    }
+  const handleQrScan = (data: any) => {
+    onOpenChange(false);
+    onQrScanSuccess?.(data);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
+      <DialogContent className="max-w-md p-0 overflow-hidden">
+        <DialogHeader className="p-4 pb-2">
           <DialogTitle className="flex items-center gap-2">
-            <Send className="h-5 w-5" />
+            <Send className="h-5 w-5 text-primary" />
             টাকা পাঠান
           </DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="recipientPhone">প্রাপকের ফোন নম্বর</Label>
-            <Input
-              id="recipientPhone"
-              type="tel"
-              placeholder="০১৭xxxxxxxx"
-              value={formData.recipientPhone}
-              onChange={(e) => setFormData({ ...formData, recipientPhone: e.target.value })}
-              required
+
+        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="w-full">
+          <TabsList className="grid w-full grid-cols-4 mx-4 mb-2" style={{ width: 'calc(100% - 32px)' }}>
+            <TabsTrigger value="phone" className="flex items-center gap-1 text-xs px-2">
+              <Phone className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">ফোন</span>
+            </TabsTrigger>
+            <TabsTrigger value="email" className="flex items-center gap-1 text-xs px-2">
+              <Mail className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">ইমেইল</span>
+            </TabsTrigger>
+            <TabsTrigger value="link" className="flex items-center gap-1 text-xs px-2">
+              <Link2 className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">লিংক</span>
+            </TabsTrigger>
+            <TabsTrigger value="qr" className="flex items-center gap-1 text-xs px-2">
+              <QrCode className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">QR</span>
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="phone" className="mt-0">
+            <SendByPhoneTab
+              currentBalance={currentBalance}
+              onSuccess={onSuccess}
+              onClose={handleClose}
             />
-          </div>
-          <div>
-            <Label htmlFor="amount">পরিমাণ (৳)</Label>
-            <Input
-              id="amount"
-              type="number"
-              step="0.01"
-              placeholder="০.০০"
-              value={formData.amount}
-              onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-              required
+          </TabsContent>
+
+          <TabsContent value="email" className="mt-0">
+            <SendByEmailTab
+              currentBalance={currentBalance}
+              onSuccess={onSuccess}
+              onClose={handleClose}
             />
-            <p className="text-sm text-muted-foreground mt-1">
-              বর্তমান ব্যালেন্স: ৳{currentBalance.toLocaleString()}
-            </p>
-          </div>
-          <div>
-            <Label htmlFor="description">বিবরণ (ঐচ্ছিক)</Label>
-            <Textarea
-              id="description"
-              placeholder="উদাহরণ: পণ্য কেনা, সার্ভিস পেমেন্ট"
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              rows={3}
+          </TabsContent>
+
+          <TabsContent value="link" className="mt-0">
+            <SendByLinkTab currentBalance={currentBalance} />
+          </TabsContent>
+
+          <TabsContent value="qr" className="mt-0">
+            <SendByQRTab
+              onScanSuccess={handleQrScan}
+              onClose={handleClose}
             />
-          </div>
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'প্রক্রিয়াধীন...' : 'টাকা পাঠান'}
-          </Button>
-        </form>
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   );
