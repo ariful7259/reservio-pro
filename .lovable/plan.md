@@ -1,179 +1,280 @@
 
-## টাকা পাঠানোর মাল্টি-মেথড সিস্টেম
 
-বর্তমানে `SendMoneyDialog` শুধুমাত্র ফোন নম্বর দিয়ে টাকা পাঠাতে পারে। আমরা এটিকে আপগ্রেড করে ৪টি পদ্ধতিতে টাকা পাঠানোর সুবিধা যোগ করব:
+## MVP Feature Toggle সিস্টেম
 
-### ফিচার সামারি
-
-| পদ্ধতি | কাজ |
-|--------|-----|
-| **ফোন নম্বর** | প্রাপকের ফোন নম্বর দিয়ে সরাসরি টাকা পাঠান |
-| **ইমেইল** | প্রাপকের ইমেইল দিয়ে টাকা পাঠান |
-| **লিংক** | পেমেন্ট লিংক তৈরি করে শেয়ার করুন (প্রাপক লিংকে ক্লিক করে টাকা রিসিভ করবে) |
-| **QR কোড** | QR স্ক্যান করে সরাসরি পেমেন্ট করুন |
+অ্যাডমিন প্যানেলে একটি নতুন "MVP কন্ট্রোল" সেকশন যোগ করা হবে যেখান থেকে অ্যাডমিন MVP-তে কোন ফিচার দেখাবে আর কোনটা লুকিয়ে রাখবে সেটা নির্ধারণ করতে পারবে। এই সেটিংস পরিবর্তন করলে ইউজার অ্যাপে সেই ফিচারগুলো অটোমেটিক হাইড হয়ে যাবে।
 
 ---
 
-### পরিবর্তনসমূহ
+### কাজের সারসংক্ষেপ
 
-#### 1. SendMoneyDialog আপগ্রেড (src/components/wallet/SendMoneyDialog.tsx)
-
-**বর্তমান অবস্থা:** শুধু ফোন নম্বর দিয়ে পাঠানো যায়
-
-**নতুন ডিজাইন:**
-- ৪টি ট্যাব সহ UI: `ফোন` | `ইমেইল` | `লিংক` | `QR`
-- প্রতিটি ট্যাবে আলাদা ইনপুট ফর্ম
-
-**ট্যাব বিবরণ:**
-
-1. **ফোন ট্যাব** (বিদ্যমান)
-   - ফোন নম্বর ইনপুট
-   - পরিমাণ ও বিবরণ
-   - সরাসরি পাঠান
-
-2. **ইমেইল ট্যাব** (নতুন)
-   - ইমেইল ইনপুট
-   - profiles টেবিল থেকে email দিয়ে প্রাপক খোঁজা
-   - একই লজিক ব্যবহার করে টাকা ট্রান্সফার
-
-3. **লিংক ট্যাব** (নতুন)
-   - পরিমাণ ও বিবরণ ইনপুট
-   - মেয়াদ নির্বাচন (15m, 1h, 24h, 7d)
-   - `send_payment_requests` টেবিলে সেভ
-   - এনকোডেড পেমেন্ট লিংক ও QR কোড জেনারেট
-   - লিংক কপি ও শেয়ার অপশন
-   - **প্রাপক লিংকে ক্লিক করলে টাকা তার ওয়ালেটে চলে যাবে**
-
-4. **QR ট্যাব** (নতুন)
-   - ক্যামেরা দিয়ে QR স্ক্যান
-   - গ্যালারি থেকে QR সিলেক্ট
-   - স্ক্যান করা তথ্য দিয়ে পেমেন্ট কনফার্মেশন
+| কম্পোনেন্ট | কাজ |
+|------------|-----|
+| **FeatureConfigContext** | ফিচার টগল স্টেট ম্যানেজমেন্ট |
+| **MVPFeatureControl** | অ্যাডমিন UI - ফিচার অন/অফ করার প্যানেল |
+| **useFeatureConfig hook** | ফিচার ভিসিবিলিটি চেক করার হুক |
+| **UI আপডেট** | BottomNav, Sidebar, Routes কন্ডিশনাল রেন্ডারিং |
 
 ---
 
-#### 2. নতুন ডাটাবেজ টেবিল
+### ফিচার ক্যাটাগরি
 
-**send_payment_requests** (টাকা পাঠানোর লিংক সংরক্ষণ)
-```sql
-CREATE TABLE send_payment_requests (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  sender_id UUID REFERENCES auth.users(id) NOT NULL,
-  amount NUMERIC NOT NULL CHECK (amount > 0),
-  description TEXT,
-  qr_code_data TEXT,
-  expires_at TIMESTAMPTZ NOT NULL,
-  status TEXT DEFAULT 'active' CHECK (status IN ('active', 'claimed', 'expired', 'cancelled')),
-  claimed_by UUID REFERENCES auth.users(id),
-  claimed_at TIMESTAMPTZ,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
+```text
++------------------------------------------+
+|         MVP Feature Control               |
++------------------------------------------+
+|                                          |
+|  কোর ফিচার (সবসময় চালু)                  |
+|  +---------------------------------+     |
+|  | [✓] হোম পেইজ                    |     |
+|  | [✓] লগইন/সাইনআপ                 |     |
+|  | [✓] প্রোফাইল                     |     |
+|  +---------------------------------+     |
+|                                          |
+|  মূল সার্ভিস                              |
+|  +---------------------------------+     |
+|  | [✓] মার্কেটপ্লেস                  |     |
+|  | [✓] রেন্টাল                      |     |
+|  | [✓] সার্ভিস                      |     |
+|  | [ ] ডিজিটাল প্রোডাক্ট           |     |
+|  +---------------------------------+     |
+|                                          |
+|  পেমেন্ট সিস্টেম                          |
+|  +---------------------------------+     |
+|  | [✓] বেসিক চেকআউট (COD)          |     |
+|  | [ ] ওয়ালেট সিস্টেম              |     |
+|  | [ ] SecurePay/Escrow            |     |
+|  | [ ] পেমেন্ট অ্যানালিটিক্স       |     |
+|  +---------------------------------+     |
+|                                          |
+|  অ্যাডভান্সড ফিচার                       |
+|  +---------------------------------+     |
+|  | [ ] রিসেলার সিস্টেম             |     |
+|  | [ ] ক্রিয়েটর ড্যাশবোর্ড        |     |
+|  | [ ] অনলাইন স্টোর বিল্ডার       |     |
+|  | [ ] রেফারেল সিস্টেম            |     |
+|  | [ ] লয়্যালটি প্রোগ্রাম          |     |
+|  | [ ] KYC ভেরিফিকেশন              |     |
+|  +---------------------------------+     |
+|                                          |
+|  [সব MVP সেটিংস রিসেট] [সেভ করুন]        |
++------------------------------------------+
 ```
 
 ---
 
-#### 3. পেমেন্ট লিংক ক্লেইম সিস্টেম
+### বাস্তবায়ন পদক্ষেপ
 
-**নতুন URL প্যারামিটার হ্যান্ডলিং:**
-- `/wallet?claim=<encoded_data>` - টাকা নেওয়ার লিংক
+#### 1. নতুন Context: FeatureConfigContext
 
-**নতুন ডায়ালগ:** `ClaimPaymentDialog`
-- প্রেরকের নাম, পরিমাণ, বিবরণ দেখাবে
-- মেয়াদ চেক করবে
-- "টাকা নিন" বাটনে ক্লিক করলে:
-  - প্রেরকের ওয়ালেট থেকে টাকা কাটবে
-  - প্রাপকের ওয়ালেটে যোগ হবে
-  - ট্রানজেকশন রেকর্ড তৈরি হবে
-  - স্ট্যাটাস 'claimed' হয়ে যাবে
+**ফাইল:** `src/context/FeatureConfigContext.tsx`
+
+এই কনটেক্সট সকল ফিচার টগল স্টেট ধারণ করবে:
+
+```typescript
+interface FeatureConfig {
+  // মূল সার্ভিস
+  marketplace: boolean;
+  rentals: boolean;
+  services: boolean;
+  digitalProducts: boolean;
+  
+  // পেমেন্ট
+  wallet: boolean;
+  securePay: boolean;
+  paymentAnalytics: boolean;
+  escrow: boolean;
+  
+  // অ্যাডভান্সড
+  resellerSystem: boolean;
+  creatorDashboard: boolean;
+  onlineStoreBuilder: boolean;
+  referralSystem: boolean;
+  loyaltyProgram: boolean;
+  kycVerification: boolean;
+  disputeCenter: boolean;
+  
+  // সেলার/অ্যাডমিন
+  sellerDashboard: boolean;
+  advancedAdminFeatures: boolean;
+}
+```
+
+- LocalStorage-এ সেভ হবে
+- ডিফল্ট MVP সেটিংস থাকবে
+- `isFeatureEnabled(featureKey)` ফাংশন প্রদান করবে
 
 ---
 
-#### 4. Wallet.tsx আপডেট
+#### 2. অ্যাডমিন UI: MVPFeatureControl
 
-- `claim` URL প্যারামিটার হ্যান্ডলিং
-- `ClaimPaymentDialog` ইন্টিগ্রেশন
-- SendMoneyDialog-এ QR স্ক্যান সাপোর্ট
+**ফাইল:** `src/components/admin/MVPFeatureControl.tsx`
+
+- ক্যাটাগরি অনুযায়ী গ্রুপ করা Switch কম্পোনেন্ট
+- প্রতিটি ফিচারের জন্য নাম, বিবরণ এবং টগল
+- "MVP প্রিসেট" বাটন - এক ক্লিকে সব অপ্রয়োজনীয় ফিচার বন্ধ
+- "সব চালু করুন" বাটন - সব ফিচার অন
+- সেভ করলে toast নোটিফিকেশন
 
 ---
 
-### ফাইল পরিবর্তন
+#### 3. অ্যাডমিন ড্যাশবোর্ড আপডেট
+
+**ফাইল:** `src/pages/AdminDashboard.tsx`
+
+- সাইডবারে নতুন আইটেম: "MVP কন্ট্রোল"
+- `activeModule === 'mvp-control'` এ `<MVPFeatureControl />` রেন্ডার
+
+---
+
+#### 4. ইউজার অ্যাপে কন্ডিশনাল রেন্ডারিং
+
+**ফাইল পরিবর্তন:**
 
 | ফাইল | পরিবর্তন |
 |------|----------|
-| `src/components/wallet/SendMoneyDialog.tsx` | সম্পূর্ণ রিডিজাইন - ৪ ট্যাব সহ |
-| `src/components/wallet/ClaimPaymentDialog.tsx` | নতুন - লিংক থেকে টাকা নেওয়ার ডায়ালগ |
-| `src/pages/Wallet.tsx` | claim প্যারামিটার হ্যান্ডলিং যোগ |
+| `src/App.tsx` | `FeatureConfigProvider` wrap করা |
+| `src/components/navbar/BottomNav.tsx` | ওয়ালেট/ফিচার কন্ডিশনাল |
+| `src/components/sidebar/SidebarDrawer.tsx` | মেনু আইটেম কন্ডিশনাল |
+| `src/RoutesConfig.tsx` | রাউট কন্ডিশনাল রেন্ডার |
+| `src/pages/Index.tsx` | DigitalProductsSection কন্ডিশনাল |
+
+**উদাহরণ - BottomNav:**
+
+```tsx
+const { isFeatureEnabled } = useFeatureConfig();
+
+const navLinks = [
+  { title: 'হোম', path: '/', icon: <Home />, feature: null }, // সবসময় দেখাবে
+  { title: 'রেন্ট', path: '/rentals', icon: <Building />, feature: 'rentals' },
+  { title: 'সার্ভিস', path: '/services', icon: <Search />, feature: 'services' },
+  { title: 'মার্কেটপ্লেস', path: '/marketplace', icon: <ShoppingBag />, feature: 'marketplace' },
+];
+
+// ফিল্টার - শুধু enabled ফিচার দেখাবে
+const visibleLinks = navLinks.filter(link => 
+  link.feature === null || isFeatureEnabled(link.feature)
+);
+```
+
+**উদাহরণ - SidebarDrawer:**
+
+```tsx
+// ওয়ালেট মেনু শুধু তখনই দেখাবে যখন wallet ফিচার enabled
+{isFeatureEnabled('wallet') && (
+  <CollapsibleMenuSection 
+    title="পেমেন্ট এবং ট্রানজেকশন" 
+    items={paymentMenuItems} 
+  />
+)}
+
+// রেফারেল সিস্টেম
+{isFeatureEnabled('referralSystem') && <ReferralSystem />}
+```
+
+**উদাহরণ - RoutesConfig:**
+
+```tsx
+// ওয়ালেট রাউট শুধু যখন enabled
+{isFeatureEnabled('wallet') && (
+  <Route path="/wallet" element={<Wallet />} />
+)}
+
+// SecurePay রাউট
+{isFeatureEnabled('securePay') && (
+  <>
+    <Route path="/securepay" element={<SecurePay />} />
+    <Route path="/securepay/creator" element={<SecurePayCreator />} />
+  </>
+)}
+```
+
+---
+
+### ফাইল তালিকা
+
+| ফাইল | অ্যাকশন |
+|------|--------|
+| `src/context/FeatureConfigContext.tsx` | নতুন তৈরি |
+| `src/components/admin/MVPFeatureControl.tsx` | নতুন তৈরি |
+| `src/pages/AdminDashboard.tsx` | আপডেট - নতুন সাইডবার আইটেম |
+| `src/App.tsx` | আপডেট - Provider যোগ |
+| `src/components/navbar/BottomNav.tsx` | আপডেট - কন্ডিশনাল নেভ |
+| `src/components/sidebar/SidebarDrawer.tsx` | আপডেট - কন্ডিশনাল মেনু |
+| `src/RoutesConfig.tsx` | আপডেট - কন্ডিশনাল রাউট |
+| `src/pages/Index.tsx` | আপডেট - কন্ডিশনাল সেকশন |
+
+---
+
+### ডিফল্ট MVP সেটিংস
+
+```typescript
+const defaultMVPConfig: FeatureConfig = {
+  // MVP তে চালু থাকবে
+  marketplace: true,
+  rentals: true,
+  services: true,
+  sellerDashboard: true,
+  
+  // MVP তে বন্ধ থাকবে
+  digitalProducts: false,
+  wallet: false,
+  securePay: false,
+  paymentAnalytics: false,
+  escrow: false,
+  resellerSystem: false,
+  creatorDashboard: false,
+  onlineStoreBuilder: false,
+  referralSystem: false,
+  loyaltyProgram: false,
+  kycVerification: false,
+  disputeCenter: false,
+  advancedAdminFeatures: false,
+};
+```
 
 ---
 
 ### কারিগরি বিবরণ
 
-#### ইমেইল দিয়ে প্রাপক খোঁজা
+#### Context Hook Usage
+
 ```typescript
-const { data: recipientProfile } = await supabase
-  .from('profiles')
-  .select('id, full_name, email')
-  .eq('email', formData.recipientEmail)
-  .single();
+// যেকোনো কম্পোনেন্টে ব্যবহার
+import { useFeatureConfig } from '@/context/FeatureConfigContext';
+
+const MyComponent = () => {
+  const { isFeatureEnabled, featureConfig, updateFeature } = useFeatureConfig();
+  
+  if (!isFeatureEnabled('wallet')) {
+    return null; // ফিচার বন্ধ থাকলে কিছু রেন্ডার করবে না
+  }
+  
+  return <WalletComponent />;
+};
 ```
 
-#### পেমেন্ট লিংক ডেটা স্ট্রাকচার
+#### LocalStorage Key
+
 ```typescript
-{
-  type: 'send_payment',
-  request_id: 'uuid',
-  sender_id: 'uuid',
-  sender_name: 'নাম',
-  amount: 500,
-  description: 'বিবরণ',
-  expires_at: 'ISO timestamp'
-}
+const FEATURE_CONFIG_KEY = 'app_feature_config';
 ```
 
-#### ক্লেইম প্রসেস ফ্লো
-1. প্রাপক লিংক খোলে
-2. `ClaimPaymentDialog` প্রদর্শিত হয়
-3. প্রাপক "টাকা নিন" ক্লিক করে
-4. `process_wallet_debit` দিয়ে প্রেরকের টাকা কাটা হয়
-5. প্রাপকের ওয়ালেটে টাকা যোগ হয়
-6. উভয়ের জন্য ট্রানজেকশন তৈরি হয়
-7. রিসিপ্ট দেখানো হয়
+#### Feature Toggle হলে কি হবে
+
+1. অ্যাডমিন Switch টগল করে
+2. Context স্টেট আপডেট হয়
+3. LocalStorage-এ সেভ হয়
+4. পুরো অ্যাপে রি-রেন্ডার ট্রিগার হয়
+5. disabled ফিচার সব জায়গা থেকে হাইড হয়ে যায়
 
 ---
 
-### UI ফ্লো ডায়াগ্রাম
+### সুবিধা
 
-```text
-+--------------------------------------------------+
-|              টাকা পাঠান                           |
-+--------------------------------------------------+
-| [ফোন] [ইমেইল] [লিংক] [QR]                         |
-+--------------------------------------------------+
-|                                                   |
-|  ফোন ট্যাব:                                       |
-|  +------------------------------------------+    |
-|  | প্রাপকের ফোন: [01XXXXXXXXX           ]  |    |
-|  | পরিমাণ:      [0.00                    ]  |    |
-|  | বিবরণ:       [ঐচ্ছিক                  ]  |    |
-|  |                                          |    |
-|  |        [টাকা পাঠান]                     |    |
-|  +------------------------------------------+    |
-|                                                   |
-|  লিংক ট্যাব:                                      |
-|  +------------------------------------------+    |
-|  | পরিমাণ:      [500                     ]  |    |
-|  | বিবরণ:       [পণ্য কেনা               ]  |    |
-|  | মেয়াদ:       [24 ঘণ্টা ▼             ]  |    |
-|  |                                          |    |
-|  |        [লিংক তৈরি করুন]                 |    |
-|  +------------------------------------------+    |
-|                                                   |
-|  লিংক তৈরি হলে:                                   |
-|  +------------------------------------------+    |
-|  |      [QR CODE]                           |    |
-|  |                                          |    |
-|  |  https://...?claim=abc...                |    |
-|  |  [কপি করুন] [শেয়ার করুন]               |    |
-|  +------------------------------------------+    |
-|                                                   |
-+--------------------------------------------------+
-```
+1. **সহজ MVP লঞ্চ**: এক ক্লিকে অপ্রয়োজনীয় ফিচার বন্ধ
+2. **ফ্লেক্সিবল**: যেকোনো সময় ফিচার চালু/বন্ধ করা যায়
+3. **নো কোড ডিলিট**: কোড থাকবে, শুধু UI থেকে হাইড
+4. **ইউজার এক্সপেরিয়েন্স**: ক্লিন, সিম্পল ইন্টারফেস
+5. **গ্র্যাজুয়াল রোলআউট**: ফেজ বাই ফেজ ফিচার অন করা সম্ভব
+
