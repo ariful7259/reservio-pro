@@ -24,6 +24,8 @@ interface QRPaymentData {
   phone?: string;
   description?: string;
   data?: string;
+  request_id?: string;
+  expires_at?: string;
 }
 
 const Wallet = () => {
