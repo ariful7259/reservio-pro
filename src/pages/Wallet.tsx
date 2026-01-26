@@ -8,6 +8,7 @@ import { AddMoneyDialog } from '@/components/wallet/AddMoneyDialog';
 import { WalletQRScannerDialog } from '@/components/wallet/WalletQRScannerDialog';
 import { WalletStatement } from '@/components/wallet/WalletStatement';
 import { QRPaymentConfirmDialog } from '@/components/wallet/QRPaymentConfirmDialog';
+import { PaymentRequestDialog } from '@/components/wallet/PaymentRequestDialog';
 import WalletHeader from '@/components/wallet/WalletHeader';
 import WalletBalanceCard from '@/components/wallet/WalletBalanceCard';
 import WalletQuickActions from '@/components/wallet/WalletQuickActions';
@@ -36,6 +37,7 @@ const Wallet = () => {
   const [qrScannerOpen, setQrScannerOpen] = useState(false);
   const [statementOpen, setStatementOpen] = useState(false);
   const [paymentConfirmOpen, setPaymentConfirmOpen] = useState(false);
+  const [paymentRequestOpen, setPaymentRequestOpen] = useState(false);
   const [scannedPaymentData, setScannedPaymentData] = useState<QRPaymentData | null>(null);
   const [addMoneyDialogOpen, setAddMoneyDialogOpen] = useState(false);
   const [activeNavItem, setActiveNavItem] = useState<'home' | 'statement' | 'qr' | 'support' | 'more'>('home');
@@ -168,7 +170,7 @@ const Wallet = () => {
         onLoadMoney={() => setAddMoneyDialogOpen(true)}
         onSendMoney={() => setSendDialogOpen(true)}
         onBankTransfer={() => toast({ title: 'ব্যাংক ট্রান্সফার', description: 'এই ফিচার শীঘ্রই আসছে' })}
-        onRemittance={() => toast({ title: 'রেমিটেন্স', description: 'এই ফিচার শীঘ্রই আসছে' })}
+        onPaymentRequest={() => setPaymentRequestOpen(true)}
       />
 
       {/* Service Categories */}
@@ -223,6 +225,11 @@ const Wallet = () => {
         open={addMoneyDialogOpen}
         onOpenChange={setAddMoneyDialogOpen}
         onSuccess={loadWalletData}
+      />
+
+      <PaymentRequestDialog
+        open={paymentRequestOpen}
+        onOpenChange={setPaymentRequestOpen}
       />
     </div>
   );

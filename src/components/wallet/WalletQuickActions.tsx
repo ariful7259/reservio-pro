@@ -1,5 +1,5 @@
 import React from 'react';
-import { Wallet, Send, Building2, Globe } from 'lucide-react';
+import { Wallet, Send, Building2, BanknoteIcon } from 'lucide-react';
 
 interface QuickAction {
   title: string;
@@ -11,14 +11,14 @@ interface WalletQuickActionsProps {
   onLoadMoney: () => void;
   onSendMoney: () => void;
   onBankTransfer: () => void;
-  onRemittance: () => void;
+  onPaymentRequest: () => void;
 }
 
 const WalletQuickActions: React.FC<WalletQuickActionsProps> = ({
   onLoadMoney,
   onSendMoney,
   onBankTransfer,
-  onRemittance
+  onPaymentRequest
 }) => {
   const actions: QuickAction[] = [
     {
@@ -37,9 +37,9 @@ const WalletQuickActions: React.FC<WalletQuickActionsProps> = ({
       onClick: onBankTransfer
     },
     {
-      title: 'রেমিটেন্স',
-      icon: <Globe className="h-6 w-6" />,
-      onClick: onRemittance
+      title: 'পেমেন্ট নিন',
+      icon: <BanknoteIcon className="h-6 w-6" />,
+      onClick: onPaymentRequest
     }
   ];
 
