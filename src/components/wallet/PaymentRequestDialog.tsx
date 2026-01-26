@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import QRCode from 'react-qr-code';
@@ -15,13 +16,19 @@ import {
   Share2, 
   Check,
   Loader2,
-  BanknoteIcon
+  BanknoteIcon,
+  Clock,
+  AlertCircle
 } from 'lucide-react';
+import { format, addHours, addDays, addMinutes } from 'date-fns';
+import { bn } from 'date-fns/locale';
 
 interface PaymentRequestDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
+
+type ExpiryOption = '15m' | '1h' | '24h' | '7d';
 
 export const PaymentRequestDialog: React.FC<PaymentRequestDialogProps> = ({
   open,
@@ -30,6 +37,7 @@ export const PaymentRequestDialog: React.FC<PaymentRequestDialogProps> = ({
   const { toast } = useToast();
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
+  const [expiryOption, setExpiryOption] = useState<ExpiryOption>('24h');
   const [loading, setLoading] = useState(false);
   const [generated, setGenerated] = useState(false);
   const [qrData, setQrData] = useState('');
@@ -37,6 +45,8 @@ export const PaymentRequestDialog: React.FC<PaymentRequestDialogProps> = ({
   const [copied, setCopied] = useState(false);
   const [userName, setUserName] = useState('');
   const [userPhone, setUserPhone] = useState('');
+  const [expiresAt, setExpiresAt] = useState<Date | null>(null);
+  const [requestId, setRequestId] = useState<string | null>(null);
 
   useEffect(() => {
     if (open) {
@@ -48,10 +58,13 @@ export const PaymentRequestDialog: React.FC<PaymentRequestDialogProps> = ({
   const resetForm = () => {
     setAmount('');
     setDescription('');
+    setExpiryOption('24h');
     setGenerated(false);
     setQrData('');
     setPaymentLink('');
     setCopied(false);
+    setExpiresAt(null);
+    setRequestId(null);
   };
 
   const loadUserInfo = async () => {
@@ -71,6 +84,37 @@ export const PaymentRequestDialog: React.FC<PaymentRequestDialogProps> = ({
       }
     } catch (error) {
       console.error('Error loading user info:', error);
+    }
+  };
+
+  const getExpiryDate = (option: ExpiryOption): Date => {
+    const now = new Date();
+    switch (option) {
+      case '15m':
+        return addMinutes(now, 15);
+      case '1h':
+        return addHours(now, 1);
+      case '24h':
+        return addHours(now, 24);
+      case '7d':
+        return addDays(now, 7);
+      default:
+        return addHours(now, 24);
+    }
+  };
+
+  const getExpiryLabel = (option: ExpiryOption): string => {
+    switch (option) {
+      case '15m':
+        return '১৫ মিনিট';
+      case '1h':
+        return '১ ঘণ্টা';
+      case '24h':
+        return '২৪ ঘণ্টা';
+      case '7d':
+        return '৭ দিন';
+      default:
+        return '২৪ ঘণ্টা';
     }
   };
 
@@ -97,18 +141,43 @@ export const PaymentRequestDialog: React.FC<PaymentRequestDialogProps> = ({
         return;
       }
 
-      // Create QR data
+      const expiry = getExpiryDate(expiryOption);
+      setExpiresAt(expiry);
+
+      // Create QR data with request ID
+      const tempId = crypto.randomUUID();
       const paymentData = {
         type: 'payment_request',
+        request_id: tempId,
         user_id: user.id,
         name: userName,
         phone: userPhone,
         amount: amountNum,
         description: description || 'Payment Request',
+        expires_at: expiry.toISOString(),
         timestamp: new Date().toISOString()
       };
 
       const qrPayload = JSON.stringify(paymentData);
+
+      // Save to database
+      const { data: savedRequest, error: saveError } = await supabase
+        .from('qr_payment_requests')
+        .insert({
+          id: tempId,
+          user_id: user.id,
+          amount: amountNum,
+          description: description || 'Payment Request',
+          qr_code_data: qrPayload,
+          expires_at: expiry.toISOString(),
+          status: 'active'
+        })
+        .select()
+        .single();
+
+      if (saveError) throw saveError;
+
+      setRequestId(savedRequest.id);
       setQrData(qrPayload);
 
       // Create payment link (encoded data in URL)
@@ -206,6 +275,25 @@ export const PaymentRequestDialog: React.FC<PaymentRequestDialogProps> = ({
               />
             </div>
 
+            {/* Expiry Time Selection */}
+            <div className="space-y-2">
+              <Label className="flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                মেয়াদ শেষ হবে
+              </Label>
+              <Select value={expiryOption} onValueChange={(val) => setExpiryOption(val as ExpiryOption)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="মেয়াদ নির্বাচন করুন" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="15m">১৫ মিনিট</SelectItem>
+                  <SelectItem value="1h">১ ঘণ্টা</SelectItem>
+                  <SelectItem value="24h">২৪ ঘণ্টা</SelectItem>
+                  <SelectItem value="7d">৭ দিন</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             {/* Quick Amount Buttons */}
             <div className="grid grid-cols-4 gap-2">
               {[100, 500, 1000, 5000].map((amt) => (
@@ -249,6 +337,19 @@ export const PaymentRequestDialog: React.FC<PaymentRequestDialogProps> = ({
                 <p className="text-sm text-muted-foreground mt-1">{description}</p>
               )}
             </div>
+
+            {/* Expiry Info */}
+            {expiresAt && (
+              <div className="flex items-center gap-2 p-3 bg-amber-50 dark:bg-amber-950/20 rounded-lg">
+                <AlertCircle className="h-4 w-4 text-amber-600" />
+                <div className="flex-1">
+                  <p className="text-xs text-amber-700 dark:text-amber-400">মেয়াদ শেষ হবে</p>
+                  <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
+                    {format(expiresAt, 'dd MMMM yyyy, hh:mm a', { locale: bn })}
+                  </p>
+                </div>
+              </div>
+            )}
 
             <Tabs defaultValue="qr" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
