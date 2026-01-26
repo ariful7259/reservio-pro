@@ -82,11 +82,11 @@ const FeaturedListings: React.FC<FeaturedListingsProps> = ({ allListings }) => {
     if (!selectedListing) return;
     
     if (type === 'rent') {
-      navigate(`/rental-booking?id=${selectedListing.id}`);
+      navigate(`/rental-booking/${selectedListing.id}`);
     } else if (type === 'service') {
-      navigate(`/service-booking?id=${selectedListing.id}`);
+      navigate(`/service-booking/${selectedListing.id}`);
     } else if (type === 'buy') {
-      navigate(`/product-order?id=${selectedListing.id}`);
+      navigate(`/cart-checkout`, { state: { directBuy: selectedListing } });
     }
     
     toast({
