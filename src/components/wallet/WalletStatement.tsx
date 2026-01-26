@@ -1,25 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { 
   ArrowDownLeft, 
   ArrowUpRight, 
   Calendar,
-  Filter,
-  X,
   Wallet,
   ShoppingCart,
   CreditCard,
-  RefreshCw
+  RefreshCw,
+  Download,
+  FileText,
+  FileSpreadsheet
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { bn } from 'date-fns/locale';
+import jsPDF from 'jspdf';
+import * as XLSX from 'xlsx';
 
 interface Transaction {
   id: string;
@@ -50,6 +53,21 @@ const transactionTypeLabels: Record<string, string> = {
   rental_deposit: 'ভাড়া ডিপোজিট',
   partial_payment: 'আংশিক পেমেন্ট',
   order_refund: 'অর্ডার রিফান্ড'
+};
+
+const transactionTypeLabelsEn: Record<string, string> = {
+  send: 'Send Money',
+  receive: 'Receive Money',
+  add_money: 'Add Money',
+  withdraw: 'Withdrawal',
+  payment: 'Payment',
+  refund: 'Refund',
+  product_purchase: 'Product Purchase',
+  service_booking: 'Service Booking',
+  rental_payment: 'Rental Payment',
+  rental_deposit: 'Rental Deposit',
+  partial_payment: 'Partial Payment',
+  order_refund: 'Order Refund'
 };
 
 const getTransactionIcon = (type: string) => {
@@ -84,6 +102,7 @@ export const WalletStatement: React.FC<WalletStatementProps> = ({
   const { toast } = useToast();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [exporting, setExporting] = useState(false);
   const [filter, setFilter] = useState<'all' | 'credit' | 'debit'>('all');
 
   useEffect(() => {
@@ -106,7 +125,6 @@ export const WalletStatement: React.FC<WalletStatementProps> = ({
         return;
       }
 
-      // Get user's wallet
       const { data: wallet } = await supabase
         .from('wallets')
         .select('id')
@@ -118,7 +136,6 @@ export const WalletStatement: React.FC<WalletStatementProps> = ({
         return;
       }
 
-      // Get transactions
       const { data: txns, error } = await supabase
         .from('wallet_transactions')
         .select('*')
@@ -137,6 +154,162 @@ export const WalletStatement: React.FC<WalletStatementProps> = ({
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const exportToPDF = async () => {
+    if (filteredTransactions.length === 0) {
+      toast({
+        title: 'কোনো ডেটা নেই',
+        description: 'এক্সপোর্ট করার জন্য ট্রানজেকশন নেই',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    setExporting(true);
+    try {
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      
+      // Title
+      doc.setFontSize(18);
+      doc.text('Wallet Statement', pageWidth / 2, 20, { align: 'center' });
+      
+      // Date
+      doc.setFontSize(10);
+      doc.text(`Generated: ${format(new Date(), 'dd MMM yyyy, hh:mm a')}`, pageWidth / 2, 28, { align: 'center' });
+      
+      // Table Header
+      let yPos = 40;
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Date', 15, yPos);
+      doc.text('Type', 50, yPos);
+      doc.text('Description', 90, yPos);
+      doc.text('Amount', 160, yPos);
+      doc.text('Status', 185, yPos);
+      
+      // Line
+      yPos += 3;
+      doc.line(15, yPos, 195, yPos);
+      yPos += 7;
+      
+      // Table Content
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      
+      let totalCredit = 0;
+      let totalDebit = 0;
+      
+      filteredTransactions.forEach((tx) => {
+        if (yPos > 270) {
+          doc.addPage();
+          yPos = 20;
+        }
+        
+        const dateStr = format(new Date(tx.created_at), 'dd/MM/yy');
+        const typeStr = transactionTypeLabelsEn[tx.transaction_type] || tx.transaction_type;
+        const descStr = (tx.description || 'Wallet Transaction').substring(0, 25);
+        const credit = isCredit(tx.transaction_type);
+        const amountStr = `${credit ? '+' : '-'}${tx.amount.toLocaleString()} BDT`;
+        const statusStr = tx.status === 'completed' ? 'Done' : tx.status;
+        
+        if (credit) {
+          totalCredit += tx.amount;
+        } else {
+          totalDebit += tx.amount;
+        }
+        
+        doc.text(dateStr, 15, yPos);
+        doc.text(typeStr.substring(0, 18), 50, yPos);
+        doc.text(descStr, 90, yPos);
+        doc.text(amountStr, 160, yPos);
+        doc.text(statusStr, 185, yPos);
+        
+        yPos += 7;
+      });
+      
+      // Summary
+      yPos += 10;
+      doc.line(15, yPos, 195, yPos);
+      yPos += 10;
+      doc.setFont('helvetica', 'bold');
+      doc.text(`Total Credit: +${totalCredit.toLocaleString()} BDT`, 15, yPos);
+      doc.text(`Total Debit: -${totalDebit.toLocaleString()} BDT`, 110, yPos);
+      
+      // Save
+      doc.save(`wallet-statement-${format(new Date(), 'yyyy-MM-dd')}.pdf`);
+      
+      toast({
+        title: 'সফল!',
+        description: 'PDF ডাউনলোড হয়েছে'
+      });
+    } catch (error) {
+      console.error('PDF export error:', error);
+      toast({
+        title: 'ত্রুটি',
+        description: 'PDF তৈরি করতে সমস্যা হয়েছে',
+        variant: 'destructive'
+      });
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const exportToExcel = async () => {
+    if (filteredTransactions.length === 0) {
+      toast({
+        title: 'কোনো ডেটা নেই',
+        description: 'এক্সপোর্ট করার জন্য ট্রানজেকশন নেই',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    setExporting(true);
+    try {
+      const data = filteredTransactions.map(tx => ({
+        'Date': format(new Date(tx.created_at), 'dd/MM/yyyy hh:mm a'),
+        'Type': transactionTypeLabelsEn[tx.transaction_type] || tx.transaction_type,
+        'Description': tx.description || 'Wallet Transaction',
+        'Amount (BDT)': tx.amount,
+        'Credit/Debit': isCredit(tx.transaction_type) ? 'Credit' : 'Debit',
+        'Status': tx.status === 'completed' ? 'Completed' : tx.status,
+        'Payment Method': tx.payment_method || '-'
+      }));
+
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Transactions');
+      
+      // Auto-size columns
+      const colWidths = [
+        { wch: 20 }, // Date
+        { wch: 18 }, // Type
+        { wch: 30 }, // Description
+        { wch: 12 }, // Amount
+        { wch: 10 }, // Credit/Debit
+        { wch: 12 }, // Status
+        { wch: 15 }  // Payment Method
+      ];
+      ws['!cols'] = colWidths;
+      
+      XLSX.writeFile(wb, `wallet-statement-${format(new Date(), 'yyyy-MM-dd')}.xlsx`);
+      
+      toast({
+        title: 'সফল!',
+        description: 'Excel ডাউনলোড হয়েছে'
+      });
+    } catch (error) {
+      console.error('Excel export error:', error);
+      toast({
+        title: 'ত্রুটি',
+        description: 'Excel তৈরি করতে সমস্যা হয়েছে',
+        variant: 'destructive'
+      });
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -165,14 +338,37 @@ export const WalletStatement: React.FC<WalletStatementProps> = ({
               <Calendar className="h-5 w-5 text-primary" />
               ট্রানজেকশন হিস্ট্রি
             </span>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={loadTransactions}
-              disabled={loading}
-            >
-              <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-            </Button>
+            <div className="flex items-center gap-1">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={loading || exporting || filteredTransactions.length === 0}
+                  >
+                    <Download className={`h-4 w-4 ${exporting ? 'animate-pulse' : ''}`} />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={exportToPDF} className="gap-2">
+                    <FileText className="h-4 w-4 text-red-500" />
+                    PDF ডাউনলোড
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={exportToExcel} className="gap-2">
+                    <FileSpreadsheet className="h-4 w-4 text-green-600" />
+                    Excel ডাউনলোড
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={loadTransactions}
+                disabled={loading}
+              >
+                <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+              </Button>
+            </div>
           </DialogTitle>
         </DialogHeader>
 
@@ -189,18 +385,16 @@ export const WalletStatement: React.FC<WalletStatementProps> = ({
             variant={filter === 'credit' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setFilter('credit')}
-            className="text-green-600"
           >
-            <ArrowDownLeft className="h-3 w-3 mr-1" />
+            <ArrowDownLeft className="h-3 w-3 mr-1 text-green-600" />
             জমা
           </Button>
           <Button
             variant={filter === 'debit' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setFilter('debit')}
-            className="text-red-600"
           >
-            <ArrowUpRight className="h-3 w-3 mr-1" />
+            <ArrowUpRight className="h-3 w-3 mr-1 text-red-600" />
             খরচ
           </Button>
         </div>
