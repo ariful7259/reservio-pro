@@ -6,6 +6,7 @@ import { ReceiveMoneyDialog } from '@/components/wallet/ReceiveMoneyDialog';
 import { QRPaymentDialog } from '@/components/wallet/QRPaymentDialog';
 import { AddMoneyDialog } from '@/components/wallet/AddMoneyDialog';
 import { WalletQRScannerDialog } from '@/components/wallet/WalletQRScannerDialog';
+import { WalletStatement } from '@/components/wallet/WalletStatement';
 import WalletHeader from '@/components/wallet/WalletHeader';
 import WalletBalanceCard from '@/components/wallet/WalletBalanceCard';
 import WalletQuickActions from '@/components/wallet/WalletQuickActions';
@@ -22,6 +23,7 @@ const Wallet = () => {
   const [receiveDialogOpen, setReceiveDialogOpen] = useState(false);
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
   const [qrScannerOpen, setQrScannerOpen] = useState(false);
+  const [statementOpen, setStatementOpen] = useState(false);
   const [addMoneyDialogOpen, setAddMoneyDialogOpen] = useState(false);
   const [activeNavItem, setActiveNavItem] = useState<'home' | 'statement' | 'qr' | 'support' | 'more'>('home');
 
@@ -98,6 +100,8 @@ const Wallet = () => {
     setActiveNavItem(item);
     if (item === 'qr') {
       setQrScannerOpen(true);
+    } else if (item === 'statement') {
+      setStatementOpen(true);
     } else if (item !== 'home') {
       toast({
         title: 'শীঘ্রই আসছে',
@@ -178,6 +182,11 @@ const Wallet = () => {
         open={qrScannerOpen}
         onOpenChange={setQrScannerOpen}
         onScanSuccess={handleQrScanSuccess}
+      />
+
+      <WalletStatement
+        open={statementOpen}
+        onOpenChange={setStatementOpen}
       />
 
       <AddMoneyDialog
