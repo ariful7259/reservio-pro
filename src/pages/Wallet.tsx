@@ -10,6 +10,7 @@ import { WalletQRScannerDialog } from '@/components/wallet/WalletQRScannerDialog
 import { WalletStatement } from '@/components/wallet/WalletStatement';
 import { QRPaymentConfirmDialog } from '@/components/wallet/QRPaymentConfirmDialog';
 import { PaymentRequestDialog } from '@/components/wallet/PaymentRequestDialog';
+import { ClaimPaymentDialog } from '@/components/wallet/ClaimPaymentDialog';
 import WalletHeader from '@/components/wallet/WalletHeader';
 import WalletBalanceCard from '@/components/wallet/WalletBalanceCard';
 import WalletQuickActions from '@/components/wallet/WalletQuickActions';
@@ -26,6 +27,8 @@ interface QRPaymentData {
   data?: string;
   request_id?: string;
   expires_at?: string;
+  sender_id?: string;
+  sender_name?: string;
 }
 
 const Wallet = () => {
@@ -42,13 +45,17 @@ const Wallet = () => {
   const [statementOpen, setStatementOpen] = useState(false);
   const [paymentConfirmOpen, setPaymentConfirmOpen] = useState(false);
   const [paymentRequestOpen, setPaymentRequestOpen] = useState(false);
+  const [claimDialogOpen, setClaimDialogOpen] = useState(false);
   const [scannedPaymentData, setScannedPaymentData] = useState<QRPaymentData | null>(null);
+  const [claimPaymentData, setClaimPaymentData] = useState<QRPaymentData | null>(null);
   const [addMoneyDialogOpen, setAddMoneyDialogOpen] = useState(false);
   const [activeNavItem, setActiveNavItem] = useState<'home' | 'statement' | 'qr' | 'support' | 'more'>('home');
 
-  // Handle payment link from URL parameter
+  // Handle payment link from URL parameter (pay = payment request, claim = send payment)
   useEffect(() => {
     const payParam = searchParams.get('pay');
+    const claimParam = searchParams.get('claim');
+    
     if (payParam) {
       try {
         const decodedData = atob(payParam);
@@ -64,6 +71,29 @@ const Wallet = () => {
         }
       } catch (error) {
         console.error('Error parsing payment link:', error);
+        toast({
+          title: 'ত্রুটি',
+          description: 'পেমেন্ট লিংক পার্স করতে সমস্যা হয়েছে',
+          variant: 'destructive'
+        });
+      }
+    }
+    
+    if (claimParam) {
+      try {
+        const decodedData = atob(claimParam);
+        const claimData = JSON.parse(decodedData) as QRPaymentData;
+        
+        if (claimData.type === 'send_payment' && claimData.amount && claimData.sender_id) {
+          setClaimPaymentData(claimData);
+          setClaimDialogOpen(true);
+          
+          // Remove the claim parameter from URL after processing
+          searchParams.delete('claim');
+          setSearchParams(searchParams, { replace: true });
+        }
+      } catch (error) {
+        console.error('Error parsing claim link:', error);
         toast({
           title: 'ত্রুটি',
           description: 'পেমেন্ট লিংক পার্স করতে সমস্যা হয়েছে',
@@ -159,8 +189,13 @@ const Wallet = () => {
   const handleQrScanSuccess = (data: QRPaymentData) => {
     console.log('QR Scan Result:', data);
     
+    // Check if it's a send payment (claim)
+    if (data.type === 'send_payment' && data.sender_id) {
+      setClaimPaymentData(data);
+      setClaimDialogOpen(true);
+    }
     // Check if it's a payment request or wallet receive QR
-    if (data.type === 'payment_request' || data.type === 'wallet_receive') {
+    else if (data.type === 'payment_request' || data.type === 'wallet_receive') {
       setScannedPaymentData(data);
       setPaymentConfirmOpen(true);
     } else if (data.type === 'text' && data.data) {
@@ -219,6 +254,7 @@ const Wallet = () => {
         onOpenChange={setSendDialogOpen}
         currentBalance={walletBalance}
         onSuccess={loadWalletData}
+        onQrScanSuccess={handleQrScanSuccess}
       />
 
       <ReceiveMoneyDialog
@@ -261,6 +297,21 @@ const Wallet = () => {
       <PaymentRequestDialog
         open={paymentRequestOpen}
         onOpenChange={setPaymentRequestOpen}
+      />
+
+      <ClaimPaymentDialog
+        open={claimDialogOpen}
+        onOpenChange={setClaimDialogOpen}
+        claimData={claimPaymentData ? {
+          type: claimPaymentData.type,
+          request_id: claimPaymentData.request_id || '',
+          sender_id: claimPaymentData.sender_id || '',
+          sender_name: claimPaymentData.sender_name || 'Unknown',
+          amount: claimPaymentData.amount || 0,
+          description: claimPaymentData.description,
+          expires_at: claimPaymentData.expires_at || ''
+        } : null}
+        onSuccess={loadWalletData}
       />
     </div>
   );

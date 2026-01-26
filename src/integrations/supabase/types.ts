@@ -819,6 +819,45 @@ export type Database = {
         }
         Relationships: []
       }
+      send_payment_requests: {
+        Row: {
+          amount: number
+          claimed_at: string | null
+          claimed_by: string | null
+          created_at: string | null
+          description: string | null
+          expires_at: string
+          id: string
+          qr_code_data: string | null
+          sender_id: string
+          status: string | null
+        }
+        Insert: {
+          amount: number
+          claimed_at?: string | null
+          claimed_by?: string | null
+          created_at?: string | null
+          description?: string | null
+          expires_at: string
+          id?: string
+          qr_code_data?: string | null
+          sender_id: string
+          status?: string | null
+        }
+        Update: {
+          amount?: number
+          claimed_at?: string | null
+          claimed_by?: string | null
+          created_at?: string | null
+          description?: string | null
+          expires_at?: string
+          id?: string
+          qr_code_data?: string | null
+          sender_id?: string
+          status?: string | null
+        }
+        Relationships: []
+      }
       user_preferences: {
         Row: {
           allow_discount_notifications: boolean | null
