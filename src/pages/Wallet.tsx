@@ -5,11 +5,11 @@ import { SendMoneyDialog } from '@/components/wallet/SendMoneyDialog';
 import { ReceiveMoneyDialog } from '@/components/wallet/ReceiveMoneyDialog';
 import { QRPaymentDialog } from '@/components/wallet/QRPaymentDialog';
 import { AddMoneyDialog } from '@/components/wallet/AddMoneyDialog';
+import { WalletQRScannerDialog } from '@/components/wallet/WalletQRScannerDialog';
 import WalletHeader from '@/components/wallet/WalletHeader';
 import WalletBalanceCard from '@/components/wallet/WalletBalanceCard';
 import WalletQuickActions from '@/components/wallet/WalletQuickActions';
 import WalletServiceCategories from '@/components/wallet/WalletServiceCategories';
-import WalletFloatingButton from '@/components/wallet/WalletFloatingButton';
 import WalletBottomNav from '@/components/wallet/WalletBottomNav';
 
 const Wallet = () => {
@@ -21,8 +21,9 @@ const Wallet = () => {
   const [sendDialogOpen, setSendDialogOpen] = useState(false);
   const [receiveDialogOpen, setReceiveDialogOpen] = useState(false);
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
+  const [qrScannerOpen, setQrScannerOpen] = useState(false);
   const [addMoneyDialogOpen, setAddMoneyDialogOpen] = useState(false);
-  const [activeNavItem, setActiveNavItem] = useState<'home' | 'statement' | 'support' | 'more'>('home');
+  const [activeNavItem, setActiveNavItem] = useState<'home' | 'statement' | 'qr' | 'support' | 'more'>('home');
 
   useEffect(() => {
     loadWalletData();
@@ -93,9 +94,11 @@ const Wallet = () => {
     });
   };
 
-  const handleNavItemClick = (item: 'home' | 'statement' | 'support' | 'more') => {
+  const handleNavItemClick = (item: 'home' | 'statement' | 'qr' | 'support' | 'more') => {
     setActiveNavItem(item);
-    if (item !== 'home') {
+    if (item === 'qr') {
+      setQrScannerOpen(true);
+    } else if (item !== 'home') {
       toast({
         title: 'শীঘ্রই আসছে',
         description: 'এই ফিচার শীঘ্রই উপলব্ধ হবে',
@@ -103,11 +106,16 @@ const Wallet = () => {
     }
   };
 
-  const handleAllServicesClick = () => {
-    toast({
-      title: 'সব সার্ভিস',
-      description: 'সব সার্ভিসের তালিকা শীঘ্রই উপলব্ধ হবে',
-    });
+  const handleQrScanSuccess = (data: any) => {
+    console.log('QR Scan Result:', data);
+    if (data.type === 'payment_request') {
+      // Handle payment request
+      toast({
+        title: 'পেমেন্ট রিকোয়েস্ট',
+        description: `৳${data.amount} পেমেন্ট করতে চান?`
+      });
+    }
+    setQrScannerOpen(false);
   };
 
   return (
@@ -140,10 +148,7 @@ const Wallet = () => {
       {/* Service Categories */}
       <WalletServiceCategories onServiceClick={handleServiceClick} />
 
-      {/* Floating All Services Button */}
-      <WalletFloatingButton onClick={handleAllServicesClick} />
-
-      {/* Bottom Navigation */}
+      {/* Bottom Navigation with Center QR Button */}
       <WalletBottomNav
         activeItem={activeNavItem}
         onItemClick={handleNavItemClick}
@@ -167,6 +172,12 @@ const Wallet = () => {
         onOpenChange={setQrDialogOpen}
         currentBalance={walletBalance}
         onSuccess={loadWalletData}
+      />
+
+      <WalletQRScannerDialog
+        open={qrScannerOpen}
+        onOpenChange={setQrScannerOpen}
+        onScanSuccess={handleQrScanSuccess}
       />
 
       <AddMoneyDialog
