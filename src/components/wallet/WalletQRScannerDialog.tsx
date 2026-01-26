@@ -5,7 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import QRCode from 'react-qr-code';
-import { Camera, Image, QrCode, X, SwitchCamera } from 'lucide-react';
+import { Camera, Image, QrCode } from 'lucide-react';
+import { Html5Qrcode } from 'html5-qrcode';
 
 interface WalletQRScannerDialogProps {
   open: boolean;
@@ -20,19 +21,19 @@ export const WalletQRScannerDialog: React.FC<WalletQRScannerDialogProps> = ({
 }) => {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<'scan' | 'myqr'>('scan');
-  const [cameraActive, setCameraActive] = useState(false);
+  const [scanning, setScanning] = useState(false);
   const [myQrData, setMyQrData] = useState('');
   const [loading, setLoading] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
+  const scannerRef = useRef<Html5Qrcode | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const scannerContainerId = 'qr-reader';
 
   useEffect(() => {
     if (open && activeTab === 'scan') {
-      startCamera();
+      startScanner();
     }
     return () => {
-      stopCamera();
+      stopScanner();
     };
   }, [open, activeTab]);
 
@@ -42,18 +43,43 @@ export const WalletQRScannerDialog: React.FC<WalletQRScannerDialogProps> = ({
     }
   }, [open, activeTab]);
 
-  const startCamera = async () => {
+  const startScanner = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' }
-      });
-      streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        setCameraActive(true);
+      // Wait for DOM to be ready
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      const container = document.getElementById(scannerContainerId);
+      if (!container) return;
+
+      // Clean up existing scanner
+      if (scannerRef.current) {
+        try {
+          await scannerRef.current.stop();
+        } catch (e) {
+          // Ignore stop errors
+        }
       }
+
+      scannerRef.current = new Html5Qrcode(scannerContainerId);
+      
+      await scannerRef.current.start(
+        { facingMode: 'environment' },
+        {
+          fps: 10,
+          qrbox: { width: 250, height: 250 },
+          aspectRatio: 1.0
+        },
+        (decodedText) => {
+          handleScanSuccess(decodedText);
+        },
+        () => {
+          // QR code not found - ignore
+        }
+      );
+      
+      setScanning(true);
     } catch (error) {
-      console.error('Camera error:', error);
+      console.error('Scanner error:', error);
       toast({
         title: 'ক্যামেরা অ্যাক্সেস',
         description: 'ক্যামেরা অ্যাক্সেস করতে অনুমতি দিন',
@@ -62,16 +88,41 @@ export const WalletQRScannerDialog: React.FC<WalletQRScannerDialogProps> = ({
     }
   };
 
-  const stopCamera = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-      streamRef.current = null;
+  const stopScanner = async () => {
+    if (scannerRef.current) {
+      try {
+        await scannerRef.current.stop();
+        scannerRef.current.clear();
+      } catch (e) {
+        // Ignore errors on cleanup
+      }
+      scannerRef.current = null;
     }
-    setCameraActive(false);
+    setScanning(false);
+  };
+
+  const handleScanSuccess = async (decodedText: string) => {
+    // Stop scanner after successful scan
+    await stopScanner();
+    
+    toast({
+      title: 'QR কোড স্ক্যান সফল!',
+      description: 'ডেটা পাওয়া গেছে'
+    });
+
+    try {
+      const data = JSON.parse(decodedText);
+      onScanSuccess?.(data);
+    } catch {
+      // Not JSON, treat as plain text
+      onScanSuccess?.({ type: 'text', data: decodedText });
+    }
+    
+    onOpenChange(false);
   };
 
   const handleClose = () => {
-    stopCamera();
+    stopScanner();
     onOpenChange(false);
   };
 
@@ -118,43 +169,34 @@ export const WalletQRScannerDialog: React.FC<WalletQRScannerDialogProps> = ({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // In a real implementation, you'd use a QR code reader library like jsQR
-    // For now, we'll simulate reading QR from image
-    toast({
-      title: 'QR কোড স্ক্যান হচ্ছে',
-      description: 'গ্যালারি থেকে QR কোড রিড করা হচ্ছে...'
-    });
-
-    // Simulate scan delay
-    setTimeout(() => {
+    try {
+      // Stop camera scanner first
+      await stopScanner();
+      
+      const html5QrCode = new Html5Qrcode('qr-file-reader');
+      
+      const result = await html5QrCode.scanFile(file, true);
+      
       toast({
-        title: 'স্ক্যান সফল',
-        description: 'QR কোড থেকে ডেটা পাওয়া গেছে'
+        title: 'QR কোড স্ক্যান সফল!',
+        description: 'গ্যালারি থেকে QR কোড রিড হয়েছে'
       });
-      onScanSuccess?.({ type: 'gallery_scan', data: 'sample_qr_data' });
-    }, 1500);
-  };
 
-  const simulateScan = () => {
-    // In production, use a library like html5-qrcode or jsQR for real scanning
-    toast({
-      title: 'স্ক্যান করা হচ্ছে',
-      description: 'QR কোড সনাক্ত করা হচ্ছে...'
-    });
-    
-    setTimeout(() => {
-      const mockData = {
-        type: 'payment_request',
-        amount: 100,
-        user_id: 'mock_user',
-        description: 'টেস্ট পেমেন্ট'
-      };
+      try {
+        const data = JSON.parse(result);
+        onScanSuccess?.(data);
+      } catch {
+        onScanSuccess?.({ type: 'text', data: result });
+      }
+      
+      onOpenChange(false);
+    } catch (error) {
       toast({
-        title: 'QR কোড পাওয়া গেছে!',
-        description: 'পেমেন্ট রিকোয়েস্ট: ৳100'
+        title: 'স্ক্যান ব্যর্থ',
+        description: 'এই ছবিতে কোনো QR কোড পাওয়া যায়নি',
+        variant: 'destructive'
       });
-      onScanSuccess?.(mockData);
-    }, 2000);
+    }
   };
 
   return (
@@ -181,37 +223,18 @@ export const WalletQRScannerDialog: React.FC<WalletQRScannerDialogProps> = ({
 
           <TabsContent value="scan" className="mt-0">
             <div className="relative">
-              {/* Camera View */}
+              {/* Scanner Container */}
               <div className="aspect-square bg-black relative overflow-hidden">
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  playsInline
-                  muted
-                  className="w-full h-full object-cover"
-                />
+                <div id={scannerContainerId} className="w-full h-full" />
                 
-                {/* Scan Frame Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="w-56 h-56 border-2 border-white rounded-lg relative">
-                    {/* Corner decorations */}
-                    <div className="absolute -top-0.5 -left-0.5 w-6 h-6 border-t-4 border-l-4 border-primary rounded-tl-lg" />
-                    <div className="absolute -top-0.5 -right-0.5 w-6 h-6 border-t-4 border-r-4 border-primary rounded-tr-lg" />
-                    <div className="absolute -bottom-0.5 -left-0.5 w-6 h-6 border-b-4 border-l-4 border-primary rounded-bl-lg" />
-                    <div className="absolute -bottom-0.5 -right-0.5 w-6 h-6 border-b-4 border-r-4 border-primary rounded-br-lg" />
-                    
-                    {/* Scanning line animation */}
-                    <div className="absolute inset-x-2 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent animate-pulse" 
-                         style={{ animation: 'scanLine 2s ease-in-out infinite' }} />
+                {/* Scanning indicator */}
+                {scanning && (
+                  <div className="absolute bottom-4 left-0 right-0 text-center pointer-events-none">
+                    <p className="text-white text-sm bg-black/50 px-4 py-2 rounded-full inline-block animate-pulse">
+                      QR কোড খুঁজছি...
+                    </p>
                   </div>
-                </div>
-
-                {/* Instructions */}
-                <div className="absolute bottom-4 left-0 right-0 text-center">
-                  <p className="text-white text-sm bg-black/50 px-4 py-2 rounded-full inline-block">
-                    QR কোড ফ্রেমের মধ্যে রাখুন
-                  </p>
-                </div>
+                )}
               </div>
 
               {/* Action Buttons */}
@@ -222,17 +245,21 @@ export const WalletQRScannerDialog: React.FC<WalletQRScannerDialogProps> = ({
                   onClick={handleGallerySelect}
                 >
                   <Image className="h-4 w-4" />
-                  গ্যালারি
+                  গ্যালারি থেকে
                 </Button>
                 <Button
                   className="flex-1 flex items-center gap-2"
-                  onClick={simulateScan}
+                  onClick={() => {
+                    if (!scanning) startScanner();
+                  }}
+                  disabled={scanning}
                 >
                   <Camera className="h-4 w-4" />
-                  স্ক্যান করুন
+                  {scanning ? 'স্ক্যানিং...' : 'স্ক্যান করুন'}
                 </Button>
               </div>
 
+              {/* Hidden elements for file scanning */}
               <input
                 ref={fileInputRef}
                 type="file"
@@ -240,6 +267,7 @@ export const WalletQRScannerDialog: React.FC<WalletQRScannerDialogProps> = ({
                 className="hidden"
                 onChange={handleFileChange}
               />
+              <div id="qr-file-reader" className="hidden" />
             </div>
           </TabsContent>
 
@@ -283,13 +311,6 @@ export const WalletQRScannerDialog: React.FC<WalletQRScannerDialogProps> = ({
           </TabsContent>
         </Tabs>
       </DialogContent>
-
-      <style>{`
-        @keyframes scanLine {
-          0%, 100% { top: 10%; }
-          50% { top: 90%; }
-        }
-      `}</style>
     </Dialog>
   );
 };
